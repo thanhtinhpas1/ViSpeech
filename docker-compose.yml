@@ -4,6 +4,7 @@
 version: '3'
 
 services:
+  # EVENT STORE
   eventstore:
     image: eventstore/eventstore
     ports:
@@ -14,6 +15,9 @@ services:
     environment:
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+    networks: 
+      - backend 
+  # DATABASE - MYSQL
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -25,6 +29,11 @@ services:
       MYSQL_PASSWORD: 'vispeech'
     ports: 
       - 3306:3306
+    expose: 
+      - 3306
+    networks: 
+      - backend
+  # API - VISPEECH
   vispeech:
     build:
       context: "."
@@ -48,3 +57,10 @@ services:
       - "./src:/app/src"
     links:
       - eventstore
+      - db
+    networks: 
+      - backend
+networks:
+  backend:
+    driver: bridge
+    
