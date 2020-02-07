@@ -48,7 +48,7 @@ services:
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
-      - 7070:7070"
+      - 7070:7070
     expose: 
       - 7070
     # volumes:
