@@ -19,10 +19,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      MYSQL_USER: vispeech
-      MYSQL_PASSWORD: vispeech
-      MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_DATABASE: vispeech
+      MYSQL_ROOT_PASSWORD: 'mysql'
+      MYSQL_DATABASE: 'vispeech'
+      MYSQL_USER: 'vispeech'
+      MYSQL_PASSWORD: 'vispeech'
     ports: 
       - 3306:3306
   vispeech:
@@ -44,7 +44,7 @@ services:
       - "${CONTAINER_PORT}:7070"
     expose: 
       - ${CONTAINER_PORT}
-    # volumes:
-    #   - "./src:/app/src"
+    volumes:
+      - "./src:/app/src"
     links:
       - eventstore
