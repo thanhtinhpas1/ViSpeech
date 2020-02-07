@@ -44,7 +44,7 @@ services:
       replicas: ${CONTAINER_SCALE}
     depends_on:
       - eventstore
-      - db
+      - mysql
     # env_file:
     #   - "./.env"
     environment:
