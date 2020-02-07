@@ -19,13 +19,16 @@ services:
   # DATABASE - MYSQL
   mysql:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'mysql'
       MYSQL_DATABASE: 'vispeech'
       MYSQL_USER: 'vispeech'
       MYSQL_PASSWORD: 'vispeech'
+      # chmod 0444 cfg//mysqld.cnf
+    volumes:
+      - ./cfg:/etc/mysql/conf.d
     ports: 
       - 3306:3306
     expose: 
