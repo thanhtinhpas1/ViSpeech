@@ -1,6 +1,6 @@
 ### BASE
 FROM node:dubnium-alpine AS base
-LABEL maintainer "Qasim Soomro <qasim@soomro.com>"
+LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 # Set the working directory
 WORKDIR /app
 # Copy project specification and dependencies lock files

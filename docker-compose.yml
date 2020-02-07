@@ -12,32 +12,29 @@ services:
     environment:
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
-    networks:
-      - backend
-
-  db:
+  mysql:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysql
-
   vispeech:
     build:
       context: "."
-    command: ${CONTAINER_COMMAND}
+    # command: ${CONTAINER_COMMAND}
     restart: always
-    deploy:
-      mode: replicated
-      replicas: ${CONTAINER_SCALE}
+    # deploy: 
+    #   mode: replicated
+    #   replicas: ${CONTAINER_SCALE}
     depends_on:
       - eventstore
-    env_file:
-      - "./.env"
+      - mysql
+    # env_file:
+    #   - "./.env"
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
-      - "${CONTAINER_PORT}:7070"
+      - "7070:7070"
     volumes:
       - "./src:/app/src"
     links:
