@@ -9,6 +9,8 @@ services:
     ports:
       - 2113:2113
       - 1113:1113
+    expose:
+      - 2113
     environment:
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
@@ -21,6 +23,8 @@ services:
       MYSQL_DATABASE: vispeech
     ports: 
       - 3306:3306
+    expose: 
+      - 3306
   vispeech:
     build:
       context: "."
@@ -37,7 +41,9 @@ services:
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
-      - "7070:7070"
+      - "${CONTAINER_PORT}:7070"
+    expose: 
+      - ${CONTAINER_PORT}
     volumes:
       - "./src:/app/src"
     links:
