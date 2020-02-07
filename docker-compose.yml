@@ -15,8 +15,7 @@ services:
     environment:
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
-    networks: 
-      - backend 
+    network_mode: bridge
   # DATABASE - MYSQL
   mysql:
     image: mysql
@@ -31,8 +30,7 @@ services:
       - 3306:3306
     expose: 
       - 3306
-    networks: 
-      - backend
+    network_mode: bridge
   # API - VISPEECH
   vispeech:
     build:
@@ -58,8 +56,4 @@ services:
     links:
       - eventstore
       - mysql
-    networks: 
-      - backend
-networks:
-  backend:
-    driver: bridge
+    network_mode: bridge
