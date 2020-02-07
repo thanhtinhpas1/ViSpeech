@@ -15,7 +15,14 @@ services:
     networks:
       - backend
 
-  boilerplate-nodejs-cqrs-es-swagger:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+
+  vispeech:
     build:
       context: "."
     command: ${CONTAINER_COMMAND}

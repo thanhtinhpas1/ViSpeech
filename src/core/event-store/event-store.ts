@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleDestroy, OnModuleInit, Logger } from '@nestjs/common';
 import { IEventPublisher } from '@nestjs/cqrs/dist/interfaces/events/event-publisher.interface';
 import { IMessageSource } from '@nestjs/cqrs/dist/interfaces/events/message-source.interface';
 import { IEvent } from '@nestjs/cqrs/dist/interfaces/events/event.interface';
@@ -34,9 +34,9 @@ export class EventStore implements IEventPublisher, IMessageSource {
   }
 
   async publish<T extends IEvent>(event: T) {
-    const message = JSON.parse(JSON.stringify(event));
-    const userId = message.userId || message.userDto.userId;
-    const streamName = `${this.category}-${userId}`;
+    // const message = JSON.parse(JSON.stringify(event));
+    // const userId = message.userId || message.user.userId;
+    const streamName = `${this.category}`;
     const type = event.constructor.name;
     try {
       await this.eventStore.client.writeEvent(streamName, type, event);
@@ -51,11 +51,10 @@ export class EventStore implements IEventPublisher, IMessageSource {
    */
   async bridgeEventsTo<T extends IEvent>(subject: Subject<T>) {
     const streamName = `${this.category}`;
-    const onEvent = async (event) => {
+    const onEvent = async (subscription, event) => {
       let streamId = event.streamId;
       let eventNumber = event.eventNumber;
-      const eventUrl = eventStoreHostUrl +
-        `${streamId}/${eventNumber}`;
+      const eventUrl = eventStoreHostUrl + `${streamId}/${eventNumber}`;
       const httpOptions = {
         headers: {
           "Authorization": "Basic YWRtaW46Y2hhbmdlaXQ="

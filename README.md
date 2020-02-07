@@ -1,3 +1,7 @@
+# Thesis K16 - Build system recognize Vietnamese voice
+## Trần Thanh Tịnh - 1612704
+## Trần Thị Khánh Linh - 1612339
+
 <p align="center">
   <img src="https://cdn-images-1.medium.com/max/1200/1*feM_-VHhK670LlEQekesKg.png" width="320" alt="Logo" />
 </p>
@@ -9,7 +13,7 @@
 
 This is an application boilerplate that demonstrates how to use Nest.js and Event Store to create a RESTful Users API microservice.
 
-Please note that commands have been implemented and they do write into the Event Store, however, queries for denormalized views have some boilerplate but it is up to you to implement them using your favorite database technology of choice.
+Please note that commands have been implemented and they do write into the Event Store, however, queries for denormalized views have some boilerplate but it is up to you to implement them using your favorite database technology of choice. (use MySql in my position, suggest use NoSql as Mongodb, PostgreSql)
 
 In case you don't feel like downloading dependencies locally, I've added support for Docker so follow those instructions in "Running the app" and you'll have everything up and running in less than 2 minutes.
 
@@ -75,5 +79,6 @@ $ yarn test:cov
 * 0.1.0
     * The first proper release
     * CHANGE: Minimalist users app using Event Store
-* 0.0.1
-    * Work in progress
+* 0.1.1
+    * Work with role permission
+    * Work with core recognize Vietnamese voice

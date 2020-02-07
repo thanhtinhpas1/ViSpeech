@@ -5,7 +5,7 @@ import { User } from '../models/user.model';
 export class UserRepository {
 
   async createUser(userDto) {
-    const user = new User(undefined);
+    const user = new User(userDto.userId);
     user.setData(userDto);
     user.createUser();
     return user;

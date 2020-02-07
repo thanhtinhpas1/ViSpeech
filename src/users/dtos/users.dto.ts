@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsBoolean, IsNotEmpty, IsEmpty, IsNumber, Allow } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, ObjectIdColumn } from 'typeorm';
 
 export class UserIdRequestParamsDto {
   @IsString()
@@ -10,9 +10,7 @@ export class UserIdRequestParamsDto {
 export class UserDto {
 
   @IsEmpty()
-  @PrimaryGeneratedColumn({
-    name: "id"
-  })
+  @PrimaryGeneratedColumn('increment')
   userId!: number;
 
   @IsString()
