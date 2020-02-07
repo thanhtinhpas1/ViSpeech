@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "build:docker": "docker build --force-rm -t boilerplate-nodejs-cqrs-es-swagger .",
+    "build:docker": "docker build --force-rm -t vispeech .",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
