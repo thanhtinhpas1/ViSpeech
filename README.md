@@ -1,6 +1,6 @@
 # Thesis K16 - Build system recognize Vietnamese voice
-## Trần Thanh Tịnh - 1612704
-## Trần Thị Khánh Linh - 1612339
+#### Trần Thanh Tịnh - 1612704
+#### Trần Thị Khánh Linh - 1612339
 
 <p align="center">
   <img src="https://cdn-images-1.medium.com/max/1200/1*feM_-VHhK670LlEQekesKg.png" width="320" alt="Logo" />
