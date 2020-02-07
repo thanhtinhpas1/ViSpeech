@@ -53,8 +53,8 @@ services:
       - "${CONTAINER_PORT}:7070"
     expose: 
       - ${CONTAINER_PORT}
-    volumes:
-      - "./src:/app/src"
+    # volumes:
+    #   - "./src:/app/src"
     links:
       - eventstore
       - mysql
