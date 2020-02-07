@@ -16,6 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         __dirname + '/../**/*.dto{.ts,.js}',
       ],
       synchronize: true,
+      logger: 'debug'
     }),
     EventStoreModule.forRoot(),
     /** ------------- */
