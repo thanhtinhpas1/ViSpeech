@@ -3,15 +3,15 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique, ObjectIdColumn } from '
 
 export class UserIdRequestParamsDto {
   @IsString()
-  readonly userId!: number;
+  readonly userId!: string;
 }
 
 @Entity("users")
 export class UserDto {
 
   @IsEmpty()
-  @PrimaryGeneratedColumn('increment')
-  userId!: number;
+  @PrimaryGeneratedColumn('uuid')
+  userId!: string;
 
   @IsString()
   @IsNotEmpty()
