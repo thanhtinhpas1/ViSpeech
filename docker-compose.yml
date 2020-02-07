@@ -22,13 +22,14 @@ services:
     ports: 
       - 3306:3306
   vispeech:
+    command: -d
     build:
       context: "."
-    # command: ${CONTAINER_COMMAND}
+    command: ${CONTAINER_COMMAND}
     restart: always
-    # deploy: 
-    #   mode: replicated
-    #   replicas: ${CONTAINER_SCALE}
+    deploy: 
+      mode: replicated
+      replicas: ${CONTAINER_SCALE}
     depends_on:
       - eventstore
       - mysql
