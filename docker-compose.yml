@@ -21,10 +21,7 @@ services:
       MYSQL_DATABASE: vispeech
     ports: 
       - 3306:3306
-    networks:
-      - backend
   vispeech:
-    command: -d
     build:
       context: "."
     command: ${CONTAINER_COMMAND}
@@ -45,9 +42,3 @@ services:
       - "./src:/app/src"
     links:
       - eventstore
-    networks:
-      - backend
-
-networks:
-  backend:
-    driver: bridge
