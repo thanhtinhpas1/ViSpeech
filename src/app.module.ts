@@ -7,10 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'mysql',
       port: 3306,
-      username: 'vispeech',
-      password: 'vispeech',
+      username: 'root',
+      password: 'mysql',
       database: 'vispeech',
       entities: [
         __dirname + '/../**/*.dto{.ts,.js}',
