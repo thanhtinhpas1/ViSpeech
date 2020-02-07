@@ -23,7 +23,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'mysql'
-      MYSQL_DATABASE: 'vispeech'
       MYSQL_USER: 'vispeech'
       MYSQL_PASSWORD: 'vispeech'
     ports: 
