@@ -18,7 +18,7 @@ services:
     networks: 
       - backend 
   # DATABASE - MYSQL
-  db:
+  mysql:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
@@ -63,4 +63,3 @@ services:
 networks:
   backend:
     driver: bridge
-    
