@@ -25,8 +25,6 @@ services:
       MYSQL_DATABASE: vispeech
     ports: 
       - 3306:3306
-    expose: 
-      - 3306
   vispeech:
     build:
       context: "."
