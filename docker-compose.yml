@@ -57,7 +57,7 @@ services:
       - "./src:/app/src"
     links:
       - eventstore
-      - db
+      - mysql
     networks: 
       - backend
 networks:
