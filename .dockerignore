@@ -12,6 +12,7 @@ pids
 
 # Dependency directories
 node_modules/
+*/node_modules/
 
 # 0x directories
 *.0x/
