@@ -1,0 +1,59 @@
+# Documentation
+# https://docs.docker.com/compose/compose-file
+
+version: '3'
+
+services:
+  # EVENT STORE
+  eventstore:
+    image: eventstore/eventstore
+    ports:
+      - 2113:2113
+      - 1113:1113
+    expose:
+      - 2113
+    environment:
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+    network_mode: bridge
+  # DATABASE - MYSQL
+  mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'mysql'
+      MYSQL_USER: 'vispeech'
+      MYSQL_PASSWORD: 'vispeech'
+      MYSQL_DATABASE: 'vispeech'
+    ports: 
+      - 3306:3306
+    expose: 
+      - 3306
+    network_mode: bridge
+  # API - VISPEECH
+  vispeech:
+    build:
+      context: "."
+    command: ${CONTAINER_COMMAND}
+    restart: always
+    # deploy: 
+    #   mode: replicated
+    #   replicas: ${CONTAINER_SCALE}
+    depends_on:
+      - eventstore
+      - mysql
+    # env_file:
+    #   - "./.env"
+    environment:
+      - EVENT_STORE_HOSTNAME=eventstore
+    ports:
+      - 7070:7070
+    expose: 
+      - 7070
+    # volumes:
+    #   - "./src:/app/src"
+    links:
+      - eventstore
+      - mysql
+    network_mode: bridge
