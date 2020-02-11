@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Param, Body, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Delete, Put, Query } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { UserIdRequestParamsDto } from '../dtos/users.dto';
 import { UserDto } from '../dtos/users.dto';
 import { UsersService } from '../services/users.service';
+import { GetUsersQuery } from 'users/queries/impl';
+import { FindUserQuery } from 'users/queries/impl/find-user.query';
 
 @Controller('users')
 @ApiTags('Users')
@@ -41,16 +43,18 @@ export class UsersController {
   @ApiOperation({ tags: ['List Users'] })
   @ApiResponse({ status: 200, description: 'List Users.' })
   @Get()
-  async findUsers(@Param() param) {
-    return this.usersService.findUsers();
+  async findUsers(@Query() usersQuery: GetUsersQuery) {
+    console.log(usersQuery);
+    return this.usersService.findUsers(usersQuery);
   }
 
-  /* TODO: Find User */
+  /* Find User */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Get User'] })
   @ApiResponse({ status: 200, description: 'Get User.' })
-  @Get(':userId')
-  async findOneUser(@Param() userId: UserIdRequestParamsDto) {
-    return this.usersService.findUsers();
+  @Get(':_id')
+  async findOneUser(@Param() userQuery: FindUserQuery) {
+    console.log(userQuery);
+    return this.usersService.findOne(userQuery);
   }
 }

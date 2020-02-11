@@ -1,9 +1,9 @@
 import { IsString, IsEmail, IsBoolean, IsNotEmpty, IsEmpty, IsNumber, Allow } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, Unique, ObjectIdColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, ObjectIdColumn, ObjectID } from 'typeorm';
 
 export class UserIdRequestParamsDto {
   @IsString()
-  readonly userId!: string;
+  userId: string;
 }
 
 @Entity("users")
@@ -11,7 +11,7 @@ export class UserDto {
 
   @IsEmpty()
   @PrimaryGeneratedColumn('uuid')
-  userId!: string;
+  userId!: ObjectID;
 
   @IsString()
   @IsNotEmpty()
@@ -22,7 +22,7 @@ export class UserDto {
   firstName!: string;
 
   @IsString()
-  @IsNotEmpty() 
+  @IsNotEmpty()
   @Column({
     name: "last_name",
     length: 50,
@@ -41,7 +41,7 @@ export class UserDto {
   @Column({
   })
   password!: string;
-  
+
 
   @IsEmail()
   @IsNotEmpty()

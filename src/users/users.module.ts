@@ -15,6 +15,7 @@ import { UserUpdatedEvent } from './events/impl/user-updated.event';
 import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserDto } from './dtos/users.dto';
+import { QueryHandlers } from './queries/handler';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserDto } from './dtos/users.dto';
     UsersSagas,
     ...CommandHandlers,
     ...EventHandlers,
+    ...QueryHandlers,
     UserRepository,
   ],
 })

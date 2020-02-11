@@ -8,11 +8,11 @@ import { join } from 'path';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'mysql',
-      port: 3306,
-      username: 'root',
-      password: 'mysql',
+      type: 'mongodb',
+      host: 'localhost',
+      port: 27017,
+      // username: 'root',
+      // password: 'mysql',
       database: 'vispeech',
       entities: [
         __dirname + '/../**/*.dto{.ts,.js}',
