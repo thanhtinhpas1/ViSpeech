@@ -1,10 +1,10 @@
-import { CommandBus, EventBus, CqrsModule } from '@nestjs/cqrs';
+import { CommandBus, EventBus, CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { OnModuleInit, Module } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
 import { CommandHandlers } from './commands/handlers';
 import { EventHandlers } from './events/handlers';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersController } from './controllers/users.controller';
+import { IndexController } from './controllers/index.controller';
 import { UsersService } from './services/users.service';
 import { UserRepository } from './repository/user.repository';
 import { EventStoreModule } from '../core/event-store/event-store.module';
@@ -16,6 +16,7 @@ import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserDto } from './dtos/users.dto';
 import { QueryHandlers } from './queries/handler';
+import { AuthModule } from 'auth/auth.module';
 
 @Module({
   imports: [
@@ -32,15 +33,17 @@ import { QueryHandlers } from './queries/handler';
     ...QueryHandlers,
     UserRepository,
   ],
+  exports: [UsersService]
 })
 export class UsersModule implements OnModuleInit {
   constructor(
     // private readonly moduleRef: ModuleRef,
     private readonly command$: CommandBus,
+    private readonly query$: QueryBus,
     private readonly event$: EventBus,
     private readonly usersSagas: UsersSagas,
     private readonly eventStore: EventStore,
-  ) {}
+  ) { }
 
   onModuleInit() {
     // this.command$.setModuleRef(this.moduleRef);
@@ -52,6 +55,7 @@ export class UsersModule implements OnModuleInit {
     /** ------------ */
     this.event$.register(EventHandlers);
     this.command$.register(CommandHandlers);
+    this.query$.register(QueryHandlers);
     this.event$.registerSagas([UsersSagas]);
   }
 

@@ -9,5 +9,8 @@ export const Utils = {
     },
     getUuid: () => {
         return uuid();
+    },
+    comparePassword: (oldPassword, newPassword) => {
+        return bcrypt.compare(oldPassword, newPassword);
     }
 }

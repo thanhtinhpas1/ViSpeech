@@ -7,12 +7,16 @@ import { UpdateUserCommand } from '../commands/impl/update-user.command';
 import { DeleteUserCommand } from '../commands/impl/delete-user.command';
 import { GetUsersQuery } from 'users/queries/impl';
 import { FindUserQuery } from 'users/queries/impl/find-user.query';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
+
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
+    @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
   ) { }
 
   async createUser(user: UserDto) {
@@ -43,5 +47,9 @@ export class UsersService {
     var query = new FindUserQuery();
     Object.assign(query, userQuery);
     return await this.queryBus.execute(query);
+  }
+
+  async findByUsername(username: string) {
+    return this.repository.findOne({username: username});
   }
 }
