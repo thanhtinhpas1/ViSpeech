@@ -39,7 +39,7 @@ const AdminLayout = ({ children }) => {
           </div>
           <Footer />
         </div>
-        <div className="fixed-plugin">
+        {/* <div className="fixed-plugin">
           <div className="dropdown show-dropdown">
             <a href="#" data-toggle="dropdown" aria-expanded="false">
               <i className="fa fa-cog fa-2x"> </i>
@@ -82,7 +82,7 @@ const AdminLayout = ({ children }) => {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   )

@@ -91,7 +91,7 @@ const RouteCustomer = ({ currentUser }) => {
             <Redirect to="/" />
           </Route>
         </> */}
-      )}
+      {/* )} */}
     </Switch>
   )
 }
@@ -124,13 +124,27 @@ const RouteAdmin = ({ currentUser }) => {
 
 const App = ({ currentUser }) => {
   useEffect(() => {
-    // loadScript(`${process.env.PUBLIC_URL}/assets/js/all/bootstrap.min.js`)
-    //   .then(script1 => {
-    //     console.log('script bootstrap.min.js is loaded')
-    //   })
-    //   .catch(err => {
-    //     console.error(err.message)
-    //   })
+    loadScript(`${process.env.PUBLIC_URL}/assets/vendors/charts/flot/jquery.flot.js`)
+      .then(script1 => {
+        console.log('script jquery.flot.js is loaded')
+        loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`)
+          .then(script2 => {
+            console.log('script flot-charts.js is loaded')
+          })
+          .catch(err => {
+            console.error(err.message)
+          })
+        loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`)
+          .then(script3 => {
+            console.log('script chartjs-charts.js is loaded')
+          })
+          .catch(err => {
+            console.error(err.message)
+          })
+      })
+      .catch(err => {
+        console.error(err.message)
+      })
     loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`)
       .then(script1 => {
         console.log('script scripta5f5.js is loaded')
@@ -155,20 +169,6 @@ const App = ({ currentUser }) => {
     loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`)
       .then(script1 => {
         console.log('script turbo.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`)
-      .then(script1 => {
-        console.log('script flot-charts.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`)
-      .then(script1 => {
-        console.log('script chartjs-charts.js is loaded')
       })
       .catch(err => {
         console.error(err.message)

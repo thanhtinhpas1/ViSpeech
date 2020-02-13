@@ -1,5 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
+import { TokensModule } from './tokens/tokens.module';
 import { EventStoreModule } from './core/event-store/event-store.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -30,7 +31,8 @@ import { HomeController } from 'app.controllers';
     EventStoreModule.forRoot(),
     /** ------------- */
     UsersModule,
-    AuthModule
+    AuthModule,
+    TokensModule
   ],
   controllers: [HomeController]
 })

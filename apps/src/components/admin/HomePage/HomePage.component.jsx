@@ -400,7 +400,7 @@ const Home = () => {
                           <td>
                             <div className="flag">
                               <img
-                                src={`${process.env.PUBLIC_URL}/images/admin/img/flags/US.png`}
+                                src={`${process.env.PUBLIC_URL}/images/admin/flags/US.png`}
                                 alt=""
                               />
                             </div>
@@ -413,7 +413,7 @@ const Home = () => {
                           <td>
                             <div className="flag">
                               <img
-                                src={`${process.env.PUBLIC_URL}/admin/img/flags/DE.png`}
+                                src={`${process.env.PUBLIC_URL}/images/admin/flags/DE.png`}
                                 alt=""
                               />
                             </div>
@@ -426,7 +426,7 @@ const Home = () => {
                           <td>
                             <div className="flag">
                               <img
-                                src={`${process.env.PUBLIC_URL}/admin/img/flags/AU.png`}
+                                src={`${process.env.PUBLIC_URL}/images/admin/flags/AU.png`}
                                 alt=""
                               />
                             </div>
@@ -439,7 +439,7 @@ const Home = () => {
                           <td>
                             <div className="flag">
                               <img
-                                src={`${process.env.PUBLIC_URL}/admin/img/flags/GB.png`}
+                                src={`${process.env.PUBLIC_URL}/images/admin/flags/GB.png`}
                                 alt=""
                               />
                             </div>
@@ -452,7 +452,7 @@ const Home = () => {
                           <td>
                             <div className="flag">
                               <img
-                                src={`${process.env.PUBLIC_URL}/admin/img/flags/RO.png`}
+                                src={`${process.env.PUBLIC_URL}/images/admin/flags/RO.png`}
                                 alt=""
                               />
                             </div>
@@ -465,7 +465,7 @@ const Home = () => {
                           <td>
                             <div className="flag">
                               <img
-                                src={`${process.env.PUBLIC_URL}/admin/img/flags/BR.png`}
+                                src={`${process.env.PUBLIC_URL}/images/admin/flags/BR.png`}
                                 alt=""
                               />
                             </div>
