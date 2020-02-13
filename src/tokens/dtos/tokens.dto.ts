@@ -1,38 +1,42 @@
-import { IsString, IsEmail, IsBoolean, IsNotEmpty, IsEmpty, IsNumber, Allow } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, Unique, ObjectIdColumn } from 'typeorm';
+import { IsString, IsNotEmpty, IsEmpty } from "class-validator";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ObjectIdColumn,
+  ObjectID,
+  CreateDateColumn,
+  UpdateDateColumn
+} from "typeorm";
 
 export class TokenIdRequestParamsDto {
   @IsString()
-  readonly tokenId!: string;
+  tokenId: string;
 }
 
 @Entity("tokens")
 export class TokenDto {
-
   @IsEmpty()
-  @PrimaryGeneratedColumn('uuid')
-  tokenId!: string;
+  @ObjectIdColumn()
+  _id: ObjectID; // name same with _id column in mongodb
+
+  // @IsEmpty()
+  // // @PrimaryGeneratedColumn('uuid')
+  // tokenId!: string;
 
   @IsString()
   @IsNotEmpty()
-  @Column({
-    name: "token_key",
-    length: 150,
-  })
-  tokenKey!: string;
+  @Column()
+  value: string;
 
-  @IsEmpty()
-  @Column({
-    default: true,
-    name: "firsttime_login_remaining",
-    nullable: true
-  })
-  firstTimeLoginRemaining: boolean;
+  @IsString()
+  @IsNotEmpty()
+  @ObjectIdColumn()
+  userId: ObjectID;
 
-  @IsEmpty()
-  @Column({
-    default: true,
-    nullable: true
-  })
-  enabled: boolean;
+  @CreateDateColumn()
+  created: string;
+
+  @UpdateDateColumn()
+  updated: string;
 }

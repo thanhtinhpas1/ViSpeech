@@ -15,7 +15,7 @@ export class UsersSagas {
       delay(1000),
         map(event => {
           Logger.log('Inside [UsersSagas] Saga', 'UsersSagas');
-          const userId = event.user[0].userId | event.user[0].username;
+          const userId = event.userDto[0]._id;
           return new WelcomeUserCommand(userId);
         }),
       );

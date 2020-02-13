@@ -1,6 +1,6 @@
 import { IsString } from "class-validator";
 
-export class FindUserQuery {
+export class FindTokenQuery {
   @IsString()
   _id: string;
 }

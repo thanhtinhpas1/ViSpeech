@@ -1,31 +1,30 @@
-import { Injectable } from '@nestjs/common';
-import { Token } from '../models/token.model';
+import { Injectable } from "@nestjs/common";
+import { Token } from "../models/token.model";
 
 @Injectable()
 export class TokenRepository {
-
   async createToken(tokenDto) {
-    const token = new Token(tokenDto.tokenId);
+    const token = new Token(tokenDto._id);
     token.setData(tokenDto);
     token.createToken();
     return token;
   }
 
   async updateToken(tokenDto) {
-    const token = new Token(tokenDto.tokenId);
+    const token = new Token(tokenDto._id);
     token.setData(tokenDto);
     token.updateToken();
     return token;
   }
 
-  async deleteToken(tokenDto) {
-    const token = new Token(tokenDto.tokenId);
+  async deleteToken(tokenId) {
+    const token = new Token(tokenId);
     token.deleteToken();
     return token;
   }
 
-  async welcomeToken(tokenDto) {
-    const token = new Token(tokenDto.tokenId);
+  async welcomeToken(tokenId) {
+    const token = new Token(tokenId);
     token.welcomeToken();
     return token;
   }

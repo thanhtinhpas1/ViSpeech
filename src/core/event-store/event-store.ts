@@ -79,7 +79,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
             console.log(data);
             console.log(eventType);
             console.log(content);
-            console.log(this.eventHandlers);
+            // console.log(this.eventHandlers);
             event = this.eventHandlers[eventType](...Object.values(data));
             subject.next(event);
           });

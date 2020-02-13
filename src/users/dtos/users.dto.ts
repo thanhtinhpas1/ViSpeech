@@ -1,5 +1,21 @@
-import { IsString, IsEmail, IsBoolean, IsNotEmpty, IsEmpty, IsNumber, Allow } from 'class-validator';
-import { Entity, PrimaryGeneratedColumn, Column, Unique, ObjectIdColumn, ObjectID } from 'typeorm';
+import {
+  IsString,
+  IsEmail,
+  IsBoolean,
+  IsNotEmpty,
+  IsEmpty,
+  IsNumber
+} from "class-validator";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ObjectIdColumn,
+  ObjectID,
+  Index,
+  CreateDateColumn,
+  UpdateDateColumn
+} from "typeorm";
 
 export class UserIdRequestParamsDto {
   @IsString()
@@ -8,47 +24,39 @@ export class UserIdRequestParamsDto {
 
 @Entity("users")
 export class UserDto {
-
   @IsEmpty()
-  @PrimaryGeneratedColumn('uuid')
-  userId!: ObjectID;
+  @ObjectIdColumn()
+  _id: ObjectID; // name same with _id column in mongodb
+
+  // @IsEmpty()
+  // @PrimaryGeneratedColumn('uuid')
+  // userId!: ObjectID;
 
   @IsString()
   @IsNotEmpty()
-  @Column({
-    name: "first_name",
-    length: 50,
-  })
-  firstName!: string;
+  @Column()
+  firstName: string;
 
   @IsString()
   @IsNotEmpty()
-  @Column({
-    name: "last_name",
-    length: 50,
-  })
-  lastName!: string;
+  @Column()
+  lastName: string;
 
   @IsString()
   @IsNotEmpty()
-  @Column({
-    length: 50,
-  })
-  username!: string;
+  @Index({ unique: true })
+  @Column()
+  username: string;
 
   @IsString()
   @IsNotEmpty()
-  @Column({
-  })
-  password!: string;
-
+  @Column()
+  password: string;
 
   @IsEmail()
   @IsNotEmpty()
-  @Column({
-    length: 50,
-  })
-  email!: string;
+  @Column()
+  email: string;
 
   @IsEmpty()
   @Column({
@@ -65,4 +73,9 @@ export class UserDto {
   })
   enabled: boolean;
 
+  @CreateDateColumn()
+  created: string;
+
+  @UpdateDateColumn()
+  updated: string;
 }

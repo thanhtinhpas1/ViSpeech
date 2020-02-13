@@ -1,21 +1,20 @@
-import { EventPublisher, ICommandHandler, CommandHandler } from '@nestjs/cqrs';
-import { DeleteTokenCommand } from '../impl/delete-token.command';
-import { TokenRepository } from '../../repository/token.repository';
-import { Logger } from '@nestjs/common';
+import { EventPublisher, ICommandHandler, CommandHandler } from "@nestjs/cqrs";
+import { DeleteTokenCommand } from "../impl/delete-token.command";
+import { TokenRepository } from "../../repository/token.repository";
+import { Logger } from "@nestjs/common";
 
 @CommandHandler(DeleteTokenCommand)
-export class DeleteTokenHandler
-  implements ICommandHandler<DeleteTokenCommand> {
+export class DeleteTokenHandler implements ICommandHandler<DeleteTokenCommand> {
   constructor(
     private readonly repository: TokenRepository,
-    private readonly publisher: EventPublisher,
+    private readonly publisher: EventPublisher
   ) {}
 
   async execute(command: DeleteTokenCommand) {
-    Logger.log('Async DeleteTokenHandler...', 'DeleteTokenCommand');
-    const {tokenDto} = command;
+    Logger.log("Async DeleteTokenHandler...", "DeleteTokenCommand");
+    const { tokenId } = command;
     const token = this.publisher.mergeObjectContext(
-      await this.repository.deleteToken(tokenDto),
+      await this.repository.deleteToken(tokenId.tokenId)
     );
     token.commit();
   }

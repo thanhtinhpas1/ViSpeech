@@ -1,20 +1,29 @@
-import { Controller, Get, Post, Param, Body, Delete, Put, Query } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
-import { UserIdRequestParamsDto } from '../dtos/users.dto';
-import { UserDto } from '../dtos/users.dto';
-import { UsersService } from '../services/users.service';
-import { GetUsersQuery } from 'users/queries/impl';
-import { FindUserQuery } from 'users/queries/impl/find-user.query';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Delete,
+  Put,
+  Query
+} from "@nestjs/common";
+import { ApiTags, ApiResponse, ApiOperation } from "@nestjs/swagger";
+import { UserIdRequestParamsDto } from "../dtos/users.dto";
+import { UserDto } from "../dtos/users.dto";
+import { UsersService } from "../services/users.service";
+import { GetUsersQuery } from "users/queries/impl/get-users.query";
+import { FindUserQuery } from "users/queries/impl/find-user.query";
 
-@Controller('users')
-@ApiTags('Users')
+@Controller("users")
+@ApiTags("Users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   /* Create User */
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Create User'] })
-  @ApiResponse({ status: 200, description: 'Create User.' })
+  @ApiOperation({ tags: ["Create User"] })
+  @ApiResponse({ status: 200, description: "Create User." })
   @Post()
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
     return this.usersService.createUser(userDto);
@@ -22,39 +31,40 @@ export class UsersController {
 
   /* Update User */
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Update User'] })
-  @ApiResponse({ status: 200, description: 'Update User.' })
-  @Put(':userId')
-  async updateUser(@Param() userId: UserIdRequestParamsDto, @Body() userDto: UserDto) {
-    return this.usersService.updateUser({ ...userId, ...userDto });
+  @ApiOperation({ tags: ["Update User"] })
+  @ApiResponse({ status: 200, description: "Update User." })
+  @Put(":userId")
+  async updateUser(
+    @Param() userId: UserIdRequestParamsDto,
+    @Body() userDto: UserDto
+  ) {
+    return this.usersService.updateUser({ _id: userId.userId, ...userDto });
   }
 
   /* Delete User */
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Delete User'] })
-  @ApiResponse({ status: 200, description: 'Delete User.' })
-  @Delete(':userId')
+  @ApiOperation({ tags: ["Delete User"] })
+  @ApiResponse({ status: 200, description: "Delete User." })
+  @Delete(":userId")
   async deleteUser(@Param() userId: UserIdRequestParamsDto) {
     return this.usersService.deleteUser(userId);
   }
 
   /* List Users */
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ['List Users'] })
-  @ApiResponse({ status: 200, description: 'List Users.' })
+  @ApiOperation({ tags: ["List Users"] })
+  @ApiResponse({ status: 200, description: "List Users." })
   @Get()
-  async findUsers(@Query() usersQuery: GetUsersQuery) {
-    console.log(usersQuery);
-    return this.usersService.findUsers(usersQuery);
+  async findUsers(@Query() getUsersQuery: GetUsersQuery) {
+    return this.usersService.findUsers(getUsersQuery);
   }
 
   /* Find User */
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Get User'] })
-  @ApiResponse({ status: 200, description: 'Get User.' })
-  @Get(':_id')
-  async findOneUser(@Param() userQuery: FindUserQuery) {
-    console.log(userQuery);
-    return this.usersService.findOne(userQuery);
+  @ApiOperation({ tags: ["Get User"] })
+  @ApiResponse({ status: 200, description: "Get User." })
+  @Get(":_id")
+  async findOneUser(@Param() findUserQuery: FindUserQuery) {
+    return this.usersService.findOne(findUserQuery);
   }
 }
