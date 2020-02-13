@@ -1,6 +1,5 @@
 import { CommandBus, EventBus, CqrsModule } from '@nestjs/cqrs';
 import { OnModuleInit, Module } from '@nestjs/common';
-import { ModuleRef } from '@nestjs/core';
 import { CommandHandlers } from './commands/handlers';
 import { EventHandlers } from './events/handlers';
 import { TokensSagas } from './sagas/tokens.sagas';
@@ -33,7 +32,6 @@ import { TokenDto } from './dtos/tokens.dto';
 })
 export class TokensModule implements OnModuleInit {
   constructor(
-    // private readonly moduleRef: ModuleRef,
     private readonly command$: CommandBus,
     private readonly event$: EventBus,
     private readonly tokensSagas: TokensSagas,
@@ -41,9 +39,6 @@ export class TokensModule implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    // this.command$.setModuleRef(this.moduleRef);
-    // this.event$.setModuleRef(this.moduleRef);
-    /** ------------ */
     this.eventStore.setEventHandlers(this.eventHandlers);
     this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
     this.event$.publisher = this.eventStore;

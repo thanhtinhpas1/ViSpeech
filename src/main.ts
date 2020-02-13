@@ -14,6 +14,7 @@ async function bootstrap() {
     .setDescription(config.DESCRIPTION)
     .setVersion(config.VERSION)
     .addTag('vispeech')
+    .setBasePath(config.PREFIX)
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, documentOptions);

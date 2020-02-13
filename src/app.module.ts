@@ -5,7 +5,6 @@ import { EventStoreModule } from './core/event-store/event-store.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from 'auth/auth.module';
 import { HomeController } from 'app.controllers';
 

@@ -18,6 +18,7 @@ const eventStoreHostUrl = config.EVENT_STORE_SETTINGS.protocol +
  */
 @Injectable()
 export class EventStore implements IEventPublisher, IMessageSource {
+  
   private eventStore: any;
   private eventHandlers: object;
   private category: string;
@@ -75,6 +76,10 @@ export class EventStore implements IEventPublisher, IMessageSource {
             const content = result['atom:entry']['atom:content'][0];
             const eventType = content.eventType[0];
             const data = content.data[0];
+            console.log(data);
+            console.log(eventType);
+            console.log(content);
+            console.log(this.eventHandlers);
             event = this.eventHandlers[eventType](...Object.values(data));
             subject.next(event);
           });
@@ -94,6 +99,8 @@ export class EventStore implements IEventPublisher, IMessageSource {
   }
 
   setEventHandlers(eventHandlers) {
-    this.eventHandlers = eventHandlers;
+    // this.eventHandlers = eventHandlers;
+    // Object.assign(this.eventHandlers, eventHandlers);
+    this.eventHandlers = {...this.eventHandlers, ...eventHandlers};
   }
 }

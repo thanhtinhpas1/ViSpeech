@@ -4,8 +4,7 @@ import { UserRepository } from '../../repository/user.repository';
 import { Logger } from '@nestjs/common';
 
 @CommandHandler(CreateUserCommand)
-export class CreateUserHandler
-  implements ICommandHandler<CreateUserCommand> {
+export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(
     private readonly repository: UserRepository,
     private readonly publisher: EventPublisher,

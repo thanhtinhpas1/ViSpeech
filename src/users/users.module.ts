@@ -4,7 +4,6 @@ import { CommandHandlers } from './commands/handlers';
 import { EventHandlers } from './events/handlers';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersController } from './controllers/users.controller';
-import { IndexController } from './controllers/index.controller';
 import { UsersService } from './services/users.service';
 import { UserRepository } from './repository/user.repository';
 import { EventStoreModule } from '../core/event-store/event-store.module';
@@ -16,7 +15,6 @@ import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserDto } from './dtos/users.dto';
 import { QueryHandlers } from './queries/handler';
-import { AuthModule } from 'auth/auth.module';
 
 @Module({
   imports: [
@@ -37,7 +35,6 @@ import { AuthModule } from 'auth/auth.module';
 })
 export class UsersModule implements OnModuleInit {
   constructor(
-    // private readonly moduleRef: ModuleRef,
     private readonly command$: CommandBus,
     private readonly query$: QueryBus,
     private readonly event$: EventBus,
@@ -46,8 +43,6 @@ export class UsersModule implements OnModuleInit {
   ) { }
 
   onModuleInit() {
-    // this.command$.setModuleRef(this.moduleRef);
-    // this.event$.setModuleRef(this.moduleRef);
     /** ------------ */
     this.eventStore.setEventHandlers(this.eventHandlers);
     this.eventStore.bridgeEventsTo((this.event$ as any).subject$);

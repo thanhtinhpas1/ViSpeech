@@ -17,7 +17,6 @@ export class Token extends AggregateRoot {
   }
 
   createToken() {
-    Logger.log(this.data, 'CreateTokenModel')
     this.apply(new TokenCreatedEvent(this.data));
   }
 
