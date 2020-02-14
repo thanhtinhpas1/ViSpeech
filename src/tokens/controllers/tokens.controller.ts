@@ -38,7 +38,6 @@ export class TokensController {
     @Param() tokenId: TokenIdRequestParamsDto,
     @Body() tokenDto: TokenDto
   ) {
-    console.log("controller token id", tokenId)
     return this.tokensService.updateToken({
       _id: tokenId.tokenId,
       ...tokenDto

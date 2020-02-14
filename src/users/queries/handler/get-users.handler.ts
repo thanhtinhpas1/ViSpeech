@@ -1,4 +1,4 @@
-import { GetUsersQuery } from "../impl";
+import { GetUsersQuery } from "../impl/get-users.query";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";

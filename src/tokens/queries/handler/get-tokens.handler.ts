@@ -1,4 +1,4 @@
-import { GetTokensQuery } from "../impl";
+import { GetTokensQuery } from "../impl/get-tokens.query";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";

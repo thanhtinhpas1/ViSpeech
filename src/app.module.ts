@@ -1,6 +1,7 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TokensModule } from './tokens/tokens.module';
+import { OrdersModule } from './orders/orders.module';
 import { EventStoreModule } from './core/event-store/event-store.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -31,7 +32,8 @@ import { HomeController } from 'app.controllers';
     /** ------------- */
     UsersModule,
     AuthModule,
-    TokensModule
+    TokensModule,
+    OrdersModule
   ],
   controllers: [HomeController]
 })

@@ -9,28 +9,28 @@ import {
   UpdateDateColumn
 } from "typeorm";
 
-export class TokenIdRequestParamsDto {
+export class OrderIdRequestParamsDto {
   @IsString()
-  tokenId: string;
+  orderId: string;
 }
 
-@Entity("tokens")
-export class TokenDto {
+@Entity("orders")
+export class OrderDto {
   @IsEmpty()
   @ObjectIdColumn()
   _id: ObjectID; // name same with _id column in mongodb
 
   // @IsEmpty()
   // // @PrimaryGeneratedColumn('uuid')
-  // tokenId!: string;
+  // orderId!: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   @Column()
-  value: string;
+  tokenId: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   @Column()
   userId: string;
 
