@@ -1,5 +1,5 @@
 import { CommandBus, EventBus, CqrsModule, QueryBus } from "@nestjs/cqrs";
-import { OnModuleInit, Module } from "@nestjs/common";
+import { OnModuleInit, Module, forwardRef } from "@nestjs/common";
 import { CommandHandlers } from "./commands/handlers";
 import { EventHandlers } from "./events/handlers";
 import { UsersSagas } from "./sagas/users.sagas";
@@ -15,21 +15,33 @@ import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserDto } from "./dtos/users.dto";
 import { QueryHandlers } from "./queries/handler";
+import { AuthModule } from "auth/auth.module";
+import { TokensModule } from "tokens/tokens.module";
+import { TokensService } from "tokens/services/tokens.service";
+import { TokenCreatedEvent } from "tokens/events/impl/token-created.event";
+import { TokenRepository } from "tokens/repository/token.repository";
+import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserDto]),
+    TypeOrmModule.forFeature([UserDto, TokenDto]),
     CqrsModule,
-    EventStoreModule.forFeature()
+    EventStoreModule.forFeature(),
+    // TokensModule,
+    forwardRef(() => AuthModule)
   ],
   controllers: [UsersController],
   providers: [
+    TokensService,
     UsersService,
     UsersSagas,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,
+
+    /*** REPOSITORY */
     UserRepository
+    // TokenRepository,
   ],
   exports: [UsersService]
 })

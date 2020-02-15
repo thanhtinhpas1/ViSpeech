@@ -9,6 +9,7 @@ import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { Utils } from "utils";
 
 @Injectable()
 export class UsersService {
@@ -19,6 +20,7 @@ export class UsersService {
   ) {}
 
   async createUser(userDto: UserDto) {
+    userDto.userId = Utils.getUuid();
     return await this.commandBus.execute(new CreateUserCommand(userDto));
   }
 

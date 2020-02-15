@@ -4,14 +4,14 @@ import { Order } from "../models/order.model";
 @Injectable()
 export class OrderRepository {
   async createOrder(orderDto) {
-    const order = new Order(orderDto._id);
+    const order = new Order(orderDto.tokenId);
     order.setData(orderDto);
     order.createOrder();
     return order;
   }
 
   async updateOrder(orderDto) {
-    const order = new Order(orderDto._id);
+    const order = new Order(orderDto.tokenId);
     order.setData(orderDto);
     order.updateOrder();
     return order;

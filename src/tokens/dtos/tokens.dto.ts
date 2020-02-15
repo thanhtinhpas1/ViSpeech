@@ -15,6 +15,11 @@ export class TokenIdRequestParamsDto {
 @Entity("tokens")
 export class TokenDto {
 
+  constructor(value, userId) {
+    this.value = value;
+    this.userId = userId;
+  }
+
   @IsEmpty()
   @PrimaryGeneratedColumn('uuid', {
     name: 'id'

@@ -14,7 +14,7 @@ import { RolesModule } from 'roles/roles.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '13.230.185.171',
       port: 3306,
       username: 'root',
       password: 'mysql',
