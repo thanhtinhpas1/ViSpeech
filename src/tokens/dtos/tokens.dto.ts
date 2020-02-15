@@ -1,30 +1,25 @@
 import { IsString, IsNotEmpty, IsEmpty } from "class-validator";
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn
-} from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
+import { BaseEntityDto } from "base/base-entity.dto";
+import { TokenTypeDto } from "./token-types.dto";
 
 export class TokenIdRequestParamsDto {
+  constructor(tokenId) {
+    this.id = tokenId;
+  }
+
   @IsString()
-  tokenId: string;
+  @IsNotEmpty()
+  id: string;
 }
 
 @Entity("tokens")
-export class TokenDto {
-
+export class TokenDto extends BaseEntityDto {
   constructor(value, userId) {
+    super();
     this.value = value;
     this.userId = userId;
   }
-
-  @IsEmpty()
-  @PrimaryGeneratedColumn('uuid', {
-    name: 'id'
-  })
-  tokenId: string; 
 
   @IsString()
   @IsNotEmpty()
@@ -34,17 +29,10 @@ export class TokenDto {
   @IsString()
   @IsNotEmpty()
   @Column({
-    name: 'user_id'
+    name: "user_id"
   })
   userId: string;
 
-  @CreateDateColumn({
-    name: 'created_date'
-  })
-  created: string;
-
-  @UpdateDateColumn({
-    name: 'updated_date'
-  })
-  updated: string;
+  @ManyToOne(type => TokenTypeDto, tokenTypeDto => tokenTypeDto.tokens)
+  tokenType: TokenTypeDto;
 }

@@ -23,8 +23,8 @@ export class OrdersService {
     return await this.commandBus.execute(new UpdateOrderCommand(orderDto));
   }
 
-  async deleteOrder(orderId: OrderIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteOrderCommand(orderId));
+  async deleteOrder(orderIdDto: OrderIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteOrderCommand(orderIdDto));
   }
 
   async findOrders(getOrdersQuery: GetOrdersQuery) {

@@ -20,7 +20,7 @@ export class UsersService {
   ) {}
 
   async createUser(userDto: UserDto) {
-    userDto.userId = Utils.getUuid();
+    userDto.id = Utils.getUuid();
     return await this.commandBus.execute(new CreateUserCommand(userDto));
   }
 
@@ -28,8 +28,8 @@ export class UsersService {
     return await this.commandBus.execute(new UpdateUserCommand(userDto));
   }
 
-  async deleteUser(userId: UserIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteUserCommand(userId));
+  async deleteUser(userIdDto: UserIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteUserCommand(userIdDto));
   }
 
   async findUsers(getUsersQuery: GetUsersQuery) {

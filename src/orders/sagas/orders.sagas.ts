@@ -14,7 +14,7 @@ export class OrdersSagas {
       delay(1000),
       map(event => {
         Logger.log("Inside [OrdersSagas] Saga", "OrdersSagas");
-        const orderId = event.orderDto[0].tokenId;
+        const orderId = event.orderDto[0].id;
         return new WelcomeOrderCommand(orderId);
       })
     );

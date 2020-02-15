@@ -1,50 +1,36 @@
 import { IsString, IsNotEmpty, IsEmpty } from "class-validator";
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn
-} from "typeorm";
+import { Entity, Column } from "typeorm";
+import { BaseEntityDto } from "base/base-entity.dto";
 
 export class OrderIdRequestParamsDto {
+  constructor(orderId) {
+    this.id = orderId;
+  }
+
   @IsString()
-  orderId: string;
+  @IsNotEmpty()
+  id: string;
 }
 
 @Entity("orders")
-export class OrderDto {
-
-  @IsEmpty()
-  @PrimaryGeneratedColumn('uuid', {
-    name: 'id'
-  })
-  orderId: string; 
+export class OrderDto extends BaseEntityDto {
+  constructor(tokenId, userId) {
+    super();
+    this.tokenId = tokenId;
+    this.userId = userId;
+  }
 
   @IsNotEmpty()
   @IsString()
   @Column({
-    name: 'token_id'
+    name: "token_id"
   })
   tokenId: string;
 
   @IsNotEmpty()
   @IsString()
   @Column({
-    name: 'user_id'
+    name: "user_id"
   })
   userId: string;
-
-  @IsEmpty()
-  @CreateDateColumn({
-    name: 'created_date',
-    nullable: true
-  })
-  created: string;
-
-  @UpdateDateColumn({
-    name: 'updated_date',
-    nullable: true
-  })
-  updated: string;
 }

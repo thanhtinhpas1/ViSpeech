@@ -35,11 +35,11 @@ export class TokensController {
   @ApiResponse({ status: 200, description: "Update Token." })
   @Put(":tokenId")
   async updateToken(
-    @Param() tokenId: TokenIdRequestParamsDto,
+    @Param() tokenIdDto: TokenIdRequestParamsDto,
     @Body() tokenDto: TokenDto
   ) {
     return this.tokensService.updateToken({
-      tokenId: tokenId.tokenId,
+      id: tokenIdDto.id,
       ...tokenDto
     });
   }
@@ -49,8 +49,8 @@ export class TokensController {
   @ApiOperation({ tags: ["Delete Token"] })
   @ApiResponse({ status: 200, description: "Delete Token." })
   @Delete(":tokenId")
-  async deleteToken(@Param() tokenId: TokenIdRequestParamsDto) {
-    return this.tokensService.deleteToken(tokenId);
+  async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
+    return this.tokensService.deleteToken(tokenIdDto);
   }
 
   /* List Tokens */

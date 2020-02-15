@@ -14,7 +14,7 @@ export class TokensSagas {
   //     delay(1000),
   //     map(event => {
   //       Logger.log("Inside [TokensSagas] Saga", "TokensSagas");
-  //       const tokenId = event.tokenDto[0].tokenId;
+  //       const tokenId = event.tokenDto[0].id;
   //       return new WelcomeTokenCommand(tokenId);
   //     })
   //   );

@@ -12,7 +12,7 @@ export class UserRepository {
   }
 
   async updateUser(userDto) {
-    const user = new User(userDto.userId);
+    const user = new User(userDto.id);
     user.setData(userDto);
     user.updateUser();
     return user;

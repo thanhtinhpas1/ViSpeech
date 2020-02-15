@@ -17,11 +17,11 @@ export class UserWelcomedHandler implements IEventHandler<UserWelcomedEvent> {
   handle(event: UserWelcomedEvent) {
     try {
       Logger.log(event, "UserWelcomedEvent");
-      var tokenValue = this.authService.generate_token_one(event.userId);
-      var entity = new TokenDto(tokenValue, event.userId);
-      this.tokensService.createToken(entity);
+      const tokenValue = this.authService.generate_token_with_userId(event.userId);
+      const tokenDto = new TokenDto(tokenValue, event.userId);
+      this.tokensService.createToken(tokenDto);
     } catch (error) {
-      Logger.error(error, "UserWelcomeHandler");
+      Logger.error(error, "UserWelcomedHandler");
     }
   }
 }

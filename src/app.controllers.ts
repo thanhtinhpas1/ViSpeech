@@ -13,7 +13,8 @@ export class HomeController {
     @UseGuards(AuthGuard('local'))
     @Post('login')
     async login(@Request() req) {
-        return this.authService.login(req.user);
+        const { id, username } = req.user;
+        return this.authService.generate_token(id, username);
     }
 
     @UseGuards(AuthGuard('jwt'))
