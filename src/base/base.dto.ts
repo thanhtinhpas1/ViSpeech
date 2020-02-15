@@ -7,13 +7,17 @@ export class BaseDto {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
+    @IsEmpty()
     @CreateDateColumn({
         name: 'created_date',
+        nullable: true
     })
     createdDate: Date
 
+    @IsEmpty()
     @UpdateDateColumn({
         name: 'updated_date',
+        nullable: true
     })
     updatedDate;
 }

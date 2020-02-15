@@ -11,8 +11,10 @@ import {
   Column,
   Index,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from "typeorm";
+import { RoleDto } from "roles/dtos/roles.dto";
 
 export class UserIdRequestParamsDto {
   @IsString()
@@ -73,13 +75,26 @@ export class UserDto {
   })
   enabled: boolean;
 
+  @IsEmpty()
+  @Column({
+    name: 'roles_id',
+  })
+  @OneToMany(type => RoleDto, role => role.id, {
+    eager: true,
+  })
+  roles: string
+
+  @IsEmpty()
   @CreateDateColumn({
-    name: 'created_date'
+    name: 'created_date',
+    nullable: true
   })
   created: string;
 
+  @IsEmpty()
   @UpdateDateColumn({
-    name: 'updated_date'
+    name: 'updated_date',
+    nullable: true
   })
   updated: string;
 }

@@ -3,8 +3,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ObjectIdColumn,
-  ObjectID,
   CreateDateColumn,
   UpdateDateColumn
 } from "typeorm";
@@ -37,13 +35,16 @@ export class OrderDto {
   })
   userId: string;
 
+  @IsEmpty()
   @CreateDateColumn({
-    name: 'created_date'
+    name: 'created_date',
+    nullable: true
   })
   created: string;
 
   @UpdateDateColumn({
-    name: 'updated_date'
+    name: 'updated_date',
+    nullable: true
   })
   updated: string;
 }
