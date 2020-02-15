@@ -8,20 +8,21 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from 'auth/auth.module';
 import { HomeController } from 'app.controllers';
+import { RolesModule } from 'roles/roles.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mongodb',
+      type: 'mysql',
       host: 'localhost',
-      port: 27017,
-      // username: 'root',
-      // password: 'mysql',
+      port: 3306,
+      username: 'root',
+      password: 'mysql',
       database: 'vispeech',
       entities: [
         __dirname + '/../**/*.dto{.ts,.js}',
       ],
-      useUnifiedTopology: true,
+      extra: {"charset": "utf8mb4"},
       synchronize: true,
       logger: 'debug',
     }),
@@ -33,7 +34,8 @@ import { HomeController } from 'app.controllers';
     UsersModule,
     AuthModule,
     TokensModule,
-    OrdersModule
+    OrdersModule,
+    RolesModule
   ],
   controllers: [HomeController]
 })

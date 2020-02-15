@@ -3,8 +3,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ObjectIdColumn,
-  ObjectID,
   CreateDateColumn,
   UpdateDateColumn
 } from "typeorm";
@@ -16,13 +14,12 @@ export class TokenIdRequestParamsDto {
 
 @Entity("tokens")
 export class TokenDto {
-  @IsEmpty()
-  @ObjectIdColumn()
-  _id: ObjectID; // name same with _id column in mongodb
 
-  // @IsEmpty()
-  // // @PrimaryGeneratedColumn('uuid')
-  // tokenId!: string;
+  @IsEmpty()
+  @PrimaryGeneratedColumn('uuid', {
+    name: 'id'
+  })
+  tokenId: string; 
 
   @IsString()
   @IsNotEmpty()
@@ -31,12 +28,18 @@ export class TokenDto {
 
   @IsString()
   @IsNotEmpty()
-  @Column()
+  @Column({
+    name: 'user_id'
+  })
   userId: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_date'
+  })
   created: string;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_date'
+  })
   updated: string;
 }

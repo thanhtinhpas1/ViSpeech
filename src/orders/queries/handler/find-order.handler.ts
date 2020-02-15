@@ -4,7 +4,6 @@ import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderDto } from "orders/dtos/orders.dto";
 import { Repository } from "typeorm";
-import * as mongodb from 'mongodb';
 
 @QueryHandler(FindOrderQuery)
 export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
@@ -12,9 +11,7 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
 
     execute(query: FindOrderQuery): Promise<any> {
         Logger.log("ASync FindOrderQuery...");
-        return this.repository.find({
-            where: { _id: new mongodb.ObjectID(query._id) }
-        })
+        return this.repository.findOne(query._id)
     }
 
 }

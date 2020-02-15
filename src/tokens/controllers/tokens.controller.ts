@@ -39,7 +39,7 @@ export class TokensController {
     @Body() tokenDto: TokenDto
   ) {
     return this.tokensService.updateToken({
-      _id: tokenId.tokenId,
+      tokenId: tokenId.tokenId,
       ...tokenDto
     });
   }

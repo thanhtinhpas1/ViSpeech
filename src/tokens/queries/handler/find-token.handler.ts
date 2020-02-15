@@ -4,7 +4,6 @@ import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository } from "typeorm";
-import * as mongodb from 'mongodb';
 
 @QueryHandler(FindTokenQuery)
 export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
@@ -12,9 +11,7 @@ export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
 
     execute(query: FindTokenQuery): Promise<any> {
         Logger.log("ASync FindTokenQuery...");
-        return this.repository.find({
-            where: { _id: new mongodb.ObjectID(query._id) }
-        })
+        return this.repository.findOne(query._id);
     }
 
 }

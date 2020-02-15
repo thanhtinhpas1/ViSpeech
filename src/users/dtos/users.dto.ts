@@ -1,17 +1,14 @@
 import {
   IsString,
   IsEmail,
-  IsBoolean,
   IsNotEmpty,
   IsEmpty,
-  IsNumber
 } from "class-validator";
+
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ObjectIdColumn,
-  ObjectID,
   Index,
   CreateDateColumn,
   UpdateDateColumn
@@ -24,22 +21,25 @@ export class UserIdRequestParamsDto {
 
 @Entity("users")
 export class UserDto {
+  
   @IsEmpty()
-  @ObjectIdColumn()
-  _id: ObjectID; // name same with _id column in mongodb
-
-  // @IsEmpty()
-  // @PrimaryGeneratedColumn('uuid')
-  // userId!: ObjectID;
+  @PrimaryGeneratedColumn('uuid', {
+    name: 'id'
+  })
+  userId: string;
 
   @IsString()
   @IsNotEmpty()
-  @Column()
+  @Column({
+    name: 'first_name'
+  })
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
-  @Column()
+  @Column({
+    name: 'last_name'
+  })
   lastName: string;
 
   @IsString()
@@ -73,9 +73,13 @@ export class UserDto {
   })
   enabled: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_date'
+  })
   created: string;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_date'
+  })
   updated: string;
 }

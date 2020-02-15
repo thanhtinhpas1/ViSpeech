@@ -38,7 +38,7 @@ export class UsersController {
     @Param() userId: UserIdRequestParamsDto,
     @Body() userDto: UserDto
   ) {
-    return this.usersService.updateUser({ _id: userId.userId, ...userDto });
+    return this.usersService.updateUser({ userId: userId.userId, ...userDto });
   }
 
   /* Delete User */

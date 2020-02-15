@@ -39,7 +39,7 @@ export class OrdersController {
     @Body() orderDto: OrderDto
   ) {
     return this.ordersService.updateOrder({
-      _id: orderId.orderId,
+      orderId: orderId.orderId,
       ...orderDto
     });
   }

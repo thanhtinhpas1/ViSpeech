@@ -16,27 +16,34 @@ export class OrderIdRequestParamsDto {
 
 @Entity("orders")
 export class OrderDto {
-  @IsEmpty()
-  @ObjectIdColumn()
-  _id: ObjectID; // name same with _id column in mongodb
 
-  // @IsEmpty()
-  // // @PrimaryGeneratedColumn('uuid')
-  // orderId!: string;
+  @IsEmpty()
+  @PrimaryGeneratedColumn('uuid', {
+    name: 'id'
+  })
+  orderId: string; 
 
   @IsNotEmpty()
   @IsString()
-  @Column()
+  @Column({
+    name: 'token_id'
+  })
   tokenId: string;
 
   @IsNotEmpty()
   @IsString()
-  @Column()
+  @Column({
+    name: 'user_id'
+  })
   userId: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_date'
+  })
   created: string;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_date'
+  })
   updated: string;
 }
