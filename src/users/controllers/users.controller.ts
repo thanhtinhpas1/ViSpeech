@@ -36,10 +36,10 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "Update User." })
   @Put(":userId")
   async updateUser(
-    @Param() userId: UserIdRequestParamsDto,
+    @Param() userIdDto: UserIdRequestParamsDto,
     @Body() userDto: UserDto
   ) {
-    return this.usersService.updateUser({ userId: userId.userId, ...userDto });
+    return this.usersService.updateUser({ id: userIdDto.id, ...userDto });
   }
 
   /* Delete User */
@@ -47,8 +47,8 @@ export class UsersController {
   @ApiOperation({ tags: ["Delete User"] })
   @ApiResponse({ status: 200, description: "Delete User." })
   @Delete(":userId")
-  async deleteUser(@Param() userId: UserIdRequestParamsDto) {
-    return this.usersService.deleteUser(userId);
+  async deleteUser(@Param() userIdDto: UserIdRequestParamsDto) {
+    return this.usersService.deleteUser(userIdDto);
   }
 
   /* List Users */

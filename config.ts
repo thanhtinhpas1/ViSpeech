@@ -20,11 +20,11 @@ const configs = {
     API_EXPLORER_PATH: process.env.APP_API_EXPLORER_PATH || '/api',
     // Server
     HOST: process.env.APP_HOST || '0.0.0.0',
-    PORT: process.env.APP_PORT || 7070,
+    PORT: process.env.APP_PORT || 7071,
     // Event Store
     EVENT_STORE_SETTINGS: {
       protocol: process.env.EVENT_STORE_PROTOCOL || 'http',
-      hostname: process.env.EVENT_STORE_HOSTNAME || '0.0.0.0',
+      hostname: process.env.EVENT_STORE_HOSTNAME || '13.230.185.171',
       tcpPort: process.env.EVENT_STORE_TCP_PORT ||  1113,
       httpPort: process.env.EVENT_STORE_HTTP_PORT ||  2113,
       credentials: {

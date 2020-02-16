@@ -1,9 +1,9 @@
 import { Entity, Column } from "typeorm";
-import { BaseDto } from "base/base.dto";
 import { IsString, IsIP, IsNumber, IsPositive } from "class-validator";
+import { BaseEntityDto } from "base/base-entity.dto";
 
 @Entity('requests')
-export class RequestDto extends BaseDto {
+export class RequestDto extends BaseEntityDto {
 
     @IsString()
     @Column({

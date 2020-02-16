@@ -30,7 +30,8 @@ import { QueryHandlers } from "./queries/handler";
     ...EventHandlers,
     ...QueryHandlers,
     TokenRepository
-  ]
+  ],
+  exports: [TokensService]
 })
 export class TokensModule implements OnModuleInit {
   constructor(

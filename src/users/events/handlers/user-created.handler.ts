@@ -12,10 +12,10 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
   ) {}
 
-  handle(event: UserCreatedEvent) {
+  async handle(event: UserCreatedEvent) {
     Logger.log(event, "UserCreatedEvent");
     const user = event.userDto[0];
     user.password = Utils.hashPassword(user.password[0]);
-    this.repository.save(user);
+    return await this.repository.save(user);
   }
 }

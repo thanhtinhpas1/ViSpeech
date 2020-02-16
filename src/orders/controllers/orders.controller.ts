@@ -37,11 +37,11 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: "Update Order." })
   @Put(":orderId")
   async updateOrder(
-    @Param() orderId: OrderIdRequestParamsDto,
+    @Param() orderIdDto: OrderIdRequestParamsDto,
     @Body() orderDto: OrderDto
   ) {
     return this.ordersService.updateOrder({
-      orderId: orderId.orderId,
+      id: orderIdDto.id,
       ...orderDto
     });
   }
@@ -51,8 +51,8 @@ export class OrdersController {
   @ApiOperation({ tags: ["Delete Order"] })
   @ApiResponse({ status: 200, description: "Delete Order." })
   @Delete(":orderId")
-  async deleteOrder(@Param() orderId: OrderIdRequestParamsDto) {
-    return this.ordersService.deleteOrder(orderId);
+  async deleteOrder(@Param() orderIdDto: OrderIdRequestParamsDto) {
+    return this.ordersService.deleteOrder(orderIdDto);
   }
 
   /* List Orders */

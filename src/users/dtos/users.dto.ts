@@ -1,46 +1,40 @@
-import {
-  IsString,
-  IsEmail,
-  IsNotEmpty,
-  IsEmpty,
-} from "class-validator";
-
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  Index,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany
-} from "typeorm";
+import { IsString, IsEmail, IsNotEmpty, IsEmpty } from "class-validator";
+import { Entity, Column, Index, ManyToMany } from "typeorm";
 import { RoleDto } from "roles/dtos/roles.dto";
+import { BaseEntityDto } from "base/base-entity.dto";
 
 export class UserIdRequestParamsDto {
+  constructor(userId) {
+    this.id = userId;
+  }
+
   @IsString()
-  userId: string;
+  @IsNotEmpty()
+  id: string;
 }
 
 @Entity("users")
-export class UserDto {
-  
-  @IsEmpty()
-  @PrimaryGeneratedColumn('uuid', {
-    name: 'id'
-  })
-  userId: string;
+export class UserDto extends BaseEntityDto {
+  constructor(firstName, lastName, username, password, email) {
+    super();
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+  }
 
   @IsString()
   @IsNotEmpty()
   @Column({
-    name: 'first_name'
+    name: "first_name"
   })
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
   @Column({
-    name: 'last_name'
+    name: "last_name"
   })
   lastName: string;
 
@@ -73,28 +67,11 @@ export class UserDto {
     default: true,
     nullable: true
   })
-  enabled: boolean;
+  isActive: boolean;
 
-  @IsEmpty()
-  @Column({
-    name: 'roles_id',
-  })
-  @OneToMany(type => RoleDto, role => role.id, {
-    eager: true,
-  })
-  roles: string
-
-  @IsEmpty()
-  @CreateDateColumn({
-    name: 'created_date',
-    nullable: true
-  })
-  created: string;
-
-  @IsEmpty()
-  @UpdateDateColumn({
-    name: 'updated_date',
-    nullable: true
-  })
-  updated: string;
+  @ManyToMany(
+    type => RoleDto,
+    roleDto => roleDto.users
+  )
+  roles: RoleDto[];
 }

@@ -118,7 +118,6 @@ export class EventStore implements IEventPublisher, IMessageSource {
   }
 
   setEventHandlers(eventHandlers) {
-    // this.eventHandlers = {...this.eventHandlers, ...eventHandlers};
-    this.eventHandlers = eventHandlers;
+    this.eventHandlers = {...this.eventHandlers, ...eventHandlers};
   }
 }

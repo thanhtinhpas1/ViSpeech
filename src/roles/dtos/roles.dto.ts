@@ -1,13 +1,19 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, ManyToMany, JoinTable } from "typeorm";
+import { BaseEntityDto } from "base/base-entity.dto";
+import { IsString, IsNotEmpty } from "class-validator";
+import { UserDto } from "users/dtos/users.dto";
 
-import { BaseDto } from "base/base.dto";
+@Entity("roles")
+export class RoleDto extends BaseEntityDto {
+  @IsNotEmpty()
+  @IsString()
+  @Column()
+  name: string;
 
-import { IsString } from "class-validator";
-
-@Entity('roles')
-export class RoleDto extends BaseDto{
-    
-    @IsString()
-    @Column()
-    name: string;
+  @ManyToMany(
+    type => UserDto,
+    userDto => userDto.roles
+  )
+  @JoinTable()
+  users: UserDto[];
 }
