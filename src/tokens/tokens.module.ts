@@ -60,7 +60,7 @@ export class TokensModule implements OnModuleInit {
 
     const freeTokenType = await this.repository.find({ name: "free" });
     if (!freeTokenType[0]) {
-      const freeTokenType = new TokenTypeDto("free");
+      const freeTokenType = new TokenTypeDto("free", 10, 0);
       this.repository.save(freeTokenType);
     }
   }

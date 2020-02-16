@@ -1,6 +1,7 @@
-import { IsString, IsNotEmpty, IsEmpty } from "class-validator";
-import { Entity, Column } from "typeorm";
+import { IsString, IsNotEmpty, IsEmpty, IsNumber, IsPositive } from "class-validator";
+import { Entity, Column, ManyToOne } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
+import { UserDto } from "users/dtos/users.dto";
 
 export class OrderIdRequestParamsDto {
   constructor(orderId) {
@@ -14,10 +15,11 @@ export class OrderIdRequestParamsDto {
 
 @Entity("orders")
 export class OrderDto extends BaseEntityDto {
-  constructor(tokenId, userId) {
+  constructor(tokenId, price, user: UserDto) {
     super();
     this.tokenId = tokenId;
-    this.userId = userId;
+    this.price = price;
+    this.user = user;
   }
 
   @IsNotEmpty()
@@ -27,10 +29,13 @@ export class OrderDto extends BaseEntityDto {
   })
   tokenId: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNumber()
+  @IsPositive()
   @Column({
-    name: "user_id"
+    name: 'price'
   })
-  userId: string;
+  price: number;
+
+  @ManyToOne(type => UserDto, UserDto => UserDto.orders)
+  user: UserDto;
 }

@@ -19,8 +19,8 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
     Logger.log(event, "TokenCreatedEvent");
     const token = event.tokenDto[0];
     const freeTokenType = await this.repositoryTokenType.find({ name: "free" });
-    console.log("freeTokenType", freeTokenType)
     token.tokenType = freeTokenType[0];
+    token.minutes = freeTokenType[0].minutes;
     this.repository.save(token);
   }
 }

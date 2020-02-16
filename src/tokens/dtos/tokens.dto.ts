@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEmpty, IsDate, IsNumber, IsPositive } from "class-validator";
+import { IsString, IsNotEmpty, IsEmpty, IsNumber, IsPositive } from "class-validator";
 import {
   Entity,
   Column,
@@ -19,19 +19,28 @@ export class TokenIdRequestParamsDto {
 
 @Entity("tokens")
 export class TokenDto extends BaseEntityDto {
-  constructor(value, userId) {
+  constructor(value, userId, tokenType: TokenTypeDto) {
     super();
     this.value = value;
     this.userId = userId;
+    this.tokenType = tokenType;
+    if (tokenType) {
+      this.minutes = tokenType.minutes;
+    }
   }
 
-  @IsNumber()
-  @IsPositive()
   @Column({
-    name: 'minute',
+    name: 'minutes',
+    default: 0
   })
-  minute: number;
+  minutes: number;
 
+  @Column({
+    name: 'used_minutes',
+    default: 0,
+    nullable: true
+  })
+  usedMinutes: number;
 
   @IsString()
   @IsNotEmpty()
@@ -47,4 +56,10 @@ export class TokenDto extends BaseEntityDto {
 
   @ManyToOne(type => TokenTypeDto, tokenTypeDto => tokenTypeDto.tokens)
   tokenType: TokenTypeDto;
+
+  @IsEmpty()
+  @Column({
+    default: true
+  })
+  isValid: boolean;
 }

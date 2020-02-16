@@ -14,7 +14,7 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
 
   handle(event: TokenUpdatedEvent) {
     Logger.log(event, "TokenUpdatedEvent"); // write here
-    const { _id, ...tokenInfo } = event.tokenDto[0];
-    this.repository.update(_id, tokenInfo);
+    const { id, ...tokenInfo } = event.tokenDto[0];
+    this.repository.update(id, tokenInfo);
   }
 }

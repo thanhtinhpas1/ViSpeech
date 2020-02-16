@@ -15,16 +15,19 @@ import { OrderWelcomedEvent } from "./events/impl/order-welcomed.event";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { OrderDto } from "./dtos/orders.dto";
 import { QueryHandlers } from "./queries/handler";
+import { UserDto } from "users/dtos/users.dto";
+import { UsersService } from "users/services/users.service";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderDto]),
+    TypeOrmModule.forFeature([OrderDto, UserDto]),
     CqrsModule,
     EventStoreModule.forFeature()
   ],
   controllers: [OrdersController],
   providers: [
     OrdersService,
+    UsersService,
     OrdersSagas,
     ...CommandHandlers,
     ...EventHandlers,

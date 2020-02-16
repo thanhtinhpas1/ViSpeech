@@ -14,7 +14,7 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
 
   handle(event: OrderUpdatedEvent) {
     Logger.log(event, "OrderUpdatedEvent"); // write here
-    const { _id, ...orderInfo } = event.orderDto[0];
-    this.repository.update(_id, orderInfo);
+    const { id, ...orderInfo } = event.orderDto[0];
+    this.repository.update(id, orderInfo);
   }
 }

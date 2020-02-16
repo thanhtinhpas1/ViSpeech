@@ -1,7 +1,15 @@
 import { IsString, IsEmail, IsNotEmpty, IsEmpty } from "class-validator";
-import { Entity, Column, Index, ManyToMany, JoinTable } from "typeorm";
+import {
+  Entity,
+  Column,
+  Index,
+  ManyToMany,
+  JoinTable,
+  OneToMany
+} from "typeorm";
 import { RoleDto } from "roles/dtos/roles.dto";
 import { BaseEntityDto } from "base/base-entity.dto";
+import { OrderDto } from "orders/dtos/orders.dto";
 
 export class UserIdRequestParamsDto {
   constructor(userId) {
@@ -15,13 +23,14 @@ export class UserIdRequestParamsDto {
 
 @Entity("users")
 export class UserDto extends BaseEntityDto {
-  constructor(firstName, lastName, username, password, email) {
+  constructor(firstName, lastName, username, password, email, roles: RoleDto[]) {
     super();
     this.firstName = firstName;
     this.lastName = lastName;
     this.username = username;
     this.password = password;
     this.email = email;
+    this.roles = roles;
   }
 
   @IsString()
@@ -73,6 +82,12 @@ export class UserDto extends BaseEntityDto {
     type => RoleDto,
     roleDto => roleDto.users
   )
-  @JoinTable({name: "user_roles"})
+  @JoinTable({ name: "user_roles" })
   roles: RoleDto[];
+
+  @OneToMany(
+    type => OrderDto,
+    orderDto => orderDto.user
+  )
+  orders: OrderDto[];
 }

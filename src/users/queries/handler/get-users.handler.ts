@@ -16,8 +16,9 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
     if (query.limit && query.offset)
       return this.repository.find({
         skip: Number(query.offset),
-        take: Number(query.limit)
+        take: Number(query.limit),
+        relations: ["roles"]
       });
-    return this.repository.find();
+    return this.repository.find({ relations: ["roles"] });
   }
 }

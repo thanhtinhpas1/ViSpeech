@@ -22,9 +22,8 @@ export class UserWelcomedHandler implements IEventHandler<UserWelcomedEvent> {
       const tokenValue = this.authService.generate_token_with_userId(
         event.userId
       );
-      const tokenDto = new TokenDto(tokenValue, event.userId);
       const freeTokenType = await this.tokenTypesService.findByName("free");
-      tokenDto.tokenType = freeTokenType;
+      const tokenDto = new TokenDto(tokenValue, event.userId, freeTokenType);
       this.tokensService.createToken(tokenDto);
     } catch (error) {
       Logger.error(error, "UserWelcomedHandler");

@@ -46,6 +46,9 @@ export class UsersService {
   }
 
   async findByUsername(username: string) {
-    return this.repository.findOne({ username });
+    return await this.repository.findOne(
+      { username },
+      { relations: ["roles"] }
+    );
   }
 }

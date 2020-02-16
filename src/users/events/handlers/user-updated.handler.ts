@@ -14,7 +14,7 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
 
   handle(event: UserUpdatedEvent) {
     Logger.log(event, "UserUpdatedEvent");
-    const { _id, ...userInfo} = event.userDto[0];
-    this.repository.update(_id, userInfo);
+    const { id, ...userInfo} = event.userDto[0];
+    this.repository.update(id, userInfo);
   }
 }
