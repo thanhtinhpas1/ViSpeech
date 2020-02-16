@@ -20,6 +20,8 @@ import { FindOrderQuery } from 'orders/queries/impl/find-order.query';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  // TODO: make payment
+
   /* Create Order */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Order"] })

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEmpty } from "class-validator";
+import { IsString, IsNotEmpty, IsEmpty, IsDate, IsNumber, IsPositive } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -20,6 +20,14 @@ export class TokenDto {
     name: 'id'
   })
   tokenId: string; 
+
+  @IsNumber()
+  @IsPositive()
+  @Column({
+    name: 'minute',
+  })
+  minute: number;
+
 
   @IsString()
   @IsNotEmpty()
