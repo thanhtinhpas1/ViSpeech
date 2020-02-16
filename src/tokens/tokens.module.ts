@@ -12,26 +12,30 @@ import { TokenCreatedEvent } from "./events/impl/token-created.event";
 import { TokenDeletedEvent } from "./events/impl/token-deleted.event";
 import { TokenUpdatedEvent } from "./events/impl/token-updated.event";
 import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule, InjectRepository } from "@nestjs/typeorm";
 import { TokenDto } from "./dtos/tokens.dto";
 import { QueryHandlers } from "./queries/handler";
+import { Repository } from "typeorm";
+import { TokenTypeDto } from "./dtos/token-types.dto";
+import { TokenTypesService } from "./services/token-types.service";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([TokenDto]),
+    TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
     CqrsModule,
     EventStoreModule.forFeature()
   ],
   controllers: [TokensController],
   providers: [
     TokensService,
+    TokenTypesService,
     TokensSagas,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,
     TokenRepository
   ],
-  exports: [TokensService]
+  exports: [TokensService, TokenTypesService]
 })
 export class TokensModule implements OnModuleInit {
   constructor(
@@ -39,10 +43,12 @@ export class TokensModule implements OnModuleInit {
     private readonly query$: QueryBus,
     private readonly event$: EventBus,
     private readonly tokensSagas: TokensSagas,
-    private readonly eventStore: EventStore
+    private readonly eventStore: EventStore,
+    @InjectRepository(TokenTypeDto)
+    private readonly repository: Repository<TokenTypeDto>
   ) {}
 
-  onModuleInit() {
+  async onModuleInit() {
     this.eventStore.setEventHandlers(this.eventHandlers);
     this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
     this.event$.publisher = this.eventStore;
@@ -51,6 +57,12 @@ export class TokensModule implements OnModuleInit {
     this.command$.register(CommandHandlers);
     this.query$.register(QueryHandlers);
     this.event$.registerSagas([TokensSagas]);
+
+    const freeTokenType = await this.repository.find({ name: "free" });
+    if (!freeTokenType[0]) {
+      const freeTokenType = new TokenTypeDto("free");
+      this.repository.save(freeTokenType);
+    }
   }
 
   eventHandlers = {

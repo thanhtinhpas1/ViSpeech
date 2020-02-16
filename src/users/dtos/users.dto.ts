@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsNotEmpty, IsEmpty } from "class-validator";
-import { Entity, Column, Index, ManyToMany } from "typeorm";
+import { Entity, Column, Index, ManyToMany, JoinTable } from "typeorm";
 import { RoleDto } from "roles/dtos/roles.dto";
 import { BaseEntityDto } from "base/base-entity.dto";
 
@@ -73,5 +73,6 @@ export class UserDto extends BaseEntityDto {
     type => RoleDto,
     roleDto => roleDto.users
   )
+  @JoinTable({name: "user_roles"})
   roles: RoleDto[];
 }

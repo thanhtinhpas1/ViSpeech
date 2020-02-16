@@ -16,15 +16,17 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserDto } from "./dtos/users.dto";
 import { QueryHandlers } from "./queries/handler";
 import { AuthModule } from "auth/auth.module";
-import { TokensModule } from "tokens/tokens.module";
 import { TokensService } from "tokens/services/tokens.service";
-import { TokenCreatedEvent } from "tokens/events/impl/token-created.event";
-import { TokenRepository } from "tokens/repository/token.repository";
 import { TokenDto } from "tokens/dtos/tokens.dto";
+import { RolesModule } from "roles/roles.module";
+import { RoleDto } from "roles/dtos/roles.dto";
+import { TokenTypesService } from "tokens/services/token-types.service";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
+import { RolesService } from "roles/services/roles.service";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserDto, TokenDto]),
+    TypeOrmModule.forFeature([UserDto, TokenDto, RoleDto, TokenTypeDto]),
     CqrsModule,
     EventStoreModule.forFeature(),
     // TokensModule,
@@ -33,7 +35,9 @@ import { TokenDto } from "tokens/dtos/tokens.dto";
   controllers: [UsersController],
   providers: [
     TokensService,
+    TokenTypesService,
     UsersService,
+    RolesService,
     UsersSagas,
     ...CommandHandlers,
     ...EventHandlers,

@@ -5,6 +5,11 @@ import { UserDto } from "users/dtos/users.dto";
 
 @Entity("roles")
 export class RoleDto extends BaseEntityDto {
+  constructor(name) {
+    super();
+    this.name = name;
+  }
+
   @IsNotEmpty()
   @IsString()
   @Column()
@@ -14,6 +19,5 @@ export class RoleDto extends BaseEntityDto {
     type => UserDto,
     userDto => userDto.roles
   )
-  @JoinTable()
   users: UserDto[];
 }
