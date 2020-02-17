@@ -9,12 +9,14 @@ import { join } from 'path';
 import { AuthModule } from 'auth/auth.module';
 import { HomeController } from 'app.controllers';
 import { RolesModule } from 'roles/roles.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from 'security/roles.guard';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '13.230.185.171',
       port: 3306,
       username: 'root',
       password: 'mysql',
@@ -22,7 +24,7 @@ import { RolesModule } from 'roles/roles.module';
       entities: [
         __dirname + '/../**/*.dto{.ts,.js}',
       ],
-      extra: {"charset": "utf8mb4"},
+      extra: { "charset": "utf8mb4" },
       synchronize: true,
       logger: 'debug',
     }),
@@ -36,6 +38,13 @@ import { RolesModule } from 'roles/roles.module';
     TokensModule,
     OrdersModule,
     RolesModule
+  ],
+  /** -------- ROLE_PERMISSION -------- */
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
+    },
   ],
   controllers: [HomeController]
 })
