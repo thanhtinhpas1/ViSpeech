@@ -19,7 +19,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     Logger.log(event, "UserCreatedEvent");
     const user = event.userDto[0];
     user.password = Utils.hashPassword(user.password[0]);
-    const customerRole = await this.rolesService.findByName("customer");
+    const customerRole = await this.rolesService.findByName(user.roles.name);
     user.roles = [customerRole];
     return await this.repository.save(user);
   }

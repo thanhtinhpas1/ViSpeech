@@ -10,7 +10,6 @@ import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Utils } from "utils";
-import { RoleDto } from "roles/dtos/roles.dto";
 
 @Injectable()
 export class UsersService {
@@ -48,6 +47,13 @@ export class UsersService {
   async findByUsername(username: string) {
     return await this.repository.findOne(
       { username },
+      { relations: ["roles"] }
+    );
+  }
+
+  async findById(id: string) {
+    return await this.repository.findOne(
+      { id },
       { relations: ["roles"] }
     );
   }

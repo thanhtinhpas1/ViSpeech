@@ -1,6 +1,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
+import UserService from 'services/user.service'
+import { JWT_TOKEN } from 'utils/constant'
+import STORAGE from 'utils/storage'
 import UserTypes from './user.types'
 import {
   loginSuccess,
@@ -22,8 +25,6 @@ import {
   updateAvatarSuccess,
   updateAvatarFailure,
 } from './user.actions'
-import UserService from '../../services/user.service'
-import { JWT_TOKEN } from '../../utils/constant'
 
 // ==== login
 export function* login({ payload: user }) {
@@ -35,7 +36,7 @@ export function* login({ payload: user }) {
   }
 }
 
-export function* loginStartSagas() {
+export function* loginStartSaga() {
   yield takeLatest(UserTypes.LOGIN_START, login)
 }
 
@@ -67,7 +68,7 @@ export function* register({ payload: user }) {
 }
 
 export function* logout() {
-  UserService.removePreferences(JWT_TOKEN)
+  STORAGE.removePreferences(JWT_TOKEN)
   yield put(onClearUserState())
 }
 
@@ -189,7 +190,7 @@ function* updateAvatarSaga() {
 
 export function* userSaga() {
   yield all([
-    call(loginStartSagas),
+    call(loginStartSaga),
     call(authenWithSocialSaga),
     call(activeEmailSaga),
     call(sendEmailResetPasswordSaga),

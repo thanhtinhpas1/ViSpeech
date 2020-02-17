@@ -5,20 +5,27 @@ import { UsersService } from "users/services/users.service";
 
 @Controller()
 export class HomeController {
-    constructor(
-        private readonly authService: AuthService,
-        private readonly usersSerive: UsersService
-    ) { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersSerive: UsersService
+  ) {}
 
-    @UseGuards(AuthGuard('local'))
-    @Post('login')
-    async login(@Request() req) {
-        const { id, username } = req.user;
-        return this.authService.generate_token(id, username);
-    }
+  @UseGuards(AuthGuard("local"))
+  @Post("login")
+  login(@Request() req) {
+    const { id, username } = req.user;
+    const access_token = this.authService.generate_token(id, username);
+    req.user.token = access_token;
+    return req.user;
+  }
 
-    @UseGuards(AuthGuard('jwt'))
-    @Get('profile')
-    getProfile(@Request() req) {
-    }
+  @UseGuards(AuthGuard("jwt"))
+  @Get("profile")
+  getProfile(@Request() req) {}
+
+  @UseGuards(AuthGuard("jwt"))
+  @Get("authenticate")
+  authenticate(@Request() req) {
+    return req.user;
+  }
 }

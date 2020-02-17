@@ -19,6 +19,14 @@ export class AuthService {
     return null;
   }
 
+  async validateUserId(userId: string): Promise<any> {
+    const user = await this.usersService.findById(userId);
+    if (user) {
+      return user;
+    }
+    return null;
+  }
+
   generate_token(userId, username) {
     const payload = { username, sub: userId };
     return this.jwtService.sign(payload);
