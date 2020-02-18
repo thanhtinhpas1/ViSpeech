@@ -19,12 +19,12 @@ export class UserWelcomedHandler implements IEventHandler<UserWelcomedEvent> {
   async handle(event: UserWelcomedEvent) {
     try {
       Logger.log(event, "UserWelcomedEvent");
-      const tokenValue = this.authService.generate_token_with_userId(
-        event.userId
-      );
-      const freeTokenType = await this.tokenTypesService.findByName("free");
-      const tokenDto = new TokenDto(tokenValue, event.userId, freeTokenType);
-      this.tokensService.createToken(tokenDto);
+      // const tokenValue = this.authService.generate_token_with_userId(
+      //   event.userId
+      // );
+      // const freeTokenType = await this.tokenTypesService.findByName("free");
+      // const tokenDto = new TokenDto(tokenValue, event.userId, freeTokenType);
+      // this.tokensService.createToken(tokenDto);
     } catch (error) {
       Logger.error(error, "UserWelcomedHandler");
     }

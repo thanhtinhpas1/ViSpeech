@@ -9,6 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, new FastifyAdapter({
     trustProxy: true,
   }));
+  app.enableCors();
   const documentOptions = new DocumentBuilder()
     .setTitle(config.TITLE)
     .setDescription(config.DESCRIPTION)

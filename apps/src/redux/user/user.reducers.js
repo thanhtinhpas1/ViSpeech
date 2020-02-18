@@ -36,17 +36,24 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
       }
+    case UserTypes.LOGIN_START:
+      return {
+        ...state,
+        isLoading: true,
+      }
     case UserTypes.LOGIN_SUCCESS:
       return {
         ...state,
         errorMessage: null,
         currentUser: action.payload,
+        isLoading: false,
       }
     case UserTypes.LOGIN_FAILURE:
       return {
         ...state,
         errorMessage: action.payload,
         currentUser: null,
+        isLoading: false,
       }
     case UserTypes.REGISTER_START:
       return {

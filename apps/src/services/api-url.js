@@ -4,7 +4,7 @@
 //     : 'http://localhost:4500'
 
 // const apiUrl = 'http://localhost:4500'
-const apiUrl = 'https://tutor-back-end-user.herokuapp.com'
+const apiUrl = 'http://localhost:7070/v1'
 console.log('process env: ', process.env.NODE_ENV)
 
 export default apiUrl

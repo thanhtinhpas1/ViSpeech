@@ -29,7 +29,7 @@ export class UsersController {
   @Post()
   @Roles(['admin'])
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
-    return this.usersService.createUser(userDto);
+    return await this.usersService.createUser(userDto);
   }
 
   /* Update User */

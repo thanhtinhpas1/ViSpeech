@@ -43,7 +43,6 @@ import { RolesService } from "roles/services/roles.service";
 
     /*** REPOSITORY */
     UserRepository,
-    // TokenRepository,
   ],
 })
 export class UsersModule implements OnModuleInit {

@@ -19,6 +19,7 @@ const RegisterPage = ({ user, register, onClearUserState }) => {
       lastName: form.elements.lastName.value,
       firstName: form.elements.firstName.value,
       password: form.elements.password.value,
+      roles: { name: 'customer' },
     }
 
     register(user)

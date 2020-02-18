@@ -33,46 +33,46 @@ const RouteCustomer = ({ currentUser }) => {
   return (
     <Switch>
       {/* WITHOUT login, user can access those links */}
-      {/* {currentUser ? (
-        <> */}
-      <Route exact path={CUSTOMER_PATH}>
-        <CustomerLayout>
-          <CustomerHomePage />
-        </CustomerLayout>
-      </Route>
-      <Route
-        path={`${CUSTOMER_PATH}/transactions`}
-        render={props => (
-          <CustomerLayout>
-            <TransactionsPage />
-          </CustomerLayout>
-        )}
-      />
-      <Route
-        path={`${CUSTOMER_PATH}/transaction-details`}
-        render={props => (
-          <CustomerLayout>
-            <TransactionDetailsPage />
-          </CustomerLayout>
-        )}
-      />
-      <Route
-        path={`${CUSTOMER_PATH}/tokens-wallet`}
-        render={props => (
-          <CustomerLayout>
-            <TokensWalletPage />
-          </CustomerLayout>
-        )}
-      />
-      <Route
-        path={`${CUSTOMER_PATH}/profile`}
-        render={props => (
-          <CustomerLayout>
-            <ProfilePage />
-          </CustomerLayout>
-        )}
-      />
-      {/* </>
+      {currentUser ? (
+        <>
+          <Route exact path={CUSTOMER_PATH}>
+            <CustomerLayout>
+              <CustomerHomePage />
+            </CustomerLayout>
+          </Route>
+          <Route
+            path={`${CUSTOMER_PATH}/transactions`}
+            render={props => (
+              <CustomerLayout>
+                <TransactionsPage />
+              </CustomerLayout>
+            )}
+          />
+          <Route
+            path={`${CUSTOMER_PATH}/transaction-details`}
+            render={props => (
+              <CustomerLayout>
+                <TransactionDetailsPage />
+              </CustomerLayout>
+            )}
+          />
+          <Route
+            path={`${CUSTOMER_PATH}/tokens-wallet`}
+            render={props => (
+              <CustomerLayout>
+                <TokensWalletPage />
+              </CustomerLayout>
+            )}
+          />
+          <Route
+            path={`${CUSTOMER_PATH}/profile`}
+            render={props => (
+              <CustomerLayout>
+                <ProfilePage />
+              </CustomerLayout>
+            )}
+          />
+        </>
       ) : (
         <>
           <Route exact path={CUSTOMER_PATH}>
@@ -90,8 +90,8 @@ const RouteCustomer = ({ currentUser }) => {
           <Route path={`${CUSTOMER_PATH}/profile`}>
             <Redirect to="/" />
           </Route>
-        </> */}
-      {/* )} */}
+        </>
+      )}
     </Switch>
   )
 }
@@ -100,16 +100,7 @@ const RouteAdmin = ({ currentUser }) => {
   return (
     <Switch>
       {/* WITHOUT login, user can access those links */}
-      {/* {currentUser ? (
-        <> */}
-      <Route exact path={ADMIN_PATH}>
-        <AdminLayout>
-          <AdminHomePage />
-        </AdminLayout>
-      </Route>
-
-      {/* </>
-      ) : (
+      {currentUser ? (
         <>
           <Route exact path={ADMIN_PATH}>
             <AdminLayout>
@@ -117,70 +108,100 @@ const RouteAdmin = ({ currentUser }) => {
             </AdminLayout>
           </Route>
         </>
-      )} */}
+      ) : (
+        <>
+          <Route exact path={ADMIN_PATH}>
+            <Redirect to="/" />
+          </Route>
+        </>
+      )}
     </Switch>
   )
 }
 
 const App = ({ currentUser }) => {
   useEffect(() => {
-    loadScript(`${process.env.PUBLIC_URL}/assets/vendors/charts/flot/jquery.flot.js`)
-      .then(script1 => {
-        console.log('script jquery.flot.js is loaded')
-        loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`)
-          .then(script2 => {
-            console.log('script flot-charts.js is loaded')
-          })
-          .catch(err => {
-            console.error(err.message)
-          })
-        loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`)
-          .then(script3 => {
-            console.log('script chartjs-charts.js is loaded')
-          })
-          .catch(err => {
-            console.error(err.message)
-          })
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`)
-      .then(script1 => {
-        console.log('script scripta5f5.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`)
-      .then(script1 => {
-        console.log('script custom.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`)
-      .then(script1 => {
-        console.log('script particles-app.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`)
-      .then(script1 => {
-        console.log('script turbo.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-  }, [])
+    if (true) {
+      loadScript(`${process.env.PUBLIC_URL}/assets/js/all/bootstrap.min.js`)
+        .then(script1 => {
+          console.log('script bootstrap.min.js is loaded')
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`)
+        .then(script1 => {
+          console.log('script scripta5f5.js is loaded')
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`)
+        .then(script1 => {
+          console.log('script custom.js is loaded')
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`)
+        .then(script1 => {
+          console.log('script particles-app.js is loaded')
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+    } else if (currentUser && currentUser.role === 'admin') {
+      loadScript(`${process.env.PUBLIC_URL}/assets/vendors/bootstrap.min.js`)
+        .then(script1 => {
+          console.log('script bootstrap.min.js is loaded')
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      loadScript(`${process.env.PUBLIC_URL}/assets/vendors/jquery.datatables.js`)
+        .then(script1 => {
+          console.log('script jquery.datatables.js is loaded')
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      loadScript(`${process.env.PUBLIC_URL}/assets/vendors/charts/flot/jquery.flot.js`)
+        .then(script1 => {
+          console.log('script jquery.flot.js is loaded')
+          loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`)
+            .then(script2 => {
+              console.log('script flot-charts.js is loaded')
+            })
+            .catch(err => {
+              console.error(err.message)
+            })
+          loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`)
+            .then(script3 => {
+              console.log('script chartjs-charts.js is loaded')
+            })
+            .catch(err => {
+              console.error(err.message)
+            })
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`)
+        .then(script1 => {
+          console.log('script turbo.js is loaded')
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+    }
+  }, [currentUser])
 
   return (
     <>
       <Switch>
         <Route path={CUSTOMER_PATH} render={() => <RouteCustomer currentUser={currentUser} />} />
         <Route path={ADMIN_PATH} render={() => <RouteAdmin currentUser={currentUser} />} />
-        {/* {currentUser ? (
+        {currentUser ? (
           <>
             <Route exact path="/">
               <Redirect to={CUSTOMER_PATH} />
@@ -193,18 +214,18 @@ const App = ({ currentUser }) => {
             </Route>
           </>
         ) : (
-          <> */}
-        <Route exact path="/">
-          <LandingPage />
-        </Route>
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-        <Route path="/register">
-          <RegisterPage />
-        </Route>
-        {/* </>
-        )} */}
+          <>
+            <Route exact path="/">
+              <LandingPage />
+            </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <Route path="/register">
+              <RegisterPage />
+            </Route>
+          </>
+        )}
       </Switch>
     </>
   )
