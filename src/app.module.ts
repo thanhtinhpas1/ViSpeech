@@ -1,22 +1,16 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { TokensModule } from './tokens/tokens.module';
-import { OrdersModule } from './orders/orders.module';
 import { EventStoreModule } from './core/event-store/event-store.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { AuthModule } from 'auth/auth.module';
-import { HomeController } from 'app.controllers';
-import { RolesModule } from 'roles/roles.module';
-import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from 'security/roles.guard';
+import { UsersService } from 'users/services/users.service';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: '13.230.185.171',
+      host: '34.87.124.118',
       port: 3306,
       username: 'root',
       password: 'mysql',
@@ -33,20 +27,14 @@ import { RolesGuard } from 'security/roles.guard';
     }),
     EventStoreModule.forRoot(),
     /** ------------- */
-    UsersModule,
-    AuthModule,
-    TokensModule,
-    OrdersModule,
-    RolesModule
   ],
   /** -------- ROLE_PERMISSION -------- */
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard
-    },
+    UsersService,
+    CommandBus,
+    QueryBus,
   ],
-  controllers: [HomeController]
+  exports: [UsersService]
 })
 export class AppModule implements OnModuleInit {
   async onModuleInit() { }

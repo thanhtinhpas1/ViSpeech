@@ -29,14 +29,12 @@ import { RolesService } from "roles/services/roles.service";
     TypeOrmModule.forFeature([UserDto, TokenDto, RoleDto, TokenTypeDto]),
     CqrsModule,
     EventStoreModule.forFeature(),
-    // TokensModule,
     forwardRef(() => AuthModule)
   ],
   controllers: [UsersController],
   providers: [
     TokensService,
     TokenTypesService,
-    UsersService,
     RolesService,
     UsersSagas,
     ...CommandHandlers,
@@ -44,10 +42,9 @@ import { RolesService } from "roles/services/roles.service";
     ...QueryHandlers,
 
     /*** REPOSITORY */
-    UserRepository
+    UserRepository,
     // TokenRepository,
   ],
-  exports: [UsersService]
 })
 export class UsersModule implements OnModuleInit {
   constructor(
@@ -56,7 +53,7 @@ export class UsersModule implements OnModuleInit {
     private readonly event$: EventBus,
     private readonly usersSagas: UsersSagas,
     private readonly eventStore: EventStore
-  ) {}
+  ) { }
 
   onModuleInit() {
     /** ------------ */

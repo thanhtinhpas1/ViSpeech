@@ -14,18 +14,20 @@ import { UserDto } from "../dtos/users.dto";
 import { UsersService } from "../services/users.service";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
+import { Roles } from "security/roles.decorator";
 
 
 @Controller("users")
 @ApiTags("Users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   /* Create User */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create User"] })
   @ApiResponse({ status: 200, description: "Create User." })
   @Post()
+  @Roles(['admin'])
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
     return this.usersService.createUser(userDto);
   }

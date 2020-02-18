@@ -17,7 +17,6 @@ export class UsersService {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
-    @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
   ) {}
 
   async createUser(userDto: UserDto) {
@@ -43,12 +42,5 @@ export class UsersService {
     var query = new FindUserQuery();
     Object.assign(query, findUserQuery);
     return await this.queryBus.execute(query);
-  }
-
-  async findByUsername(username: string) {
-    return await this.repository.findOne(
-      { username },
-      { relations: ["roles"] }
-    );
   }
 }
