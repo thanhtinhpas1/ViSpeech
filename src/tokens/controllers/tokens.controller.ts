@@ -13,6 +13,7 @@ import { TokenIdRequestParamsDto } from "../dtos/tokens.dto";
 import { TokenDto } from "../dtos/tokens.dto";
 import { TokensService } from "../services/tokens.service";
 import { GetTokensQuery } from 'tokens/queries/impl/get-tokens.query';
+import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
 import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
 
 @Controller("tokens")
@@ -60,6 +61,15 @@ export class TokensController {
   @Get()
   async findTokens(@Query() getTokensQuery: GetTokensQuery) {
     return this.tokensService.findTokens(getTokensQuery);
+  }
+
+  /* List Tokens By UserId */
+  /*--------------------------------------------*/
+  @ApiOperation({ tags: ['List Tokens By UserId'] })
+  @ApiResponse({ status: 200, description: 'List Tokens By UserId.' })
+  @Get('/userId')
+  async getTokensByUserId(@Query() getTokensByUserIdQuery: GetTokensByUserIdQuery) {
+    return this.tokensService.getTokensByUserId(getTokensByUserIdQuery);
   }
 
   /* Find Token */

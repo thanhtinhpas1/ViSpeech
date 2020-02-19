@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import storage from 'redux-persist/lib/storage'
 import { persistReducer } from 'redux-persist'
 import userReducer from './user/user.reducers'
+import tokenReducer from './token/token.reducers'
 import contractReducer from './contract/contract.reducers'
 
 const userPersistConfig = {
@@ -14,6 +15,7 @@ const userPersistConfig = {
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
+  token: tokenReducer,
   contract: contractReducer,
 })
 

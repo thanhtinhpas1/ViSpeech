@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import loadScript from 'utils/loadScript'
 // import ChangePasswordContainer from 'components/common/ChangePassword/ChangePassword.container'
@@ -20,7 +20,7 @@ import RegisterPage from 'components/common/RegisterPage/RegisterPage.container'
 import CustomerHomePage from 'components/customer/HomePage/HomePage.container'
 import TransactionsPage from 'components/customer/TransactionsPage/TransactionsPage.component'
 import TransactionDetailsPage from 'components/customer/TransactionDetailsPage/TransactionDetailsPage.component'
-import TokensWalletPage from 'components/customer/TokensWalletPage/TokensWalletPage.component'
+import TokensWalletPage from 'components/customer/TokensWalletPage/TokensWalletPage.container'
 import ProfilePage from 'components/customer/ProfilePage/ProfilePage.component'
 
 import AdminHomePage from 'components/admin/HomePage/HomePage.container'
@@ -120,6 +120,8 @@ const RouteAdmin = ({ currentUser }) => {
 }
 
 const App = ({ currentUser }) => {
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false)
+
   useEffect(() => {
     if (true) {
       loadScript(`${process.env.PUBLIC_URL}/assets/js/all/bootstrap.min.js`)
@@ -129,13 +131,16 @@ const App = ({ currentUser }) => {
         .catch(err => {
           console.error(err.message)
         })
-      loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`)
-        .then(script1 => {
-          console.log('script scripta5f5.js is loaded')
-        })
-        .catch(err => {
-          console.error(err.message)
-        })
+      if (!isScriptLoaded) {
+        loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`)
+          .then(script1 => {
+            console.log('script scripta5f5.js is loaded')
+            setIsScriptLoaded(true)
+          })
+          .catch(err => {
+            console.error(err.message)
+          })
+      }
       loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`)
         .then(script1 => {
           console.log('script custom.js is loaded')
@@ -194,7 +199,7 @@ const App = ({ currentUser }) => {
           console.error(err.message)
         })
     }
-  }, [currentUser])
+  }, [currentUser, isScriptLoaded])
 
   return (
     <>

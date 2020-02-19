@@ -214,27 +214,28 @@
     })
   var A = e('.dt-init')
   A.length > 0 &&
-    A.DataTable({
-      ordering: !1,
-      autoWidth: !1,
-      dom: '<t><"row align-items-center"<"col-sm-6 text-left"p><"col-sm-6 text-sm-right"i>>',
-      pageLength: 5,
-      bPaginate: e('.data-table tbody tr').length > 5,
-      iDisplayLength: 5,
-      language: {
-        search: '',
-        searchPlaceholder: 'Type in to Search',
-        info: '_START_ -_END_ of _TOTAL_',
-        infoEmpty: 'No records',
-        infoFiltered: '( Total _MAX_  )',
-        paginate: {
-          first: 'First',
-          last: 'Last',
-          next: 'Next',
-          previous: 'Prev',
-        },
+  A.DataTable({
+    ordering: !1,
+    autoWidth: !1,
+    dom:
+      '<t><"row align-items-center"<"col-sm-6 text-left"p><"col-sm-6 text-sm-right"i>>',
+    pageLength: 5,
+    // bPaginate: e('.data-table tbody tr').length > 5,
+    // iDisplayLength: 5,
+    language: {
+      search: '',
+      // searchPlaceholder: 'Type in to Search',
+      info: 'Hiển thị _START_ đến _END_ trên _TOTAL_ dòng',
+      infoEmpty: 'Không có dữ liệu',
+      infoFiltered: '(filtered from _MAX_ total entries)',
+      paginate: {
+        first: 'Trang đầu',
+        last: 'Trang cuối',
+        next: 'Tiếp theo',
+        previous: 'Quay lại',
       },
-    })
+    },
+  })
   var O = e('.dt-filter-init')
   if (O.length > 0) {
     var P = O.DataTable({
@@ -248,14 +249,14 @@
       language: {
         search: '',
         searchPlaceholder: 'Type in to Search',
-        info: '_START_ -_END_ of _TOTAL_',
-        infoEmpty: 'No records',
-        infoFiltered: '( Total _MAX_  )',
+        info: 'Hiển thị _START_ đến _END_ trên _TOTAL_ dòng',
+        infoEmpty: 'Không có dữ liệu',
+        infoFiltered: '(filtered from _MAX_ total entries)',
         paginate: {
-          first: 'First',
-          last: 'Last',
-          next: 'Next',
-          previous: 'Prev',
+          first: 'Trang đầu',
+          last: 'Trang cuối',
+          next: 'Tiếp theo',
+          previous: 'Quay lại',
         },
       },
     })
@@ -300,7 +301,7 @@
       var t = e(this).attr('title')
       return (
         e('body').fadeOut(function() {
-          e('#layoutstyle').attr('href', `assets/css/${t}.css`),
+          e('#layoutstyle').attr('href', `%PUBLIC_URL%/assets/css/customer/${t}.css`),
             e(this)
               .delay(150)
               .fadeIn()

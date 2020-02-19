@@ -6,6 +6,7 @@ import { CreateTokenCommand } from "../commands/impl/create-token.command";
 import { UpdateTokenCommand } from "../commands/impl/update-token.command";
 import { DeleteTokenCommand } from "../commands/impl/delete-token.command";
 import { GetTokensQuery } from "tokens/queries/impl/get-tokens.query";
+import { GetTokensByUserIdQuery } from "tokens/queries/impl/get-tokens-by-userId";
 import { FindTokenQuery } from "tokens/queries/impl/find-token.query";
 
 @Injectable()
@@ -30,6 +31,12 @@ export class TokensService {
   async findTokens(getTokensQuery: GetTokensQuery) {
     var query = new GetTokensQuery();
     Object.assign(query, getTokensQuery);
+    return await this.queryBus.execute(query);
+  }
+
+  async getTokensByUserId(getTokensByUserIdQuery: GetTokensByUserIdQuery) {
+    var query = new GetTokensByUserIdQuery();
+    Object.assign(query, getTokensByUserIdQuery);
     return await this.queryBus.execute(query);
   }
 

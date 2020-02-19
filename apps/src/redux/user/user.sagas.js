@@ -40,7 +40,7 @@ export function* loginStartSaga() {
   yield takeLatest(UserTypes.LOGIN_START, login)
 }
 
-// ===authen with social
+// === authen with social
 /**
  *
  * @param {Object} payload is user
@@ -58,6 +58,7 @@ export function* authenWithSocialSaga() {
   yield takeLatest(UserTypes.AUTHEN_WITH_SOCIAL, authenWithSocial)
 }
 
+// ==== register
 export function* register({ payload: user }) {
   try {
     const registerUser = yield UserService.register(user)
@@ -67,11 +68,21 @@ export function* register({ payload: user }) {
   }
 }
 
+export function* registerStartSaga() {
+  yield takeLatest(UserTypes.REGISTER_START, register)
+}
+
+// ==== logout
 export function* logout() {
   STORAGE.removePreferences(JWT_TOKEN)
   yield put(onClearUserState())
 }
 
+export function* logoutSaga() {
+  yield takeLatest(UserTypes.LOGOUT, logout)
+}
+
+// ==== authenticate JWT
 export function* authenticate({ payload: token }) {
   try {
     const user = yield UserService.authenticate(token)
@@ -81,13 +92,12 @@ export function* authenticate({ payload: token }) {
       yield put(updateCurrentUser(null))
     }
   } catch (err) {
-    console.log('ERR AUTHENTICATE ', err)
     yield put(updateCurrentUser(null))
   }
 }
 
-export function* registerStartSaga() {
-  yield takeLatest(UserTypes.REGISTER_START, register)
+export function* authenticateSaga() {
+  yield takeLatest(UserTypes.AUTHENTICATE, authenticate)
 }
 
 // === active account by email
@@ -149,16 +159,6 @@ function* resetPassword({ payload }) {
 
 function* resetPasswordSaga() {
   yield takeLatest(UserTypes.RESET_PASSWORD, resetPassword)
-}
-
-// =================================
-
-export function* logoutSaga() {
-  yield takeLatest(UserTypes.LOGOUT, logout)
-}
-
-export function* authenticateSaga() {
-  yield takeLatest(UserTypes.AUTHENTICATE, authenticate)
 }
 
 // ===========
