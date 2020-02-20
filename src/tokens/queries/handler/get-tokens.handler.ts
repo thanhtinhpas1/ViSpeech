@@ -18,8 +18,8 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
       return this.repository.find({
         skip: Number(query.offset),
         take: Number(query.limit),
-        relations: ["token_types"]
+        relations: ["tokenType"]
       });
-    return this.repository.find({ relations: ["token_types"] });
+    return this.repository.find({ relations: ["tokenType"] });
   }
 }

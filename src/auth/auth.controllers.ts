@@ -1,13 +1,11 @@
 import { Controller, UseGuards, Post, Request, Get, Injectable, Inject } from "@nestjs/common";
 import { AuthService } from "auth/auth.service";
 import { AuthGuard } from "@nestjs/passport";
-import { UsersService } from "users/services/users.service";
 
 @Controller()
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
-    private readonly usersSerive: UsersService
+    private readonly authService: AuthService
   ) { }
 
   @UseGuards(AuthGuard("local"))

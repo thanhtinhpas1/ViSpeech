@@ -18,7 +18,6 @@ import { QueryHandlers } from "./queries/handler";
 import { AuthModule } from "auth/auth.module";
 import { TokensService } from "tokens/services/tokens.service";
 import { TokenDto } from "tokens/dtos/tokens.dto";
-import { RolesModule } from "roles/roles.module";
 import { RoleDto } from "roles/dtos/roles.dto";
 import { TokenTypesService } from "tokens/services/token-types.service";
 import { TokenTypeDto } from "tokens/dtos/token-types.dto";
@@ -29,10 +28,11 @@ import { RolesService } from "roles/services/roles.service";
     TypeOrmModule.forFeature([UserDto, TokenDto, RoleDto, TokenTypeDto]),
     CqrsModule,
     EventStoreModule.forFeature(),
-    forwardRef(() => AuthModule)
+    AuthModule
   ],
   controllers: [UsersController],
   providers: [
+    UsersService,
     TokensService,
     TokenTypesService,
     RolesService,
@@ -44,6 +44,7 @@ import { RolesService } from "roles/services/roles.service";
     /*** REPOSITORY */
     UserRepository,
   ],
+  exports: [UsersService]
 })
 export class UsersModule implements OnModuleInit {
   constructor(

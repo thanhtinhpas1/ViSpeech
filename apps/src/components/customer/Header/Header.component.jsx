@@ -44,9 +44,7 @@ const Header = ({ onAuthenticate }) => {
 
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
-    if (token) {
-      onAuthenticate(token)
-    }
+    onAuthenticate(token)
   }, [onAuthenticate])
 
   // useEffect(() => {

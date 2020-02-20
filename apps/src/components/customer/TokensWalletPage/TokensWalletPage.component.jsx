@@ -6,10 +6,10 @@ import { CUSTOMER_PATH } from 'utils/constant'
 
 const TokensWalletPage = ({ currentUser, token, getTokens }) => {
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser.id) {
       getTokens(currentUser.id)
     }
-  }, [currentUser, getTokens])
+  }, [currentUser.id, getTokens])
   return (
     <div className="page-content">
       <div className="container">
@@ -18,21 +18,21 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
             <div className="card-head">
               <h4 className="card-title">Ví key</h4>
             </div>
-            <table className="data-table dt-init user-tnx">
-              <thead>
-                <tr className="data-item data-head">
-                  <th className="data-col dt-tnxno">Key</th>
-                  <th className="data-col dt-type">Loại</th>
-                  <th className="data-col dt-token">Trạng thái</th>
-                  <th className="data-col dt-amount" style={{ textAlign: 'center' }}>
-                    Thời gian còn lại
-                  </th>
-                  <th className="data-col" />
-                </tr>
-              </thead>
-              <tbody>
-                {token.tokenList &&
-                  token.tokenList.map(item => {
+            {token.tokenList && (
+              <table className="data-table dt-init user-tnx">
+                <thead>
+                  <tr className="data-item data-head">
+                    <th className="data-col dt-tnxno">Key</th>
+                    <th className="data-col dt-type">Loại</th>
+                    <th className="data-col dt-token">Trạng thái</th>
+                    <th className="data-col dt-amount" style={{ textAlign: 'center' }}>
+                      Thời gian còn lại
+                    </th>
+                    <th className="data-col" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {token.tokenList.map(item => {
                     return (
                       <tr className="data-item" key={item.id}>
                         <td className="data-col dt-tnxno" style={{ paddingRight: '30px' }}>
@@ -84,8 +84,9 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
                       </tr>
                     )
                   })}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>

@@ -5,16 +5,14 @@ import { Utils } from "utils";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserDto } from "users/dtos/users.dto";
 import { Repository } from "typeorm";
-import { FindUserQuery } from "users/queries/impl/find-user.query";
 
 @Injectable()
 export class AuthService {
-
   constructor(
     private readonly jwtService: JwtService,
-    private readonly repository: Repository<UserDto>,
-    private readonly usersService: UsersService
-  ) { }
+    @InjectRepository(UserDto)
+    private readonly repository: Repository<UserDto>
+  ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.findUserByUsername(username);
@@ -25,12 +23,11 @@ export class AuthService {
     return null;
   }
 
-  async validateUserId(userId: string): Promise<any> {
-    const user = await this.repository.findOne(userId);
-    if (user) {
-      return user;
-    }
-    return null;
+  async validateUserId(userId: string) {
+    const user = await this.repository.findOne(userId, {
+      relations: ["roles"]
+    });
+    return user || null;
   }
 
   generate_token(userId, username) {
@@ -52,7 +49,7 @@ export class AuthService {
 
   async findUserRoles(userId: string) {
     return await this.repository.findOne(userId, {
-      relations: ['user_roles']
+      relations: ["user_roles"]
     });
   }
 }

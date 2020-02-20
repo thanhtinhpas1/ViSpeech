@@ -97,6 +97,7 @@ export default class UserService {
 
   static authenticate = token => {
     const api = `${apiUrl}/authenticate`
+    let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'GET',
@@ -106,9 +107,14 @@ export default class UserService {
       },
     })
       .then(response => {
+        status = response.status
         return response.json()
       })
       .then(result => {
+        if (status !== 200) {
+          STORAGE.removePreferences(JWT_TOKEN)
+          throw new Error(result.message)
+        }
         return result
       })
       .catch(err => {
