@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "babel-jest": "24.9.0",
     "firebase": "^7.5.2",
     "moment": "^2.24.0",
     "node-sass": "^4.13.0",
@@ -24,8 +23,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "precommit": "lint-staged"
+    "eject": "react-scripts eject"
   },
   "lint-staged": {
     "*.{js,jsx}": [

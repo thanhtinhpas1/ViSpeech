@@ -3,6 +3,10 @@
 # Yarn
 *.yarn
 
+# Yarn.lock
+yarn.lock
+apps/yarn.lock
+
 # Logs
 *.log
 npm-debug.log*
@@ -38,6 +42,7 @@ build/Release
 
 # Dependency directories
 node_modules/
+apps/node_modules/
 jspm_packages/
 vendor/
 

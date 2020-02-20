@@ -2,12 +2,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import loadScript from 'utils/loadScript'
 // import ChangePasswordContainer from 'components/common/ChangePassword/ChangePassword.container'
 import { connect } from 'react-redux'
-import { CUSTOMER_PATH, ADMIN_PATH } from 'utils/constant'
+import { CUSTOMER_PATH, ADMIN_PATH, ROLES } from 'utils/constant'
 // import NotFound404 from 'components/common/NotFound404/NotFound404.component'
 // import ErrorPage from 'components/common/ErrorPage/ErrorPage.component'
 import CustomerLayout from 'components/customer/CustomerLayout'
@@ -120,71 +120,150 @@ const RouteAdmin = ({ currentUser }) => {
 }
 
 const App = ({ currentUser }) => {
-  // const [isScriptLoaded, setIsScriptLoaded] = useState(false)
-
   useEffect(() => {
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/all/bootstrap.min.js`)
-      .then(script1 => {
-        console.log('script bootstrap.min.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`)
-      .then(script1 => {
-        console.log('script custom.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
-    loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`)
-      .then(script1 => {
-        console.log('script particles-app.js is loaded')
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
+    if (!currentUser) {
+      // load script
+      loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
+        'customer-bootstrap.min.js',
+        'on'
+      )
+        .then(script => {
+          console.log(`script ${script.id} is loaded`)
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      // load script
+      loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/custom.js`,
+        'customer-custom.js',
+        'on'
+      )
+        .then(script => {
+          console.log(`script ${script.id} is loaded`)
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+      // load script
+      loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
+        'customer-particles-app.js',
+        'on'
+      )
+        .then(script => {
+          console.log(`script ${script.id} is loaded`)
+        })
+        .catch(err => {
+          console.error(err.message)
+        })
+    }
 
-    if (currentUser && currentUser.roles) {
-      if (currentUser.roles[0].name === 'customer') {
-        // if (!isScriptLoaded) {
-        loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`)
-          .then(script1 => {
-            console.log('script scripta5f5.js is loaded')
-            // setIsScriptLoaded(true)
+    if (currentUser && Array.isArray(currentUser.roles)) {
+      const isCustomer = currentUser.roles.findIndex(role => role.name.includes('customer')) !== -1
+      if (isCustomer) {
+        // load script
+        loadScript(
+          `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/jquery.dataTables.min.js`,
+          'customer-jquery.dataTables.min.js',
+          'on'
+        )
+          .then(script => {
+            console.log(`script ${script.id} is loaded`)
+            // load script
+            loadScript(
+              `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/dataTables.bootstrap4.min.js`,
+              'customer-dataTables.bootstrap4.min.js',
+              'on'
+            )
+              .then(script1 => {
+                console.log(`script ${script1.id} is loaded`)
+              })
+              .catch(err => {
+                console.error(err.message)
+              })
           })
           .catch(err => {
             console.error(err.message)
           })
-        // }
-      } else if (currentUser.roles[0].name === 'admin') {
-        loadScript(`${process.env.PUBLIC_URL}/assets/vendors/bootstrap.min.js`)
-          .then(script1 => {
-            console.log('script bootstrap.min.js is loaded')
+        // load script
+        loadScript(
+          `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
+          'customer-bootstrap.min.js',
+          'on'
+        )
+          .then(script => {
+            console.log(`script ${script.id} is loaded`)
+            // load script
+            loadScript(
+              `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
+              'customer-scripta5f5.js',
+              'on'
+            )
+              .then(script1 => {
+                console.log(`script ${script1.id} is loaded`)
+              })
+              .catch(err => {
+                console.error(err.message)
+              })
           })
           .catch(err => {
             console.error(err.message)
           })
-        loadScript(`${process.env.PUBLIC_URL}/assets/vendors/jquery.datatables.js`)
-          .then(script1 => {
-            console.log('script jquery.datatables.js is loaded')
+      } else {
+        // load script
+        loadScript(
+          `${process.env.PUBLIC_URL}/assets/vendors/bootstrap.min.js`,
+          'admin-bootstrap.min.js',
+          'on'
+        )
+          .then(script => {
+            console.log(`script ${script.id} is loaded`)
           })
           .catch(err => {
             console.error(err.message)
           })
-        loadScript(`${process.env.PUBLIC_URL}/assets/vendors/charts/flot/jquery.flot.js`)
-          .then(script1 => {
-            console.log('script jquery.flot.js is loaded')
-            loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`)
+        // load script
+        loadScript(
+          `${process.env.PUBLIC_URL}/assets/vendors/jquery.datatables.js`,
+          'admin-jquery.datatables.js',
+          'on'
+        )
+          .then(script => {
+            console.log(`script ${script.id} is loaded`)
+          })
+          .catch(err => {
+            console.error(err.message)
+          })
+        // load script
+        loadScript(
+          `${process.env.PUBLIC_URL}/assets/vendors/charts/flot/jquery.flot.js`,
+          'admin-jquery.flot.js',
+          'on'
+        )
+          .then(script => {
+            console.log(`script ${script.id} is loaded`)
+            // load script
+            loadScript(
+              `${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`,
+              'admin-flot-charts.js',
+              'on'
+            )
+              .then(script1 => {
+                console.log(`script ${script1.id} is loaded`)
+              })
+              .catch(err => {
+                console.error(err.message)
+              })
+            // load script
+            loadScript(
+              `${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`,
+              'admin-chartjs-charts.js',
+              'on'
+            )
               .then(script2 => {
-                console.log('script flot-charts.js is loaded')
-              })
-              .catch(err => {
-                console.error(err.message)
-              })
-            loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`)
-              .then(script3 => {
-                console.log('script chartjs-charts.js is loaded')
+                console.log(`script ${script2.id} is loaded`)
               })
               .catch(err => {
                 console.error(err.message)
@@ -193,9 +272,10 @@ const App = ({ currentUser }) => {
           .catch(err => {
             console.error(err.message)
           })
-        loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`)
-          .then(script1 => {
-            console.log('script turbo.js is loaded')
+        // load script
+        loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`, 'admin-turbo.js', 'on')
+          .then(script => {
+            console.log(`script ${script.id} is loaded`)
           })
           .catch(err => {
             console.error(err.message)
