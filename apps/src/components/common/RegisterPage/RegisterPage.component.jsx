@@ -31,16 +31,6 @@ const RegisterPage = ({ user, register, onClearUserState }) => {
 
   return (
     <>
-      <link
-        rel="stylesheet"
-        href={`${process.env.PUBLIC_URL}/assets/css/all/bootstrap.min.css`}
-        id="layoutstyle"
-      />
-      <link
-        rel="stylesheet"
-        href={`${process.env.PUBLIC_URL}/assets/css/customer/style-1.css`}
-        id="layoutstyle"
-      />
       <div className="page-ath-wrap">
         <div className="page-ath-content">
           <div className="page-ath-header">

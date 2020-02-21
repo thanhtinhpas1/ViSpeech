@@ -13,10 +13,10 @@ const loadScript = (url, id, status) => {
         resolve(scriptToLoad)
       } else {
         const script = document.createElement('script')
+        script.id = `script-${id}`
         script.type = 'text/javascript'
         script.src = url
         script.async = true
-        script.id = `script-${id}`
         script.onreadystatechange = () => {
           if (!ready && (!window.readyState || window.readyState === 'complete')) {
             ready = true
@@ -32,7 +32,7 @@ const loadScript = (url, id, status) => {
 
         script.onabort = msg => {
           console.log(msg)
-          reject(new Error('Script loading aboirted.'))
+          reject(new Error('Script loading aborted.'))
         }
 
         if (tag.parentNode != null) {
@@ -41,7 +41,9 @@ const loadScript = (url, id, status) => {
       }
     } else {
       const scriptToRemove = document.getElementById(`script-${id}`)
-      scriptToRemove.parentNode.removeChild(scriptToRemove)
+      if (scriptToRemove) {
+        scriptToRemove.parentNode.removeChild(scriptToRemove)
+      }
       resolve(scriptToRemove)
     }
   })

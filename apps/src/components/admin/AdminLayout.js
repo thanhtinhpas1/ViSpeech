@@ -8,26 +8,6 @@ import Footer from './Footer/Footer.container'
 const AdminLayout = ({ children }) => {
   return (
     <>
-      <link
-        rel="stylesheet"
-        href={`${process.env.PUBLIC_URL}/assets/css/admin/bootstrap.min.css`}
-        id="layoutstyle"
-      />
-      <link
-        rel="stylesheet"
-        href={`${process.env.PUBLIC_URL}/assets/css/admin/turbo.css`}
-        id="layoutstyle"
-      />
-      <link
-        rel="stylesheet"
-        href={`${process.env.PUBLIC_URL}/assets/css/admin/material-design-iconic-font/dist/css/material-design-iconic-font.min.css`}
-        id="layoutstyle"
-      />
-      <link
-        rel="stylesheet"
-        type="text/css"
-        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons"
-      />
       <div className="wrapper">
         <Sidebar />
         <div className="main-panel">

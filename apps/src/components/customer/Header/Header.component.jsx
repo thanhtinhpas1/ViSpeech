@@ -1,10 +1,11 @@
+/* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router'
 import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 
-const Header = ({ onAuthenticate }) => {
+const Header = ({ onAuthenticate, logout }) => {
   const [userLinks, setUserLinks] = useState([])
   const [navbarMenu, setNavbarMenu] = useState([])
 
@@ -136,7 +137,7 @@ const Header = ({ onAuthenticate }) => {
                     </ul>
                     <ul className="user-links bg-light">
                       <li>
-                        <a href="#">
+                        <a href="javascript:void(0)" onClick={logout}>
                           <i className="ti ti-power-off" />
                           Đăng xuất
                         </a>
@@ -172,3 +173,4 @@ const Header = ({ onAuthenticate }) => {
 }
 
 export default withRouter(Header)
+// You can get access to the history object’s properties and the closest <Route>'s match via the withRouter higher-order component. withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.

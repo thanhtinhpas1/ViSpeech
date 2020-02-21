@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
+import { authenticate, logout } from 'redux/user/user.actions'
 import Header from './Header.component'
-import { authenticate } from '../../../redux/user/user.actions'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
@@ -8,6 +8,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onAuthenticate: token => dispatch(authenticate(token)),
+  logout: () => dispatch(logout()),
 })
 
 const HeaderContainer = connect(mapStateToProps, mapDispatchToProps)(Header)
