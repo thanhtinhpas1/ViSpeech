@@ -11,7 +11,7 @@ export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
 
     execute(query: FindTokenQuery): Promise<any> {
         Logger.log("ASync FindTokenQuery...");
-        return this.repository.findOne(query._id);
+        return this.repository.findOne(query.id);
     }
 
 }

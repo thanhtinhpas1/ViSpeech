@@ -33,7 +33,7 @@ export class ReportsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Report"] })
   @ApiResponse({ status: 200, description: "Update Report." })
-  @Put(":reportId")
+  @Put(":id")
   async updateReport(
     @Param() reportIdDto: ReportIdRequestParamsDto,
     @Body() reportDto: ReportDto
@@ -48,7 +48,7 @@ export class ReportsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Report"] })
   @ApiResponse({ status: 200, description: "Delete Report." })
-  @Delete(":reportId")
+  @Delete(":id")
   async deleteReport(@Param() reportIdDto: ReportIdRequestParamsDto) {
     return this.reportsService.deleteReport(reportIdDto);
   }
@@ -66,7 +66,7 @@ export class ReportsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Get Report'] })
   @ApiResponse({ status: 200, description: 'Get Report.' })
-  @Get(':_id')
+  @Get(':id')
   async findOneReport(@Param() findReportQuery: FindReportQuery) {
     return this.reportsService.findOne(findReportQuery);
   }

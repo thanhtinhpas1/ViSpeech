@@ -36,7 +36,7 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update User"] })
   @ApiResponse({ status: 200, description: "Update User." })
-  @Put(":userId")
+  @Put(":id")
   async updateUser(
     @Param() userIdDto: UserIdRequestParamsDto,
     @Body() userDto: UserDto
@@ -48,7 +48,7 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete User"] })
   @ApiResponse({ status: 200, description: "Delete User." })
-  @Delete(":userId")
+  @Delete(":id")
   async deleteUser(@Param() userIdDto: UserIdRequestParamsDto) {
     return this.usersService.deleteUser(userIdDto);
   }
@@ -66,7 +66,7 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Get User"] })
   @ApiResponse({ status: 200, description: "Get User." })
-  @Get(":_id")
+  @Get(":id")
   async findOneUser(@Param() findUserQuery: FindUserQuery) {
     return this.usersService.findOne(findUserQuery);
   }

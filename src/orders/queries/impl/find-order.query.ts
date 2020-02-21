@@ -1,6 +1,7 @@
-import { IsString } from "class-validator";
+import { IsString, IsNotEmpty } from "class-validator";
 
 export class FindOrderQuery {
+  @IsNotEmpty()
   @IsString()
-  _id: string;
+  id: string;
 }

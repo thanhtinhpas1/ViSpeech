@@ -11,7 +11,7 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
 
     execute(query: FindOrderQuery): Promise<any> {
         Logger.log("ASync FindOrderQuery...");
-        return this.repository.findOne(query._id)
+        return this.repository.findOne(query.id)
     }
 
 }
