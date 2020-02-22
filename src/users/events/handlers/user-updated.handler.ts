@@ -1,10 +1,9 @@
-import { IEventHandler, EventsHandler } from "@nestjs/cqrs";
-import { UserUpdatedEvent } from "../impl/user-updated.event";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { UserDto } from "users/dtos/users.dto";
-import { Repository } from "typeorm";
-import { userInfo } from "os";
+import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {UserUpdatedEvent} from '../impl/user-updated.event';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {UserDto} from 'users/dtos/users.dto';
+import {Repository} from 'typeorm';
 
 @EventsHandler(UserUpdatedEvent)
 export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {

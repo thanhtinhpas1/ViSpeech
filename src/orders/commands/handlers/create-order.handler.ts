@@ -1,7 +1,7 @@
-import { EventPublisher, ICommandHandler, CommandHandler } from "@nestjs/cqrs";
-import { CreateOrderCommand } from "../impl/create-order.command";
-import { OrderRepository } from "../../repository/order.repository";
-import { Logger } from "@nestjs/common";
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {CreateOrderCommand} from '../impl/create-order.command';
+import {OrderRepository} from '../../repository/order.repository';
+import {Logger} from '@nestjs/common';
 
 @CommandHandler(CreateOrderCommand)
 export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {

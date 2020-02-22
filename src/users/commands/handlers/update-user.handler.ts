@@ -1,7 +1,7 @@
-import { EventPublisher, ICommandHandler, CommandHandler } from "@nestjs/cqrs";
-import { UpdateUserCommand } from "../impl/update-user.command";
-import { UserRepository } from "../../repository/user.repository";
-import { Logger } from "@nestjs/common";
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {UpdateUserCommand} from '../impl/update-user.command';
+import {UserRepository} from '../../repository/user.repository';
+import {Logger} from '@nestjs/common';
 
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {

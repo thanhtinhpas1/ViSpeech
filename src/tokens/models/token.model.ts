@@ -1,8 +1,8 @@
-import { AggregateRoot } from "@nestjs/cqrs";
-import { TokenCreatedEvent } from "../events/impl/token-created.event";
-import { TokenUpdatedEvent } from "../events/impl/token-updated.event";
-import { TokenDeletedEvent } from "../events/impl/token-deleted.event";
-import { TokenWelcomedEvent } from "../events/impl/token-welcomed.event";
+import {AggregateRoot} from '@nestjs/cqrs';
+import {TokenCreatedEvent} from '../events/impl/token-created.event';
+import {TokenUpdatedEvent} from '../events/impl/token-updated.event';
+import {TokenDeletedEvent} from '../events/impl/token-deleted.event';
+import {TokenWelcomedEvent} from '../events/impl/token-welcomed.event';
 
 export class Token extends AggregateRoot {
   [x: string]: any;

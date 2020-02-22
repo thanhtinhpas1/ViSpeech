@@ -1,9 +1,9 @@
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { FindReportQuery } from "../impl/find-report.query";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { ReportDto } from "reports/dtos/reports.dto";
-import { Repository } from "typeorm";
+import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
+import {FindReportQuery} from '../impl/find-report.query';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {ReportDto} from 'reports/dtos/reports.dto';
+import {Repository} from 'typeorm';
 
 @QueryHandler(FindReportQuery)
 export class FindReportHandler implements IQueryHandler<FindReportQuery> {

@@ -1,12 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { OrderIdRequestParamsDto } from "../dtos/orders.dto";
-import { OrderDto } from "../dtos/orders.dto";
-import { CreateOrderCommand } from "../commands/impl/create-order.command";
-import { UpdateOrderCommand } from "../commands/impl/update-order.command";
-import { DeleteOrderCommand } from "../commands/impl/delete-order.command";
-import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
-import { FindOrderQuery } from "orders/queries/impl/find-order.query";
+import {Injectable} from '@nestjs/common';
+import {CommandBus, QueryBus} from '@nestjs/cqrs';
+import {OrderDto, OrderIdRequestParamsDto} from '../dtos/orders.dto';
+import {CreateOrderCommand} from '../commands/impl/create-order.command';
+import {UpdateOrderCommand} from '../commands/impl/update-order.command';
+import {DeleteOrderCommand} from '../commands/impl/delete-order.command';
+import {GetOrdersQuery} from 'orders/queries/impl/get-orders.query';
+import {FindOrderQuery} from 'orders/queries/impl/find-order.query';
 
 @Injectable()
 export class OrdersService {

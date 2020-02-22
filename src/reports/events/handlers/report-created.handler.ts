@@ -1,9 +1,9 @@
-import { IEventHandler, EventsHandler } from "@nestjs/cqrs";
-import { ReportCreatedEvent } from "../impl/report-created.event";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { ReportDto } from "reports/dtos/reports.dto";
-import { Repository } from "typeorm";
+import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {ReportCreatedEvent} from '../impl/report-created.event';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {ReportDto} from 'reports/dtos/reports.dto';
+import {Repository} from 'typeorm';
 
 @EventsHandler(ReportCreatedEvent)
 export class ReportCreatedHandler implements IEventHandler<ReportCreatedEvent> {

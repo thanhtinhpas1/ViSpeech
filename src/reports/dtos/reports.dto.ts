@@ -1,54 +1,49 @@
-import { IsString, IsNotEmpty, IsEmpty, IsDate, IsNumber, IsPositive } from "class-validator";
-import {
-  Entity,
-  Column,
-  ManyToOne
-} from "typeorm";
-import { BaseEntityDto } from "base/base-entity.dto";
+import {IsDate, IsNotEmpty, IsNumber, IsPositive, IsString} from 'class-validator';
+import {Column, Entity, ManyToOne} from 'typeorm';
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {UserDto} from '../../users/dtos/users.dto';
+import {TokenDto} from '../../tokens/dtos/tokens.dto';
 
 export class ReportIdRequestParamsDto {
-  constructor(reportId) {
-    this.id = reportId;
-  }
+    constructor(reportId) {
+        this.id = reportId;
+    }
 
-  @IsString()
-  @IsNotEmpty()
-  id: string;
+    @IsString()
+    @IsNotEmpty()
+    id: string;
 }
 
-@Entity("reports")
+@Entity('reports')
 export class ReportDto extends BaseEntityDto {
-  constructor(value, userId) {
-    super();
-    this.value = value;
-    this.userId = userId;
-  }
+    constructor(value, userId) {
+        super();
+    }
 
-  @IsNumber()
-  @IsPositive()
-  @Column({
-    name: 'minutes',
-  })
-  minutes: number;
+    @IsNumber()
+    @IsPositive()
+    @Column({
+        name: 'used_minutes',
+        default: 0,
+        nullable: true,
+    })
+    usedMinutes: number;
 
-  @IsNumber()
-  @IsPositive()
-  @Column({
-    name: 'used_minutes',
-    default: 0,
-    nullable: true
-  })
-  usedMinutes: number;
+    @ManyToOne(() => UserDto,
+        userDto => userDto.reports,
+    )
+    user: UserDto;
 
-  @IsString()
-  @IsNotEmpty()
-  @Column()
-  value: string;
+    @ManyToOne(
+        () => TokenDto,
+        tokenDto => tokenDto.reports,
+    )
+    token: TokenDto;
 
-  @IsString()
-  @IsNotEmpty()
-  @Column({
-    name: "user_id"
-  })
-  userId: string;
+    @IsDate()
+    @IsNotEmpty()
+    @Column({
+        name: 'date_report',
+    })
+    dateReport: Date;
 }

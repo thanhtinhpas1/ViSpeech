@@ -1,9 +1,9 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ICommand, Saga, ofType } from "@nestjs/cqrs";
-import { UserCreatedEvent } from "../events/impl/user-created.event";
-import { delay, map } from "rxjs/operators";
-import { Observable } from "rxjs";
-import { WelcomeUserCommand } from "users/commands/impl/welcome-user.command";
+import {Injectable, Logger} from '@nestjs/common';
+import {ICommand, ofType, Saga} from '@nestjs/cqrs';
+import {UserCreatedEvent} from '../events/impl/user-created.event';
+import {delay, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {WelcomeUserCommand} from 'users/commands/impl/welcome-user.command';
 
 @Injectable()
 export class UsersSagas {

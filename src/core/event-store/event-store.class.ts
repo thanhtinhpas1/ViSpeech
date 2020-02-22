@@ -1,4 +1,4 @@
-import { TCPClient, EventFactory} from 'geteventstore-promise';
+import {EventFactory, TCPClient} from 'geteventstore-promise';
 
 /**
  * @class EventStore

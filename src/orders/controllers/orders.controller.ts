@@ -1,19 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-  Delete,
-  Put,
-  Query
-} from "@nestjs/common";
-import { ApiTags, ApiResponse, ApiOperation } from "@nestjs/swagger";
-import { OrderIdRequestParamsDto } from "../dtos/orders.dto";
-import { OrderDto } from "../dtos/orders.dto";
-import { OrdersService } from "../services/orders.service";
-import { GetOrdersQuery } from 'orders/queries/impl/get-orders.query';
-import { FindOrderQuery } from 'orders/queries/impl/find-order.query';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query} from '@nestjs/common';
+import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {OrderDto, OrderIdRequestParamsDto} from '../dtos/orders.dto';
+import {OrdersService} from '../services/orders.service';
+import {GetOrdersQuery} from 'orders/queries/impl/get-orders.query';
+import {FindOrderQuery} from 'orders/queries/impl/find-order.query';
 
 @Controller("orders")
 @ApiTags("Orders")

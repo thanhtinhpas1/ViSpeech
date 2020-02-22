@@ -1,33 +1,32 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Param,
   Body,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
   Put,
   Query
 } from "@nestjs/common";
-import { ApiTags, ApiResponse, ApiOperation } from "@nestjs/swagger";
-import { UserIdRequestParamsDto } from "../dtos/users.dto";
-import { UserDto } from "../dtos/users.dto";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { UserDto, UserIdRequestParamsDto } from "../dtos/users.dto";
 import { UsersService } from "../services/users.service";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
-import { Roles } from "security/roles.decorator";
-
+import { Roles } from "auth/roles.decorator";
 
 @Controller("users")
 @ApiTags("Users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   /* Create User */
+
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create User"] })
   @ApiResponse({ status: 200, description: "Create User." })
   @Post()
-  @Roles(['admin'])
+  @Roles(["admin"])
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
     return await this.usersService.createUser(userDto);
   }
@@ -52,8 +51,8 @@ export class UsersController {
   async deleteUser(@Param() userIdDto: UserIdRequestParamsDto) {
     return this.usersService.deleteUser(userIdDto);
   }
-
   /* List Users */
+
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["List Users"] })
   @ApiResponse({ status: 200, description: "List Users." })

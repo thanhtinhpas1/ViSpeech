@@ -1,7 +1,7 @@
-import { EventPublisher, ICommandHandler, CommandHandler } from "@nestjs/cqrs";
-import { DeleteUserCommand } from "../impl/delete-user.command";
-import { UserRepository } from "../../repository/user.repository";
-import { Logger } from "@nestjs/common";
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {DeleteUserCommand} from '../impl/delete-user.command';
+import {UserRepository} from '../../repository/user.repository';
+import {Logger} from '@nestjs/common';
 
 @CommandHandler(DeleteUserCommand)
 export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {

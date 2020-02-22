@@ -1,9 +1,9 @@
-import { Entity, Column, ManyToMany, JoinTable } from "typeorm";
-import { BaseEntityDto } from "base/base-entity.dto";
-import { IsString, IsNotEmpty } from "class-validator";
-import { UserDto } from "users/dtos/users.dto";
+import {Column, Entity, ManyToMany} from 'typeorm';
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {IsNotEmpty, IsString} from 'class-validator';
+import {UserDto} from 'users/dtos/users.dto';
 
-@Entity("roles")
+@Entity('roles')
 export class RoleDto extends BaseEntityDto {
   constructor(name) {
     super();
@@ -17,7 +17,7 @@ export class RoleDto extends BaseEntityDto {
 
   @ManyToMany(
     type => UserDto,
-    userDto => userDto.roles
+    userDto => userDto.roles,
   )
   users: UserDto[];
 }

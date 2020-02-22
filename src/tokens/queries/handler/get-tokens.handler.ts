@@ -1,9 +1,9 @@
-import { GetTokensQuery } from "../impl/get-tokens.query";
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { Repository } from "typeorm";
+import {GetTokensQuery} from '../impl/get-tokens.query';
+import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
+import {Repository} from 'typeorm';
 
 @QueryHandler(GetTokensQuery)
 export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {

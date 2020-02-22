@@ -1,11 +1,11 @@
-import { Module, OnModuleInit } from "@nestjs/common";
-import { TypeOrmModule, InjectRepository } from "@nestjs/typeorm";
-import { RoleDto } from "./dtos/roles.dto";
-import { CqrsModule } from "@nestjs/cqrs";
-import { EventStoreModule } from "core/event-store/event-store.module";
-import { Repository } from "typeorm";
-import { RolesService } from "./services/roles.service";
-import { JwtService } from "@nestjs/jwt";
+import {Module, OnModuleInit} from '@nestjs/common';
+import {InjectRepository, TypeOrmModule} from '@nestjs/typeorm';
+import {RoleDto} from './dtos/roles.dto';
+import {CqrsModule} from '@nestjs/cqrs';
+import {EventStoreModule} from 'core/event-store/event-store.module';
+import {Repository} from 'typeorm';
+import {RolesService} from './services/roles.service';
+
 // import { UserRoleDto } from "./dtos/user-roles.dto";
 
 @Module({

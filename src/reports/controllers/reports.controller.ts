@@ -1,19 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-  Delete,
-  Put,
-  Query
-} from "@nestjs/common";
-import { ApiTags, ApiResponse, ApiOperation } from "@nestjs/swagger";
-import { ReportIdRequestParamsDto } from "../dtos/reports.dto";
-import { ReportDto } from "../dtos/reports.dto";
-import { ReportsService } from "../services/reports.service";
-import { GetReportsQuery } from 'reports/queries/impl/get-reports.query';
-import { FindReportQuery } from 'reports/queries/impl/find-report.query';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query} from '@nestjs/common';
+import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {ReportDto, ReportIdRequestParamsDto} from '../dtos/reports.dto';
+import {ReportsService} from '../services/reports.service';
+import {GetReportsQuery} from 'reports/queries/impl/get-reports.query';
+import {FindReportQuery} from 'reports/queries/impl/find-report.query';
 
 @Controller("reports")
 @ApiTags("Reports")

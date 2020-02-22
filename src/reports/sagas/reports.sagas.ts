@@ -1,9 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ICommand, Saga, ofType } from "@nestjs/cqrs";
-import { ReportCreatedEvent } from "../events/impl/report-created.event";
-import { WelcomeReportCommand } from "../commands/impl/welcome-report.command";
-import { delay, map } from "rxjs/operators";
-import { Observable } from "rxjs";
+import {Injectable} from '@nestjs/common';
 
 @Injectable()
 export class ReportsSagas {

@@ -1,20 +1,20 @@
-import { CommandBus, EventBus, CqrsModule, QueryBus } from "@nestjs/cqrs";
-import { OnModuleInit, Module } from "@nestjs/common";
-import { CommandHandlers } from "./commands/handlers";
-import { EventHandlers } from "./events/handlers";
-import { ReportsSagas } from "./sagas/reports.sagas";
-import { ReportsController } from "./controllers/reports.controller";
-import { ReportsService } from "./services/reports.service";
-import { ReportRepository } from "./repository/report.repository";
-import { EventStoreModule } from "../core/event-store/event-store.module";
-import { EventStore } from "../core/event-store/event-store";
-import { ReportCreatedEvent } from "./events/impl/report-created.event";
-import { ReportDeletedEvent } from "./events/impl/report-deleted.event";
-import { ReportUpdatedEvent } from "./events/impl/report-updated.event";
-import { ReportWelcomedEvent } from "./events/impl/report-welcomed.event";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ReportDto } from "./dtos/reports.dto";
-import { QueryHandlers } from "./queries/handler";
+import {CommandBus, CqrsModule, EventBus, QueryBus} from '@nestjs/cqrs';
+import {Module, OnModuleInit} from '@nestjs/common';
+import {CommandHandlers} from './commands/handlers';
+import {EventHandlers} from './events/handlers';
+import {ReportsSagas} from './sagas/reports.sagas';
+import {ReportsController} from './controllers/reports.controller';
+import {ReportsService} from './services/reports.service';
+import {ReportRepository} from './repository/report.repository';
+import {EventStoreModule} from '../core/event-store/event-store.module';
+import {EventStore} from '../core/event-store/event-store';
+import {ReportCreatedEvent} from './events/impl/report-created.event';
+import {ReportDeletedEvent} from './events/impl/report-deleted.event';
+import {ReportUpdatedEvent} from './events/impl/report-updated.event';
+import {ReportWelcomedEvent} from './events/impl/report-welcomed.event';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {ReportDto} from './dtos/reports.dto';
+import {QueryHandlers} from './queries/handler';
 
 @Module({
   imports: [

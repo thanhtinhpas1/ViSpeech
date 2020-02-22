@@ -1,4 +1,3 @@
-import {config} from '../../../config';
 import {EventStore} from './event-store.class';
 
 export const eventStoreProviders = [

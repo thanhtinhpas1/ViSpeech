@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { TokenTypeDto } from "tokens/dtos/token-types.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import {Injectable} from '@nestjs/common';
+import {CommandBus, QueryBus} from '@nestjs/cqrs';
+import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
 
 @Injectable()
 export class TokenTypesService {

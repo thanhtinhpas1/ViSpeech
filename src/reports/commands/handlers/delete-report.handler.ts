@@ -1,7 +1,7 @@
-import { EventPublisher, ICommandHandler, CommandHandler } from "@nestjs/cqrs";
-import { DeleteReportCommand } from "../impl/delete-report.command";
-import { ReportRepository } from "../../repository/report.repository";
-import { Logger } from "@nestjs/common";
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {DeleteReportCommand} from '../impl/delete-report.command';
+import {ReportRepository} from '../../repository/report.repository';
+import {Logger} from '@nestjs/common';
 
 @CommandHandler(DeleteReportCommand)
 export class DeleteReportHandler implements ICommandHandler<DeleteReportCommand> {

@@ -1,0 +1,6 @@
+export const CONSTANTS = {
+    ROLE_ADMIN: 'ADMIN',
+    ROLE_USER: 'USER',
+    ROLE_MANAGER_USER: 'MANAGER_USER',
+    BEARER_HEADER_AUTHORIZE: 'Bearer ',
+};
