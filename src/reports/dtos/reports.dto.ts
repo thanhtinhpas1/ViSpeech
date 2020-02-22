@@ -29,17 +29,6 @@ export class ReportDto extends BaseEntityDto {
     })
     usedMinutes: number;
 
-    @ManyToOne(() => UserDto,
-        userDto => userDto.reports,
-    )
-    user: UserDto;
-
-    @ManyToOne(
-        () => TokenDto,
-        tokenDto => tokenDto.reports,
-    )
-    token: TokenDto;
-
     @IsDate()
     @IsNotEmpty()
     @Column({

@@ -14,10 +14,4 @@ export class RoleDto extends BaseEntityDto {
     @IsString()
     @Column()
     name: string;
-
-    @ManyToMany(
-        type => UserDto,
-        userDto => userDto.roles,
-    )
-    users: UserDto[];
 }
