@@ -13,6 +13,6 @@ export class FindUserHandler implements IQueryHandler<FindUserQuery> {
 
   execute(query: FindUserQuery): Promise<any> {
     Logger.log("ASync FindUserQuery...");
-    return this.repository.findOne(query.userId, { relations: ["roles"] });
+    return this.repository.findOne(query.id, { relations: ["roles"] });
   }
 }

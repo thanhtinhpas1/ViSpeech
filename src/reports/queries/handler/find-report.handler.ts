@@ -11,7 +11,7 @@ export class FindReportHandler implements IQueryHandler<FindReportQuery> {
 
     execute(query: FindReportQuery): Promise<any> {
         Logger.log("ASync FindReportQuery...");
-        return this.repository.findOne(query._id);
+        return this.repository.findOne(query.id);
     }
 
 }

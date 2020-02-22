@@ -1,6 +1,7 @@
-import {IsString} from 'class-validator';
+import { IsString, IsNotEmpty } from "class-validator";
 
 export class FindReportQuery {
+  @IsNotEmpty()
   @IsString()
-  _id: string;
+  id: string;
 }

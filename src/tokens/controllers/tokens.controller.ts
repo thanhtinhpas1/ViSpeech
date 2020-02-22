@@ -24,7 +24,7 @@ export class TokensController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Token"] })
   @ApiResponse({ status: 200, description: "Update Token." })
-  @Put(":tokenId")
+  @Put(":id")
   async updateToken(
     @Param() tokenIdDto: TokenIdRequestParamsDto,
     @Body() tokenDto: TokenDto
@@ -39,7 +39,7 @@ export class TokensController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Token"] })
   @ApiResponse({ status: 200, description: "Delete Token." })
-  @Delete(":tokenId")
+  @Delete(":id")
   async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
     return this.tokensService.deleteToken(tokenIdDto);
   }
@@ -66,7 +66,7 @@ export class TokensController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Get Token'] })
   @ApiResponse({ status: 200, description: 'Get Token.' })
-  @Get(':_id')
+  @Get(':id')
   async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
     return this.tokensService.findOne(findTokenQuery);
   }

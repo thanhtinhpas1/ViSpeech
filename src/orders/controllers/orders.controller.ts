@@ -25,7 +25,7 @@ export class OrdersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Order"] })
   @ApiResponse({ status: 200, description: "Update Order." })
-  @Put(":orderId")
+  @Put(":id")
   async updateOrder(
     @Param() orderIdDto: OrderIdRequestParamsDto,
     @Body() orderDto: OrderDto
@@ -40,7 +40,7 @@ export class OrdersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Order"] })
   @ApiResponse({ status: 200, description: "Delete Order." })
-  @Delete(":orderId")
+  @Delete(":id")
   async deleteOrder(@Param() orderIdDto: OrderIdRequestParamsDto) {
     return this.ordersService.deleteOrder(orderIdDto);
   }
@@ -58,7 +58,7 @@ export class OrdersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Get Order'] })
   @ApiResponse({ status: 200, description: 'Get Order.' })
-  @Get(':_id')
+  @Get(':id')
   async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {
     return this.ordersService.findOne(findOrderQuery);
   }
