@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { Report } from "../models/report.model";
+import {Injectable} from '@nestjs/common';
+import {Report} from '../models/report.model';
 
 @Injectable()
 export class ReportRepository {

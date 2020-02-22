@@ -2,6 +2,7 @@ import {CanActivate, Injectable} from '@nestjs/common';
 import {Reflector} from '@nestjs/core';
 import {JwtService} from '@nestjs/jwt';
 import {UsersService} from '../users/services/users.service';
+import {CONSTANTS} from '../common/constant';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -13,7 +14,7 @@ export class RolesGuard implements CanActivate {
     ) {
     }
 
-    canActivate(context: import('@nestjs/common').ExecutionContext): boolean | Promise<boolean> | import('rxjs').Observable<boolean> {
+    canActivate(context: import ('@nestjs/common').ExecutionContext): boolean | Promise<boolean> | import ('rxjs').Observable<boolean> {
         const roles = this.reflector.get<string[]>('roles', context.getHandler());
         const request = context.switchToHttp().getRequest();
         if (!roles) {
@@ -24,11 +25,10 @@ export class RolesGuard implements CanActivate {
     }
 
     matchRoles(request, roles: string[]) {
-        var authorization = request.headers.authorization;
+        const authorization = request.headers.authorization;
         if (!authorization) return false;
-        const jwt = authorization.replace('Bearer ', '');
+        const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, '');
         const payload = this.jwtService.decode(jwt);
-        // load roles
         // var user = this.usersService.findUserRoles(payload.userId);
         return false;
     }

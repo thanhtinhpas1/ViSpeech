@@ -1,9 +1,9 @@
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { FindOrderQuery } from "../impl/find-order.query";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { OrderDto } from "orders/dtos/orders.dto";
-import { Repository } from "typeorm";
+import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
+import {FindOrderQuery} from '../impl/find-order.query';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {OrderDto} from 'orders/dtos/orders.dto';
+import {Repository} from 'typeorm';
 
 @QueryHandler(FindOrderQuery)
 export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {

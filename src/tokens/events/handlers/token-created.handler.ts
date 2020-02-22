@@ -1,10 +1,10 @@
-import { IEventHandler, EventsHandler } from "@nestjs/cqrs";
-import { TokenCreatedEvent } from "../impl/token-created.event";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { Repository } from "typeorm";
-import { TokenTypeDto } from "tokens/dtos/token-types.dto";
+import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {TokenCreatedEvent} from '../impl/token-created.event';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
+import {Repository} from 'typeorm';
+import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
 
 @EventsHandler(TokenCreatedEvent)
 export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {

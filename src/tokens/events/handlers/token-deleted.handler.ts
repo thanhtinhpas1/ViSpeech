@@ -1,9 +1,9 @@
-import { IEventHandler, EventsHandler } from "@nestjs/cqrs";
-import { TokenDeletedEvent } from "../impl/token-deleted.event";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { Repository } from "typeorm";
+import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {TokenDeletedEvent} from '../impl/token-deleted.event';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
+import {Repository} from 'typeorm';
 
 @EventsHandler(TokenDeletedEvent)
 export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {

@@ -1,7 +1,7 @@
-import { EventPublisher, ICommandHandler, CommandHandler } from "@nestjs/cqrs";
-import { DeleteTokenCommand } from "../impl/delete-token.command";
-import { TokenRepository } from "../../repository/token.repository";
-import { Logger } from "@nestjs/common";
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {DeleteTokenCommand} from '../impl/delete-token.command';
+import {TokenRepository} from '../../repository/token.repository';
+import {Logger} from '@nestjs/common';
 
 @CommandHandler(DeleteTokenCommand)
 export class DeleteTokenHandler implements ICommandHandler<DeleteTokenCommand> {

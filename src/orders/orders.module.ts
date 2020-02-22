@@ -1,22 +1,22 @@
-import { CommandBus, EventBus, CqrsModule, QueryBus } from "@nestjs/cqrs";
-import { OnModuleInit, Module } from "@nestjs/common";
-import { CommandHandlers } from "./commands/handlers";
-import { EventHandlers } from "./events/handlers";
-import { OrdersSagas } from "./sagas/orders.sagas";
-import { OrdersController } from "./controllers/orders.controller";
-import { OrdersService } from "./services/orders.service";
-import { OrderRepository } from "./repository/order.repository";
-import { EventStoreModule } from "../core/event-store/event-store.module";
-import { EventStore } from "../core/event-store/event-store";
-import { OrderCreatedEvent } from "./events/impl/order-created.event";
-import { OrderDeletedEvent } from "./events/impl/order-deleted.event";
-import { OrderUpdatedEvent } from "./events/impl/order-updated.event";
-import { OrderWelcomedEvent } from "./events/impl/order-welcomed.event";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { OrderDto } from "./dtos/orders.dto";
-import { QueryHandlers } from "./queries/handler";
-import { UserDto } from "users/dtos/users.dto";
-import { UsersService } from "users/services/users.service";
+import {CommandBus, CqrsModule, EventBus, QueryBus} from '@nestjs/cqrs';
+import {Module, OnModuleInit} from '@nestjs/common';
+import {CommandHandlers} from './commands/handlers';
+import {EventHandlers} from './events/handlers';
+import {OrdersSagas} from './sagas/orders.sagas';
+import {OrdersController} from './controllers/orders.controller';
+import {OrdersService} from './services/orders.service';
+import {OrderRepository} from './repository/order.repository';
+import {EventStoreModule} from '../core/event-store/event-store.module';
+import {EventStore} from '../core/event-store/event-store';
+import {OrderCreatedEvent} from './events/impl/order-created.event';
+import {OrderDeletedEvent} from './events/impl/order-deleted.event';
+import {OrderUpdatedEvent} from './events/impl/order-updated.event';
+import {OrderWelcomedEvent} from './events/impl/order-welcomed.event';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {OrderDto} from './dtos/orders.dto';
+import {QueryHandlers} from './queries/handler';
+import {UserDto} from 'users/dtos/users.dto';
+import {UsersService} from 'users/services/users.service';
 
 @Module({
   imports: [

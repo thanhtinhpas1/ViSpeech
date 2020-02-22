@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { RoleDto } from "roles/dtos/roles.dto";
+import {Injectable} from '@nestjs/common';
+import {CommandBus, QueryBus} from '@nestjs/cqrs';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {RoleDto} from 'roles/dtos/roles.dto';
 
 @Injectable()
 export class RolesService {

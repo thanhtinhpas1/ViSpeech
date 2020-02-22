@@ -1,4 +1,6 @@
-export const ROLE_ADMIN = 'ADMIN';
-export const ROLE_USER = 'USER';
-export const ROLE_MANAGER_USER = 'MANAGER_USER';
-export const BEARER_HEADER_AUTHORIZE = 'Bearer  ;'
+export const CONSTANTS = {
+    ROLE_ADMIN: 'ADMIN',
+    ROLE_USER: 'USER',
+    ROLE_MANAGER_USER: 'MANAGER_USER',
+    BEARER_HEADER_AUTHORIZE: 'Bearer ',
+};

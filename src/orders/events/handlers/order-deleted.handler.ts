@@ -1,9 +1,9 @@
-import { IEventHandler, EventsHandler } from "@nestjs/cqrs";
-import { OrderDeletedEvent } from "../impl/order-deleted.event";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { OrderDto } from "orders/dtos/orders.dto";
-import { Repository } from "typeorm";
+import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {OrderDeletedEvent} from '../impl/order-deleted.event';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {OrderDto} from 'orders/dtos/orders.dto';
+import {Repository} from 'typeorm';
 
 @EventsHandler(OrderDeletedEvent)
 export class OrderDeletedHandler implements IEventHandler<OrderDeletedEvent> {

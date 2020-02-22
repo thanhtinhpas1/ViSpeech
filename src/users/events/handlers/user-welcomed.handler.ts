@@ -1,12 +1,10 @@
-import { IEventHandler, EventsHandler } from "@nestjs/cqrs";
-import { UserWelcomedEvent } from "../impl/user-welcomed.event";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { Repository } from "typeorm";
-import { TokensService } from "tokens/services/tokens.service";
-import { AuthService } from "auth/auth.service";
-import { TokenTypesService } from "tokens/services/token-types.service";
+import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {UserWelcomedEvent} from '../impl/user-welcomed.event';
+import {Logger} from '@nestjs/common';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
+import {TokensService} from 'tokens/services/tokens.service';
+import {AuthService} from 'auth/auth.service';
+import {TokenTypesService} from 'tokens/services/token-types.service';
 
 @EventsHandler(UserWelcomedEvent)
 export class UserWelcomedHandler implements IEventHandler<UserWelcomedEvent> {

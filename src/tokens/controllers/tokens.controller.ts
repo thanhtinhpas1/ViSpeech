@@ -1,20 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Body,
-  Delete,
-  Put,
-  Query
-} from "@nestjs/common";
-import { ApiTags, ApiResponse, ApiOperation } from "@nestjs/swagger";
-import { TokenIdRequestParamsDto } from "../dtos/tokens.dto";
-import { TokenDto } from "../dtos/tokens.dto";
-import { TokensService } from "../services/tokens.service";
-import { GetTokensQuery } from 'tokens/queries/impl/get-tokens.query';
-import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
-import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query} from '@nestjs/common';
+import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {TokenDto, TokenIdRequestParamsDto} from '../dtos/tokens.dto';
+import {TokensService} from '../services/tokens.service';
+import {GetTokensQuery} from 'tokens/queries/impl/get-tokens.query';
+import {GetTokensByUserIdQuery} from 'tokens/queries/impl/get-tokens-by-userId';
+import {FindTokenQuery} from 'tokens/queries/impl/find-token.query';
 
 @Controller("tokens")
 @ApiTags("Tokens")
