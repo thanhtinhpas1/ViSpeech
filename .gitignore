@@ -43,8 +43,11 @@ build/Release
 # Dependency directories
 node_modules/
 apps/node_modules/
+apps/build/
+
 jspm_packages/
 vendor/
+.idea/
 
 # TypeScript v1 declaration files
 typings/
