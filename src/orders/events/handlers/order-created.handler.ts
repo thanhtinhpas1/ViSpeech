@@ -9,19 +9,19 @@ import {FindUserQuery} from 'users/queries/impl/find-user.query';
 
 @EventsHandler(OrderCreatedEvent)
 export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
-  constructor(
-    @InjectRepository(OrderDto)
-    private readonly repository: Repository<OrderDto>,
-    private readonly usersService: UsersService
-  ) {}
+    constructor(
+        @InjectRepository(OrderDto)
+        private readonly repository: Repository<OrderDto>,
+        private readonly usersService: UsersService
+    ) {
+    }
 
-  async handle(event: OrderCreatedEvent) {
-    Logger.log(event, "OrderCreatedEvent");
-    const order = event.orderDto[0];
-    const findUserQuery = new FindUserQuery();
-    findUserQuery.userId = order.user.id;
-    const user = await this.usersService.findOne(findUserQuery);
-    order.user = user;
-    this.repository.save(order);
-  }
+    async handle(event: OrderCreatedEvent) {
+        Logger.log(event, 'OrderCreatedEvent');
+        const order = event.orderDto[0];
+        const findUserQuery = new FindUserQuery();
+        findUserQuery.id = order.user.id;
+        order.user = await this.usersService.findOne(findUserQuery);
+        await this.repository.save(order);
+    }
 }

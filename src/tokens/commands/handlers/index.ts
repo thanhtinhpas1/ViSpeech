@@ -4,8 +4,8 @@ import {UpdateTokenHandler} from './update-token.handler';
 import {WelcomeTokenHandler} from './welcome-token.handler';
 
 export const CommandHandlers = [
-  CreateTokenHandler,
-  DeleteTokenHandler,
-  UpdateTokenHandler,
-  WelcomeTokenHandler
+    CreateTokenHandler,
+    DeleteTokenHandler,
+    UpdateTokenHandler,
+    WelcomeTokenHandler
 ];

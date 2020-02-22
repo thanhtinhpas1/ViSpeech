@@ -5,29 +5,29 @@ import {TokenDeletedEvent} from '../events/impl/token-deleted.event';
 import {TokenWelcomedEvent} from '../events/impl/token-welcomed.event';
 
 export class Token extends AggregateRoot {
-  [x: string]: any;
+    [x: string]: any;
 
-  constructor(private readonly id: string | undefined) {
-    super();
-  }
+    constructor(private readonly id: string | undefined) {
+        super();
+    }
 
-  setData(data) {
-    this.data = data;
-  }
+    setData(data) {
+        this.data = data;
+    }
 
-  createToken() {
-    this.apply(new TokenCreatedEvent(this.data));
-  }
+    createToken() {
+        this.apply(new TokenCreatedEvent(this.data));
+    }
 
-  updateToken() {
-    this.apply(new TokenUpdatedEvent(this.data));
-  }
+    updateToken() {
+        this.apply(new TokenUpdatedEvent(this.data));
+    }
 
-  welcomeToken() {
-    this.apply(new TokenWelcomedEvent(this.id));
-  }
+    welcomeToken() {
+        this.apply(new TokenWelcomedEvent(this.id));
+    }
 
-  deleteToken() {
-    this.apply(new TokenDeletedEvent(this.id));
-  }
+    deleteToken() {
+        this.apply(new TokenDeletedEvent(this.id));
+    }
 }

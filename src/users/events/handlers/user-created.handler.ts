@@ -10,7 +10,8 @@ import {RolesService} from 'roles/services/roles.service';
 @EventsHandler(UserCreatedEvent)
 export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     constructor(
-        @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
+        @InjectRepository(UserDto)
+        private readonly repository: Repository<UserDto>,
         private readonly rolesService: RolesService,
     ) {
     }

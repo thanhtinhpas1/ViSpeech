@@ -7,10 +7,11 @@ import {Repository} from 'typeorm';
 
 @QueryHandler(FindReportQuery)
 export class FindReportHandler implements IQueryHandler<FindReportQuery> {
-    constructor(@InjectRepository(ReportDto) private readonly repository: Repository<ReportDto>) { }
+    constructor(@InjectRepository(ReportDto) private readonly repository: Repository<ReportDto>) {
+    }
 
     execute(query: FindReportQuery): Promise<any> {
-        Logger.log("ASync FindReportQuery...");
+        Logger.log('ASync FindReportQuery...');
         return this.repository.findOne(query.id);
     }
 

@@ -3,21 +3,21 @@
  *
  */
 
-(function($) {
+(function ($) {
     "use strict";
 
     var defaultOptions = {
-        tagClass: function(item) {
+        tagClass: function (item) {
             return 'label label-info';
         },
         focusClass: 'focus',
-        itemValue: function(item) {
+        itemValue: function (item) {
             return item ? item.toString() : item;
         },
-        itemText: function(item) {
+        itemText: function (item) {
             return this.itemValue(item);
         },
-        itemTitle: function(item) {
+        itemTitle: function (item) {
             return null;
         },
         freeInput: true,
@@ -28,7 +28,7 @@
         delimiter: ',',
         delimiterRegex: null,
         cancelConfirmKeysOnEmpty: false,
-        onTagExists: function(item, $tag) {
+        onTagExists: function (item, $tag) {
             $tag.hide().fadeIn();
         },
         trimValue: false,
@@ -68,7 +68,7 @@
          * Adds the given item as a new tag. Pass true to dontPushVal to prevent
          * updating the elements val()
          */
-        add: function(item, dontPushVal, options) {
+        add: function (item, dontPushVal, options) {
             var self = this;
 
             if (self.options.maxTags && self.itemsArray.length >= self.options.maxTags)
@@ -115,13 +115,13 @@
                 itemTitle = self.options.itemTitle(item);
 
             // Ignore items allready added
-            var existing = $.grep(self.itemsArray, function(item) {
+            var existing = $.grep(self.itemsArray, function (item) {
                 return self.options.itemValue(item) === itemValue;
             })[0];
             if (existing && !self.options.allowDuplicates) {
                 // Invoke onTagExists
                 if (self.options.onTagExists) {
-                    var $existingTag = $(".tag", self.$container).filter(function() {
+                    var $existingTag = $(".tag", self.$container).filter(function () {
                         return $(this).data("item") === existing;
                     });
                     self.options.onTagExists(item, $existingTag);
@@ -196,16 +196,16 @@
          * Removes the given item. Pass true to dontPushVal to prevent updating the
          * elements val()
          */
-        remove: function(item, dontPushVal, options) {
+        remove: function (item, dontPushVal, options) {
             var self = this;
 
             if (self.objectItems) {
                 if (typeof item === "object")
-                    item = $.grep(self.itemsArray, function(other) {
+                    item = $.grep(self.itemsArray, function (other) {
                         return self.options.itemValue(other) == self.options.itemValue(item);
                     });
                 else
-                    item = $.grep(self.itemsArray, function(other) {
+                    item = $.grep(self.itemsArray, function (other) {
                         return self.options.itemValue(other) == item;
                     });
 
@@ -222,10 +222,10 @@
                 if (beforeItemRemoveEvent.cancel)
                     return;
 
-                $('.tag', self.$container).filter(function() {
+                $('.tag', self.$container).filter(function () {
                     return $(this).data('item') === item;
                 }).remove();
-                $('option', self.$element).filter(function() {
+                $('option', self.$element).filter(function () {
                     return $(this).data('item') === item;
                 }).remove();
                 if ($.inArray(item, self.itemsArray) !== -1)
@@ -248,7 +248,7 @@
         /**
          * Removes all items
          */
-        removeAll: function() {
+        removeAll: function () {
             var self = this;
 
             $('.tag', self.$container).remove();
@@ -264,9 +264,9 @@
          * Refreshes the tags so they match the text/value of their corresponding
          * item.
          */
-        refresh: function() {
+        refresh: function () {
             var self = this;
-            $('.tag', self.$container).each(function() {
+            $('.tag', self.$container).each(function () {
                 var $tag = $(this),
                     item = $tag.data('item'),
                     itemValue = self.options.itemValue(item),
@@ -276,12 +276,12 @@
                 // Update tag's class and inner text
                 $tag.attr('class', null);
                 $tag.addClass('tag ' + htmlEncode(tagClass));
-                $tag.contents().filter(function() {
+                $tag.contents().filter(function () {
                     return this.nodeType == 3;
                 })[0].nodeValue = htmlEncode(itemText);
 
                 if (self.isSelect) {
-                    var option = $('option', self.$element).filter(function() {
+                    var option = $('option', self.$element).filter(function () {
                         return $(this).data('item') === item;
                     });
                     option.attr('value', itemValue);
@@ -292,7 +292,7 @@
         /**
          * Returns the items added as tags
          */
-        items: function() {
+        items: function () {
             return this.itemsArray;
         },
 
@@ -300,9 +300,9 @@
          * Assembly value by retrieving the value of each item, and set it on the
          * element.
          */
-        pushVal: function() {
+        pushVal: function () {
             var self = this,
-                val = $.map(self.items(), function(item) {
+                val = $.map(self.items(), function (item) {
                     return self.options.itemValue(item).toString();
                 });
 
@@ -315,7 +315,7 @@
         /**
          * Initializes the tags input behaviour on the element
          */
-        build: function(options) {
+        build: function (options) {
             var self = this;
 
             self.options = $.extend({}, defaultOptions, options);
@@ -334,7 +334,7 @@
                 makeOptionFunction(typeahead, 'source');
 
                 self.$input.typeahead($.extend({}, typeahead, {
-                    source: function(query, process) {
+                    source: function (query, process) {
                         function processItems(items) {
                             var texts = [];
 
@@ -362,17 +362,17 @@
                                 .then(processItems);
                         }
                     },
-                    updater: function(text) {
+                    updater: function (text) {
                         self.add(this.map[text]);
                         return this.map[text];
                     },
-                    matcher: function(text) {
+                    matcher: function (text) {
                         return (text.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1);
                     },
-                    sorter: function(texts) {
+                    sorter: function (texts) {
                         return texts.sort();
                     },
-                    highlighter: function(text) {
+                    highlighter: function (text) {
                         var regex = new RegExp('(' + this.query + ')', 'gi');
                         return text.replace(regex, "<strong>$1</strong>");
                     }
@@ -388,20 +388,20 @@
                     typeaheadjs = [null, typeaheadjs];
                 }
                 var valueKey = typeaheadjs[1].valueKey; // We should test typeaheadjs.size >= 1
-                var f_datum = valueKey ? function(datum) {
+                var f_datum = valueKey ? function (datum) {
                         return datum[valueKey];
                     } :
-                    function(datum) {
+                    function (datum) {
                         return datum;
                     }
-                $.fn.typeahead.apply(self.$input, typeaheadjs).on('typeahead:selected', $.proxy(function(obj, datum) {
+                $.fn.typeahead.apply(self.$input, typeaheadjs).on('typeahead:selected', $.proxy(function (obj, datum) {
                     self.add(f_datum(datum));
                     self.$input.typeahead('val', '');
                 }, self));
 
             }
 
-            self.$container.on('click', $.proxy(function(event) {
+            self.$container.on('click', $.proxy(function (event) {
                 if (!self.$element.attr('disabled')) {
                     self.$input.removeAttr('disabled');
                 }
@@ -409,7 +409,7 @@
             }, self));
 
             if (self.options.addOnBlur && self.options.freeInput) {
-                self.$input.on('focusout', $.proxy(function(event) {
+                self.$input.on('focusout', $.proxy(function (event) {
                     // HACK: only process on focusout when no typeahead opened, to
                     //       avoid adding the typeahead text as tag
                     if ($('.typeahead, .twitter-typeahead', self.$container).length === 0) {
@@ -421,15 +421,15 @@
 
             // Toggle the 'focus' css class on the container when it has focus
             self.$container.on({
-                focusin: function() {
+                focusin: function () {
                     self.$container.addClass(self.options.focusClass);
                 },
-                focusout: function() {
+                focusout: function () {
                     self.$container.removeClass(self.options.focusClass);
                 },
             });
 
-            self.$container.on('keydown', 'input', $.proxy(function(event) {
+            self.$container.on('keydown', 'input', $.proxy(function (event) {
                 var $input = $(event.target),
                     $inputWrapper = self.findInputWrapper();
 
@@ -449,7 +449,7 @@
                         }
                         break;
 
-                        // DELETE
+                    // DELETE
                     case 46:
                         if (doGetCaretPosition($input[0]) === 0) {
                             var next = $inputWrapper.next();
@@ -459,7 +459,7 @@
                         }
                         break;
 
-                        // LEFT ARROW
+                    // LEFT ARROW
                     case 37:
                         // Try to move the input before the previous tag
                         var $prevTag = $inputWrapper.prev();
@@ -468,7 +468,7 @@
                             $input.focus();
                         }
                         break;
-                        // RIGHT ARROW
+                    // RIGHT ARROW
                     case 39:
                         // Try to move the input after the next tag
                         var $nextTag = $inputWrapper.next();
@@ -478,7 +478,7 @@
                         }
                         break;
                     default:
-                        // ignore
+                    // ignore
                 }
 
                 // Reset internal input's size
@@ -488,7 +488,7 @@
                 $input.attr('size', Math.max(this.inputSize, $input.val().length));
             }, self));
 
-            self.$container.on('keypress', 'input', $.proxy(function(event) {
+            self.$container.on('keypress', 'input', $.proxy(function (event) {
                 var $input = $(event.target);
 
                 if (self.$element.attr('disabled')) {
@@ -519,7 +519,7 @@
             }, self));
 
             // Remove icon clicked
-            self.$container.on('click', '[data-role=remove]', $.proxy(function(event) {
+            self.$container.on('click', '[data-role=remove]', $.proxy(function (event) {
                 if (self.$element.attr('disabled')) {
                     return;
                 }
@@ -531,7 +531,7 @@
                 if (self.$element[0].tagName === 'INPUT') {
                     self.add(self.$element.val());
                 } else {
-                    $('option', self.$element).each(function() {
+                    $('option', self.$element).each(function () {
                         self.add($(this).attr('value'), true);
                     });
                 }
@@ -541,7 +541,7 @@
         /**
          * Removes all tagsinput behaviour and unregsiter all event handlers
          */
-        destroy: function() {
+        destroy: function () {
             var self = this;
 
             // Unbind events
@@ -556,14 +556,14 @@
         /**
          * Sets focus on the tagsinput
          */
-        focus: function() {
+        focus: function () {
             this.$input.focus();
         },
 
         /**
          * Returns the internal input element
          */
-        input: function() {
+        input: function () {
             return this.$input;
         },
 
@@ -571,7 +571,7 @@
          * Returns the element which is wrapped around the internal input. This
          * is normally the $container, but typeahead.js moves the $input element.
          */
-        findInputWrapper: function() {
+        findInputWrapper: function () {
             var elt = this.$input[0],
                 container = this.$container[0];
             while (elt && elt.parentNode !== container)
@@ -584,10 +584,10 @@
     /**
      * Register JQuery plugin
      */
-    $.fn.tagsinput = function(arg1, arg2, arg3) {
+    $.fn.tagsinput = function (arg1, arg2, arg3) {
         var results = [];
 
-        this.each(function() {
+        this.each(function () {
             var tagsinput = $(this).data('tagsinput');
             // Initialize a new tags input
             if (!tagsinput) {
@@ -635,7 +635,7 @@
     function makeOptionItemFunction(options, key) {
         if (typeof options[key] !== 'function') {
             var propertyName = options[key];
-            options[key] = function(item) {
+            options[key] = function (item) {
                 return item[propertyName];
             };
         }
@@ -644,11 +644,12 @@
     function makeOptionFunction(options, key) {
         if (typeof options[key] !== 'function') {
             var value = options[key];
-            options[key] = function() {
+            options[key] = function () {
                 return value;
             };
         }
     }
+
     /**
      * HtmlEncodes the given value
      */
@@ -688,8 +689,8 @@
      */
     function keyCombinationInList(keyPressEvent, lookupList) {
         var found = false;
-        $.each(lookupList, function(index, keyCombination) {
-            if (typeof(keyCombination) === 'number' && keyPressEvent.which === keyCombination) {
+        $.each(lookupList, function (index, keyCombination) {
+            if (typeof (keyCombination) === 'number' && keyPressEvent.which === keyCombination) {
                 found = true;
                 return false;
             }
@@ -712,7 +713,7 @@
      * Initialize tagsinput behaviour on inputs and selects which have
      * data-role=tagsinput
      */
-    $(function() {
+    $(function () {
         $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
     });
 })(window.jQuery);

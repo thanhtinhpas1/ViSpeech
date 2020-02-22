@@ -11,7 +11,7 @@
 
 var isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
 var isLinux = navigator.platform.indexOf('Linux') > -1 ? true : false;
-(function() {
+(function () {
 
     if ((isWindows || isLinux) && !($('body').hasClass('sidebar-mini') || $('body').hasClass('compact-menu') || $('body').hasClass('rtl-layout'))) {
         // if we are on windows OS we activate the perfectScrollbar function
@@ -44,7 +44,7 @@ var seq2 = 0,
     durations2 = 500;
 
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     var $sidebar = $('.sidebar');
 
@@ -60,19 +60,19 @@ $(document).ready(function() {
     }
 
     if ($('body').hasClass('compact-menu') || $('body').hasClass('horizontal-menu')) {
-        $('.sidebar .collapse').collapse('hide').on('hidden.bs.collapse', function() {
+        $('.sidebar .collapse').collapse('hide').on('hidden.bs.collapse', function () {
             $(this).css('height', 'auto');
         });
 
         if (window.matchMedia('(min-width: 992px)').matches) {
             $('.sidebar .sidebar-wrapper').perfectScrollbar('destroy');
         }
-        setTimeout(function() {
+        setTimeout(function () {
             $('.sidebar .collapse').css('height', 'auto');
         }, 300);
     }
 
-    $('.sidebar [data-toggle="collapse"]').on("click", function(event) {
+    $('.sidebar [data-toggle="collapse"]').on("click", function (event) {
         if ($('body').hasClass('compact-menu') || $('body').hasClass('horizontal-menu')) {
             if (window.matchMedia('(min-width: 992px)').matches) {
                 //Disable click on sidebar menu collapsible item when compact menu mode or horizontal menu mode is in use 
@@ -110,20 +110,20 @@ $(document).ready(function() {
         "optionClass": ""
     });
 
-    $('.form-control').on("focus", function() {
+    $('.form-control').on("focus", function () {
         $(this).parent('.input-group').addClass("input-group-focus");
-    }).on("blur", function() {
+    }).on("blur", function () {
         $(this).parent(".input-group").removeClass("input-group-focus");
     });
 
 
     if (breakCards == true) {
         // We break the cards headers if there is too much stress on them :-)
-        $('[data-header-animation="true"]').each(function() {
+        $('[data-header-animation="true"]').each(function () {
             var $fix_button = $(this)
             var $card = $(this).parent('.card');
 
-            $card.find('.fix-broken-card').on('click', function() {
+            $card.find('.fix-broken-card').on('click', function () {
                 console.log(this);
                 var $header = $(this).parent().parent().siblings('.card-header, .card-image');
 
@@ -131,12 +131,12 @@ $(document).ready(function() {
 
                 $card.attr('data-count', 0);
 
-                setTimeout(function() {
+                setTimeout(function () {
                     $header.removeClass('fadeInDown animate');
                 }, 480);
             });
 
-            $card.mouseenter(function() {
+            $card.mouseenter(function () {
                 var $this = $(this);
                 hover_count = parseInt($this.attr('data-count'), 10) + 1 || 0;
                 $this.attr("data-count", hover_count);
@@ -152,7 +152,7 @@ $(document).ready(function() {
 });
 
 // activate collapse right menu when the windows is resized
-$(window).resize(function() {
+$(window).resize(function () {
     md.initSidebarsCheck();
 
     // reset the seq for charts drawing animations
@@ -169,7 +169,7 @@ var md = {
         disabled_collapse_init: 0,
     },
 
-    checkSidebarImage: function() {
+    checkSidebarImage: function () {
         var image_src = $sidebar.data('image');
 
         if (image_src !== undefined) {
@@ -178,7 +178,7 @@ var md = {
         }
     },
 
-    initSliders: function() {
+    initSliders: function () {
         // Sliders for demo purpose
         $('#sliderRegular').noUiSlider({
             start: 40,
@@ -199,7 +199,7 @@ var md = {
         });
     },
 
-    initSidebarsCheck: function() {
+    initSidebarsCheck: function () {
         if ($(window).width() <= 991) {
             if ($sidebar.length != 0) {
                 md.initRightMenu();
@@ -211,10 +211,10 @@ var md = {
 
     },
 
-    initMinimizeSidebar: function() {
+    initMinimizeSidebar: function () {
 
         // when we are on a Desktop Screen and the collapse is triggered we check if the sidebar mini is active or not. If it is active then we don't let the collapse to show the elements because the elements from the collapse are showing on the hover state over the icons in sidebar mini, not on the click.
-        $('.sidebar .collapse').on('show.bs.collapse', function() {
+        $('.sidebar .collapse').on('show.bs.collapse', function () {
             if ($(window).width() > 991 && md.misc.sidebar_mini_active == true) {
                 return false;
             } else {
@@ -222,7 +222,7 @@ var md = {
             }
         });
 
-        $('#minimizeSidebar').on('click', function() {
+        $('#minimizeSidebar').on('click', function () {
             var $btn = $(this);
 
             if (md.misc.sidebar_mini_active == true) {
@@ -237,7 +237,7 @@ var md = {
 
             } else {
 
-                $('.sidebar .collapse').collapse('hide').on('hidden.bs.collapse', function() {
+                $('.sidebar .collapse').collapse('hide').on('hidden.bs.collapse', function () {
                     $(this).css('height', 'auto');
                 });
 
@@ -245,7 +245,7 @@ var md = {
                     $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
                 }
 
-                setTimeout(function() {
+                setTimeout(function () {
                     $('body').addClass('sidebar-mini');
 
                     $('.sidebar .collapse').css('height', 'auto');
@@ -254,18 +254,18 @@ var md = {
             }
 
             // we simulate the window Resize so the charts will get updated in realtime.
-            var simulateWindowResize = setInterval(function() {
+            var simulateWindowResize = setInterval(function () {
                 window.dispatchEvent(new Event('resize'));
             }, 180);
 
             // we stop the simulation of Window Resize after the animations are completed
-            setTimeout(function() {
+            setTimeout(function () {
                 clearInterval(simulateWindowResize);
             }, 1000);
         });
     },
 
-    checkScrollForTransparentNavbar: debounce(function() {
+    checkScrollForTransparentNavbar: debounce(function () {
         if ($(document).scrollTop() > 260) {
             if (transparent) {
                 transparent = false;
@@ -280,7 +280,7 @@ var md = {
     }, 17),
 
 
-    initRightMenu: debounce(function() {
+    initRightMenu: debounce(function () {
         var $sidebar_wrapper = $('.sidebar-wrapper');
 
         if (!mobile_menu_initialized) {
@@ -289,7 +289,7 @@ var md = {
             var nav_content = '';
             var mobile_menu_content = '';
 
-            $navbar.children('ul').each(function() {
+            $navbar.children('ul').each(function () {
 
                 var content_buff = $(this).html();
                 nav_content = nav_content + content_buff;
@@ -306,7 +306,7 @@ var md = {
             $nav_content.insertBefore($sidebar_nav);
             $navbar_form.insertBefore($nav_content);
 
-            $(".sidebar-wrapper .dropdown .dropdown-menu > li > a").on('click', function(event) {
+            $(".sidebar-wrapper .dropdown .dropdown-menu > li > a").on('click', function (event) {
                 event.stopPropagation();
 
             });
@@ -328,19 +328,19 @@ var md = {
         if (!toggle_initialized) {
             var $toggle = $('.navbar-toggle');
 
-            $toggle.on('click', function() {
+            $toggle.on('click', function () {
 
                 if (mobile_menu_visible == 1) {
                     $('html').removeClass('nav-open');
 
                     $('.close-layer').remove();
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $toggle.removeClass('toggled');
                     }, 400);
 
                     mobile_menu_visible = 0;
                 } else {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $toggle.addClass('toggled');
                     }, 430);
 
@@ -350,17 +350,17 @@ var md = {
                     $layer.css('height', main_panel_height + 'px');
                     $layer.appendTo(".main-panel");
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $layer.addClass('visible');
                     }, 100);
 
-                    $layer.on('click', function() {
+                    $layer.on('click', function () {
                         $('html').removeClass('nav-open');
                         mobile_menu_visible = 0;
 
                         $layer.removeClass('visible');
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $layer.remove();
                             $toggle.removeClass('toggled');
 
@@ -378,7 +378,7 @@ var md = {
     }, 200),
 
 
-    initBootstrapNavbarMenu: debounce(function() {
+    initBootstrapNavbarMenu: debounce(function () {
 
         if (!bootstrap_nav_initialized) {
             var $navbar = $('nav').find('.navbar-collapse').first().clone(true);
@@ -387,7 +387,7 @@ var md = {
             var mobile_menu_content = '';
 
             //add the content from the regular header to the mobile menu
-            $navbar.children('ul').each(function() {
+            $navbar.children('ul').each(function () {
                 var content_buff = $(this).html();
                 nav_content = nav_content + content_buff;
             });
@@ -406,36 +406,36 @@ var md = {
             $navbar.find('button').removeClass('btn-round btn-fill btn-info btn-primary btn-success btn-danger btn-warning btn-neutral');
             $navbar.find('button').addClass('btn-simple btn-block');
 
-            $toggle.on('click', function() {
+            $toggle.on('click', function () {
                 if (mobile_menu_visible == 1) {
                     $('html').removeClass('nav-open');
 
                     $('.close-layer').remove();
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $toggle.removeClass('toggled');
                     }, 400);
 
                     mobile_menu_visible = 0;
                 } else {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $toggle.addClass('toggled');
                     }, 430);
 
                     var $layer = $('<div class="close-layer"></div>');
                     $layer.appendTo(".wrapper-full-page");
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $layer.addClass('visible');
                     }, 100);
 
 
-                    $layer.on('click', function() {
+                    $layer.on('click', function () {
                         $('html').removeClass('nav-open');
                         mobile_menu_visible = 0;
 
                         $layer.removeClass('visible');
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $layer.remove();
                             $toggle.removeClass('toggled');
 
@@ -452,9 +452,9 @@ var md = {
         }
     }, 500),
 
-    startAnimationForLineChart: function(chart) {
+    startAnimationForLineChart: function (chart) {
 
-        chart.on('draw', function(data) {
+        chart.on('draw', function (data) {
             if (data.type === 'line' || data.type === 'area') {
                 data.element.animate({
                     d: {
@@ -481,9 +481,9 @@ var md = {
 
         seq = 0;
     },
-    startAnimationForBarChart: function(chart) {
+    startAnimationForBarChart: function (chart) {
 
-        chart.on('draw', function(data) {
+        chart.on('draw', function (data) {
             if (data.type === 'bar') {
                 seq2++;
                 data.element.animate({
@@ -510,11 +510,11 @@ var md = {
 
 function debounce(func, wait, immediate) {
     var timeout;
-    return function() {
+    return function () {
         var context = this,
             args = arguments;
         clearTimeout(timeout);
-        timeout = setTimeout(function() {
+        timeout = setTimeout(function () {
             timeout = null;
             if (!immediate) func.apply(context, args);
         }, wait);

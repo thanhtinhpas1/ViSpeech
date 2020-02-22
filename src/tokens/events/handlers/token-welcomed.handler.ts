@@ -4,7 +4,7 @@ import {Logger} from '@nestjs/common';
 
 @EventsHandler(TokenWelcomedEvent)
 export class TokenWelcomedHandler implements IEventHandler<TokenWelcomedEvent> {
-  handle(event: TokenWelcomedEvent) {
-    Logger.log(event, "TokenWelcomedEvent"); // write here
-  }
+    handle(event: TokenWelcomedEvent) {
+        Logger.log(event, 'TokenWelcomedEvent'); // write here
+    }
 }

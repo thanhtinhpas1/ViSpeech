@@ -7,12 +7,13 @@ import {Repository} from 'typeorm';
 
 @QueryHandler(GetReportsQuery)
 export class GetReportsHandler implements IQueryHandler<GetReportsQuery> {
-    constructor(@InjectRepository(ReportDto) private readonly repository: Repository<ReportDto>) { }
+    constructor(@InjectRepository(ReportDto) private readonly repository: Repository<ReportDto>) {
+    }
 
     async execute(query: GetReportsQuery) {
-        Logger.log("Async GetReportsQuery...");
+        Logger.log('Async GetReportsQuery...');
         if (query.limit && query.offset)
-            return this.repository.find({ skip: Number(query.offset), take: Number(query.limit) });
+            return this.repository.find({skip: Number(query.offset), take: Number(query.limit)});
         return this.repository.find();
     }
 }

@@ -4,8 +4,8 @@ import {TokenDeletedHandler} from './token-deleted.handler';
 import {TokenWelcomedHandler} from './token-welcomed.handler';
 
 export const EventHandlers = [
-  TokenCreatedHandler,
-  TokenUpdatedHandler,
-  TokenDeletedHandler,
-  TokenWelcomedHandler
+    TokenCreatedHandler,
+    TokenUpdatedHandler,
+    TokenDeletedHandler,
+    TokenWelcomedHandler
 ];

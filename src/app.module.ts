@@ -13,7 +13,11 @@ import {CommandBus, QueryBus} from '@nestjs/cqrs';
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot(config.DATABASE),
+        TypeOrmModule.forRoot({
+            ...config.DATABASE,
+            useUnifiedTopology: true,
+            entities: [__dirname + '/../**/*.dto{.ts,.js}'],
+        }),
         ServeStaticModule.forRoot({
             rootPath: join(__dirname, '..', config.ROOT_PATH),
         }),

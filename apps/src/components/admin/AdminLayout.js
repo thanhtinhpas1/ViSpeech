@@ -1,25 +1,28 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react'
 import Sidebar from './Sidebar/Sidebar.component'
 import Navbar from './Navbar/Navbar.component'
 import Footer from './Footer/Footer.container'
 
-const AdminLayout = ({ children }) => {
-  return (
-    <>
-      <div className="wrapper">
-        <Sidebar />
-        <div className="main-panel">
-          <Navbar />
-          <div className="content">
-            <div className="container-fluid">
-              <div>{children}</div>
-            </div>
-          </div>
-          <Footer />
-        </div>
-        {/* <div className="fixed-plugin">
+const AdminLayout = ({children}) => {
+    return (
+        < >
+        < div
+    className = "wrapper" >
+        < Sidebar / >
+        < div
+    className = "main-panel" >
+        < Navbar / >
+        < div
+    className = "content" >
+        < div
+    className = "container-fluid" >
+        < div > {children} < /div>
+        < /div>
+        < /div>
+        < Footer / >
+        < /div>
+    {/* <div className="fixed-plugin">
           <div className="dropdown show-dropdown">
             <a href="#" data-toggle="dropdown" aria-expanded="false">
               <i className="fa fa-cog fa-2x"> </i>
@@ -62,10 +65,12 @@ const AdminLayout = ({ children }) => {
               </li>
             </ul>
           </div>
-        </div> */}
-      </div>
-    </>
-  )
+        </div> */
+    }
+<
+    /div>
+    < />
+)
 }
 
 export default AdminLayout

@@ -7,12 +7,14 @@ import {Repository} from 'typeorm';
 
 @EventsHandler(UserDeletedEvent)
 export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
-  constructor(
-    @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
-  ) {}
-  handle(event: UserDeletedEvent) {
-    Logger.log(event, "UserDeletedEvent");
-    const userId = event.userId[0];
-    this.repository.delete(userId);
-  }
+    constructor(
+        @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
+    ) {
+    }
+
+    handle(event: UserDeletedEvent) {
+        Logger.log(event, 'UserDeletedEvent');
+        const userId = event.userId[0];
+        this.repository.delete(userId);
+    }
 }

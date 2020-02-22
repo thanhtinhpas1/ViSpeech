@@ -4,8 +4,8 @@ import {ReportDeletedHandler} from './report-deleted.handler';
 import {ReportWelcomedHandler} from './report-welcomed.handler';
 
 export const EventHandlers = [
-  ReportCreatedHandler,
-  ReportUpdatedHandler,
-  ReportDeletedHandler,
-  ReportWelcomedHandler
+    ReportCreatedHandler,
+    ReportUpdatedHandler,
+    ReportDeletedHandler,
+    ReportWelcomedHandler
 ];

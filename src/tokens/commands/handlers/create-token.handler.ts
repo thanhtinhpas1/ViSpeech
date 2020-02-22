@@ -5,19 +5,20 @@ import {Logger} from '@nestjs/common';
 
 @CommandHandler(CreateTokenCommand)
 export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
-  constructor(
-    private readonly repository: TokenRepository,
-    private readonly publisher: EventPublisher
-  ) {}
+    constructor(
+        private readonly repository: TokenRepository,
+        private readonly publisher: EventPublisher
+    ) {
+    }
 
-  async execute(command: CreateTokenCommand) {
-    Logger.log("Async CreateTokenHandler...", "CreateTokenCommand");
+    async execute(command: CreateTokenCommand) {
+        Logger.log('Async CreateTokenHandler...', 'CreateTokenCommand');
 
-    const { tokenDto } = command;
-    // use mergeObjectContext for dto dispatch events
-    const token = this.publisher.mergeObjectContext(
-      await this.repository.createToken(tokenDto)
-    );
-    token.commit();
-  }
+        const {tokenDto} = command;
+        // use mergeObjectContext for dto dispatch events
+        const token = this.publisher.mergeObjectContext(
+            await this.repository.createToken(tokenDto)
+        );
+        token.commit();
+    }
 }

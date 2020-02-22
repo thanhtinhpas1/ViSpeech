@@ -14,31 +14,25 @@ import {UserUpdatedEvent} from './events/impl/user-updated.event';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {UserDto} from './dtos/users.dto';
 import {QueryHandlers} from './queries/handler';
-import {TokensService} from 'tokens/services/tokens.service';
-import {TokenTypesService} from 'tokens/services/token-types.service';
-import {RolesService} from 'roles/services/roles.service';
-import {TokenTypeDto} from '../tokens/dtos/token-types.dto';
+import {RolesService} from '../roles/services/roles.service';
 import {RoleDto} from '../roles/dtos/roles.dto';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UserDto, TokenTypeDto, RoleDto]),
+        TypeOrmModule.forFeature([UserDto, RoleDto]),
         CqrsModule,
         EventStoreModule.forFeature(),
     ],
     controllers: [UsersController],
     providers: [
         UsersService,
-        TokensService,
-        TokenTypesService,
-        RolesService,
         UsersSagas,
         ...CommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
 
         /*** REPOSITORY */
-        UserRepository,
+        UserRepository, RolesService,
     ],
     exports: [UsersService],
 })

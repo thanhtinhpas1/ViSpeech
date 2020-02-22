@@ -39,16 +39,16 @@ const configs = {
         },
 
         DATABASE: {
-            type: process.env.TYPEORM_CONNECTION || 'mysql',
-            host: process.env.TYPEORM_HOST || '127.0.0.1',
-            username: process.env.TYPEORM_USERNAME || 'root',
-            password: process.env.TYPEORM_PASSWORD || 'mysql',
+            // name: process.env.TYPEORM_NAME || 'vispeech',
+            type: process.env.TYPEORM_CONNECTION || 'mongodb',
+            host: process.env.TYPEORM_HOST || 'localhost',
+            // username: process.env.TYPEORM_USERNAME || 'root',
+            // password: process.env.TYPEORM_PASSWORD || 'mysql',
             database: process.env.TYPEORM_DATABASE || 'vispeech',
-            port: process.env.TYPEORM_PORT || 3306,
+            port: process.env.TYPEORM_PORT || 27017,
             synchronize: process.env.TYPEORM_SYNCHRONIZE || true,
-            logging: process.env.TYPEORM_LOGGING || 'debug',
-            extra: process.env.TYPEORM_EXTRA || {charset: 'utf8mb4'},
-            entities: [__dirname + '/../**/*.dto{.ts,.js}'],
+            logger: process.env.TYPEORM_LOGGING || 'debug',
+            // extra: process.env.TYPEORM_EXTRA || {charset: 'utf8mb4'},
         },
 
         JWT: {

@@ -1,7 +1,6 @@
 import {CanActivate, Injectable} from '@nestjs/common';
 import {Reflector} from '@nestjs/core';
 import {JwtService} from '@nestjs/jwt';
-import {UsersService} from '../users/services/users.service';
 import {CONSTANTS} from '../common/constant';
 
 @Injectable()
@@ -10,7 +9,6 @@ export class RolesGuard implements CanActivate {
     constructor(
         private readonly reflector: Reflector,
         private readonly jwtService: JwtService,
-        private readonly  usersService: UsersService,
     ) {
     }
 
@@ -29,6 +27,7 @@ export class RolesGuard implements CanActivate {
         if (!authorization) return false;
         const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, '');
         const payload = this.jwtService.decode(jwt);
+        if (!payload) return false;
         // var user = this.usersService.findUserRoles(payload.userId);
         return false;
     }

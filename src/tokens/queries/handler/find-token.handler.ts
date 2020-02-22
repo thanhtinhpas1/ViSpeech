@@ -7,10 +7,11 @@ import {Repository} from 'typeorm';
 
 @QueryHandler(FindTokenQuery)
 export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
-    constructor(@InjectRepository(TokenDto) private readonly repository: Repository<TokenDto>) { }
+    constructor(@InjectRepository(TokenDto) private readonly repository: Repository<TokenDto>) {
+    }
 
     execute(query: FindTokenQuery): Promise<any> {
-        Logger.log("ASync FindTokenQuery...");
+        Logger.log('ASync FindTokenQuery...');
         return this.repository.findOne(query.id);
     }
 

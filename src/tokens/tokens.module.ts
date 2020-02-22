@@ -33,6 +33,7 @@ import {TokensService} from './services/tokens.service';
         TokenRepository,
         CommandBus, QueryBus,
         TokensService,
+        CommandBus, QueryBus,
     ],
     exports: [TokensService],
 })

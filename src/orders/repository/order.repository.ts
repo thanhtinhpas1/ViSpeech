@@ -3,29 +3,29 @@ import {Order} from '../models/order.model';
 
 @Injectable()
 export class OrderRepository {
-  async createOrder(orderDto) {
-    const order = new Order(undefined);
-    order.setData(orderDto);
-    order.createOrder();
-    return order;
-  }
+    async createOrder(orderDto) {
+        const order = new Order(undefined);
+        order.setData(orderDto);
+        order.createOrder();
+        return order;
+    }
 
-  async updateOrder(orderDto) {
-    const order = new Order(orderDto.id);
-    order.setData(orderDto);
-    order.updateOrder();
-    return order;
-  }
+    async updateOrder(orderDto) {
+        const order = new Order(orderDto.id);
+        order.setData(orderDto);
+        order.updateOrder();
+        return order;
+    }
 
-  async deleteOrder(orderId) {
-    const order = new Order(orderId);
-    order.deleteOrder();
-    return order;
-  }
+    async deleteOrder(orderId) {
+        const order = new Order(orderId);
+        order.deleteOrder();
+        return order;
+    }
 
-  async welcomeOrder(orderId) {
-    const order = new Order(orderId);
-    order.welcomeOrder();
-    return order;
-  }
+    async welcomeOrder(orderId) {
+        const order = new Order(orderId);
+        order.welcomeOrder();
+        return order;
+    }
 }

@@ -4,7 +4,6 @@ import {JwtModule, JwtService} from '@nestjs/jwt';
 import {APP_GUARD} from '@nestjs/core';
 import {RolesGuard} from 'auth/roles.guard';
 import {AuthController} from './auth.controllers';
-import {UserDto} from 'users/dtos/users.dto';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {CommandBus, QueryBus} from '@nestjs/cqrs';
 import {UsersService} from '../users/services/users.service';
@@ -14,7 +13,7 @@ import {config} from '../../config';
 @Module({
     imports: [
         JwtModule.register(config.JWT),
-        TypeOrmModule.forFeature([UserDto]),
+        TypeOrmModule.forFeature(),
         UsersModule,
         PassportModule,
     ],

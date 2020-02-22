@@ -7,14 +7,15 @@ import {Repository} from 'typeorm';
 
 @EventsHandler(ReportCreatedEvent)
 export class ReportCreatedHandler implements IEventHandler<ReportCreatedEvent> {
-  constructor(
-    @InjectRepository(ReportDto)
-    private readonly repository: Repository<ReportDto>
-  ) {}
+    constructor(
+        @InjectRepository(ReportDto)
+        private readonly repository: Repository<ReportDto>
+    ) {
+    }
 
-  async handle(event: ReportCreatedEvent) {
-    Logger.log(event, "ReportCreatedEvent");
-    const report = event.reportDto[0];
-    this.repository.save(report);
-  }
+    async handle(event: ReportCreatedEvent) {
+        Logger.log(event, 'ReportCreatedEvent');
+        const report = event.reportDto[0];
+        this.repository.save(report);
+    }
 }

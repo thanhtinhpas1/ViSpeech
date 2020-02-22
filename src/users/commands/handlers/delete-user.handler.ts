@@ -5,17 +5,18 @@ import {Logger} from '@nestjs/common';
 
 @CommandHandler(DeleteUserCommand)
 export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
-  constructor(
-    private readonly repository: UserRepository,
-    private readonly publisher: EventPublisher
-  ) {}
+    constructor(
+        private readonly repository: UserRepository,
+        private readonly publisher: EventPublisher
+    ) {
+    }
 
-  async execute(command: DeleteUserCommand) {
-    Logger.log("Async DeleteUserHandler...", "DeleteUserCommand");
-    const { userIdDto } = command;
-    const user = this.publisher.mergeObjectContext(
-      await this.repository.deleteUser(userIdDto.id)
-    );
-    user.commit();
-  }
+    async execute(command: DeleteUserCommand) {
+        Logger.log('Async DeleteUserHandler...', 'DeleteUserCommand');
+        const {userIdDto} = command;
+        const user = this.publisher.mergeObjectContext(
+            await this.repository.deleteUser(userIdDto.id)
+        );
+        user.commit();
+    }
 }

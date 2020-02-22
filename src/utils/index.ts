@@ -13,4 +13,4 @@ export const Utils = {
     comparePassword: (oldPassword, newPassword) => {
         return bcrypt.compare(oldPassword, newPassword);
     }
-}
+};

@@ -15,50 +15,50 @@ import {OrderWelcomedEvent} from './events/impl/order-welcomed.event';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {OrderDto} from './dtos/orders.dto';
 import {QueryHandlers} from './queries/handler';
-import {UserDto} from 'users/dtos/users.dto';
 import {UsersService} from 'users/services/users.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([OrderDto, UserDto]),
-    CqrsModule,
-    EventStoreModule.forFeature()
-  ],
-  controllers: [OrdersController],
-  providers: [
-    OrdersService,
-    UsersService,
-    OrdersSagas,
-    ...CommandHandlers,
-    ...EventHandlers,
-    ...QueryHandlers,
-    OrderRepository
-  ]
+    imports: [
+        TypeOrmModule.forFeature([OrderDto]),
+        CqrsModule,
+        EventStoreModule.forFeature(),
+    ],
+    controllers: [OrdersController],
+    providers: [
+        OrdersService,
+        UsersService,
+        OrdersSagas,
+        ...CommandHandlers,
+        ...EventHandlers,
+        ...QueryHandlers,
+        OrderRepository,
+    ],
 })
 export class OrdersModule implements OnModuleInit {
-  constructor(
-    private readonly command$: CommandBus,
-    private readonly query$: QueryBus,
-    private readonly event$: EventBus,
-    private readonly ordersSagas: OrdersSagas,
-    private readonly eventStore: EventStore
-  ) {}
+    constructor(
+        private readonly command$: CommandBus,
+        private readonly query$: QueryBus,
+        private readonly event$: EventBus,
+        private readonly ordersSagas: OrdersSagas,
+        private readonly eventStore: EventStore,
+    ) {
+    }
 
-  onModuleInit() {
-    this.eventStore.setEventHandlers(this.eventHandlers);
-    this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
-    this.event$.publisher = this.eventStore;
-    /** ------------ */
-    this.event$.register(EventHandlers);
-    this.command$.register(CommandHandlers);
-    this.query$.register(QueryHandlers);
-    this.event$.registerSagas([OrdersSagas]);
-  }
+    onModuleInit() {
+        this.eventStore.setEventHandlers(this.eventHandlers);
+        this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
+        this.event$.publisher = this.eventStore;
+        /** ------------ */
+        this.event$.register(EventHandlers);
+        this.command$.register(CommandHandlers);
+        this.query$.register(QueryHandlers);
+        this.event$.registerSagas([OrdersSagas]);
+    }
 
-  eventHandlers = {
-    OrderCreatedEvent: data => new OrderCreatedEvent(data),
-    OrderDeletedEvent: data => new OrderDeletedEvent(data),
-    OrderUpdatedEvent: data => new OrderUpdatedEvent(data),
-    OrderWelcomedEvent: data => new OrderWelcomedEvent(data)
-  };
+    eventHandlers = {
+        OrderCreatedEvent: data => new OrderCreatedEvent(data),
+        OrderDeletedEvent: data => new OrderDeletedEvent(data),
+        OrderUpdatedEvent: data => new OrderUpdatedEvent(data),
+        OrderWelcomedEvent: data => new OrderWelcomedEvent(data)
+    };
 }

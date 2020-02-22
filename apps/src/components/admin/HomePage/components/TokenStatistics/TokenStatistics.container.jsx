@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import TokenStatistics from './TokenStatistics.component'
 
 const mapStateToProps = state => ({})

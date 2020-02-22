@@ -4,8 +4,8 @@ import {UpdateUserHandler} from './update-user.handler';
 import {WelcomeUserHandler} from './welcome-user.handler';
 
 export const CommandHandlers = [
-  CreateUserHandler,
-  DeleteUserHandler,
-  UpdateUserHandler,
-  WelcomeUserHandler,
+    CreateUserHandler,
+    DeleteUserHandler,
+    UpdateUserHandler,
+    WelcomeUserHandler,
 ];

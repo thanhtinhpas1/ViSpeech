@@ -5,18 +5,19 @@ import {Logger} from '@nestjs/common';
 
 @CommandHandler(UpdateUserCommand)
 export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
-  constructor(
-    private readonly repository: UserRepository,
-    private readonly publisher: EventPublisher
-  ) {}
+    constructor(
+        private readonly repository: UserRepository,
+        private readonly publisher: EventPublisher
+    ) {
+    }
 
-  async execute(command: UpdateUserCommand) {
-    Logger.log("Async UpdateUserHandler...", "UpdateUserCommand");
+    async execute(command: UpdateUserCommand) {
+        Logger.log('Async UpdateUserHandler...', 'UpdateUserCommand');
 
-    const { userDto } = command;
-    const user = this.publisher.mergeObjectContext(
-      await this.repository.updateUser(userDto)
-    );
-    user.commit();
-  }
+        const {userDto} = command;
+        const user = this.publisher.mergeObjectContext(
+            await this.repository.updateUser(userDto)
+        );
+        user.commit();
+    }
 }

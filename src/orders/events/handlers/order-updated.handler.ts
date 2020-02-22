@@ -7,14 +7,15 @@ import {Repository} from 'typeorm';
 
 @EventsHandler(OrderUpdatedEvent)
 export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
-  constructor(
-    @InjectRepository(OrderDto)
-    private readonly repository: Repository<OrderDto>
-  ) {}
+    constructor(
+        @InjectRepository(OrderDto)
+        private readonly repository: Repository<OrderDto>
+    ) {
+    }
 
-  handle(event: OrderUpdatedEvent) {
-    Logger.log(event, "OrderUpdatedEvent"); // write here
-    const { id, ...orderInfo } = event.orderDto[0];
-    this.repository.update(id, orderInfo);
-  }
+    handle(event: OrderUpdatedEvent) {
+        Logger.log(event, 'OrderUpdatedEvent'); // write here
+        const {id, ...orderInfo} = event.orderDto[0];
+        this.repository.update(id, orderInfo);
+    }
 }

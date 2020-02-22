@@ -6,14 +6,14 @@ import Main from './components/Main/Main.component'
 import Footer from './components/Footer/Footer.component'
 
 const LandingPage = () => {
-  return (
-    <div>
-      <Loading />
-      <Header />
-      <Main />
-      <Footer />
-    </div>
-  )
+    return (
+        <div>
+            <Loading/>
+            <Header/>
+            <Main/>
+            <Footer/>
+        </div>
+    )
 }
 
 export default LandingPage

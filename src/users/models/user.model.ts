@@ -5,29 +5,29 @@ import {UserDeletedEvent} from '../events/impl/user-deleted.event';
 import {UserWelcomedEvent} from '../events/impl/user-welcomed.event';
 
 export class User extends AggregateRoot {
-  [x: string]: any;
+    [x: string]: any;
 
-  constructor(private readonly id: string | undefined) {
-    super();
-  }
+    constructor(private readonly id: string | undefined) {
+        super();
+    }
 
-  setData(data) {
-    this.data = data;
-  }
+    setData(data) {
+        this.data = data;
+    }
 
-  createUser() {
-    this.apply(new UserCreatedEvent(this.data));
-  }
+    createUser() {
+        this.apply(new UserCreatedEvent(this.data));
+    }
 
-  updateUser() {
-    this.apply(new UserUpdatedEvent(this.data));
-  }
+    updateUser() {
+        this.apply(new UserUpdatedEvent(this.data));
+    }
 
-  welcomeUser() {
-    this.apply(new UserWelcomedEvent(this.id));
-  }
+    welcomeUser() {
+        this.apply(new UserWelcomedEvent(this.id));
+    }
 
-  deleteUser() {
-    this.apply(new UserDeletedEvent(this.id));
-  }
+    deleteUser() {
+        this.apply(new UserDeletedEvent(this.id));
+    }
 }

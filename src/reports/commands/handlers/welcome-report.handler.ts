@@ -5,18 +5,19 @@ import {Logger} from '@nestjs/common';
 
 @CommandHandler(WelcomeReportCommand)
 export class WelcomeReportHandler
-  implements ICommandHandler<WelcomeReportCommand> {
-  constructor(
-    private readonly repository: ReportRepository,
-    private readonly publisher: EventPublisher
-  ) {}
+    implements ICommandHandler<WelcomeReportCommand> {
+    constructor(
+        private readonly repository: ReportRepository,
+        private readonly publisher: EventPublisher
+    ) {
+    }
 
-  async execute(command: WelcomeReportCommand) {
-    Logger.log("Async WelcomeReportHandler...", "WelcomeReportCommand");
-    const { reportId } = command;
-    const report = this.publisher.mergeObjectContext(
-      await this.repository.welcomeReport(reportId)
-    );
-    report.commit();
-  }
+    async execute(command: WelcomeReportCommand) {
+        Logger.log('Async WelcomeReportHandler...', 'WelcomeReportCommand');
+        const {reportId} = command;
+        const report = this.publisher.mergeObjectContext(
+            await this.repository.welcomeReport(reportId)
+        );
+        report.commit();
+    }
 }

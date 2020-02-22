@@ -7,19 +7,20 @@ import {Repository} from 'typeorm';
 
 @QueryHandler(GetTokensQuery)
 export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
-  constructor(
-    @InjectRepository(TokenDto)
-    private readonly repository: Repository<TokenDto>
-  ) {}
+    constructor(
+        @InjectRepository(TokenDto)
+        private readonly repository: Repository<TokenDto>
+    ) {
+    }
 
-  async execute(query: GetTokensQuery) {
-    Logger.log("Async GetTokensQuery...");
-    if (query.limit && query.offset)
-      return this.repository.find({
-        skip: Number(query.offset),
-        take: Number(query.limit),
-        relations: ["tokenType"]
-      });
-    return this.repository.find({ relations: ["tokenType"] });
-  }
+    async execute(query: GetTokensQuery) {
+        Logger.log('Async GetTokensQuery...');
+        if (query.limit && query.offset)
+            return this.repository.find({
+                skip: Number(query.offset),
+                take: Number(query.limit),
+                relations: ['tokenType']
+            });
+        return this.repository.find({relations: ['tokenType']});
+    }
 }

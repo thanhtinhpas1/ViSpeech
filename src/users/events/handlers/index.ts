@@ -3,8 +3,8 @@ import {UserUpdatedHandler} from './user-updated.handler';
 import {UserDeletedHandler} from './user-deleted.handler';
 
 export const EventHandlers = [
-  UserCreatedHandler,
-  UserUpdatedHandler,
-  UserDeletedHandler,
-  // UserWelcomedHandler,
+    UserCreatedHandler,
+    UserUpdatedHandler,
+    UserDeletedHandler,
+    // UserWelcomedHandler,
 ];
