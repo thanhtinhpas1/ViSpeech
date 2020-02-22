@@ -1,9 +1,10 @@
+import STORAGE from 'utils/storage'
+import { JWT_TOKEN } from 'utils/constant'
 import apiUrl from './api-url'
-import { JWT_TOKEN } from '../utils/constant'
 
 export default class UserService {
   static login = ({ username, password }) => {
-    const api = `${apiUrl}/user/login`
+    const api = `${apiUrl}/login`
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
@@ -21,11 +22,11 @@ export default class UserService {
         return response.json()
       })
       .then(result => {
-        if (status !== 200) {
+        if (status !== 201) {
           throw new Error(result.message)
         }
-        this.setPreferences(JWT_TOKEN, result.user.token)
-        return result.user
+        STORAGE.setPreferences(JWT_TOKEN, result.token)
+        return result
       })
       .catch(err => {
         throw new Error(err)
@@ -53,7 +54,7 @@ export default class UserService {
         if (status !== 200) {
           throw new Error(result.message)
         }
-        this.setPreferences(JWT_TOKEN, result.user.token)
+        STORAGE.setPreferences(JWT_TOKEN, result.user.token)
         return result.user
       })
       .catch(err => {
@@ -61,8 +62,8 @@ export default class UserService {
       })
   }
 
-  static register = ({ username, email, lastName, firstName, password }) => {
-    const api = `${apiUrl}/user/register`
+  static register = ({ username, email, lastName, firstName, password, roles }) => {
+    const api = `${apiUrl}/users`
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
@@ -73,6 +74,7 @@ export default class UserService {
         lastName,
         firstName,
         password,
+        roles,
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -80,13 +82,13 @@ export default class UserService {
     })
       .then(response => {
         status = response.status
-        return response.json()
+        return response.text()
       })
       .then(result => {
-        if (status !== 200) {
+        if (status !== 201) {
           throw new Error(result.message)
         }
-        return result.user
+        return result ? JSON.parse(result) : {}
       })
       .catch(err => {
         throw new Error(err)
@@ -94,7 +96,8 @@ export default class UserService {
   }
 
   static authenticate = token => {
-    const api = `${apiUrl}/user/authenticate`
+    const api = `${apiUrl}/authenticate`
+    let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'GET',
@@ -104,30 +107,20 @@ export default class UserService {
       },
     })
       .then(response => {
+        status = response.status
         return response.json()
       })
-      .then(user => {
-        return user
+      .then(result => {
+        if (status !== 200) {
+          STORAGE.removePreferences(JWT_TOKEN)
+          throw new Error(result.message)
+        }
+        return result
       })
       .catch(err => {
-        this.removePreferences(JWT_TOKEN)
+        STORAGE.removePreferences(JWT_TOKEN)
         throw new Error(err)
       })
-  }
-
-  static setPreferences = (key, value) => {
-    // eslint-disable-next-line no-undef
-    localStorage.setItem(key, value)
-  }
-
-  static getPreferences = key => {
-    // eslint-disable-next-line no-undef
-    return localStorage.getItem(key)
-  }
-
-  static removePreferences = key => {
-    // eslint-disable-next-line no-undef
-    localStorage.removeItem(key)
   }
 
   static activeEmail = token => {

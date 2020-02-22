@@ -1,8 +1,8 @@
-import { AggregateRoot } from '@nestjs/cqrs';
-import { UserCreatedEvent } from '../events/impl/user-created.event';
-import { UserUpdatedEvent } from '../events/impl/user-updated.event';
-import { UserDeletedEvent } from '../events/impl/user-deleted.event';
-import { UserWelcomedEvent } from '../events/impl/user-welcomed.event';
+import {AggregateRoot} from '@nestjs/cqrs';
+import {UserCreatedEvent} from '../events/impl/user-created.event';
+import {UserUpdatedEvent} from '../events/impl/user-updated.event';
+import {UserDeletedEvent} from '../events/impl/user-deleted.event';
+import {UserWelcomedEvent} from '../events/impl/user-welcomed.event';
 
 export class User extends AggregateRoot {
   [x: string]: any;

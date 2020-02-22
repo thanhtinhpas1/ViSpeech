@@ -3,6 +3,10 @@
 # Yarn
 *.yarn
 
+# Yarn.lock
+yarn.lock
+apps/yarn.lock
+
 # Logs
 *.log
 npm-debug.log*
@@ -38,8 +42,12 @@ build/Release
 
 # Dependency directories
 node_modules/
+apps/node_modules/
+apps/build/
+
 jspm_packages/
 vendor/
+.idea/
 
 # TypeScript v1 declaration files
 typings/
@@ -60,7 +68,9 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+
+# .idea
+.idea/**
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

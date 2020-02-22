@@ -1,6 +1,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
+import UserService from 'services/user.service'
+import { JWT_TOKEN } from 'utils/constant'
+import STORAGE from 'utils/storage'
 import UserTypes from './user.types'
 import {
   loginSuccess,
@@ -22,8 +25,6 @@ import {
   updateAvatarSuccess,
   updateAvatarFailure,
 } from './user.actions'
-import UserService from '../../services/user.service'
-import { JWT_TOKEN } from '../../utils/constant'
 
 // ==== login
 export function* login({ payload: user }) {
@@ -35,11 +36,11 @@ export function* login({ payload: user }) {
   }
 }
 
-export function* loginStartSagas() {
+export function* loginStartSaga() {
   yield takeLatest(UserTypes.LOGIN_START, login)
 }
 
-// ===authen with social
+// === authen with social
 /**
  *
  * @param {Object} payload is user
@@ -57,6 +58,7 @@ export function* authenWithSocialSaga() {
   yield takeLatest(UserTypes.AUTHEN_WITH_SOCIAL, authenWithSocial)
 }
 
+// ==== register
 export function* register({ payload: user }) {
   try {
     const registerUser = yield UserService.register(user)
@@ -66,11 +68,21 @@ export function* register({ payload: user }) {
   }
 }
 
+export function* registerStartSaga() {
+  yield takeLatest(UserTypes.REGISTER_START, register)
+}
+
+// ==== logout
 export function* logout() {
-  UserService.removePreferences(JWT_TOKEN)
+  STORAGE.removePreferences(JWT_TOKEN)
   yield put(onClearUserState())
 }
 
+export function* logoutSaga() {
+  yield takeLatest(UserTypes.LOGOUT, logout)
+}
+
+// ==== authenticate JWT
 export function* authenticate({ payload: token }) {
   try {
     const user = yield UserService.authenticate(token)
@@ -80,13 +92,12 @@ export function* authenticate({ payload: token }) {
       yield put(updateCurrentUser(null))
     }
   } catch (err) {
-    console.log('ERR AUTHENTICATE ', err)
     yield put(updateCurrentUser(null))
   }
 }
 
-export function* registerStartSaga() {
-  yield takeLatest(UserTypes.REGISTER_START, register)
+export function* authenticateSaga() {
+  yield takeLatest(UserTypes.AUTHENTICATE, authenticate)
 }
 
 // === active account by email
@@ -150,16 +161,6 @@ function* resetPasswordSaga() {
   yield takeLatest(UserTypes.RESET_PASSWORD, resetPassword)
 }
 
-// =================================
-
-export function* logoutSaga() {
-  yield takeLatest(UserTypes.LOGOUT, logout)
-}
-
-export function* authenticateSaga() {
-  yield takeLatest(UserTypes.AUTHENTICATE, authenticate)
-}
-
 // ===========
 function* changePassword({ payload }) {
   try {
@@ -189,7 +190,7 @@ function* updateAvatarSaga() {
 
 export function* userSaga() {
   yield all([
-    call(loginStartSagas),
+    call(loginStartSaga),
     call(authenWithSocialSaga),
     call(activeEmailSaga),
     call(sendEmailResetPasswordSaga),

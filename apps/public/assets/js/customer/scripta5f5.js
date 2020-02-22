@@ -23,8 +23,10 @@
       var e = t.scrollTop()
       var a = s.height()
       e > c.top
-        ? n.hasClass('has-fixed') || (n.addClass('has-fixed'), r.css('padding-top', a))
-        : n.hasClass('has-fixed') && (n.removeClass('has-fixed'), r.css('padding-top', 0))
+        ? n.hasClass('has-fixed') ||
+          (n.addClass('has-fixed'), r.css('padding-top', a))
+        : n.hasClass('has-fixed') &&
+          (n.removeClass('has-fixed'), r.css('padding-top', 0))
     })
   }
   var d = e('[data-percent]')
@@ -101,7 +103,9 @@
   var x = e('.toggle-nav')
   var y = e('.navbar')
   function C(e) {
-    l < 991 ? e.delay(500).addClass('navbar-mobile') : e.delay(500).removeClass('navbar-mobile')
+    l < 991
+      ? e.delay(500).addClass('navbar-mobile')
+      : e.delay(500).removeClass('navbar-mobile')
   }
   x.length > 0 &&
     x.on('click', function(e) {
@@ -217,58 +221,59 @@
     A.DataTable({
       ordering: !1,
       autoWidth: !1,
-      dom: '<t><"row align-items-center"<"col-sm-6 text-left"p><"col-sm-6 text-sm-right"i>>',
-      pageLength: 5,
-      bPaginate: e('.data-table tbody tr').length > 5,
-      iDisplayLength: 5,
-      language: {
-        search: '',
-        searchPlaceholder: 'Type in to Search',
-        info: '_START_ -_END_ of _TOTAL_',
-        infoEmpty: 'No records',
-        infoFiltered: '( Total _MAX_  )',
-        paginate: {
-          first: 'First',
-          last: 'Last',
-          next: 'Next',
-          previous: 'Prev',
-        },
-      },
-    })
-  var O = e('.dt-filter-init')
-  if (O.length > 0) {
-    var P = O.DataTable({
-      ordering: !1,
-      autoWidth: !1,
       dom:
-        '<"row justify-content-between pdb-1x"<"col-9 col-sm-6 text-left"f><"col-3 text-right"<"data-table-filter relative d-inline-block">>><t><"row align-items-center"<"col-sm-6 text-left"p><"col-sm-6 text-sm-right"i>>',
-      pageLength: 6,
-      bPaginate: e('.data-table tbody tr').length > 6,
-      iDisplayLength: 6,
+        '<t><"row align-items-center"<"col-sm-6 text-left"p><"col-sm-6 text-sm-right"i>>',
+      pageLength: 5,
+      // bPaginate: e('.data-table tbody tr').length > 5,
+      // iDisplayLength: 5,
       language: {
         search: '',
-        searchPlaceholder: 'Type in to Search',
-        info: '_START_ -_END_ of _TOTAL_',
-        infoEmpty: 'No records',
-        infoFiltered: '( Total _MAX_  )',
+        // searchPlaceholder: 'Type in to Search',
+        info: 'Hiển thị _START_ đến _END_ trên _TOTAL_ dòng',
+        infoEmpty: 'Không có dữ liệu',
+        infoFiltered: '(filtered from _MAX_ total entries)',
         paginate: {
-          first: 'First',
-          last: 'Last',
-          next: 'Next',
-          previous: 'Prev',
+          first: 'Trang đầu',
+          last: 'Trang cuối',
+          next: 'Tiếp theo',
+          previous: 'Quay lại',
         },
       },
     })
-    e('.data-table-filter').append(
-      '<a href="#" class="btn btn-light-alt btn-xs btn-icon toggle-tigger"> <em class="ti ti-settings"></em> </a><div class="toggle-class toggle-datatable-filter dropdown-content dropdown-content-top-left text-left"><ul class="pdt-1x pdb-1x"><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" id="all" checked value=""> <label for="all">All</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" id="approved" value="approved"> <label for="approved">Approved</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" value="pending" id="pending"> <label for="pending">Pending</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" value="progress" id="progress"> <label for="progress">Progress</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" value="cancled" id="cancled"> <label for="cancled">Cancled</label></li></ul></div>'
-    ),
-      e('.data-filter').on('change', function() {
-        var t = e(this).val()
-        P.columns('.dt-tnxno')
-          .search(t || '', !0, !1)
-          .draw()
-      })
-  }
+  // var O = e('.dt-filter-init')
+  // if (O.length > 0) {
+  //   var P = O.DataTable({
+  //     ordering: !1,
+  //     autoWidth: !1,
+  //     dom:
+  //       '<"row justify-content-between pdb-1x"<"col-9 col-sm-6 text-left"f><"col-3 text-right"<"data-table-filter relative d-inline-block">>><t><"row align-items-center"<"col-sm-6 text-left"p><"col-sm-6 text-sm-right"i>>',
+  //     pageLength: 6,
+  //     bPaginate: e('.data-table tbody tr').length > 6,
+  //     iDisplayLength: 6,
+  //     language: {
+  //       search: '',
+  //       searchPlaceholder: 'Type in to Search',
+  //       info: '_START_ -_END_ of _TOTAL_',
+  //       infoEmpty: 'No records',
+  //       infoFiltered: '( Total _MAX_  )',
+  //       paginate: {
+  //         first: 'First',
+  //         last: 'Last',
+  //         next: 'Next',
+  //         previous: 'Prev',
+  //       },
+  //     }
+  //   })
+  //   e('.data-table-filter').append(
+  //     '<a href="#" class="btn btn-light-alt btn-xs btn-icon toggle-tigger"> <em class="ti ti-settings"></em> </a><div class="toggle-class toggle-datatable-filter dropdown-content dropdown-content-top-left text-left"><ul class="pdt-1x pdb-1x"><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" id="all" checked value=""> <label for="all">All</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" id="approved" value="approved"> <label for="approved">Approved</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" value="pending" id="pending"> <label for="pending">Pending</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" value="progress" id="progress"> <label for="progress">Progress</label></li><li class="pd-1x pdl-2x pdr-2x"> <input class="data-filter input-checkbox input-checkbox-sm" type="radio" name="filter" value="cancled" id="cancled"> <label for="cancled">Cancled</label></li></ul></div>'
+  //   ),
+  //     e('.data-filter').on('change', function() {
+  //       var t = e(this).val()
+  //       P.columns('.dt-tnxno')
+  //         .search(t || '', !0, !1)
+  //         .draw()
+  //     })
+  // }
   e('.modal').on('shown.bs.modal', function() {
     a.hasClass('modal-open') || a.addClass('modal-open')
   })
@@ -294,18 +299,21 @@
           .removeClass('current'),
         a.preventDefault())
     })
-  var M = e('.color-trigger')
-  M.length > 0 &&
-    M.on('click', function() {
-      var t = e(this).attr('title')
-      return (
-        e('body').fadeOut(function() {
-          e('#layoutstyle').attr('href', `assets/css/${t}.css`),
-            e(this)
-              .delay(150)
-              .fadeIn()
-        }),
-        !1
-      )
-    })
+  // var M = e('.color-trigger')
+  // M.length > 0 &&
+  //   M.on('click', function() {
+  //     var t = e(this).attr('title')
+  //     return (
+  //       e('body').fadeOut(function() {
+  //         e('#layoutstyle').attr(
+  //           'href',
+  //           `%PUBLIC_URL%/assets/css/customer/${t}.css`
+  //         ),
+  //           e(this)
+  //             .delay(150)
+  //             .fadeIn()
+  //       }),
+  //       !1
+  //     )
+  //   })
 })(jQuery)

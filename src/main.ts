@@ -1,19 +1,21 @@
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { FastifyAdapter } from '@nestjs/platform-fastify';
-import { AppModule } from './app.module';
-import { config } from '../config';
+import {NestFactory} from '@nestjs/core';
+import {Logger, ValidationPipe} from '@nestjs/common';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {FastifyAdapter} from '@nestjs/platform-fastify';
+import {AppModule} from './app.module';
+import {config} from '../config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new FastifyAdapter({
     trustProxy: true,
   }));
+  app.enableCors();
   const documentOptions = new DocumentBuilder()
     .setTitle(config.TITLE)
     .setDescription(config.DESCRIPTION)
     .setVersion(config.VERSION)
-    .addTag('vispeech')
+    .addTag(config.NAME)
+    .setBasePath(config.PREFIX)
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, documentOptions);

@@ -1,20 +1,38 @@
+/* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router'
-import { CUSTOMER_PATH } from 'utils/constant'
+import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
+import STORAGE from 'utils/storage'
 
-const Header = () => {
+const Header = ({ onAuthenticate, logout }) => {
   const [userLinks, setUserLinks] = useState([])
   const [navbarMenu, setNavbarMenu] = useState([])
 
   useEffect(() => {
     const userLinksArr = [
-      { href: `${CUSTOMER_PATH}/profile`, iconClass: 'ti-id-badge', name: 'Trang cá nhân' },
-      { href: `${CUSTOMER_PATH}/transactions`, iconClass: 'ti-eye', name: 'Lịch sử giao dịch' },
+      {
+        href: `${CUSTOMER_PATH}/profile`,
+        iconClass: 'ti-id-badge',
+        name: 'Trang cá nhân',
+      },
+      {
+        href: `${CUSTOMER_PATH}/transactions`,
+        iconClass: 'ti-eye',
+        name: 'Lịch sử giao dịch',
+      },
     ]
     const navbarMenuArr = [
-      { href: `${CUSTOMER_PATH}`, emClass: 'ikon-dashboard', name: 'Trang chủ' },
-      { href: `${CUSTOMER_PATH}/tokens-wallet`, emClass: 'ikon-distribution', name: 'Ví key' },
+      {
+        href: `${CUSTOMER_PATH}`,
+        emClass: 'ikon-dashboard',
+        name: 'Trang chủ',
+      },
+      {
+        href: `${CUSTOMER_PATH}/tokens-wallet`,
+        emClass: 'ikon-distribution',
+        name: 'Ví key',
+      },
       {
         href: `${CUSTOMER_PATH}/transactions`,
         emClass: 'ikon-transactions',
@@ -25,10 +43,10 @@ const Header = () => {
     setNavbarMenu(navbarMenuArr)
   }, [])
 
-  // useEffect(() => {
-  //   const token = UserService.getPreferences(JWT_TOKEN)
-  //   if (!currentUser && token) onAuthenticate(token)
-  // }, [currentUser, onAuthenticate])
+  useEffect(() => {
+    const token = STORAGE.getPreferences(JWT_TOKEN)
+    onAuthenticate(token)
+  }, [onAuthenticate])
 
   // useEffect(() => {
   //   let interval
@@ -119,7 +137,7 @@ const Header = () => {
                     </ul>
                     <ul className="user-links bg-light">
                       <li>
-                        <a href="#">
+                        <a href="javascript:void(0)" onClick={logout}>
                           <i className="ti ti-power-off" />
                           Đăng xuất
                         </a>
@@ -155,3 +173,4 @@ const Header = () => {
 }
 
 export default withRouter(Header)
+// You can get access to the history object’s properties and the closest <Route>'s match via the withRouter higher-order component. withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.

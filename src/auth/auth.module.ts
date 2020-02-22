@@ -1,22 +1,31 @@
-import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.strategy';
-import { JwtStrategy } from './jwt.strategy';
-import { UsersModule } from '../users/users.module';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+import {Module} from '@nestjs/common';
+import {PassportModule} from '@nestjs/passport';
+import {JwtModule, JwtService} from '@nestjs/jwt';
+import {APP_GUARD} from '@nestjs/core';
+import {RolesGuard} from 'auth/roles.guard';
+import {AuthController} from './auth.controllers';
+import {UserDto} from 'users/dtos/users.dto';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {CommandBus, QueryBus} from '@nestjs/cqrs';
+import {UsersService} from '../users/services/users.service';
+import {UsersModule} from '../users/users.module';
+import {config} from '../../config';
 
 @Module({
-  imports: [
-    UsersModule,
-    PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
-    }),
-  ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
+    imports: [
+        JwtModule.register(config.JWT),
+        TypeOrmModule.forFeature([UserDto]),
+        UsersModule,
+        PassportModule,
+    ],
+    controllers: [AuthController],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard,
+        },
+        CommandBus, QueryBus, UsersService, JwtService,
+    ],
 })
-export class AuthModule {}
+export class AuthModule {
+}
