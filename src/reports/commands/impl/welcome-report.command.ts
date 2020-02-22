@@ -1,6 +1,5 @@
-import {ICommand} from '@nestjs/cqrs';
+import { ICommand } from "@nestjs/cqrs";
 
 export class WelcomeReportCommand implements ICommand {
-    constructor(public readonly reportId: string) {
-    }
+  constructor(public readonly reportId: string) {}
 }

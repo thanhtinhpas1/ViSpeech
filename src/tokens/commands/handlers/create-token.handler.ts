@@ -1,7 +1,7 @@
-import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
-import {CreateTokenCommand} from '../impl/create-token.command';
-import {TokenRepository} from '../../repository/token.repository';
-import {Logger} from '@nestjs/common';
+import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
+import { CreateTokenCommand } from "../impl/create-token.command";
+import { TokenRepository } from "../../repository/token.repository";
+import { Logger } from "@nestjs/common";
 
 @CommandHandler(CreateTokenCommand)
 export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
@@ -14,11 +14,11 @@ export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
     async execute(command: CreateTokenCommand) {
         Logger.log('Async CreateTokenHandler...', 'CreateTokenCommand');
 
-        const {tokenDto} = command;
-        // use mergeObjectContext for dto dispatch events
-        const token = this.publisher.mergeObjectContext(
-            await this.repository.createToken(tokenDto)
-        );
-        token.commit();
-    }
+    const { tokenDto, userDto } = command;
+    // use mergeObjectContext for dto dispatch events
+    const token = this.publisher.mergeObjectContext(
+      await this.repository.createToken(tokenDto, userDto)
+    );
+    token.commit();
+  }
 }

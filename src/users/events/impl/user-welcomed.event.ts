@@ -1,6 +1,5 @@
-import {IEvent} from '@nestjs/cqrs';
+import { IEvent } from "@nestjs/cqrs";
 
 export class UserWelcomedEvent implements IEvent {
-    constructor(public readonly userId: string) {
-    }
+  constructor(public readonly userId: string) {}
 }

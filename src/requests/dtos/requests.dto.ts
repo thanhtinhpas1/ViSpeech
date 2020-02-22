@@ -1,27 +1,30 @@
-import {Column, Entity} from 'typeorm';
-import {IsIP, IsNumber, IsPositive, IsString} from 'class-validator';
-import {BaseEntityDto} from 'base/base-entity.dto';
+import { Column, Entity } from "typeorm";
+import {
+  IsIP,
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsNotEmpty
+} from "class-validator";
+import { BaseEntityDto } from "base/base-entity.dto";
 
-@Entity('requests')
+@Entity("requests")
 export class RequestDto extends BaseEntityDto {
 
-    @IsString()
-    @Column({
-        name: 'token_id'
-    })
-    tokenId: string;
+  @IsNotEmpty()
+  @IsString()
+  @Column()
+  tokenId: string;
 
-    @IsIP()
-    @IsString()
-    @Column()
-    host: string;
+  @IsIP()
+  @IsString()
+  @Column()
+  host: string;
 
-    @IsNumber()
-    @IsPositive()
-    @Column({
-        comment: 'length of voice - minute'
-    })
-    length: number;
-
+  @IsNumber()
+  @IsPositive()
+  @Column({
+    comment: "length of voice - minute"
+  })
+  length: number;
 }
- 
