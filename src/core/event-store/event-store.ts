@@ -68,17 +68,21 @@ export class EventStore implements IEventPublisher, IMessageSource {
                         rawData += chunk;
                     });
                     res.on('end', () => {
-                        xml2js.parseString(rawData, {explicitArray: false}, (err, result) => {
-                            if (err) {
-                                console.trace(err);
-                                return;
-                            }
-                            const content = result['atom:entry']['atom:content'];
-                            const eventType = content.eventType;
-                            const data = content.data;
-                            event = this.eventHandlers[eventType](Object.values(data));
-                            subject.next(event);
-                        });
+                        try {
+                            xml2js.parseString(rawData, {explicitArray: false}, (err, result) => {
+                                if (err) {
+                                    console.trace(err);
+                                    return;
+                                }
+                                const content = result['atom:entry']['atom:content'];
+                                const eventType = content.eventType;
+                                const data = content.data;
+                                event = this.eventHandlers[eventType](Object.values(data));
+                                subject.next(event);
+                            });
+                        }catch (e) {
+                            Logger.log('PARSE ERROR', e.message);
+                        }
                     });
                 });
             } catch (error) {

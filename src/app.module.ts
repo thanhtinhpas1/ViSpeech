@@ -7,7 +7,6 @@ import {UsersService} from 'users/services/users.service';
 import {UsersModule} from 'users/users.module';
 import {TokensModule} from 'tokens/tokens.module';
 import {OrdersModule} from 'orders/orders.module';
-import {RolesModule} from 'roles/roles.module';
 import {config} from '../config';
 import {CommandBus, QueryBus} from '@nestjs/cqrs';
 
@@ -16,6 +15,7 @@ import {CommandBus, QueryBus} from '@nestjs/cqrs';
         TypeOrmModule.forRoot({
             ...config.DATABASE,
             useUnifiedTopology: true,
+            synchronize: false,
             entities: [__dirname + '/../**/*.dto{.ts,.js}'],
         }),
         ServeStaticModule.forRoot({
@@ -26,7 +26,6 @@ import {CommandBus, QueryBus} from '@nestjs/cqrs';
         UsersModule,
         TokensModule,
         OrdersModule,
-        RolesModule,
     ],
     providers: [
         UsersService, CommandBus, QueryBus,

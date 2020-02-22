@@ -1,10 +1,15 @@
 import {IsEmpty} from 'class-validator';
 import {CreateDateColumn, ObjectID, ObjectIdColumn, UpdateDateColumn} from 'typeorm';
+import {Utils} from '../utils';
 
 export class BaseEntityDto {
-    @IsEmpty()
+
+    constructor() {
+        this._id = Utils.getUuid();
+    }
+
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
 
     @IsEmpty()
     @CreateDateColumn({

@@ -16,7 +16,7 @@ export class UsersSagas {
                 Logger.log('Inside [UsersSagas] Saga', 'UsersSagas');
                 const userId = event.userDto[0].id;
                 return new WelcomeUserCommand(userId);
-            })
+            }),
         );
     };
 }

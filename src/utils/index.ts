@@ -1,16 +1,16 @@
 const bcrypt = require('bcryptjs');
-const uuid = require('uuid');
+import {v1 as uuidv1} from 'uuid';
 
 export const Utils = {
     hashPassword: (password) => {
-        let salt = bcrypt.genSaltSync(10);
-        let hash = bcrypt.hashSync(password, salt);
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
         return hash;
     },
     getUuid: () => {
-        return uuid();
+        return uuidv1();
     },
     comparePassword: (oldPassword, newPassword) => {
         return bcrypt.compare(oldPassword, newPassword);
-    }
+    },
 };

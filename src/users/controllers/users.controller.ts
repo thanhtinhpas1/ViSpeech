@@ -5,6 +5,7 @@ import {UsersService} from '../services/users.service';
 import {GetUsersQuery} from 'users/queries/impl/get-users.query';
 import {FindUserQuery} from 'users/queries/impl/find-user.query';
 import {Roles} from 'auth/roles.decorator';
+import {CONSTANTS} from '../../common/constant';
 
 @Controller('users')
 @ApiTags('Users')
@@ -18,7 +19,7 @@ export class UsersController {
     @ApiOperation({tags: ['Create User']})
     @ApiResponse({status: 200, description: 'Create User.'})
     @Post()
-    @Roles(['admin'])
+    @Roles([CONSTANTS.ROLE_ADMIN])
     async createUser(@Body() userDto: UserDto): Promise<UserDto> {
         return await this.usersService.createUser(userDto);
     }
@@ -31,9 +32,9 @@ export class UsersController {
     @Put(':id')
     async updateUser(
         @Param() userIdDto: UserIdRequestParamsDto,
-        @Body() userDto: UserDto
+        @Body() userDto: UserDto,
     ) {
-        return this.usersService.updateUser({id: userIdDto.id, ...userDto});
+        return this.usersService.updateUser(userDto);
     }
 
     /* Delete User */

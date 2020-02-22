@@ -1,6 +1,7 @@
 import {IsEmail, IsEmpty, IsNotEmpty, IsString} from 'class-validator';
-import {Column, Entity, Index} from 'typeorm';
+import {Column, Entity, Index, Unique} from 'typeorm';
 import {BaseEntityDto} from 'base/base-entity.dto';
+import {CONSTANTS} from '../../common/constant';
 
 export class UserIdRequestParamsDto {
     constructor(userId) {
@@ -42,7 +43,7 @@ export class UserDto extends BaseEntityDto {
 
     @IsEmail()
     @IsNotEmpty()
-    @Column()
+    @Column({unique: true})
     email: string;
 
     @IsEmpty()
@@ -59,23 +60,12 @@ export class UserDto extends BaseEntityDto {
         nullable: true,
     })
     isActive: boolean;
-    //
-    // @ManyToMany(
-    //     type => RoleDto,
-    //     roleDto => roleDto.users,
-    // )
-    // @JoinTable({name: 'user_roles'})
-    // roles: RoleDto[];
-    //
-    // @OneToMany(
-    //     () => ReportDto,
-    //     reportDto => reportDto.user,
-    // )
-    // reports: ReportDto[];
-    //
-    // @OneToMany(
-    //     type => OrderDto,
-    //     orderDto => orderDto.user,
-    // )
-    // orders: OrderDto[];
+
+    @IsNotEmpty()
+    @Column({
+        name: 'roles',
+        default: [CONSTANTS.ROLE_USER],
+        nullable: false,
+    })
+    roles: string[];
 }

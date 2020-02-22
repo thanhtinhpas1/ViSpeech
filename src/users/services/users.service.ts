@@ -17,7 +17,6 @@ export class UsersService {
     }
 
     async createUser(userDto: UserDto) {
-        userDto.id = Utils.getUuid();
         return await this.commandBus.execute(new CreateUserCommand(userDto));
     }
 

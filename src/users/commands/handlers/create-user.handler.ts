@@ -17,7 +17,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
         const {userDto} = command;
         // use mergeObjectContext for dto dispatch events
         const user = this.publisher.mergeObjectContext(
-            await this.repository.createUser(userDto)
+            await this.repository.createUser(userDto),
         );
         user.commit();
     }

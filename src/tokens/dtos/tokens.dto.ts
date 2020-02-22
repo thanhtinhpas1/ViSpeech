@@ -1,8 +1,7 @@
 import {IsEmpty, IsNotEmpty, IsString} from 'class-validator';
-import {Column, Entity, ManyToOne, OneToMany} from 'typeorm';
+import {Column, Entity} from 'typeorm';
 import {BaseEntityDto} from 'base/base-entity.dto';
 import {TokenTypeDto} from './token-types.dto';
-import {ReportDto} from '../../reports/dtos/reports.dto';
 
 export class TokenIdRequestParamsDto {
     constructor(tokenId) {
@@ -51,10 +50,11 @@ export class TokenDto extends BaseEntityDto {
     })
     userId: string;
 
-    @ManyToOne(
-        () => TokenTypeDto,
-        tokenTypeDto => tokenTypeDto.tokens,
-    )
+    @IsNotEmpty()
+    @Column({
+        name: 'token_type',
+        nullable: false,
+    })
     tokenType: TokenTypeDto;
 
     @IsEmpty()
@@ -63,9 +63,4 @@ export class TokenDto extends BaseEntityDto {
     })
     isValid: boolean;
 
-    @OneToMany(
-        () => ReportDto,
-        reportDto => reportDto.token,
-    )
-    reports: ReportDto[];
 }
