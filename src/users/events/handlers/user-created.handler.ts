@@ -16,11 +16,14 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
   ) {}
 
   async handle(event: UserCreatedEvent) {
-    Logger.log(event, "UserCreatedEvent");
-    const user = event.userDto[0];
-    user.password = Utils.hashPassword(user.password[0]);
-    const customerRole = await this.rolesService.findByName(user.roles.name);
-    user.roles = [customerRole];
-    return await this.repository.save(user);
+    try {
+      Logger.log(event, "UserCreatedEvent");
+      const user = event.userDto[0];
+      user.password = Utils.hashPassword(user.password[0]);
+      user.roles = Utils.updateUserRoles(user.roles);
+      return await this.repository.save(user);
+    } catch (error) {
+      Logger.error(error, "UserCreatedEvent");
+    }
   }
 }

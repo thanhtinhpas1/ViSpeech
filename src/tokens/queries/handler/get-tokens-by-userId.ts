@@ -13,11 +13,14 @@ export class GetTokensByUserIdHandler
     private readonly repository: Repository<TokenDto>
   ) {}
 
-  execute(query: GetTokensByUserIdQuery): Promise<any> {
-    Logger.log("Async GetTokensByUserIdQuery...");
-    return this.repository.find({
-      relations: ["tokenType"],
-      where: { userId: query.userId }
-    });
+  async execute(query: GetTokensByUserIdQuery): Promise<any> {
+    try {
+      Logger.log("Async GetTokensByUserIdQuery...", "GetTokensByUserIdQuery");
+      return await this.repository.find({
+        where: { userId: query.userId }
+      });
+    } catch (error) {
+      Logger.error(error, "GetTokensByUserIdQuery");
+    }
   }
 }

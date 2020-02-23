@@ -12,13 +12,16 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
   ) {}
 
   async execute(query: GetUsersQuery) {
-    Logger.log("Async GetUsersQuery...");
-    if (query.limit && query.offset)
-      return this.repository.find({
-        skip: Number(query.offset),
-        take: Number(query.limit),
-        relations: ["roles"]
-      });
-    return this.repository.find({ relations: ["roles"] });
+    try {
+      Logger.log("Async GetUsersQuery...", "GetUsersQuery");
+      if (query.limit && query.offset)
+        return await this.repository.find({
+          skip: Number(query.offset),
+          take: Number(query.limit)
+        });
+      return await this.repository.find();
+    } catch (error) {
+      Logger.error(error, "GetUsersQuery");
+    }
   }
 }

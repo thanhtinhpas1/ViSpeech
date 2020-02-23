@@ -1,4 +1,4 @@
-import { IsEmail, IsEmpty, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsEmpty, IsNotEmpty, IsString, IsArray } from "class-validator";
 import { Column, Entity, Index } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
 
@@ -59,6 +59,11 @@ export class UserDto extends BaseEntityDto {
     nullable: true
   })
   isActive: boolean;
+
+  @IsArray()
+  @IsNotEmpty()
+  @Column()
+  roles: string[];
   //
   // @ManyToMany(
   //     type => RoleDto,

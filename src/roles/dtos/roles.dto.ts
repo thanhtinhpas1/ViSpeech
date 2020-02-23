@@ -1,7 +1,6 @@
-import { Column, Entity, ManyToMany } from "typeorm";
+import { Column, Entity } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
 import { IsNotEmpty, IsString } from "class-validator";
-import { UserDto } from "users/dtos/users.dto";
 
 @Entity("roles")
 export class RoleDto extends BaseEntityDto {

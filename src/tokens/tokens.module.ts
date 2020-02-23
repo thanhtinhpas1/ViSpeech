@@ -17,6 +17,7 @@ import { QueryHandlers } from "./queries/handler";
 import { Repository } from "typeorm";
 import { TokenTypeDto } from "./dtos/token-types.dto";
 import { TokensService } from "./services/tokens.service";
+import { CONSTANTS } from "common/constant";
 
 @Module({
   imports: [
@@ -56,9 +57,9 @@ export class TokensModule implements OnModuleInit {
     this.query$.register(QueryHandlers);
     this.event$.registerSagas([TokensSagas]);
 
-    const freeTokenType = await this.repository.find({ name: "free" });
+    const freeTokenType = await this.repository.find({ name: CONSTANTS.TOKEN_TYPE.FREE });
     if (!freeTokenType[0]) {
-      const freeTokenType = new TokenTypeDto("free", 10, 0);
+      const freeTokenType = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0);
       await this.repository.save(freeTokenType);
     }
   }

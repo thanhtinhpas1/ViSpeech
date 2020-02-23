@@ -44,15 +44,15 @@ export class TokenDto extends BaseEntityDto {
   @Column()
   userId: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Column()
+  @IsEmpty()
+  @Column({
+    default: ""
+  })
   tokenTypeId: string;
 
   @IsEmpty()
   @Column({
     default: true
   })
-  @IsBoolean()
   isValid: boolean;
 }

@@ -11,9 +11,13 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
     @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
   ) {}
 
-  handle(event: UserDeletedEvent) {
-    Logger.log(event, "UserDeletedEvent");
-    const userId = event.userId[0];
-    this.repository.delete(userId);
+  async handle(event: UserDeletedEvent) {
+    try {
+      Logger.log(event, "UserDeletedEvent");
+      const userId = event.userId[0];
+      return await this.repository.delete(userId);
+    } catch (error) {
+      Logger.error(error, "UserDeletedEvent");
+    }
   }
 }

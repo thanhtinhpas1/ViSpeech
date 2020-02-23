@@ -11,8 +11,12 @@ export class FindUserHandler implements IQueryHandler<FindUserQuery> {
     @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
   ) {}
 
-  execute(query: FindUserQuery): Promise<any> {
-    Logger.log("Async FindUserQuery...");
-    return this.repository.findOne(query.id, { relations: ["roles"] });
+  async execute(query: FindUserQuery): Promise<any> {
+    try {
+      Logger.log("Async FindUserQuery...", "FindUserQuery");
+      return await this.repository.findOne(query.id);
+    } catch (error) {
+      Logger.error(error, "FindUserQuery");
+    }
   }
 }

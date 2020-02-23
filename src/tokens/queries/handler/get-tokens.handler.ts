@@ -13,13 +13,16 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
   ) {}
 
   async execute(query: GetTokensQuery) {
-    Logger.log("Async GetTokensQuery...");
-    if (query.limit && query.offset)
-      return this.repository.find({
-        skip: Number(query.offset),
-        take: Number(query.limit),
-        relations: ["tokenType"]
-      });
-    return this.repository.find({ relations: ["tokenType"] });
+    try {
+      Logger.log("Async GetTokensQuery...", "GetTokensQuery");
+      if (query.limit && query.offset)
+        return await this.repository.find({
+          skip: Number(query.offset),
+          take: Number(query.limit)
+        });
+      return await this.repository.find();
+    } catch (error) {
+      Logger.error(error, "GetTokensQuery");
+    }
   }
 }
