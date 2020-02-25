@@ -9,6 +9,8 @@ import {TokensModule} from 'tokens/tokens.module';
 import {OrdersModule} from 'orders/orders.module';
 import {config} from '../config';
 import {CommandBus, QueryBus} from '@nestjs/cqrs';
+import {AuthModule} from './auth/auth.module';
+import {RoleModule} from './roles/role.module';
 
 @Module({
     imports: [
@@ -26,6 +28,8 @@ import {CommandBus, QueryBus} from '@nestjs/cqrs';
         UsersModule,
         TokensModule,
         OrdersModule,
+        AuthModule,
+        RoleModule,
     ],
     providers: [
         UsersService, CommandBus, QueryBus,

@@ -1,7 +1,7 @@
 import {IsEmail, IsEmpty, IsNotEmpty, IsString} from 'class-validator';
-import {Column, Entity, Index, Unique} from 'typeorm';
+import {Column, Entity, Index} from 'typeorm';
 import {BaseEntityDto} from 'base/base-entity.dto';
-import {CONSTANTS} from '../../common/constant';
+import {RoleDto} from '../../roles/dtos/roles.dto';
 
 export class UserIdRequestParamsDto {
     constructor(userId) {
@@ -62,10 +62,6 @@ export class UserDto extends BaseEntityDto {
     isActive: boolean;
 
     @IsNotEmpty()
-    @Column({
-        name: 'roles',
-        default: [CONSTANTS.ROLE_USER],
-        nullable: false,
-    })
-    roles: string[];
+    @Column(() => RoleDto)
+    roles: RoleDto[];
 }

@@ -8,12 +8,11 @@ import {Repository} from 'typeorm';
 @QueryHandler(FindUserQuery)
 export class FindUserHandler implements IQueryHandler<FindUserQuery> {
     constructor(
-        @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
+        @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
     ) {
     }
 
-    execute(query: FindUserQuery): Promise<any> {
-        Logger.log('ASync FindUserQuery...');
-        return this.repository.findOne(query.id, {relations: ['roles']});
+    execute(query: FindUserQuery): Promise<UserDto> {
+        return this.repository.findOne({_id: query.id});
     }
 }

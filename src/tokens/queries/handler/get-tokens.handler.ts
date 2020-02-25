@@ -9,7 +9,7 @@ import {Repository} from 'typeorm';
 export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
     constructor(
         @InjectRepository(TokenDto)
-        private readonly repository: Repository<TokenDto>
+        private readonly repository: Repository<TokenDto>,
     ) {
     }
 

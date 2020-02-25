@@ -17,12 +17,17 @@ import {QueryHandlers} from './queries/handler';
 import {Repository} from 'typeorm';
 import {TokenTypeDto} from './dtos/token-types.dto';
 import {TokensService} from './services/tokens.service';
+import {JwtModule} from '@nestjs/jwt';
+import {config} from '../../config';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
         CqrsModule,
         EventStoreModule.forFeature(),
+        JwtModule.register({
+            secret: config.JWT.secret,
+        }),
     ],
     controllers: [TokensController],
     providers: [
@@ -35,7 +40,7 @@ import {TokensService} from './services/tokens.service';
         TokensService,
         CommandBus, QueryBus,
     ],
-    exports: [TokensService],
+    exports: [TokensService, JwtModule],
 })
 export class TokensModule implements OnModuleInit {
     constructor(

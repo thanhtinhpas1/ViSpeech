@@ -17,7 +17,7 @@ export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
         const {tokenDto} = command;
         // use mergeObjectContext for dto dispatch events
         const token = this.publisher.mergeObjectContext(
-            await this.repository.createToken(tokenDto)
+            await this.repository.createToken(tokenDto),
         );
         token.commit();
     }

@@ -19,7 +19,6 @@ export class UsersController {
     @ApiOperation({tags: ['Create User']})
     @ApiResponse({status: 200, description: 'Create User.'})
     @Post()
-    @Roles([CONSTANTS.ROLE_ADMIN])
     async createUser(@Body() userDto: UserDto): Promise<UserDto> {
         return await this.usersService.createUser(userDto);
     }
