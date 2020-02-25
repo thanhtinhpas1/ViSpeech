@@ -46,9 +46,29 @@ services:
       - 80:80
     expose:
       - 80
-    # volumes:
-    #   - "./src:/app/src"
+     volumes:
+       - "./src:/app/src"
     links:
       - eventstore
-      - mysql
+      - mongodb
     network_mode: bridge
+  vispeechdemo:
+    build:
+      context: "./ViSpeechDemo"
+      command: ${CONTAINER_COMMAND}
+      restart: always
+      depends_on:
+        - eventstore
+        - mongodb
+        - vispeech
+      ports:
+        - 3000:3000
+      expose:
+        - 3000
+       volumes:
+         - "./src:/app/src"
+      links:
+        - eventstore
+        - mongodb
+        - vispeech
+      network_mode: bridge
