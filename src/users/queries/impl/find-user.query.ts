@@ -14,6 +14,7 @@ export class FindUserByUsernameQuery {
     constructor(username: string) {
         this.username = username;
     }
+
     @IsNotEmpty()
     @IsString()
     username: string;

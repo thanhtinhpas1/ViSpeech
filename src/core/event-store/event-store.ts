@@ -80,7 +80,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                                 event = this.eventHandlers[eventType](Object.values(data));
                                 subject.next(event);
                             });
-                        }catch (e) {
+                        } catch (e) {
                             Logger.log('PARSE ERROR', e.message);
                         }
                     });

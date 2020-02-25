@@ -48,9 +48,9 @@ services:
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
-      - 7070:7070
+      - 80:80
     expose:
-      - 7070
+      - 80
     # volumes:
     #   - "./src:/app/src"
     links:

@@ -4,8 +4,6 @@ import {UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
 import {UsersService} from '../services/users.service';
 import {GetUsersQuery} from 'users/queries/impl/get-users.query';
 import {FindUserQuery} from 'users/queries/impl/find-user.query';
-import {Roles} from 'auth/roles.decorator';
-import {CONSTANTS} from '../../common/constant';
 
 @Controller('users')
 @ApiTags('Users')
