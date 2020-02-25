@@ -3,8 +3,10 @@ import {
   IsNotEmpty,
   IsNumber,
   IsPositive,
-  IsString
+  IsString,
+  IsInt
 } from "class-validator";
+import { Transform, Type } from 'class-transformer'
 import { Column, Entity } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
 
@@ -31,15 +33,15 @@ export class ReportDto extends BaseEntityDto {
   @Column()
   userId: string;
 
+  @Type(() => Number)
   @IsNumber()
   @IsPositive()
   @Column({
-    name: "used_minutes",
-    default: 0,
-    nullable: true
+    name: "used_minutes"
   })
   usedMinutes: number;
 
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   @Column({

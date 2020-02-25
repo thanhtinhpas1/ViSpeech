@@ -20,8 +20,9 @@ async function bootstrap() {
         .build();
     const document = SwaggerModule.createDocument(app, documentOptions);
     const validationOptions = {
+        transform: true,
         skipMissingProperties: false,
-        validationError: {target: false},
+        validationError: {target: false}
     };
     /*--------------------------------------------*/
     app.useGlobalPipes(new ValidationPipe(validationOptions));

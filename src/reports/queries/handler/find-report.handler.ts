@@ -12,8 +12,12 @@ export class FindReportHandler implements IQueryHandler<FindReportQuery> {
     private readonly repository: Repository<ReportDto>
   ) {}
 
-  execute(query: FindReportQuery): Promise<any> {
-    Logger.log("Async FindReportQuery...");
-    return this.repository.findOne(query.id);
+  async execute(query: FindReportQuery): Promise<any> {
+    try {
+      Logger.log("Async FindReportQuery...", "FindReportQuery");
+      return await this.repository.findOne(query.id);
+    } catch (error) {
+      Logger.error(error, "FindReportQuery");
+    }
   }
 }

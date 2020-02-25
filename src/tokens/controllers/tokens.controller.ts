@@ -21,7 +21,11 @@ export class TokensController {
   constructor(private readonly tokensService: TokensService) {}
 
   /* Create Token */
-
+  /* {
+    "value": "abcdefgh123",
+    "userId": "8a4ee46a-dec2-46cb-bed2-ffd885b6f233",
+    "tokeType": "FREE"
+  } */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Token"] })
   @ApiResponse({ status: 200, description: "Create Token." })

@@ -13,12 +13,16 @@ export class GetReportsHandler implements IQueryHandler<GetReportsQuery> {
   ) {}
 
   async execute(query: GetReportsQuery) {
-    Logger.log("Async GetReportsQuery...");
-    if (query.limit && query.offset)
-      return this.repository.find({
-        skip: Number(query.offset),
-        take: Number(query.limit)
-      });
-    return this.repository.find();
+    try {
+      Logger.log("Async GetReportsQuery...");
+      if (query.limit && query.offset)
+        return await this.repository.find({
+          skip: Number(query.offset),
+          take: Number(query.limit)
+        });
+      return await this.repository.find();
+    } catch (error) {
+      Logger.error(error, "GetReportsQuery");
+    }
   }
 }

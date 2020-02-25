@@ -12,9 +12,13 @@ export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
     private readonly repository: Repository<ReportDto>
   ) {}
 
-  handle(event: ReportUpdatedEvent) {
-    Logger.log(event, "ReportUpdatedEvent"); // write here
+  async handle(event: ReportUpdatedEvent) {
+    try {
+      Logger.log(event, "ReportUpdatedEvent"); // write here
     const { id, ...reportInfo } = event.reportDto[0];
-    this.repository.update(id, reportInfo);
+    return await this.repository.update(id, reportInfo);
+    } catch (error) {
+      Logger.error(error, "ReportUpdatedEvent");
+    }
   }
 }

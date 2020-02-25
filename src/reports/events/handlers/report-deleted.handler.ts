@@ -12,9 +12,13 @@ export class ReportDeletedHandler implements IEventHandler<ReportDeletedEvent> {
     private readonly repository: Repository<ReportDto>
   ) {}
 
-  handle(event: ReportDeletedEvent) {
-    Logger.log(event, "ReportDeletedEvent");
-    const reportId = event.reportId[0];
-    this.repository.delete(reportId);
+  async handle(event: ReportDeletedEvent) {
+    try {
+      Logger.log(event, "ReportDeletedEvent");
+      const reportId = event.reportId[0];
+      return await this.repository.delete(reportId);
+    } catch (error) {
+      Logger.error(error, "ReportDeletedEvent");
+    }
   }
 }

@@ -12,8 +12,12 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
     private readonly repository: Repository<OrderDto>
   ) {}
 
-  execute(query: FindOrderQuery): Promise<any> {
-    Logger.log("Async FindOrderQuery...");
-    return this.repository.findOne(query.id);
+  async execute(query: FindOrderQuery): Promise<any> {
+    try {
+      Logger.log("Async FindOrderQuery...", "FindOrderQuery");
+      return await this.repository.findOne(query.id);
+    } catch (error) {
+      Logger.error(error, "FindOrderQuery");
+    }
   }
 }

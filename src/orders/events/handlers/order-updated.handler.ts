@@ -12,9 +12,13 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
     private readonly repository: Repository<OrderDto>
   ) {}
 
-  handle(event: OrderUpdatedEvent) {
-    Logger.log(event, "OrderUpdatedEvent"); // write here
-    const { id, ...orderInfo } = event.orderDto[0];
-    this.repository.update(id, orderInfo);
+  async handle(event: OrderUpdatedEvent) {
+    try {
+      Logger.log(event, "OrderUpdatedEvent"); // write here
+      const { id, ...orderInfo } = event.orderDto[0];
+      return await this.repository.update(id, orderInfo);
+    } catch (error) {
+      Logger.error(error, "OrderUpdatedEvent");
+    }
   }
 }

@@ -13,12 +13,16 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
   ) {}
 
   async execute(query: GetOrdersQuery) {
-    Logger.log("Async GetOrdersQuery...");
-    if (query.limit && query.offset)
-      return this.repository.find({
-        skip: Number(query.offset),
-        take: Number(query.limit)
-      });
-    return this.repository.find();
+    try {
+      Logger.log("Async GetOrdersQuery...", "GetOrdersQuery");
+      if (query.limit && query.offset)
+        return await this.repository.find({
+          skip: Number(query.offset),
+          take: Number(query.limit)
+        });
+      return this.repository.find();
+    } catch (error) {
+      Logger.error(error, "GetOrdersQuery");
+    }
   }
 }

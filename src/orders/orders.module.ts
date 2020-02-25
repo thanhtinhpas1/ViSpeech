@@ -26,7 +26,6 @@ import { UsersService } from "users/services/users.service";
   controllers: [OrdersController],
   providers: [
     OrdersService,
-    UsersService,
     OrdersSagas,
     ...CommandHandlers,
     ...EventHandlers,

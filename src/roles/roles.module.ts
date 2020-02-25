@@ -24,11 +24,14 @@ export class RolesModule implements OnModuleInit {
 
   async onModuleInit() {
     const userRole = await this.repository.find({ name: CONSTANTS.ROLE.USER });
+    const manageUserRole = await this.repository.find({ name: CONSTANTS.ROLE.MANAGER_USER });
     const adminRole = await this.repository.find({ name: CONSTANTS.ROLE.ADMIN });
-    if (!userRole[0] || !adminRole[0]) {
+    if (!userRole[0] || !adminRole[0] || !manageUserRole[0]) {
       const userRole = new RoleDto(CONSTANTS.ROLE.USER);
+      const manageUserRole = new RoleDto(CONSTANTS.ROLE.MANAGER_USER);
       const adminRole = new RoleDto(CONSTANTS.ROLE.ADMIN);
       await this.repository.save(userRole);
+      await this.repository.save(manageUserRole);
       await this.repository.save(adminRole);
     }
   }

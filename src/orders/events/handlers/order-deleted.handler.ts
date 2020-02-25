@@ -12,9 +12,13 @@ export class OrderDeletedHandler implements IEventHandler<OrderDeletedEvent> {
     private readonly repository: Repository<OrderDto>
   ) {}
 
-  handle(event: OrderDeletedEvent) {
-    Logger.log(event, "OrderDeletedEvent");
-    const orderId = event.orderId[0];
-    this.repository.delete(orderId);
+  async handle(event: OrderDeletedEvent) {
+    try {
+      Logger.log(event, "OrderDeletedEvent");
+      const orderId = event.orderId[0];
+      return await this.repository.delete(orderId);
+    } catch (error) {
+      Logger.error(error, "OrderDeletedEvent");
+    }
   }
 }

@@ -11,6 +11,7 @@ import { RolesModule } from "roles/roles.module";
 import { config } from "../config";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { AuthModule } from "auth/auth.module";
+import { ReportsModule } from "reports/reports.module";
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { AuthModule } from "auth/auth.module";
     AuthModule,
     TokensModule,
     OrdersModule,
-    RolesModule
+    RolesModule,
+    ReportsModule
   ],
   providers: [CommandBus, QueryBus]
 })

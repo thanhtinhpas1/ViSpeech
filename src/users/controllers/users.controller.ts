@@ -21,7 +21,14 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   /* Create User */
-
+  /* {
+     "firstName": "Linh",
+     "lastName": "Tran",
+     "username": "omylnyh",
+     "password": "123456",
+     "email": "omylynh@gmail.com",
+     "roles": ["USER"]
+  } */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create User"] })
   @ApiResponse({ status: 200, description: "Create User." })
