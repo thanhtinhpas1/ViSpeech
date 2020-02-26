@@ -1,6 +1,6 @@
 ### BASE
 FROM node:dubnium-alpine AS base
-LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
+LABEL maintainer "VispeechRelease <vispeech@hcmus.edu.vn>"
 # Set the working directory
 WORKDIR /app
 # Copy project specification and dependencies lock files
@@ -20,4 +20,4 @@ COPY . .
 # Copy dependencies
 COPY --from=dependencies /tmp/node_modules ./node_modules
 # Expose application port
-EXPOSE 7070:7070
+EXPOSE 8000:8000

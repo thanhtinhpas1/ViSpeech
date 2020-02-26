@@ -43,9 +43,9 @@ services:
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
-      - 80:80
+      - ${VISPEECH_PORT}:${VISPEECH_PORT}
     expose:
-      - 80
+      - ${VISPEECH_PORT}
      volumes:
        - "./src:/app/src"
     links:
@@ -55,18 +55,38 @@ services:
   vispeechdemo:
     build:
       context: "./ViSpeechDemo"
-      command: ${CONTAINER_COMMAND}
+      command: ${CONTAINER_NODE_COMMAND}
       restart: always
       depends_on:
         - eventstore
         - mongodb
         - vispeech
       ports:
-        - 3000:3000
+        - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
       expose:
-        - 3000
+        - ${VISPEECH_PORT_DEMO}
        volumes:
          - "./src:/app/src"
+      links:
+        - eventstore
+        - mongodb
+        - vispeech
+      network_mode: bridge
+  release:
+    build:
+      context: "./release"
+      command: "node app.js"
+      restart: always
+      depends_on:
+        - eventstore
+        - mongodb
+        - vispeech
+      ports:
+        - ${RELEASE_PAGE_PORT}:${RELEASE_PAGE_PORT}
+      expose:
+        - ${RELEASE_PAGE_PORT}
+        volumes:
+          - "./src:/app/src"
       links:
         - eventstore
         - mongodb
