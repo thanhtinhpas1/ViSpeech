@@ -55,23 +55,23 @@ services:
   vispeechdemo:
     build:
       context: "./ViSpeechDemo"
-      command: ${CONTAINER_NODE_COMMAND}
-      restart: always
-      depends_on:
-        - eventstore
-        - mongodb
-        - vispeech
-      ports:
-        - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
-      expose:
-        - ${VISPEECH_PORT_DEMO}
-       volumes:
-         - "./src:/app/src"
-      links:
-        - eventstore
-        - mongodb
-        - vispeech
-      network_mode: bridge
+    command: ${CONTAINER_NODE_COMMAND}
+    restart: always
+    depends_on:
+      - eventstore
+      - mongodb
+      - vispeech
+    ports:
+      - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
+    expose:
+      - ${VISPEECH_PORT_DEMO}
+      volumes:
+        - "./src:/app/src"
+    links:
+      - eventstore
+      - mongodb
+      - vispeech
+    network_mode: bridge
   release:
     build:
       context: "./release"
