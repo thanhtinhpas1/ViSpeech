@@ -58,8 +58,8 @@ services:
       - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
     expose:
       - ${VISPEECH_PORT_DEMO}
-      volumes: 
-        - "./src:/app/src"
+    volumes: 
+      - "./src:/app/src"
     links:
       - eventstore
       - mongodb
@@ -78,8 +78,8 @@ services:
       - ${RELEASE_INTERNAL_PORT}:${RELEASE_INTERNAL_PORT}
     expose:
       - ${RELEASE_PAGE_PORT}
-      volumes: 
-        - "./src:/app/src"
+    volumes: 
+      - "./src:/app/src"
     links:
       - eventstore
       - mongodb
