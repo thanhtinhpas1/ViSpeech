@@ -25,7 +25,7 @@ export class TokensController {
   /* {
     "value": "abcdefgh123",
     "userId": "8a4ee46a-dec2-46cb-bed2-ffd885b6f233",
-    "tokeType": "FREE"
+    "tokenType": "FREE"
   } */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Token"] })

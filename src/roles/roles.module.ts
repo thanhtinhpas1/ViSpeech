@@ -4,17 +4,12 @@ import { RoleDto } from "./dtos/roles.dto";
 import { CqrsModule } from "@nestjs/cqrs";
 import { EventStoreModule } from "core/event-store/event-store.module";
 import { Repository } from "typeorm";
-import { RolesService } from "./services/roles.service";
 import { CONSTANTS } from "common/constant";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([RoleDto]),
-    CqrsModule,
-    EventStoreModule.forFeature()
-  ],
-  providers: [RolesService],
-  exports: [RolesService]
+    TypeOrmModule.forFeature([RoleDto])
+  ]
 })
 export class RolesModule implements OnModuleInit {
   constructor(

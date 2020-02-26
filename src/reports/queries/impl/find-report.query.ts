@@ -1,7 +1,11 @@
-import {IsNotEmpty, IsString} from 'class-validator';
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class FindReportQuery {
-    @IsNotEmpty()
-    @IsString()
-    id: string;
+  constructor(id: string) {
+    this.id = id;
+  }
+
+  @IsNotEmpty()
+  @IsString()
+  id: string;
 }

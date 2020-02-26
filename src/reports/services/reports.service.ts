@@ -33,8 +33,7 @@ export class ReportsService {
   }
 
   async findOne(findReportQuery: FindReportQuery): Promise<ReportDto> {
-    var query = new FindReportQuery();
-    Object.assign(query, findReportQuery);
+    var query = new FindReportQuery(findReportQuery.id);
     return await this.queryBus.execute(query);
   }
 }

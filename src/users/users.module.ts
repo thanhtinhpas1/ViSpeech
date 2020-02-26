@@ -13,6 +13,7 @@ import { EventStore } from "../core/event-store/event-store";
 import { UserCreatedEvent } from "./events/impl/user-created.event";
 import { UserDeletedEvent } from "./events/impl/user-deleted.event";
 import { UserUpdatedEvent } from "./events/impl/user-updated.event";
+import { UserCreationStartedEvent } from "./events/impl/user-created.event";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserDto } from "./dtos/users.dto";
 import { QueryHandlers } from "./queries/handler";
@@ -21,7 +22,6 @@ import { RoleDto } from "../roles/dtos/roles.dto";
 import { TokensModule } from "tokens/tokens.module";
 import { AuthModule } from "auth/auth.module";
 import { RolesModule } from "roles/roles.module";
-import { UserCreationStartedEvent } from "./events/impl/user-creation-started.event";
 import { TokenRepository } from "tokens/repository/token.repository";
 import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";
 
@@ -31,8 +31,7 @@ import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";
     CqrsModule,
     EventStoreModule.forFeature(),
     TokensModule,
-    forwardRef(() => AuthModule),
-    RolesModule,
+    forwardRef(() => AuthModule)
   ],
   controllers: [UsersController],
   providers: [

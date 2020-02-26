@@ -1,6 +1,14 @@
-import { IsEmail, IsEmpty, IsNotEmpty, IsString, IsArray } from "class-validator";
+import {
+  IsEmail,
+  IsEmpty,
+  IsNotEmpty,
+  IsString,
+  IsArray,
+  IsIn
+} from "class-validator";
 import { Column, Entity, Index } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
+import { CONSTANTS } from "common/constant";
 
 export class UserIdRequestParamsDto {
   constructor(userId) {
@@ -14,7 +22,6 @@ export class UserIdRequestParamsDto {
 
 @Entity("users")
 export class UserDto extends BaseEntityDto {
-
   @IsString()
   @IsNotEmpty()
   @Column({
@@ -40,10 +47,10 @@ export class UserDto extends BaseEntityDto {
   @Column()
   password: string;
 
-    @IsEmail()
-    @IsNotEmpty()
-    @Column({unique: true})
-    email: string;
+  @IsEmail()
+  @IsNotEmpty()
+  @Column({ unique: true })
+  email: string;
 
   @IsEmpty()
   @Column({
@@ -55,6 +62,7 @@ export class UserDto extends BaseEntityDto {
 
   @IsEmpty()
   @Column({
+    name: "is_active",
     default: true,
     nullable: true
   })
@@ -62,6 +70,12 @@ export class UserDto extends BaseEntityDto {
 
   @IsArray()
   @IsNotEmpty()
+  @IsIn(
+    [CONSTANTS.ROLE.USER, CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.ADMIN],
+    {
+      each: true
+    }
+  )
   @Column()
   roles: string[];
 }

@@ -5,14 +5,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserDto } from "users/dtos/users.dto";
 import { Repository } from "typeorm";
 import { Utils } from "utils";
-import { RolesService } from "roles/services/roles.service";
 
 @EventsHandler(UserCreatedEvent)
 export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
   constructor(
     @InjectRepository(UserDto)
-    private readonly repository: Repository<UserDto>,
-    private readonly rolesService: RolesService
+    private readonly repository: Repository<UserDto>
   ) {}
 
   async handle(event: UserCreatedEvent) {

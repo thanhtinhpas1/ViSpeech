@@ -1,5 +1,5 @@
 import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
-import { UserCreationStartedEvent } from "../impl/user-creation-started.event";
+import { UserCreationStartedEvent } from "../impl/user-created.event";
 import { Logger } from "@nestjs/common";
 
 @EventsHandler(UserCreationStartedEvent)
