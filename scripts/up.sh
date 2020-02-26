@@ -12,11 +12,8 @@ export VISPEECH_PORT=7070
 export RELEASE_INTERNAL_PORT=8000
 export RELEASE_PAGE_PORT=80
 
-# remove cache volume cause mysql communication failed with root user
-# docker-compose rm -fv
-docker-compose up -d --build
 
-#vispeech app
-export VISPEECH_PORT=7070
-
-
+ docker-compose rm --all &&
+ docker-compose pull &&
+ docker-compose build --no-cache &&
+ docker-compose up -d --force-recreate &&
