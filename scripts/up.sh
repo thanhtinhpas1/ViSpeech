@@ -8,6 +8,7 @@ export CONTAINER_PORT="7070"
 # release app and vispeechdemo
 export CONTAINER_NODE_COMMAND="yarn start"
 export VISPEECH_PORT_DEMO=3000
+export VISPEECH_PORT=7070
 export RELEASE_PAGE_PORT=80
 
 # remove cache volume cause mysql communication failed with root user
