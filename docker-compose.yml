@@ -41,6 +41,8 @@ services:
       - ${VISPEECH_PORT}:${VISPEECH_PORT}
     expose:
       - ${VISPEECH_PORT}
+    volumes: 
+      - ./src:/app/src/vispeech
     links:
       - eventstore
       - mongodb
@@ -59,7 +61,7 @@ services:
     expose:
       - ${VISPEECH_PORT_DEMO}
     volumes: 
-      - "./src:/app/src"
+      - "./src:/app/src/vispeechdemo"
     links:
       - eventstore
       - mongodb
@@ -79,7 +81,7 @@ services:
     expose:
       - ${RELEASE_PAGE_PORT}
     volumes: 
-      - "./src:/app/src"
+        - "./src:/app/src/release"
     links:
       - eventstore
       - mongodb
