@@ -105,9 +105,9 @@
     optional "0.1.4"
 
 "@nestjs/passport@^6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.1.1.tgz#991b8736c0ebffabb85a6455f0288055e5b52755"
-  integrity sha512-wMhvi3Ru965nftCLUhFUqWNwyzSxVDmGgTEYVyWbOOmHFjNg5US47jzV2NresuUP2vjgg8J8S6DviKTVuLfkRw==
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-6.2.0.tgz#de5bf9b20912d26e15a99c7478b2760e7c3ebc79"
+  integrity sha512-Wy8FeSCNxbfTKRe/mJk0w5hSLsqoNMehg6DUQOoDug+6Uaq+QLEy6wvGPUJbVqGKpJwFHGgUoWp2ag05zh4zpA==
 
 "@nestjs/platform-fastify@^6.11.6":
   version "6.11.8"
@@ -126,9 +126,9 @@
   integrity sha512-PRTrmytKXGSDYJn8i0I/XiSV01tygh4L0SR5bq1/zxIT5HHK/edmlULKfHeeA2pHQV7YLxMH33al/TPlcn4tXQ==
 
 "@nestjs/swagger@^4.2.6":
-  version "4.2.11"
-  resolved "https://registry.yarnpkg.com/@nestjs/swagger/-/swagger-4.2.11.tgz#2b7a24fc42e4c38281e2e2fbbbf864a1575a23f7"
-  integrity sha512-8dyzXDOn1DSxF3hFowudEjB7oX8z5/wbgsqMwY5KrjGP2XZX3QS8+bf2/kUhvZQT4bjp6re9WfZz24Zx/pto/w==
+  version "4.2.12"
+  resolved "https://registry.yarnpkg.com/@nestjs/swagger/-/swagger-4.2.12.tgz#5f68a97c45475d1ee48bb4eaf3638b69b2896959"
+  integrity sha512-+ewTeVFKlgVKhkg6ul1l4hWt/PatnIxMOLcpr5wM9MBZUN9Dh7p4Guv5ZWqRx2qWsttfYWPZbQzmNRfRFO9+nw==
   dependencies:
     lodash "4.17.15"
     path-to-regexp "3.2.0"
@@ -142,9 +142,9 @@
     optional "0.1.4"
 
 "@nestjs/typeorm@^6.2.0":
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-6.3.1.tgz#65e1a666a06290bfe3007293c6aa78152f109056"
-  integrity sha512-Au40kKTpRU8p0Z45psrGTdKKJeIIXNt/2iwSUtA1RODCQZfJQrr/Sg6aLo2373LU9FY4GHGTaI3hmadYCL5Pdg==
+  version "6.3.3"
+  resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-6.3.3.tgz#a096d0fe7412eacea7a99d7c46f17ff7f11b0b47"
+  integrity sha512-N6rKvZfblmkMF3G93QilLRY8nhFwfqYRUwjcOMRxfffuyV9+don5MPG1P3p/SimWoWaizYMD5lfhEFOfRHMJ9g==
   dependencies:
     uuid "3.4.0"
 
@@ -1226,7 +1226,7 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-class-transformer@^0.2.0:
+class-transformer@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.2.3.tgz#598c92ca71dcca73f91ccb875d74a3847ccfa32d"
   integrity sha512-qsP+0xoavpOlJHuYsQJsN58HXSl8Jvveo+T37rEvCEeRfMWoytAyR0Ua/YsFgpM6AZYZ/og2PJwArwzJl1aXtQ==
@@ -2357,9 +2357,9 @@ fast-json-stable-stringify@2.x, fast-json-stable-stringify@^2.0.0:
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
 
 fast-json-stringify@^1.15.7, fast-json-stringify@^1.16.0:
-  version "1.16.3"
-  resolved "https://registry.yarnpkg.com/fast-json-stringify/-/fast-json-stringify-1.16.3.tgz#5ffd3afa7cbdc1688dc6cce2f9860003824b59d8"
-  integrity sha512-FSb9SrdvqgxICQyJf74T1xSRRpAsHTb7Sv2mD81v6URXlsOo3+/x0ATwMu5Cm8LXxkHsrwuVr6soTGj9Hc9pXg==
+  version "1.16.4"
+  resolved "https://registry.yarnpkg.com/fast-json-stringify/-/fast-json-stringify-1.16.4.tgz#5f08f946df7e13d7a381fcc4a360e89d1d3d419e"
+  integrity sha512-VPhWesykpU9pQR6QyoCcg+UuGyYlSzREoygujxqep+KinnoDnPBNw2LrOxxiECbwfpNnZavsyph8zFKUan2J3w==
   dependencies:
     ajv "^6.11.0"
     deepmerge "^4.2.2"
@@ -6626,10 +6626,15 @@ tsconfig-paths@^3.5.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@1.10.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
+tslib@1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
+
+tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.11.0.tgz#f1f3528301621a53220d58373ae510ff747a66bc"
+  integrity sha512-BmndXUtiTn/VDDrJzQE7Mm22Ix3PxgLltW9bSNLoeCY31gnG2OPx0QqJnuc9oMIKioYrz487i6K9o4Pdn0j+Kg==
 
 tslint@5.11.0:
   version "5.11.0"
@@ -6721,9 +6726,9 @@ typeorm@^0.2.22:
     yargs "^13.2.1"
 
 typescript@^3.7.5:
-  version "3.7.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
-  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.2.tgz#91d6868aaead7da74f493c553aeff76c0c0b1d5a"
+  integrity sha512-EgOVgL/4xfVrCMbhYKUQTdF37SQn4Iw73H5BgCrF1Abdun7Kwy/QZsE/ssAy0y4LxBbvua3PIbFsbRczWWnDdQ==
 
 uglify-js@^3.1.4:
   version "3.8.0"

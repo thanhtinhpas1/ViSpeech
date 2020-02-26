@@ -1,6 +1,5 @@
-import {ICommand} from '@nestjs/cqrs';
+import { ICommand } from "@nestjs/cqrs";
 
 export class WelcomeTokenCommand implements ICommand {
-    constructor(public readonly tokenId: string) {
-    }
+  constructor(public readonly tokenId: string) {}
 }

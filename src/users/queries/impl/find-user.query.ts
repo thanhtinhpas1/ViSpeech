@@ -1,21 +1,21 @@
-import {IsNotEmpty, IsString} from 'class-validator';
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class FindUserQuery {
-    constructor(id: string) {
-        this.id = id;
-    }
+  constructor(id: string) {
+    this.id = id;
+  }
 
-    @IsNotEmpty()
-    @IsString()
-    id: string;
+  @IsNotEmpty()
+  @IsString()
+  id: string;
 }
 
 export class FindUserByUsernameQuery {
-    constructor(username: string) {
-        this.username = username;
-    }
+  constructor(username: string) {
+    this.username = username;
+  }
 
-    @IsNotEmpty()
-    @IsString()
-    username: string;
+  @IsNotEmpty()
+  @IsString()
+  username: string;
 }
