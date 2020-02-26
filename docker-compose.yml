@@ -78,7 +78,7 @@ services:
       - mongodb
       - vispeech
     ports:
-      - ${RELEASE_PAGE_PORT}:${RELEASE_PAGE_PORT}
+      - ${RELEASE_INTERNAL_PORT}:${RELEASE_INTERNAL_PORT}
     expose:
       - ${RELEASE_PAGE_PORT}
     links:
