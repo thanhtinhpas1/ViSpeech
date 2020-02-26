@@ -46,8 +46,6 @@ services:
       - ${VISPEECH_PORT}:${VISPEECH_PORT}
     expose:
       - ${VISPEECH_PORT}
-     volumes:
-       - "./src:/app/src"
     links:
       - eventstore
       - mongodb
@@ -65,8 +63,6 @@ services:
       - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
     expose:
       - ${VISPEECH_PORT_DEMO}
-      volumes:
-        - "./src:/app/src"
     links:
       - eventstore
       - mongodb
@@ -75,20 +71,18 @@ services:
   release:
     build:
       context: "./release"
-      command: "node app.js"
-      restart: always
-      depends_on:
-        - eventstore
-        - mongodb
-        - vispeech
-      ports:
-        - ${RELEASE_PAGE_PORT}:${RELEASE_PAGE_PORT}
-      expose:
-        - ${RELEASE_PAGE_PORT}
-        volumes:
-          - "./src:/app/src"
-      links:
-        - eventstore
-        - mongodb
-        - vispeech
-      network_mode: bridge
+    command: "node app.js"
+    restart: always
+    depends_on:
+      - eventstore
+      - mongodb
+      - vispeech
+    ports:
+      - ${RELEASE_PAGE_PORT}:${RELEASE_PAGE_PORT}
+    expose:
+      - ${RELEASE_PAGE_PORT}
+    links:
+      - eventstore
+      - mongodb
+      - vispeech
+    network_mode: bridge
