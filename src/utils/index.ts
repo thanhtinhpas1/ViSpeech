@@ -1,7 +1,7 @@
 import { CONSTANTS } from "common/constant";
+import { v1 as uuidv1 } from "uuid";
 
 const bcrypt = require("bcryptjs");
-const uuid = require("uuid");
 
 export const Utils = {
   hashPassword: password => {
@@ -10,7 +10,7 @@ export const Utils = {
     return hash;
   },
   getUuid: () => {
-    return uuid();
+    return uuidv1();
   },
   comparePassword: (oldPassword, newPassword) => {
     return bcrypt.compare(oldPassword, newPassword);

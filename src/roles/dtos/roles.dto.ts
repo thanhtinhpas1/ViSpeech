@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 
 @Entity("roles")
 export class RoleDto extends BaseEntityDto {
-  constructor(name) {
+  constructor(name: string) {
     super();
     this.name = name;
   }

@@ -17,13 +17,18 @@ import { QueryHandlers } from "./queries/handler";
 import { Repository } from "typeorm";
 import { TokenTypeDto } from "./dtos/token-types.dto";
 import { TokensService } from "./services/tokens.service";
+import { JwtModule } from "@nestjs/jwt";
+import { config } from "../../config";
 import { CONSTANTS } from "common/constant";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
     CqrsModule,
-    EventStoreModule.forFeature()
+    EventStoreModule.forFeature(),
+    JwtModule.register({
+      secret: config.JWT.secret
+    })
   ],
   controllers: [TokensController],
   providers: [
@@ -34,7 +39,7 @@ import { CONSTANTS } from "common/constant";
     TokenRepository,
     TokensService
   ],
-  exports: [TokensService]
+  exports: [TokensService, JwtModule]
 })
 export class TokensModule implements OnModuleInit {
   constructor(
@@ -57,7 +62,9 @@ export class TokensModule implements OnModuleInit {
     this.query$.register(QueryHandlers);
     this.event$.registerSagas([TokensSagas]);
 
-    const freeTokenType = await this.repository.find({ name: CONSTANTS.TOKEN_TYPE.FREE });
+    const freeTokenType = await this.repository.find({
+      name: CONSTANTS.TOKEN_TYPE.FREE
+    });
     if (!freeTokenType[0]) {
       const freeTokenType = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0);
       await this.repository.save(freeTokenType);

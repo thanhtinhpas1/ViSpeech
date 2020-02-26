@@ -4,34 +4,29 @@ import {
   IsNumber,
   IsPositive,
   IsString,
-  IsInt
+  IsInt,
+  IsUUID
 } from "class-validator";
-import { Transform, Type } from 'class-transformer'
-import { Column, Entity } from "typeorm";
+import { Transform, Type } from "class-transformer";
+import { Column, Entity, ObjectID } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
 
 export class ReportIdRequestParamsDto {
   constructor(reportId) {
-    this.id = reportId;
+    this._id = reportId;
   }
 
   @IsString()
   @IsNotEmpty()
-  id: string;
+  _id: string;
 }
 
 @Entity("reports")
 export class ReportDto extends BaseEntityDto {
-
   @IsNotEmpty()
   @IsString()
   @Column()
   tokenId: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @Column()
-  userId: string;
 
   @Type(() => Number)
   @IsNumber()
@@ -48,4 +43,12 @@ export class ReportDto extends BaseEntityDto {
     name: "date_report"
   })
   dateReport: Date;
+
+  @IsUUID()
+  @Column({
+    name: "user_id",
+    nullable: false,
+    type: "uuid"
+  })
+  userId: ObjectID;
 }

@@ -40,7 +40,7 @@ export class ReportsController {
     @Body() reportDto: ReportDto
   ) {
     return this.reportsService.updateReport({
-      id: reportIdDto.id,
+      _id: reportIdDto._id,
       ...reportDto
     });
   }

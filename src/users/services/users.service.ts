@@ -27,14 +27,13 @@ export class UsersService {
   }
 
   async findUsers(getUsersQuery: GetUsersQuery) {
-    var query = new GetUsersQuery();
+    const query = new GetUsersQuery();
     Object.assign(query, getUsersQuery);
     return await this.queryBus.execute(query);
   }
 
   async findOne(findUserQuery: FindUserQuery): Promise<UserDto> {
-    var query = new FindUserQuery();
-    Object.assign(query, findUserQuery);
+    const query = new FindUserQuery(findUserQuery.id);
     return await this.queryBus.execute(query);
   }
 }

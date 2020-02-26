@@ -1,17 +1,18 @@
-import { Module, forwardRef } from "@nestjs/common";
+import { Module, OnModuleInit, forwardRef } from "@nestjs/common";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { APP_GUARD } from "@nestjs/core";
 import { RolesGuard } from "auth/roles.guard";
 import { AuthController } from "./auth.controllers";
-import { UserDto } from "users/dtos/users.dto";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { UsersModule } from "../users/users.module";
 import { config } from "../../config";
-import { JwtStrategy } from "./jwt.strategy";
 import { AuthService } from "./auth.service";
+import { UserDto } from "../users/dtos/users.dto";
 import { LocalStrategy } from "./local.strategy";
+import { JwtStrategy } from "./jwt.strategy";
+import { QueryHandlers } from "../users/queries/handler";
 
 @Module({
   imports: [
@@ -26,12 +27,18 @@ import { LocalStrategy } from "./local.strategy";
       provide: APP_GUARD,
       useClass: RolesGuard
     },
-    CommandBus,
-    QueryBus,
     LocalStrategy,
     JwtStrategy,
+    CommandBus,
+    QueryBus,
     AuthService
   ],
-  exports: [AuthService]
+  exports: [JwtModule, AuthService]
 })
-export class AuthModule {}
+export class AuthModule implements OnModuleInit {
+  constructor(private readonly query$: QueryBus) {}
+
+  onModuleInit(): any {
+    this.query$.register(QueryHandlers);
+  }
+}

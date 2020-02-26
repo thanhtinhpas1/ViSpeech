@@ -4,12 +4,12 @@ import { BaseEntityDto } from "base/base-entity.dto";
 
 export class UserIdRequestParamsDto {
   constructor(userId) {
-    this.id = userId;
+    this._id = userId;
   }
 
   @IsString()
   @IsNotEmpty()
-  id: string;
+  _id: string;
 }
 
 @Entity("users")
@@ -40,10 +40,10 @@ export class UserDto extends BaseEntityDto {
   @Column()
   password: string;
 
-  @IsEmail()
-  @IsNotEmpty()
-  @Column()
-  email: string;
+    @IsEmail()
+    @IsNotEmpty()
+    @Column({unique: true})
+    email: string;
 
   @IsEmpty()
   @Column({
@@ -64,11 +64,4 @@ export class UserDto extends BaseEntityDto {
   @IsNotEmpty()
   @Column()
   roles: string[];
-  //
-  // @ManyToMany(
-  //     type => RoleDto,
-  //     roleDto => roleDto.users,
-  // )
-  // @JoinTable({name: 'user_roles'})
-  // roles: RoleDto[];
 }

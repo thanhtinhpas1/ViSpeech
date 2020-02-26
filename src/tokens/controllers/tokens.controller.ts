@@ -14,6 +14,7 @@ import { TokensService } from "../services/tokens.service";
 import { GetTokensQuery } from "tokens/queries/impl/get-tokens.query";
 import { GetTokensByUserIdQuery } from "tokens/queries/impl/get-tokens-by-userId";
 import { FindTokenQuery } from "tokens/queries/impl/find-token.query";
+import { ObjectID } from "typeorm";
 
 @Controller("tokens")
 @ApiTags("Tokens")
@@ -45,8 +46,8 @@ export class TokensController {
     @Body() tokenDto: TokenDto
   ) {
     return this.tokensService.updateToken({
-      id: tokenIdDto.id,
-      ...tokenDto
+      ...tokenDto,
+      _id: ObjectID.createFromHexString(tokenIdDto.id)
     });
   }
 

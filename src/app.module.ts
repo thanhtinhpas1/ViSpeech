@@ -3,7 +3,6 @@ import { EventStoreModule } from "./core/event-store/event-store.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
-import { UsersService } from "users/services/users.service";
 import { UsersModule } from "users/users.module";
 import { TokensModule } from "tokens/tokens.module";
 import { OrdersModule } from "orders/orders.module";
