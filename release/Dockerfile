@@ -3,7 +3,7 @@ FROM node:dubnium-alpine AS base
 # Set the working directory
 WORKDIR .
 # Install yarn
-RUN apk --no-cache add yarn
+RUN apk add yarn
 ### DEPENDENCIES
 FROM base AS dependencies
 # Install Node.js dependencies
