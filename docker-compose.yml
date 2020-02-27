@@ -5,62 +5,62 @@ version: '3'
 
 services:
   # EVENT STORE
-#  eventstore:
-#    image: eventstore/eventstore
-#    ports:
-#      - 2113:2113
-#      - 1113:1113
-#    expose:
-#      - 2113
-#    environment:
-#      - EVENTSTORE_RUN_PROJECTIONS=All
-#      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
-#    network_mode: bridge
+  #  eventstore:
+  #    image: eventstore/eventstore
+  #    ports:
+  #      - 2113:2113
+  #      - 1113:1113
+  #    expose:
+  #      - 2113
+  #    environment:
+  #      - EVENTSTORE_RUN_PROJECTIONS=All
+  #      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+  #    network_mode: bridge
   # DATABASE - MYSQL
-#  mongodb:
-#    image: mongo
-#    restart: alwaysw
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: mongodb
-#    ports:
-#      - 27017:27017
-#    network_mode: bridge
+  #  mongodb:
+  #    image: mongo
+  #    restart: alwaysw
+  #    environment:
+  #      MONGO_INITDB_ROOT_USERNAME: root
+  #      MONGO_INITDB_ROOT_PASSWORD: mongodb
+  #    ports:
+  #      - 27017:27017
+  #    network_mode: bridge
   # API - VISPEECH
   vispeech:
     build:
       context: "."
     command: ${CONTAINER_COMMAND}
     restart: always
-#    depends_on:
-#      - eventstore
-#      - mongodb
+    #    depends_on:
+    #      - eventstore
+    #      - mongodb
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
       - ${VISPEECH_PORT}:${VISPEECH_PORT}
     expose:
       - ${VISPEECH_PORT}
-#    links:
-#      - eventstore
-#      - mongodb
+    #    links:
+    #      - eventstore
+    #      - mongodb
     network_mode: bridge
   vispeechdemo:
     build:
       context: "./ViSpeechDemo"
     command: ${CONTAINER_NODE_COMMAND}
     restart: always
-#    depends_on:
-#      - eventstore
-#      - mongodb
-      - vispeech
+      #    depends_on:
+      #      - eventstore
+      #      - mongodb
+      # - vispeech
     ports:
       - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
     expose:
       - ${VISPEECH_PORT_DEMO}
     links:
-#      - eventstore
-#      - mongodb
+      #      - eventstore
+      #      - mongodb
       - vispeech
     network_mode: bridge
   release:
@@ -69,15 +69,15 @@ services:
     command: "node app.js"
     restart: always
     depends_on:
-#      - eventstore
-#      - mongodb
-#      - vispeech
+    #      - eventstore
+    #      - mongodb
+    #      - vispeech
     ports:
       - ${RELEASE_INTERNAL_PORT}:${RELEASE_INTERNAL_PORT}
     expose:
       - ${RELEASE_PAGE_PORT}
-#    links:
-#      - eventstore
-#      - mongodb
-#      - vispeech
+    #    links:
+    #      - eventstore
+    #      - mongodb
+    #      - vispeech
     network_mode: bridge
