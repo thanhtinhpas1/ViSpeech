@@ -32,18 +32,18 @@ services:
       context: "."
     command: ${CONTAINER_COMMAND}
     restart: always
-    depends_on:
-      - eventstore
-      - mongodb
+#    depends_on:
+#      - eventstore
+#      - mongodb
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
       - ${VISPEECH_PORT}:${VISPEECH_PORT}
     expose:
       - ${VISPEECH_PORT}
-    links:
-      - eventstore
-      - mongodb
+#    links:
+#      - eventstore
+#      - mongodb
     network_mode: bridge
   vispeechdemo:
     build:
@@ -51,16 +51,16 @@ services:
     command: ${CONTAINER_NODE_COMMAND}
     restart: always
     depends_on:
-      - eventstore
-      - mongodb
+#      - eventstore
+#      - mongodb
       - vispeech
     ports:
       - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
     expose:
       - ${VISPEECH_PORT_DEMO}
     links:
-      - eventstore
-      - mongodb
+#      - eventstore
+#      - mongodb
       - vispeech
     network_mode: bridge
   release:
@@ -69,15 +69,15 @@ services:
     command: "node app.js"
     restart: always
     depends_on:
-      - eventstore
-      - mongodb
-      - vispeech
+#      - eventstore
+#      - mongodb
+#      - vispeech
     ports:
       - ${RELEASE_INTERNAL_PORT}:${RELEASE_INTERNAL_PORT}
     expose:
       - ${RELEASE_PAGE_PORT}
-    links:
-      - eventstore
-      - mongodb
-      - vispeech
+#    links:
+#      - eventstore
+#      - mongodb
+#      - vispeech
     network_mode: bridge
