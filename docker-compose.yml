@@ -50,7 +50,7 @@ services:
       context: "./ViSpeechDemo"
     command: ${CONTAINER_NODE_COMMAND}
     restart: always
-    depends_on:
+#    depends_on:
 #      - eventstore
 #      - mongodb
       - vispeech
