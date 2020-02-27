@@ -68,7 +68,7 @@ services:
       context: "./release"
     command: "node app.js"
     restart: always
-    depends_on:
+    # depends_on:
     #      - eventstore
     #      - mongodb
     #      - vispeech
