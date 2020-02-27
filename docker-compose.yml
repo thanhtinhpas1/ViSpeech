@@ -19,7 +19,7 @@ services:
   # DATABASE - MYSQL
 #  mongodb:
 #    image: mongo
-#    restart: always
+#    restart: alwaysw
 #    environment:
 #      MONGO_INITDB_ROOT_USERNAME: root
 #      MONGO_INITDB_ROOT_PASSWORD: mongodb

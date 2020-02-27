@@ -1,21 +1,16 @@
 ### BASE
 FROM node:dubnium-alpine AS base
-LABEL maintainer "VispeechRelease <vispeech@hcmus.edu.vn>"
 # Set the working directory
-WORKDIR /app
+WORKDIR .
 # Install yarn
 RUN apk --no-cache add yarn
-
 ### DEPENDENCIES
 FROM base AS dependencies
 # Install Node.js dependencies
-RUN cd /tmp && yarn --pure-lockfile
-
+RUN yarn
 ### RELEASE
 FROM base AS development
 # Copy app sources
 COPY . .
-# Copy dependencies
-COPY --from=dependencies /tmp/node_modules ./node_modules
 # Expose application port
 EXPOSE 8000:8000
