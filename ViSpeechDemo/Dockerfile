@@ -2,6 +2,8 @@
 FROM node:dubnium-alpine AS base
 # Set the working directory
 WORKDIR .
+# Copy project specification and dependencies lock files
+COPY package.json .
 # Install yarn
 RUN apk add yarn
 ### DEPENDENCIES
