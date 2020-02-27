@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy project specification and dependencies lock files
 COPY package.json yarn.lock tsconfig.json /tmp/
 # Install yarn
-RUN apk --no-cache add yarn
+RUN apk add yarn
 
 ### DEPENDENCIES
 FROM base AS dependencies
