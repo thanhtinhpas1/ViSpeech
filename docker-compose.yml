@@ -50,10 +50,10 @@ services:
       context: "./ViSpeechDemo"
     command: "npm start"
     restart: always
-      depends_on:
+    depends_on:
       #      - eventstore
       #      - mongodb
-        - vispeech
+      - vispeech
     ports:
       - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
     expose:
