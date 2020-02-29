@@ -5,7 +5,7 @@ LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 # Set the working directory
 WORKDIR /user/src/app/vispeech
 # Copy project specification and dependencies lock files
-COPY package*.json yarn.lock tsconfig*.json ./
+COPY package.json yarn.lock tsconfig.json ./
 
 FROM base AS dependencies
 # Install Node.js dependencies
