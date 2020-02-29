@@ -18,10 +18,5 @@ FROM base AS development
 # Copy app sources
 COPY . .
 
-# Copy dependencies
-COPY --from=dependencies ./node_modules ./node_modules
-
 # Expose application port
 EXPOSE 7070:7070
-
-RUN npm startg
