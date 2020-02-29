@@ -12,7 +12,6 @@ export VISPEECH_PORT=7070
 export RELEASE_INTERNAL_PORT=8000
 export RELEASE_PAGE_PORT=80
 
-
  docker-compose rm --all &&
  docker-compose pull &&
  docker-compose build --no-cache &&
