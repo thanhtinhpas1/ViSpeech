@@ -17,7 +17,7 @@ export class TokensService {
 
   async createToken(tokenDto: TokenDto) {
     return await this.commandBus.execute(
-      new CreateTokenCommand(tokenDto, null)
+      new CreateTokenCommand(tokenDto)
     );
   }
 

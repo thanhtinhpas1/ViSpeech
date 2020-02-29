@@ -15,11 +15,11 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
   async handle(event: UserUpdatedEvent) {
     try {
       Logger.log(event, "UserUpdatedEvent");
-      const { id, ...userInfo } = event.userDto[0];
+      const { _id, ...userInfo } = event.userDto;
       userInfo.roles = Utils.updateUserRoles(userInfo.roles);
-      return await this.repository.update(id, userInfo);
+      return await this.repository.update(_id, userInfo);
     } catch (error) {
-      Logger.error(error, "UserUpdatedEvent");
+      Logger.error(error, "", "UserUpdatedEvent");
     }
   }
 }

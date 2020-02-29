@@ -77,7 +77,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                                 const content = result['atom:entry']['atom:content'];
                                 const eventType = content.eventType;
                                 const data = content.data;
-                                event = this.eventHandlers[eventType](Object.values(data));
+                                event = this.eventHandlers[eventType](...Object.values(data));
                                 subject.next(event);
                             });
                         } catch (e) {

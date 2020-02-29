@@ -2,12 +2,16 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ICommand, ofType, Saga } from "@nestjs/cqrs";
 import { delay, map } from "rxjs/operators";
 import { Observable } from "rxjs";
-import { UserCreationStartedEvent } from "users/events/impl/user-created.event";
-import { CreateTokenCommand } from "tokens/commands/impl/create-token.command";
+import { UserCreationStartedEvent, UserCreatedFailEvent, UserCreatedEvent, UserTokenCreatedEvent, UserTokenCreatedFailEvent } from "users/events/impl/user-created.event";
+import { CreateUserTokenCommand } from "tokens/commands/impl/create-token.command";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { AuthService } from "auth/auth.service";
 import { TokenCreatedEvent } from "tokens/events/impl/token-created.event";
 import { CreateUserCommand } from "users/commands/impl/create-user.command";
+import { WelcomeUserCommand } from "users/commands/impl/welcome-user.command";
+import { DeleteUserCommand } from "users/commands/impl/delete-user.command";
+import { UserDto } from "users/dtos/users.dto";
+import { getMongoRepository } from "typeorm";
 
 @Injectable()
 export class UsersSagas {
@@ -26,33 +30,62 @@ export class UsersSagas {
   //     })
   //   );
   // };
-  // @Saga()
-  // tokenCreated = (events$: Observable<any>): Observable<ICommand> => {
-  //   return events$.pipe(
-  //     ofType(TokenCreatedEvent),
-  //     delay(1000),
-  //     map(event => {
-  //       Logger.log("Inside [UsersSagas] create user Saga", "UsersSagas");
-  //       const userDto = event.tokenDto[1];
-  //       Logger.log(userDto, "UsersSagas create user");
-  //       return new CreateUserCommand(userDto);
-  //     })
-  //   );
-  // };
 
   @Saga()
-  userStartCreation = (events$: Observable<any>): Observable<ICommand> => {
+  startCreatingUser = (events$: Observable<any>): Observable<ICommand> => {
     return events$.pipe(
       ofType(UserCreationStartedEvent),
       delay(1000),
-      map(event => {
-        Logger.log("Inside [UsersSagas] start create user Saga", "UsersSagas");
-        const userDto = event.userDto[0];
-        // const tokenValue = this.authService.generate_token_with_userId(
-        //   userDto.id
-        // );
-        // const tokenDto = new TokenDto(tokenValue, userDto.id, null);
-        return new CreateUserCommand(userDto);
+      map((event: UserCreationStartedEvent) => {
+        Logger.log("Inside [UsersSagas] startCreatingUser Saga", "UsersSagas");
+        const userDto = event.userDto;
+        const transactionId = event.transactionId;
+        
+        return new CreateUserCommand(transactionId, userDto);
+      })
+    );
+  };
+
+  @Saga()
+  userCreated = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(UserCreatedEvent),
+      delay(1000),
+      map((event: UserCreatedEvent) => {
+        Logger.log("Inside [UsersSagas] userCreated Saga", "UsersSagas");
+        Logger.log(event, "UsersSagas");
+        const transactionId = event.transactionId;
+        const userId = event.userDto._id.toString();
+        const tokenValue = this.authService.generate_token_with_userId(userId);
+        const tokenDto = new TokenDto(tokenValue, userId);
+        return new CreateUserTokenCommand(transactionId, tokenDto);
+      })
+    );
+  };
+
+  @Saga()
+  tokenCreated = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(UserTokenCreatedEvent),
+      delay(1000),
+      map((event: UserTokenCreatedEvent) => {
+        Logger.log("Inside [UsersSagas] tokenCreated Saga", "UsersSagas");
+        const userId = event.tokenDto.userId;
+        return new WelcomeUserCommand(userId);
+      })
+    );
+  };
+
+  @Saga()
+  tokenCreatedFail = (events$: Observable<any>): Observable<ICommand> => {
+    return events$.pipe(
+      ofType(UserTokenCreatedFailEvent),
+      delay(1000),
+      map((event: UserTokenCreatedFailEvent) => {
+        Logger.log("Inside [UsersSagas] tokenCreatedFail Saga", "UsersSagas");
+        Logger.error(event.error, "", "UsersSagas error");
+        Logger.error(event.transactionId, "", "UsersSagas transactionId");
+        return new DeleteUserCommand(event.transactionId, null);
       })
     );
   };

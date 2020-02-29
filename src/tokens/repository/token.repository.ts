@@ -1,13 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { Token } from "../models/token.model";
-import { UserDto } from "users/dtos/users.dto";
+import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Injectable()
 export class TokenRepository {
-  async createToken(tokenDto, userDto: UserDto) {
+  async createToken(tokenDto) {
     const token = new Token(undefined);
-    token.setData(tokenDto, userDto);
+    token.setData(tokenDto);
     token.createToken();
+    return token;
+  }
+
+  async createUserToken(transactionId: string, tokenDto: TokenDto) {
+    const token = new Token(undefined);
+    token.setData(tokenDto);
+    token.createUserToken(transactionId);
     return token;
   }
 

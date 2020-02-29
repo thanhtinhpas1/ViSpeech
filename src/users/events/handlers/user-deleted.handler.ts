@@ -14,10 +14,14 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
   async handle(event: UserDeletedEvent) {
     try {
       Logger.log(event, "UserDeletedEvent");
-      const userId = event.userId[0];
-      return await this.repository.delete(userId);
+      const userId = event.userId;
+      const transactionId = event.transactionId;
+      if (userId) {
+        return await this.repository.delete(userId);
+      }
+      return await this.repository.delete(transactionId);
     } catch (error) {
-      Logger.error(error, "UserDeletedEvent");
+      Logger.error(error, "", "UserDeletedEvent");
     }
   }
 }

@@ -1,19 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "../models/user.model";
+import { UserDto } from "users/dtos/users.dto";
 
 @Injectable()
 export class UserRepository {
-  async createUser(userDto) {
+  async createUser(transactionId: string, userDto: UserDto) {
     const user = new User(undefined);
     user.setData(userDto);
-    user.createUser();
+    user.createUser(transactionId);
     return user;
   }
 
-  async createUserStart(userDto) {
+  async createUserStart(transactionId: string, userDto: UserDto) {
     const user = new User(undefined);
     user.setData(userDto);
-    user.createUserStart();
+    user.createUserStart(transactionId);
     return user;
   }
 
@@ -24,15 +25,15 @@ export class UserRepository {
     return user;
   }
 
-    async deleteUser(userId) {
-        const user = new User(userId);
-        user.deleteUser();
-        return user;
-    }
+  async deleteUser(transactionId: string, userId: string) {
+    const user = new User(userId);
+    user.deleteUser(transactionId);
+    return user;
+  }
 
-    async welcomeUser(userId) {
-        const user = new User(userId);
-        user.welcomeUser();
-        return user;
-    }
+  async welcomeUser(userId) {
+    const user = new User(userId);
+    user.welcomeUser();
+    return user;
+  }
 }

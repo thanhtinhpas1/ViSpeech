@@ -1,9 +1,14 @@
 import { AggregateRoot } from "@nestjs/cqrs";
-import { UserCreationStartedEvent } from "../events/impl/user-created.event";
-import { UserCreatedEvent } from "../events/impl/user-created.event";
+import {
+  UserCreationStartedEvent,
+  UserCreatedEvent,
+  UserCreatedFailEvent
+} from "../events/impl/user-created.event";
 import { UserUpdatedEvent } from "../events/impl/user-updated.event";
 import { UserDeletedEvent } from "../events/impl/user-deleted.event";
 import { UserWelcomedEvent } from "../events/impl/user-welcomed.event";
+import { UserDto } from "users/dtos/users.dto";
+import { Logger } from "@nestjs/common";
 
 export class User extends AggregateRoot {
   [x: string]: any;
@@ -12,16 +17,20 @@ export class User extends AggregateRoot {
     super();
   }
 
-  setData(data) {
+  setData(data: UserDto) {
     this.data = data;
   }
 
-  createUserStart() {
-    this.apply(new UserCreationStartedEvent(this.data));
+  createUserStart(transactionId) {
+    this.apply(new UserCreationStartedEvent(transactionId, this.data));
   }
 
-  createUser() {
-    this.apply(new UserCreatedEvent(this.data));
+  createUser(transactionId) {
+    try {
+      this.apply(new UserCreatedEvent(transactionId, this.data));
+    } catch (error) {
+      this.apply(new UserCreatedFailEvent(transactionId, error));
+    }
   }
 
   updateUser() {
@@ -32,7 +41,11 @@ export class User extends AggregateRoot {
     this.apply(new UserWelcomedEvent(this.id));
   }
 
-  deleteUser() {
-    this.apply(new UserDeletedEvent(this.id));
+  deleteUser(transactionId) {
+    try {
+      this.apply(new UserDeletedEvent(transactionId, this.id));
+    } catch (error) {
+      Logger.error(error, "", "[UserModel] deleteUser");
+    }
   }
 }

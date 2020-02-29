@@ -1,7 +1,9 @@
-import { IsEmpty, IsNotEmpty, IsString, IsNumber, IsPositive, IsOptional, IsUUID } from "class-validator";
-import { Column, Entity, ObjectID } from "typeorm";
+import { IsEmpty, IsNotEmpty, IsString, IsNumber, IsPositive, IsOptional, IsUUID, IsIn } from "class-validator";
+import { Column, Entity } from "typeorm";
+import { ObjectID } from 'mongodb'
 import { BaseEntityDto } from "base/base-entity.dto";
 import { Type } from "class-transformer";
+import { CONSTANTS } from "common/constant";
 
 export class TokenIdRequestParamsDto {
   constructor(tokenId) {
@@ -15,11 +17,12 @@ export class TokenIdRequestParamsDto {
 
 @Entity("tokens")
 export class TokenDto extends BaseEntityDto {
-  constructor(value, userId, tokenTypeId) {
+  constructor(value, userId, tokenTypeId = "", tokenType = "FREE") {
     super();
     this.value = value;
     this.userId = userId;
     this.tokenTypeId = tokenTypeId;
+    this.tokenType = tokenType;
   }
 
   @IsOptional()
@@ -45,7 +48,9 @@ export class TokenDto extends BaseEntityDto {
 
   @IsString()
   @IsNotEmpty()
-  @Column()
+  @Column({
+    unique: true
+  })
   value: string;
 
   @IsUUID()
@@ -63,7 +68,7 @@ export class TokenDto extends BaseEntityDto {
     nullable: false,
     type: "uuid"
   })
-  tokenTypeId: ObjectID;
+  tokenTypeId: string;
 
   @IsEmpty()
   @Column({
@@ -71,4 +76,10 @@ export class TokenDto extends BaseEntityDto {
     default: true
   })
   isValid: boolean;
+
+  @IsOptional()
+  @IsIn([CONSTANTS.TOKEN_TYPE.FREE], {
+    each: true
+  })
+  tokenType: string;
 }

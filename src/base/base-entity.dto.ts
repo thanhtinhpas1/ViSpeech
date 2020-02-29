@@ -1,4 +1,4 @@
-import { IsEmpty, IsUUID } from "class-validator";
+import { IsEmpty, IsUUID, IsOptional } from "class-validator";
 import {
   CreateDateColumn,
   ObjectID,
@@ -11,19 +11,19 @@ import { Utils } from "../utils";
 export class BaseEntityDto {
   constructor() {
     this._id = Utils.getUuid();
-    this.transactionId = Utils.getUuid();
   }
 
   @ObjectIdColumn()
   _id: ObjectID;
 
+  @IsOptional()
   @IsUUID()
   @Column({
     name: "transaction_id",
     nullable: false,
     type: "uuid"
   })
-  transactionId: ObjectID;
+  transactionId: string;
 
   @IsEmpty()
   @CreateDateColumn({

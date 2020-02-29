@@ -4,7 +4,8 @@ import {
   IsNotEmpty,
   IsString,
   IsArray,
-  IsIn
+  IsIn,
+  IsOptional
 } from "class-validator";
 import { Column, Entity, Index } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
@@ -64,7 +65,7 @@ export class UserDto extends BaseEntityDto {
   @Column({
     name: "is_active",
     default: true,
-    nullable: true
+    nullable: false
   })
   isActive: boolean;
 

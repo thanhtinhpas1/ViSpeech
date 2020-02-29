@@ -5,7 +5,7 @@ import { UpdateUserCommand } from "../commands/impl/update-user.command";
 import { DeleteUserCommand } from "../commands/impl/delete-user.command";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
-import { CreateUserStartCommand } from "users/commands/impl/create-user-start.command";
+import { CreateUserStartCommand } from "users/commands/impl/create-user.command";
 
 @Injectable()
 export class UsersService {
@@ -14,16 +14,16 @@ export class UsersService {
     private readonly queryBus: QueryBus,
   ) {}
 
-  async createUserStart(userDto: UserDto) {
-    return await this.commandBus.execute(new CreateUserStartCommand(userDto));
+  async createUserStart(transactionId: string, userDto: UserDto) {
+    return await this.commandBus.execute(new CreateUserStartCommand(transactionId, userDto));
   }
 
   async updateUser(userDto: UserDto) {
     return await this.commandBus.execute(new UpdateUserCommand(userDto));
   }
 
-  async deleteUser(userIdDto: UserIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteUserCommand(userIdDto));
+  async deleteUser(transactionId: string, userIdDto: UserIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteUserCommand(transactionId, userIdDto));
   }
 
   async findUsers(getUsersQuery: GetUsersQuery) {

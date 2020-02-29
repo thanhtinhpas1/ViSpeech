@@ -15,10 +15,10 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
   async handle(event: TokenDeletedEvent) {
     try {
       Logger.log(event, "TokenDeletedEvent");
-      const tokenId = event.tokenId[0];
+      const tokenId = event.tokenId;
       return await this.repository.delete(tokenId);
     } catch (error) {
-      Logger.error(error, "TokenDeletedEvent");
+      Logger.error(error, "", "TokenDeletedEvent");
     }
   }
 }

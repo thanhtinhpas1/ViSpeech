@@ -3,33 +3,53 @@ import { TokenCreatedEvent } from "../events/impl/token-created.event";
 import { TokenUpdatedEvent } from "../events/impl/token-updated.event";
 import { TokenDeletedEvent } from "../events/impl/token-deleted.event";
 import { TokenWelcomedEvent } from "../events/impl/token-welcomed.event";
-import { UserDto } from "users/dtos/users.dto";
+import {
+  UserTokenCreatedEvent,
+  UserTokenCreatedFailEvent
+} from "users/events/impl/user-created.event";
+import { TokenDto } from "tokens/dtos/tokens.dto";
 
 export class Token extends AggregateRoot {
-    [x: string]: any;
+  [x: string]: any;
 
-    constructor(private readonly id: string | undefined) {
-        super();
-    }
+  constructor(private readonly id: string | undefined) {
+    super();
+  }
 
-  setData(data, userDto: UserDto = null) {
+  setData(data: TokenDto) {
     this.data = data;
-    this.userDto = userDto;
   }
 
   createToken() {
-    this.apply(new TokenCreatedEvent(this.data, this.userDto));
+    this.apply(new TokenCreatedEvent(this.data));
   }
 
-    updateToken() {
-        this.apply(new TokenUpdatedEvent(this.data));
+  createUserToken(transactionId) {
+    try {
+      if (transactionId === "1") {
+        this.apply(new TokenCreatedEvent(this.data));
+        this.apply(new UserTokenCreatedEvent(transactionId, this.data));
+      } else {
+        this.apply(
+          new UserTokenCreatedFailEvent(transactionId, {
+            message: "invalid transactionId!"
+          })
+        );
+      }
+    } catch (error) {
+      this.apply(new UserTokenCreatedFailEvent(transactionId, error));
     }
+  }
 
-    welcomeToken() {
-        this.apply(new TokenWelcomedEvent(this.id));
-    }
+  updateToken() {
+    this.apply(new TokenUpdatedEvent(this.data));
+  }
 
-    deleteToken() {
-        this.apply(new TokenDeletedEvent(this.id));
-    }
+  welcomeToken() {
+    this.apply(new TokenWelcomedEvent(this.id));
+  }
+
+  deleteToken() {
+    this.apply(new TokenDeletedEvent(this.id));
+  }
 }

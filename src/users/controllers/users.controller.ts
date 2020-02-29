@@ -14,6 +14,7 @@ import { UsersService } from "../services/users.service";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { Roles } from "auth/roles.decorator";
+import { Utils } from "utils";
 
 @Controller("users")
 @ApiTags("Users")
@@ -35,7 +36,8 @@ export class UsersController {
   @Post()
   // @Roles(["admin"])
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
-    return await this.usersService.createUserStart(userDto);
+    const transactionId = Utils.getUuid();
+    return await this.usersService.createUserStart(transactionId, userDto);
   }
 
   /* Update User */
@@ -58,7 +60,8 @@ export class UsersController {
   @ApiResponse({ status: 200, description: "Delete User." })
   @Delete(":id")
   async deleteUser(@Param() userIdDto: UserIdRequestParamsDto) {
-    return this.usersService.deleteUser(userIdDto);
+    const transactionId = Utils.getUuid();
+    return this.usersService.deleteUser(transactionId, userIdDto);
   }
 
   /* List Users */

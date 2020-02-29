@@ -1,7 +1,7 @@
 import { CommandBus, CqrsModule, EventBus, QueryBus } from "@nestjs/cqrs";
 import { Module, OnModuleInit, forwardRef } from "@nestjs/common";
 import { CommandHandlers } from "./commands/handlers";
-import { CommandHandlers as TokenCommandHandlers } from "tokens/commands/handlers"
+import { CommandHandlers as TokenCommandHandlers } from "tokens/commands/handlers";
 import { EventHandlers } from "./events/handlers";
 import { UsersSagas } from "./sagas/users.sagas";
 import { TokensSagas } from "tokens/sagas/tokens.sagas";
@@ -10,10 +10,16 @@ import { UsersService } from "./services/users.service";
 import { UserRepository } from "./repository/user.repository";
 import { EventStoreModule } from "../core/event-store/event-store.module";
 import { EventStore } from "../core/event-store/event-store";
-import { UserCreatedEvent } from "./events/impl/user-created.event";
+import {
+  UserCreationStartedEvent,
+  // UserCreatedSuccessEvent,
+  UserCreatedFailEvent,
+  UserCreatedEvent,
+  UserTokenCreatedEvent,
+  UserTokenCreatedFailEvent
+} from "./events/impl/user-created.event";
 import { UserDeletedEvent } from "./events/impl/user-deleted.event";
 import { UserUpdatedEvent } from "./events/impl/user-updated.event";
-import { UserCreationStartedEvent } from "./events/impl/user-created.event";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserDto } from "./dtos/users.dto";
 import { QueryHandlers } from "./queries/handler";
@@ -21,7 +27,6 @@ import { TokenTypeDto } from "../tokens/dtos/token-types.dto";
 import { RoleDto } from "../roles/dtos/roles.dto";
 import { TokensModule } from "tokens/tokens.module";
 import { AuthModule } from "auth/auth.module";
-import { RolesModule } from "roles/roles.module";
 import { TokenRepository } from "tokens/repository/token.repository";
 import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";
 
@@ -70,10 +75,20 @@ export class UsersModule implements OnModuleInit {
   }
 
   eventHandlers = {
-    UserCreatedEvent: data => new UserCreatedEvent(data),
-    UserDeletedEvent: data => new UserDeletedEvent(data),
+    UserCreationStartedEvent: (transactionId, data) =>
+      new UserCreationStartedEvent(transactionId, data),
+    UserCreatedEvent: (transactionId, data) =>
+      new UserCreatedEvent(transactionId, data),
+    UserCreatedFailEvent: (transactionId, error) =>
+      new UserCreatedFailEvent(transactionId, error),
+    UserTokenCreatedEvent: (userDto, tokenDto) =>
+      new UserTokenCreatedEvent(userDto, tokenDto),
+    UserTokenCreatedFailEvent: (transactionId, error) =>
+      new UserTokenCreatedFailEvent(transactionId, error),
+
+    UserDeletedEvent: (transactionId, data) =>
+      new UserDeletedEvent(transactionId, data),
     UserUpdatedEvent: data => new UserUpdatedEvent(data),
-    UserCreationStartedEvent: data => new UserCreationStartedEvent(data),
     UserWelcomedEvent: data => new UserWelcomedEvent(data)
   };
 }

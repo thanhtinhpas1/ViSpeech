@@ -14,7 +14,7 @@ import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
 import { InjectRepository, TypeOrmModule } from "@nestjs/typeorm";
 import { TokenDto } from "./dtos/tokens.dto";
 import { QueryHandlers } from "./queries/handler";
-import { Repository } from "typeorm";
+import { Repository, getMongoRepository } from "typeorm";
 import { TokenTypeDto } from "./dtos/token-types.dto";
 import { TokensService } from "./services/tokens.service";
 import { JwtModule } from "@nestjs/jwt";
@@ -47,9 +47,7 @@ export class TokensModule implements OnModuleInit {
     private readonly query$: QueryBus,
     private readonly event$: EventBus,
     private readonly tokensSagas: TokensSagas,
-    private readonly eventStore: EventStore,
-    @InjectRepository(TokenTypeDto)
-    private readonly repository: Repository<TokenTypeDto>
+    private readonly eventStore: EventStore
   ) {}
 
   async onModuleInit() {
@@ -62,17 +60,16 @@ export class TokensModule implements OnModuleInit {
     this.query$.register(QueryHandlers);
     this.event$.registerSagas([TokensSagas]);
 
-    const freeTokenType = await this.repository.find({
+    const freeTokenType = await getMongoRepository(TokenTypeDto).find({
       name: CONSTANTS.TOKEN_TYPE.FREE
     });
     if (!freeTokenType[0]) {
-      const freeTokenType = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0);
-      await this.repository.save(freeTokenType);
+      await getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
     }
   }
 
   eventHandlers = {
-    TokenCreatedEvent: (data, userDto) => new TokenCreatedEvent(data, userDto),
+    TokenCreatedEvent: (data) => new TokenCreatedEvent(data),
     TokenDeletedEvent: data => new TokenDeletedEvent(data),
     TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
     TokenWelcomedEvent: data => new TokenWelcomedEvent(data)
