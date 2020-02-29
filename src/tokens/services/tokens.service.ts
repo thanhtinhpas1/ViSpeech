@@ -36,14 +36,12 @@ export class TokensService {
   }
 
   async getTokensByUserId(getTokensByUserIdQuery: GetTokensByUserIdQuery) {
-    const query = new GetTokensByUserIdQuery();
-    Object.assign(query, getTokensByUserIdQuery);
+    const query = new GetTokensByUserIdQuery(getTokensByUserIdQuery.userId);
     return await this.queryBus.execute(query);
   }
 
   async findOne(findTokenQuery: FindTokenQuery): Promise<TokenDto> {
-    const query = new FindTokenQuery();
-    Object.assign(query, findTokenQuery);
+    const query = new FindTokenQuery(findTokenQuery.id);
     return await this.queryBus.execute(query);
   }
 }

@@ -33,8 +33,7 @@ export class OrdersService {
   }
 
   async findOne(findOrderQuery: FindOrderQuery): Promise<OrderDto> {
-    var query = new FindOrderQuery();
-    Object.assign(query, findOrderQuery);
+    var query = new FindOrderQuery(findOrderQuery.id);
     return await this.queryBus.execute(query);
   }
 }

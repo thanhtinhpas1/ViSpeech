@@ -7,7 +7,7 @@ import {
   IsInt,
   IsUUID
 } from "class-validator";
-import { Transform, Type } from "class-transformer";
+import { Type } from "class-transformer";
 import { Column, Entity, ObjectID } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
 
@@ -23,10 +23,6 @@ export class ReportIdRequestParamsDto {
 
 @Entity("reports")
 export class ReportDto extends BaseEntityDto {
-  @IsNotEmpty()
-  @IsString()
-  @Column()
-  tokenId: string;
 
   @Type(() => Number)
   @IsNumber()
@@ -43,6 +39,14 @@ export class ReportDto extends BaseEntityDto {
     name: "date_report"
   })
   dateReport: Date;
+
+  @IsUUID()
+  @Column({
+    name: "token_id",
+    nullable: false,
+    type: "uuid"
+  })
+  tokenId: ObjectID;
 
   @IsUUID()
   @Column({

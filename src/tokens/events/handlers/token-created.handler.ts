@@ -17,24 +17,24 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
     ) {
     }
 
-    async handle(event: TokenCreatedEvent) {
-        try {
-            Logger.log(event, 'TokenCreatedEvent');
-            const token = event.tokenDto[0];
-            Logger.log(token, 'TokenCreatedEvent');
-            const freeTokenType = await this.repositoryTokenType.find({
-                name: token.tokenType || CONSTANTS.TOKEN_TYPE.FREE,
-            });
-            token.tokenTypeId = freeTokenType[0]._id;
-            token.minutes = freeTokenType[0].minutes;
-            delete token.tokenType;
-            const savedToken = await this.repository.save(token);
-            if (event.tokenDto[1]) { // userDto
-                return event.tokenDto[1];
-            }
-            return savedToken;
-        } catch (error) {
-            Logger.error(error, 'TokenCreatedEvent');
-        }
+  async handle(event: TokenCreatedEvent) {
+    try {
+      Logger.log(event, "TokenCreatedEvent");
+      const token = event.tokenDto[0];
+      Logger.log(token, "TokenCreatedEvent");
+      const freeTokenType = await this.repositoryTokenType.find({
+        name: token.tokenType || CONSTANTS.TOKEN_TYPE.FREE
+      });
+      token.tokenTypeId = freeTokenType[0]._id;
+      token.minutes = freeTokenType[0].minutes;
+      delete token.tokenType;
+      Logger.log(token, "TokenCreatedEvent after");
+      const savedToken = await this.repository.save(token);
+      if (event.tokenDto[1]) { // userDto
+        return event.tokenDto[1];
+      }
+      return savedToken;
+    } catch (error) {
+      Logger.error(error, "TokenCreatedEvent");
     }
 }

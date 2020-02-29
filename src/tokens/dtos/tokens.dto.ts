@@ -1,6 +1,7 @@
-import { IsEmpty, IsNotEmpty, IsString, IsBoolean } from "class-validator";
-import { Column, Entity } from "typeorm";
+import { IsEmpty, IsNotEmpty, IsString, IsNumber, IsPositive, IsOptional, IsUUID } from "class-validator";
+import { Column, Entity, ObjectID } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
+import { Type } from "class-transformer";
 
 export class TokenIdRequestParamsDto {
   constructor(tokenId) {
@@ -21,16 +22,24 @@ export class TokenDto extends BaseEntityDto {
     this.tokenTypeId = tokenTypeId;
   }
 
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
   @Column({
     name: "minutes",
     default: 0
   })
   minutes: number;
 
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
   @Column({
     name: "used_minutes",
     default: 0,
-    nullable: true
+    nullable: false
   })
   usedMinutes: number;
 
@@ -39,19 +48,26 @@ export class TokenDto extends BaseEntityDto {
   @Column()
   value: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Column()
-  userId: string;
-
-  @IsEmpty()
+  @IsUUID()
   @Column({
-    default: ""
+    name: "user_id",
+    nullable: false,
+    type: "uuid"
   })
-  tokenTypeId: string;
+  userId: ObjectID;
+
+  @IsOptional()
+  @IsUUID()
+  @Column({
+    name: "token_type_id",
+    nullable: false,
+    type: "uuid"
+  })
+  tokenTypeId: ObjectID;
 
   @IsEmpty()
   @Column({
+    name: "is_valid",
     default: true
   })
   isValid: boolean;

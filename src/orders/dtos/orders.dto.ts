@@ -1,6 +1,13 @@
-import {IsNotEmpty, IsNumber, IsPositive, IsString} from 'class-validator';
-import {Column, Entity} from 'typeorm';
-import {BaseEntityDto} from 'base/base-entity.dto';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsUUID
+} from "class-validator";
+import { Column, Entity, ObjectID } from "typeorm";
+import { BaseEntityDto } from "base/base-entity.dto";
+import { Type } from "class-transformer";
 
 export class OrderIdRequestParamsDto {
     constructor(orderId) {
@@ -14,19 +21,25 @@ export class OrderIdRequestParamsDto {
 
 @Entity('orders')
 export class OrderDto extends BaseEntityDto {
+  @IsUUID()
+  @Column({
+    name: "token_id",
+    nullable: false,
+    type: "uuid"
+  })
+  tokenId: ObjectID;
 
-    @IsNotEmpty()
-    @IsString()
-    @Column()
-    tokenId: string;
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @Column()
+  price: number;
 
-    @IsNumber()
-    @IsPositive()
-    @Column()
-    price: number;
-
-    @IsNotEmpty()
-    @IsString()
-    @Column()
-    userId: string;
+  @IsUUID()
+  @Column({
+    name: "user_id",
+    nullable: false,
+    type: "uuid"
+  })
+  userId: ObjectID;
 }

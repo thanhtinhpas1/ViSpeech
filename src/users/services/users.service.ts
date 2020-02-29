@@ -11,7 +11,7 @@ import { CreateUserStartCommand } from "users/commands/impl/create-user-start.co
 export class UsersService {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
 
   async createUserStart(userDto: UserDto) {

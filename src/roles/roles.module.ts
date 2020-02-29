@@ -1,17 +1,15 @@
-import {Module, OnModuleInit} from '@nestjs/common';
-import {InjectRepository, TypeOrmModule} from '@nestjs/typeorm';
-import {RoleDto} from './dtos/roles.dto';
-import {CqrsModule} from '@nestjs/cqrs';
-import {EventStoreModule} from 'core/event-store/event-store.module';
-import {Repository} from 'typeorm';
-import {CONSTANTS} from 'common/constant';
+import { Module, OnModuleInit } from "@nestjs/common";
+import { InjectRepository, TypeOrmModule } from "@nestjs/typeorm";
+import { RoleDto } from "./dtos/roles.dto";
+import { CqrsModule } from "@nestjs/cqrs";
+import { EventStoreModule } from "core/event-store/event-store.module";
+import { Repository } from "typeorm";
+import { CONSTANTS } from "common/constant";
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([RoleDto]),
-        CqrsModule,
-        EventStoreModule.forFeature(),
-    ],
+  imports: [
+    TypeOrmModule.forFeature([RoleDto])
+  ]
 })
 export class RolesModule implements OnModuleInit {
     constructor(

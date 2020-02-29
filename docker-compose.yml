@@ -45,24 +45,24 @@ services:
     #      - eventstore
     #      - mongodb
     network_mode: bridge
-  vispeechdemo:
-    build:
-      context: "./ViSpeechDemo"
-    command: ${CONTAINER_NODE_COMMAND}
-    restart: always
-      #    depends_on:
-      #      - eventstore
-      #      - mongodb
-      # - vispeech
-    ports:
-      - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
-    expose:
-      - ${VISPEECH_PORT_DEMO}
-    links:
-      #      - eventstore
-      #      - mongodb
-      - vispeech
-    network_mode: bridge
+#  vispeechdemo:
+#    build:
+#      context: "./ViSpeechDemo"
+#    command: ${CONTAINER_NODE_COMMAND}
+#    restart: always
+#      #    depends_on:
+#      #      - eventstore
+#      #      - mongodb
+#      # - vispeech
+#    ports:
+#      - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
+#    expose:
+#      - ${VISPEECH_PORT_DEMO}
+#    links:
+#      #      - eventstore
+#      #      - mongodb
+#      - vispeech
+#    network_mode: bridge
   release:
     build:
       context: "./release"

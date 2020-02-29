@@ -33,7 +33,7 @@ export class UsersController {
   @ApiOperation({ tags: ["Create User"] })
   @ApiResponse({ status: 200, description: "Create User." })
   @Post()
-  @Roles(["admin"])
+  // @Roles(["admin"])
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
     return await this.usersService.createUserStart(userDto);
   }
