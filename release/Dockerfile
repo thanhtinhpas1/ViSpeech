@@ -1,17 +1,17 @@
 ### BASE
 FROM node:dubnium-alpine AS base
 # Set the working directory
-WORKDIR .
+WORKDIR /user/src/app/release
 # Copy project specification and dependencies lock files
-COPY package.json .
-# Install yarn
-RUN apk add yarn
-### DEPENDENCIES
-FROM base AS dependencies
-# Install Node.js dependencies
-RUN yarn
-### RELEASE
-FROM base AS development
+COPY package*.json .
+
+RUN npm install
+
+COPY . .
 
 # Expose application port
 EXPOSE 8000:8000
+
+CMD["node", "bin/www"]
+
+
