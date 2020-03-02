@@ -14,7 +14,7 @@ export class BaseEntityDto {
   }
 
   @ObjectIdColumn()
-  _id: ObjectID;
+  _id: string;
 
   @IsOptional()
   @IsUUID()

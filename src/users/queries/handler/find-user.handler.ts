@@ -16,7 +16,7 @@ export class FindUserHandler implements IQueryHandler<FindUserQuery> {
       Logger.log("Async FindUserQuery...", "FindUserQuery");
       return await this.repository.findOne(query.id);
     } catch (error) {
-      Logger.error(error, "FindUserQuery");
+      Logger.error(error, "", "FindUserQuery");
     }
   }
 }

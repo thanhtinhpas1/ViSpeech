@@ -11,12 +11,12 @@ import { Type } from "class-transformer";
 
 export class OrderIdRequestParamsDto {
   constructor(orderId) {
-    this.id = orderId;
+    this._id = orderId;
   }
 
   @IsString()
   @IsNotEmpty()
-  id: string;
+  _id: string;
 }
 
 @Entity("orders")

@@ -17,7 +17,7 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
       Logger.log("Async FindOrderQuery...", "FindOrderQuery");
       return await this.repository.findOne(query.id);
     } catch (error) {
-      Logger.error(error, "FindOrderQuery");
+      Logger.error(error, "", "FindOrderQuery");
     }
   }
 }

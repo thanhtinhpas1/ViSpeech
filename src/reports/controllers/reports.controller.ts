@@ -34,14 +34,14 @@ export class ReportsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Report"] })
   @ApiResponse({ status: 200, description: "Update Report." })
-  @Put(":id")
+  @Put(":_id")
   async updateReport(
     @Param() reportIdDto: ReportIdRequestParamsDto,
     @Body() reportDto: ReportDto
   ) {
     return this.reportsService.updateReport({
-      _id: reportIdDto._id,
-      ...reportDto
+      ...reportDto,
+      _id: reportIdDto._id
     });
   }
 
@@ -50,7 +50,7 @@ export class ReportsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Report"] })
   @ApiResponse({ status: 200, description: "Delete Report." })
-  @Delete(":id")
+  @Delete(":_id")
   async deleteReport(@Param() reportIdDto: ReportIdRequestParamsDto) {
     return this.reportsService.deleteReport(reportIdDto);
   }

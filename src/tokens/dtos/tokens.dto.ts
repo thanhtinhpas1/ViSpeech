@@ -7,12 +7,12 @@ import { CONSTANTS } from "common/constant";
 
 export class TokenIdRequestParamsDto {
   constructor(tokenId) {
-    this.id = tokenId;
+    this._id = tokenId;
   }
 
   @IsString()
   @IsNotEmpty()
-  id: string;
+  _id: string;
 }
 
 @Entity("tokens")
@@ -68,7 +68,7 @@ export class TokenDto extends BaseEntityDto {
     nullable: false,
     type: "uuid"
   })
-  tokenTypeId: string;
+  tokenTypeId: ObjectID;
 
   @IsEmpty()
   @Column({

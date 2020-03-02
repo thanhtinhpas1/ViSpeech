@@ -12,7 +12,6 @@ import { EventStoreModule } from "../core/event-store/event-store.module";
 import { EventStore } from "../core/event-store/event-store";
 import {
   UserCreationStartedEvent,
-  // UserCreatedSuccessEvent,
   UserCreatedFailEvent,
   UserCreatedEvent,
   UserTokenCreatedEvent,

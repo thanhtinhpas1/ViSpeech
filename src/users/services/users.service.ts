@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { UserDto, UserIdRequestParamsDto } from "../dtos/users.dto";
 import { UpdateUserCommand } from "../commands/impl/update-user.command";
@@ -19,6 +19,7 @@ export class UsersService {
   }
 
   async updateUser(userDto: UserDto) {
+    Logger.log(userDto, "service")
     return await this.commandBus.execute(new UpdateUserCommand(userDto));
   }
 

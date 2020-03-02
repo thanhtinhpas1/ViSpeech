@@ -43,8 +43,8 @@ export class UserDto extends BaseEntityDto {
   @Column()
   username: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @Column()
   password: string;
 

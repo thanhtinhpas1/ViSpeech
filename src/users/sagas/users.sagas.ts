@@ -40,7 +40,6 @@ export class UsersSagas {
         Logger.log("Inside [UsersSagas] startCreatingUser Saga", "UsersSagas");
         const userDto = event.userDto;
         const transactionId = event.transactionId;
-        
         return new CreateUserCommand(transactionId, userDto);
       })
     );
@@ -55,7 +54,7 @@ export class UsersSagas {
         Logger.log("Inside [UsersSagas] userCreated Saga", "UsersSagas");
         Logger.log(event, "UsersSagas");
         const transactionId = event.transactionId;
-        const userId = event.userDto._id.toString();
+        const userId = event.userDto._id;
         const tokenValue = this.authService.generate_token_with_userId(userId);
         const tokenDto = new TokenDto(tokenValue, userId);
         return new CreateUserTokenCommand(transactionId, tokenDto);
@@ -84,7 +83,7 @@ export class UsersSagas {
       map((event: UserTokenCreatedFailEvent) => {
         Logger.log("Inside [UsersSagas] tokenCreatedFail Saga", "UsersSagas");
         Logger.error(event.error, "", "UsersSagas error");
-        Logger.error(event.transactionId, "", "UsersSagas transactionId");
+        Logger.log(event.transactionId, "UsersSagas transactionId");
         return new DeleteUserCommand(event.transactionId, null);
       })
     );

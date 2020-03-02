@@ -15,10 +15,10 @@ export class ReportDeletedHandler implements IEventHandler<ReportDeletedEvent> {
   async handle(event: ReportDeletedEvent) {
     try {
       Logger.log(event, "ReportDeletedEvent");
-      const reportId = event.reportId[0];
-      return await this.repository.delete(reportId);
+      const reportId = event.reportId;
+      return await this.repository.delete({ _id: reportId });
     } catch (error) {
-      Logger.error(error, "ReportDeletedEvent");
+      Logger.error(error, "", "ReportDeletedEvent");
     }
   }
 }

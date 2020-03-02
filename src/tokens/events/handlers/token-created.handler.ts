@@ -23,7 +23,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
       const tokenTypeDto = await this.repositoryTokenType.find({
         name: token.tokenType
       });
-      token.tokenTypeId = tokenTypeDto[0]._id.toString();
+      token.tokenTypeId = tokenTypeDto[0]._id;
       token.minutes = tokenTypeDto[0].minutes;
       delete token.tokenType;
       return await this.repository.save(token);

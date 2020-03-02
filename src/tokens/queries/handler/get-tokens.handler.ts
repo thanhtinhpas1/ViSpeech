@@ -22,7 +22,7 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
         });
       return await this.repository.find();
     } catch (error) {
-      Logger.error(error, "GetTokensQuery");
+      Logger.error(error, "", "GetTokensQuery");
     }
   }
 }

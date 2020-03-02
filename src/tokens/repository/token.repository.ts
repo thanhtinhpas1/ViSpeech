@@ -4,7 +4,7 @@ import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Injectable()
 export class TokenRepository {
-  async createToken(tokenDto) {
+  async createToken(tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
     token.createToken();
@@ -18,20 +18,20 @@ export class TokenRepository {
     return token;
   }
 
-  async updateToken(tokenDto) {
-    const token = new Token(tokenDto.id);
+  async updateToken(tokenDto: TokenDto) {
+    const token = new Token(undefined);
     token.setData(tokenDto);
     token.updateToken();
     return token;
   }
 
-  async deleteToken(tokenId) {
+  async deleteToken(tokenId: string) {
     const token = new Token(tokenId);
     token.deleteToken();
     return token;
   }
 
-  async welcomeToken(tokenId) {
+  async welcomeToken(tokenId: string) {
     const token = new Token(tokenId);
     token.welcomeToken();
     return token;

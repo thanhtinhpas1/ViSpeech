@@ -8,7 +8,6 @@ import { UserUpdatedEvent } from "../events/impl/user-updated.event";
 import { UserDeletedEvent } from "../events/impl/user-deleted.event";
 import { UserWelcomedEvent } from "../events/impl/user-welcomed.event";
 import { UserDto } from "users/dtos/users.dto";
-import { Logger } from "@nestjs/common";
 
 export class User extends AggregateRoot {
   [x: string]: any;
@@ -42,10 +41,10 @@ export class User extends AggregateRoot {
   }
 
   deleteUser(transactionId) {
-    try {
-      this.apply(new UserDeletedEvent(transactionId, this.id));
-    } catch (error) {
-      Logger.error(error, "", "[UserModel] deleteUser");
-    }
+    this.apply(new UserDeletedEvent(transactionId, this.id));
+    // try {
+    // } catch (error) {
+    //   Logger.error(error, "", "[UserModel] deleteUser");
+    // }
   }
 }

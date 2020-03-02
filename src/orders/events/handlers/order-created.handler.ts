@@ -15,10 +15,10 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
   async handle(event: OrderCreatedEvent) {
     try {
       Logger.log(event, "OrderCreatedEvent");
-      const order = event.orderDto[0];
+      const order = event.orderDto;
       return await this.repository.save(order);
     } catch (error) {
-      Logger.error(error, "OrderCreatedEvent");
+      Logger.error(error, "", "OrderCreatedEvent");
     }
   }
 }

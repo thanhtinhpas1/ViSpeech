@@ -25,17 +25,20 @@ export class Token extends AggregateRoot {
   }
 
   createUserToken(transactionId) {
+    // if (transactionId === "1") {
+    //   this.apply(new TokenCreatedEvent(this.data));
+    //   this.apply(new UserTokenCreatedEvent(transactionId, this.data));
+    // } else {
+      // this.apply(
+      //   new UserTokenCreatedFailEvent(transactionId, {
+      //     message: "invalid transactionId!"
+      //   })
+      // );
+    // }
     try {
-      if (transactionId === "1") {
-        this.apply(new TokenCreatedEvent(this.data));
-        this.apply(new UserTokenCreatedEvent(transactionId, this.data));
-      } else {
-        this.apply(
-          new UserTokenCreatedFailEvent(transactionId, {
-            message: "invalid transactionId!"
-          })
-        );
-      }
+      // this.apply(new TokenCreatedEvent(this.data));
+      // this.apply(new UserTokenCreatedEvent(transactionId, this.data));
+      this.apply(new UserTokenCreatedFailEvent(transactionId, {message: "invalid!"}));
     } catch (error) {
       this.apply(new UserTokenCreatedFailEvent(transactionId, error));
     }

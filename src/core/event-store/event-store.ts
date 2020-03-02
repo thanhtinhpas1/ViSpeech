@@ -1,7 +1,7 @@
 import {Inject, Injectable, Logger} from '@nestjs/common';
-import {IEventPublisher} from '@nestjs/cqrs/dist/interfaces/events/event-publisher.interface';
-import {IMessageSource} from '@nestjs/cqrs/dist/interfaces/events/message-source.interface';
-import {IEvent} from '@nestjs/cqrs/dist/interfaces/events/event.interface';
+import {IEventPublisher} from '@nestjs/cqrs';
+import {IMessageSource} from '@nestjs/cqrs';
+import {IEvent} from '@nestjs/cqrs';
 import {Subject} from 'rxjs';
 import * as xml2js from 'xml2js';
 import * as http from 'http';
@@ -38,7 +38,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
         const streamName = `${this.category}`;
         const type = event.constructor.name;
         try {
-            Logger.log('Write event ...', streamName);
+            Logger.log(streamName, 'Write event ...');
             await this.eventStore.client.writeEvent(streamName, type, event);
         } catch (err) {
             console.trace(err);
@@ -81,12 +81,12 @@ export class EventStore implements IEventPublisher, IMessageSource {
                                 subject.next(event);
                             });
                         } catch (e) {
-                            Logger.log('PARSE ERROR', e.message);
+                            Logger.error(e.message, '', 'PARSE ERROR');
                         }
                     });
                 });
             } catch (error) {
-                Logger.log('EVENT', error);
+                Logger.error(error, '', 'EVENT');
             }
         };
 
@@ -95,7 +95,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
         };
 
         try {
-            Logger.log('Subcribe stream ...', streamName);
+            Logger.log(streamName, 'Subscribe to stream ...');
             await this.eventStore.client.subscribeToStream(streamName, onEvent, onDropped, false);
         } catch (err) {
             console.trace(err);

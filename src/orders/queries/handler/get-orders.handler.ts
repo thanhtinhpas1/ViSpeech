@@ -22,7 +22,7 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
         });
       return this.repository.find();
     } catch (error) {
-      Logger.error(error, "GetOrdersQuery");
+      Logger.error(error, "", "GetOrdersQuery");
     }
   }
 }

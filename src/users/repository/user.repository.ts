@@ -19,7 +19,7 @@ export class UserRepository {
   }
 
   async updateUser(userDto) {
-    const user = new User(userDto.id);
+    const user = new User(undefined);
     user.setData(userDto);
     user.updateUser();
     return user;
@@ -31,7 +31,7 @@ export class UserRepository {
     return user;
   }
 
-  async welcomeUser(userId) {
+  async welcomeUser(userId: string) {
     const user = new User(userId);
     user.welcomeUser();
     return user;

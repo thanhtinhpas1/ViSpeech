@@ -15,9 +15,7 @@ export class TokenTypeDto extends BaseEntityDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsIn([CONSTANTS.TOKEN_TYPE.FREE], {
-    each: true
-  })
+  @IsIn([CONSTANTS.TOKEN_TYPE.FREE])
   @Column()
   name: string;
 

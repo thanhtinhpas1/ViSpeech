@@ -34,14 +34,14 @@ export class OrdersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Order"] })
   @ApiResponse({ status: 200, description: "Update Order." })
-  @Put(":id")
+  @Put(":_id")
   async updateOrder(
     @Param() orderIdDto: OrderIdRequestParamsDto,
     @Body() orderDto: OrderDto
   ) {
     return this.ordersService.updateOrder({
-      id: orderIdDto.id,
-      ...orderDto
+      ...orderDto,
+      _id: orderIdDto._id
     });
   }
 
@@ -50,7 +50,7 @@ export class OrdersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Order"] })
   @ApiResponse({ status: 200, description: "Delete Order." })
-  @Delete(":id")
+  @Delete(":_id")
   async deleteOrder(@Param() orderIdDto: OrderIdRequestParamsDto) {
     return this.ordersService.deleteOrder(orderIdDto);
   }

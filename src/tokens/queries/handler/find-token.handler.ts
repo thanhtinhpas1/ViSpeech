@@ -17,7 +17,7 @@ export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
       Logger.log("Async FindTokenQuery...", "FindTokenQuery");
       return await this.repository.findOne(query.id);
     } catch (error) {
-      Logger.error(error, "FindTokenQuery");
+      Logger.error(error, "", "FindTokenQuery");
     }
   }
 }

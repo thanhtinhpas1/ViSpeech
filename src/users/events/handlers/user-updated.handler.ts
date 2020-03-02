@@ -17,7 +17,7 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
       Logger.log(event, "UserUpdatedEvent");
       const { _id, ...userInfo } = event.userDto;
       userInfo.roles = Utils.updateUserRoles(userInfo.roles);
-      return await this.repository.update(_id, userInfo);
+      return await this.repository.update({ _id }, userInfo);
     } catch (error) {
       Logger.error(error, "", "UserUpdatedEvent");
     }

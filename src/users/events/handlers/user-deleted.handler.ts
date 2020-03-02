@@ -3,7 +3,7 @@ import { UserDeletedEvent } from "../impl/user-deleted.event";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserDto } from "users/dtos/users.dto";
-import { Repository } from "typeorm";
+import { Repository, getMongoRepository } from "typeorm";
 
 @EventsHandler(UserDeletedEvent)
 export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
@@ -17,9 +17,11 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
       const userId = event.userId;
       const transactionId = event.transactionId;
       if (userId) {
-        return await this.repository.delete(userId);
+        return await this.repository.delete({ _id: userId });
       }
-      return await this.repository.delete(transactionId);
+      return await getMongoRepository(UserDto).deleteOne({
+        transactionId: transactionId
+      });
     } catch (error) {
       Logger.error(error, "", "UserDeletedEvent");
     }

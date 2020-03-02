@@ -22,7 +22,7 @@ export class GetReportsHandler implements IQueryHandler<GetReportsQuery> {
         });
       return await this.repository.find();
     } catch (error) {
-      Logger.error(error, "GetReportsQuery");
+      Logger.error(error, "", "GetReportsQuery");
     }
   }
 }

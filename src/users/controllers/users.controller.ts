@@ -45,12 +45,12 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update User"] })
   @ApiResponse({ status: 200, description: "Update User." })
-  @Put(":id")
-  async updateUser(
+  @Put(":_id")
+  async updateUser (
     @Param() userIdDto: UserIdRequestParamsDto,
     @Body() userDto: UserDto
-  ) {
-    return this.usersService.updateUser({ _id: userIdDto._id, ...userDto });
+  ) : Promise<UserDto> {
+    return this.usersService.updateUser({ ...userDto, _id: userIdDto._id });
   }
 
   /* Delete User */
@@ -58,7 +58,7 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete User"] })
   @ApiResponse({ status: 200, description: "Delete User." })
-  @Delete(":id")
+  @Delete(":_id")
   async deleteUser(@Param() userIdDto: UserIdRequestParamsDto) {
     const transactionId = Utils.getUuid();
     return this.usersService.deleteUser(transactionId, userIdDto);

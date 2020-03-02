@@ -40,14 +40,14 @@ export class TokensController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Token"] })
   @ApiResponse({ status: 200, description: "Update Token." })
-  @Put(":id")
+  @Put(":_id")
   async updateToken(
     @Param() tokenIdDto: TokenIdRequestParamsDto,
     @Body() tokenDto: TokenDto
   ) {
     return this.tokensService.updateToken({
       ...tokenDto,
-      _id: ObjectID.createFromHexString(tokenIdDto.id)
+      _id: tokenIdDto._id
     });
   }
 
@@ -56,7 +56,7 @@ export class TokensController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Token"] })
   @ApiResponse({ status: 200, description: "Delete Token." })
-  @Delete(":id")
+  @Delete(":_id")
   async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
     return this.tokensService.deleteToken(tokenIdDto);
   }

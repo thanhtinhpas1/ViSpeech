@@ -20,7 +20,7 @@ export class GetTokensByUserIdHandler
         where: { userId: query.userId }
       });
     } catch (error) {
-      Logger.error(error, "GetTokensByUserIdQuery");
+      Logger.error(error, "", "GetTokensByUserIdQuery");
     }
   }
 }

@@ -15,10 +15,10 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
   async handle(event: OrderUpdatedEvent) {
     try {
       Logger.log(event, "OrderUpdatedEvent"); // write here
-      const { id, ...orderInfo } = event.orderDto[0];
-      return await this.repository.update(id, orderInfo);
+      const { _id, ...orderInfo } = event.orderDto;
+      return await this.repository.update({ _id }, orderInfo);
     } catch (error) {
-      Logger.error(error, "OrderUpdatedEvent");
+      Logger.error(error, "", "OrderUpdatedEvent");
     }
   }
 }
