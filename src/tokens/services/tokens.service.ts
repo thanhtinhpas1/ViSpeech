@@ -15,9 +15,9 @@ export class TokensService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createToken(tokenDto: TokenDto) {
+  async createToken(transactionId: string, tokenDto: TokenDto) {
     return await this.commandBus.execute(
-      new CreateTokenCommand(tokenDto)
+      new CreateTokenCommand(transactionId, tokenDto)
     );
   }
 

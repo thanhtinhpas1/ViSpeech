@@ -12,7 +12,7 @@ export class Report extends AggregateRoot {
     super();
   }
 
-  setData(data: ReportDto) {
+  setData(data) {
     this.data = data;
   }
 

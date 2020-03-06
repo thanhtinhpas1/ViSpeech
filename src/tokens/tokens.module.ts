@@ -1,45 +1,41 @@
-import { CommandBus, CqrsModule, EventBus, QueryBus } from "@nestjs/cqrs";
-import { Module, OnModuleInit } from "@nestjs/common";
-import { CommandHandlers } from "./commands/handlers";
-import { EventHandlers } from "./events/handlers";
-import { TokensSagas } from "./sagas/tokens.sagas";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { TokenDto } from "./dtos/tokens.dto";
+import { TokenTypeDto } from "./dtos/token-types.dto";
+import { CqrsModule, CommandBus, QueryBus, EventBus } from "@nestjs/cqrs";
+import { EventStoreModule } from "core/event-store/event-store.module";
 import { TokensController } from "./controllers/tokens.controller";
+import { TokensService } from "./services/tokens.service";
+import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokenRepository } from "./repository/token.repository";
-import { EventStoreModule } from "../core/event-store/event-store.module";
-import { EventStore } from "../core/event-store/event-store";
-import { TokenCreatedEvent } from "./events/impl/token-created.event";
+import { OnModuleInit, Module } from "@nestjs/common";
+import { EventStore } from "core/event-store/event-store";
+import { getMongoRepository } from "typeorm";
+import { CONSTANTS } from "common/constant";
+import { TokenCreatedEvent, TokenCreatedFailEvent } from "./events/impl/token-created.event";
 import { TokenDeletedEvent } from "./events/impl/token-deleted.event";
 import { TokenUpdatedEvent } from "./events/impl/token-updated.event";
 import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
-import { InjectRepository, TypeOrmModule } from "@nestjs/typeorm";
-import { TokenDto } from "./dtos/tokens.dto";
+import { CommandHandlers } from "./commands/handlers";
+import { EventHandlers } from "./events/handlers";
 import { QueryHandlers } from "./queries/handler";
-import { Repository, getMongoRepository } from "typeorm";
-import { TokenTypeDto } from "./dtos/token-types.dto";
-import { TokensService } from "./services/tokens.service";
-import { JwtModule } from "@nestjs/jwt";
-import { config } from "../../config";
-import { CONSTANTS } from "common/constant";
+
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
     CqrsModule,
-    EventStoreModule.forFeature(),
-    JwtModule.register({
-      secret: config.JWT.secret
-    })
+    EventStoreModule.forFeature()
   ],
   controllers: [TokensController],
   providers: [
+    TokensService,
     TokensSagas,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,
     TokenRepository,
-    TokensService
   ],
-  exports: [TokensService, JwtModule]
+  exports: [TokensService]
 })
 export class TokensModule implements OnModuleInit {
   constructor(
@@ -60,18 +56,39 @@ export class TokensModule implements OnModuleInit {
     this.query$.register(QueryHandlers);
     this.event$.registerSagas([TokensSagas]);
 
-    const freeTokenType = await getMongoRepository(TokenTypeDto).find({
-      name: CONSTANTS.TOKEN_TYPE.FREE
-    });
-    if (!freeTokenType[0]) {
-      await getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
-    }
+    this.persistTokenTypesToDB();
   }
 
   eventHandlers = {
-    TokenCreatedEvent: (data) => new TokenCreatedEvent(data),
+    TokenCreatedEvent: (transactionId, data) => new TokenCreatedEvent(transactionId, data),
+    TokenCreatedFailEvent: (transactionId, error) => new TokenCreatedFailEvent(transactionId, error),
     TokenDeletedEvent: data => new TokenDeletedEvent(data),
     TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
     TokenWelcomedEvent: data => new TokenWelcomedEvent(data)
   };
+
+  async persistTokenTypesToDB() {
+    const freeTokenType = await getMongoRepository(TokenTypeDto).find({
+      name: CONSTANTS.TOKEN_TYPE.FREE
+    });
+    const tokenType_50 = await getMongoRepository(TokenTypeDto).find({
+      name: CONSTANTS.TOKEN_TYPE["50-MINS"]
+    });
+    const tokenType_200 = await getMongoRepository(TokenTypeDto).find({
+      name: CONSTANTS.TOKEN_TYPE["200-MINS"]
+    });
+    const tokenType_500 = await getMongoRepository(TokenTypeDto).find({
+      name: CONSTANTS.TOKEN_TYPE["500-MINS"]
+    });
+    const dealTokenType = await getMongoRepository(TokenTypeDto).find({
+      name: CONSTANTS.TOKEN_TYPE.DEAL
+    });
+    if (!freeTokenType[0] && !tokenType_50[0] && !tokenType_200[0] && !tokenType_500[0] && !dealTokenType[0]) {
+      getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
+      getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE["50-MINS"], 50, 5));
+      getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE["200-MINS"], 200, 10));
+      getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE["500-MINS"], 500, 20));
+      getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.DEAL, 0, 0));
+    }
+  }
 }

@@ -4,17 +4,10 @@ import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Injectable()
 export class TokenRepository {
-  async createToken(tokenDto: TokenDto) {
+  async createToken(transactionId: string, tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.createToken();
-    return token;
-  }
-
-  async createUserToken(transactionId: string, tokenDto: TokenDto) {
-    const token = new Token(undefined);
-    token.setData(tokenDto);
-    token.createUserToken(transactionId);
+    token.createToken(transactionId);
     return token;
   }
 

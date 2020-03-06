@@ -14,7 +14,7 @@ import { TokensService } from "../services/tokens.service";
 import { GetTokensQuery } from "tokens/queries/impl/get-tokens.query";
 import { GetTokensByUserIdQuery } from "tokens/queries/impl/get-tokens-by-userId";
 import { FindTokenQuery } from "tokens/queries/impl/find-token.query";
-import { ObjectID } from "typeorm";
+import { Utils } from "utils";
 
 @Controller("tokens")
 @ApiTags("Tokens")
@@ -32,7 +32,8 @@ export class TokensController {
   @ApiResponse({ status: 200, description: "Create Token." })
   @Post()
   async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
-    return this.tokensService.createToken(tokenDto);
+    const transactionId = Utils.getUuid();
+    return this.tokensService.createToken(transactionId, tokenDto);
   }
 
   /* Update Token */
@@ -86,8 +87,8 @@ export class TokensController {
   /* Find Token */
 
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ["Get Token"] })
-  @ApiResponse({ status: 200, description: "Get Token." })
+  @ApiOperation({ tags: ["Find Token"] })
+  @ApiResponse({ status: 200, description: "Find Token." })
   @Get(":id")
   async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
     return this.tokensService.findOne(findTokenQuery);

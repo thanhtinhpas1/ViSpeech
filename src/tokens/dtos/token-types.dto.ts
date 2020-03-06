@@ -1,6 +1,12 @@
 import { Column, Entity } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
-import { IsNotEmpty, IsNumber, IsPositive, IsString, IsIn } from "class-validator";
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsIn
+} from "class-validator";
 import { Type } from "class-transformer";
 import { CONSTANTS } from "common/constant";
 
@@ -15,7 +21,13 @@ export class TokenTypeDto extends BaseEntityDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsIn([CONSTANTS.TOKEN_TYPE.FREE])
+  @IsIn([
+    CONSTANTS.TOKEN_TYPE.FREE,
+    CONSTANTS.TOKEN_TYPE["50-MINS"],
+    CONSTANTS.TOKEN_TYPE["200-MINS"],
+    CONSTANTS.TOKEN_TYPE["500-MINS"],
+    CONSTANTS.TOKEN_TYPE.DEAL
+  ])
   @Column()
   name: string;
 

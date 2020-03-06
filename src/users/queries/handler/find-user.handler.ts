@@ -14,7 +14,7 @@ export class FindUserHandler implements IQueryHandler<FindUserQuery> {
   async execute(query: FindUserQuery): Promise<any> {
     try {
       Logger.log("Async FindUserQuery...", "FindUserQuery");
-      return await this.repository.findOne(query.id);
+      return await this.repository.findOne({ _id: query.id });
     } catch (error) {
       Logger.error(error, "", "FindUserQuery");
     }

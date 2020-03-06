@@ -23,5 +23,16 @@ export const Utils = {
       return [roles];
     }
     return roles;
+  },
+  removeNullOrEmptyPropertyOfObj: obj => {
+    let result = JSON.parse(JSON.stringify(obj));
+    if (typeof(result) === 'object') {
+      Object.keys(result).forEach(property => {
+        if (result[property] == null || result[property] === "") {
+          delete result[property];
+        }
+      })
+    }
+    return result;
   }
 };

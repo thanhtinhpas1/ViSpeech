@@ -1,6 +1,15 @@
-import { IsEmpty, IsNotEmpty, IsString, IsNumber, IsPositive, IsOptional, IsUUID, IsIn } from "class-validator";
+import {
+  IsEmpty,
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsPositive,
+  IsOptional,
+  IsUUID,
+  IsIn
+} from "class-validator";
 import { Column, Entity } from "typeorm";
-import { ObjectID } from 'mongodb'
+import { ObjectID } from "mongodb";
 import { BaseEntityDto } from "base/base-entity.dto";
 import { Type } from "class-transformer";
 import { CONSTANTS } from "common/constant";
@@ -17,12 +26,19 @@ export class TokenIdRequestParamsDto {
 
 @Entity("tokens")
 export class TokenDto extends BaseEntityDto {
-  constructor(value, userId, tokenTypeId = "", tokenType = "FREE") {
+  constructor(
+    value,
+    userId,
+    tokenType = CONSTANTS.TOKEN_TYPE.FREE,
+    tokenTypeId = null,
+    orderId = null,
+  ) {
     super();
     this.value = value;
     this.userId = userId;
     this.tokenTypeId = tokenTypeId;
     this.tokenType = tokenType;
+    this.orderId = orderId;
   }
 
   @IsOptional()
@@ -78,8 +94,16 @@ export class TokenDto extends BaseEntityDto {
   isValid: boolean;
 
   @IsOptional()
-  @IsIn([CONSTANTS.TOKEN_TYPE.FREE], {
-    each: true
-  })
+  @IsIn([
+    CONSTANTS.TOKEN_TYPE.FREE,
+    CONSTANTS.TOKEN_TYPE["50-MINS"],
+    CONSTANTS.TOKEN_TYPE["200-MINS"],
+    CONSTANTS.TOKEN_TYPE["500-MINS"],
+    CONSTANTS.TOKEN_TYPE.DEAL
+  ])
   tokenType: string;
+
+  @IsOptional()
+  @IsUUID()
+  orderId: ObjectID;
 }

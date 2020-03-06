@@ -13,6 +13,7 @@ import { OrderDto, OrderIdRequestParamsDto } from "../dtos/orders.dto";
 import { OrdersService } from "../services/orders.service";
 import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
 import { FindOrderQuery } from "orders/queries/impl/find-order.query";
+import { Utils } from "utils";
 
 @Controller("orders")
 @ApiTags("Orders")
@@ -20,13 +21,17 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   /* Create Order */
-
+  /* {
+    "tokenTypeId": "2a34b730-5f7d-11ea-b956-5fe6b0acdf56",
+    "userId": "cee86310-5f75-11ea-87f6-45e8ec87c67d"
+  }*/
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Order"] })
   @ApiResponse({ status: 200, description: "Create Order." })
   @Post()
   async createOrder(@Body() orderDto: OrderDto): Promise<OrderDto> {
-    return this.ordersService.createOrder(orderDto);
+    const transactionId = Utils.getUuid();
+    return this.ordersService.createOrderStart(transactionId, orderDto);
   }
 
   /* Update Order */
@@ -39,7 +44,8 @@ export class OrdersController {
     @Param() orderIdDto: OrderIdRequestParamsDto,
     @Body() orderDto: OrderDto
   ) {
-    return this.ordersService.updateOrder({
+    const transactionId = Utils.getUuid();
+    return this.ordersService.updateOrder(transactionId, {
       ...orderDto,
       _id: orderIdDto._id
     });

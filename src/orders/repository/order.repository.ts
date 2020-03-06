@@ -1,20 +1,27 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { Order } from "../models/order.model";
 import { OrderDto } from "orders/dtos/orders.dto";
 
 @Injectable()
 export class OrderRepository {
-  async createOrder(orderDto: OrderDto) {
+  async createOrderStart(transactionId: string, orderDto: OrderDto) {
     const order = new Order(undefined);
     order.setData(orderDto);
-    order.createOrder();
+    order.createOrder(transactionId);
     return order;
   }
 
-  async updateOrder(orderDto: OrderDto) {
+  async createOrder(transactionId: string, orderDto: OrderDto) {
     const order = new Order(undefined);
     order.setData(orderDto);
-    order.updateOrder();
+    order.createOrder(transactionId);
+    return order;
+  }
+
+  async updateOrder(transactionId: string, orderDto: OrderDto) {
+    const order = new Order(undefined);
+    order.setData(orderDto);
+    order.updateOrder(transactionId);
     return order;
   }
 

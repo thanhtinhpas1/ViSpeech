@@ -4,7 +4,6 @@ import { CommandHandlers } from "./commands/handlers";
 import { CommandHandlers as TokenCommandHandlers } from "tokens/commands/handlers";
 import { EventHandlers } from "./events/handlers";
 import { UsersSagas } from "./sagas/users.sagas";
-import { TokensSagas } from "tokens/sagas/tokens.sagas";
 import { UsersController } from "./controllers/users.controller";
 import { UsersService } from "./services/users.service";
 import { UserRepository } from "./repository/user.repository";
@@ -14,16 +13,12 @@ import {
   UserCreationStartedEvent,
   UserCreatedFailEvent,
   UserCreatedEvent,
-  UserTokenCreatedEvent,
-  UserTokenCreatedFailEvent
 } from "./events/impl/user-created.event";
 import { UserDeletedEvent } from "./events/impl/user-deleted.event";
 import { UserUpdatedEvent } from "./events/impl/user-updated.event";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserDto } from "./dtos/users.dto";
 import { QueryHandlers } from "./queries/handler";
-import { TokenTypeDto } from "../tokens/dtos/token-types.dto";
-import { RoleDto } from "../roles/dtos/roles.dto";
 import { TokensModule } from "tokens/tokens.module";
 import { AuthModule } from "auth/auth.module";
 import { TokenRepository } from "tokens/repository/token.repository";
@@ -31,17 +26,15 @@ import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserDto, TokenTypeDto, RoleDto]),
+    TypeOrmModule.forFeature([UserDto]),
     CqrsModule,
     EventStoreModule.forFeature(),
-    TokensModule,
     forwardRef(() => AuthModule)
   ],
   controllers: [UsersController],
   providers: [
     UsersService,
     UsersSagas,
-    TokensSagas,
     ...CommandHandlers,
     ...TokenCommandHandlers,
     ...EventHandlers,
@@ -80,10 +73,6 @@ export class UsersModule implements OnModuleInit {
       new UserCreatedEvent(transactionId, data),
     UserCreatedFailEvent: (transactionId, error) =>
       new UserCreatedFailEvent(transactionId, error),
-    UserTokenCreatedEvent: (userDto, tokenDto) =>
-      new UserTokenCreatedEvent(userDto, tokenDto),
-    UserTokenCreatedFailEvent: (transactionId, error) =>
-      new UserTokenCreatedFailEvent(transactionId, error),
 
     UserDeletedEvent: (transactionId, data) =>
       new UserDeletedEvent(transactionId, data),

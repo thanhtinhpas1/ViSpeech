@@ -4,6 +4,7 @@ import { OrderUpdatedEvent } from "../events/impl/order-updated.event";
 import { OrderDeletedEvent } from "../events/impl/order-deleted.event";
 import { OrderWelcomedEvent } from "../events/impl/order-welcomed.event";
 import { OrderDto } from "orders/dtos/orders.dto";
+import { Logger } from "@nestjs/common";
 
 export class Order extends AggregateRoot {
   [x: string]: any;
@@ -12,16 +13,20 @@ export class Order extends AggregateRoot {
     super();
   }
 
-  setData(data: OrderDto) {
+  setData(data) {
     this.data = data;
   }
 
-  createOrder() {
-    this.apply(new OrderCreatedEvent(this.data));
+  createOrderStart(transactionId: string) {
+    this.apply(new OrderCreatedEvent(transactionId, this.data));
   }
 
-  updateOrder() {
-    this.apply(new OrderUpdatedEvent(this.data));
+  createOrder(transactionId: string) {
+    this.apply(new OrderCreatedEvent(transactionId, this.data));
+  }
+
+  updateOrder(transactionId: string) {
+    this.apply(new OrderUpdatedEvent(transactionId, this.data));
   }
 
   welcomeOrder() {

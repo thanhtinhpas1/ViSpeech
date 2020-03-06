@@ -1,9 +1,12 @@
 import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
-import { OrderUpdatedEvent } from "../impl/order-updated.event";
+import {
+  OrderUpdatedEvent
+} from "../impl/order-updated.event";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderDto } from "orders/dtos/orders.dto";
 import { Repository } from "typeorm";
+import { Utils } from "utils";
 
 @EventsHandler(OrderUpdatedEvent)
 export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
@@ -16,7 +19,9 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
     try {
       Logger.log(event, "OrderUpdatedEvent"); // write here
       const { _id, ...orderInfo } = event.orderDto;
-      return await this.repository.update({ _id }, orderInfo);
+      const formattedOrderInfo = Utils.removeNullOrEmptyPropertyOfObj(orderInfo);
+      Logger.log(formattedOrderInfo, "OrderUpdatedEvent formattedOrderInfo"); // write here
+      return await this.repository.update({ _id }, formattedOrderInfo);
     } catch (error) {
       Logger.error(error, "", "OrderUpdatedEvent");
     }

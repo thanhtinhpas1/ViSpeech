@@ -16,15 +16,15 @@ export class User extends AggregateRoot {
     super();
   }
 
-  setData(data: UserDto) {
+  setData(data) {
     this.data = data;
   }
 
-  createUserStart(transactionId) {
+  createUserStart(transactionId: string) {
     this.apply(new UserCreationStartedEvent(transactionId, this.data));
   }
 
-  createUser(transactionId) {
+  createUser(transactionId: string) {
     try {
       this.apply(new UserCreatedEvent(transactionId, this.data));
     } catch (error) {
@@ -40,11 +40,7 @@ export class User extends AggregateRoot {
     this.apply(new UserWelcomedEvent(this.id));
   }
 
-  deleteUser(transactionId) {
+  deleteUser(transactionId: string) {
     this.apply(new UserDeletedEvent(transactionId, this.id));
-    // try {
-    // } catch (error) {
-    //   Logger.error(error, "", "[UserModel] deleteUser");
-    // }
   }
 }
