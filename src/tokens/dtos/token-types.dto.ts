@@ -12,11 +12,12 @@ import { CONSTANTS } from "common/constant";
 
 @Entity("token_types")
 export class TokenTypeDto extends BaseEntityDto {
-  constructor(name, minutes, price) {
+  constructor(name, minutes, price, salePercent = 0) {
     super();
     this.name = name;
     this.minutes = minutes;
     this.price = price;
+    this.salePercent = salePercent;
   }
 
   @IsNotEmpty()
@@ -47,7 +48,6 @@ export class TokenTypeDto extends BaseEntityDto {
   @IsNumber()
   @IsPositive()
   @Column({
-    name: "sale_percent",
     default: 0
   })
   salePercent: number;

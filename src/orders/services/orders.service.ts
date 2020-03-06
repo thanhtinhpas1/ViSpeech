@@ -6,6 +6,9 @@ import { UpdateOrderCommand } from "../commands/impl/update-order.command";
 import { DeleteOrderCommand } from "../commands/impl/delete-order.command";
 import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
 import { FindOrderQuery } from "orders/queries/impl/find-order.query";
+import { config } from "../../../config";
+
+const stripe = require("stripe")(config.STRIPE_SECRET_KEY);
 
 @Injectable()
 export class OrdersService {
@@ -39,5 +42,12 @@ export class OrdersService {
   async findOne(findOrderQuery: FindOrderQuery): Promise<OrderDto> {
     var query = new FindOrderQuery(findOrderQuery.id);
     return await this.queryBus.execute(query);
+  }
+
+  async getPaymentIntent(amount: string) {
+    return await stripe.paymentIntents.create({
+      amount: parseInt(amount),
+      currency: 'usd'
+    });
   }
 }

@@ -19,7 +19,6 @@ import { UserUpdatedEvent } from "./events/impl/user-updated.event";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserDto } from "./dtos/users.dto";
 import { QueryHandlers } from "./queries/handler";
-import { TokensModule } from "tokens/tokens.module";
 import { AuthModule } from "auth/auth.module";
 import { TokenRepository } from "tokens/repository/token.repository";
 import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";

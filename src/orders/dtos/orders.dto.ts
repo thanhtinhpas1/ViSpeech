@@ -35,7 +35,6 @@ export class OrderDto extends BaseEntityDto {
   @IsOptional()
   @IsUUID()
   @Column({
-    name: "token_id",
     nullable: false,
     type: "uuid"
   })
@@ -57,7 +56,6 @@ export class OrderDto extends BaseEntityDto {
 
   @IsUUID()
   @Column({
-    name: "token_type_id",
     nullable: false,
     type: "uuid"
   })
@@ -65,7 +63,6 @@ export class OrderDto extends BaseEntityDto {
 
   @IsUUID()
   @Column({
-    name: "user_id",
     nullable: false,
     type: "uuid"
   })

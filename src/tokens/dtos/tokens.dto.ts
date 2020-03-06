@@ -46,7 +46,6 @@ export class TokenDto extends BaseEntityDto {
   @IsNumber()
   @IsPositive()
   @Column({
-    name: "minutes",
     default: 0
   })
   minutes: number;
@@ -56,7 +55,6 @@ export class TokenDto extends BaseEntityDto {
   @IsNumber()
   @IsPositive()
   @Column({
-    name: "used_minutes",
     default: 0,
     nullable: false
   })
@@ -71,7 +69,6 @@ export class TokenDto extends BaseEntityDto {
 
   @IsUUID()
   @Column({
-    name: "user_id",
     nullable: false,
     type: "uuid"
   })
@@ -80,7 +77,6 @@ export class TokenDto extends BaseEntityDto {
   @IsOptional()
   @IsUUID()
   @Column({
-    name: "token_type_id",
     nullable: false,
     type: "uuid"
   })
@@ -88,7 +84,6 @@ export class TokenDto extends BaseEntityDto {
 
   @IsEmpty()
   @Column({
-    name: "is_valid",
     default: true
   })
   isValid: boolean;
