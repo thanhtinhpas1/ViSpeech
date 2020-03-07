@@ -1,40 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { UserDto, UserIdRequestParamsDto } from "../dtos/users.dto";
-import { UsersService } from "../services/users.service";
-import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
-import { Roles } from "auth/roles.decorator";
+import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { Utils } from "utils";
+import { UserDto, UserIdRequestParamsDto, AssignRoleUserBody } from "../dtos/users.dto";
+import { UsersService } from "../services/users.service";
 
 @Controller("users")
 @ApiTags("Users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
-  /* Create User */
-  /* {
-     "firstName": "Linh",
-     "lastName": "Tran",
-     "username": "omylnyh",
-     "password": "123456",
-     "email": "omylynh@gmail.com",
-     "roles": ["USER"]
-  } */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create User"] })
   @ApiResponse({ status: 200, description: "Create User." })
   @Post()
-  // @Roles(["admin"])
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
     const transactionId = Utils.getUuid();
     return await this.usersService.createUserStart(transactionId, userDto);
@@ -46,10 +26,10 @@ export class UsersController {
   @ApiOperation({ tags: ["Update User"] })
   @ApiResponse({ status: 200, description: "Update User." })
   @Put(":_id")
-  async updateUser (
+  async updateUser(
     @Param() userIdDto: UserIdRequestParamsDto,
     @Body() userDto: UserDto
-  ) : Promise<UserDto> {
+  ): Promise<UserDto> {
     return this.usersService.updateUser({ ...userDto, _id: userIdDto._id });
   }
 
@@ -82,5 +62,13 @@ export class UsersController {
   @Get(":id")
   async findOneUser(@Param() findUserQuery: FindUserQuery) {
     return this.usersService.findOne(findUserQuery);
+  }
+
+  /* Assign role to user */
+  @ApiOperation({ tags: ['Assign Role'] })
+  @ApiResponse({ status: 200, description: 'Assign role to user' })
+  @Put(':_id/roles')
+  async assignRoleToUser(@Body() body: AssignRoleUserBody, @Param() param: UserIdRequestParamsDto) {
+    return this.usersService.assignRoleUser(param._id, body.roleName);
   }
 }

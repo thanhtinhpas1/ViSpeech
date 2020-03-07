@@ -1,37 +1,34 @@
-import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
-import {
-  UserCreatedEvent,
-  UserCreationStartedEvent,
-  UserCreatedFailEvent,
-} from "../impl/user-created.event";
 import { Logger } from "@nestjs/common";
-import { UserDto } from "users/dtos/users.dto";
+import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
 import { getMongoRepository } from "typeorm";
+import { UserDto } from "users/dtos/users.dto";
 import { Utils } from "utils";
+import { UserCreatedEvent, UserCreatedFailEvent, UserCreationStartedEvent } from "../impl/user-created.event";
 
 @EventsHandler(UserCreationStartedEvent)
 export class UserCreationStartedHandler
   implements IEventHandler<UserCreationStartedEvent> {
   handle(event: UserCreationStartedEvent) {
-    Logger.log(event, "UserCreationStartedEvent");
+    Logger.log(event.transactionId, "UserCreationStartedEvent");
   }
 }
 
 @EventsHandler(UserCreatedEvent)
 export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
-  constructor() {}
+  constructor(
+  ) { }
 
   async handle(event: UserCreatedEvent) {
     try {
-      Logger.log(event, "UserCreatedEvent");
       const user = event.userDto;
       const transactionId = event.transactionId;
       user.password = Utils.hashPassword(user.password);
       user.roles = Utils.updateUserRoles(user.roles);
       user.transactionId = transactionId;
-      return await getMongoRepository(UserDto).save(user);
-    } catch (error) {
-      Logger.error(error, "", "UserCreatedEvent");
+      Logger.log(event.transactionId, "UserCreatedEvent");
+      getMongoRepository(UserDto).save(user);
+    } catch (err) {
+      Logger.error(err.message);
     }
   }
 }
@@ -40,6 +37,6 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 export class UserCreatedFailHandler
   implements IEventHandler<UserCreatedFailEvent> {
   handle(event: UserCreatedFailEvent) {
-    Logger.log(event, "UserCreatedFailEvent");
+    Logger.log(event.transactionId, "UserCreatedFailEvent");
   }
 }

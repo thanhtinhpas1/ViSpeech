@@ -1,4 +1,4 @@
-import {EventStore} from './event-store.class';
+import {BaseEventStore} from './base-event-store.class';
 
 export const eventStoreProviders = [
     {
@@ -7,7 +7,7 @@ export const eventStoreProviders = [
             eventStoreConfig?: any,
         ): any => {
             if (eventStoreConfig === 'EVENT_STORE_CONFIG_USE_ENV') {
-                return new EventStore();
+                return new BaseEventStore();
             }
         },
         inject: ['EVENT_STORE_CONFIG'],

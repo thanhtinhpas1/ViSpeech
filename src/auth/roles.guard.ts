@@ -1,11 +1,11 @@
 import { CanActivate, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
-import { CONSTANTS } from "../common/constant";
-import { InjectRepository } from "@nestjs/typeorm";
-import { UserDto } from "../users/dtos/users.dto";
-import { Repository } from "typeorm";
 import { QueryBus } from "@nestjs/cqrs";
+import { JwtService } from "@nestjs/jwt";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CONSTANTS } from "../common/constant";
+import { UserDto } from "../users/dtos/users.dto";
 import { FindUserQuery } from "../users/queries/impl/find-user.query";
 
 @Injectable()

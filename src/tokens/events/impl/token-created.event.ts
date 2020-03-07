@@ -5,7 +5,7 @@ export class TokenCreatedEvent implements IEvent {
   constructor(
     public readonly transactionId: string,
     public readonly tokenDto: TokenDto
-  ) {}
+  ) { }
 }
 
 export class TokenCreatedFailEvent implements IEvent {
@@ -13,5 +13,5 @@ export class TokenCreatedFailEvent implements IEvent {
     public readonly transactionId: string,
     public readonly tokenDto: TokenDto,
     public readonly error: object
-  ) {}
+  ) { }
 }

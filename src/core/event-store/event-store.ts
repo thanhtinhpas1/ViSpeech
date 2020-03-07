@@ -1,11 +1,11 @@
-import {Inject, Injectable, Logger} from '@nestjs/common';
-import {IEventPublisher} from '@nestjs/cqrs';
-import {IMessageSource} from '@nestjs/cqrs';
-import {IEvent} from '@nestjs/cqrs';
-import {Subject} from 'rxjs';
-import * as xml2js from 'xml2js';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { IEvent, IEventPublisher, IMessageSource } from '@nestjs/cqrs';
+import { TCPClient } from 'geteventstore-promise';
 import * as http from 'http';
-import {config} from '../../../config';
+import { Subject } from 'rxjs';
+import * as xml2js from 'xml2js';
+import { config } from '../../../config';
+import { BaseEventStore } from './base-event-store.class';
 
 const eventStoreHostUrl = config.EVENT_STORE_SETTINGS.protocol +
     `://${config.EVENT_STORE_SETTINGS.hostname}:${config.EVENT_STORE_SETTINGS.httpPort}/streams/`;
@@ -19,27 +19,31 @@ const eventStoreHostUrl = config.EVENT_STORE_SETTINGS.protocol +
 @Injectable()
 export class EventStore implements IEventPublisher, IMessageSource {
 
-    private eventStore: any;
+    private eventStore: BaseEventStore;
+    private client: TCPClient;
     private eventHandlers: object;
     private category: string;
 
     constructor(@Inject('EVENT_STORE_PROVIDER') eventStore: any) {
-        this.category = 'vispeech';
         this.eventStore = eventStore;
+        this.category = config.EVENT_STORE_SETTINGS.category;
         this.eventStore.connect({
             hostname: config.EVENT_STORE_SETTINGS.hostname,
             port: config.EVENT_STORE_SETTINGS.tcpPort,
             credentials: config.EVENT_STORE_SETTINGS.credentials,
             poolOptions: config.EVENT_STORE_SETTINGS.poolOptions,
         });
+        this.client = this.eventStore.client;
     }
 
     async publish<T extends IEvent>(event: T) {
-        const streamName = `${this.category}`;
+        const message = JSON.parse(JSON.stringify(event));
+        const transactionId = message.transactionId;
+        const streamName = `${this.category}-${transactionId}`;
         const type = event.constructor.name;
         try {
-            Logger.log(streamName, 'Write event ...');
-            await this.eventStore.client.writeEvent(streamName, type, event);
+            Logger.log('Write event ...', streamName);
+            await this.client.writeEvent(streamName, type, event);
         } catch (err) {
             console.trace(err);
         }
@@ -50,12 +54,11 @@ export class EventStore implements IEventPublisher, IMessageSource {
      * @param subject
      */
     async bridgeEventsTo<T extends IEvent>(subject: Subject<T>) {
-        const streamName = `${this.category}`;
+        const streamName = `$ce-${this.category}`;
         const onEvent = async (subscription, event) => {
             try {
-                const streamId = event.streamId;
-                const eventNumber = event.eventNumber;
-                const eventUrl = eventStoreHostUrl + `${streamId}/${eventNumber}`;
+                const eventUrl = eventStoreHostUrl +
+                    `${event.metadata.$o}/${event.data.split('@')[0]}`;
                 const httpOptions = {
                     headers: {
                         Authorization: 'Basic YWRtaW46Y2hhbmdlaXQ=',
@@ -69,7 +72,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                     });
                     res.on('end', () => {
                         try {
-                            xml2js.parseString(rawData, {explicitArray: false}, (err, result) => {
+                            xml2js.parseString(rawData, { explicitArray: false }, (err, result) => {
                                 if (err) {
                                     console.trace(err);
                                     return;
@@ -81,12 +84,12 @@ export class EventStore implements IEventPublisher, IMessageSource {
                                 subject.next(event);
                             });
                         } catch (e) {
-                            Logger.error(e.message, '', 'PARSE ERROR');
+                            Logger.error('Parse error', e.message);
                         }
                     });
                 });
             } catch (error) {
-                Logger.error(error, '', 'EVENT');
+                Logger.log('Event', error);
             }
         };
 
@@ -95,14 +98,14 @@ export class EventStore implements IEventPublisher, IMessageSource {
         };
 
         try {
-            Logger.log(streamName, 'Subscribe to stream ...');
-            await this.eventStore.client.subscribeToStream(streamName, onEvent, onDropped, false);
+            Logger.log('Subscribe stream ...', streamName);
+            await this.client.subscribeToStream(streamName, onEvent, onDropped, false);
         } catch (err) {
             console.trace(err);
         }
     }
 
     setEventHandlers(eventHandlers) {
-        this.eventHandlers = {...this.eventHandlers, ...eventHandlers};
+        this.eventHandlers = eventHandlers;
     }
 }

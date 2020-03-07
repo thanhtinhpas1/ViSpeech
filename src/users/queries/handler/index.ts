@@ -1,6 +1,6 @@
-import { GetUsersHandler } from "./get-users.handler";
-import { FindUserHandler } from "./find-user.handler";
 import { FindUserUsernameHandler } from "./find-user-username.handler";
+import { FindUserHandler } from "./find-user.handler";
+import { GetUsersHandler } from "./get-users.handler";
 
 export const QueryHandlers = [
   GetUsersHandler,

@@ -28,7 +28,6 @@
     "@nestjs/core": "^6.11.6",
     "@nestjs/cqrs": "^6.1.0",
     "@nestjs/jwt": "^6.1.1",
-    "@nestjs/microservices": "^5.7.3",
     "@nestjs/passport": "^6.1.1",
     "@nestjs/platform-fastify": "^6.11.6",
     "@nestjs/serve-static": "^1.0.2",
@@ -37,7 +36,6 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
-    "cli-color": "^1.4.0",
     "dotenv": "^6.0.0",
     "fastify": "^2.12.0",
     "fastify-static": "^2.6.0",
@@ -45,7 +43,6 @@
     "geteventstore-promise": "^3.1.1",
     "logform": "^2.1.2",
     "mongodb": "^3.5.3",
-    "mysql": "^2.18.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
@@ -55,7 +52,6 @@
     "strict-event-emitter-types": "^2.0.0",
     "typeorm": "^0.2.22",
     "uuid": "^3.4.0",
-    "winston": "^3.2.1",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {

@@ -2,7 +2,8 @@ export const CONSTANTS = {
   ROLE: {
     ADMIN: "ADMIN",
     USER: "USER",
-    MANAGER_USER: "MANAGER_USER"
+    MANAGER_USER: "MANAGER_USER",
+    CSR_USER: "CSR_USER",
   },
   TOKEN_TYPE: {
     "FREE": "FREE",

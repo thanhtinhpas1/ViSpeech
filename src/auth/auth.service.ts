@@ -1,19 +1,14 @@
 import { Injectable } from "@nestjs/common";
+import { QueryBus } from "@nestjs/cqrs";
 import { JwtService } from "@nestjs/jwt";
-import { Utils } from "utils";
 import { UserDto } from "users/dtos/users.dto";
-import { QueryBus, CommandBus } from "@nestjs/cqrs";
-import {
-  FindUserByUsernameQuery,
-  FindUserQuery
-} from "../users/queries/impl/find-user.query";
-import { UsersService } from "users/services/users.service";
+import { Utils } from "utils";
+import { FindUserByUsernameQuery, FindUserQuery } from "../users/queries/impl/find-user.query";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    // private readonly usersService: UsersService,
     private readonly queryBus: QueryBus
   ) {}
 
@@ -47,9 +42,4 @@ export class AuthService {
   async findUserByUsername(username: string): Promise<UserDto> {
     return await this.queryBus.execute(new FindUserByUsernameQuery(username));
   }
-
-  // async createUser(userDto: UserDto): Promise<UserDto> {
-  //   const transactionId = Utils.getUuid();
-  //   return await this.usersService.createUserStart(transactionId, userDto);
-  // }
 }

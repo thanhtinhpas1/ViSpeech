@@ -1,28 +1,27 @@
-import { CommandBus, CqrsModule, EventBus, QueryBus } from "@nestjs/cqrs";
 import { Module, OnModuleInit } from "@nestjs/common";
-import { CommandHandlers } from "./commands/handlers";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { AuthModule } from "auth/auth.module";
 import { CommandHandlers as TokenCommandHandlers } from "tokens/commands/handlers";
-import { EventHandlers } from "./events/handlers";
-import { OrdersSagas } from "./sagas/orders.sagas";
-import { OrdersController } from "./controllers/orders.controller";
-import { OrdersService } from "./services/orders.service";
-import { OrderRepository } from "./repository/order.repository";
+import { TokenRepository } from "tokens/repository/token.repository";
 import { EventStoreModule } from "../core/event-store/event-store.module";
-import { EventStore } from "../core/event-store/event-store";
+import { CommandHandlers } from "./commands/handlers";
+import { OrdersController } from "./controllers/orders.controller";
+import { OrderDto } from "./dtos/orders.dto";
+import { EventHandlers } from "./events/handlers";
 import { OrderCreatedEvent, OrderCreationStartedEvent } from "./events/impl/order-created.event";
 import { OrderDeletedEvent } from "./events/impl/order-deleted.event";
 import { OrderUpdatedEvent } from "./events/impl/order-updated.event";
 import { OrderWelcomedEvent } from "./events/impl/order-welcomed.event";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { OrderDto } from "./dtos/orders.dto";
 import { QueryHandlers } from "./queries/handler";
-import { TokenRepository } from "tokens/repository/token.repository";
-import { AuthModule } from "auth/auth.module";
+import { OrderRepository } from "./repository/order.repository";
+import { OrdersSagas } from "./sagas/orders.sagas";
+import { OrdersService } from "./services/orders.service";
+import { EventPublisher, CommandBus, EventBus, QueryBus } from "@nestjs/cqrs";
+import { EventStore } from "core/event-store/event-store";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderDto]),
-    CqrsModule,
     EventStoreModule.forFeature(),
     AuthModule
   ],
@@ -36,6 +35,7 @@ import { AuthModule } from "auth/auth.module";
     ...QueryHandlers,
     OrderRepository,
     TokenRepository,
+    QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
   ],
   exports: [OrdersService]
 })
@@ -46,7 +46,7 @@ export class OrdersModule implements OnModuleInit {
     private readonly event$: EventBus,
     private readonly ordersSagas: OrdersSagas,
     private readonly eventStore: EventStore
-  ) {}
+  ) { }
 
   onModuleInit() {
     this.eventStore.setEventHandlers(this.eventHandlers);

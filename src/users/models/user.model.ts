@@ -8,6 +8,8 @@ import { UserUpdatedEvent } from "../events/impl/user-updated.event";
 import { UserDeletedEvent } from "../events/impl/user-deleted.event";
 import { UserWelcomedEvent } from "../events/impl/user-welcomed.event";
 import { UserDto } from "users/dtos/users.dto";
+import { AssignedRoleEvent } from "users/events/impl/role-assigned.event";
+import { Logger } from "@nestjs/common";
 
 export class User extends AggregateRoot {
   [x: string]: any;
@@ -25,11 +27,7 @@ export class User extends AggregateRoot {
   }
 
   createUser(transactionId: string) {
-    try {
-      this.apply(new UserCreatedEvent(transactionId, this.data));
-    } catch (error) {
-      this.apply(new UserCreatedFailEvent(transactionId, error));
-    }
+    this.apply(new UserCreatedEvent(transactionId, this.data));
   }
 
   updateUser() {
@@ -42,5 +40,13 @@ export class User extends AggregateRoot {
 
   deleteUser(transactionId: string) {
     this.apply(new UserDeletedEvent(transactionId, this.id));
+  }
+
+  assignRoleUser(userId, roleName) {
+    try {
+      this.apply(new AssignedRoleEvent(userId, roleName));
+    } catch (e) {
+      Logger.error(e, '', '[UserModel] assignRoleUser');
+    }
   }
 }

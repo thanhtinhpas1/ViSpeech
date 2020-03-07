@@ -1,9 +1,9 @@
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { FindUserByUsernameQuery } from "../impl/find-user.query";
-import { InjectRepository } from "@nestjs/typeorm";
-import { UserDto } from "../../dtos/users.dto";
-import { Repository } from "typeorm";
 import { Logger } from "@nestjs/common";
+import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { UserDto } from "../../dtos/users.dto";
+import { FindUserByUsernameQuery } from "../impl/find-user.query";
 
 @QueryHandler(FindUserByUsernameQuery)
 export class FindUserUsernameHandler

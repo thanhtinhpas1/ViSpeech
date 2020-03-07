@@ -15,7 +15,8 @@ export class RoleDto extends BaseEntityDto {
   @IsIn([
     CONSTANTS.ROLE.USER,
     CONSTANTS.ROLE.MANAGER_USER,
-    CONSTANTS.ROLE.ADMIN
+    CONSTANTS.ROLE.ADMIN,
+    CONSTANTS.ROLE.CSR_USER
   ])
   @Column()
   name: string;

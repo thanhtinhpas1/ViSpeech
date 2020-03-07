@@ -1,29 +1,28 @@
+import { Module, OnModuleInit } from "@nestjs/common";
+import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { TokenDto } from "./dtos/tokens.dto";
-import { TokenTypeDto } from "./dtos/token-types.dto";
-import { CqrsModule, CommandBus, QueryBus, EventBus } from "@nestjs/cqrs";
-import { EventStoreModule } from "core/event-store/event-store.module";
-import { TokensController } from "./controllers/tokens.controller";
-import { TokensService } from "./services/tokens.service";
-import { TokensSagas } from "./sagas/tokens.sagas";
-import { TokenRepository } from "./repository/token.repository";
-import { OnModuleInit, Module } from "@nestjs/common";
-import { EventStore } from "core/event-store/event-store";
-import { getMongoRepository } from "typeorm";
 import { CONSTANTS } from "common/constant";
+import { EventStore } from "core/event-store/event-store";
+import { EventStoreModule } from "core/event-store/event-store.module";
+import { getMongoRepository } from "typeorm";
+import { CommandHandlers } from "./commands/handlers";
+import { TokensController } from "./controllers/tokens.controller";
+import { TokenTypeDto } from "./dtos/token-types.dto";
+import { TokenDto } from "./dtos/tokens.dto";
+import { EventHandlers } from "./events/handlers";
 import { TokenCreatedEvent, TokenCreatedFailEvent } from "./events/impl/token-created.event";
 import { TokenDeletedEvent } from "./events/impl/token-deleted.event";
 import { TokenUpdatedEvent } from "./events/impl/token-updated.event";
 import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
-import { CommandHandlers } from "./commands/handlers";
-import { EventHandlers } from "./events/handlers";
 import { QueryHandlers } from "./queries/handler";
+import { TokenRepository } from "./repository/token.repository";
+import { TokensSagas } from "./sagas/tokens.sagas";
+import { TokensService } from "./services/tokens.service";
 
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
-    CqrsModule,
     EventStoreModule.forFeature()
   ],
   controllers: [TokensController],
@@ -34,6 +33,7 @@ import { QueryHandlers } from "./queries/handler";
     ...EventHandlers,
     ...QueryHandlers,
     TokenRepository,
+    QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
   ],
   exports: [TokensService]
 })
@@ -42,9 +42,8 @@ export class TokensModule implements OnModuleInit {
     private readonly command$: CommandBus,
     private readonly query$: QueryBus,
     private readonly event$: EventBus,
-    private readonly tokensSagas: TokensSagas,
     private readonly eventStore: EventStore
-  ) {}
+  ) { }
 
   async onModuleInit() {
     this.eventStore.setEventHandlers(this.eventHandlers);
@@ -61,7 +60,7 @@ export class TokensModule implements OnModuleInit {
 
   eventHandlers = {
     TokenCreatedEvent: (transactionId, data) => new TokenCreatedEvent(transactionId, data),
-    TokenCreatedFailEvent: (transactionId, error) => new TokenCreatedFailEvent(transactionId, error),
+    TokenCreatedFailEvent: (transactionId, tokenDto, error) => new TokenCreatedFailEvent(transactionId, tokenDto, error),
     TokenDeletedEvent: data => new TokenDeletedEvent(data),
     TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
     TokenWelcomedEvent: data => new TokenWelcomedEvent(data)

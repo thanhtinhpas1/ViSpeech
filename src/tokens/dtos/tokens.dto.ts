@@ -1,18 +1,9 @@
-import {
-  IsEmpty,
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-  IsPositive,
-  IsOptional,
-  IsUUID,
-  IsIn
-} from "class-validator";
-import { Column, Entity } from "typeorm";
-import { ObjectID } from "mongodb";
 import { BaseEntityDto } from "base/base-entity.dto";
 import { Type } from "class-transformer";
+import { IsEmpty, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from "class-validator";
 import { CONSTANTS } from "common/constant";
+import { ObjectID } from "mongodb";
+import { Column, Entity } from "typeorm";
 
 export class TokenIdRequestParamsDto {
   constructor(tokenId) {

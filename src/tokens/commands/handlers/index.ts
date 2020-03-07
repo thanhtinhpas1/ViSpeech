@@ -7,5 +7,5 @@ export const CommandHandlers = [
   CreateTokenHandler,
   DeleteTokenHandler,
   UpdateTokenHandler,
-  WelcomeTokenHandler
+  WelcomeTokenHandler,
 ];
