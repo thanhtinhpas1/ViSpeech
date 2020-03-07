@@ -80,4 +80,16 @@ export class OrdersController {
   async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {
     return this.ordersService.findOne(findOrderQuery);
   }
+
+  @ApiOperation({ tags: ["Get Payment Intent"] })
+  @ApiResponse({ status: 200, description: "Get Payment Intent." })
+  @Post("/payment-intent")
+  async getPaymentIntent(@Body() body) {
+    try {
+      const paymentIntent = await this.ordersService.getPaymentIntent(body.amount);
+      return { clientSecret: paymentIntent.client_secret };
+    } catch (err) {
+      throw err;
+    }
+  }
 }

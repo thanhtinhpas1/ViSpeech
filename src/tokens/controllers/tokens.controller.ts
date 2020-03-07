@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { TokenDto, TokenIdRequestParamsDto } from "../dtos/tokens.dto";
 import { TokensService } from "../services/tokens.service";
-import { GetTokensQuery } from "tokens/queries/impl/get-tokens.query";
+import { GetTokensQuery, GetTokenTypesQuery } from "tokens/queries/impl/get-tokens.query";
 import { GetTokensByUserIdQuery } from "tokens/queries/impl/get-tokens-by-userId";
 import { FindTokenQuery } from "tokens/queries/impl/find-token.query";
 import { Utils } from "utils";
@@ -92,5 +92,14 @@ export class TokensController {
   @Get(":id")
   async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
     return this.tokensService.findOne(findTokenQuery);
+  }
+
+  /* List Token Types */
+  /*--------------------------------------------*/
+  @ApiOperation({ tags: ["List Token Types"] })
+  @ApiResponse({ status: 200, description: "List Token Types." })
+  @Get("/token-types")
+  async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
+    return this.tokensService.findTokenTypes(getTokenTypesQuery);
   }
 }

@@ -24,16 +24,12 @@ export class AssignRoleUserBody {
 export class UserDto extends BaseEntityDto {
   @IsString()
   @IsNotEmpty()
-  @Column({
-    name: "first_name"
-  })
+  @Column()
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
-  @Column({
-    name: "last_name"
-  })
+  @Column()
   lastName: string;
 
   @IsString()
@@ -55,14 +51,12 @@ export class UserDto extends BaseEntityDto {
   @IsEmpty()
   @Column({
     default: true,
-    name: "firsttime_login_remaining",
     nullable: true
   })
   firstTimeLoginRemaining: boolean;
 
   @IsEmpty()
   @Column({
-    name: "is_active",
     default: true,
     nullable: false
   })

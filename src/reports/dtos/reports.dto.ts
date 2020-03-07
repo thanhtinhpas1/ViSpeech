@@ -27,22 +27,17 @@ export class ReportDto extends BaseEntityDto {
   @Type(() => Number)
   @IsNumber()
   @IsPositive()
-  @Column({
-    name: "used_minutes"
-  })
+  @Column()
   usedMinutes: number;
 
   @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
-  @Column({
-    name: "date_report"
-  })
+  @Column()
   dateReport: Date;
 
   @IsUUID()
   @Column({
-    name: "token_id",
     nullable: false,
     type: "uuid"
   })
@@ -50,7 +45,6 @@ export class ReportDto extends BaseEntityDto {
 
   @IsUUID()
   @Column({
-    name: "user_id",
     nullable: false,
     type: "uuid"
   })

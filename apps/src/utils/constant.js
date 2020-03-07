@@ -10,3 +10,15 @@ export const ROLES = {
   USER: 'USER',
   MANAGER_USER: 'MANAGER_USER',
 }
+export const TOKEN_TYPE = {
+  FREE: 'FREE',
+  '50-MINS': '50-MINS',
+  '200-MINS': '200-MINS',
+  '500-MINS': '500-MINS',
+  DEAL: 'DEAL',
+}
+export const STATUS = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
+}

@@ -1,13 +1,14 @@
 import apiUrl from './api-url'
 
-export default class TokenService {
-  static getTokens = userId => {
-    const api = `${apiUrl}/tokens/userId?userId=${userId}`
+export default class OrderService {
+  static createOrder = ({ userId, tokenTypeId }) => {
+    const api = `${apiUrl}/orders`
     let status = 400
     return fetch(api, {
-      method: 'GET',
+      method: 'POST',
+      body: JSON.stringify({ userId, tokenTypeId }),
       headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-type': 'application/json; charset=UTF-8',
       },
     })
       .then(response => {
@@ -15,8 +16,8 @@ export default class TokenService {
         return response.json()
       })
       .then(result => {
-        if (status !== 200) {
-          throw new Error(result.message)
+        if (status !== 201) {
+          throw new Error(result.error)
         }
         return result
       })
@@ -25,13 +26,14 @@ export default class TokenService {
       })
   }
 
-  static getTokenTypes = () => {
-    const api = `${apiUrl}/tokens/token-types`
+  static createPaymentIntent = amount => {
+    const api = `${apiUrl}/orders/payment-intent`
     let status = 400
     return fetch(api, {
-      method: 'GET',
+      method: 'POST',
+      body: JSON.stringify({ amount }),
       headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-type': 'application/json; charset=UTF-8',
       },
     })
       .then(response => {
@@ -39,8 +41,8 @@ export default class TokenService {
         return response.json()
       })
       .then(result => {
-        if (status !== 200) {
-          throw new Error(result.message)
+        if (status !== 201) {
+          throw new Error(result.error)
         }
         return result
       })

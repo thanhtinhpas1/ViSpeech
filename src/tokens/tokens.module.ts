@@ -60,7 +60,7 @@ export class TokensModule implements OnModuleInit {
 
   eventHandlers = {
     TokenCreatedEvent: (transactionId, data) => new TokenCreatedEvent(transactionId, data),
-    TokenCreatedFailEvent: (transactionId, tokenDto, error) => new TokenCreatedFailEvent(transactionId, tokenDto, error),
+    TokenCreatedFailEvent: (transactionId, data, error) => new TokenCreatedFailEvent(transactionId, data, error),
     TokenDeletedEvent: data => new TokenDeletedEvent(data),
     TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
     TokenWelcomedEvent: data => new TokenWelcomedEvent(data)
