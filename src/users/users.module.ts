@@ -19,6 +19,7 @@ import { QueryHandlers } from "./queries/handler";
 import { UserRepository } from "./repository/user.repository";
 import { UsersSagas } from "./sagas/users.sagas";
 import { UsersService } from "./services/users.service";
+import { TokenCreatedEvent } from "tokens/events/impl/token-created.event";
 
 @Module({
   imports: [

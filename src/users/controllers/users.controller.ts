@@ -1,10 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { Utils } from "utils";
 import { UserDto, UserIdRequestParamsDto, AssignRoleUserBody } from "../dtos/users.dto";
 import { UsersService } from "../services/users.service";
+import { Roles } from "auth/roles.decorator";
+import { CONSTANTS } from "common/constant";
+import { AuthGuard } from "@nestjs/passport";
+import { RoleDto } from "roles/dtos/roles.dto";
 
 @Controller("users")
 @ApiTags("Users")
@@ -17,6 +21,7 @@ export class UsersController {
   @Post()
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
     const transactionId = Utils.getUuid();
+    userDto.roles = [new RoleDto(CONSTANTS.ROLE.USER)];
     return await this.usersService.createUserStart(transactionId, userDto);
   }
 
@@ -25,11 +30,14 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update User"] })
   @ApiResponse({ status: 200, description: "Update User." })
+  @UseGuards(AuthGuard('jwt'))
   @Put(":_id")
+  @Roles([CONSTANTS.ROLE.USER])
   async updateUser(
     @Param() userIdDto: UserIdRequestParamsDto,
     @Body() userDto: UserDto
   ): Promise<UserDto> {
+    delete userDto.password;
     return this.usersService.updateUser({ ...userDto, _id: userIdDto._id });
   }
 

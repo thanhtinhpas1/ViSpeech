@@ -10,11 +10,11 @@ export class ReportCreatedHandler implements IEventHandler<ReportCreatedEvent> {
   constructor(
     @InjectRepository(ReportDto)
     private readonly repository: Repository<ReportDto>
-  ) {}
+  ) { }
 
   async handle(event: ReportCreatedEvent) {
     try {
-      Logger.log(event, "ReportCreatedEvent");
+      Logger.log(event.reportDto.transactionId, "ReportCreatedEvent");
       const report = event.reportDto;
       return await this.repository.save(report);
     } catch (error) {

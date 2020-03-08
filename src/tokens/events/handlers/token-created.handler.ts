@@ -1,10 +1,10 @@
+import { Logger } from "@nestjs/common";
 import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
-import { TokenCreatedEvent, TokenCreatedFailEvent } from "../impl/token-created.event";
-import { Logger, BadRequestException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository } from "typeorm";
-import { TokenTypeDto } from "tokens/dtos/token-types.dto";
+import { TokenCreatedEvent, TokenCreatedFailEvent } from "../impl/token-created.event";
 
 @EventsHandler(TokenCreatedEvent)
 export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
@@ -17,7 +17,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
 
   async handle(event: TokenCreatedEvent) {
     try {
-      Logger.log(event, "TokenCreatedEvent");
+      Logger.log(event.transactionId, "TokenCreatedEvent");
       const token = JSON.parse(JSON.stringify(event.tokenDto));
       const transactionId = event.transactionId;
       let tokenTypeDto = null;
@@ -37,7 +37,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
       delete token.orderId;
       return await this.repository.save(token);
     } catch (error) {
-      Logger.error(error.message);
+      Logger.error('TokenCreatedHanler', 'Something went wrong when create token', error.message);
     }
   }
 }
@@ -46,6 +46,6 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
 export class TokenCreatedFailHandler
   implements IEventHandler<TokenCreatedFailEvent> {
   handle(event: TokenCreatedFailEvent) {
-    Logger.log(event, "TokenCreatedFailEvent");
+    Logger.log(event.transactionId, "TokenCreatedFailEvent");
   }
 }

@@ -28,7 +28,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
       Logger.log(event.transactionId, "UserCreatedEvent");
       getMongoRepository(UserDto).save(user);
     } catch (err) {
-      Logger.error(err.message);
+      Logger.error('UserCreatedHandler', 'Something went wrong when create user', err.message);
     }
   }
 }

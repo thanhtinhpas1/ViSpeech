@@ -14,7 +14,7 @@ export class OrderDeletedHandler implements IEventHandler<OrderDeletedEvent> {
 
   async handle(event: OrderDeletedEvent) {
     try {
-      Logger.log(event, "OrderDeletedEvent");
+      Logger.log(event.orderId, "OrderDeletedEvent");
       const orderId = event.orderId;
       return await this.repository.delete({ _id: orderId });
     } catch (error) {

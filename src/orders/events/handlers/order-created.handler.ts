@@ -13,7 +13,7 @@ import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 export class OrderCreationStartedHandler
   implements IEventHandler<OrderCreationStartedEvent> {
   handle(event: OrderCreationStartedEvent) {
-    Logger.log(event, "OrderCreationStartedEvent");
+    Logger.log(event.transactionId, "OrderCreationStartedEvent");
   }
 }
 
@@ -26,7 +26,7 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
 
   async handle(event: OrderCreatedEvent) {
     try {
-      Logger.log(event, "OrderCreatedEvent");
+      Logger.log(event.transactionId, "OrderCreatedEvent");
       const order = event.orderDto;
       const transactionId = event.transactionId;
       const tokenTypeDto = await getMongoRepository(TokenTypeDto).find({

@@ -14,7 +14,7 @@ export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
 
   async handle(event: ReportUpdatedEvent) {
     try {
-      Logger.log(event, "ReportUpdatedEvent"); // write here
+      Logger.log(event.reportDto.transactionId, "ReportUpdatedEvent"); // write here
     const { _id, ...reportInfo } = event.reportDto;
     return await this.repository.update({ _id }, reportInfo);
     } catch (error) {

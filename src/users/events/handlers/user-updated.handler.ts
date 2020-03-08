@@ -10,11 +10,11 @@ import { Utils } from "utils";
 export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
   constructor(
     @InjectRepository(UserDto) private readonly repository: Repository<UserDto>
-  ) {}
+  ) { }
 
   async handle(event: UserUpdatedEvent) {
     try {
-      Logger.log(event, "UserUpdatedEvent");
+      Logger.log(event.userDto.transactionId, "UserUpdatedEvent");
       const { _id, ...userInfo } = event.userDto;
       userInfo.roles = Utils.updateUserRoles(userInfo.roles);
       return await this.repository.update({ _id }, userInfo);

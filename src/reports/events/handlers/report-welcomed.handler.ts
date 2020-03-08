@@ -6,6 +6,6 @@ import { Logger } from "@nestjs/common";
 export class ReportWelcomedHandler
   implements IEventHandler<ReportWelcomedEvent> {
   handle(event: ReportWelcomedEvent) {
-    Logger.log(event, "ReportWelcomedEvent"); // write here
+    Logger.log(event.reportId, "ReportWelcomedEvent"); // write here
   }
 }

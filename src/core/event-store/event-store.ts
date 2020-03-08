@@ -38,7 +38,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
 
     async publish<T extends IEvent>(event: T) {
         const message = JSON.parse(JSON.stringify(event));
-        const transactionId = message.transactionId;
+        const transactionId = message.transactionId || message._id;
         const streamName = `${this.category}-${transactionId}`;
         const type = event.constructor.name;
         try {
@@ -61,6 +61,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                     `${event.metadata.$o}/${event.data.split('@')[0]}`;
                 const httpOptions = {
                     headers: {
+                        // TODO: param authorization token
                         Authorization: 'Basic YWRtaW46Y2hhbmdlaXQ=',
                     },
                 };
@@ -71,21 +72,20 @@ export class EventStore implements IEventPublisher, IMessageSource {
                         rawData += chunk;
                     });
                     res.on('end', () => {
-                        try {
-                            xml2js.parseString(rawData, { explicitArray: false }, (err, result) => {
-                                if (err) {
-                                    console.trace(err);
-                                    return;
-                                }
-                                const content = result['atom:entry']['atom:content'];
-                                const eventType = content.eventType;
-                                const data = content.data;
+                        xml2js.parseString(rawData, { explicitArray: false }, (err, result) => {
+                            if (err) {
+                                console.trace(err);
+                                return;
+                            }
+                            const content = result['atom:entry']['atom:content'];
+                            const eventType = content.eventType;
+                            const data = content.data;
+                            if (this.eventHandlers[eventType]) {
                                 event = this.eventHandlers[eventType](...Object.values(data));
                                 subject.next(event);
-                            });
-                        } catch (e) {
-                            Logger.error('Parse error', e.message);
-                        }
+                            }
+                            // do nothing
+                        });
                     });
                 });
             } catch (error) {

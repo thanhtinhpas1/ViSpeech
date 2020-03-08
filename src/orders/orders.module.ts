@@ -1,6 +1,9 @@
-import { Module, OnModuleInit } from "@nestjs/common";
+import { forwardRef, Module, OnModuleInit } from "@nestjs/common";
+import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "auth/auth.module";
+import { AuthService } from "auth/auth.service";
+import { EventStore } from "core/event-store/event-store";
 import { CommandHandlers as TokenCommandHandlers } from "tokens/commands/handlers";
 import { TokenRepository } from "tokens/repository/token.repository";
 import { EventStoreModule } from "../core/event-store/event-store.module";
@@ -16,18 +19,17 @@ import { QueryHandlers } from "./queries/handler";
 import { OrderRepository } from "./repository/order.repository";
 import { OrdersSagas } from "./sagas/orders.sagas";
 import { OrdersService } from "./services/orders.service";
-import { EventPublisher, CommandBus, EventBus, QueryBus } from "@nestjs/cqrs";
-import { EventStore } from "core/event-store/event-store";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderDto]),
+    forwardRef(() => AuthModule),
     EventStoreModule.forFeature(),
-    AuthModule
   ],
   controllers: [OrdersController],
   providers: [
     OrdersService,
+    AuthService,
     OrdersSagas,
     ...CommandHandlers,
     ...TokenCommandHandlers,

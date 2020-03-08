@@ -13,7 +13,7 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
 
   async handle(event: UserDeletedEvent) {
     try {
-      Logger.log(event, "UserDeletedEvent");
+      Logger.log(event.transactionId, "UserDeletedEvent");
       const userId = event.userId;
       const transactionId = event.transactionId;
       if (userId) {

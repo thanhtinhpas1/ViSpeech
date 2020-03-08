@@ -16,8 +16,8 @@ export class AssignedRoleHandler implements IEventHandler {
 
     async handle(event: AssignedRoleEvent) {
         try {
-            Logger.log(event, 'AssignedRoleEvent');
-            const userId = event.userId;
+            Logger.log(event.transactionId, 'AssignedRoleEvent');
+            const userId = event.transactionId;
             const roles = event.roles;
             const rolesDto = new Array(roles.length);
             for (const role of roles) {

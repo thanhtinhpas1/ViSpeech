@@ -17,7 +17,7 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
 
   async handle(event: OrderUpdatedEvent) {
     try {
-      Logger.log(event, "OrderUpdatedEvent"); // write here
+      Logger.log(event.transactionId, "OrderUpdatedEvent"); // write here
       const { _id, ...orderInfo } = event.orderDto;
       const formattedOrderInfo = Utils.removeNullOrEmptyPropertyOfObj(orderInfo);
       Logger.log(formattedOrderInfo, "OrderUpdatedEvent formattedOrderInfo"); // write here

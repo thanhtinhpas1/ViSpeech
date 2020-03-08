@@ -2,7 +2,7 @@ import {IEvent} from '@nestjs/cqrs';
 
 export class AssignedRoleEvent implements IEvent {
     constructor(
-        public readonly userId: string,
+        public readonly transactionId: string,
         public readonly roles: string[],
     ) {
     }
