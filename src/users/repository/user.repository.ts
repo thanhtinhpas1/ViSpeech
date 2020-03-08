@@ -18,10 +18,10 @@ export class UserRepository {
     return user;
   }
 
-  async updateUser(userDto) {
+  async updateUser(transactionId: string, userDto: UserDto) {
     const user = new User(undefined);
     user.setData(userDto);
-    user.updateUser();
+    user.updateUser(transactionId);
     return user;
   }
 

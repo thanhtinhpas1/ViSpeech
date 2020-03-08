@@ -1,7 +1,9 @@
-import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
+import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
 import {
   OrderCreatedEvent,
-  OrderCreationStartedEvent
+  OrderCreationStartedEvent,
+  OrderCreatedSuccessEvent,
+  OrderCreatedFailEvent
 } from "../impl/order-created.event";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -21,23 +23,41 @@ export class OrderCreationStartedHandler
 export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
   constructor(
     @InjectRepository(OrderDto)
-    private readonly repository: Repository<OrderDto>
+    private readonly repository: Repository<OrderDto>,
+    private readonly eventBus: EventBus
   ) {}
 
   async handle(event: OrderCreatedEvent) {
+    Logger.log(event, "OrderCreatedEvent");
+    const order = event.orderDto;
+    const transactionId = event.transactionId;
     try {
-      Logger.log(event.transactionId, "OrderCreatedEvent");
-      const order = event.orderDto;
-      const transactionId = event.transactionId;
       const tokenTypeDto = await getMongoRepository(TokenTypeDto).find({
         _id: order.tokenTypeId.toString()
       });
       order.minutes = tokenTypeDto[0].minutes;
       order.price = tokenTypeDto[0].price;
       order.transactionId = transactionId;
-      return await this.repository.save(order);
+      await this.repository.save(order);
+      this.eventBus.publish(new OrderCreatedSuccessEvent(transactionId, order));
     } catch (error) {
-      Logger.error(error, "", "OrderCreatedEvent");
+      this.eventBus.publish(new OrderCreatedFailEvent(transactionId, error));
     }
+  }
+}
+
+@EventsHandler(OrderCreatedSuccessEvent)
+export class OrderCreatedSuccessHandler
+  implements IEventHandler<OrderCreatedSuccessEvent> {
+  handle(event: OrderCreatedSuccessEvent) {
+    // Logger.log(event, "OrderCreatedSuccessEvent");
+  }
+}
+
+@EventsHandler(OrderCreatedFailEvent)
+export class OrderCreatedFailHandler
+  implements IEventHandler<OrderCreatedFailEvent> {
+  handle(event: OrderCreatedFailEvent) {
+    // Logger.log(event, "OrderCreatedFailEvent");
   }
 }

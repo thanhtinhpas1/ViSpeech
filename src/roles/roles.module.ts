@@ -17,10 +17,12 @@ export class RolesModule implements OnModuleInit {
   async persistRolesToDB() {
     const userRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.USER });
     const manageUserRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.MANAGER_USER });
+    const csrUserRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.CSR_USER });
     const adminRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.ADMIN });
-    if (!userRole[0] && !adminRole[0] && !manageUserRole[0]) {
+    if (!userRole[0] && !csrUserRole[0] && !adminRole[0] && !manageUserRole[0]) {
       getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.USER));
       getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.MANAGER_USER));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.CSR_USER));
       getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.ADMIN));
     }
   }

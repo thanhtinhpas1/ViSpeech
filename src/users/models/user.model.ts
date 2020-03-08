@@ -1,7 +1,10 @@
 import { Logger } from "@nestjs/common";
 import { AggregateRoot } from "@nestjs/cqrs";
 import { AssignedRoleEvent } from "users/events/impl/role-assigned.event";
-import { UserCreatedEvent, UserCreationStartedEvent } from "../events/impl/user-created.event";
+import {
+  UserCreationStartedEvent,
+  UserCreatedEvent
+} from "../events/impl/user-created.event";
 import { UserDeletedEvent } from "../events/impl/user-deleted.event";
 import { UserUpdatedEvent } from "../events/impl/user-updated.event";
 import { UserWelcomedEvent } from "../events/impl/user-welcomed.event";
@@ -25,8 +28,8 @@ export class User extends AggregateRoot {
     this.apply(new UserCreatedEvent(transactionId, this.data));
   }
 
-  updateUser() {
-    this.apply(new UserUpdatedEvent(this.data));
+  updateUser(transactionId: string) {
+    this.apply(new UserUpdatedEvent(transactionId, this.data));
   }
 
   welcomeUser() {

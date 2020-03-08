@@ -62,7 +62,6 @@ export class UserDto extends BaseEntityDto {
   isActive: boolean;
 
   @IsArray()
-  @IsEmpty()
   @Column()
   roles: RoleDto[];
 }

@@ -1,13 +1,13 @@
 import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
-import { TokenCreatedEvent, TokenCreatedFailEvent, TokenCreatedSuccessEvent } from "../impl/token-created.event";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository } from "typeorm";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from "../impl/ordered-token-created";
 
-@EventsHandler(TokenCreatedEvent)
-export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
+@EventsHandler(OrderedTokenCreatedEvent)
+export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCreatedEvent> {
   constructor(
     @InjectRepository(TokenDto)
     private readonly repository: Repository<TokenDto>,
@@ -16,8 +16,8 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
     private readonly eventBus: EventBus
   ) {}
 
-  async handle(event: TokenCreatedEvent) {
-    Logger.log(event, "TokenCreatedEvent");
+  async handle(event: OrderedTokenCreatedEvent) {
+    Logger.log(event, "OrderedTokenCreatedEvent");
     const token = JSON.parse(JSON.stringify(event.tokenDto));
     const transactionId = event.transactionId;
     let tokenTypeDto = null;
@@ -37,25 +37,25 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
       delete token.tokenType;
       delete token.orderId;
       const newToken = await this.repository.save(token);
-      this.eventBus.publish(new TokenCreatedSuccessEvent(transactionId, newToken));
+      this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(transactionId, newToken));
     } catch (error) {
-      this.eventBus.publish(new TokenCreatedFailEvent(transactionId, token, error));
+      this.eventBus.publish(new OrderedTokenCreatedFailEvent(transactionId, token, error));
     }
   }
 }
 
-@EventsHandler(TokenCreatedSuccessEvent)
-export class TokenCreatedSuccessHandler
-  implements IEventHandler<TokenCreatedSuccessEvent> {
-  handle(event: TokenCreatedSuccessEvent) {
-    Logger.log(event, "TokenCreatedSuccessEvent");
+@EventsHandler(OrderedTokenCreatedSuccessEvent)
+export class OrderedTokenCreatedSuccessHandler
+  implements IEventHandler<OrderedTokenCreatedSuccessEvent> {
+  handle(event: OrderedTokenCreatedSuccessEvent) {
+    Logger.log(event, "OrderedTokenCreatedSuccessEvent");
   }
 }
 
-@EventsHandler(TokenCreatedFailEvent)
-export class TokenCreatedFailHandler
-  implements IEventHandler<TokenCreatedFailEvent> {
-  handle(event: TokenCreatedFailEvent) {
-    Logger.log(event.transactionId, "TokenCreatedFailEvent");
+@EventsHandler(OrderedTokenCreatedFailEvent)
+export class OrderedTokenCreatedFailHandler
+  implements IEventHandler<OrderedTokenCreatedFailEvent> {
+  handle(event: OrderedTokenCreatedFailEvent) {
+    Logger.log(event, "OrderedTokenCreatedFailEvent");
   }
 }

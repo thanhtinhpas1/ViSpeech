@@ -30,15 +30,15 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update User"] })
   @ApiResponse({ status: 200, description: "Update User." })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Put(":_id")
-  @Roles([CONSTANTS.ROLE.USER])
+  // @Roles([CONSTANTS.ROLE.USER])
   async updateUser(
     @Param() userIdDto: UserIdRequestParamsDto,
     @Body() userDto: UserDto
   ): Promise<UserDto> {
-    delete userDto.password;
-    return this.usersService.updateUser({ ...userDto, _id: userIdDto._id });
+    const transactionId = Utils.getUuid();
+    return this.usersService.updateUser(transactionId, { ...userDto, _id: userIdDto._id });
   }
 
   /* Delete User */

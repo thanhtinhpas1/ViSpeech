@@ -19,7 +19,6 @@ export class BaseEntityDto {
   @IsOptional()
   @IsUUID()
   @Column({
-    name: "transaction_id",
     nullable: false,
     type: "uuid"
   })
@@ -27,15 +26,13 @@ export class BaseEntityDto {
 
   @IsEmpty()
   @CreateDateColumn({
-    name: "created_date",
-    nullable: true
+    name: "created_date"
   })
   createdDate: Date;
 
   @IsEmpty()
   @UpdateDateColumn({
-    name: "updated_date",
-    nullable: true
+    name: "updated_date"
   })
   updatedDate: Date;
 }

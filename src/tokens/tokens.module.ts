@@ -10,7 +10,7 @@ import { TokensController } from "./controllers/tokens.controller";
 import { TokenTypeDto } from "./dtos/token-types.dto";
 import { TokenDto } from "./dtos/tokens.dto";
 import { EventHandlers } from "./events/handlers";
-import { TokenCreatedEvent, TokenCreatedFailEvent } from "./events/impl/token-created.event";
+import { TokenCreatedEvent, TokenCreatedFailEvent, TokenCreatedSuccessEvent } from "./events/impl/token-created.event";
 import { TokenDeletedEvent } from "./events/impl/token-deleted.event";
 import { TokenUpdatedEvent } from "./events/impl/token-updated.event";
 import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
@@ -18,6 +18,8 @@ import { QueryHandlers } from "./queries/handler";
 import { TokenRepository } from "./repository/token.repository";
 import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokensService } from "./services/tokens.service";
+import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailEvent } from "./events/impl/free-token-created.event";
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from "./events/impl/ordered-token-created";
 
 
 @Module({
@@ -46,7 +48,7 @@ export class TokensModule implements OnModuleInit {
   ) { }
 
   async onModuleInit() {
-    this.eventStore.setEventHandlers(this.eventHandlers);
+    this.eventStore.setEventHandlers(TokensModule.eventHandlers);
     await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
     this.event$.publisher = this.eventStore;
     /** ------------ */
@@ -58,12 +60,21 @@ export class TokensModule implements OnModuleInit {
     this.persistTokenTypesToDB();
   }
 
-  eventHandlers = {
+  public static eventHandlers = {
     TokenCreatedEvent: (transactionId, data) => new TokenCreatedEvent(transactionId, data),
+    TokenCreatedSuccessEvent: (transactionId, data) => new TokenCreatedSuccessEvent(transactionId, data),
     TokenCreatedFailEvent: (transactionId, data, error) => new TokenCreatedFailEvent(transactionId, data, error),
-    TokenDeletedEvent: data => new TokenDeletedEvent(data),
+    TokenDeletedEvent: (transactionId, data) => new TokenDeletedEvent(transactionId, data),
     TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
-    TokenWelcomedEvent: data => new TokenWelcomedEvent(data)
+    TokenWelcomedEvent: data => new TokenWelcomedEvent(data),
+    // free token
+    FreeTokenCreatedEvent: (transactionId, data) => new FreeTokenCreatedEvent(transactionId, data),
+    FreeTokenCreatedSuccessEvent: (transactionId, data) => new FreeTokenCreatedSuccessEvent(transactionId, data),
+    FreeTokenCreatedFailEvent: (transactionId, error) => new FreeTokenCreatedFailEvent(transactionId, error),
+    // ordered token
+    OrderedTokenCreatedEvent: (transactionId, data) => new OrderedTokenCreatedEvent(transactionId, data),
+    OrderedTokenCreatedSuccessEvent: (transactionId, data) => new OrderedTokenCreatedSuccessEvent(transactionId, data),
+    OrderedTokenCreatedFailEvent: (transactionId, data, error) => new OrderedTokenCreatedFailEvent(transactionId, data, error),
   };
 
   async persistTokenTypesToDB() {
@@ -79,15 +90,11 @@ export class TokensModule implements OnModuleInit {
     const tokenType_500 = await getMongoRepository(TokenTypeDto).find({
       name: CONSTANTS.TOKEN_TYPE["500-MINS"]
     });
-    const dealTokenType = await getMongoRepository(TokenTypeDto).find({
-      name: CONSTANTS.TOKEN_TYPE.DEAL
-    });
-    if (!freeTokenType[0] && !tokenType_50[0] && !tokenType_200[0] && !tokenType_500[0] && !dealTokenType[0]) {
+    if (!freeTokenType[0] && !tokenType_50[0] && !tokenType_200[0] && !tokenType_500[0]) {
       getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
       getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE["50-MINS"], 50, 5));
       getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE["200-MINS"], 200, 10));
       getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE["500-MINS"], 500, 20));
-      getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.DEAL, 0, 0));
     }
   }
 }

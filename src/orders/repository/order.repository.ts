@@ -7,7 +7,7 @@ export class OrderRepository {
   async createOrderStart(transactionId: string, orderDto: OrderDto) {
     const order = new Order(undefined);
     order.setData(orderDto);
-    order.createOrder(transactionId);
+    order.createOrderStart(transactionId);
     return order;
   }
 
