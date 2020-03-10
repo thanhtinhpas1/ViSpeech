@@ -16,7 +16,7 @@ export class RolesGuard implements CanActivate {
     @InjectRepository(UserDto)
     private readonly userRepo: Repository<UserDto>,
     private readonly queryBus: QueryBus
-  ) {}
+  ) { }
 
   canActivate(
     context: import("@nestjs/common").ExecutionContext

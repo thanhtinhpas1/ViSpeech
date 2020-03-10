@@ -26,7 +26,7 @@ export const Utils = {
   },
   removeNullOrEmptyPropertyOfObj: obj => {
     let result = JSON.parse(JSON.stringify(obj));
-    if (typeof(result) === 'object') {
+    if (typeof (result) === 'object') {
       Object.keys(result).forEach(property => {
         if (result[property] == null || result[property] === "") {
           delete result[property];
@@ -34,5 +34,14 @@ export const Utils = {
       })
     }
     return result;
+  },
+  decodeJwtAuthorization: request => {
+    const authorization = request.headers['authorization'];
+    if (!authorization) return null;
+    const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, "");
+    return this.jwtService.decode(jwt);
+  },
+  getRolesFromJwt: request => {
+    return Utils.decodeJwtAuthorization(request).roles;
   }
 };

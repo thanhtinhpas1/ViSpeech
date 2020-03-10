@@ -9,7 +9,7 @@ export class UserIdRequestParamsDto {
   }
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   _id: string;
 }
 

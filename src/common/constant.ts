@@ -17,5 +17,7 @@ export const CONSTANTS = {
     SUCCESS: "SUCCESS",
     FAILURE: "FAILURE"
   },
-  BEARER_HEADER_AUTHORIZE: "Bearer "
+  BEARER_HEADER_AUTHORIZE: "Bearer ",
+  AUTH_JWT: 'jwt',
+  AUTH_LOCAL: 'local',
 };
