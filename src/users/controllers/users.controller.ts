@@ -3,7 +3,6 @@ import { AuthGuard } from "@nestjs/passport";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "auth/roles.decorator";
 import { CONSTANTS } from "common/constant";
-import { RoleDto } from "roles/dtos/roles.dto";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { Utils } from "utils";
@@ -42,7 +41,7 @@ export class UsersController {
       if (userIdDto._id !== userDto._id) throw new UnauthorizedException();
     }
     delete userDto.password;
-    return this.usersService.updateUser({ ...userDto, _id: userIdDto._id });
+    return this.usersService.updateUser(userIdDto._id, { ...userDto, _id: userIdDto._id });
   }
 
   /* Delete User */
