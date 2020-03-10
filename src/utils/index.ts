@@ -1,5 +1,6 @@
 import { CONSTANTS } from "common/constant";
 import { v1 as uuidv1 } from "uuid";
+import { JwtService } from "@nestjs/jwt";
 
 const bcrypt = require("bcryptjs");
 
@@ -31,14 +32,5 @@ export const Utils = {
       })
     }
     return result;
-  },
-  decodeJwtAuthorization: request => {
-    const authorization = request.headers['authorization'];
-    if (!authorization) return null;
-    const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, "");
-    return this.jwtService.decode(jwt);
-  },
-  getRolesFromJwt: request => {
-    return Utils.decodeJwtAuthorization(request).roles;
   }
 };

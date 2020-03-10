@@ -1,7 +1,8 @@
 import { BaseEntityDto } from "base/base-entity.dto";
-import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsUUID, IsIn } from "class-validator";
 import { RoleDto } from "roles/dtos/roles.dto";
 import { Column, Entity, Index } from "typeorm";
+import { CONSTANTS } from "common/constant";
 
 export class UserIdRequestParamsDto {
   constructor(userId) {
@@ -46,6 +47,11 @@ export class UserDto extends BaseEntityDto {
   @IsNotEmpty()
   @Column({ unique: true })
   email: string;
+
+  @IsOptional()
+  @IsUUID()
+  @Column()
+  assignerId: string;
 
   @IsEmpty()
   @Column({

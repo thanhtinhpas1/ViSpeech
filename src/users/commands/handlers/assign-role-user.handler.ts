@@ -13,9 +13,9 @@ export class AssignRoleUserHandler implements ICommandHandler {
 
     async execute(command: any): Promise<any> {
         Logger.log('Async AssignRoleHandler...', 'AssignRoleCommand');
-        const {userId, roleName} = command;
+        const {userId, roleName, assignerId} = command;
         const user = this.publisher.mergeObjectContext(
-            await this.repository.assignRoleUser(userId, roleName),
+            await this.repository.assignRoleUser(userId, roleName, assignerId),
         );
         user.commit();
     }

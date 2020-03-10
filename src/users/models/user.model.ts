@@ -28,21 +28,21 @@ export class User extends AggregateRoot {
     this.apply(new UserCreatedEvent(transactionId, this.data));
   }
 
-  updateUser(transactionId: string) {
-    this.apply(new UserUpdatedEvent(transactionId, this.data));
+  updateUser(updatedBy: string, roles: string[]) {
+    this.apply(new UserUpdatedEvent(updatedBy, roles, this.data));
   }
 
   welcomeUser() {
     this.apply(new UserWelcomedEvent(this.id));
   }
 
-  deleteUser(transactionId: string) {
-    this.apply(new UserDeletedEvent(transactionId, this.id));
+  deleteUser(updatedBy: string, roles: string[]) {
+    this.apply(new UserDeletedEvent(updatedBy, roles, this.id));
   }
 
-  assignRoleUser(userId, roleName) {
+  assignRoleUser(userId, roleName, assignerId) {
     try {
-      this.apply(new AssignedRoleEvent(userId, roleName));
+      this.apply(new AssignedRoleEvent(userId, roleName, assignerId));
     } catch (e) {
       Logger.error(e, '', '[UserModel] assignRoleUser');
     }

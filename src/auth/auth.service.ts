@@ -4,6 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 import { UserDto } from "users/dtos/users.dto";
 import { Utils } from "utils";
 import { FindUserByUsernameQuery, FindUserQuery } from "../users/queries/impl/find-user.query";
+import { CONSTANTS } from "common/constant";
 
 @Injectable()
 export class AuthService {
@@ -42,4 +43,12 @@ export class AuthService {
   async findUserByUsername(username: string): Promise<UserDto> {
     return await this.queryBus.execute(new FindUserByUsernameQuery(username));
   }
+
+  decode(request: any) {
+    const authorization = request.headers.authorization;
+    if (!authorization) return false;
+    const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, "");
+    const payload = this.jwtService.decode(jwt);
+    return payload;
+}
 }

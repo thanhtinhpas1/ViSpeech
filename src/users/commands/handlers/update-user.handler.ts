@@ -8,14 +8,14 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   constructor(
     private readonly repository: UserRepository,
     private readonly publisher: EventPublisher
-  ) {}
+  ) { }
 
   async execute(command: UpdateUserCommand) {
     Logger.log("Async UpdateUserHandler...", "UpdateUserCommand");
 
-    const { transactionId, userDto } = command;
+    const { updatedBy, roles, userDto } = command;
     const user = this.publisher.mergeObjectContext(
-      await this.repository.updateUser(transactionId, userDto)
+      await this.repository.updateUser(updatedBy, roles, userDto)
     );
     user.commit();
   }

@@ -1,32 +1,17 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { FindTokenQuery } from "tokens/queries/impl/find-token.query";
+import { GetTokensByUserIdQuery } from "tokens/queries/impl/get-tokens-by-userId";
+import { GetTokensQuery, GetTokenTypesQuery } from "tokens/queries/impl/get-tokens.query";
+import { Utils } from "utils";
 import { TokenDto, TokenIdRequestParamsDto } from "../dtos/tokens.dto";
 import { TokensService } from "../services/tokens.service";
-import { GetTokensQuery, GetTokenTypesQuery } from "tokens/queries/impl/get-tokens.query";
-import { GetTokensByUserIdQuery } from "tokens/queries/impl/get-tokens-by-userId";
-import { FindTokenQuery } from "tokens/queries/impl/find-token.query";
-import { Utils } from "utils";
 
 @Controller("tokens")
 @ApiTags("Tokens")
 export class TokensController {
-  constructor(private readonly tokensService: TokensService) {}
+  constructor(private readonly tokensService: TokensService) { }
 
-  /* Create Token */
-  /* {
-    "value": "abcdefgh123",
-    "userId": "8a4ee46a-dec2-46cb-bed2-ffd885b6f233",
-    "tokenType": "FREE"
-  } */
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Token"] })
   @ApiResponse({ status: 200, description: "Create Token." })

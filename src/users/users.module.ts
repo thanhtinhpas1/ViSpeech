@@ -5,18 +5,14 @@ import { AuthModule } from "auth/auth.module";
 import { EventStoreModule } from "core/event-store/event-store.module";
 import { CommandHandlers as TokenCommandHandlers } from "tokens/commands/handlers";
 import { TokenRepository } from "tokens/repository/token.repository";
+import { TokensModule } from "tokens/tokens.module";
 import { EventStore } from "../core/event-store/event-store";
 import { CommandHandlers } from "./commands/handlers";
 import { UsersController } from "./controllers/users.controller";
 import { UserDto } from "./dtos/users.dto";
 import { EventHandlers } from "./events/handlers";
 import { AssignedRoleEvent } from "./events/impl/role-assigned.event";
-import {
-  UserCreationStartedEvent,
-  UserCreatedFailEvent,
-  UserCreatedEvent,
-  UserCreatedSuccessEvent,
-} from "./events/impl/user-created.event";
+import { UserCreatedEvent, UserCreatedFailEvent, UserCreatedSuccessEvent, UserCreationStartedEvent } from "./events/impl/user-created.event";
 import { UserDeletedEvent } from "./events/impl/user-deleted.event";
 import { UserUpdatedEvent } from "./events/impl/user-updated.event";
 import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";
@@ -24,7 +20,6 @@ import { QueryHandlers } from "./queries/handler";
 import { UserRepository } from "./repository/user.repository";
 import { UsersSagas } from "./sagas/users.sagas";
 import { UsersService } from "./services/users.service";
-import { TokensModule } from "tokens/tokens.module"
 
 @Module({
   imports: [
@@ -58,7 +53,7 @@ export class UsersModule implements OnModuleInit {
 
   async onModuleInit() {
     /** ------------ */
-    this.eventStore.setEventHandlers({...this.eventHandlers, ...TokensModule.eventHandlers});
+    this.eventStore.setEventHandlers({ ...this.eventHandlers, ...TokensModule.eventHandlers });
     this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
     this.event$.publisher = this.eventStore;
     /** ------------ */
@@ -78,10 +73,9 @@ export class UsersModule implements OnModuleInit {
     UserCreatedFailEvent: (transactionId, data, error) =>
       new UserCreatedFailEvent(transactionId, data, error),
 
-    UserDeletedEvent: (transactionId, data) =>
-      new UserDeletedEvent(transactionId, data),
-    UserUpdatedEvent: (transactionId, data) => new UserUpdatedEvent(transactionId, data),
+    UserDeletedEvent: (updatedBy, roles, data) => new UserDeletedEvent(updatedBy, roles, data),
+    UserUpdatedEvent: (updatedBy, roles, data) => new UserUpdatedEvent(updatedBy, roles, data),
     UserWelcomedEvent: data => new UserWelcomedEvent(data),
-    AssignedRoleEvent: (transactionId, roles) => new AssignedRoleEvent(transactionId, roles),
+    AssignedRoleEvent: (transactionId, roles, assignerId) => new AssignedRoleEvent(transactionId, roles, assignerId),
   };
 }

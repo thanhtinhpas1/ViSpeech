@@ -19,12 +19,12 @@ export class UsersService {
     return await this.commandBus.execute(new CreateUserStartCommand(transactionId, userDto));
   }
 
-  async updateUser(transactionId: string, userDto: UserDto) {
-    return await this.commandBus.execute(new UpdateUserCommand(transactionId, userDto));
+  async updateUser(updatedBy: string, roles: string[], userDto: UserDto) {
+    return await this.commandBus.execute(new UpdateUserCommand(updatedBy, roles, userDto));
   }
 
-  async deleteUser(transactionId: string, userIdDto: UserIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteUserCommand(transactionId, userIdDto));
+  async deleteUser(updatedBy: string, roles: string[], userIdDto: UserIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteUserCommand(updatedBy, roles, userIdDto));
   }
 
   async findUsers(getUsersQuery: GetUsersQuery) {
@@ -38,7 +38,7 @@ export class UsersService {
     return await this.queryBus.execute(query);
   }
 
-  async assignRoleUser(userId: string, roleName: string[]) {
-    return await this.commandBus.execute(new AssignRoleUserCommand(userId, roleName));
+  async assignRoleUser(userId: string, roleName: string[], assignerId: string) {
+    return await this.commandBus.execute(new AssignRoleUserCommand(userId, roleName, assignerId));
   }
 }

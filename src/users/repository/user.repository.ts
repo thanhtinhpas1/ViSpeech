@@ -18,16 +18,16 @@ export class UserRepository {
     return user;
   }
 
-  async updateUser(transactionId: string, userDto: UserDto) {
+  async updateUser(updatedBy: string, roles: string[], userDto: UserDto) {
     const user = new User(undefined);
     user.setData(userDto);
-    user.updateUser(transactionId);
+    user.updateUser(updatedBy, roles);
     return user;
   }
 
-  async deleteUser(transactionId: string, userId: string) {
+  async deleteUser(updatedBy: string, roles: string[], userId: string) {
     const user = new User(userId);
-    user.deleteUser(transactionId);
+    user.deleteUser(updatedBy, roles);
     return user;
   }
 
@@ -37,9 +37,9 @@ export class UserRepository {
     return user;
   }
 
-  async assignRoleUser(userId: string, roleName: string) {
+  async assignRoleUser(userId: string, roleName: string, assignerId: string) {
     const user = new User(userId);
-    user.assignRoleUser(userId, roleName);
+    user.assignRoleUser(userId, roleName, assignerId);
     return user;
   }
 }

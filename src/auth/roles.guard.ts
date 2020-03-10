@@ -2,10 +2,7 @@ import { CanActivate, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { QueryBus } from "@nestjs/cqrs";
 import { JwtService } from "@nestjs/jwt";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
 import { CONSTANTS } from "../common/constant";
-import { UserDto } from "../users/dtos/users.dto";
 import { FindUserQuery } from "../users/queries/impl/find-user.query";
 
 @Injectable()
@@ -13,8 +10,6 @@ export class RolesGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly jwtService: JwtService,
-    @InjectRepository(UserDto)
-    private readonly userRepo: Repository<UserDto>,
     private readonly queryBus: QueryBus
   ) { }
 
