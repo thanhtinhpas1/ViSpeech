@@ -9,6 +9,7 @@ export const ROLES = {
   ADMIN: 'ADMIN',
   USER: 'USER',
   MANAGER_USER: 'MANAGER_USER',
+  CSR_USER: 'CSR_USER',
 }
 export const TOKEN_TYPE = {
   FREE: 'FREE',

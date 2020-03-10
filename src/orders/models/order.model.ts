@@ -1,5 +1,5 @@
 import { AggregateRoot } from "@nestjs/cqrs";
-import { OrderCreatedEvent } from "../events/impl/order-created.event";
+import { OrderCreatedEvent, OrderCreationStartedEvent } from "../events/impl/order-created.event";
 import { OrderUpdatedEvent } from "../events/impl/order-updated.event";
 import { OrderDeletedEvent } from "../events/impl/order-deleted.event";
 import { OrderWelcomedEvent } from "../events/impl/order-welcomed.event";
@@ -18,7 +18,7 @@ export class Order extends AggregateRoot {
   }
 
   createOrderStart(transactionId: string) {
-    this.apply(new OrderCreatedEvent(transactionId, this.data));
+    this.apply(new OrderCreationStartedEvent(transactionId, this.data));
   }
 
   createOrder(transactionId: string) {

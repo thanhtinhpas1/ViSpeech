@@ -101,3 +101,5 @@ api/swagger-spec/swagger.json
 
 # Event Store
 eventstore/
+
+.vscode/

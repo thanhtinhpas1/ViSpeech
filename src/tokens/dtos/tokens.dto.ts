@@ -84,8 +84,7 @@ export class TokenDto extends BaseEntityDto {
     CONSTANTS.TOKEN_TYPE.FREE,
     CONSTANTS.TOKEN_TYPE["50-MINS"],
     CONSTANTS.TOKEN_TYPE["200-MINS"],
-    CONSTANTS.TOKEN_TYPE["500-MINS"],
-    CONSTANTS.TOKEN_TYPE.DEAL
+    CONSTANTS.TOKEN_TYPE["500-MINS"]
   ])
   tokenType: string;
 

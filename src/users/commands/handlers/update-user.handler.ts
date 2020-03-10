@@ -13,9 +13,9 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
   async execute(command: UpdateUserCommand) {
     Logger.log("Async UpdateUserHandler...", "UpdateUserCommand");
 
-    const { userDto } = command;
+    const { transactionId, userDto } = command;
     const user = this.publisher.mergeObjectContext(
-      await this.repository.updateUser(userDto)
+      await this.repository.updateUser(transactionId, userDto)
     );
     user.commit();
   }

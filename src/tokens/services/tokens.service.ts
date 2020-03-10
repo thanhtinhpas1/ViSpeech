@@ -25,8 +25,8 @@ export class TokensService {
     return await this.commandBus.execute(new UpdateTokenCommand(tokenDto));
   }
 
-  async deleteToken(tokenIdDto: TokenIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteTokenCommand(tokenIdDto));
+  async deleteToken(transactionId: string, tokenIdDto: TokenIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteTokenCommand(transactionId, tokenIdDto));
   }
 
   async findTokens(getTokensQuery: GetTokensQuery) {

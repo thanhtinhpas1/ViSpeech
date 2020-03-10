@@ -12,14 +12,15 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
   ) {}
 
   async handle(event: UserDeletedEvent) {
+    Logger.log(event, "UserDeletedEvent");
+    const userId = event.userId;
+    const transactionId = event.transactionId;
     try {
-      Logger.log(event.transactionId, "UserDeletedEvent");
-      const userId = event.userId;
-      const transactionId = event.transactionId;
       if (userId) {
-        return await this.repository.delete({ _id: userId });
+        await this.repository.delete({ _id: userId });
+        return;
       }
-      return await getMongoRepository(UserDto).deleteOne({
+      await getMongoRepository(UserDto).deleteOne({
         transactionId: transactionId
       });
     } catch (error) {

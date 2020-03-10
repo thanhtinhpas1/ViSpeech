@@ -19,9 +19,8 @@ export class UsersService {
     return await this.commandBus.execute(new CreateUserStartCommand(transactionId, userDto));
   }
 
-  async updateUser(userDto: UserDto) {
-    Logger.log(userDto, "service")
-    return await this.commandBus.execute(new UpdateUserCommand(userDto));
+  async updateUser(transactionId: string, userDto: UserDto) {
+    return await this.commandBus.execute(new UpdateUserCommand(transactionId, userDto));
   }
 
   async deleteUser(transactionId: string, userIdDto: UserIdRequestParamsDto) {

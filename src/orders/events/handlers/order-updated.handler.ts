@@ -19,6 +19,7 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
     try {
       Logger.log(event.transactionId, "OrderUpdatedEvent"); // write here
       const { _id, ...orderInfo } = event.orderDto;
+      orderInfo.tokenTypeId = null;
       const formattedOrderInfo = Utils.removeNullOrEmptyPropertyOfObj(orderInfo);
       Logger.log(formattedOrderInfo, "OrderUpdatedEvent formattedOrderInfo"); // write here
       return await this.repository.update({ _id }, formattedOrderInfo);

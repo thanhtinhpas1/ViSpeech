@@ -59,7 +59,8 @@ export class TokensController {
   @ApiResponse({ status: 200, description: "Delete Token." })
   @Delete(":_id")
   async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
-    return this.tokensService.deleteToken(tokenIdDto);
+    const transactionId = Utils.getUuid();
+    return this.tokensService.deleteToken(transactionId, tokenIdDto);
   }
 
   /* List Tokens */

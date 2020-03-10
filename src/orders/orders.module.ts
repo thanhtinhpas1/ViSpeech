@@ -11,7 +11,7 @@ import { CommandHandlers } from "./commands/handlers";
 import { OrdersController } from "./controllers/orders.controller";
 import { OrderDto } from "./dtos/orders.dto";
 import { EventHandlers } from "./events/handlers";
-import { OrderCreatedEvent, OrderCreationStartedEvent } from "./events/impl/order-created.event";
+import { OrderCreatedEvent, OrderCreationStartedEvent, OrderCreatedSuccessEvent, OrderCreatedFailEvent } from "./events/impl/order-created.event";
 import { OrderDeletedEvent } from "./events/impl/order-deleted.event";
 import { OrderUpdatedEvent } from "./events/impl/order-updated.event";
 import { OrderWelcomedEvent } from "./events/impl/order-welcomed.event";
@@ -19,6 +19,7 @@ import { QueryHandlers } from "./queries/handler";
 import { OrderRepository } from "./repository/order.repository";
 import { OrdersSagas } from "./sagas/orders.sagas";
 import { OrdersService } from "./services/orders.service";
+import { TokensModule } from "tokens/tokens.module";
 
 @Module({
   imports: [
@@ -51,12 +52,12 @@ export class OrdersModule implements OnModuleInit {
   ) { }
 
   onModuleInit() {
-    this.eventStore.setEventHandlers(this.eventHandlers);
+    this.eventStore.setEventHandlers({...this.eventHandlers, ...TokensModule.eventHandlers});
     this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
     this.event$.publisher = this.eventStore;
     /** ------------ */
     this.event$.register(EventHandlers);
-    this.command$.register(CommandHandlers);
+    this.command$.register([...CommandHandlers, ...TokenCommandHandlers]);
     this.query$.register(QueryHandlers);
     this.event$.registerSagas([OrdersSagas]);
   }
@@ -64,6 +65,8 @@ export class OrdersModule implements OnModuleInit {
   eventHandlers = {
     OrderCreationStartedEvent: (transactionId, data) => new OrderCreationStartedEvent(transactionId, data),
     OrderCreatedEvent: (transactionId, data) => new OrderCreatedEvent(transactionId, data),
+    OrderCreatedSuccessEvent: (transactionId, data) => new OrderCreatedSuccessEvent(transactionId, data),
+    OrderCreatedFailEvent: (transactionId, data) => new OrderCreatedFailEvent(transactionId, data),
     OrderDeletedEvent: data => new OrderDeletedEvent(data),
     OrderUpdatedEvent: (transactionId, data) => new OrderUpdatedEvent(transactionId, data),
     OrderWelcomedEvent: data => new OrderWelcomedEvent(data)

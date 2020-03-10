@@ -15,9 +15,17 @@ export class UserCreatedEvent implements IEvent {
   ) {}
 }
 
+export class UserCreatedSuccessEvent implements IEvent {
+  constructor(
+    public readonly transactionId: string,
+    public readonly userDto: UserDto
+  ) {}
+}
+
 export class UserCreatedFailEvent implements IEvent {
   constructor(
     public readonly transactionId: string,
+    public readonly userDto: UserDto,
     public readonly error: object
   ) {}
 }

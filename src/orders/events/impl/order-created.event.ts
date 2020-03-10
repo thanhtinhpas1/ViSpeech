@@ -15,6 +15,13 @@ export class OrderCreatedEvent implements IEvent {
   ) {}
 }
 
+export class OrderCreatedSuccessEvent implements IEvent {
+  constructor(
+    public readonly transactionId: string,
+    public readonly orderDto: OrderDto
+  ) {}
+}
+
 export class OrderCreatedFailEvent implements IEvent {
   constructor(
     public readonly transactionId: string,

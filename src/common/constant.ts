@@ -9,8 +9,7 @@ export const CONSTANTS = {
     "FREE": "FREE",
     "50-MINS": "50-MINS",
     "200-MINS": "200-MINS",
-    "500-MINS": "500-MINS",
-    "DEAL": "DEAL"
+    "500-MINS": "500-MINS"
   },
   STATUS: {
     PENDING: "PENDING",
