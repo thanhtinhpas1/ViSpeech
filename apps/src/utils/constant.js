@@ -16,7 +16,6 @@ export const TOKEN_TYPE = {
   '50-MINS': '50-MINS',
   '200-MINS': '200-MINS',
   '500-MINS': '500-MINS',
-  DEAL: 'DEAL',
 }
 export const STATUS = {
   PENDING: 'PENDING',

@@ -1,0 +1,39 @@
+::selection {
+  background-color:#012690;
+  color: #fff;
+}
+::-moz-selection {
+  background-color:#012690;
+  color: #fff;
+}
+
+
+.btn-theme:hover,
+.btn-theme:focus,
+.btn-theme:active,
+.theme-color{
+  color:#012690;
+}
+
+
+.price-table.active .price-head,
+.fixed-header.header,
+.ul-list-style li:after,
+.btn-theme,
+.theme-bg {
+  background:#012690;
+}
+
+.btn-theme {
+	border-color:#012690;
+}
+.theme-g-bg{
+	background-image: -webkit-radial-gradient(100% 100%,ellipse farthest-side,#dbf6c8 20%,#1cafc6 50%,#012690 110%);
+    background-image: radial-gradient(ellipse farthest-side at 100% 100%,#dbf6c8 20%,#1cafc6 50%,#012690 110%);
+}
+
+@media (max-width: 991px){
+	.header	{
+		background:#012690;
+	}
+}

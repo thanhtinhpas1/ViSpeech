@@ -21,6 +21,8 @@ export class UsersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create User"] })
   @ApiResponse({ status: 200, description: "Create User." })
+  @UseGuards(AuthGuard('jwt'))
+  @Roles([CONSTANTS.ROLE.ADMIN])
   @Post()
   async createUser(@Body() userDto: UserDto): Promise<UserDto> {
     const transactionId = Utils.getUuid();
@@ -32,6 +34,7 @@ export class UsersController {
   @ApiOperation({ tags: ["Update User"] })
   @ApiResponse({ status: 200, description: "Update User." })
   @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.USER])
   @Put(":_id")
   async updateUser(
     @Param() userIdDto: UserIdRequestParamsDto,

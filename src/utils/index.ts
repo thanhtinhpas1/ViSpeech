@@ -17,8 +17,11 @@ export const Utils = {
     return bcrypt.compare(oldPassword, newPassword);
   },
   formatUserRoles: roles => {
-    if (!roles || !Array.isArray(roles)) {
+    if (!roles) {
       return [{ name: CONSTANTS.ROLE.USER }];
+    }
+    if (!Array.isArray(roles)) {
+      return [roles];
     }
     return roles;
   },
