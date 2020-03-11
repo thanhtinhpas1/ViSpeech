@@ -18,28 +18,28 @@ export class UserRepository {
     return user;
   }
 
-  async updateUser(updatedBy: string, roles: string[], userDto: UserDto) {
+  async updateUser(transactionId: string, updatedBy: string, roleNames: string[], userDto: UserDto) {
     const user = new User(undefined);
     user.setData(userDto);
-    user.updateUser(updatedBy, roles);
+    user.updateUser(transactionId, updatedBy, roleNames);
     return user;
   }
 
-  async deleteUser(updatedBy: string, roles: string[], userId: string) {
+  async deleteUser(transactionId: string, updatedBy: string, roleNames: string[], userId: string) {
     const user = new User(userId);
-    user.deleteUser(updatedBy, roles);
+    user.deleteUser(transactionId, updatedBy, roleNames);
     return user;
   }
 
-  async welcomeUser(userId: string) {
+  async welcomeUser(transactionId: string, userId: string) {
     const user = new User(userId);
-    user.welcomeUser();
+    user.welcomeUser(transactionId);
     return user;
   }
 
-  async assignRoleUser(userId: string, roleName: string, assignerId: string) {
+  async assignUserRole(transactionId: string, userId: string, roleNames: string[], assignerId: string) {
     const user = new User(userId);
-    user.assignRoleUser(userId, roleName, assignerId);
+    user.assignUserRole(transactionId, userId, roleNames, assignerId);
     return user;
   }
 }

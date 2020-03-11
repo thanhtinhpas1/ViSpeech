@@ -1,8 +1,7 @@
 import { BaseEntityDto } from "base/base-entity.dto";
-import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsUUID, IsIn } from "class-validator";
+import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 import { RoleDto } from "roles/dtos/roles.dto";
 import { Column, Entity, Index } from "typeorm";
-import { CONSTANTS } from "common/constant";
 
 export class UserIdRequestParamsDto {
   constructor(userId) {
@@ -14,10 +13,10 @@ export class UserIdRequestParamsDto {
   _id: string;
 }
 
-export class AssignRoleUserBody {
+export class AssignUserRoleBody {
   @IsNotEmpty()
   @IsArray()
-  roleName: string[];
+  roleNames: string[];
 }
 
 @Entity("users")

@@ -3,7 +3,9 @@ import { UserIdRequestParamsDto } from "users/dtos/users.dto";
 
 export class DeleteUserCommand implements ICommand {
   constructor(
+    public readonly transactionId: string,
     public readonly updatedBy: string,
     public readonly roles: string[],
-    public readonly userIdDto: UserIdRequestParamsDto) { }
+    public readonly userIdDto: UserIdRequestParamsDto
+  ) {}
 }

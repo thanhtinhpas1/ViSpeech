@@ -53,8 +53,9 @@ export class UsersSagas {
       ofType(FreeTokenCreatedSuccessEvent),
       map((event: FreeTokenCreatedSuccessEvent) => {
         Logger.log("Inside [UsersSagas] freeTokenCreatedSuccess Saga", "UsersSagas");
+        const transactionId = event.transactionId;
         const userId = event.tokenDto.userId;
-        return new WelcomeUserCommand(userId);
+        return new WelcomeUserCommand(transactionId, userId);
       })
     );
   };
@@ -68,7 +69,7 @@ export class UsersSagas {
 
         const commands = [
           new DeleteTokenCommand(event.transactionId, null),
-          new DeleteUserCommand(event.transactionId, null),
+          new DeleteUserCommand(event.transactionId, null, null, null),
         ]
 
         return commands;

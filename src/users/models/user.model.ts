@@ -1,6 +1,6 @@
 import { Logger } from "@nestjs/common";
 import { AggregateRoot } from "@nestjs/cqrs";
-import { AssignedRoleEvent } from "users/events/impl/role-assigned.event";
+import { UserRoleAssignedEvent } from "users/events/impl/user-role-assigned.event";
 import {
   UserCreationStartedEvent,
   UserCreatedEvent
@@ -28,23 +28,23 @@ export class User extends AggregateRoot {
     this.apply(new UserCreatedEvent(transactionId, this.data));
   }
 
-  updateUser(updatedBy: string, roles: string[]) {
-    this.apply(new UserUpdatedEvent(updatedBy, roles, this.data));
+  updateUser(transactionId: string, updatedBy: string, roleNames: string[]) {
+    this.apply(new UserUpdatedEvent(transactionId, updatedBy, roleNames, this.data));
   }
 
-  welcomeUser() {
-    this.apply(new UserWelcomedEvent(this.id));
+  deleteUser(transactionId: string, updatedBy: string, roles: string[]) {
+    this.apply(new UserDeletedEvent(transactionId, updatedBy, roles, this.id));
+  }
+  
+  welcomeUser(transactionId: string) {
+    this.apply(new UserWelcomedEvent(transactionId, this.id));
   }
 
-  deleteUser(updatedBy: string, roles: string[]) {
-    this.apply(new UserDeletedEvent(updatedBy, roles, this.id));
-  }
-
-  assignRoleUser(userId, roleName, assignerId) {
+  assignUserRole(transactionId: string, userId: string, roleNames: string[], assignerId: string) {
     try {
-      this.apply(new AssignedRoleEvent(userId, roleName, assignerId));
+      this.apply(new UserRoleAssignedEvent(transactionId, userId, roleNames, assignerId));
     } catch (e) {
-      Logger.error(e, '', '[UserModel] assignRoleUser');
+      Logger.error(e, '', '[UserModel] assignUserRole');
     }
   }
 }

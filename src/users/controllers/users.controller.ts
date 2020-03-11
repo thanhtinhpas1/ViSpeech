@@ -5,9 +5,8 @@ import { Roles } from "auth/roles.decorator";
 import { CONSTANTS } from "common/constant";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
-import { AssignRoleUserBody, UserDto, UserIdRequestParamsDto } from "../dtos/users.dto";
+import { AssignUserRoleBody, UserDto, UserIdRequestParamsDto } from "../dtos/users.dto";
 import { UsersService } from "../services/users.service";
-import { JwtService } from "@nestjs/jwt";
 import { Utils } from "utils";
 import { AuthService } from "auth/auth.service";
 
@@ -41,13 +40,14 @@ export class UsersController {
     @Body() userDto: UserDto,
     @Req() request
   ): Promise<UserDto> {
+    const transactionId = Utils.getUuid();
     const payload = this.authService.decode(request);
     const roles = payload['roles'] || [];
     if (!roles.include(CONSTANTS.ROLE.ADMIN) && !roles.include(CONSTANTS.ROLE.MANAGER_USER)) {
       if (userIdDto._id !== userDto._id) throw new UnauthorizedException();
     }
     delete userDto.password;
-    return this.usersService.updateUser(payload['id'], roles, { ...userDto, _id: userIdDto._id });
+    return this.usersService.updateUser(transactionId, payload['id'], roles, { ...userDto, _id: userIdDto._id });
   }
 
   /* Delete User */
@@ -59,9 +59,10 @@ export class UsersController {
   @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Delete(":_id")
   async deleteUser(@Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
+    const transactionId = Utils.getUuid();
     const payload = this.authService.decode(request);
     const roles = payload['roles'] || [];
-    return this.usersService.deleteUser(payload['id'], roles, userIdDto);
+    return this.usersService.deleteUser(transactionId, payload['id'], roles, userIdDto);
   }
 
   /* List Users */
@@ -94,13 +95,14 @@ export class UsersController {
   @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
   @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Put(':_id/roles')
-  async assignRoleToUser(@Body() body: AssignRoleUserBody, @Param() param: UserIdRequestParamsDto, @Req() request) {
+  async assignRoleToUser(@Body() body: AssignUserRoleBody, @Param() param: UserIdRequestParamsDto, @Req() request) {
+    const transactionId = Utils.getUuid();
     const payload = this.authService.decode(request);
     const roles = payload['roles'] || [];
     if (roles.includes(CONSTANTS.ROLE.MANAGER_USER)) {
-      if (body.roleName.includes(CONSTANTS.ROLE.ADMIN)) throw new ForbiddenException();
+      if (body.roleNames.includes(CONSTANTS.ROLE.ADMIN)) throw new ForbiddenException();
     }
     const assignerId = payload['id'];
-    return this.usersService.assignRoleUser(param._id, body.roleName, assignerId);
+    return this.usersService.assignUserRole(transactionId, param._id, body.roleNames, assignerId);
   }
 }

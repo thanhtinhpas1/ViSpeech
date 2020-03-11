@@ -22,7 +22,7 @@ export class OrderCreatedSuccessEvent implements IEvent {
   ) {}
 }
 
-export class OrderCreatedFailEvent implements IEvent {
+export class OrderCreatedFailedEvent implements IEvent {
   constructor(
     public readonly transactionId: string,
     public readonly error: object

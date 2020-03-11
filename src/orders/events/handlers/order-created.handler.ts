@@ -3,7 +3,7 @@ import {
   OrderCreatedEvent,
   OrderCreationStartedEvent,
   OrderCreatedSuccessEvent,
-  OrderCreatedFailEvent
+  OrderCreatedFailedEvent
 } from "../impl/order-created.event";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -31,6 +31,7 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
     Logger.log(event, "OrderCreatedEvent");
     const order = event.orderDto;
     const transactionId = event.transactionId;
+
     try {
       const tokenTypeDto = await getMongoRepository(TokenTypeDto).find({
         _id: order.tokenTypeId.toString()
@@ -41,7 +42,7 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
       await this.repository.save(order);
       this.eventBus.publish(new OrderCreatedSuccessEvent(transactionId, order));
     } catch (error) {
-      this.eventBus.publish(new OrderCreatedFailEvent(transactionId, error));
+      this.eventBus.publish(new OrderCreatedFailedEvent(transactionId, error));
     }
   }
 }
@@ -54,10 +55,10 @@ export class OrderCreatedSuccessHandler
   }
 }
 
-@EventsHandler(OrderCreatedFailEvent)
-export class OrderCreatedFailHandler
-  implements IEventHandler<OrderCreatedFailEvent> {
-  handle(event: OrderCreatedFailEvent) {
-    // Logger.log(event, "OrderCreatedFailEvent");
+@EventsHandler(OrderCreatedFailedEvent)
+export class OrderCreatedFailedHandler
+  implements IEventHandler<OrderCreatedFailedEvent> {
+  handle(event: OrderCreatedFailedEvent) {
+    // Logger.log(event, "OrderCreatedFailedEvent");
   }
 }

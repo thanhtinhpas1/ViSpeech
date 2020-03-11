@@ -11,10 +11,23 @@ import { CommandHandlers } from "./commands/handlers";
 import { UsersController } from "./controllers/users.controller";
 import { UserDto } from "./dtos/users.dto";
 import { EventHandlers } from "./events/handlers";
-import { AssignedRoleEvent } from "./events/impl/role-assigned.event";
-import { UserCreatedEvent, UserCreatedFailEvent, UserCreatedSuccessEvent, UserCreationStartedEvent } from "./events/impl/user-created.event";
-import { UserDeletedEvent } from "./events/impl/user-deleted.event";
-import { UserUpdatedEvent } from "./events/impl/user-updated.event";
+import { UserRoleAssignedEvent } from "./events/impl/user-role-assigned.event";
+import {
+  UserCreatedEvent,
+  UserCreatedFailedEvent,
+  UserCreatedSuccessEvent,
+  UserCreationStartedEvent
+} from "./events/impl/user-created.event";
+import {
+  UserDeletedEvent,
+  UserDeletedSuccessEvent,
+  UserDeletedFailedEvent
+} from "./events/impl/user-deleted.event";
+import {
+  UserUpdatedEvent,
+  UserUpdatedSuccessEvent,
+  UserUpdatedFailedEvent
+} from "./events/impl/user-updated.event";
 import { UserWelcomedEvent } from "./events/impl/user-welcomed.event";
 import { QueryHandlers } from "./queries/handler";
 import { UserRepository } from "./repository/user.repository";
@@ -25,7 +38,7 @@ import { UsersService } from "./services/users.service";
   imports: [
     TypeOrmModule.forFeature([UserDto]),
     forwardRef(() => AuthModule),
-    EventStoreModule.forFeature(),
+    EventStoreModule.forFeature()
   ],
   controllers: [UsersController],
   providers: [
@@ -38,22 +51,28 @@ import { UsersService } from "./services/users.service";
     /*** REPOSITORY */
     UserRepository,
     TokenRepository,
-    QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+    QueryBus,
+    EventBus,
+    EventStore,
+    CommandBus,
+    EventPublisher
   ],
   exports: [UsersService]
 })
 export class UsersModule implements OnModuleInit {
-
   constructor(
     private readonly command$: CommandBus,
     private readonly query$: QueryBus,
     private readonly event$: EventBus,
     private readonly eventStore: EventStore
-  ) { }
+  ) {}
 
   async onModuleInit() {
     /** ------------ */
-    this.eventStore.setEventHandlers({ ...this.eventHandlers, ...TokensModule.eventHandlers });
+    this.eventStore.setEventHandlers({
+      ...this.eventHandlers,
+      ...TokensModule.eventHandlers
+    });
     this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
     this.event$.publisher = this.eventStore;
     /** ------------ */
@@ -64,18 +83,59 @@ export class UsersModule implements OnModuleInit {
   }
 
   eventHandlers = {
+    // create
     UserCreationStartedEvent: (transactionId, data) =>
       new UserCreationStartedEvent(transactionId, data),
     UserCreatedEvent: (transactionId, data) =>
       new UserCreatedEvent(transactionId, data),
     UserCreatedSuccessEvent: (transactionId, data) =>
       new UserCreatedSuccessEvent(transactionId, data),
-    UserCreatedFailEvent: (transactionId, data, error) =>
-      new UserCreatedFailEvent(transactionId, data, error),
+    UserCreatedFailedEvent: (transactionId, data, error) =>
+      new UserCreatedFailedEvent(transactionId, data, error),
 
-    UserDeletedEvent: (updatedBy, roles, data) => new UserDeletedEvent(updatedBy, roles, data),
-    UserUpdatedEvent: (updatedBy, roles, data) => new UserUpdatedEvent(updatedBy, roles, data),
-    UserWelcomedEvent: data => new UserWelcomedEvent(data),
-    AssignedRoleEvent: (transactionId, roles, assignerId) => new AssignedRoleEvent(transactionId, roles, assignerId),
+    // update
+    UserUpdatedEvent: (transactionId, updatedBy, roleNames, data) =>
+      new UserUpdatedEvent(transactionId, updatedBy, roleNames, data),
+    UserUpdatedSuccessEvent: (transactionId, updatedBy, roleNames, data) =>
+      new UserUpdatedSuccessEvent(transactionId, updatedBy, roleNames, data),
+    UserUpdatedFailedEvent: (
+      transactionId,
+      updatedBy,
+      roleNames,
+      data,
+      error
+    ) =>
+      new UserUpdatedFailedEvent(
+        transactionId,
+        updatedBy,
+        roleNames,
+        data,
+        error
+      ),
+
+    // delete
+    UserDeletedEvent: (transactionId, updatedBy, roleNames, data) =>
+      new UserDeletedEvent(transactionId, updatedBy, roleNames, data),
+    UserDeletedSuccessEvent: (transactionId, updatedBy, roleNames, data) =>
+      new UserDeletedSuccessEvent(transactionId, updatedBy, roleNames, data),
+    UserDeletedFailedEvent: (
+      transactionId,
+      updatedBy,
+      roleNames,
+      data,
+      error
+    ) =>
+      new UserDeletedFailedEvent(
+        transactionId,
+        updatedBy,
+        roleNames,
+        data,
+        error
+      ),
+
+    UserWelcomedEvent: (transactionId, data) =>
+      new UserWelcomedEvent(transactionId, data),
+    AssignedRoleEvent: (transactionId, userId, roleNames, assignerId) =>
+      new UserRoleAssignedEvent(transactionId, userId, roleNames, assignerId)
   };
 }

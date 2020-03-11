@@ -6,25 +6,41 @@ import { DeleteUserCommand } from "../commands/impl/delete-user.command";
 import { GetUsersQuery } from "users/queries/impl/get-users.query";
 import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { CreateUserStartCommand } from "users/commands/impl/create-user.command";
-import { AssignRoleUserCommand } from "users/commands/impl/assign-role-user.command";
+import { AssignUserRoleCommand } from "users/commands/impl/assign-user-role.command";
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
-  ) { }
+    private readonly queryBus: QueryBus
+  ) {}
 
   async createUserStart(transactionId: string, userDto: UserDto) {
-    return await this.commandBus.execute(new CreateUserStartCommand(transactionId, userDto));
+    return await this.commandBus.execute(
+      new CreateUserStartCommand(transactionId, userDto)
+    );
   }
 
-  async updateUser(updatedBy: string, roles: string[], userDto: UserDto) {
-    return await this.commandBus.execute(new UpdateUserCommand(updatedBy, roles, userDto));
+  async updateUser(
+    transactionId: string,
+    updatedBy: string,
+    roleNames: string[],
+    userDto: UserDto
+  ) {
+    return await this.commandBus.execute(
+      new UpdateUserCommand(transactionId, updatedBy, roleNames, userDto)
+    );
   }
 
-  async deleteUser(updatedBy: string, roles: string[], userIdDto: UserIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteUserCommand(updatedBy, roles, userIdDto));
+  async deleteUser(
+    transactionId: string,
+    updatedBy: string,
+    roleNames: string[],
+    userIdDto: UserIdRequestParamsDto
+  ) {
+    return await this.commandBus.execute(
+      new DeleteUserCommand(transactionId, updatedBy, roleNames, userIdDto)
+    );
   }
 
   async findUsers(getUsersQuery: GetUsersQuery) {
@@ -38,7 +54,14 @@ export class UsersService {
     return await this.queryBus.execute(query);
   }
 
-  async assignRoleUser(userId: string, roleName: string[], assignerId: string) {
-    return await this.commandBus.execute(new AssignRoleUserCommand(userId, roleName, assignerId));
+  async assignUserRole(
+    transactionId: string,
+    userId: string,
+    roleNames: string[],
+    assignerId: string
+  ) {
+    return await this.commandBus.execute(
+      new AssignUserRoleCommand(transactionId, userId, roleNames, assignerId)
+    );
   }
 }

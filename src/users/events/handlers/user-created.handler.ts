@@ -2,7 +2,7 @@ import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
 import {
   UserCreatedEvent,
   UserCreationStartedEvent,
-  UserCreatedFailEvent,
+  UserCreatedFailedEvent,
   UserCreatedSuccessEvent,
 } from "../impl/user-created.event";
 import { Logger } from "@nestjs/common";
@@ -29,6 +29,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     Logger.log(event, "UserCreatedEvent");
     const user = event.userDto;
     const transactionId = event.transactionId;
+
     try {
       user.password = Utils.hashPassword(user.password);
       const formattedRoles = Utils.formatUserRoles(user.roles);
@@ -38,7 +39,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
       const newUser = await getMongoRepository(UserDto).save(user);
       this.eventBus.publish(new UserCreatedSuccessEvent(event.transactionId, newUser))
     } catch (error) {
-      this.eventBus.publish(new UserCreatedFailEvent(event.transactionId, user, error))
+      this.eventBus.publish(new UserCreatedFailedEvent(event.transactionId, user, error))
     }
   }
 }
@@ -51,10 +52,10 @@ export class UserCreatedSuccessHandler
   }
 }
 
-@EventsHandler(UserCreatedFailEvent)
-export class UserCreatedFailHandler
-  implements IEventHandler<UserCreatedFailEvent> {
-  handle(event: UserCreatedFailEvent) {
-    // Logger.log(event, "UserCreatedFailEvent");
+@EventsHandler(UserCreatedFailedEvent)
+export class UserCreatedFailedHandler
+  implements IEventHandler<UserCreatedFailedEvent> {
+  handle(event: UserCreatedFailedEvent) {
+    // Logger.log(event, "UserCreatedFailedEvent");
   }
 }
