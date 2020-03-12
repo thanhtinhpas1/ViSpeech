@@ -20,6 +20,7 @@ import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokensService } from "./services/tokens.service";
 import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailEvent } from "./events/impl/free-token-created.event";
 import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from "./events/impl/ordered-token-created";
+import { AuthService } from "auth/auth.service";
 
 
 @Module({
@@ -34,6 +35,7 @@ import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedToken
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,
+    AuthService,
     TokenRepository,
     QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
   ],

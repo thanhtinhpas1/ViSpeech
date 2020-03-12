@@ -68,7 +68,7 @@ export class UsersSagas {
 
         const commands = [
           new DeleteTokenCommand(event.transactionId, null),
-          new DeleteUserCommand(event.transactionId, null),
+          // new DeleteUserCommand(event.transactionId, null),
         ]
 
         return commands;

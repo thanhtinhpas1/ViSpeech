@@ -1,26 +1,21 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Roles } from "auth/roles.decorator";
+import { CONSTANTS } from "common/constant";
+import { FindReportQuery } from "reports/queries/impl/find-report.query";
+import { GetReportsQuery } from "reports/queries/impl/get-reports.query";
 import { ReportDto, ReportIdRequestParamsDto } from "../dtos/reports.dto";
 import { ReportsService } from "../services/reports.service";
-import { GetReportsQuery } from "reports/queries/impl/get-reports.query";
-import { FindReportQuery } from "reports/queries/impl/find-report.query";
+import { AuthGuard } from "@nestjs/passport";
+import { ReportGuard } from "auth/guards/report.guard";
 
 @Controller("reports")
+@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportGuard)
 @ApiTags("Reports")
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
+  constructor(private readonly reportsService: ReportsService) { }
 
   /* Create Report */
-
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Report"] })
   @ApiResponse({ status: 200, description: "Create Report." })
@@ -30,7 +25,7 @@ export class ReportsController {
   }
 
   /* Update Report */
-
+  // TODO: verify why we need to update report
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Report"] })
   @ApiResponse({ status: 200, description: "Update Report." })
@@ -46,10 +41,10 @@ export class ReportsController {
   }
 
   /* Delete Report */
-
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Report"] })
   @ApiResponse({ status: 200, description: "Delete Report." })
+  @Roles([CONSTANTS.ROLE.ADMIN])
   @Delete(":_id")
   async deleteReport(@Param() reportIdDto: ReportIdRequestParamsDto) {
     return this.reportsService.deleteReport(reportIdDto);
@@ -66,7 +61,6 @@ export class ReportsController {
   }
 
   /* Find Report */
-
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Get Report"] })
   @ApiResponse({ status: 200, description: "Get Report." })
