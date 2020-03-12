@@ -19,3 +19,18 @@ export const getTokensFailure = message => ({
   type: TokenTypes.GET_TOKENS_FAILURE,
   payload: message,
 })
+
+// Get token types
+export const getTokenTypes = () => ({
+  type: TokenTypes.GET_TOKEN_TYPES,
+})
+
+export const getTokenTypesSuccess = tokenTypeList => ({
+  type: TokenTypes.GET_TOKEN_TYPES_SUCCESS,
+  payload: tokenTypeList,
+})
+
+export const getTokenTypesFailure = message => ({
+  type: TokenTypes.GET_TOKEN_TYPES_FAILURE,
+  payload: message,
+})

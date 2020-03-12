@@ -1,9 +1,18 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query} from '@nestjs/common';
-import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {ReportDto, ReportIdRequestParamsDto} from '../dtos/reports.dto';
-import {ReportsService} from '../services/reports.service';
-import {GetReportsQuery} from 'reports/queries/impl/get-reports.query';
-import {FindReportQuery} from 'reports/queries/impl/find-report.query';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query
+} from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ReportDto, ReportIdRequestParamsDto } from "../dtos/reports.dto";
+import { ReportsService } from "../services/reports.service";
+import { GetReportsQuery } from "reports/queries/impl/get-reports.query";
+import { FindReportQuery } from "reports/queries/impl/find-report.query";
 
 @Controller("reports")
 @ApiTags("Reports")
@@ -11,6 +20,7 @@ export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
   /* Create Report */
+
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Report"] })
   @ApiResponse({ status: 200, description: "Create Report." })
@@ -20,43 +30,47 @@ export class ReportsController {
   }
 
   /* Update Report */
+
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Report"] })
   @ApiResponse({ status: 200, description: "Update Report." })
-  @Put(":id")
+  @Put(":_id")
   async updateReport(
     @Param() reportIdDto: ReportIdRequestParamsDto,
     @Body() reportDto: ReportDto
   ) {
     return this.reportsService.updateReport({
-      id: reportIdDto.id,
-      ...reportDto
+      ...reportDto,
+      _id: reportIdDto._id
     });
   }
 
   /* Delete Report */
+
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Report"] })
   @ApiResponse({ status: 200, description: "Delete Report." })
-  @Delete(":id")
+  @Delete(":_id")
   async deleteReport(@Param() reportIdDto: ReportIdRequestParamsDto) {
     return this.reportsService.deleteReport(reportIdDto);
   }
 
   /* List Reports */
+
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ['List Reports'] })
-  @ApiResponse({ status: 200, description: 'List Reports.' })
+  @ApiOperation({ tags: ["List Reports"] })
+  @ApiResponse({ status: 200, description: "List Reports." })
   @Get()
   async findReports(@Query() getReportsQuery: GetReportsQuery) {
     return this.reportsService.findReports(getReportsQuery);
   }
 
   /* Find Report */
+
   /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Get Report'] })
-  @ApiResponse({ status: 200, description: 'Get Report.' })
-  @Get(':id')
+  @ApiOperation({ tags: ["Get Report"] })
+  @ApiResponse({ status: 200, description: "Get Report." })
+  @Get(":id")
   async findOneReport(@Param() findReportQuery: FindReportQuery) {
     return this.reportsService.findOne(findReportQuery);
   }

@@ -18,7 +18,7 @@
   "include": [
     "src/**/*",
     "pipes/*",
-    "middlewares/*",
+    "middlewares/*"
   ],
   "exclude": [
     "node_modules",

@@ -1,25 +1,24 @@
-import {CommandBus, CqrsModule, EventBus, QueryBus} from '@nestjs/cqrs';
-import {Module, OnModuleInit} from '@nestjs/common';
-import {CommandHandlers} from './commands/handlers';
-import {EventHandlers} from './events/handlers';
-import {ReportsSagas} from './sagas/reports.sagas';
-import {ReportsController} from './controllers/reports.controller';
-import {ReportsService} from './services/reports.service';
-import {ReportRepository} from './repository/report.repository';
-import {EventStoreModule} from '../core/event-store/event-store.module';
-import {EventStore} from '../core/event-store/event-store';
-import {ReportCreatedEvent} from './events/impl/report-created.event';
-import {ReportDeletedEvent} from './events/impl/report-deleted.event';
-import {ReportUpdatedEvent} from './events/impl/report-updated.event';
-import {ReportWelcomedEvent} from './events/impl/report-welcomed.event';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {ReportDto} from './dtos/reports.dto';
-import {QueryHandlers} from './queries/handler';
+import { Module, OnModuleInit } from "@nestjs/common";
+import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { EventStore } from "../core/event-store/event-store";
+import { EventStoreModule } from "../core/event-store/event-store.module";
+import { CommandHandlers } from "./commands/handlers";
+import { ReportsController } from "./controllers/reports.controller";
+import { ReportDto } from "./dtos/reports.dto";
+import { EventHandlers } from "./events/handlers";
+import { ReportCreatedEvent } from "./events/impl/report-created.event";
+import { ReportDeletedEvent } from "./events/impl/report-deleted.event";
+import { ReportUpdatedEvent } from "./events/impl/report-updated.event";
+import { ReportWelcomedEvent } from "./events/impl/report-welcomed.event";
+import { QueryHandlers } from "./queries/handler";
+import { ReportRepository } from "./repository/report.repository";
+import { ReportsSagas } from "./sagas/reports.sagas";
+import { ReportsService } from "./services/reports.service";
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ReportDto]),
-    CqrsModule,
     EventStoreModule.forFeature()
   ],
   controllers: [ReportsController],
@@ -29,7 +28,8 @@ import {QueryHandlers} from './queries/handler';
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,
-    ReportRepository
+    ReportRepository,
+    QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
   ],
   exports: [ReportsService]
 })
@@ -40,7 +40,7 @@ export class ReportsModule implements OnModuleInit {
     private readonly event$: EventBus,
     private readonly reportsSagas: ReportsSagas,
     private readonly eventStore: EventStore
-  ) {}
+  ) { }
 
   async onModuleInit() {
     this.eventStore.setEventHandlers(this.eventHandlers);

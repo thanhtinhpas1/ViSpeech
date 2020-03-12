@@ -1,9 +1,10 @@
-import {GetTokensQuery} from '../impl/get-tokens.query';
-import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {Repository} from 'typeorm';
+import { GetTokensQuery, GetTokenTypesQuery } from "../impl/get-tokens.query";
+import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
+import { Logger } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { TokenDto } from "tokens/dtos/tokens.dto";
+import { Repository, getMongoRepository } from "typeorm";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 
 @QueryHandler(GetTokensQuery)
 export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
@@ -13,13 +14,28 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
   ) {}
 
   async execute(query: GetTokensQuery) {
-    Logger.log("Async GetTokensQuery...");
-    if (query.limit && query.offset)
-      return this.repository.find({
-        skip: Number(query.offset),
-        take: Number(query.limit),
-        relations: ["tokenType"]
-      });
-    return this.repository.find({ relations: ["tokenType"] });
+    try {
+      Logger.log("Async GetTokensHandler...", "GetTokensQuery");
+      if (query.limit && query.offset)
+        return await this.repository.find({
+          skip: Number(query.offset),
+          take: Number(query.limit)
+        });
+      return await this.repository.find();
+    } catch (error) {
+      Logger.error(error, "", "GetTokensQuery");
+    }
+  }
+}
+
+@QueryHandler(GetTokenTypesQuery)
+export class GetTokenTypesHandler implements IQueryHandler<GetTokenTypesQuery> {
+  async execute(query: GetTokenTypesQuery) {
+    try {
+      Logger.log("Async GetTokenTypesHandler...", "GetTokenTypesQuery");
+      return await getMongoRepository(TokenTypeDto).find();
+    } catch (error) {
+      Logger.error(error, "", "GetTokenTypesQuery");
+    }
   }
 }

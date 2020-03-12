@@ -1,6 +1,11 @@
-import {ICommand} from '@nestjs/cqrs';
-import {UserIdRequestParamsDto} from '../../dtos/users.dto';
+import { ICommand } from "@nestjs/cqrs";
+import { UserIdRequestParamsDto } from "users/dtos/users.dto";
 
 export class DeleteUserCommand implements ICommand {
-  constructor(public readonly userIdDto: UserIdRequestParamsDto) {}
+  constructor(
+    public readonly transactionId: string,
+    public readonly updatedBy: string,
+    public readonly roles: string[],
+    public readonly userIdDto: UserIdRequestParamsDto
+  ) {}
 }

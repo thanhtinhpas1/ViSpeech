@@ -15,7 +15,7 @@ const PayReviewModal = ({ payReviewModal }) => {
             <div className="gaps-2x" />
             <h3 style={{ color: '#495463' }}>Giao dịch thành công.</h3>
             <p style={{ color: '#495463' }}>
-              Thời hạn dùng key là {payReviewModal.time}. Xin cảm ơn.
+              Thời hạn sử dụng token là {payReviewModal.minutes} phút. Xin cảm ơn.
             </p>
             {/* <span
     class="badge badge-outline badge-md badge-success"
@@ -28,12 +28,12 @@ const PayReviewModal = ({ payReviewModal }) => {
               <input
                 type="text"
                 className="copy-address"
-                defaultValue={payReviewModal.token}
+                defaultValue={payReviewModal.tokenId}
                 disabled
               />
               <button
                 className="copy-trigger copy-clipboard"
-                data-clipboard-text={payReviewModal.token}
+                data-clipboard-text={payReviewModal.tokenId}
               >
                 <em className="ti ti-files" />
               </button>

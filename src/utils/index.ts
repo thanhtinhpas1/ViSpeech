@@ -1,16 +1,39 @@
-const bcrypt = require('bcryptjs');
-const uuid = require('uuid');
+import { CONSTANTS } from "common/constant";
+import { v1 as uuidv1 } from "uuid";
+import { JwtService } from "@nestjs/jwt";
+
+const bcrypt = require("bcryptjs");
 
 export const Utils = {
-    hashPassword: (password) => {
-        let salt = bcrypt.genSaltSync(10);
-        let hash = bcrypt.hashSync(password, salt);
-        return hash;
-    },
-    getUuid: () => {
-        return uuid();
-    },
-    comparePassword: (oldPassword, newPassword) => {
-        return bcrypt.compare(oldPassword, newPassword);
+  hashPassword: password => {
+    let salt = bcrypt.genSaltSync(10);
+    let hash = bcrypt.hashSync(password, salt);
+    return hash;
+  },
+  getUuid: () => {
+    return uuidv1();
+  },
+  comparePassword: (oldPassword, newPassword) => {
+    return bcrypt.compare(oldPassword, newPassword);
+  },
+  formatUserRoles: roles => {
+    if (!roles) {
+      return [{ name: CONSTANTS.ROLE.USER }];
     }
-}
+    if (!Array.isArray(roles)) {
+      return [roles];
+    }
+    return roles;
+  },
+  removeNullOrEmptyPropertyOfObj: obj => {
+    let result = JSON.parse(JSON.stringify(obj));
+    if (typeof (result) === 'object') {
+      Object.keys(result).forEach(property => {
+        if (result[property] == null || result[property] === "") {
+          delete result[property];
+        }
+      })
+    }
+    return result;
+  }
+};

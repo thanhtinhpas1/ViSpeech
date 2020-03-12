@@ -1,6 +1,11 @@
-import {ICommand} from '@nestjs/cqrs';
-import {UserDto} from '../../dtos/users.dto';
+import { ICommand } from "@nestjs/cqrs";
+import { UserDto } from "../../dtos/users.dto";
 
 export class UpdateUserCommand implements ICommand {
-  constructor(public readonly userDto: UserDto) {}
+  constructor(
+    public readonly transactionId: string,
+    public readonly updatedBy: string,
+    public readonly roles: string[],
+    public readonly userDto: UserDto
+  ) {}
 }

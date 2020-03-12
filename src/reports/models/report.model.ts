@@ -1,8 +1,9 @@
-import {AggregateRoot} from '@nestjs/cqrs';
-import {ReportCreatedEvent} from '../events/impl/report-created.event';
-import {ReportUpdatedEvent} from '../events/impl/report-updated.event';
-import {ReportDeletedEvent} from '../events/impl/report-deleted.event';
-import {ReportWelcomedEvent} from '../events/impl/report-welcomed.event';
+import { AggregateRoot } from "@nestjs/cqrs";
+import { ReportCreatedEvent } from "../events/impl/report-created.event";
+import { ReportUpdatedEvent } from "../events/impl/report-updated.event";
+import { ReportDeletedEvent } from "../events/impl/report-deleted.event";
+import { ReportWelcomedEvent } from "../events/impl/report-welcomed.event";
+import { ReportDto } from "reports/dtos/reports.dto";
 
 export class Report extends AggregateRoot {
   [x: string]: any;

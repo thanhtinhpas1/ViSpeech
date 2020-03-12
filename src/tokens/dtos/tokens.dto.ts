@@ -1,71 +1,94 @@
-import {IsEmpty, IsNotEmpty, IsString} from 'class-validator';
-import {Column, Entity, ManyToOne, OneToMany} from 'typeorm';
-import {BaseEntityDto} from 'base/base-entity.dto';
-import {TokenTypeDto} from './token-types.dto';
-import {ReportDto} from '../../reports/dtos/reports.dto';
+import { BaseEntityDto } from "base/base-entity.dto";
+import { Type } from "class-transformer";
+import { IsEmpty, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from "class-validator";
+import { CONSTANTS } from "common/constant";
+import { ObjectID } from "mongodb";
+import { Column, Entity } from "typeorm";
 
 export class TokenIdRequestParamsDto {
-    constructor(tokenId) {
-        this.id = tokenId;
-    }
+  constructor(tokenId) {
+    this._id = tokenId;
+  }
 
-    @IsString()
-    @IsNotEmpty()
-    id: string;
+  @IsString()
+  @IsNotEmpty()
+  _id: string;
 }
 
-@Entity('tokens')
+@Entity("tokens")
 export class TokenDto extends BaseEntityDto {
-    constructor(value, userId, tokenType: TokenTypeDto) {
-        super();
-        this.value = value;
-        this.userId = userId;
-        this.tokenType = tokenType;
-        if (tokenType) {
-            this.minutes = tokenType.minutes;
-        }
-    }
+  constructor(
+    value,
+    userId,
+    tokenType = CONSTANTS.TOKEN_TYPE.FREE,
+    tokenTypeId = null,
+    orderId = null,
+  ) {
+    super();
+    this.value = value;
+    this.userId = userId;
+    this.tokenTypeId = tokenTypeId;
+    this.tokenType = tokenType;
+    this.orderId = orderId;
+  }
 
-    @Column({
-        name: 'minutes',
-        default: 0,
-    })
-    minutes: number;
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @Column({
+    default: 0
+  })
+  minutes: number;
 
-    @Column({
-        name: 'used_minutes',
-        default: 0,
-        nullable: true,
-    })
-    usedMinutes: number;
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @Column({
+    default: 0,
+    nullable: false
+  })
+  usedMinutes: number;
 
-    @IsString()
-    @IsNotEmpty()
-    @Column()
-    value: string;
+  @IsString()
+  @IsNotEmpty()
+  @Column({
+    unique: true
+  })
+  value: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @Column({
-        name: 'user_id',
-    })
-    userId: string;
+  @IsUUID()
+  @Column({
+    nullable: false,
+    type: "uuid"
+  })
+  userId: ObjectID;
 
-    @ManyToOne(
-        () => TokenTypeDto,
-        tokenTypeDto => tokenTypeDto.tokens,
-    )
-    tokenType: TokenTypeDto;
+  @IsOptional()
+  @IsUUID()
+  @Column({
+    nullable: false,
+    type: "uuid"
+  })
+  tokenTypeId: ObjectID;
 
-    @IsEmpty()
-    @Column({
-        default: true,
-    })
-    isValid: boolean;
+  @IsEmpty()
+  @Column({
+    default: true
+  })
+  isValid: boolean;
 
-    @OneToMany(
-        () => ReportDto,
-        reportDto => reportDto.token,
-    )
-    reports: ReportDto[];
+  @IsOptional()
+  @IsIn([
+    CONSTANTS.TOKEN_TYPE.FREE,
+    CONSTANTS.TOKEN_TYPE["50-MINS"],
+    CONSTANTS.TOKEN_TYPE["200-MINS"],
+    CONSTANTS.TOKEN_TYPE["500-MINS"]
+  ])
+  tokenType: string;
+
+  @IsOptional()
+  @IsUUID()
+  orderId: ObjectID;
 }

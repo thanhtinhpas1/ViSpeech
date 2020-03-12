@@ -2,6 +2,7 @@ import TokenTypes from './token.types'
 
 const INITIAL_STATE = {
   tokenList: null,
+  tokenTypeList: null,
   errorMessage: null,
   isSuccess: null,
   isLoading: false,
@@ -28,6 +29,27 @@ const userReducer = (state = INITIAL_STATE, action) => {
         message: null,
       }
     case TokenTypes.GET_TOKENS_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        isSuccess: false,
+        message: action.payload,
+      }
+    // GET_TOKEN_TYPES
+    case TokenTypes.GET_TOKEN_TYPES:
+      return {
+        ...state,
+        isLoading: true,
+      }
+    case TokenTypes.GET_TOKEN_TYPES_SUCCESS:
+      return {
+        ...state,
+        tokenTypeList: action.payload,
+        isLoading: false,
+        isSuccess: true,
+        message: null,
+      }
+    case TokenTypes.GET_TOKEN_TYPES_FAILURE:
       return {
         ...state,
         isLoading: false,

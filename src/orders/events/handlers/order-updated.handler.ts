@@ -1,9 +1,12 @@
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {OrderUpdatedEvent} from '../impl/order-updated.event';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {OrderDto} from 'orders/dtos/orders.dto';
-import {Repository} from 'typeorm';
+import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
+import {
+  OrderUpdatedEvent
+} from "../impl/order-updated.event";
+import { Logger } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { OrderDto } from "orders/dtos/orders.dto";
+import { Repository } from "typeorm";
+import { Utils } from "utils";
 
 @EventsHandler(OrderUpdatedEvent)
 export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
@@ -12,9 +15,16 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
     private readonly repository: Repository<OrderDto>
   ) {}
 
-  handle(event: OrderUpdatedEvent) {
-    Logger.log(event, "OrderUpdatedEvent"); // write here
-    const { id, ...orderInfo } = event.orderDto[0];
-    this.repository.update(id, orderInfo);
+  async handle(event: OrderUpdatedEvent) {
+    try {
+      Logger.log(event.transactionId, "OrderUpdatedEvent"); // write here
+      const { _id, ...orderInfo } = event.orderDto;
+      orderInfo.tokenTypeId = null;
+      const formattedOrderInfo = Utils.removeNullOrEmptyPropertyOfObj(orderInfo);
+      Logger.log(formattedOrderInfo, "OrderUpdatedEvent formattedOrderInfo"); // write here
+      return await this.repository.update({ _id }, formattedOrderInfo);
+    } catch (error) {
+      Logger.error(error, "", "OrderUpdatedEvent");
+    }
   }
 }

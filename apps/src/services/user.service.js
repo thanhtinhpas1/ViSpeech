@@ -23,7 +23,7 @@ export default class UserService {
       })
       .then(result => {
         if (status !== 201) {
-          throw new Error(result.message)
+          throw new Error(result.error)
         }
         STORAGE.setPreferences(JWT_TOKEN, result.token)
         return result
@@ -63,7 +63,7 @@ export default class UserService {
   }
 
   static register = ({ username, email, lastName, firstName, password, roles }) => {
-    const api = `${apiUrl}/users`
+    const api = `${apiUrl}/register`
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
@@ -86,7 +86,7 @@ export default class UserService {
       })
       .then(result => {
         if (status !== 201) {
-          throw new Error(result.message)
+          throw new Error(result.error)
         }
         return result ? JSON.parse(result) : {}
       })
@@ -113,12 +113,144 @@ export default class UserService {
       .then(result => {
         if (status !== 200) {
           STORAGE.removePreferences(JWT_TOKEN)
-          throw new Error(result.message)
+          throw new Error(result.error)
         }
         return result
       })
       .catch(err => {
         STORAGE.removePreferences(JWT_TOKEN)
+        throw new Error(err)
+      })
+  }
+
+  static getUserList = () => {
+    const api = `${apiUrl}/users`
+    let status = 400
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(result.message)
+        }
+        return result
+      })
+      .catch(err => {
+        throw new Error(err)
+      })
+  }
+
+  static getUserInfo = id => {
+    const api = `${apiUrl}/users/${id}`
+    let status = 400
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(result.message)
+        }
+        return result
+      })
+      .catch(err => {
+        throw new Error(err)
+      })
+  }
+
+  static updateUserInfo = (id, info) => {
+    const api = `${apiUrl}/users/${id}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'PUT',
+      body: JSON.stringify({
+        ...info,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(result.message)
+        }
+      })
+      .catch(err => {
+        throw new Error(err)
+      })
+  }
+
+  static createUser = data => {
+    const api = `${apiUrl}/users`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'POST',
+      body: JSON.stringify({
+        ...data,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response
+      })
+      .then(result => {
+        if (status !== 201) {
+          throw new Error(result.message)
+        }
+      })
+      .catch(err => {
+        throw new Error(err)
+      })
+  }
+
+  static deleteUser = id => {
+    const api = `${apiUrl}/users/${id}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'DELETE',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(result.message)
+        }
+      })
+      .catch(err => {
         throw new Error(err)
       })
   }

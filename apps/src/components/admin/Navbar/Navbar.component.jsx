@@ -22,8 +22,8 @@ const Navbar = () => {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a className="navbar-brand" href="#">
-            Dashboard
+          <a className="navbar-brand" href="/">
+            ViSpeech Admin
           </a>
         </div>
         <div className="collapse navbar-collapse">

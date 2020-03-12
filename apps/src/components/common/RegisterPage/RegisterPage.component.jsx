@@ -3,6 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
+import { ROLES } from 'utils/constant'
 
 const RegisterPage = ({ user, register, onClearUserState }) => {
   useEffect(() => {
@@ -19,7 +20,7 @@ const RegisterPage = ({ user, register, onClearUserState }) => {
       lastName: form.elements.lastName.value,
       firstName: form.elements.firstName.value,
       password: form.elements.password.value,
-      roles: { name: 'customer' },
+      roles: [ROLES.USER],
     }
 
     register(user)

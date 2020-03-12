@@ -10,7 +10,8 @@ import loadScript from 'utils/loadScript'
 import loadLink from 'utils/loadLink'
 // import ChangePasswordContainer from 'components/common/ChangePassword/ChangePassword.container'
 import { connect } from 'react-redux'
-import { CUSTOMER_PATH, ADMIN_PATH, ROLES } from 'utils/constant'
+import Utils from 'utils'
+import { CUSTOMER_PATH, ADMIN_PATH } from 'utils/constant'
 // import NotFound404 from 'components/common/NotFound404/NotFound404.component'
 // import ErrorPage from 'components/common/ErrorPage/ErrorPage.component'
 
@@ -24,6 +25,7 @@ import RegisterPage from 'components/common/RegisterPage/RegisterPage.container'
 
 const App = ({ currentUser }) => {
   const [isCssLoaded, setIsCssLoaded] = useState(false)
+  const [isUser, setIsUser] = useState(null)
 
   useEffect(() => {
     // async function unloadAllCssFile() {
@@ -158,9 +160,10 @@ const App = ({ currentUser }) => {
     }
 
     if (currentUser && Array.isArray(currentUser.roles)) {
-      const isCustomer =
-        currentUser.roles.findIndex(role => role.name.includes(ROLES.customer)) !== -1
-      if (isCustomer) {
+      const isUserRole = Utils.checkIfIsUser(currentUser.roles)
+      setIsUser(isUserRole)
+
+      if (isUserRole) {
         // load link
         loadLink(
           `${process.env.PUBLIC_URL}/assets/css/customer/bootstrap.min.css`,
@@ -370,16 +373,16 @@ const App = ({ currentUser }) => {
         <>
           <Route path={CUSTOMER_PATH} render={() => <RouteCustomer currentUser={currentUser} />} />
           <Route path={ADMIN_PATH} render={() => <RouteAdmin currentUser={currentUser} />} />
-          {currentUser ? (
+          {currentUser && isUser != null ? (
             <>
               <Route exact path="/">
-                <Redirect to={CUSTOMER_PATH} />
+                <Redirect to={isUser ? CUSTOMER_PATH : ADMIN_PATH} />
               </Route>
               <Route path="/login">
-                <Redirect to={CUSTOMER_PATH} />
+                <Redirect to={isUser ? CUSTOMER_PATH : ADMIN_PATH} />
               </Route>
               <Route path="/register">
-                <Redirect to={CUSTOMER_PATH} />
+                <Redirect to={isUser ? CUSTOMER_PATH : ADMIN_PATH} />
               </Route>
             </>
           ) : (

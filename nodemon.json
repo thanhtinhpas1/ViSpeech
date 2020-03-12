@@ -1,7 +1,11 @@
 {
-  "watch": ["src"],
+  "watch": [
+    "src"
+  ],
   "ext": "ts",
-  "ignore": ["src/**/*.spec.ts"],
+  "ignore": [
+    "src/**/*.spec.ts"
+  ],
   "exec": "ts-node -r tsconfig-paths/register src/main.ts",
   "events": {
     "restart": "osascript -e 'display notification \"boilerplate-nodejs-cqrs-es-swagger restarted\" with title \"nodemon\"'"

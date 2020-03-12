@@ -1,15 +1,16 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react'
 
-const PayOption = ({ payOption }) => (
+const TokenType = ({ tokenType }) => (
   <div className="pay-option h-100">
     <input
       className="pay-option-check"
       type="radio"
-      id={payOption.type}
-      name="payOption"
-      defaultChecked={payOption.defaultChecked ? payOption.defaultChecked : false}
+      id={tokenType._id}
+      name="tokenType"
+      defaultChecked={tokenType.defaultChecked}
     />
-    <label className="pay-option-label h-100" htmlFor={payOption.type}>
+    <label className="pay-option-label h-100" htmlFor={tokenType._id}>
       <span className="pay-title">
         <em className="pay-icon">
           <i className="fas fa-key" />
@@ -19,7 +20,7 @@ const PayOption = ({ payOption }) => (
         <span
           className="pay-amount"
           style={
-            payOption.saleOff
+            tokenType.saleOff
               ? {
                   marginTop: '0.5em',
                   marginBottom: '0.5em',
@@ -28,14 +29,11 @@ const PayOption = ({ payOption }) => (
               : null
           }
         >
-          {payOption.price}/ {payOption.time}
+          {tokenType.price}$/ {tokenType.minutes} phút
         </span>
-        {payOption.saleOff ? (
-          <span
-            className="pay-amount"
-            style={{ marginBottom: '0.5em', color: 'red' }}
-          >
-            {payOption.saleOff.price}/ {payOption.saleOff.time}
+        {tokenType.saleOff ? (
+          <span className="pay-amount" style={{ marginBottom: '0.5em', color: 'red' }}>
+            {tokenType.saleOff.price}$/ {tokenType.saleOff.time} phút
           </span>
         ) : null}
       </div>
@@ -43,4 +41,4 @@ const PayOption = ({ payOption }) => (
   </div>
 )
 
-export default PayOption
+export default TokenType

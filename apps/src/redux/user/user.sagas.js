@@ -10,6 +10,16 @@ import {
   loginFailure,
   registerSuccess,
   registerFailure,
+  getUserListSuccess,
+  getUserListFailure,
+  getUserInfoSuccess,
+  getUserInfoFailure,
+  updateUserInfoSuccess,
+  updateUserInfoFailure,
+  createUserSuccess,
+  createUserFailure,
+  deleteUserSuccess,
+  deleteUserFailure,
   activeEmailSuccess,
   activeEmailFailure,
   sendEmailResetPasswordSuccess,
@@ -98,6 +108,73 @@ export function* authenticate({ payload: token }) {
 
 export function* authenticateSaga() {
   yield takeLatest(UserTypes.AUTHENTICATE, authenticate)
+}
+
+// ==== get user list
+export function* getUserList() {
+  try {
+    const userList = yield UserService.getUserList()
+    yield put(getUserListSuccess(userList))
+  } catch (err) {
+    yield put(getUserListFailure(err.message))
+  }
+}
+
+export function* getUserListSaga() {
+  yield takeLatest(UserTypes.GET_USER_LIST, getUserList)
+}
+
+// ==== get user info
+export function* getUserInfo({ payload: id }) {
+  try {
+    const userInfo = yield UserService.getUserInfo(id)
+    yield put(getUserInfoSuccess(userInfo))
+  } catch (err) {
+    yield put(getUserInfoFailure(err.message))
+  }
+}
+
+export function* getUserInfoSaga() {
+  yield takeLatest(UserTypes.GET_USER_INFO, getUserInfo)
+}
+
+// ==== update user info
+function* updateUserInfo({ payload: { id, userInfo } }) {
+  try {
+    yield UserService.updateUserInfo(id, userInfo)
+    yield put(updateUserInfoSuccess({ ...userInfo, _id: id }))
+  } catch (err) {
+    yield put(updateUserInfoFailure(err.message))
+  }
+}
+function* updateUserInfoSaga() {
+  yield takeLatest(UserTypes.UPDATE_USER_INFO, updateUserInfo)
+}
+
+// ==== create user
+function* createUser({ payload: data }) {
+  try {
+    yield UserService.createUser(data)
+    yield put(createUserSuccess(data))
+  } catch (err) {
+    yield put(createUserFailure(err.message))
+  }
+}
+function* createUserSaga() {
+  yield takeLatest(UserTypes.CREATE_USER, createUser)
+}
+
+// ==== delete user
+function* deleteUser({ payload: id }) {
+  try {
+    yield UserService.deleteUser(id)
+    yield put(deleteUserSuccess(id))
+  } catch (err) {
+    yield put(deleteUserFailure(err.message))
+  }
+}
+function* deleteUserSaga() {
+  yield takeLatest(UserTypes.DELETE_USER, deleteUser)
 }
 
 // === active account by email
@@ -191,6 +268,11 @@ function* updateAvatarSaga() {
 export function* userSaga() {
   yield all([
     call(loginStartSaga),
+    call(getUserListSaga),
+    call(getUserInfoSaga),
+    call(updateUserInfoSaga),
+    call(createUserSaga),
+    call(deleteUserSaga),
     call(authenWithSocialSaga),
     call(activeEmailSaga),
     call(sendEmailResetPasswordSaga),

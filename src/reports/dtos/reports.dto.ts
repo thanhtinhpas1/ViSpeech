@@ -1,49 +1,52 @@
-import {IsDate, IsNotEmpty, IsNumber, IsPositive, IsString} from 'class-validator';
-import {Column, Entity, ManyToOne} from 'typeorm';
-import {BaseEntityDto} from 'base/base-entity.dto';
-import {UserDto} from '../../users/dtos/users.dto';
-import {TokenDto} from '../../tokens/dtos/tokens.dto';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsInt,
+  IsUUID
+} from "class-validator";
+import { Type } from "class-transformer";
+import { Column, Entity, ObjectID } from "typeorm";
+import { BaseEntityDto } from "base/base-entity.dto";
 
 export class ReportIdRequestParamsDto {
-    constructor(reportId) {
-        this.id = reportId;
-    }
+  constructor(reportId) {
+    this._id = reportId;
+  }
 
-    @IsString()
-    @IsNotEmpty()
-    id: string;
+  @IsString()
+  @IsNotEmpty()
+  _id: string;
 }
 
-@Entity('reports')
+@Entity("reports")
 export class ReportDto extends BaseEntityDto {
-    constructor(value, userId) {
-        super();
-    }
 
-    @IsNumber()
-    @IsPositive()
-    @Column({
-        name: 'used_minutes',
-        default: 0,
-        nullable: true,
-    })
-    usedMinutes: number;
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @Column()
+  usedMinutes: number;
 
-    @ManyToOne(() => UserDto,
-        userDto => userDto.reports,
-    )
-    user: UserDto;
+  @Type(() => Date)
+  @IsDate()
+  @IsNotEmpty()
+  @Column()
+  dateReport: Date;
 
-    @ManyToOne(
-        () => TokenDto,
-        tokenDto => tokenDto.reports,
-    )
-    token: TokenDto;
+  @IsUUID()
+  @Column({
+    nullable: false,
+    type: "uuid"
+  })
+  tokenId: ObjectID;
 
-    @IsDate()
-    @IsNotEmpty()
-    @Column({
-        name: 'date_report',
-    })
-    dateReport: Date;
+  @IsUUID()
+  @Column({
+    nullable: false,
+    type: "uuid"
+  })
+  userId: ObjectID;
 }

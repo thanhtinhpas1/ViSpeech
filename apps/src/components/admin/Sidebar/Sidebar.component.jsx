@@ -1,42 +1,49 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react'
+import React, { useEffect } from 'react'
+import { JWT_TOKEN, ADMIN_PATH } from 'utils/constant'
+import STORAGE from 'utils/storage'
 
-const Sidebar = () => {
+const Sidebar = ({ onAuthenticate }) => {
+  useEffect(() => {
+    const token = STORAGE.getPreferences(JWT_TOKEN)
+    onAuthenticate(token)
+  }, [onAuthenticate])
+
   return (
     <div className="sidebar">
       <div className="logo">
-        <a href="#" className="simple-text">
-          Turbo /admin
+        <a href="/" className="simple-text">
+          ViSpeech Admin
         </a>
       </div>
       <div className="logo logo-mini">
-        <a href="#" className="simple-text">
+        <a href="/" className="simple-text">
           T
         </a>
       </div>
       <div className="sidebar-wrapper">
         <ul className="nav">
           <li className="active">
-            <a href="index.html">
+            <a href="/">
               <i className="material-icons">dashboard</i>
-              <p>Dashboard</p>
+              <p>Trang chủ</p>
             </a>
           </li>
           <li>
             <a data-toggle="collapse" href="#layouts" className="collapsed" aria-expanded="false">
-              <i className="material-icons">aspect_ratio</i>
+              <i className="zmdi zmdi-accounts" />
               <p>
-                Layouts
+                Khách hàng
                 <b className="caret" />
               </p>
             </a>
             <div className="collapse" id="layouts" aria-expanded="false" style={{ height: '0px' }}>
               <ul className="nav">
                 <li>
-                  <a href="layouts/boxed-layout.html">Box Layout</a>
+                  <a href={`${ADMIN_PATH}/users`}>Danh sách</a>
                 </li>
                 <li>
-                  <a href="layouts/compact-menu.html">Compact Menu</a>
+                  <a href={`${ADMIN_PATH}/create-user`}>Thêm mới</a>
                 </li>
                 <li>
                   <a href="layouts/horizontal-menu.html">Horizontal Menu</a>

@@ -3,19 +3,19 @@ version: 2
 aliases:
   - &restore-cache
     restore_cache:
-        key: dependency-cache-{{ checksum "package.json" }}
+      key: dependency-cache-{{ checksum "package.json" }}
   - &install-deps
     run:
-        name: Install dependencies
-        command: npm ci
+      name: Install dependencies
+      command: npm ci
   - &build-packages
     run:
-        name: Build
-        command: npm run build
+      name: Build
+      command: npm run build
   - &run-unit-tests
     run:
-        name: Test
-        command: npm run test
+      name: Test
+      command: npm run test
 
 unit-tests-template: &unit-tests-template
   working_directory: ~/nest
@@ -48,7 +48,7 @@ jobs:
       - run:
           name: Build
           command: npm run build
-        
+
   test_node_12:
     working_directory: ~/nest
     docker:
@@ -95,12 +95,12 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: 
+      - run:
           name: Prepare nvm
           command: |
             echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
             echo ' [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-      - run: 
+      - run:
           name: Upgrade Node.js
           command: |
             nvm install v12
@@ -124,7 +124,7 @@ jobs:
       - run:
           name: Integration tests
           command: npm run integration-test
-          
+
   codechecks_benchmarks:
     working_directory: ~/nest
     docker:

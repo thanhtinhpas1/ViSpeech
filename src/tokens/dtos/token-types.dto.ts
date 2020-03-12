@@ -1,47 +1,53 @@
-import {Column, Entity, OneToMany} from 'typeorm';
-import {BaseEntityDto} from 'base/base-entity.dto';
-import {TokenDto} from './tokens.dto';
-import {IsNotEmpty, IsNumber, IsPositive, IsString} from 'class-validator';
+import { Column, Entity } from "typeorm";
+import { BaseEntityDto } from "base/base-entity.dto";
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsIn
+} from "class-validator";
+import { Type } from "class-transformer";
+import { CONSTANTS } from "common/constant";
 
-@Entity('token_types')
+@Entity("token_types")
 export class TokenTypeDto extends BaseEntityDto {
-    constructor(name, minutes, price) {
-        super();
-        this.name = name;
-        this.minutes = minutes;
-        this.price = price;
-    }
+  constructor(name, minutes, price, salePercent = 0) {
+    super();
+    this.name = name;
+    this.minutes = minutes;
+    this.price = price;
+    this.salePercent = salePercent;
+  }
 
-    @IsNotEmpty()
-    @IsString()
-    @Column()
-    name: string;
+  @IsNotEmpty()
+  @IsString()
+  @IsIn([
+    CONSTANTS.TOKEN_TYPE.FREE,
+    CONSTANTS.TOKEN_TYPE["50-MINS"],
+    CONSTANTS.TOKEN_TYPE["200-MINS"],
+    CONSTANTS.TOKEN_TYPE["500-MINS"]
+  ])
+  @Column()
+  name: string;
 
-    @IsNumber()
-    @IsPositive()
-    @Column({
-        name: 'minutes',
-    })
-    minutes: number;
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @Column()
+  minutes: number;
 
-    @IsNumber()
-    @IsPositive()
-    @Column({
-        name: 'price',
-    })
-    price: number;
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @Column()
+  price: number;
 
-    @IsNumber()
-    @IsPositive()
-    @Column({
-        name: 'sale_percent',
-        default: 0,
-    })
-    salePercent: number;
-
-    @OneToMany(
-        type => TokenDto,
-        tokenDto => tokenDto.tokenType
-    )
-    tokens: TokenDto[];
+  @Type(() => Number)
+  @IsNumber()
+  @IsPositive()
+  @Column({
+    default: 0
+  })
+  salePercent: number;
 }

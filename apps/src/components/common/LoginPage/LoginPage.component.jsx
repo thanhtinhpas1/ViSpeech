@@ -3,7 +3,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
-import { CUSTOMER_PATH } from 'utils/constant'
+import { CUSTOMER_PATH, ADMIN_PATH } from 'utils/constant'
+import Utils from 'utils'
 import AuthenWithFacebook from '../AuthenWithFacebook/AuthenWithFacebook.container'
 import AuthenWithGoogle from '../AuthenWithGoogle/AuthenWithGoogle.container'
 
@@ -13,7 +14,8 @@ const LoginPage = ({ user, login, onClearUserState }) => {
   }, [onClearUserState])
 
   if (user.currentUser) {
-    return <Redirect to={CUSTOMER_PATH} />
+    const isUser = Utils.checkIfIsUser(user.currentUser.roles)
+    return <Redirect to={isUser ? CUSTOMER_PATH : ADMIN_PATH} />
   }
 
   const handleOnSubmit = e => {

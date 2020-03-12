@@ -1,7 +1,7 @@
-import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
-import {WelcomeUserCommand} from '../impl/welcome-user.command';
-import {UserRepository} from '../../repository/user.repository';
-import {Logger} from '@nestjs/common';
+import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
+import { WelcomeUserCommand } from "../impl/welcome-user.command";
+import { UserRepository } from "../../repository/user.repository";
+import { Logger } from "@nestjs/common";
 
 @CommandHandler(WelcomeUserCommand)
 export class WelcomeUserHandler implements ICommandHandler<WelcomeUserCommand> {
@@ -12,9 +12,9 @@ export class WelcomeUserHandler implements ICommandHandler<WelcomeUserCommand> {
 
   async execute(command: WelcomeUserCommand) {
     Logger.log("Async WelcomeUserHandler...", "WelcomeUserCommand");
-    const { userId } = command;
+    const { transactionId, userId } = command;
     const user = this.publisher.mergeObjectContext(
-      await this.repository.welcomeUser(userId)
+      await this.repository.welcomeUser(transactionId, userId)
     );
     user.commit();
   }

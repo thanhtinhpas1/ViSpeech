@@ -1,9 +1,9 @@
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {ReportUpdatedEvent} from '../impl/report-updated.event';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {ReportDto} from 'reports/dtos/reports.dto';
-import {Repository} from 'typeorm';
+import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
+import { ReportUpdatedEvent } from "../impl/report-updated.event";
+import { Logger } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { ReportDto } from "reports/dtos/reports.dto";
+import { Repository } from "typeorm";
 
 @EventsHandler(ReportUpdatedEvent)
 export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
@@ -12,9 +12,13 @@ export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
     private readonly repository: Repository<ReportDto>
   ) {}
 
-  handle(event: ReportUpdatedEvent) {
-    Logger.log(event, "ReportUpdatedEvent"); // write here
-    const { id, ...reportInfo } = event.reportDto[0];
-    this.repository.update(id, reportInfo);
+  async handle(event: ReportUpdatedEvent) {
+    try {
+      Logger.log(event.reportDto.transactionId, "ReportUpdatedEvent"); // write here
+    const { _id, ...reportInfo } = event.reportDto;
+    return await this.repository.update({ _id }, reportInfo);
+    } catch (error) {
+      Logger.error(error, "", "ReportUpdatedEvent");
+    }
   }
 }

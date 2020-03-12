@@ -1,0 +1,142 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-alert */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react/button-has-type */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import Utils from 'utils'
+import { ADMIN_PATH } from 'utils/constant'
+import * as moment from 'moment'
+
+const UserListPage = ({ currentUser, userListObj, deleteUserObj, getUserList, deleteUser }) => {
+  const dataTableFunc = window.$('#userListDataTable').DataTable
+
+  useEffect(() => {
+    if (deleteUserObj.isLoading === false && deleteUserObj.isSuccess === true) {
+      getUserList()
+    }
+    if (deleteUserObj.isSuccess === null) {
+      getUserList()
+    }
+    if (currentUser._id && typeof dataTableFunc === 'function') {
+      window.$('#userListDataTable').DataTable({
+        pagingType: 'full_numbers',
+        lengthMenu: [
+          [10, 25, 50, -1],
+          [10, 25, 50, 'All'],
+        ],
+        responsive: true,
+        // language: {
+        //   search: '_INPUT_',
+        //   searchPlaceholder: 'Search records',
+        // },
+      })
+
+      const table = window.$('#userListDataTable').DataTable()
+
+      // Like record
+      table.on('click', '.like', function a() {
+        alert('You clicked on Like button')
+      })
+
+      window.$('.card .material-datatables label').addClass('form-group')
+    }
+  }, [currentUser._id, deleteUserObj, getUserList, dataTableFunc])
+
+  const onDeleteUser = (e, id) => {
+    deleteUser(id)
+  }
+
+  return (
+    <div className="row">
+      <div className="col-md-12">
+        <div className="card">
+          <div className="card-content">
+            <h4 className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>Danh sách khách hàng</span>
+              <a
+                href={`${ADMIN_PATH}/create-user`}
+                className="btn btn-just-icon btn-simple btn-behance m-0"
+                rel="tooltip"
+                title="Thêm mới"
+              >
+                <i className="zmdi zmdi-plus-circle-o" />
+              </a>
+            </h4>
+            <div className="toolbar" />
+            <div className="material-datatables">
+              {typeof dataTableFunc === 'function' && (
+                <table
+                  id="userListDataTable"
+                  className="table table-striped table-no-bordered table-hover"
+                  cellSpacing={0}
+                  width="100%"
+                  style={{ width: '100%' }}
+                >
+                  <thead>
+                    <tr>
+                      <th>Họ tên</th>
+                      <th>Tên đăng nhập</th>
+                      <th>Email</th>
+                      <th>Vai trò</th>
+                      <th>Tạo ngày</th>
+                      <th className="disabled-sorting text-right">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Họ tên</th>
+                      <th>Tên đăng nhập</th>
+                      <th>Email</th>
+                      <th>Vai trò</th>
+                      <th>Tạo ngày</th>
+                      <th className="text-right">Actions</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    {userListObj.isLoading === false &&
+                      userListObj.isSuccess === true &&
+                      userListObj.userList.map(user => {
+                        return (
+                          <tr key={user._id}>
+                            <td>
+                              {user.lastName} {user.firstName}
+                            </td>
+                            <td>{user.username}</td>
+                            <td>{user.email}</td>
+                            <td>{Utils.getRolesInText(user.roles)}</td>
+                            <td>{moment(user.createdDate).format('DD/MM/YYYY HH:MM')}</td>
+                            <td className="text-right">
+                              <a href="#" className="btn btn-simple btn-info btn-icon like">
+                                <i className="material-icons">favorite</i>
+                              </a>
+                              <Link
+                                to={`/admin/user-info/${user._id}`}
+                                className="btn btn-simple btn-warning btn-icon edit"
+                              >
+                                <i className="material-icons">dvr</i>
+                              </Link>
+                              <a
+                                href="#"
+                                className="btn btn-simple btn-danger btn-icon remove"
+                                onClick={e => onDeleteUser(e, user._id)}
+                              >
+                                <i className="material-icons">close</i>
+                              </a>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default UserListPage

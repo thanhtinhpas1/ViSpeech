@@ -1,7 +1,7 @@
-import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
-import {UpdateOrderCommand} from '../impl/update-order.command';
-import {OrderRepository} from '../../repository/order.repository';
-import {Logger} from '@nestjs/common';
+import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
+import { UpdateOrderCommand } from "../impl/update-order.command";
+import { OrderRepository } from "../../repository/order.repository";
+import { Logger } from "@nestjs/common";
 
 @CommandHandler(UpdateOrderCommand)
 export class UpdateOrderHandler implements ICommandHandler<UpdateOrderCommand> {
@@ -13,9 +13,9 @@ export class UpdateOrderHandler implements ICommandHandler<UpdateOrderCommand> {
   async execute(command: UpdateOrderCommand) {
     Logger.log("Async UpdateOrderHandler...", "UpdateOrderCommand");
 
-    const { orderDto } = command;
+    const { transactionId, orderDto } = command;
     const order = this.publisher.mergeObjectContext(
-      await this.repository.updateOrder(orderDto)
+      await this.repository.updateOrder(transactionId, orderDto)
     );
     order.commit();
   }

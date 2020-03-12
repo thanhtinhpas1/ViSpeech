@@ -1,5 +1,8 @@
-import {IEvent} from '@nestjs/cqrs';
+import { IEvent } from "@nestjs/cqrs";
 
 export class TokenDeletedEvent implements IEvent {
-  constructor(public readonly tokenId: string) {}
+  constructor(
+    public readonly transactionId: string,
+    public readonly tokenId: string
+  ) {}
 }

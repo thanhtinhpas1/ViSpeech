@@ -1,11 +1,11 @@
-import {Injectable} from '@nestjs/common';
-import {CommandBus, QueryBus} from '@nestjs/cqrs';
-import {ReportDto, ReportIdRequestParamsDto} from '../dtos/reports.dto';
-import {CreateReportCommand} from '../commands/impl/create-report.command';
-import {UpdateReportCommand} from '../commands/impl/update-report.command';
-import {DeleteReportCommand} from '../commands/impl/delete-report.command';
-import {GetReportsQuery} from 'reports/queries/impl/get-reports.query';
-import {FindReportQuery} from 'reports/queries/impl/find-report.query';
+import { Injectable } from "@nestjs/common";
+import { CommandBus, QueryBus } from "@nestjs/cqrs";
+import { ReportDto, ReportIdRequestParamsDto } from "../dtos/reports.dto";
+import { CreateReportCommand } from "../commands/impl/create-report.command";
+import { UpdateReportCommand } from "../commands/impl/update-report.command";
+import { DeleteReportCommand } from "../commands/impl/delete-report.command";
+import { GetReportsQuery } from "reports/queries/impl/get-reports.query";
+import { FindReportQuery } from "reports/queries/impl/find-report.query";
 
 @Injectable()
 export class ReportsService {
@@ -33,8 +33,7 @@ export class ReportsService {
   }
 
   async findOne(findReportQuery: FindReportQuery): Promise<ReportDto> {
-    var query = new FindReportQuery();
-    Object.assign(query, findReportQuery);
+    var query = new FindReportQuery(findReportQuery.id);
     return await this.queryBus.execute(query);
   }
 }

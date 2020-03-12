@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import Sidebar from './Sidebar/Sidebar.component'
+import Sidebar from './Sidebar/Sidebar.container'
 import Navbar from './Navbar/Navbar.component'
 import Footer from './Footer/Footer.container'
 

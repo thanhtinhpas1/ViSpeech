@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
@@ -6,10 +7,10 @@ import { CUSTOMER_PATH } from 'utils/constant'
 
 const TokensWalletPage = ({ currentUser, token, getTokens }) => {
   useEffect(() => {
-    if (currentUser.id) {
-      getTokens(currentUser.id)
+    if (currentUser._id) {
+      getTokens(currentUser._id)
     }
-  }, [currentUser.id, getTokens])
+  }, [currentUser._id, getTokens])
   return (
     <div className="page-content">
       <div className="container">
@@ -34,7 +35,7 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
                 <tbody>
                   {token.tokenList.map(item => {
                     return (
-                      <tr className="data-item" key={item.id}>
+                      <tr className="data-item" key={item._id}>
                         <td className="data-col dt-tnxno" style={{ paddingRight: '30px' }}>
                           <span className="lead tnx-id">
                             <div className="copy-wrap w-100">

@@ -1,24 +1,38 @@
-import {IsEmpty} from 'class-validator';
-import {CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import { IsEmpty, IsUUID, IsOptional } from "class-validator";
+import {
+  CreateDateColumn,
+  ObjectID,
+  ObjectIdColumn,
+  UpdateDateColumn,
+  Column
+} from "typeorm";
+import { Utils } from "../utils";
 
 export class BaseEntityDto {
-    @IsEmpty()
-    @PrimaryGeneratedColumn('uuid', {
-        name: 'id',
-    })
-    id: string;
+  constructor() {
+    this._id = Utils.getUuid();
+  }
 
-    @IsEmpty()
-    @CreateDateColumn({
-        name: 'created_date',
-        nullable: true,
-    })
-    createdDate: Date;
+  @ObjectIdColumn()
+  _id: string;
 
-    @IsEmpty()
-    @UpdateDateColumn({
-        name: 'updated_date',
-        nullable: true,
-    })
-    updatedDate;
+  @IsOptional()
+  @IsUUID()
+  @Column({
+    nullable: false,
+    type: "uuid"
+  })
+  transactionId: string;
+
+  @IsEmpty()
+  @CreateDateColumn({
+    name: "created_date"
+  })
+  createdDate: Date;
+
+  @IsEmpty()
+  @UpdateDateColumn({
+    name: "updated_date"
+  })
+  updatedDate: Date;
 }

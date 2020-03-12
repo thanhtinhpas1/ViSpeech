@@ -6,6 +6,19 @@ export const DEFAULT_AVATAR_URL =
 export const CUSTOMER_PATH = '/customer'
 export const ADMIN_PATH = '/admin'
 export const ROLES = {
-  customer: 'customer',
-  admin: 'admin',
+  ADMIN: 'ADMIN',
+  USER: 'USER',
+  MANAGER_USER: 'MANAGER_USER',
+  CSR_USER: 'CSR_USER',
+}
+export const TOKEN_TYPE = {
+  FREE: 'FREE',
+  '50-MINS': '50-MINS',
+  '200-MINS': '200-MINS',
+  '500-MINS': '500-MINS',
+}
+export const STATUS = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILURE: 'FAILURE',
 }

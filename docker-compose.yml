@@ -17,19 +17,14 @@ services:
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
     network_mode: bridge
   # DATABASE - MYSQL
-  mysql:
-    image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
+  mongodb:
+    image: mongo
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 'mysql'
-      MYSQL_USER: 'vispeech'
-      MYSQL_PASSWORD: 'vispeech'
-      MYSQL_DATABASE: 'vispeech'
-    ports: 
-      - 3306:3306
-    expose: 
-      - 3306
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongodb
+    ports:
+      - 27017:27017
     network_mode: bridge
   # API - VISPEECH
   vispeech:
@@ -42,18 +37,38 @@ services:
     #   replicas: ${CONTAINER_SCALE}
     depends_on:
       - eventstore
-      - mysql
+      - mongodb
     # env_file:
     #   - "./.env"
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
-      - 7070:7070
-    expose: 
-      - 7070
-    # volumes:
-    #   - "./src:/app/src"
+      - 80:80
+    expose:
+      - 80
+     volumes:
+       - "./src:/app/src"
     links:
       - eventstore
-      - mysql
+      - mongodb
     network_mode: bridge
+  vispeechdemo:
+    build:
+      context: "./ViSpeechDemo"
+      command: ${CONTAINER_COMMAND}
+      restart: always
+      depends_on:
+        - eventstore
+        - mongodb
+        - vispeech
+      ports:
+        - 3000:3000
+      expose:
+        - 3000
+       volumes:
+         - "./src:/app/src"
+      links:
+        - eventstore
+        - mongodb
+        - vispeech
+      network_mode: bridge

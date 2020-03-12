@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* Javascript plotting library for jQuery, version 0.8.3.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
