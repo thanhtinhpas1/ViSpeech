@@ -5,12 +5,35 @@
 import React, { useEffect } from 'react'
 import { CUSTOMER_PATH } from 'utils/constant'
 
-const TokensWalletPage = ({ currentUser, token, getTokens }) => {
+const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
   useEffect(() => {
-    if (currentUser._id) {
+    if (currentUser._id && token.isLoading === false && token.isSuccess === null) {
       getTokens(currentUser._id)
     }
-  }, [currentUser._id, getTokens])
+    if (token.isLoading === false && token.isSuccess === true && isJsLoaded) {
+      window.$('#tokenListDataTable').DataTable({
+        ordering: !1,
+        autoWidth: !1,
+        dom: '<t><"row align-items-center"<"col-sm-6 text-left"p><"col-sm-6 text-sm-right"i>>',
+        pageLength: 5,
+        // bPaginate: e('.data-table tbody tr').length > 5,
+        // iDisplayLength: 5,
+        language: {
+          search: '',
+          // searchPlaceholder: 'Type in to Search',
+          info: 'Hiển thị _START_ đến _END_ trên _TOTAL_ dòng',
+          infoEmpty: 'Không có dữ liệu',
+          infoFiltered: '(filtered from _MAX_ total entries)',
+          paginate: {
+            first: 'Trang đầu',
+            last: 'Trang cuối',
+            next: 'Tiếp theo',
+            previous: 'Quay lại',
+          },
+        },
+      })
+    }
+  }, [currentUser._id, token, getTokens, isJsLoaded])
   return (
     <div className="page-content">
       <div className="container">
@@ -19,8 +42,8 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
             <div className="card-head">
               <h4 className="card-title">Ví key</h4>
             </div>
-            {token.tokenList && (
-              <table className="data-table dt-init user-tnx">
+            {token.isLoading === false && token.isSuccess === true && isJsLoaded && (
+              <table className="data-table user-tnx" id="tokenListDataTable">
                 <thead>
                   <tr className="data-item data-head">
                     <th className="data-col dt-tnxno">Key</th>

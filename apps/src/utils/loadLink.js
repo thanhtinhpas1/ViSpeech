@@ -1,6 +1,6 @@
-const loadLink = (url, id, status) => {
+const loadLink = (url, id, action) => {
   return new Promise((resolve, reject) => {
-    if (status === 'on') {
+    if (action === 'on') {
       let ready = false
       if (!document) {
         reject(new Error('Document was not defined'))
@@ -46,7 +46,7 @@ const loadLink = (url, id, status) => {
       if (linkToRemove) {
         linkToRemove.parentNode.removeChild(linkToRemove)
       }
-      resolve(linkToRemove)
+      resolve(linkToRemove || { id: `link-${id}` })
     }
   })
 }

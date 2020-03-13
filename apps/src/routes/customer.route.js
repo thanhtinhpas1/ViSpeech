@@ -12,7 +12,7 @@ import TransactionDetailsPage from 'components/customer/TransactionDetailsPage/T
 import TokensWalletPage from 'components/customer/TokensWalletPage/TokensWalletPage.container'
 import ProfilePage from 'components/customer/ProfilePage/ProfilePage.component'
 
-const RouteCustomer = ({ currentUser }) => {
+const RouteCustomer = ({ currentUser, isJsLoaded }) => {
   return (
     <Switch>
       {/* WITHOUT login, user can access those links */}
@@ -27,7 +27,7 @@ const RouteCustomer = ({ currentUser }) => {
             path={`${CUSTOMER_PATH}/transactions`}
             render={() => (
               <CustomerLayout>
-                <TransactionsPage />
+                <TransactionsPage isJsLoaded={isJsLoaded} />
               </CustomerLayout>
             )}
           />
@@ -43,7 +43,7 @@ const RouteCustomer = ({ currentUser }) => {
             path={`${CUSTOMER_PATH}/tokens-wallet`}
             render={() => (
               <CustomerLayout>
-                <TokensWalletPage />
+                <TokensWalletPage isJsLoaded={isJsLoaded} />
               </CustomerLayout>
             )}
           />

@@ -1,6 +1,6 @@
-const loadScript = (url, id, status) => {
+const loadScript = (url, id, action) => {
   return new Promise((resolve, reject) => {
-    if (status === 'on') {
+    if (action === 'on') {
       let ready = false
       if (!document) {
         reject(new Error('Document was not defined'))
@@ -44,7 +44,7 @@ const loadScript = (url, id, status) => {
       if (scriptToRemove) {
         scriptToRemove.parentNode.removeChild(scriptToRemove)
       }
-      resolve(scriptToRemove)
+      resolve(scriptToRemove || { id: `script-${id}` })
     }
   })
 }
