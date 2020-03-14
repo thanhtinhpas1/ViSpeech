@@ -9,8 +9,8 @@ export class AuthController {
   @UseGuards(AuthGuard("local"))
   @Post("login")
   login(@Request() req) {
-    const { _id, username } = req.user;
-    req.user.token = this.authService.generate_token(_id, username);
+    const { _id, username, roles } = req.user;
+    req.user.token = this.authService.generate_token(_id, username, roles);
     return req.user;
   }
   

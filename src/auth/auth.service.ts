@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, Logger} from "@nestjs/common";
 import {QueryBus} from "@nestjs/cqrs";
 import {JwtService} from "@nestjs/jwt";
 import {UserDto} from "users/dtos/users.dto";
@@ -31,8 +31,8 @@ export class AuthService {
         return user || null;
     }
 
-    generate_token(userId, username) {
-        const payload = {username, id: userId};
+    generate_token(userId, username, roles) {
+        const payload = {username, id: userId, roles};
         return this.jwtService.sign(payload);
     }
 

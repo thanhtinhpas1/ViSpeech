@@ -18,16 +18,16 @@ export class UserRepository {
     return user;
   }
 
-  async updateUser(updatedBy: string, roles: string[], userDto: UserDto) {
+  async updateUser(userDto: UserDto) {
     const user = new User(undefined);
     user.setData(userDto);
-    user.updateUser(updatedBy, roles);
+    user.updateUser();
     return user;
   }
 
-  async deleteUser(updatedBy: string, roles: string[], userId: string) {
+  async deleteUser(userId: string) {
     const user = new User(userId);
-    user.deleteUser(updatedBy, roles);
+    user.deleteUser();
     return user;
   }
 

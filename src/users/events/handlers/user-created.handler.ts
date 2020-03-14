@@ -1,15 +1,16 @@
-import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
+import {EventBus, EventsHandler, IEventHandler} from "@nestjs/cqrs";
 import {
   UserCreatedEvent,
-  UserCreationStartedEvent,
   UserCreatedFailEvent,
   UserCreatedSuccessEvent,
+  UserCreationStartedEvent,
 } from "../impl/user-created.event";
-import { Logger } from "@nestjs/common";
-import { getMongoRepository } from "typeorm";
-import { UserDto } from "users/dtos/users.dto";
-import { Utils } from "utils";
-import { RoleDto } from "roles/dtos/roles.dto";
+import {Logger} from "@nestjs/common";
+import {getMongoRepository} from "typeorm";
+import {UserDto} from "users/dtos/users.dto";
+import {Utils} from "utils";
+import {RoleDto} from "roles/dtos/roles.dto";
+import {CONSTANTS} from "../../../common/constant";
 
 @EventsHandler(UserCreationStartedEvent)
 export class UserCreationStartedHandler
@@ -28,13 +29,10 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
   async handle(event: UserCreatedEvent) {
     Logger.log(event, "UserCreatedEvent");
     const user = event.userDto;
-    const transactionId = event.transactionId;
     try {
       user.password = Utils.hashPassword(user.password);
-      const formattedRoles = Utils.formatUserRoles(user.roles);
-      user.roles = formattedRoles.map(role => new RoleDto(role.name));
-      user.roles.forEach(role => delete role._id);
-      user.transactionId = transactionId;
+      user.roles = [new RoleDto(CONSTANTS.ROLE.USER)];
+      user.transactionId = event.transactionId;
       const newUser = await getMongoRepository(UserDto).save(user);
       this.eventBus.publish(new UserCreatedSuccessEvent(event.transactionId, newUser))
     } catch (error) {
@@ -47,7 +45,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 export class UserCreatedSuccessHandler
   implements IEventHandler<UserCreatedSuccessEvent> {
   handle(event: UserCreatedSuccessEvent) {
-    // Logger.log(event, "UserCreatedSuccessEvent");
+    Logger.log(event.transactionId, "UserCreatedSuccessEvent");
   }
 }
 
@@ -55,6 +53,6 @@ export class UserCreatedSuccessHandler
 export class UserCreatedFailHandler
   implements IEventHandler<UserCreatedFailEvent> {
   handle(event: UserCreatedFailEvent) {
-    // Logger.log(event, "UserCreatedFailEvent");
+    Logger.log(event.transactionId, "UserCreatedFailEvent");
   }
 }
