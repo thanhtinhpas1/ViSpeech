@@ -10,7 +10,6 @@ export class CreateUserStartCommand implements ICommand {
 
 export class CreateUserCommand implements ICommand {
   constructor(
-    public readonly transactionId: string,
     public readonly userDto: UserDto
   ) {}
 }

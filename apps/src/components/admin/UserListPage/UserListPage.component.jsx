@@ -9,17 +9,14 @@ import Utils from 'utils'
 import { ADMIN_PATH } from 'utils/constant'
 import * as moment from 'moment'
 
-const UserListPage = ({ currentUser, userListObj, deleteUserObj, getUserList, deleteUser }) => {
-  const dataTableFunc = window.$('#userListDataTable').DataTable
-
+const UserListPage = ({ userListObj, isJsLoaded, deleteUserObj, getUserList, deleteUser }) => {
   useEffect(() => {
     if (deleteUserObj.isLoading === false && deleteUserObj.isSuccess === true) {
       getUserList()
-    }
-    if (deleteUserObj.isSuccess === null) {
+    } else if (userListObj.isLoading === false && userListObj.isSuccess === null) {
       getUserList()
     }
-    if (currentUser._id && typeof dataTableFunc === 'function') {
+    if (userListObj.isLoading === false && userListObj.isSuccess === true && isJsLoaded) {
       window.$('#userListDataTable').DataTable({
         pagingType: 'full_numbers',
         lengthMenu: [
@@ -27,10 +24,19 @@ const UserListPage = ({ currentUser, userListObj, deleteUserObj, getUserList, de
           [10, 25, 50, 'All'],
         ],
         responsive: true,
-        // language: {
-        //   search: '_INPUT_',
-        //   searchPlaceholder: 'Search records',
-        // },
+        language: {
+          search: '',
+          // searchPlaceholder: 'Type in to Search',
+          info: 'Hiển thị _START_ đến _END_ trên _TOTAL_ dòng',
+          infoEmpty: 'Không có dữ liệu',
+          infoFiltered: '(filtered from _MAX_ total entries)',
+          paginate: {
+            first: 'Trang đầu',
+            last: 'Trang cuối',
+            next: 'Tiếp theo',
+            previous: 'Quay lại',
+          },
+        },
       })
 
       const table = window.$('#userListDataTable').DataTable()
@@ -42,7 +48,7 @@ const UserListPage = ({ currentUser, userListObj, deleteUserObj, getUserList, de
 
       window.$('.card .material-datatables label').addClass('form-group')
     }
-  }, [currentUser._id, deleteUserObj, getUserList, dataTableFunc])
+  }, [deleteUserObj, userListObj, getUserList, isJsLoaded])
 
   const onDeleteUser = (e, id) => {
     deleteUser(id)
@@ -66,7 +72,7 @@ const UserListPage = ({ currentUser, userListObj, deleteUserObj, getUserList, de
             </h4>
             <div className="toolbar" />
             <div className="material-datatables">
-              {typeof dataTableFunc === 'function' && (
+              {userListObj.isLoading === false && userListObj.isSuccess === true && isJsLoaded && (
                 <table
                   id="userListDataTable"
                   className="table table-striped table-no-bordered table-hover"
@@ -95,39 +101,37 @@ const UserListPage = ({ currentUser, userListObj, deleteUserObj, getUserList, de
                     </tr>
                   </tfoot>
                   <tbody>
-                    {userListObj.isLoading === false &&
-                      userListObj.isSuccess === true &&
-                      userListObj.userList.map(user => {
-                        return (
-                          <tr key={user._id}>
-                            <td>
-                              {user.lastName} {user.firstName}
-                            </td>
-                            <td>{user.username}</td>
-                            <td>{user.email}</td>
-                            <td>{Utils.getRolesInText(user.roles)}</td>
-                            <td>{moment(user.createdDate).format('DD/MM/YYYY HH:MM')}</td>
-                            <td className="text-right">
-                              <a href="#" className="btn btn-simple btn-info btn-icon like">
-                                <i className="material-icons">favorite</i>
-                              </a>
-                              <Link
-                                to={`/admin/user-info/${user._id}`}
-                                className="btn btn-simple btn-warning btn-icon edit"
-                              >
-                                <i className="material-icons">dvr</i>
-                              </Link>
-                              <a
-                                href="#"
-                                className="btn btn-simple btn-danger btn-icon remove"
-                                onClick={e => onDeleteUser(e, user._id)}
-                              >
-                                <i className="material-icons">close</i>
-                              </a>
-                            </td>
-                          </tr>
-                        )
-                      })}
+                    {userListObj.userList.map(user => {
+                      return (
+                        <tr key={user._id}>
+                          <td>
+                            {user.lastName} {user.firstName}
+                          </td>
+                          <td>{user.username}</td>
+                          <td>{user.email}</td>
+                          <td>{Utils.getRolesInText(user.roles)}</td>
+                          <td>{moment(user.createdDate).format('DD/MM/YYYY HH:MM')}</td>
+                          <td className="text-right">
+                            <a href="#" className="btn btn-simple btn-info btn-icon like">
+                              <i className="material-icons">favorite</i>
+                            </a>
+                            <Link
+                              to={`/admin/user-info/${user._id}`}
+                              className="btn btn-simple btn-warning btn-icon edit"
+                            >
+                              <i className="material-icons">dvr</i>
+                            </Link>
+                            <a
+                              href="#"
+                              className="btn btn-simple btn-danger btn-icon remove"
+                              onClick={e => onDeleteUser(e, user._id)}
+                            >
+                              <i className="material-icons">close</i>
+                            </a>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               )}

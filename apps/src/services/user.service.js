@@ -125,11 +125,14 @@ export default class UserService {
 
   static getUserList = () => {
     const api = `${apiUrl}/users`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
     let status = 400
     return fetch(api, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
       },
     })
       .then(response => {
@@ -149,11 +152,14 @@ export default class UserService {
 
   static getUserInfo = id => {
     const api = `${apiUrl}/users/${id}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
     let status = 400
     return fetch(api, {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
       },
     })
       .then(response => {

@@ -1,27 +1,27 @@
 import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {AssignedRoleEvent} from '../impl/role-assigned.event';
 import {Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {UserDto} from '../../dtos/users.dto';
 import {Repository} from 'typeorm';
 import {RoleDto} from '../../../roles/dtos/roles.dto';
+import {UserRoleAssignedEvent} from "../impl/user-role-assigned.event";
 
-@EventsHandler(AssignedRoleEvent)
-export class AssignedRoleHandler implements IEventHandler {
+@EventsHandler(UserRoleAssignedEvent)
+export class AssignedRoleHandler implements IEventHandler<UserRoleAssignedEvent> {
     constructor(
         @InjectRepository(UserDto)
         private readonly userRepository: Repository<UserDto>,
     ) {
     }
 
-    async handle(event: AssignedRoleEvent) {
+    handle(event: UserRoleAssignedEvent) {
         try {
-            Logger.log(event.transactionId, 'AssignedRoleEvent');
-            const userId = event.transactionId;
+            const userId = event.userId;
             const roleName = event.roleName;
             const assignerId = event.assignerId;
             const rolesDto = [new RoleDto(roleName)];
-            return await this.userRepository.update({_id: userId},
+            Logger.log(event.userId, 'AssignedRoleEvent');
+            return this.userRepository.update({_id: userId},
                 {roles: rolesDto, assignerId});
         } catch (e) {
             Logger.error(e, e.message, 'AssignedRoleEvent');

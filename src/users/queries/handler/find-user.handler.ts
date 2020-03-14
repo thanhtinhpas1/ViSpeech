@@ -15,13 +15,12 @@ export class FindUserHandler implements IQueryHandler<FindUserQuery> {
 
     async execute(query: FindUserQuery) {
         try {
-            const user = await this.repository.findOne({_id: query.id.toString()});
+            const user = await this.repository.findOne({_id: query.id});
             delete user['password'];
             Logger.log("Async FindUserQuery...", "FindUserQuery");
             return user;
         } catch (error) {
             Logger.error(error.message, "", "FindUserQuery");
-            return null;
         }
     }
 }

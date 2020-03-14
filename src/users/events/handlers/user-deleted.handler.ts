@@ -1,5 +1,5 @@
 import {EventsHandler, IEventHandler} from "@nestjs/cqrs";
-import {UserDeletedEvent} from "../impl/user-deleted.event";
+import {UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent} from "../impl/user-deleted.event";
 import {Logger} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserDto} from "users/dtos/users.dto";
@@ -24,5 +24,21 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
         } catch (error) {
             Logger.error(error, "", "UserDeletedEvent");
         }
+    }
+}
+
+@EventsHandler(UserDeletedSuccessEvent)
+export class UserDeletedSuccessHandler
+    implements IEventHandler<UserDeletedSuccessEvent> {
+    handle(event: UserDeletedSuccessEvent) {
+        Logger.log(event.userId, "UserDeletedSuccessEvent");
+    }
+}
+
+@EventsHandler(UserDeletedFailedEvent)
+export class UserDeletedFailedHandler
+    implements IEventHandler<UserDeletedFailedEvent> {
+    handle(event: UserDeletedFailedEvent) {
+        Logger.log(event.userId, "UserDeletedFailedEvent");
     }
 }

@@ -1,4 +1,4 @@
-import {forwardRef, Logger, Module, OnModuleInit} from "@nestjs/common";
+import {forwardRef, Module, OnModuleInit} from "@nestjs/common";
 import {CommandBus, EventBus, EventPublisher, QueryBus} from "@nestjs/cqrs";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {AuthModule} from "auth/auth.module";
@@ -11,48 +11,39 @@ import {CommandHandlers} from "./commands/handlers";
 import {UsersController} from "./controllers/users.controller";
 import {UserDto} from "./dtos/users.dto";
 import {EventHandlers} from "./events/handlers";
-import {AssignedRoleEvent} from "./events/impl/role-assigned.event";
 import {
     UserCreatedEvent,
-    UserCreatedFailEvent,
+    UserCreatedFailedEvent,
     UserCreatedSuccessEvent,
     UserCreationStartedEvent
 } from "./events/impl/user-created.event";
-import {UserDeletedEvent} from "./events/impl/user-deleted.event";
-import {UserUpdatedEvent} from "./events/impl/user-updated.event";
+import {UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent} from "./events/impl/user-deleted.event";
+import {UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent} from "./events/impl/user-updated.event";
 import {UserWelcomedEvent} from "./events/impl/user-welcomed.event";
 import {QueryHandlers} from "./queries/handler";
 import {UserRepository} from "./repository/user.repository";
 import {UsersSagas} from "./sagas/users.sagas";
 import {UsersService} from "./services/users.service";
-import {getMongoRepository} from "typeorm";
-import {RoleDto} from "../roles/dtos/roles.dto";
-import {CONSTANTS} from "../common/constant";
-import {Utils} from "../utils";
+import {UserRoleAssignedEvent} from "./events/impl/user-role-assigned.event";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([UserDto]),
         forwardRef(() => AuthModule),
-        EventStoreModule.forFeature(),
+        EventStoreModule.forFeature()
     ],
     controllers: [UsersController],
     providers: [
         UsersService,
-        UsersSagas,
-        ...CommandHandlers,
-        ...TokenCommandHandlers,
-        ...EventHandlers,
-        ...QueryHandlers,
+        UsersSagas, ...CommandHandlers, ...TokenCommandHandlers,
+        ...EventHandlers, ...QueryHandlers,
         /*** REPOSITORY */
-        UserRepository,
-        TokenRepository,
+        UserRepository, TokenRepository,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
     ],
     exports: [UsersService]
 })
 export class UsersModule implements OnModuleInit {
-
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
@@ -62,36 +53,32 @@ export class UsersModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        /** ------------ */
-        getMongoRepository(UserDto).save(new UserDto("admin", "admin", "admin",
-            Utils.hashPassword("admin"), "vispeech@gmail.com", "", [new RoleDto(CONSTANTS.ROLE.ADMIN)]))
-            .then(rs => {
-                Logger.log("Created Admin account", 'CreatedAdmin');
-            }).catch(err => {
-            Logger.warn(err.message, 'Create Admin account failed');
+        this.eventStore.setEventHandlers({
+            ...this.eventHandlers,
+            ...TokensModule.eventHandlers
         });
-
-        /** ------------ */
-        this.eventStore.setEventHandlers({...this.eventHandlers, ...TokensModule.eventHandlers});
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
-        /** ------------ */
         this.event$.register(EventHandlers);
         this.command$.register([...CommandHandlers, ...TokenCommandHandlers]);
-        // @ts-ignore
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
     }
 
     eventHandlers = {
-        UserCreationStartedEvent: (transactionId, data) => new UserCreationStartedEvent(transactionId, data),
-        UserCreatedEvent: (transactionId, data) => new UserCreatedEvent(transactionId, data),
-        UserCreatedSuccessEvent: (transactionId, data) => new UserCreatedSuccessEvent(transactionId, data),
-        UserCreatedFailEvent: (transactionId, data, error) => new UserCreatedFailEvent(transactionId, data, error),
-
-        UserDeletedEvent: (updatedBy) => new UserDeletedEvent(updatedBy),
-        UserUpdatedEvent: (updatedBy) => new UserUpdatedEvent(updatedBy),
-        UserWelcomedEvent: data => new UserWelcomedEvent(data),
-        AssignedRoleEvent: (transactionId, roles, assignerId) => new AssignedRoleEvent(transactionId, roles, assignerId),
+        // create
+        UserCreationStartedEvent: (data) => new UserCreationStartedEvent(data),
+        UserCreatedEvent: (data) => new UserCreatedEvent(data),
+        UserCreatedSuccessEvent: (data) => new UserCreatedSuccessEvent(data),
+        UserCreatedFailedEvent: (data, error) => new UserCreatedFailedEvent(data, error),
+        UserUpdatedEvent: (data) => new UserUpdatedEvent(data),
+        UserUpdatedSuccessEvent: (data) => new UserUpdatedSuccessEvent(data),
+        UserUpdatedFailedEvent: (error) => new UserUpdatedFailedEvent(error),
+        // delete
+        UserDeletedEvent: (data) => new UserDeletedEvent(data),
+        UserDeletedSuccessEvent: (data) => new UserDeletedSuccessEvent(data),
+        UserDeletedFailedEvent: (data, error) => new UserDeletedFailedEvent(data, error),
+        UserWelcomedEvent: (data) => new UserWelcomedEvent(data),
+        UserRoleAssignedEvent: (userId, roleName, assignerId) => new UserRoleAssignedEvent(userId, roleName, assignerId),
     };
 }

@@ -8,7 +8,7 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
   constructor(
     private readonly repository: UserRepository,
     private readonly publisher: EventPublisher
-  ) { }
+  ) {}
 
   async execute(command: DeleteUserCommand) {
     Logger.log("Async DeleteUserHandler...", "DeleteUserCommand");

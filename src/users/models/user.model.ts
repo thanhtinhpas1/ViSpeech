@@ -1,50 +1,42 @@
-import { Logger } from "@nestjs/common";
-import { AggregateRoot } from "@nestjs/cqrs";
-import { AssignedRoleEvent } from "users/events/impl/role-assigned.event";
-import {
-  UserCreationStartedEvent,
-  UserCreatedEvent
-} from "../events/impl/user-created.event";
-import { UserDeletedEvent } from "../events/impl/user-deleted.event";
-import { UserUpdatedEvent } from "../events/impl/user-updated.event";
-import { UserWelcomedEvent } from "../events/impl/user-welcomed.event";
+import {Logger} from "@nestjs/common";
+import {AggregateRoot} from "@nestjs/cqrs";
+import {UserCreatedEvent, UserCreationStartedEvent} from "../events/impl/user-created.event";
+import {UserDeletedEvent} from "../events/impl/user-deleted.event";
+import {UserUpdatedEvent} from "../events/impl/user-updated.event";
+import {UserRoleAssignedEvent} from "../events/impl/user-role-assigned.event";
 
 export class User extends AggregateRoot {
-  [x: string]: any;
+    [x: string]: any;
 
-  constructor(private readonly id: string | undefined) {
-    super();
-  }
-
-  setData(data) {
-    this.data = data;
-  }
-
-  createUserStart(transactionId: string) {
-    this.apply(new UserCreationStartedEvent(transactionId, this.data));
-  }
-
-  createUser(transactionId: string) {
-    this.apply(new UserCreatedEvent(transactionId, this.data));
-  }
-
-  updateUser() {
-    this.apply(new UserUpdatedEvent(this.data));
-  }
-
-  welcomeUser() {
-    this.apply(new UserWelcomedEvent(this.id));
-  }
-
-  deleteUser() {
-    this.apply(new UserDeletedEvent(this.id));
-  }
-
-  assignRoleUser(userId, roleName, assignerId) {
-    try {
-      this.apply(new AssignedRoleEvent(userId, roleName, assignerId));
-    } catch (e) {
-      Logger.error(e, '', '[UserModel] assignRoleUser');
+    constructor(private readonly id: string | undefined) {
+        super();
     }
-  }
+
+    setData(data) {
+        this.data = data;
+    }
+
+    createUserStart(transactionId: string) {
+        this.apply(new UserCreationStartedEvent(this.data));
+    }
+
+    createUser() {
+        this.apply(new UserCreatedEvent(this.data));
+    }
+
+    updateUser() {
+        this.apply(new UserUpdatedEvent(this.data));
+    }
+
+    deleteUser() {
+        this.apply(new UserDeletedEvent(this.id));
+    }
+
+    assignUserRole(roleName: string, assignerId: string) {
+        try {
+            this.apply(new UserRoleAssignedEvent(this.id, roleName, assignerId));
+        } catch (err) {
+            Logger.error(err.message, '', '[UserModel] assignUserRole');
+        }
+    }
 }
