@@ -3,11 +3,11 @@ import React, { useEffect } from 'react'
 import { JWT_TOKEN, ADMIN_PATH } from 'utils/constant'
 import STORAGE from 'utils/storage'
 
-const Sidebar = ({ onAuthenticate }) => {
+const Sidebar = ({ currentUser, onAuthenticate }) => {
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
-    onAuthenticate(token)
-  }, [onAuthenticate])
+    if ((!currentUser && token) || !token) onAuthenticate(token)
+  }, [currentUser, onAuthenticate])
 
   return (
     <div className="sidebar">

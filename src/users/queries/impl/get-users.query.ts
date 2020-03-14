@@ -1,4 +1,5 @@
 export class GetUsersQuery {
-  limit!: number;
-  offset!: number;
+    userId!: string;
+    limit!: number;
+    offset!: number;
 }

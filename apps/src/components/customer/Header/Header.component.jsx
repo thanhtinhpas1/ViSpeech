@@ -5,7 +5,7 @@ import { withRouter } from 'react-router'
 import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 
-const Header = ({ onAuthenticate, logout }) => {
+const Header = ({ currentUser, onAuthenticate, logout }) => {
   const [userLinks, setUserLinks] = useState([])
   const [navbarMenu, setNavbarMenu] = useState([])
 
@@ -45,8 +45,8 @@ const Header = ({ onAuthenticate, logout }) => {
 
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
-    onAuthenticate(token)
-  }, [onAuthenticate])
+    if ((!currentUser && token) || !token) onAuthenticate(token)
+  }, [currentUser, onAuthenticate])
 
   // useEffect(() => {
   //   let interval

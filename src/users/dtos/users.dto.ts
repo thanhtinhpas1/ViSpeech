@@ -1,72 +1,96 @@
-import { BaseEntityDto } from "base/base-entity.dto";
-import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
-import { RoleDto } from "roles/dtos/roles.dto";
-import { Column, Entity, Index } from "typeorm";
+import {BaseEntityDto} from "base/base-entity.dto";
+import {IsArray, IsEmail, IsEmpty, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from "class-validator";
+import {RoleDto} from "roles/dtos/roles.dto";
+import {Column, Entity, Index} from "typeorm";
+import {CONSTANTS} from "common/constant";
 
 export class UserIdRequestParamsDto {
-  constructor(userId) {
-    this._id = userId;
-  }
+    constructor(userId) {
+        this._id = userId;
+    }
 
-  @IsString()
-  @IsOptional()
-  _id: string;
+    @IsString()
+    @IsOptional()
+    _id: string;
 }
 
-export class AssignUserRoleBody {
-  @IsNotEmpty()
-  @IsArray()
-  roleNames: string[];
+export class AssignRoleUserBody {
+    @IsNotEmpty()
+    @IsArray()
+    @IsIn([CONSTANTS.ROLE.USER, CONSTANTS.ROLE.CSR_USER, CONSTANTS.ROLE.MANAGER_USER],
+        {each: true})
+    roleName: string;
 }
 
 @Entity("users")
 export class UserDto extends BaseEntityDto {
-  @IsString()
-  @IsNotEmpty()
-  @Column()
-  firstName: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Column()
-  lastName: string;
+    constructor(firstName: string, lastName: string, username: string, password: string, email: string, assignerId: string, roles: RoleDto[]) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.assignerId = assignerId;
+        this.roles = roles;
+    }
 
-  @IsString()
-  @IsNotEmpty()
-  @Index({ unique: true })
-  @Column()
-  username: string;
+    @IsString()
+    @IsNotEmpty()
+    @Column()
+    firstName: string;
 
-  @IsOptional()
-  @IsString()
-  @Column()
-  password: string;
+    @IsString()
+    @IsNotEmpty()
+    @Column()
+    lastName: string;
 
-  @IsEmail()
-  @IsNotEmpty()
-  @Column({ unique: true })
-  email: string;
+    @IsString()
+    @IsNotEmpty()
+    @Index({unique: true})
+    @Column({nullable: false})
+    readonly username: string;
 
-  @IsOptional()
-  @IsUUID()
-  @Column()
-  assignerId: string;
+    @IsOptional()
+    @IsString()
+    @Column({
+        select: false, nullable: false,
+    })
+    password: string;
 
-  @IsEmpty()
-  @Column({
-    default: true,
-    nullable: true
-  })
-  firstTimeLoginRemaining: boolean;
+    @IsEmail()
+    @IsNotEmpty()
+    @Column({
+        unique: true, update: false,
+    })
+    email: string;
 
-  @IsEmpty()
-  @Column({
-    default: true,
-    nullable: false
-  })
-  isActive: boolean;
+    @IsOptional()
+    @IsUUID()
+    @Column({
+        update: false,
+    })
+    assignerId: string;
 
-  @IsArray()
-  @Column()
-  roles: RoleDto[];
+    @IsEmpty()
+    @Column({
+        default: true,
+        nullable: true,
+        insert: false,
+    })
+    firstTimeLoginRemaining: boolean;
+
+    @IsEmpty()
+    @Column({
+        default: true,
+        nullable: false,
+        insert: false,
+    })
+    isActive: boolean;
+
+    @IsArray()
+    @IsOptional()
+    @Column()
+    roles: RoleDto[];
 }

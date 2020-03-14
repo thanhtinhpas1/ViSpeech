@@ -1,16 +1,8 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsPositive,
-  IsString,
-  IsUUID,
-  IsIn,
-  IsOptional
-} from "class-validator";
-import { Column, Entity, ObjectID } from "typeorm";
 import { BaseEntityDto } from "base/base-entity.dto";
 import { Type } from "class-transformer";
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from "class-validator";
 import { CONSTANTS } from "common/constant";
+import { Column, Entity, ObjectID } from "typeorm";
 
 export class OrderIdRequestParamsDto {
   constructor(orderId) {

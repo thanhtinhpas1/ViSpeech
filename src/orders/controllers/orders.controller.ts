@@ -1,30 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { FindOrderQuery } from "orders/queries/impl/find-order.query";
+import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
+import { Utils } from "utils";
 import { OrderDto, OrderIdRequestParamsDto } from "../dtos/orders.dto";
 import { OrdersService } from "../services/orders.service";
-import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
-import { FindOrderQuery } from "orders/queries/impl/find-order.query";
-import { Utils } from "utils";
+import { OrderGuard } from "auth/guards/order.guard";
+import { CONSTANTS } from "common/constant";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("orders")
 @ApiTags("Orders")
+@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) { }
 
-  /* Create Order */
-  /* {
-    "tokenTypeId": "2a34b730-5f7d-11ea-b956-5fe6b0acdf56",
-    "userId": "cee86310-5f75-11ea-87f6-45e8ec87c67d"
-  }*/
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Order"] })
   @ApiResponse({ status: 200, description: "Create Order." })

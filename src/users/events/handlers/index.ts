@@ -1,26 +1,32 @@
-import { UserRoleAssignedHandler } from "./user-role-assigned.handler"
-import { UserDeletedHandler, UserDeletedSuccessHandler, UserDeletedFailedHandler } from "./user-deleted.handler";
-import { UserUpdatedHandler, UserUpdatedFailedHandler, UserUpdatedSuccessHandler } from "./user-updated.handler";
-import { UserCreationStartedHandler, UserCreatedFailedHandler, UserCreatedHandler, UserCreatedSuccessHandler } from "./user-created.handler";
-import { UserWelcomedHandler } from "./user-welcomed.handler";
+import {UserDeletedFailedHandler, UserDeletedHandler, UserDeletedSuccessHandler} from "./user-deleted.handler";
+import {UserUpdatedFailedHandler, UserUpdatedHandler, UserUpdatedSuccessHandler} from "./user-updated.handler";
+import {
+    UserCreatedFailHandler,
+    UserCreatedHandler,
+    UserCreatedSuccessHandler,
+    UserCreationStartedHandler
+} from "./user-created.handler";
+import {UserWelcomedHandler} from "./user-welcomed.handler";
+import {AssignedRoleHandler} from "./user-role-assigned.handler";
 
 export const EventHandlers = [
-  // create
-  UserCreationStartedHandler,
-  UserCreatedSuccessHandler,
-  UserCreatedFailedHandler,
-  UserCreatedHandler,
+    // create
+    UserCreationStartedHandler,
+    UserCreatedSuccessHandler,
+    UserCreatedFailHandler,
+    UserCreatedHandler,
+    UserCreatedHandler,
 
-  // update
-  UserUpdatedHandler,
-  UserUpdatedSuccessHandler,
-  UserUpdatedFailedHandler,
+    // update
+    UserUpdatedHandler,
+    UserUpdatedSuccessHandler,
+    UserUpdatedFailedHandler,
+    AssignedRoleHandler,
 
-  // delete
-  UserDeletedHandler,
-  UserDeletedSuccessHandler,
-  UserDeletedFailedHandler,
+    // delete
+    UserDeletedHandler,
+    UserDeletedSuccessHandler,
+    UserDeletedFailedHandler,
+    UserWelcomedHandler,
 
-  UserWelcomedHandler,
-  UserRoleAssignedHandler
 ];

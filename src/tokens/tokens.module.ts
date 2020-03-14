@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from "@nestjs/common";
+import {forwardRef, Module, OnModuleInit} from "@nestjs/common";
 import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CONSTANTS } from "common/constant";
@@ -20,11 +20,14 @@ import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokensService } from "./services/tokens.service";
 import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailEvent } from "./events/impl/free-token-created.event";
 import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from "./events/impl/ordered-token-created";
+import { AuthService } from "auth/auth.service";
+import {AuthModule} from "../auth/auth.module";
 
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
+    forwardRef(() => AuthModule),
     EventStoreModule.forFeature()
   ],
   controllers: [TokensController],
@@ -34,6 +37,7 @@ import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedToken
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,
+    AuthService,
     TokenRepository,
     QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
   ],

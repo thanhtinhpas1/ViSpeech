@@ -1,108 +1,110 @@
-import { Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Roles } from "auth/roles.decorator";
-import { CONSTANTS } from "common/constant";
-import { FindUserQuery } from "users/queries/impl/find-user.query";
-import { GetUsersQuery } from "users/queries/impl/get-users.query";
-import { AssignUserRoleBody, UserDto, UserIdRequestParamsDto } from "../dtos/users.dto";
-import { UsersService } from "../services/users.service";
-import { Utils } from "utils";
-import { AuthService } from "auth/auth.service";
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put,
+    Query,
+    Req,
+    UseGuards
+} from "@nestjs/common";
+import {AuthGuard} from "@nestjs/passport";
+import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {AuthService} from "auth/auth.service";
+import {Roles} from "auth/roles.decorator";
+import {CONSTANTS} from "common/constant";
+import {FindUserQuery} from "users/queries/impl/find-user.query";
+import {GetUsersQuery} from "users/queries/impl/get-users.query";
+import {Utils} from "utils";
+import {AssignRoleUserBody, UserDto, UserIdRequestParamsDto} from "../dtos/users.dto";
+import {UsersService} from "../services/users.service";
+import {UserGuard} from "auth/guards/user.guard";
+import {AssignRoleGuard} from "../../auth/guards/assign-role.guard";
 
 @Controller("users")
 @ApiTags("Users")
 export class UsersController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly usersService: UsersService) { }
-
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ["Create User"] })
-  @ApiResponse({ status: 200, description: "Create User." })
-  @UseGuards(AuthGuard('jwt'))
-  @Roles([CONSTANTS.ROLE.ADMIN])
-  @Post()
-  async createUser(@Body() userDto: UserDto): Promise<UserDto> {
-    const transactionId = Utils.getUuid();
-    return await this.usersService.createUserStart(transactionId, userDto);
-  }
-
-  /* Update User */
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ["Update User"] })
-  @ApiResponse({ status: 200, description: "Update User." })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.USER])
-  @Put(":_id")
-  async updateUser(
-    @Param() userIdDto: UserIdRequestParamsDto,
-    @Body() userDto: UserDto,
-    @Req() request
-  ): Promise<UserDto> {
-    const transactionId = Utils.getUuid();
-    const payload = this.authService.decode(request);
-    const roles = payload['roles'] || [];
-    if (!roles.include(CONSTANTS.ROLE.ADMIN) && !roles.include(CONSTANTS.ROLE.MANAGER_USER)) {
-      if (userIdDto._id !== userDto._id) throw new UnauthorizedException();
+    constructor(
+        private readonly authService: AuthService,
+        private readonly usersService: UsersService) {
     }
-    delete userDto.password;
-    return this.usersService.updateUser(transactionId, payload['id'], roles, { ...userDto, _id: userIdDto._id });
-  }
 
-  /* Delete User */
-
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ["Delete User"] })
-  @ApiResponse({ status: 200, description: "Delete User." })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-  @Delete(":_id")
-  async deleteUser(@Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
-    const transactionId = Utils.getUuid();
-    const payload = this.authService.decode(request);
-    const roles = payload['roles'] || [];
-    return this.usersService.deleteUser(transactionId, payload['id'], roles, userIdDto);
-  }
-
-  /* List Users */
-
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ["List Users"] })
-  @ApiResponse({ status: 200, description: "List Users." })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-  @Get()
-  async findUsers(@Query() getUsersQuery: GetUsersQuery) {
-    return this.usersService.findUsers(getUsersQuery);
-  }
-
-  /* Find User */
-
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ["Get User"] })
-  @ApiResponse({ status: 200, description: "Get User." })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-  @Roles([CONSTANTS.ROLE.ADMIN])
-  @Get(":id")
-  async findOneUser(@Param() findUserQuery: FindUserQuery) {
-    return this.usersService.findOne(findUserQuery);
-  }
-
-  /* Assign role to user */
-  @ApiOperation({ tags: ['Assign Role'] })
-  @ApiResponse({ status: 200, description: 'Assign role to user' })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-  @Put(':_id/roles')
-  async assignRoleToUser(@Body() body: AssignUserRoleBody, @Param() param: UserIdRequestParamsDto, @Req() request) {
-    const transactionId = Utils.getUuid();
-    const payload = this.authService.decode(request);
-    const roles = payload['roles'] || [];
-    if (roles.includes(CONSTANTS.ROLE.MANAGER_USER)) {
-      if (body.roleNames.includes(CONSTANTS.ROLE.ADMIN)) throw new ForbiddenException();
+    /* Create user
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ["Create User"]})
+    @ApiResponse({status: 200, description: "Create User."})
+    @Post()
+    async createUser(@Body() userDto: UserDto): Promise<UserDto> {
+        const transactionId = Utils.getUuid();
+        return await this.usersService.createUserStart(transactionId, userDto);
     }
-    const assignerId = payload['id'];
-    return this.usersService.assignUserRole(transactionId, param._id, body.roleNames, assignerId);
-  }
+
+    /* Update User */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ["Update User"]})
+    @ApiResponse({status: 200, description: "Update User."})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
+    @Put(":_id")
+    async updateUser(
+        @Param() userIdDto: UserIdRequestParamsDto,
+        @Body() userDto: UserDto
+    ): Promise<UserDto> {
+        delete userDto.password;
+        return this.usersService.updateUser({...userDto, _id: userIdDto._id});
+    }
+
+    /* Delete User */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ["Delete User"]})
+    @ApiResponse({status: 200, description: "Delete User."})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Delete(":_id")
+    async deleteUser(@Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
+        const payload = this.authService.decode(request);
+        if (payload['id'] === userIdDto._id) throw new BadRequestException();
+        return this.usersService.deleteUser(userIdDto);
+    }
+
+    /* Find User */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ["Get User"]})
+    @ApiResponse({status: 200, description: "Get User."})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
+    @Get(":id")
+    async findOneUser(@Param() findUserQuery: FindUserQuery) {
+        return await this.usersService.findOne(findUserQuery);
+    }
+
+    /* List Users */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ["List Users"]})
+    @ApiResponse({status: 200, description: "List Users."})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
+    @Roles([CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.ADMIN])
+    @Get()
+    async findUsers(@Query() getUsersQuery: GetUsersQuery, @Req() request) {
+        const payload = this.authService.decode(request);
+        getUsersQuery.userId = payload['id'];
+        return this.usersService.findUsers(payload['id'], getUsersQuery);
+    }
+
+    /* Assign role to user */
+    @ApiOperation({tags: ['Assign Role']})
+    @ApiResponse({status: 200, description: 'Assign role to user'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Put(':_id/roles')
+    async assignRoleToUser(@Body() body: AssignRoleUserBody, @Param() param: UserIdRequestParamsDto, @Req() request) {
+        const payload = this.authService.decode(request);
+        const assignerId = payload['id'];
+        return this.usersService.assignRoleUser(param._id, body.roleName, assignerId);
+    }
 }
