@@ -1,10 +1,10 @@
-import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { Repository } from "typeorm";
-import { TokenTypeDto } from "tokens/dtos/token-types.dto";
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from "../impl/ordered-token-created";
+import { EventsHandler, IEventHandler, EventBus } from '@nestjs/cqrs';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { Repository } from 'typeorm';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from '../impl/ordered-token-created';
 
 @EventsHandler(OrderedTokenCreatedEvent)
 export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCreatedEvent> {
@@ -13,22 +13,22 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
     private readonly repository: Repository<TokenDto>,
     @InjectRepository(TokenTypeDto)
     private readonly repositoryTokenType: Repository<TokenTypeDto>,
-    private readonly eventBus: EventBus
+    private readonly eventBus: EventBus,
   ) {}
 
   async handle(event: OrderedTokenCreatedEvent) {
-    Logger.log(event, "OrderedTokenCreatedEvent");
+    Logger.log(event, 'OrderedTokenCreatedEvent');
     const token = JSON.parse(JSON.stringify(event.tokenDto));
     const transactionId = event.transactionId;
     let tokenTypeDto = null;
     try {
       if (token.tokenTypeId) {
         tokenTypeDto = await this.repositoryTokenType.find({
-          _id: token.tokenTypeId
+          _id: token.tokenTypeId,
         });
       } else {
         tokenTypeDto = await this.repositoryTokenType.find({
-          name: token.tokenType
+          name: token.tokenType,
         });
       }
       token.tokenTypeId = tokenTypeDto[0]._id;
@@ -48,7 +48,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
 export class OrderedTokenCreatedSuccessHandler
   implements IEventHandler<OrderedTokenCreatedSuccessEvent> {
   handle(event: OrderedTokenCreatedSuccessEvent) {
-    Logger.log(event, "OrderedTokenCreatedSuccessEvent");
+    Logger.log(event, 'OrderedTokenCreatedSuccessEvent');
   }
 }
 
@@ -56,6 +56,6 @@ export class OrderedTokenCreatedSuccessHandler
 export class OrderedTokenCreatedFailHandler
   implements IEventHandler<OrderedTokenCreatedFailEvent> {
   handle(event: OrderedTokenCreatedFailEvent) {
-    Logger.log(event, "OrderedTokenCreatedFailEvent");
+    Logger.log(event, 'OrderedTokenCreatedFailEvent');
   }
 }

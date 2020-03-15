@@ -19,25 +19,25 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
 
   async handle(event: FreeTokenCreatedEvent) {
     Logger.log(event, "FreeTokenCreatedEvent");
-    const token = JSON.parse(JSON.stringify(event.tokenDto));
+    const {tokenDto} = event;
     const transactionId = event.transactionId;
     let tokenTypeDto = null;
     try {
-      if (token.tokenTypeId) {
+      if (tokenDto.tokenTypeId) {
         tokenTypeDto = await this.repositoryTokenType.find({
-          _id: token.tokenTypeId
+          _id: tokenDto.tokenTypeId
         });
       } else {
         tokenTypeDto = await this.repositoryTokenType.find({
           name: CONSTANTS.TOKEN_TYPE.FREE
         });
       }
-      token.tokenTypeId = tokenTypeDto[0]._id;
-      token.minutes = tokenTypeDto[0].minutes;
-      token.transactionId = transactionId;
-      delete token.tokenType;
-      delete token.orderId;
-      const newToken = await this.repository.save(token);
+      tokenDto.tokenTypeId = tokenTypeDto[0]._id;
+      tokenDto.minutes = tokenTypeDto[0].minutes;
+      tokenDto.transactionId = transactionId;
+      delete tokenDto.tokenType;
+      delete tokenDto.orderId;
+      const newToken = await this.repository.save(tokenDto);
       this.eventBus.publish(new FreeTokenCreatedSuccessEvent(transactionId, newToken));
     } catch (error) {
       this.eventBus.publish(new FreeTokenCreatedFailEvent(transactionId, error));

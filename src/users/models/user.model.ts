@@ -1,9 +1,9 @@
-import {Logger} from "@nestjs/common";
-import {AggregateRoot} from "@nestjs/cqrs";
-import {UserCreatedEvent, UserCreationStartedEvent} from "../events/impl/user-created.event";
-import {UserDeletedEvent} from "../events/impl/user-deleted.event";
-import {UserUpdatedEvent} from "../events/impl/user-updated.event";
-import {UserRoleAssignedEvent} from "../events/impl/user-role-assigned.event";
+import {AggregateRoot} from '@nestjs/cqrs';
+import {UserCreatedEvent, UserCreationStartedEvent} from '../events/impl/user-created.event';
+import {UserDeletedEvent} from '../events/impl/user-deleted.event';
+import {UserUpdatedEvent} from '../events/impl/user-updated.event';
+import {UserRoleAssignedEvent} from '../events/impl/user-role-assigned.event';
+import {ChangedPasswordEvent} from '../events/impl/changed-password.event';
 
 export class User extends AggregateRoot {
     [x: string]: any;
@@ -33,10 +33,10 @@ export class User extends AggregateRoot {
     }
 
     assignUserRole(roleName: string, assignerId: string) {
-        try {
-            this.apply(new UserRoleAssignedEvent(this.id, roleName, assignerId));
-        } catch (err) {
-            Logger.error(err.message, '', '[UserModel] assignUserRole');
-        }
+        this.apply(new UserRoleAssignedEvent(this.id, roleName, assignerId));
+    }
+
+    changePassword(newPassword: string, oldPassword: string) {
+        this.apply(new ChangedPasswordEvent(this.id, newPassword, oldPassword));
     }
 }

@@ -24,6 +24,7 @@ export class AssignRoleGuard implements CanActivate {
             else if (payload['roles'].filter(x => x.name === CONSTANTS.ROLE.MANAGER_USER).length > 0) {
                 const user = await this.userRepository.findOne({_id: id});
                 if (!user && !user['roles']) throw new BadRequestException();
+                if (payload['id'] === user.assignerId) return true;
                 if (user['roles'].filter(x => x.name === CONSTANTS.ROLE.USER).length >= 0
                     || user.assignerId === payload['id']) {
                     return true;

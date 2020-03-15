@@ -1,8 +1,8 @@
-import {BaseEntityDto} from "base/base-entity.dto";
-import {IsArray, IsEmail, IsEmpty, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from "class-validator";
-import {RoleDto} from "roles/dtos/roles.dto";
-import {Column, Entity, Index} from "typeorm";
-import {CONSTANTS} from "common/constant";
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {IsArray, IsEmail, IsEmpty, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from 'class-validator';
+import {RoleDto} from 'roles/dtos/roles.dto';
+import {Column, Entity, Index} from 'typeorm';
+import {CONSTANTS} from 'common/constant';
 
 export class UserIdRequestParamsDto {
     constructor(userId) {
@@ -22,7 +22,17 @@ export class AssignRoleUserBody {
     roleName: string;
 }
 
-@Entity("users")
+export class ChangePasswordBody {
+    @IsNotEmpty()
+    @IsString()
+    readonly oldPassword;
+
+    @IsNotEmpty()
+    @IsString()
+    readonly newPassword;
+}
+
+@Entity('users')
 export class UserDto extends BaseEntityDto {
 
     constructor(firstName: string, lastName: string, username: string, password: string, email: string, assignerId: string, roles: RoleDto[]) {
@@ -49,8 +59,8 @@ export class UserDto extends BaseEntityDto {
     @IsString()
     @IsNotEmpty()
     @Index({unique: true})
-    @Column({nullable: false})
-    readonly username: string;
+    @Column({nullable: false, update: false})
+    username: string;
 
     @IsOptional()
     @IsString()
@@ -68,9 +78,7 @@ export class UserDto extends BaseEntityDto {
 
     @IsOptional()
     @IsUUID()
-    @Column({
-        update: false,
-    })
+    @Column({insert: false})
     assignerId: string;
 
     @IsEmpty()

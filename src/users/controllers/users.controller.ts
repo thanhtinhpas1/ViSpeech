@@ -9,23 +9,26 @@ import {
     Put,
     Query,
     Req,
-    UseGuards
-} from "@nestjs/common";
-import {AuthGuard} from "@nestjs/passport";
-import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
-import {AuthService} from "auth/auth.service";
-import {Roles} from "auth/roles.decorator";
-import {CONSTANTS} from "common/constant";
-import {FindUserQuery} from "users/queries/impl/find-user.query";
-import {GetUsersQuery} from "users/queries/impl/get-users.query";
-import {Utils} from "utils";
-import {AssignRoleUserBody, UserDto, UserIdRequestParamsDto} from "../dtos/users.dto";
-import {UsersService} from "../services/users.service";
-import {UserGuard} from "auth/guards/user.guard";
-import {AssignRoleGuard} from "../../auth/guards/assign-role.guard";
+    Res,
+    UnauthorizedException,
+    UseGuards,
+} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
+import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {AuthService} from 'auth/auth.service';
+import {Roles} from 'auth/roles.decorator';
+import {CONSTANTS} from 'common/constant';
+import {FindUserQuery} from 'users/queries/impl/find-user.query';
+import {GetUsersQuery} from 'users/queries/impl/get-users.query';
+import {Utils} from 'utils';
+import {AssignRoleUserBody, ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
+import {UsersService} from '../services/users.service';
+import {UserGuard} from 'auth/guards/user.guard';
+import {AssignRoleGuard} from '../../auth/guards/assign-role.guard';
+import {getMongoRepository} from 'typeorm';
 
-@Controller("users")
-@ApiTags("Users")
+@Controller('users')
+@ApiTags('Users')
 export class UsersController {
     constructor(
         private readonly authService: AuthService,
@@ -34,8 +37,8 @@ export class UsersController {
 
     /* Create user
     /*--------------------------------------------*/
-    @ApiOperation({tags: ["Create User"]})
-    @ApiResponse({status: 200, description: "Create User."})
+    @ApiOperation({tags: ['Create User']})
+    @ApiResponse({status: 200, description: 'Create User.'})
     @Post()
     async createUser(@Body() userDto: UserDto): Promise<UserDto> {
         const transactionId = Utils.getUuid();
@@ -45,26 +48,39 @@ export class UsersController {
     /* Update User */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ["Update User"]})
-    @ApiResponse({status: 200, description: "Update User."})
+    @ApiOperation({tags: ['Update User']})
+    @ApiResponse({status: 200, description: 'Update User.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
-    @Put(":_id")
+    @Put(':_id')
     async updateUser(
         @Param() userIdDto: UserIdRequestParamsDto,
-        @Body() userDto: UserDto
+        @Body() userDto: UserDto,
     ): Promise<UserDto> {
-        delete userDto.password;
         return this.usersService.updateUser({...userDto, _id: userIdDto._id});
+    }
+
+    /* Update User */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Change password']})
+    @ApiResponse({status: 200, description: 'Change password.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @Put('change-password')
+    async changePassword(@Body() body: ChangePasswordBody, @Req() request) {
+        if (!body || !body.oldPassword || !body.newPassword) throw new BadRequestException();
+        const payload = this.authService.decode(request);
+        if (!payload) throw new UnauthorizedException();
+        return this.usersService.changePassword(payload['id'], body.newPassword, body.oldPassword);
     }
 
     /* Delete User */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ["Delete User"]})
-    @ApiResponse({status: 200, description: "Delete User."})
+    @ApiOperation({tags: ['Delete User']})
+    @ApiResponse({status: 200, description: 'Delete User.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-    @Delete(":_id")
+    @Delete(':_id')
     async deleteUser(@Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
         const payload = this.authService.decode(request);
         if (payload['id'] === userIdDto._id) throw new BadRequestException();
@@ -74,10 +90,10 @@ export class UsersController {
     /* Find User */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ["Get User"]})
-    @ApiResponse({status: 200, description: "Get User."})
+    @ApiOperation({tags: ['Get User']})
+    @ApiResponse({status: 200, description: 'Get User.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
-    @Get(":id")
+    @Get(':id')
     async findOneUser(@Param() findUserQuery: FindUserQuery) {
         return await this.usersService.findOne(findUserQuery);
     }
@@ -85,8 +101,8 @@ export class UsersController {
     /* List Users */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ["List Users"]})
-    @ApiResponse({status: 200, description: "List Users."})
+    @ApiOperation({tags: ['List Users']})
+    @ApiResponse({status: 200, description: 'List Users.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
     @Roles([CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.ADMIN])
     @Get()

@@ -1,22 +1,22 @@
-import {EventBus, EventsHandler, IEventHandler} from "@nestjs/cqrs";
+import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
 import {
     UserCreatedEvent,
     UserCreatedFailedEvent,
     UserCreatedSuccessEvent,
     UserCreationStartedEvent,
-} from "../impl/user-created.event";
-import {Logger} from "@nestjs/common";
-import {Repository} from "typeorm";
-import {UserDto} from "users/dtos/users.dto";
-import {Utils} from "utils";
-import {RoleDto} from "roles/dtos/roles.dto";
-import {CONSTANTS} from "../../../common/constant";
-import {InjectRepository} from "@nestjs/typeorm";
+} from '../impl/user-created.event';
+import {Logger} from '@nestjs/common';
+import {Repository} from 'typeorm';
+import {UserDto} from 'users/dtos/users.dto';
+import {Utils} from 'utils';
+import {RoleDto} from 'roles/dtos/roles.dto';
+import {CONSTANTS} from '../../../common/constant';
+import {InjectRepository} from '@nestjs/typeorm';
 
 @EventsHandler(UserCreationStartedEvent)
 export class UserCreationStartedHandler implements IEventHandler<UserCreationStartedEvent> {
     handle(event: UserCreationStartedEvent) {
-        Logger.log(event.userDto._id, "UserCreationStartedEvent");
+        Logger.log(event.userDto._id, 'UserCreationStartedEvent');
     }
 }
 
@@ -30,7 +30,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     }
 
     async handle(event: UserCreatedEvent) {
-        Logger.log(event, "UserCreatedEvent");
+        Logger.log(event.userDto._id, 'UserCreatedEvent');
         const user = event.userDto;
         try {
             user.password = Utils.hashPassword(user.password);
@@ -39,7 +39,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
             const newUser = await this.userRepository.insert(user);
             this.eventBus.publish(new UserCreatedSuccessEvent(newUser));
         } catch (error) {
-            this.eventBus.publish(new UserCreatedFailedEvent(user, error))
+            this.eventBus.publish(new UserCreatedFailedEvent(user, error));
         }
     }
 }
@@ -47,13 +47,13 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 @EventsHandler(UserCreatedSuccessEvent)
 export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSuccessEvent> {
     handle(event: UserCreatedSuccessEvent) {
-        Logger.log(event.userDto.username, "UserCreatedSuccessEvent");
+        Logger.log(event.userDto.username, 'UserCreatedSuccessEvent');
     }
 }
 
 @EventsHandler(UserCreatedFailedEvent)
 export class UserCreatedFailHandler implements IEventHandler<UserCreatedFailedEvent> {
     handle(event: UserCreatedFailedEvent) {
-        Logger.log(event.userDto.username, "UserCreatedFailEvent");
+        Logger.log(event.userDto.username, 'UserCreatedFailEvent');
     }
 }

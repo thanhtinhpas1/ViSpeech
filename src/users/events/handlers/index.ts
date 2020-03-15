@@ -8,6 +8,7 @@ import {
 } from "./user-created.handler";
 import {UserWelcomedHandler} from "./user-welcomed.handler";
 import {AssignedRoleHandler} from "./user-role-assigned.handler";
+import {ChangedPasswordHandler} from './changed-password.handler';
 
 export const EventHandlers = [
     // create
@@ -22,6 +23,7 @@ export const EventHandlers = [
     UserUpdatedSuccessHandler,
     UserUpdatedFailedHandler,
     AssignedRoleHandler,
+    ChangedPasswordHandler,
 
     // delete
     UserDeletedHandler,

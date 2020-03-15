@@ -1,9 +1,9 @@
-import { BaseEntityDto } from "base/base-entity.dto";
-import { Type } from "class-transformer";
-import { IsEmpty, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from "class-validator";
-import { CONSTANTS } from "common/constant";
-import { ObjectID } from "mongodb";
-import { Column, Entity } from "typeorm";
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { Type } from 'class-transformer';
+import { IsEmpty, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
+import { CONSTANTS } from 'common/constant';
+import { ObjectID } from 'mongodb';
+import { Column, Entity } from 'typeorm';
 
 export class TokenIdRequestParamsDto {
   constructor(tokenId) {
@@ -15,7 +15,7 @@ export class TokenIdRequestParamsDto {
   _id: string;
 }
 
-@Entity("tokens")
+@Entity('tokens')
 export class TokenDto extends BaseEntityDto {
   constructor(
     value,
@@ -37,7 +37,7 @@ export class TokenDto extends BaseEntityDto {
   @IsNumber()
   @IsPositive()
   @Column({
-    default: 0
+    default: 0,
   })
   minutes: number;
 
@@ -47,21 +47,21 @@ export class TokenDto extends BaseEntityDto {
   @IsPositive()
   @Column({
     default: 0,
-    nullable: false
+    nullable: false,
   })
   usedMinutes: number;
 
   @IsString()
   @IsNotEmpty()
   @Column({
-    unique: true
+    unique: true,
   })
   value: string;
 
   @IsUUID()
   @Column({
     nullable: false,
-    type: "uuid"
+    type: 'uuid',
   })
   userId: ObjectID;
 
@@ -69,22 +69,22 @@ export class TokenDto extends BaseEntityDto {
   @IsUUID()
   @Column({
     nullable: false,
-    type: "uuid"
+    type: 'uuid',
   })
   tokenTypeId: ObjectID;
 
   @IsEmpty()
   @Column({
-    default: true
+    default: true,
   })
   isValid: boolean;
 
   @IsOptional()
   @IsIn([
     CONSTANTS.TOKEN_TYPE.FREE,
-    CONSTANTS.TOKEN_TYPE["50-MINS"],
-    CONSTANTS.TOKEN_TYPE["200-MINS"],
-    CONSTANTS.TOKEN_TYPE["500-MINS"]
+    CONSTANTS.TOKEN_TYPE['50-MINS'],
+    CONSTANTS.TOKEN_TYPE['200-MINS'],
+    CONSTANTS.TOKEN_TYPE['500-MINS'],
   ])
   tokenType: string;
 

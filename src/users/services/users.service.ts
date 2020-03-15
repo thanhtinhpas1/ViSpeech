@@ -1,12 +1,13 @@
-import {Injectable} from "@nestjs/common";
-import {CommandBus, QueryBus} from "@nestjs/cqrs";
-import {UserDto, UserIdRequestParamsDto} from "../dtos/users.dto";
-import {UpdateUserCommand} from "../commands/impl/update-user.command";
-import {DeleteUserCommand} from "../commands/impl/delete-user.command";
-import {GetUsersQuery} from "users/queries/impl/get-users.query";
-import {FindUserQuery} from "users/queries/impl/find-user.query";
-import {CreateUserStartCommand} from "users/commands/impl/create-user.command";
-import {AssignRoleUserCommand} from "users/commands/impl/assign-role-user.command";
+import {Injectable} from '@nestjs/common';
+import {CommandBus, QueryBus} from '@nestjs/cqrs';
+import {UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
+import {UpdateUserCommand} from '../commands/impl/update-user.command';
+import {DeleteUserCommand} from '../commands/impl/delete-user.command';
+import {GetUsersQuery} from 'users/queries/impl/get-users.query';
+import {FindUserQuery} from 'users/queries/impl/find-user.query';
+import {CreateUserStartCommand} from 'users/commands/impl/create-user.command';
+import {AssignRoleUserCommand} from 'users/commands/impl/assign-role-user.command';
+import {ChangePasswordCommand} from '../commands/impl/change-password.command';
 
 @Injectable()
 export class UsersService {
@@ -41,5 +42,9 @@ export class UsersService {
 
     async assignRoleUser(userId: string, roleName: string, assignerId: string) {
         return await this.commandBus.execute(new AssignRoleUserCommand(userId, roleName, assignerId));
+    }
+
+    async changePassword(userId: string, newPassword: string, oldPassword: string) {
+        return await this.commandBus.execute(new ChangePasswordCommand(userId, newPassword, oldPassword));
     }
 }

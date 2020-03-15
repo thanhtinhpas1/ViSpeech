@@ -1,6 +1,6 @@
-import {Injectable} from "@nestjs/common";
-import {UserDto} from "users/dtos/users.dto";
-import {User} from "../models/user.model";
+import {Injectable} from '@nestjs/common';
+import {UserDto} from 'users/dtos/users.dto';
+import {User} from '../models/user.model';
 
 @Injectable()
 export class UserRepository {
@@ -40,6 +40,12 @@ export class UserRepository {
     async assignUserRole(userId: string, roleName: string, assignerId: string) {
         const user = new User(userId);
         user.assignUserRole(roleName, assignerId);
+        return user;
+    }
+
+    async changePassword(userId: string, newPassword: string, oldPassword: string) {
+        const user = new User(userId);
+        user.changePassword(newPassword, oldPassword);
         return user;
     }
 }
