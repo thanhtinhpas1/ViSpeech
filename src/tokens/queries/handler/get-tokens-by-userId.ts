@@ -14,8 +14,8 @@ export class GetTokensByUserIdHandler
   ) {}
 
   async execute(query: GetTokensByUserIdQuery): Promise<any> {
+    Logger.log("Async GetTokensByUserIdQuery...", "GetTokensByUserIdQuery");
     try {
-      Logger.log("Async GetTokensByUserIdQuery...", "GetTokensByUserIdQuery");
       return await this.repository.find({
         where: { userId: query.userId }
       });

@@ -16,7 +16,7 @@ export class User extends AggregateRoot {
         this.data = data;
     }
 
-    createUserStart(transactionId: string) {
+    createUserStart() {
         this.apply(new UserCreationStartedEvent(this.data));
     }
 

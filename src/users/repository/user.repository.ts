@@ -11,10 +11,10 @@ export class UserRepository {
         return user;
     }
 
-    async createUserStart(transactionId: string, userDto: UserDto) {
+    async createUserStart(userDto: UserDto) {
         const user = new User(undefined);
         user.setData(userDto);
-        user.createUserStart(transactionId);
+        user.createUserStart();
         return user;
     }
 
@@ -31,9 +31,9 @@ export class UserRepository {
         return user;
     }
 
-    async welcomeUser(transactionId: string, userId: string) {
+    async welcomeUser(userId: string) {
         const user = new User(userId);
-        user.welcomeUser(transactionId);
+        user.welcomeUser();
         return user;
     }
 

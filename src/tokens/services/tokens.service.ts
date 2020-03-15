@@ -15,9 +15,9 @@ export class TokensService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createToken(transactionId: string, tokenDto: TokenDto) {
+  async createToken(tokenDto: TokenDto) {
     return await this.commandBus.execute(
-      new CreateTokenCommand(transactionId, tokenDto)
+      new CreateTokenCommand(tokenDto)
     );
   }
 
@@ -25,8 +25,8 @@ export class TokensService {
     return await this.commandBus.execute(new UpdateTokenCommand(tokenDto));
   }
 
-  async deleteToken(transactionId: string, tokenIdDto: TokenIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteTokenCommand(transactionId, tokenIdDto));
+  async deleteToken(tokenIdDto: TokenIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteTokenCommand(tokenIdDto));
   }
 
   async findTokens(getTokensQuery: GetTokensQuery) {

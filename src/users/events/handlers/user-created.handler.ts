@@ -24,8 +24,7 @@ export class UserCreationStartedHandler implements IEventHandler<UserCreationSta
 export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     constructor(
         private readonly eventBus: EventBus,
-        @InjectRepository(UserDto)
-        private readonly userRepository: Repository<UserDto>,
+        @InjectRepository(UserDto) private readonly userRepository: Repository<UserDto>,
     ) {
     }
 
@@ -54,6 +53,6 @@ export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSucce
 @EventsHandler(UserCreatedFailedEvent)
 export class UserCreatedFailHandler implements IEventHandler<UserCreatedFailedEvent> {
     handle(event: UserCreatedFailedEvent) {
-        Logger.log(event.userDto.username, 'UserCreatedFailEvent');
+        Logger.log(event.error, "UserCreatedFailEvent");
     }
 }

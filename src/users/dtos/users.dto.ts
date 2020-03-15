@@ -14,7 +14,7 @@ export class UserIdRequestParamsDto {
     _id: string;
 }
 
-export class AssignRoleUserBody {
+export class AssignUserRoleBody {
     @IsNotEmpty()
     @IsArray()
     @IsIn([CONSTANTS.ROLE.USER, CONSTANTS.ROLE.CSR_USER, CONSTANTS.ROLE.MANAGER_USER],

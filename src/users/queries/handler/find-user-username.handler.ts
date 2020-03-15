@@ -14,8 +14,8 @@ export class FindUserUsernameHandler
   ) {}
 
   async execute(query: FindUserByUsernameQuery): Promise<any> {
+    Logger.log("Async FindUserByUsernameQuery...", "FindUserByUsernameQuery");
     try {
-        Logger.log("Async FindUserByUsernameQuery...", "FindUserByUsernameQuery");
         return await this.userRepository.findOne({ username: query.username });
       } catch (error) {
         Logger.error(error, "", "FindUserByUsernameQuery");

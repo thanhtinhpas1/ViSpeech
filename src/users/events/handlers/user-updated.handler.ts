@@ -37,15 +37,14 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
 export class UserUpdatedSuccessHandler
     implements IEventHandler<UserUpdatedSuccessEvent> {
     handle(event: UserUpdatedSuccessEvent) {
-        Logger.log(event, 'UserDeletedSuccessEvent');
+        Logger.log(event.userDto.username, "UserUpdatedSuccessEvent");
     }
 }
 
 @EventsHandler(UserUpdatedFailedEvent)
 export class UserUpdatedFailedHandler
     implements IEventHandler<UserUpdatedFailedEvent> {
-    handle(event: UserUpdatedFailedEvent
-    ) {
-        Logger.log(event, 'UserUpdatedFailedEvent');
+    handle(event: UserUpdatedFailedEvent) {
+        Logger.log(event.error, "UserUpdatedFailedEvent");
     }
 }
