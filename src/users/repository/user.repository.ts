@@ -5,21 +5,21 @@ import {User} from '../models/user.model';
 @Injectable()
 export class UserRepository {
     async createUser(userDto: UserDto) {
-        const user = new User(undefined);
+        const user = new User(userDto._id);
         user.setData(userDto);
         user.createUser();
         return user;
     }
 
-    async createUserStart(userDto: UserDto) {
-        const user = new User(undefined);
+    async createUserStart(_id: string, userDto: UserDto) {
+        const user = new User(_id);
         user.setData(userDto);
         user.createUserStart();
         return user;
     }
 
     async updateUser(userDto: UserDto) {
-        const user = new User(undefined);
+        const user = new User(userDto._id);
         user.setData(userDto);
         user.updateUser();
         return user;

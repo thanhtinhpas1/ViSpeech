@@ -3,6 +3,7 @@ import {UserDto} from '../../dtos/users.dto';
 
 export class UserUpdatedEvent implements IEvent {
     constructor(
+        public readonly _id: string,
         public readonly userDto: UserDto,
     ) {
     }
@@ -10,6 +11,7 @@ export class UserUpdatedEvent implements IEvent {
 
 export class UserUpdatedSuccessEvent implements IEvent {
     constructor(
+        public readonly _id: string,
         public readonly userDto: UserDto,
     ) {
     }
@@ -17,6 +19,7 @@ export class UserUpdatedSuccessEvent implements IEvent {
 
 export class UserUpdatedFailedEvent implements IEvent {
     constructor(
+        public readonly _id: string,
         public readonly error: object,
     ) {
     }

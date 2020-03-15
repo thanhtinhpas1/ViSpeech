@@ -36,7 +36,7 @@ export class OrdersSagas {
       map((event: OrderCreatedSuccessEvent) => {
         Logger.log("Inside [OrdersSagas] orderCreatedSuccess Saga", "OrdersSagas");
         const { userId, tokenTypeId, _id } = event.orderDto;
-        const tokenValue = this.authService.generate_token_with_userId(userId);
+        const tokenValue = this.authService.generateTokenWithUserId(userId);
         const tokenDto = new TokenDto(tokenValue, userId, null, tokenTypeId, _id);
         return new CreateOrderedTokenCommand(tokenDto);
       })

@@ -16,8 +16,8 @@ export class UsersService {
         private readonly queryBus: QueryBus,
     ) { }
 
-    async createUserStart(userDto: UserDto) {
-        return await this.commandBus.execute(new CreateUserStartCommand(userDto));
+    async createUserStart(_id: string, userDto: UserDto) {
+        return await this.commandBus.execute(new CreateUserStartCommand(_id, userDto));
     }
 
     async updateUser(userDto: UserDto) {

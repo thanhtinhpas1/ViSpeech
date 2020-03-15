@@ -15,10 +15,10 @@ export class CreateUserStartHandler
     async execute(command: CreateUserStartCommand) {
         Logger.log("Async CreateUserStartHandler...", "CreateUserStartCommand");
 
-        const { userDto } = command;
+        const { _id, userDto } = command;
         // use mergeObjectContext for dto dispatch events
         const user = this.publisher.mergeObjectContext(
-            await this.repository.createUserStart(userDto)
+            await this.repository.createUserStart(_id, userDto)
         );
         user.commit();
     }

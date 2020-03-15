@@ -16,7 +16,6 @@ export const EventHandlers = [
     UserCreatedSuccessHandler,
     UserCreatedFailHandler,
     UserCreatedHandler,
-    UserCreatedHandler,
 
     // update
     UserUpdatedHandler,

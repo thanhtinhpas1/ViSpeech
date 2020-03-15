@@ -17,15 +17,15 @@ export class User extends AggregateRoot {
     }
 
     createUserStart() {
-        this.apply(new UserCreationStartedEvent(this.data));
+        this.apply(new UserCreationStartedEvent(this.id, this.data));
     }
 
     createUser() {
-        this.apply(new UserCreatedEvent(this.data));
+        this.apply(new UserCreatedEvent(this.id, this.data));
     }
 
     updateUser() {
-        this.apply(new UserUpdatedEvent(this.data));
+        this.apply(new UserUpdatedEvent(this.id, this.data));
     }
 
     deleteUser() {

@@ -1,10 +1,10 @@
-import {Injectable, Logger} from "@nestjs/common";
-import {QueryBus} from "@nestjs/cqrs";
-import {JwtService} from "@nestjs/jwt";
-import {UserDto} from "users/dtos/users.dto";
-import {Utils} from "utils";
-import {FindUserByUsernameQuery, FindUserQuery} from "../users/queries/impl/find-user.query";
-import {CONSTANTS} from "common/constant";
+import {Injectable} from '@nestjs/common';
+import {QueryBus} from '@nestjs/cqrs';
+import {JwtService} from '@nestjs/jwt';
+import {UserDto} from 'users/dtos/users.dto';
+import {Utils} from 'utils';
+import {FindUserByUsernameQuery, FindUserQuery} from '../users/queries/impl/find-user.query';
+import {CONSTANTS} from 'common/constant';
 
 @Injectable()
 export class AuthService {
@@ -31,12 +31,12 @@ export class AuthService {
         return user || null;
     }
 
-    generate_token(userId, username, roles) {
+    generateToken(userId, username, roles) {
         const payload = {username, id: userId, roles};
         return this.jwtService.sign(payload);
     }
 
-    generate_token_with_userId(userId) {
+    generateTokenWithUserId(userId) {
         const payload = {id: userId};
         return this.jwtService.sign(payload);
     }
@@ -49,7 +49,6 @@ export class AuthService {
         const authorization = request.headers.authorization;
         if (!authorization) return false;
         const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, "");
-        const payload = this.jwtService.decode(jwt);
-        return payload;
+        return this.jwtService.decode(jwt);
     }
 }

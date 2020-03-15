@@ -10,7 +10,7 @@ export class AuthController {
   @Post("login")
   login(@Request() req) {
     const { _id, username, roles } = req.user;
-    req.user.token = this.authService.generate_token(_id, username, roles);
+    req.user.token = this.authService.generateToken(_id, username, roles);
     return req.user;
   }
   

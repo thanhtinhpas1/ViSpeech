@@ -76,13 +76,13 @@ export class UsersModule implements OnModuleInit {
 
     eventHandlers = {
         // create
-        UserCreationStartedEvent: (data) => new UserCreationStartedEvent(data),
-        UserCreatedEvent: (data) => new UserCreatedEvent(data),
-        UserCreatedSuccessEvent: (data) => new UserCreatedSuccessEvent(data),
-        UserCreatedFailedEvent: (data, error) => new UserCreatedFailedEvent(data, error),
-        UserUpdatedEvent: (data) => new UserUpdatedEvent(data),
-        UserUpdatedSuccessEvent: (data) => new UserUpdatedSuccessEvent(data),
-        UserUpdatedFailedEvent: (error) => new UserUpdatedFailedEvent(error),
+        UserCreationStartedEvent: (id, data) => new UserCreationStartedEvent(id, data),
+        UserCreatedEvent: (id, data) => new UserCreatedEvent(id, data),
+        UserCreatedSuccessEvent: (id, data) => new UserCreatedSuccessEvent(id, data),
+        UserCreatedFailedEvent: (id, data, error) => new UserCreatedFailedEvent(id, data, error),
+        UserUpdatedEvent: (id, data) => new UserUpdatedEvent(id, data),
+        UserUpdatedSuccessEvent: (id, data) => new UserUpdatedSuccessEvent(id, data),
+        UserUpdatedFailedEvent: (id, error) => new UserUpdatedFailedEvent(id, error),
         // delete
         UserDeletedEvent: (data) => new UserDeletedEvent(data),
         UserDeletedSuccessEvent: (data) => new UserDeletedSuccessEvent(data),

@@ -25,10 +25,10 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
         return this.repository.update({_id: userDto._id}, userDto)
             .then(rs => {
                 // FIXME: change event to UserUpdatedSuccessEvent & below when failed
-                this.eventBus.publish(new UserCreatedSuccessEvent(userDto));
+                this.eventBus.publish(new UserCreatedSuccessEvent(userDto._id, userDto));
             }).catch(err => {
                 Logger.error(err.message, '', 'UserUpdatedEvent');
-                this.eventBus.publish(new UserCreatedFailedEvent(userDto, err));
+                this.eventBus.publish(new UserCreatedFailedEvent(userDto._id, userDto, err));
             });
     }
 }
@@ -37,7 +37,7 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
 export class UserUpdatedSuccessHandler
     implements IEventHandler<UserUpdatedSuccessEvent> {
     handle(event: UserUpdatedSuccessEvent) {
-        Logger.log(event.userDto.username, "UserUpdatedSuccessEvent");
+        Logger.log(event.userDto.username, 'UserUpdatedSuccessEvent');
     }
 }
 
@@ -45,6 +45,6 @@ export class UserUpdatedSuccessHandler
 export class UserUpdatedFailedHandler
     implements IEventHandler<UserUpdatedFailedEvent> {
     handle(event: UserUpdatedFailedEvent) {
-        Logger.log(event.error, "UserUpdatedFailedEvent");
+        Logger.log(event.error, 'UserUpdatedFailedEvent');
     }
 }
