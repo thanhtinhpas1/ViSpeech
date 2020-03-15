@@ -17,16 +17,16 @@ export class OrdersService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createOrderStart(transactionId: string, orderDto: OrderDto) {
-    return await this.commandBus.execute(new CreateOrderStartCommand(transactionId, orderDto));
+  async createOrderStart(orderDto: OrderDto) {
+    return await this.commandBus.execute(new CreateOrderStartCommand(orderDto));
   }
 
-  async createOrder(transactionId: string, orderDto: OrderDto) {
-    return await this.commandBus.execute(new CreateOrderCommand(transactionId, orderDto));
+  async createOrder(orderDto: OrderDto) {
+    return await this.commandBus.execute(new CreateOrderCommand(orderDto));
   }
 
-  async updateOrder(transactionId: string, orderDto: OrderDto) {
-    return await this.commandBus.execute(new UpdateOrderCommand(transactionId, orderDto));
+  async updateOrder(orderDto: OrderDto) {
+    return await this.commandBus.execute(new UpdateOrderCommand(orderDto));
   }
 
   async deleteOrder(orderIdDto: OrderIdRequestParamsDto) {

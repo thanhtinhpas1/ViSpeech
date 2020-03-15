@@ -16,22 +16,39 @@ export const Utils = {
   comparePassword: (oldPassword, newPassword) => {
     return bcrypt.compare(oldPassword, newPassword);
   },
-  formatUserRoles: roles => {
-    if (!roles) {
-      return [{ name: CONSTANTS.ROLE.USER }];
-    }
-    if (!Array.isArray(roles)) {
-      return [roles];
-    }
-    return roles;
-  },
   removeNullOrEmptyPropertyOfObj: obj => {
-    let result = JSON.parse(JSON.stringify(obj));
-    if (typeof (result) === 'object') {
+    const result = JSON.parse(JSON.stringify(obj));
+    if (typeof (obj) === 'object') {
       Object.keys(result).forEach(property => {
         if (result[property] == null || result[property] === "") {
           delete result[property];
         }
+      })
+    }
+    return result;
+  },
+  removePropertyFromObject: (obj, property) => {
+    const result = JSON.parse(JSON.stringify(obj));
+    if (typeof (obj) === 'object' && result.hasOwnProperty(property)) {
+      delete result[property];
+    }
+    return result;
+  },
+  removePropertiesFromObject: (obj, properties) => {
+    let result = JSON.parse(JSON.stringify(obj));
+    if (typeof (obj) === 'object' && Array.isArray(properties)) {
+      properties.forEach(property => {
+        result = Utils.removePropertyFromObject(result, property);
+      })
+    }
+    return result;
+  },
+  removeObjPropertiesFromObjArr: (arr, properties) => {
+    const result = [];
+    if (Array.isArray(arr) && Array.isArray(properties)) {
+      arr.forEach(obj => {
+        const updatedObj = Utils.removePropertiesFromObject(obj, properties);
+        result.push(updatedObj);
       })
     }
     return result;

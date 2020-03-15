@@ -23,14 +23,13 @@ export class TokensController {
   // TODO: Guard to check maked payment
   @Post()
   async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
-    const transactionId = Utils.getUuid();
-    return this.tokensService.createToken(transactionId, tokenDto);
+    return this.tokensService.createToken(tokenDto);
   }
 
   /* Update Token */
 
   /*--------------------------------------------*/
-  // TODO: check business flow update -> upgrade type token insteed change value
+  // TODO: check business flow update -> upgrade type token instead change value
   // TODO: make flow to regenerate token value
   @ApiOperation({ tags: ["Update Token"] })
   @ApiResponse({ status: 200, description: "Update Token." })
@@ -53,8 +52,7 @@ export class TokensController {
   @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Delete(":_id")
   async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
-    const transactionId = Utils.getUuid();
-    return this.tokensService.deleteToken(transactionId, tokenIdDto);
+    return this.tokensService.deleteToken(tokenIdDto);
   }
 
   /* List Tokens */

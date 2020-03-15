@@ -10,7 +10,7 @@ import { TokensController } from "./controllers/tokens.controller";
 import { TokenTypeDto } from "./dtos/token-types.dto";
 import { TokenDto } from "./dtos/tokens.dto";
 import { EventHandlers } from "./events/handlers";
-import { TokenCreatedEvent, TokenCreatedFailEvent, TokenCreatedSuccessEvent } from "./events/impl/token-created.event";
+import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from "./events/impl/token-created.event";
 import { TokenDeletedEvent } from "./events/impl/token-deleted.event";
 import { TokenUpdatedEvent } from "./events/impl/token-updated.event";
 import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
@@ -18,8 +18,8 @@ import { QueryHandlers } from "./queries/handler";
 import { TokenRepository } from "./repository/token.repository";
 import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokensService } from "./services/tokens.service";
-import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailEvent } from "./events/impl/free-token-created.event";
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from "./events/impl/ordered-token-created";
+import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailedEvent } from "./events/impl/free-token-created.event";
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailedEvent } from "./events/impl/ordered-token-created.event";
 import { AuthService } from "auth/auth.service";
 import {AuthModule} from "../auth/auth.module";
 
@@ -65,20 +65,24 @@ export class TokensModule implements OnModuleInit {
   }
 
   public static eventHandlers = {
-    TokenCreatedEvent: (transactionId, data) => new TokenCreatedEvent(transactionId, data),
-    TokenCreatedSuccessEvent: (transactionId, data) => new TokenCreatedSuccessEvent(transactionId, data),
-    TokenCreatedFailEvent: (transactionId, data, error) => new TokenCreatedFailEvent(transactionId, data, error),
-    TokenDeletedEvent: (transactionId, data) => new TokenDeletedEvent(transactionId, data),
+    // create
+    TokenCreatedEvent: data => new TokenCreatedEvent(data),
+    TokenCreatedSuccessEvent: data => new TokenCreatedSuccessEvent(data),
+    TokenCreatedFailEvent: (data, error) => new TokenCreatedFailedEvent(data, error),
+
+    TokenDeletedEvent: data => new TokenDeletedEvent(data),
     TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
     TokenWelcomedEvent: data => new TokenWelcomedEvent(data),
+
     // free token
-    FreeTokenCreatedEvent: (transactionId, data) => new FreeTokenCreatedEvent(transactionId, data),
-    FreeTokenCreatedSuccessEvent: (transactionId, data) => new FreeTokenCreatedSuccessEvent(transactionId, data),
-    FreeTokenCreatedFailEvent: (transactionId, error) => new FreeTokenCreatedFailEvent(transactionId, error),
+    FreeTokenCreatedEvent: data => new FreeTokenCreatedEvent(data),
+    FreeTokenCreatedSuccessEvent: data => new FreeTokenCreatedSuccessEvent(data),
+    FreeTokenCreatedFailEvent: (data, error) => new FreeTokenCreatedFailedEvent(data, error),
+
     // ordered token
-    OrderedTokenCreatedEvent: (transactionId, data) => new OrderedTokenCreatedEvent(transactionId, data),
-    OrderedTokenCreatedSuccessEvent: (transactionId, data) => new OrderedTokenCreatedSuccessEvent(transactionId, data),
-    OrderedTokenCreatedFailEvent: (transactionId, data, error) => new OrderedTokenCreatedFailEvent(transactionId, data, error),
+    OrderedTokenCreatedEvent: data => new OrderedTokenCreatedEvent(data),
+    OrderedTokenCreatedSuccessEvent: data => new OrderedTokenCreatedSuccessEvent(data),
+    OrderedTokenCreatedFailEvent: (data, error) => new OrderedTokenCreatedFailedEvent(data, error),
   };
 
   async persistTokenTypesToDB() {

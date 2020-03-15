@@ -16,7 +16,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 @EventsHandler(UserCreationStartedEvent)
 export class UserCreationStartedHandler implements IEventHandler<UserCreationStartedEvent> {
     handle(event: UserCreationStartedEvent) {
-        Logger.log(event.userDto._id, "UserCreationStartedEvent");
+        Logger.log(event.userDto.username, "UserCreationStartedEvent");
     }
 }
 
@@ -24,13 +24,12 @@ export class UserCreationStartedHandler implements IEventHandler<UserCreationSta
 export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     constructor(
         private readonly eventBus: EventBus,
-        @InjectRepository(UserDto)
-        private readonly userRepository: Repository<UserDto>,
+        @InjectRepository(UserDto) private readonly userRepository: Repository<UserDto>,
     ) {
     }
 
     async handle(event: UserCreatedEvent) {
-        Logger.log(event, "UserCreatedEvent");
+        Logger.log(event.userDto.username, "UserCreatedEvent");
         const user = event.userDto;
         try {
             user.password = Utils.hashPassword(user.password);
@@ -54,6 +53,6 @@ export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSucce
 @EventsHandler(UserCreatedFailedEvent)
 export class UserCreatedFailHandler implements IEventHandler<UserCreatedFailedEvent> {
     handle(event: UserCreatedFailedEvent) {
-        Logger.log(event.userDto.username, "UserCreatedFailEvent");
+        Logger.log(event.error, "UserCreatedFailEvent");
     }
 }

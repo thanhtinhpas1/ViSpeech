@@ -12,10 +12,10 @@ export class DeleteTokenHandler implements ICommandHandler<DeleteTokenCommand> {
 
   async execute(command: DeleteTokenCommand) {
     Logger.log("Async DeleteTokenHandler...", "DeleteTokenCommand");
-    const { transactionId, tokenIdDto } = command;
-    const id = tokenIdDto ? tokenIdDto._id : null;
+    const { tokenIdDto } = command;
+    const id = tokenIdDto._id;
     const token = this.publisher.mergeObjectContext(
-      await this.repository.deleteToken(transactionId, tokenIdDto._id)
+      await this.repository.deleteToken(id)
     );
     token.commit();
   }

@@ -4,24 +4,24 @@ import { OrderDto } from "orders/dtos/orders.dto";
 
 @Injectable()
 export class OrderRepository {
-  async createOrderStart(transactionId: string, orderDto: OrderDto) {
+  async createOrderStart(orderDto: OrderDto) {
     const order = new Order(undefined);
     order.setData(orderDto);
-    order.createOrderStart(transactionId);
+    order.createOrderStart();
     return order;
   }
 
-  async createOrder(transactionId: string, orderDto: OrderDto) {
+  async createOrder(orderDto: OrderDto) {
     const order = new Order(undefined);
     order.setData(orderDto);
-    order.createOrder(transactionId);
+    order.createOrder();
     return order;
   }
 
-  async updateOrder(transactionId: string, orderDto: OrderDto) {
+  async updateOrder(orderDto: OrderDto) {
     const order = new Order(undefined);
     order.setData(orderDto);
-    order.updateOrder(transactionId);
+    order.updateOrder();
     return order;
   }
 

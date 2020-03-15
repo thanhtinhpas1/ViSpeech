@@ -15,7 +15,6 @@ export class CreateFreeTokenCommand implements ICommand {
 
 export class CreateOrderedTokenCommand implements ICommand {
   constructor(
-    public readonly transactionId: string,
     public readonly tokenDto: TokenDto,
   ) {}
 }

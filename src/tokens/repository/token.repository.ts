@@ -4,24 +4,24 @@ import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Injectable()
 export class TokenRepository {
-  async createToken(transactionId: string, tokenDto: TokenDto) {
+  async createToken(tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.createToken(transactionId);
+    token.createToken();
     return token;
   }
 
-  async createFreeToken(transactionId: string, tokenDto: TokenDto) {
+  async createFreeToken(tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.createFreeToken(transactionId);
+    token.createFreeToken();
     return token;
   }
 
-  async createOrderedToken(transactionId: string, tokenDto: TokenDto) {
+  async createOrderedToken(tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.createOrderedToken(transactionId);
+    token.createOrderedToken();
     return token;
   }
 
@@ -32,9 +32,9 @@ export class TokenRepository {
     return token;
   }
 
-  async deleteToken(transactionId: string, tokenId: string) {
+  async deleteToken(tokenId: string) {
     const token = new Token(tokenId);
-    token.deleteToken(transactionId);
+    token.deleteToken();
     return token;
   }
 

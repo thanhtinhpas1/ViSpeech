@@ -1,4 +1,3 @@
-import {Logger} from "@nestjs/common";
 import {AggregateRoot} from "@nestjs/cqrs";
 import {UserCreatedEvent, UserCreationStartedEvent} from "../events/impl/user-created.event";
 import {UserDeletedEvent} from "../events/impl/user-deleted.event";
@@ -16,7 +15,7 @@ export class User extends AggregateRoot {
         this.data = data;
     }
 
-    createUserStart(transactionId: string) {
+    createUserStart() {
         this.apply(new UserCreationStartedEvent(this.data));
     }
 
@@ -33,10 +32,6 @@ export class User extends AggregateRoot {
     }
 
     assignUserRole(roleName: string, assignerId: string) {
-        try {
-            this.apply(new UserRoleAssignedEvent(this.id, roleName, assignerId));
-        } catch (err) {
-            Logger.error(err.message, '', '[UserModel] assignUserRole');
-        }
+        this.apply(new UserRoleAssignedEvent(this.id, roleName, assignerId));
     }
 }

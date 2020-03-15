@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FindOrderQuery } from "orders/queries/impl/find-order.query";
 import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
-import { Utils } from "utils";
 import { OrderDto, OrderIdRequestParamsDto } from "../dtos/orders.dto";
 import { OrdersService } from "../services/orders.service";
 import { OrderGuard } from "auth/guards/order.guard";
@@ -20,8 +19,7 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: "Create Order." })
   @Post()
   async createOrder(@Body() orderDto: OrderDto): Promise<OrderDto> {
-    const transactionId = Utils.getUuid();
-    return this.ordersService.createOrderStart(transactionId, orderDto);
+    return this.ordersService.createOrderStart(orderDto);
   }
 
   /* Update Order */
@@ -34,8 +32,7 @@ export class OrdersController {
     @Param() orderIdDto: OrderIdRequestParamsDto,
     @Body() orderDto: OrderDto
   ) {
-    const transactionId = Utils.getUuid();
-    return this.ordersService.updateOrder(transactionId, {
+    return this.ordersService.updateOrder({
       ...orderDto,
       _id: orderIdDto._id
     });

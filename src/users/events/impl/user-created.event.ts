@@ -3,13 +3,13 @@ import { UserDto } from "../../dtos/users.dto";
 
 export class UserCreationStartedEvent implements IEvent {
   constructor(
-    public readonly userDto: any
+    public readonly userDto: UserDto
   ) {}
 }
 
 export class UserCreatedEvent implements IEvent {
   constructor(
-    public readonly userDto: any
+    public readonly userDto: UserDto
   ) {}
 }
 

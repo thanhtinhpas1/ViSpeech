@@ -15,7 +15,7 @@ import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 export class OrderCreationStartedHandler
   implements IEventHandler<OrderCreationStartedEvent> {
   handle(event: OrderCreationStartedEvent) {
-    Logger.log(event.transactionId, "OrderCreationStartedEvent");
+    Logger.log(event.orderDto._id, "OrderCreationStartedEvent");
   }
 }
 
@@ -28,21 +28,19 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
   ) {}
 
   async handle(event: OrderCreatedEvent) {
-    Logger.log(event, "OrderCreatedEvent");
+    Logger.log(event.orderDto._id, "OrderCreatedEvent");
     const order = event.orderDto;
-    const transactionId = event.transactionId;
 
     try {
-      const tokenTypeDto = await getMongoRepository(TokenTypeDto).find({
+      const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({
         _id: order.tokenTypeId.toString()
       });
-      order.minutes = tokenTypeDto[0].minutes;
-      order.price = tokenTypeDto[0].price;
-      order.transactionId = transactionId;
-      await this.repository.save(order);
-      this.eventBus.publish(new OrderCreatedSuccessEvent(transactionId, order));
+      order.minutes = tokenTypeDto.minutes;
+      order.price = tokenTypeDto.price;
+      const newOrder = await this.repository.insert(order);
+      this.eventBus.publish(new OrderCreatedSuccessEvent(newOrder));
     } catch (error) {
-      this.eventBus.publish(new OrderCreatedFailedEvent(transactionId, error));
+      this.eventBus.publish(new OrderCreatedFailedEvent(error));
     }
   }
 }
@@ -51,7 +49,7 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
 export class OrderCreatedSuccessHandler
   implements IEventHandler<OrderCreatedSuccessEvent> {
   handle(event: OrderCreatedSuccessEvent) {
-    // Logger.log(event, "OrderCreatedSuccessEvent");
+    Logger.log(event.orderDto._id, "OrderCreatedSuccessEvent");
   }
 }
 
@@ -59,6 +57,6 @@ export class OrderCreatedSuccessHandler
 export class OrderCreatedFailedHandler
   implements IEventHandler<OrderCreatedFailedEvent> {
   handle(event: OrderCreatedFailedEvent) {
-    // Logger.log(event, "OrderCreatedFailedEvent");
+    Logger.log(event.error, "OrderCreatedFailedEvent");
   }
 }

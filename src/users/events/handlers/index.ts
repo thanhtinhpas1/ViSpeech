@@ -1,13 +1,13 @@
-import {UserDeletedFailedHandler, UserDeletedHandler, UserDeletedSuccessHandler} from "./user-deleted.handler";
-import {UserUpdatedFailedHandler, UserUpdatedHandler, UserUpdatedSuccessHandler} from "./user-updated.handler";
+import { UserDeletedFailedHandler, UserDeletedHandler, UserDeletedSuccessHandler } from "./user-deleted.handler";
+import { UserUpdatedFailedHandler, UserUpdatedHandler, UserUpdatedSuccessHandler } from "./user-updated.handler";
 import {
     UserCreatedFailHandler,
     UserCreatedHandler,
     UserCreatedSuccessHandler,
     UserCreationStartedHandler
 } from "./user-created.handler";
-import {UserWelcomedHandler} from "./user-welcomed.handler";
-import {AssignedRoleHandler} from "./user-role-assigned.handler";
+import { UserWelcomedHandler } from "./user-welcomed.handler";
+import { UserRoleAssignedHandler, UserRoleAssignedSuccessHandler, UserRoleAssignedFailedHandler } from "./user-role-assigned.handler";
 
 export const EventHandlers = [
     // create
@@ -21,12 +21,17 @@ export const EventHandlers = [
     UserUpdatedHandler,
     UserUpdatedSuccessHandler,
     UserUpdatedFailedHandler,
-    AssignedRoleHandler,
+
+    // assign user role
+    UserRoleAssignedHandler,
+    UserRoleAssignedSuccessHandler,
+    UserRoleAssignedFailedHandler,
 
     // delete
     UserDeletedHandler,
     UserDeletedSuccessHandler,
     UserDeletedFailedHandler,
-    UserWelcomedHandler,
 
+    // welcome
+    UserWelcomedHandler,
 ];
