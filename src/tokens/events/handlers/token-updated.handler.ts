@@ -17,8 +17,10 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
 
   async handle(event: TokenUpdatedEvent) {
     Logger.log(event.tokenDto._id, "TokenUpdatedEvent"); // write here
-    const { _id, ...tokenInfo } = event.tokenDto;
+    const { streamId, tokenDto } = event;
+    const { _id, ...tokenInfo } = tokenDto;
     let tokenTypeDto = null;
+
     try {
       if (tokenInfo.tokenTypeId) {
         tokenTypeDto = await this.repositoryTokenType.findOne({ _id: tokenInfo.tokenTypeId });

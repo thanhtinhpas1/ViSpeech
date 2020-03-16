@@ -3,7 +3,7 @@ import {UserCreatedEvent, UserCreationStartedEvent} from '../events/impl/user-cr
 import {UserDeletedEvent} from '../events/impl/user-deleted.event';
 import {UserUpdatedEvent} from '../events/impl/user-updated.event';
 import {UserRoleAssignedEvent} from '../events/impl/user-role-assigned.event';
-import {ChangedPasswordEvent} from '../events/impl/changed-password.event';
+import {PasswordChangedEvent} from '../events/impl/password-changed.event';
 
 export class User extends AggregateRoot {
     [x: string]: any;
@@ -16,27 +16,27 @@ export class User extends AggregateRoot {
         this.data = data;
     }
 
-    createUserStart() {
-        this.apply(new UserCreationStartedEvent(this.id, this.data));
+    createUserStart(streamId: string) {
+        this.apply(new UserCreationStartedEvent(streamId, this.data));
     }
 
-    createUser() {
-        this.apply(new UserCreatedEvent(this.id, this.data));
+    createUser(streamId: string) {
+        this.apply(new UserCreatedEvent(streamId, this.data));
     }
 
-    updateUser() {
-        this.apply(new UserUpdatedEvent(this.id, this.data));
+    updateUser(streamId: string) {
+        this.apply(new UserUpdatedEvent(streamId, this.data));
     }
 
-    deleteUser() {
-        this.apply(new UserDeletedEvent(this.id));
+    deleteUser(streamId: string) {
+        this.apply(new UserDeletedEvent(streamId, this.id));
     }
 
-    assignUserRole(roleName: string, assignerId: string) {
-        this.apply(new UserRoleAssignedEvent(this.id, roleName, assignerId));
+    assignUserRole(streamId: string, roleName: string, assignerId: string) {
+        this.apply(new UserRoleAssignedEvent(streamId, this.id, roleName, assignerId));
     }
 
-    changePassword(newPassword: string, oldPassword: string) {
-        this.apply(new ChangedPasswordEvent(this.id, newPassword, oldPassword));
+    changePassword(streamId: string, newPassword: string, oldPassword: string) {
+        this.apply(new PasswordChangedEvent(streamId, this.id, newPassword, oldPassword));
     }
 }

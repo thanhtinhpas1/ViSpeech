@@ -17,23 +17,23 @@ export class OrdersService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createOrderStart(orderDto: OrderDto) {
-    return await this.commandBus.execute(new CreateOrderStartCommand(orderDto));
+  async createOrderStart(streamId: string, orderDto: OrderDto) {
+    return await this.commandBus.execute(new CreateOrderStartCommand(streamId, orderDto));
   }
 
-  async createOrder(orderDto: OrderDto) {
-    return await this.commandBus.execute(new CreateOrderCommand(orderDto));
+  async createOrder(streamId: string, orderDto: OrderDto) {
+    return await this.commandBus.execute(new CreateOrderCommand(streamId, orderDto));
   }
 
-  async updateOrder(orderDto: OrderDto) {
-    return await this.commandBus.execute(new UpdateOrderCommand(orderDto));
+  async updateOrder(streamId: string, orderDto: OrderDto) {
+    return await this.commandBus.execute(new UpdateOrderCommand(streamId, orderDto));
   }
 
-  async deleteOrder(orderIdDto: OrderIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteOrderCommand(orderIdDto));
+  async deleteOrder(streamId: string, orderIdDto: OrderIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteOrderCommand(streamId, orderIdDto));
   }
 
-  async findOrders(getOrdersQuery: GetOrdersQuery) {
+  async getOrders(getOrdersQuery: GetOrdersQuery) {
     var query = new GetOrdersQuery();
     Object.assign(query, getOrdersQuery);
     return await this.queryBus.execute(query);

@@ -2,6 +2,7 @@ import { IEvent } from "@nestjs/cqrs";
 
 export class UserRoleAssignedEvent implements IEvent {
     constructor(
+        public readonly streamId: string,
         public readonly userId: string,
         public readonly roleName: string,
         public readonly assignerId: string
@@ -11,6 +12,7 @@ export class UserRoleAssignedEvent implements IEvent {
 
 export class UserRoleAssignedSuccessEvent implements IEvent {
     constructor(
+        public readonly streamId: string,
         public readonly userId: string,
         public readonly roleName: string,
         public readonly assignerId: string
@@ -19,6 +21,7 @@ export class UserRoleAssignedSuccessEvent implements IEvent {
 
 export class UserRoleAssignedFailedEvent implements IEvent {
     constructor(
+        public readonly streamId: string,
         public readonly userId: string,
         public readonly roleName: string,
         public readonly assignerId: string,

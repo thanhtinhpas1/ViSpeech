@@ -15,10 +15,10 @@ export class CreateUserStartHandler
     async execute(command: CreateUserStartCommand) {
         Logger.log("Async CreateUserStartHandler...", "CreateUserStartCommand");
 
-        const { _id, userDto } = command;
+        const { streamId, userDto } = command;
         // use mergeObjectContext for dto dispatch events
         const user = this.publisher.mergeObjectContext(
-            await this.repository.createUserStart(_id, userDto)
+            await this.repository.createUserStart(streamId, userDto)
         );
         user.commit();
     }
@@ -35,10 +35,10 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
     async execute(command: CreateUserCommand) {
         Logger.log("Async CreateUserHandler...", "CreateUserCommand");
 
-        const { userDto } = command;
+        const { streamId, userDto } = command;
         // use mergeObjectContext for dto dispatch events
         const user = this.publisher.mergeObjectContext(
-            await this.repository.createUser(userDto)
+            await this.repository.createUser(streamId, userDto)
         );
         user.commit();
     }

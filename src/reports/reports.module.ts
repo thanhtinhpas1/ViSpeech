@@ -57,9 +57,9 @@ export class ReportsModule implements OnModuleInit {
     }
 
     eventHandlers = {
-        ReportCreatedEvent: data => new ReportCreatedEvent(data),
-        ReportDeletedEvent: data => new ReportDeletedEvent(data),
-        ReportUpdatedEvent: data => new ReportUpdatedEvent(data),
-        ReportWelcomedEvent: data => new ReportWelcomedEvent(data)
+        ReportCreatedEvent: (streamId, data) => new ReportCreatedEvent(streamId, data),
+        ReportDeletedEvent: (streamId, data) => new ReportDeletedEvent(streamId, data),
+        ReportUpdatedEvent: (streamId, data) => new ReportUpdatedEvent(streamId, data),
+        ReportWelcomedEvent: (streamId, data) => new ReportWelcomedEvent(streamId, data)
     };
 }

@@ -5,11 +5,10 @@ import {
   OrderCreatedSuccessEvent,
   OrderCreatedFailedEvent
 } from "../impl/order-created.event";
-import { Logger } from "@nestjs/common";
+import { Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderDto } from "orders/dtos/orders.dto";
-import { Repository, getMongoRepository } from "typeorm";
-import { TokenTypeDto } from "tokens/dtos/token-types.dto";
+import { Repository } from "typeorm";
 
 @EventsHandler(OrderCreationStartedEvent)
 export class OrderCreationStartedHandler
@@ -29,18 +28,18 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
 
   async handle(event: OrderCreatedEvent) {
     Logger.log(event.orderDto._id, "OrderCreatedEvent");
-    const order = event.orderDto;
+    const { streamId, orderDto } = event;
+    const order = JSON.parse(JSON.stringify(orderDto));
 
     try {
-      const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({
-        _id: order.tokenTypeId.toString()
-      });
+      const tokenTypeDto = await this.repository.findOne({ _id: order.tokenTypeId });
+      if (!tokenTypeDto) throw new NotFoundException(`Token type with _id ${order.tokenTypeId} does not exist.`);
       order.minutes = tokenTypeDto.minutes;
       order.price = tokenTypeDto.price;
       const newOrder = await this.repository.insert(order);
-      this.eventBus.publish(new OrderCreatedSuccessEvent(newOrder));
+      this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, newOrder));
     } catch (error) {
-      this.eventBus.publish(new OrderCreatedFailedEvent(error));
+      this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, error));
     }
   }
 }

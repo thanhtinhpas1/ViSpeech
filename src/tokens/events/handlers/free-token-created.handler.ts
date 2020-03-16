@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailedEvent } from "../impl/free-token-created.event";
 import { CONSTANTS } from "common/constant";
+import { Utils } from "utils";
 
 @EventsHandler(FreeTokenCreatedEvent)
 export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEvent> {
@@ -19,18 +20,18 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
 
   async handle(event: FreeTokenCreatedEvent) {
     Logger.log(event.tokenDto._id, "FreeTokenCreatedEvent");
-    const { tokenDto } = event;
-    const token = JSON.parse(JSON.stringify(tokenDto)); // deep clone
+    const { streamId, tokenDto } = event;
+    let token = JSON.parse(JSON.stringify(tokenDto)); // deep clone
+
     try {
       const tokenTypeDto = await this.repositoryTokenType.findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
       token.tokenTypeId = tokenTypeDto._id;
       token.minutes = tokenTypeDto.minutes;
-      delete token.tokenType;
-      delete token.orderId;
+      token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
       const newToken = await this.repository.insert(token);
-      this.eventBus.publish(new FreeTokenCreatedSuccessEvent(newToken));
+      this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, newToken));
     } catch (error) {
-      this.eventBus.publish(new FreeTokenCreatedFailedEvent(tokenDto, error));
+      this.eventBus.publish(new FreeTokenCreatedFailedEvent(streamId, tokenDto, error));
     }
   }
 }

@@ -20,11 +20,10 @@ export class OrdersSagas {
   startCreatingOrder = (events$: Observable<any>): Observable<ICommand> => {
     return events$.pipe(
       ofType(OrderCreationStartedEvent),
-      delay(1000),
       map((event: OrderCreationStartedEvent) => {
         Logger.log("Inside [OrdersSagas] startCreatingOrder Saga", "OrdersSagas");
-        const orderDto = event.orderDto;
-        return new CreateOrderCommand(orderDto);
+        const { streamId, orderDto } = event;
+        return new CreateOrderCommand(streamId, orderDto);
       })
     );
   };
@@ -35,10 +34,11 @@ export class OrdersSagas {
       ofType(OrderCreatedSuccessEvent),
       map((event: OrderCreatedSuccessEvent) => {
         Logger.log("Inside [OrdersSagas] orderCreatedSuccess Saga", "OrdersSagas");
-        const { userId, tokenTypeId, _id } = event.orderDto;
+        const { streamId, orderDto } = event;
+        const { userId, tokenTypeId, _id } = orderDto;
         const tokenValue = this.authService.generateTokenWithUserId(userId);
         const tokenDto = new TokenDto(tokenValue, userId, null, tokenTypeId, _id);
-        return new CreateOrderedTokenCommand(tokenDto);
+        return new CreateOrderedTokenCommand(streamId, tokenDto);
       })
     );
   };
@@ -47,28 +47,28 @@ export class OrdersSagas {
   orderedTokenCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
     return events$.pipe(
       ofType(OrderedTokenCreatedSuccessEvent),
-      delay(1000),
       map((event: OrderedTokenCreatedSuccessEvent) => {
         Logger.log("Inside [OrdersSagas] orderedTokenCreatedSuccess Saga", "OrdersSagas");
-        const { _id, userId, tokenTypeId, orderId } = event.tokenDto;
+        const { streamId, tokenDto } = event;
+        const { _id, userId, tokenTypeId, orderId } = tokenDto;
         const orderDto = new OrderDto(userId, tokenTypeId, _id, CONSTANTS.STATUS.SUCCESS);
         orderDto._id = orderId;
-        return new UpdateOrderCommand(orderDto);
+        return new UpdateOrderCommand(streamId, orderDto);
       })
     );
   };
 
   @Saga()
-  orderedTokenCreatedFail = (events$: Observable<any>): Observable<ICommand> => {
+  orderedTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
     return events$.pipe(
       ofType(OrderedTokenCreatedFailedEvent),
-      delay(1000),
       map((event: OrderedTokenCreatedFailedEvent) => {
-        Logger.log("Inside [OrdersSagas] orderedTokenCreatedFail Saga", "OrdersSagas");
-        const { _id, userId, tokenTypeId, orderId } = event.tokenDto;
+        Logger.log("Inside [OrdersSagas] orderedTokenCreatedFailed Saga", "OrdersSagas");
+        const { streamId, tokenDto } = event;
+        const { _id, userId, tokenTypeId, orderId } = tokenDto;
         const orderDto = new OrderDto(userId, tokenTypeId, _id, CONSTANTS.STATUS.FAILURE);
         orderDto._id = orderId;
-        return new UpdateOrderCommand(orderDto);
+        return new UpdateOrderCommand(streamId, orderDto);
       })
     );
   };

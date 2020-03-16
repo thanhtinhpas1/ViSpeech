@@ -19,9 +19,10 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
 
   async handle(event: OrderedTokenCreatedEvent) {
     Logger.log(event.tokenDto._id, "OrderedTokenCreatedEvent");
-    const { tokenDto } = event;
+    const { streamId, tokenDto } = event;
     let token = JSON.parse(JSON.stringify(tokenDto));
     let tokenTypeDto = null;
+
     try {
       if (token.tokenTypeId) {
         tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
@@ -35,9 +36,9 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
       token.minutes = tokenTypeDto.minutes;
       token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
       const newToken = await this.repository.insert(token);
-      this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(newToken));
+      this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, newToken));
     } catch (error) {
-      this.eventBus.publish(new OrderedTokenCreatedFailedEvent(tokenDto, error));
+      this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));
     }
   }
 }

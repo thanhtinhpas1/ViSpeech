@@ -14,10 +14,10 @@ export class CreateOrderStartHandler
   async execute(command: CreateOrderStartCommand) {
     Logger.log("Async CreateOrderStartHandler...", "CreateOrderStartCommand");
 
-    const { orderDto } = command;
+    const { streamId, orderDto } = command;
     // use mergeObjectContext for dto dispatch events
     const user = this.publisher.mergeObjectContext(
-      await this.repository.createOrderStart(orderDto)
+      await this.repository.createOrderStart(streamId, orderDto)
     );
     user.commit();
   }
@@ -33,10 +33,10 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
   async execute(command: CreateOrderCommand) {
     Logger.log("Async CreateOrderHandler...", "CreateOrderCommand");
 
-    const { orderDto } = command;
+    const { streamId, orderDto } = command;
     // use mergeObjectContext for dto dispatch events
     const order = this.publisher.mergeObjectContext(
-      await this.repository.createOrder(orderDto)
+      await this.repository.createOrder(streamId, orderDto)
     );
     order.commit();
   }

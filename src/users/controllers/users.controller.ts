@@ -10,7 +10,6 @@ import {AssignUserRoleBody, ChangePasswordBody, UserDto, UserIdRequestParamsDto}
 import {UsersService} from '../services/users.service';
 import {UserGuard} from 'auth/guards/user.guard';
 import {AssignRoleGuard} from '../../auth/guards/assign-role.guard';
-import {Utils} from '../../utils';
 
 @Controller('users')
 @ApiTags('Users')
@@ -26,8 +25,8 @@ export class UsersController {
     @ApiResponse({status: 200, description: 'Create User.'})
     @Post()
     async createUser(@Body() userDto: UserDto): Promise<UserDto> {
-        userDto._id = Utils.getUuid();
-        return await this.usersService.createUserStart(userDto._id, userDto);
+        const streamId = userDto._id;
+        return await this.usersService.createUserStart(streamId, userDto);
     }
 
     /* Update User */
@@ -41,7 +40,8 @@ export class UsersController {
         @Param() userIdDto: UserIdRequestParamsDto,
         @Body() userDto: UserDto,
     ): Promise<UserDto> {
-        return this.usersService.updateUser({...userDto, _id: userIdDto._id});
+        const streamId = userIdDto._id;
+        return this.usersService.updateUser(streamId, {...userDto, _id: userIdDto._id});
     }
 
     /* Update User */
@@ -55,7 +55,8 @@ export class UsersController {
         if (!body || !body.oldPassword || !body.newPassword) throw new BadRequestException();
         const payload = this.authService.decode(request);
         if (!payload) throw new UnauthorizedException();
-        return this.usersService.changePassword(payload['id'], body.newPassword, body.oldPassword);
+        const streamId = payload['id'];
+        return this.usersService.changePassword(streamId, payload['id'], body.newPassword, body.oldPassword);
     }
 
     /* Delete User */
@@ -69,7 +70,8 @@ export class UsersController {
     async deleteUser(@Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
         const payload = this.authService.decode(request);
         if (payload['id'] === userIdDto._id) throw new BadRequestException();
-        return this.usersService.deleteUser(userIdDto);
+        const streamId = userIdDto._id;
+        return this.usersService.deleteUser(streamId, userIdDto);
     }
 
     /* Find User */
@@ -91,7 +93,7 @@ export class UsersController {
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
     @Roles([CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.ADMIN])
     @Get()
-    async findUsers(@Query() getUsersQuery: GetUsersQuery, @Req() request) {
+    async getUsers(@Query() getUsersQuery: GetUsersQuery, @Req() request) {
         const payload = this.authService.decode(request);
         getUsersQuery.userId = payload['id'];
         return this.usersService.getUsers(getUsersQuery);
@@ -103,9 +105,10 @@ export class UsersController {
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Put(':_id/roles')
-    async assignRoleToUser(@Body() body: AssignUserRoleBody, @Param() param: UserIdRequestParamsDto, @Req() request) {
+    async assignRoleToUser(@Body() body: AssignUserRoleBody, @Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
         const payload = this.authService.decode(request);
         const assignerId = payload['id'];
-        return this.usersService.assignRoleUser(param._id, body.roleName, assignerId);
+        const streamId = userIdDto._id;
+        return this.usersService.assignUserRole(streamId, userIdDto._id, body.roleName, assignerId);
     }
 }

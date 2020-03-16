@@ -19,9 +19,10 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
 
   async handle(event: TokenCreatedEvent) {
     Logger.log(event.tokenDto._id, "TokenCreatedEvent");
-    const { tokenDto } = event;
+    const { streamId, tokenDto } = event;
     let token = JSON.parse(JSON.stringify(tokenDto));
     let tokenTypeDto = null;
+
     try {
       if (token.tokenTypeId) {
         tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
@@ -35,9 +36,9 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
       token.minutes = tokenTypeDto.minutes;
       token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
       const newToken = await this.repository.insert(token);
-      this.eventBus.publish(new TokenCreatedSuccessEvent(newToken));
+      this.eventBus.publish(new TokenCreatedSuccessEvent(streamId, newToken));
     } catch (error) {
-      this.eventBus.publish(new TokenCreatedFailedEvent(tokenDto, error));
+      this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error));
     }
   }
 }

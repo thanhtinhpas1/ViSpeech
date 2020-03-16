@@ -15,13 +15,14 @@ export class UserRoleAssignedHandler implements IEventHandler<UserRoleAssignedEv
 
     async handle(event: UserRoleAssignedEvent) {
         Logger.log(event.userId, "UserRoleAssignedEvent");
-        const { userId, roleName, assignerId } = event;
+        const { streamId, userId, roleName, assignerId } = event;
+
         try {
             const roleDto = [new RoleDto(roleName)];
             await this.userRepository.update({ _id: userId }, { roles: roleDto, assignerId });
-            this.eventBus.publish(new UserRoleAssignedSuccessEvent(userId, roleName, assignerId));
+            this.eventBus.publish(new UserRoleAssignedSuccessEvent(streamId, userId, roleName, assignerId));
         } catch (error) {
-            this.eventBus.publish(new UserRoleAssignedFailedEvent(userId, roleName, assignerId, error));
+            this.eventBus.publish(new UserRoleAssignedFailedEvent(streamId, userId, roleName, assignerId, error));
         }
     }
 }

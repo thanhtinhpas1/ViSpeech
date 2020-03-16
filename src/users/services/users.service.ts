@@ -16,16 +16,24 @@ export class UsersService {
         private readonly queryBus: QueryBus,
     ) { }
 
-    async createUserStart(_id: string, userDto: UserDto) {
-        return await this.commandBus.execute(new CreateUserStartCommand(_id, userDto));
+    async createUserStart(streamId: string, userDto: UserDto) {
+        return await this.commandBus.execute(new CreateUserStartCommand(streamId, userDto));
     }
 
-    async updateUser(userDto: UserDto) {
-        return await this.commandBus.execute(new UpdateUserCommand(userDto));
+    async updateUser(streamId: string, userDto: UserDto) {
+        return await this.commandBus.execute(new UpdateUserCommand(streamId, userDto));
     }
 
-    async deleteUser(userIdDto: UserIdRequestParamsDto) {
-        return await this.commandBus.execute(new DeleteUserCommand(userIdDto));
+    async deleteUser(streamId: string, userIdDto: UserIdRequestParamsDto) {
+        return await this.commandBus.execute(new DeleteUserCommand(streamId, userIdDto));
+    }
+
+    async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
+        return await this.commandBus.execute(new AssignUserRoleCommand(streamId, userId, roleName, assignerId));
+    }
+
+    async changePassword(streamId: string, userId: string, newPassword: string, oldPassword: string) {
+        return await this.commandBus.execute(new ChangePasswordCommand(streamId, userId, newPassword, oldPassword));
     }
 
     async getUsers(getUsersQuery: GetUsersQuery) {
@@ -37,13 +45,5 @@ export class UsersService {
     async findOne(findUserQuery: FindUserQuery) {
         const query = new FindUserQuery(findUserQuery.id);
         return await this.queryBus.execute(query);
-    }
-
-    async assignRoleUser(userId: string, roleName: string, assignerId: string) {
-        return await this.commandBus.execute(new AssignUserRoleCommand(userId, roleName, assignerId));
-    }
-
-    async changePassword(userId: string, newPassword: string, oldPassword: string) {
-        return await this.commandBus.execute(new ChangePasswordCommand(userId, newPassword, oldPassword));
     }
 }

@@ -24,7 +24,8 @@ export class UsersSagas {
             ofType(UserCreationStartedEvent),
             map((event: UserCreationStartedEvent) => {
                 Logger.log('Inside [UsersSagas] startCreatingUser Saga', 'UsersSagas');
-                return new CreateUserCommand(event._id, event.userDto);
+                const { streamId, userDto } = event;
+                return new CreateUserCommand(streamId, userDto);
             })
         );
     };
@@ -35,10 +36,11 @@ export class UsersSagas {
             ofType(UserCreatedSuccessEvent),
             map((event: UserCreatedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
-                const {_id} = event.userDto;
-                const tokenValue = this.authService.generateTokenWithUserId(_id);
-                const tokenDto = new TokenDto(tokenValue, _id); // free token
-                return new CreateFreeTokenCommand(tokenDto);
+                const { streamId, userDto } = event;
+                const userId = userDto._id;
+                const tokenValue = this.authService.generateTokenWithUserId(userId);
+                const tokenDto = new TokenDto(tokenValue, userId); // free token
+                return new CreateFreeTokenCommand(streamId, tokenDto);
             })
         );
     };
@@ -49,22 +51,23 @@ export class UsersSagas {
             ofType(FreeTokenCreatedSuccessEvent),
             map((event: FreeTokenCreatedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] freeTokenCreatedSuccess Saga', 'UsersSagas');
-                const {userId} = event.tokenDto;
-                return new WelcomeUserCommand(userId);
+                const { streamId, tokenDto } = event;
+                return new WelcomeUserCommand(streamId, tokenDto.userId);
             })
         );
     };
 
     @Saga()
-    freeTokenCreatedFail = (events$: Observable<any>): Observable<ICommand> => {
+    freeTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(FreeTokenCreatedFailedEvent),
             flatMap((event: FreeTokenCreatedFailedEvent) => {
-                Logger.log('Inside [UsersSagas] freeTokenCreatedFail Saga', 'UsersSagas');
-                const {_id, userId} = event.tokenDto;
+                Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
+                const { streamId, tokenDto } = event;
+                const { _id, userId } = tokenDto;
                 return [
-                    new DeleteTokenCommand(new TokenIdRequestParamsDto(_id)),
-                    new DeleteUserCommand(new UserIdRequestParamsDto(userId))
+                    new DeleteTokenCommand(streamId, new TokenIdRequestParamsDto(_id)),
+                    new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId))
                 ];
             })
         );

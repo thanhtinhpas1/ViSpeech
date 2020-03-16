@@ -3,7 +3,7 @@ import {UserDto} from '../../dtos/users.dto';
 
 export class CreateUserStartCommand implements ICommand {
     constructor(
-        public readonly _id: string,
+        public readonly streamId: string,
         public readonly userDto: UserDto
     ) {
     }
@@ -11,7 +11,7 @@ export class CreateUserStartCommand implements ICommand {
 
 export class CreateUserCommand implements ICommand {
     constructor(
-        public readonly _id: string,
+        public readonly streamId: string,
         public readonly userDto: UserDto
     ) {
     }

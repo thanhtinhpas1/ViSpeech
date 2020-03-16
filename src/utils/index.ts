@@ -10,19 +10,8 @@ export const Utils = {
     getUuid: () => {
         return uuidv1();
     },
-    comparePassword: (oldPassword, newPassword) => {
-        return bcrypt.compare(oldPassword, newPassword);
-    },
-    removeNullOrEmptyPropertyOfObj: obj => {
-        const result = JSON.parse(JSON.stringify(obj));
-        if (typeof (obj) === 'object') {
-            Object.keys(result).forEach(property => {
-                if (result[property] == null || result[property] === '') {
-                    delete result[property];
-                }
-            });
-        }
-        return result;
+    comparePassword: (plainTextPassword, hashedPassword) => {
+        return bcrypt.compare(plainTextPassword, hashedPassword);
     },
     removePropertyFromObject: (obj, property) => {
         const result = JSON.parse(JSON.stringify(obj));
@@ -41,11 +30,10 @@ export const Utils = {
         return result;
     },
     removeObjPropertiesFromObjArr: (arr, properties) => {
-        const result = [];
+        let result = [];
         if (Array.isArray(arr) && Array.isArray(properties)) {
-            arr.forEach(obj => {
-                const updatedObj = Utils.removePropertiesFromObject(obj, properties);
-                result.push(updatedObj);
+            result = arr.map(obj => {
+                return Utils.removePropertiesFromObject(obj, properties);
             });
         }
         return result;

@@ -64,13 +64,13 @@ export class OrdersModule implements OnModuleInit {
 
   eventHandlers = {
     // create
-    OrderCreationStartedEvent: (data) => new OrderCreationStartedEvent(data),
-    OrderCreatedEvent: (data) => new OrderCreatedEvent(data),
-    OrderCreatedSuccessEvent: (data) => new OrderCreatedSuccessEvent(data),
-    OrderCreatedFailedEvent: (data) => new OrderCreatedFailedEvent(data),
+    OrderCreationStartedEvent: (streamId, data) => new OrderCreationStartedEvent(streamId, data),
+    OrderCreatedEvent: (streamId, data) => new OrderCreatedEvent(streamId, data),
+    OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),
+    OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),
 
-    OrderDeletedEvent: data => new OrderDeletedEvent(data),
-    OrderUpdatedEvent: (data) => new OrderUpdatedEvent(data),
-    OrderWelcomedEvent: data => new OrderWelcomedEvent(data)
+    OrderDeletedEvent: (streamId, data) => new OrderDeletedEvent(streamId, data),
+    OrderUpdatedEvent: (streamId, data) => new OrderUpdatedEvent(streamId, data),
+    OrderWelcomedEvent: (streamId, data) => new OrderWelcomedEvent(streamId, data)
   };
 }

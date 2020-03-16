@@ -7,8 +7,8 @@ import {
     UserCreationStartedHandler
 } from "./user-created.handler";
 import {UserWelcomedHandler} from "./user-welcomed.handler";
-import {UserRoleAssignedHandler} from "./user-role-assigned.handler";
-import {ChangedPasswordHandler} from './changed-password.handler';
+import {UserRoleAssignedHandler, UserRoleAssignedSuccessHandler, UserRoleAssignedFailedHandler} from "./user-role-assigned.handler";
+import {PasswordChangedHandler} from './password-changed.handler';
 
 export const EventHandlers = [
     // create
@@ -21,8 +21,14 @@ export const EventHandlers = [
     UserUpdatedHandler,
     UserUpdatedSuccessHandler,
     UserUpdatedFailedHandler,
+
+    // change password
+    PasswordChangedHandler,
+
+    // assign user role
     UserRoleAssignedHandler,
-    ChangedPasswordHandler,
+    UserRoleAssignedSuccessHandler,
+    UserRoleAssignedFailedHandler,
 
     // delete
     UserDeletedHandler,

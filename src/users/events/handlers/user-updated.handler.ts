@@ -1,10 +1,10 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent} from '../impl/user-updated.event';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {UserDto} from 'users/dtos/users.dto';
-import {Repository} from 'typeorm';
-import {UserCreatedFailedEvent, UserCreatedSuccessEvent} from '../impl/user-created.event';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from '../impl/user-updated.event';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { Repository } from 'typeorm';
+import { Utils } from 'utils';
 
 @EventsHandler(UserUpdatedEvent)
 export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
@@ -16,20 +16,16 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
     }
 
     async handle(event: UserUpdatedEvent) {
-        Logger.log(event, 'UserUpdatedEvent');
-        const {userDto} = event;
-        delete userDto['email'];
-        delete userDto['assignerId'];
-        delete userDto['roles'];
-        delete userDto['password'];
-        return this.repository.update({_id: userDto._id}, userDto)
-            .then(rs => {
-                // FIXME: change event to UserUpdatedSuccessEvent & below when failed
-                this.eventBus.publish(new UserCreatedSuccessEvent(userDto._id, userDto));
-            }).catch(err => {
-                Logger.error(err.message, '', 'UserUpdatedEvent');
-                this.eventBus.publish(new UserCreatedFailedEvent(userDto._id, userDto, err));
-            });
+        Logger.log(event.userDto.username, 'UserUpdatedEvent');
+        const { streamId, userDto } = event;
+
+        try {
+            const formattedUserDto = Utils.removePropertiesFromObject(userDto, ['email', 'assignerId', 'password', 'roles']);
+            await this.repository.update({ _id: userDto._id }, formattedUserDto);
+            this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
+        } catch(error) {
+            this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));
+        }
     }
 }
 

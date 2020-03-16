@@ -5,7 +5,6 @@ import { CONSTANTS } from 'common/constant';
 import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
 import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
 import { GetTokensQuery, GetTokenTypesQuery } from 'tokens/queries/impl/get-tokens.query';
-import { Utils } from 'utils';
 import { TokenDto, TokenIdRequestParamsDto } from '../dtos/tokens.dto';
 import { TokensService } from '../services/tokens.service';
 import { Roles } from 'auth/roles.decorator';
@@ -23,7 +22,8 @@ export class TokensController {
   // TODO: Guard to check maked payment
   @Post()
   async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
-    return this.tokensService.createToken(tokenDto);
+    const streamId = tokenDto._id;
+    return this.tokensService.createToken(streamId, tokenDto);
   }
 
   /* Update Token */
@@ -37,7 +37,8 @@ export class TokensController {
     @Param() tokenIdDto: TokenIdRequestParamsDto,
     @Body() tokenDto: TokenDto,
   ) {
-    return this.tokensService.updateToken({
+    const streamId = tokenIdDto._id;
+    return this.tokensService.updateToken(streamId, {
       ...tokenDto,
       _id: tokenIdDto._id,
     });
@@ -50,7 +51,8 @@ export class TokensController {
   @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Delete(':_id')
   async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
-    return this.tokensService.deleteToken(tokenIdDto);
+    const streamId = tokenIdDto._id;
+    return this.tokensService.deleteToken(streamId, tokenIdDto);
   }
 
   /* List Tokens */
@@ -60,8 +62,8 @@ export class TokensController {
   @ApiResponse({ status: 200, description: 'List Tokens.' })
   @Roles([CONSTANTS.ROLE.ADMIN])
   @Get()
-  async findTokens(@Query() getTokensQuery: GetTokensQuery) {
-    return this.tokensService.findTokens(getTokensQuery);
+  async getTokens(@Query() getTokensQuery: GetTokensQuery) {
+    return this.tokensService.getTokens(getTokensQuery);
   }
 
   /* List Tokens By UserId */

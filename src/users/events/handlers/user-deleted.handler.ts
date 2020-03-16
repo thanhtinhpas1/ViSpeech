@@ -4,7 +4,6 @@ import { Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserDto } from "users/dtos/users.dto";
 import { Repository } from "typeorm";
-import { throwError } from "rxjs";
 
 @EventsHandler(UserDeletedEvent)
 export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
@@ -16,17 +15,18 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
 
     async handle(event: UserDeletedEvent) {
         Logger.log(event.userId, "UserDeletedEvent");
-        const userId = event.userId;
+        const { streamId, userId } = event;
+
         try {
             const user = await this.repository.findOne({ _id: userId });
             if (user) {
                 await this.repository.delete({ _id: userId });
-                this.eventBus.publish(new UserDeletedSuccessEvent(userId));
+                this.eventBus.publish(new UserDeletedSuccessEvent(streamId, userId));
                 return;
             }
             throw new NotFoundException(`User with _id ${userId} does not exist.`);
         } catch (error) {
-            this.eventBus.publish(new UserDeletedFailedEvent(userId, error));
+            this.eventBus.publish(new UserDeletedFailedEvent(streamId, userId, error));
         }
     }
 }

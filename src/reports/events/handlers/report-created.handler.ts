@@ -13,10 +13,11 @@ export class ReportCreatedHandler implements IEventHandler<ReportCreatedEvent> {
   ) { }
 
   async handle(event: ReportCreatedEvent) {
+    Logger.log(event.reportDto._id, "ReportCreatedEvent");
+    const { streamId, reportDto } = event;
+
     try {
-      Logger.log(event.reportDto.transactionId, "ReportCreatedEvent");
-      const report = event.reportDto;
-      return await this.repository.save(report);
+      return await this.repository.insert(reportDto);
     } catch (error) {
       Logger.error(error, "", "ReportCreatedEvent");
     }

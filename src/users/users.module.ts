@@ -19,8 +19,8 @@ import {QueryHandlers} from './queries/handler';
 import {UserRepository} from './repository/user.repository';
 import {UsersSagas} from './sagas/users.sagas';
 import {UsersService} from './services/users.service';
-import {UserRoleAssignedEvent} from './events/impl/user-role-assigned.event';
-import {ChangedPasswordEvent} from './events/impl/changed-password.event';
+import {UserRoleAssignedEvent, UserRoleAssignedSuccessEvent, UserRoleAssignedFailedEvent} from './events/impl/user-role-assigned.event';
+import {PasswordChangedEvent} from './events/impl/password-changed.event';
 import {getMongoRepository} from 'typeorm';
 import {Utils} from '../utils';
 import {CONSTANTS} from '../common/constant';
@@ -69,26 +69,36 @@ export class UsersModule implements OnModuleInit {
                 'admin@vispeech.com', null, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
             Logger.log('Seed admin account success', 'UserModule');
             await getMongoRepository(UserDto).save(admin);
-        }catch (e) {
+        } catch (e) {
             Logger.warn('Seed admin account existed',  'UserModule');
         }
     }
 
     eventHandlers = {
         // create
-        UserCreationStartedEvent: (id, data) => new UserCreationStartedEvent(id, data),
-        UserCreatedEvent: (id, data) => new UserCreatedEvent(id, data),
-        UserCreatedSuccessEvent: (id, data) => new UserCreatedSuccessEvent(id, data),
-        UserCreatedFailedEvent: (id, data, error) => new UserCreatedFailedEvent(id, data, error),
-        UserUpdatedEvent: (id, data) => new UserUpdatedEvent(id, data),
-        UserUpdatedSuccessEvent: (id, data) => new UserUpdatedSuccessEvent(id, data),
-        UserUpdatedFailedEvent: (id, error) => new UserUpdatedFailedEvent(id, error),
+        UserCreationStartedEvent: (streamId, data) => new UserCreationStartedEvent(streamId, data),
+        UserCreatedEvent: (streamId, data) => new UserCreatedEvent(streamId, data),
+        UserCreatedSuccessEvent: (streamId, data) => new UserCreatedSuccessEvent(streamId, data),
+        UserCreatedFailedEvent: (streamId, data, error) => new UserCreatedFailedEvent(streamId, data, error),
+        
+        // update
+        UserUpdatedEvent: (streamId, data) => new UserUpdatedEvent(streamId, data),
+        UserUpdatedSuccessEvent: (streamId, data) => new UserUpdatedSuccessEvent(streamId, data),
+        UserUpdatedFailedEvent: (streamId, data, error) => new UserUpdatedFailedEvent(streamId, data, error),
+
+        // change password
+        PasswordChangedEvent: (streamId, userId, newPassword, oldPassword) => new PasswordChangedEvent(streamId, userId, newPassword, oldPassword),
+        
         // delete
-        UserDeletedEvent: (data) => new UserDeletedEvent(data),
-        UserDeletedSuccessEvent: (data) => new UserDeletedSuccessEvent(data),
-        UserDeletedFailedEvent: (data, error) => new UserDeletedFailedEvent(data, error),
-        UserWelcomedEvent: (data) => new UserWelcomedEvent(data),
-        UserRoleAssignedEvent: (userId, roleName, assignerId) => new UserRoleAssignedEvent(userId, roleName, assignerId),
-        ChangedPasswordEvent: (userId, newPassword, oldPassword) => new ChangedPasswordEvent(userId, newPassword, oldPassword),
+        UserDeletedEvent: (streamId, data) => new UserDeletedEvent(streamId, data),
+        UserDeletedSuccessEvent: (streamId, data) => new UserDeletedSuccessEvent(streamId, data),
+        UserDeletedFailedEvent: (streamId, data, error) => new UserDeletedFailedEvent(streamId, data, error),
+        
+        // assign user role
+        UserRoleAssignedEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedEvent(streamId, userId, roleNames, assignerId),
+        UserRoleAssignedSuccessEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedSuccessEvent(streamId, userId, roleNames, assignerId),
+        UserRoleAssignedFailedEvent: (streamId, userId, roleNames, assignerId, error) => new UserRoleAssignedFailedEvent(streamId, userId, roleNames, assignerId, error),
+
+        UserWelcomedEvent: (streamId, data) => new UserWelcomedEvent(streamId, data),
     };
 }

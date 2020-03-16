@@ -14,23 +14,23 @@ export class Order extends AggregateRoot {
     this.data = data;
   }
 
-  createOrderStart() {
-    this.apply(new OrderCreationStartedEvent(this.data));
+  createOrderStart(streamId: string) {
+    this.apply(new OrderCreationStartedEvent(streamId, this.data));
   }
 
-  createOrder() {
-    this.apply(new OrderCreatedEvent(this.data));
+  createOrder(streamId: string) {
+    this.apply(new OrderCreatedEvent(streamId, this.data));
   }
 
-  updateOrder() {
-    this.apply(new OrderUpdatedEvent(this.data));
+  updateOrder(streamId: string) {
+    this.apply(new OrderUpdatedEvent(streamId, this.data));
   }
 
-  welcomeOrder() {
-    this.apply(new OrderWelcomedEvent(this.id));
+  welcomeOrder(streamId: string) {
+    this.apply(new OrderWelcomedEvent(streamId, this.id));
   }
 
-  deleteOrder() {
-    this.apply(new OrderDeletedEvent(this.id));
+  deleteOrder(streamId: string) {
+    this.apply(new OrderDeletedEvent(streamId, this.id));
   }
 }

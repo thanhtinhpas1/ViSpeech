@@ -4,43 +4,43 @@ import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Injectable()
 export class TokenRepository {
-  async createToken(tokenDto: TokenDto) {
+  async createToken(streamId: string, tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.createToken();
+    token.createToken(streamId);
     return token;
   }
 
-  async createFreeToken(tokenDto: TokenDto) {
+  async createFreeToken(streamId: string, tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.createFreeToken();
+    token.createFreeToken(streamId);
     return token;
   }
 
-  async createOrderedToken(tokenDto: TokenDto) {
+  async createOrderedToken(streamId: string, tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.createOrderedToken();
+    token.createOrderedToken(streamId);
     return token;
   }
 
-  async updateToken(tokenDto: TokenDto) {
+  async updateToken(streamId: string, tokenDto: TokenDto) {
     const token = new Token(undefined);
     token.setData(tokenDto);
-    token.updateToken();
+    token.updateToken(streamId);
     return token;
   }
 
-  async deleteToken(tokenId: string) {
+  async deleteToken(streamId: string, tokenId: string) {
     const token = new Token(tokenId);
-    token.deleteToken();
+    token.deleteToken(streamId);
     return token;
   }
 
-  async welcomeToken(tokenId: string) {
+  async welcomeToken(streamId: string, tokenId: string) {
     const token = new Token(tokenId);
-    token.welcomeToken();
+    token.welcomeToken(streamId);
     return token;
   }
 }

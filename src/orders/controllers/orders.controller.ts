@@ -19,7 +19,8 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: "Create Order." })
   @Post()
   async createOrder(@Body() orderDto: OrderDto): Promise<OrderDto> {
-    return this.ordersService.createOrderStart(orderDto);
+    const streamId = orderDto._id;
+    return this.ordersService.createOrderStart(streamId, orderDto);
   }
 
   /* Update Order */
@@ -32,7 +33,8 @@ export class OrdersController {
     @Param() orderIdDto: OrderIdRequestParamsDto,
     @Body() orderDto: OrderDto
   ) {
-    return this.ordersService.updateOrder({
+    const streamId = orderIdDto._id;
+    return this.ordersService.updateOrder(streamId, {
       ...orderDto,
       _id: orderIdDto._id
     });
@@ -45,7 +47,8 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: "Delete Order." })
   @Delete(":_id")
   async deleteOrder(@Param() orderIdDto: OrderIdRequestParamsDto) {
-    return this.ordersService.deleteOrder(orderIdDto);
+    const streamId = orderIdDto._id;
+    return this.ordersService.deleteOrder(streamId, orderIdDto);
   }
 
   /* List Orders */
@@ -54,8 +57,8 @@ export class OrdersController {
   @ApiOperation({ tags: ["List Orders"] })
   @ApiResponse({ status: 200, description: "List Orders." })
   @Get()
-  async findOrders(@Query() getOrdersQuery: GetOrdersQuery) {
-    return this.ordersService.findOrders(getOrdersQuery);
+  async getOrders(@Query() getOrdersQuery: GetOrdersQuery) {
+    return this.ordersService.getOrders(getOrdersQuery);
   }
 
   /* Find Order */

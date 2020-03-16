@@ -17,27 +17,27 @@ export class Token extends AggregateRoot {
     this.data = data;
   }
 
-  createToken() {
-    this.apply(new TokenCreatedEvent(this.data));
+  createToken(streamId: string) {
+    this.apply(new TokenCreatedEvent(streamId, this.data));
   }
 
-  createFreeToken() {
-    this.apply(new FreeTokenCreatedEvent(this.data));
+  createFreeToken(streamId: string) {
+    this.apply(new FreeTokenCreatedEvent(streamId, this.data));
   }
 
-  createOrderedToken() {
-    this.apply(new OrderedTokenCreatedEvent(this.data));
+  createOrderedToken(streamId: string) {
+    this.apply(new OrderedTokenCreatedEvent(streamId, this.data));
   }
 
-  updateToken() {
-    this.apply(new TokenUpdatedEvent(this.data));
+  updateToken(streamId: string) {
+    this.apply(new TokenUpdatedEvent(streamId, this.data));
   }
 
-  welcomeToken() {
-    this.apply(new TokenWelcomedEvent(this.id));
+  welcomeToken(streamId: string) {
+    this.apply(new TokenWelcomedEvent(streamId, this.id));
   }
 
-  deleteToken() {
-    this.apply(new TokenDeletedEvent(this.id));
+  deleteToken(streamId: string) {
+    this.apply(new TokenDeletedEvent(streamId, this.id));
   }
 }

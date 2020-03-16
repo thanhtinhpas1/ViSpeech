@@ -14,7 +14,8 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
 
   async handle(event: TokenDeletedEvent) {
     Logger.log(event.tokenId, "TokenDeletedEvent");
-    const tokenId = event.tokenId;
+    const { streamId, tokenId } = event;
+
     try {
       const token = await this.repository.findOne({ _id: tokenId });
       if (token) {

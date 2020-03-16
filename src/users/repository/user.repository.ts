@@ -4,48 +4,48 @@ import {User} from '../models/user.model';
 
 @Injectable()
 export class UserRepository {
-    async createUser(userDto: UserDto) {
-        const user = new User(userDto._id);
+    async createUser(streamId: string, userDto: UserDto) {
+        const user = new User(undefined);
         user.setData(userDto);
-        user.createUser();
+        user.createUser(streamId);
         return user;
     }
 
-    async createUserStart(_id: string, userDto: UserDto) {
-        const user = new User(_id);
+    async createUserStart(streamId: string, userDto: UserDto) {
+        const user = new User(undefined);
         user.setData(userDto);
-        user.createUserStart();
+        user.createUserStart(streamId);
         return user;
     }
 
-    async updateUser(userDto: UserDto) {
-        const user = new User(userDto._id);
+    async updateUser(streamId: string, userDto: UserDto) {
+        const user = new User(undefined);
         user.setData(userDto);
-        user.updateUser();
+        user.updateUser(streamId);
         return user;
     }
 
-    async deleteUser(userId: string) {
+    async deleteUser(streamId: string, userId: string) {
         const user = new User(userId);
-        user.deleteUser();
+        user.deleteUser(streamId);
         return user;
     }
 
-    async welcomeUser(userId: string) {
+    async welcomeUser(streamId: string, userId: string) {
         const user = new User(userId);
-        user.welcomeUser();
+        user.welcomeUser(streamId);
         return user;
     }
 
-    async assignUserRole(userId: string, roleName: string, assignerId: string) {
+    async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
         const user = new User(userId);
-        user.assignUserRole(roleName, assignerId);
+        user.assignUserRole(streamId, roleName, assignerId);
         return user;
     }
 
-    async changePassword(userId: string, newPassword: string, oldPassword: string) {
+    async changePassword(streamId: string, userId: string, newPassword: string, oldPassword: string) {
         const user = new User(userId);
-        user.changePassword(newPassword, oldPassword);
+        user.changePassword(streamId, newPassword, oldPassword);
         return user;
     }
 }

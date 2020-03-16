@@ -17,10 +17,11 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
 
   async handle(event: OrderUpdatedEvent) {
     Logger.log(event.orderDto._id, "OrderUpdatedEvent"); // write here
-    const { _id, ...orderInfo } = event.orderDto;
+    const { streamId, orderDto } = event;
+    const { _id, ...orderInfo } = orderDto;
+
     try {
-      orderInfo.tokenTypeId = null;
-      const formattedOrderInfo = Utils.removeNullOrEmptyPropertyOfObj(orderInfo);
+      const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenTypeId']);
       return await this.repository.update({ _id }, formattedOrderInfo);
     } catch (error) {
       Logger.error(error, "", "OrderUpdatedEvent");

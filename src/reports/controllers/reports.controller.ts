@@ -21,7 +21,8 @@ export class ReportsController {
   @ApiResponse({ status: 200, description: "Create Report." })
   @Post()
   async createReport(@Body() reportDto: ReportDto): Promise<ReportDto> {
-    return this.reportsService.createReport(reportDto);
+    const streamId = reportDto._id;
+    return this.reportsService.createReport(streamId, reportDto);
   }
 
   /* Update Report */
@@ -34,7 +35,8 @@ export class ReportsController {
     @Param() reportIdDto: ReportIdRequestParamsDto,
     @Body() reportDto: ReportDto
   ) {
-    return this.reportsService.updateReport({
+    const streamId = reportIdDto._id;
+    return this.reportsService.updateReport(streamId, {
       ...reportDto,
       _id: reportIdDto._id
     });
@@ -47,7 +49,8 @@ export class ReportsController {
   @Roles([CONSTANTS.ROLE.ADMIN])
   @Delete(":_id")
   async deleteReport(@Param() reportIdDto: ReportIdRequestParamsDto) {
-    return this.reportsService.deleteReport(reportIdDto);
+    const streamId = reportIdDto._id;
+    return this.reportsService.deleteReport(streamId, reportIdDto);
   }
 
   /* List Reports */
