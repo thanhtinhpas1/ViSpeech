@@ -5,11 +5,14 @@ import apiUrl from './api-url'
 export default class TokenService {
   static getTokens = userId => {
     const api = `${apiUrl}/tokens/userId?userId=${userId}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
     let status = 400
     return fetch(api, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
       },
     })
       .then(response => {

@@ -1,7 +1,7 @@
 import TokenTypes from './token.types'
 
 const INITIAL_STATE = {
-  tokenList: null,
+  tokenList: [],
   tokenTypeList: null,
   errorMessage: null,
   isSuccess: null,
