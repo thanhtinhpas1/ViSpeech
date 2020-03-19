@@ -1,24 +1,22 @@
-import TransactionTypes from './transaction.types'
+import OrderTypes from './order.types'
 
 const INITIAL_STATE = {
   getList: {
-    transactionList: [],
-    numberOfTransactions: 0,
-    pageIndex: 0,
+    orderList: [],
     isLoading: false,
     isSuccess: null,
     message: null,
   },
-  newTransaction: {},
+  newOrder: {},
 }
 
-const transactionReducer = (state = INITIAL_STATE, action) => {
+const orderReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case TransactionTypes.CLEAR_TRANSACTION_STATE:
+    case OrderTypes.CLEAR_ORDER_STATE:
       return {
         ...INITIAL_STATE,
       }
-    case TransactionTypes.GET_TRANSACTION_LIST:
+    case OrderTypes.GET_ORDER_LIST:
       return {
         ...state,
         getList: {
@@ -26,18 +24,16 @@ const transactionReducer = (state = INITIAL_STATE, action) => {
           isLoading: true,
         },
       }
-    case TransactionTypes.GET_TRANSACTION_LIST_SUCCESS:
+    case OrderTypes.GET_ORDER_LIST_SUCCESS:
       return {
         ...state,
         getList: {
           isLoading: false,
           isSuccess: true,
-          transactionList: action.payload.transactionList,
-          numberOfTransactions: action.payload.numberOfTransactions,
-          pageIndex: action.payload.pageIndex,
+          orderList: action.payload.orderList,
         },
       }
-    case TransactionTypes.GET_TRANSACTION_LIST_FAILURE:
+    case OrderTypes.GET_ORDER_LIST_FAILURE:
       return {
         ...state,
         getList: {
@@ -51,4 +47,4 @@ const transactionReducer = (state = INITIAL_STATE, action) => {
   }
 }
 
-export default transactionReducer
+export default orderReducer

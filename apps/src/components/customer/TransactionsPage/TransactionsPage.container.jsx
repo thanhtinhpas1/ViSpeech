@@ -1,15 +1,15 @@
 import { connect } from 'react-redux'
-import { getTransactionList } from 'redux/transaction/transaction.actions'
+import { getOrderList } from 'redux/order/order.actions'
 import TransactionsPage from './TransactionsPage.component'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
-  transactionListObj: state.transaction.getList,
+  orderListObj: state.order.getList,
 })
 
 const mapDispatchToProps = dispatch => ({
-  getTransactionList: ({ pageIndex, pageSize }) =>
-    dispatch(getTransactionList({ pageIndex, pageSize })),
+  getOrderList: ({ userId, pageIndex, pageSize }) =>
+    dispatch(getOrderList({ userId, pageIndex, pageSize })),
 })
 
 const TransactionsPageContainer = connect(mapStateToProps, mapDispatchToProps)(TransactionsPage)

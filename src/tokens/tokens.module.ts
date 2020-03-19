@@ -67,23 +67,23 @@ export class TokensModule implements OnModuleInit {
 
   public static eventHandlers = {
     // create
-    TokenCreatedEvent: data => new TokenCreatedEvent(data),
-    TokenCreatedSuccessEvent: data => new TokenCreatedSuccessEvent(data),
-    TokenCreatedFailEvent: (data, error) => new TokenCreatedFailedEvent(data, error),
+    TokenCreatedEvent: (streamId, data) => new TokenCreatedEvent(streamId, data),
+    TokenCreatedSuccessEvent: (streamId, data) => new TokenCreatedSuccessEvent(streamId, data),
+    TokenCreatedFailEvent: (streamId, data, error) => new TokenCreatedFailedEvent(streamId, data, error),
 
-    TokenDeletedEvent: data => new TokenDeletedEvent(data),
-    TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
-    TokenWelcomedEvent: data => new TokenWelcomedEvent(data),
+    TokenDeletedEvent: (streamId, data) => new TokenDeletedEvent(streamId, data),
+    TokenUpdatedEvent: (streamId, data) => new TokenUpdatedEvent(streamId, data),
+    TokenWelcomedEvent: (streamId, data) => new TokenWelcomedEvent(streamId, data),
 
     // free token
-    FreeTokenCreatedEvent: data => new FreeTokenCreatedEvent(data),
-    FreeTokenCreatedSuccessEvent: data => new FreeTokenCreatedSuccessEvent(data),
-    FreeTokenCreatedFailEvent: (data, error) => new FreeTokenCreatedFailedEvent(data, error),
+    FreeTokenCreatedEvent: (streamId, data) => new FreeTokenCreatedEvent(streamId, data),
+    FreeTokenCreatedSuccessEvent: (streamId, data) => new FreeTokenCreatedSuccessEvent(streamId, data),
+    FreeTokenCreatedFailEvent: (streamId, data, error) => new FreeTokenCreatedFailedEvent(streamId, data, error),
 
     // ordered token
-    OrderedTokenCreatedEvent: data => new OrderedTokenCreatedEvent(data),
-    OrderedTokenCreatedSuccessEvent: data => new OrderedTokenCreatedSuccessEvent(data),
-    OrderedTokenCreatedFailEvent: (data, error) => new OrderedTokenCreatedFailedEvent(data, error),
+    OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
+    OrderedTokenCreatedSuccessEvent: (streamId, data) => new OrderedTokenCreatedSuccessEvent(streamId, data),
+    OrderedTokenCreatedFailEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
   };
 
     async persistTokenTypesToDB() {
@@ -100,10 +100,10 @@ export class TokensModule implements OnModuleInit {
             name: CONSTANTS.TOKEN_TYPE['500-MINS'],
         });
         if (!freeTokenType[0] && !tokenType_50[0] && !tokenType_200[0] && !tokenType_500[0]) {
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['50-MINS'], 50, 5));
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['200-MINS'], 200, 10));
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['500-MINS'], 500, 20));
+            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
+            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['50-MINS'], 50, 5));
+            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['200-MINS'], 200, 10));
+            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['500-MINS'], 500, 20));
         }
     }
 }

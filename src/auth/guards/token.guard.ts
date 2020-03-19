@@ -15,9 +15,10 @@ export class TokenGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const id = request.params._id || request.params.id || request.params.tokenId;
         if (!id) return true;
+
         const payload = this.authService.decode(request);
-        if (payload['roles'])
-            if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+
         const token = await getMongoRepository(TokenDto).findOne({_id: id});
         if (token.userId !== payload['id']) {
             Logger.warn('User do not have permission to modify this token.', 'TokenGuard');

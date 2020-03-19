@@ -2,11 +2,11 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { CUSTOMER_PATH } from 'utils/constant'
 import ReactTable from 'components/customer/ReactTable/ReactTable.component'
 
-const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
+const TokensWalletPage = ({ currentUser, token, getTokens }) => {
   const columns = [
     {
       Header: 'Key',
@@ -16,24 +16,18 @@ const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
       style: { paddingRight: '30px' },
       Cell: props => {
         const { cell } = props
-        return <span className="lead tnx-id">
-                            <div className="copy-wrap w-100">
-                              <span className="copy-feedback" />
-                              <em className="fas fa-key" />
-                              <input
-                                type="text"
-                                className="copy-address"
-                                defaultValue={cell.value}
-                                disabled
-                              />
-                              <button
-                                className="copy-trigger copy-clipboard"
-                                data-clipboard-text={cell.value}
-                              >
-                                <em className="ti ti-files" />
-                              </button>
-                            </div>
-                          </span>
+        return (
+          <span className="lead tnx-id">
+            <div className="copy-wrap w-100">
+              <span className="copy-feedback" />
+              <em className="fas fa-key" />
+              <input type="text" className="copy-address" defaultValue={cell.value} disabled />
+              <button className="copy-trigger copy-clipboard" data-clipboard-text={cell.value}>
+                <em className="ti ti-files" />
+              </button>
+            </div>
+          </span>
+        )
       },
     },
     {
@@ -44,9 +38,7 @@ const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
       style: { paddingRight: '30px' },
       Cell: props => {
         const { cell } = props
-        return (
-          <div className="d-flex align-items-center">{cell.value.name}</div>
-        )
+        return <div className="d-flex align-items-center">{cell.value.name}</div>
       },
     },
     {
@@ -57,16 +49,16 @@ const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
       style: { paddingTop: '0' },
       Cell: props => {
         const { cell } = props
-        return <div className="d-flex align-items-center">
-                            <div
-                              className={`data-state ${
-                                cell.value ? 'data-state-approved' : 'data-state-pending'
-                              }`}
-                            />
-                            <span className="sub sub-s2" style={{ paddingTop: '0' }}>
-                              {cell.value ? 'Hợp lệ' : 'Có vấn đề'}
-                            </span>
-                          </div>
+        return (
+          <div className="d-flex align-items-center">
+            <div
+              className={`data-state ${cell.value ? 'data-state-approved' : 'data-state-pending'}`}
+            />
+            <span className="sub sub-s2" style={{ paddingTop: '0' }}>
+              {cell.value ? 'Hợp lệ' : 'Có vấn đề'}
+            </span>
+          </div>
+        )
       },
     },
     {
@@ -78,9 +70,7 @@ const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
       className: 'data-col dt-account',
       Cell: props => {
         const { cell } = props
-        return (
-          <span className="sub sub-date">{cell.value} phút</span>
-        )
+        return <span className="sub sub-date">{cell.value} phút</span>
       },
     },
     {
@@ -102,9 +92,10 @@ const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
     },
   ]
 
-  const getUserTokens = ({ pageIndex, pageSize }) => {
-    getTokens(currentUser._id);
-  }
+  const getUserTokens = useCallback(({ pageIndex, pageSize }) => {
+    const userId = currentUser._id
+    getTokens({ userId, pageIndex, pageSize })
+  }, [])
 
   return (
     <div className="page-content">
@@ -114,15 +105,17 @@ const TokensWalletPage = ({ currentUser, token, isJsLoaded, getTokens }) => {
             <div className="card-head">
               <h4 className="card-title">Ví key</h4>
             </div>
-            <ReactTable
-              columns={columns}
-              data={token.tokenList}
-              fetchData={getUserTokens}
-              loading={token.isLoading}
-              pageCount={1}
-              defaultPageSize={5}
-              pageSize={5}
-            />
+            {currentUser._id && (
+              <ReactTable
+                columns={columns}
+                data={token.tokenList}
+                fetchData={getUserTokens}
+                loading={token.isLoading}
+                pageCount={1}
+                defaultPageSize={5}
+                pageSize={5}
+              />
+            )}
           </div>
         </div>
       </div>

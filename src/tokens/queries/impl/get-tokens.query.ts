@@ -1,8 +1,12 @@
-import { IsOptional, IsNumber, IsPositive } from "class-validator";
+import { IsOptional, IsNumber, IsPositive, IsString, Min } from "class-validator";
 import { Type } from "class-transformer";
 
 export class GetTokensQuery {
   constructor() { }
+
+  @IsOptional()
+  @IsString()
+  userId: string;
 
   @IsOptional()
   @Type(() => Number)
@@ -13,7 +17,7 @@ export class GetTokensQuery {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   offset: number;
 }
 

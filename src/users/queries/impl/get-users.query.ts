@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber, IsPositive } from "class-validator";
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsPositive, Min } from "class-validator";
 import { Type } from "class-transformer";
 
 export class GetUsersQuery {
@@ -19,6 +19,6 @@ export class GetUsersQuery {
     @IsOptional()
     @Type(() => Number)
     @IsNumber()
-    @IsPositive()
-    offset!: number;
+    @Min(0)
+    offset: number;
 }

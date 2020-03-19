@@ -49,7 +49,11 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()} className="data-item data-head">
                 {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()} style={column.headerStyle || {}} className={column.headerClassName}>
+                  <th
+                    {...column.getHeaderProps()}
+                    style={column.headerStyle || {}}
+                    className={column.headerClassName}
+                  >
                     {column.render('Header')}
                   </th>
                 ))}
@@ -63,7 +67,11 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
                 <tr {...row.getRowProps()} className="data-item">
                   {row.cells.map(cell => {
                     return (
-                      <td {...cell.getCellProps()} style={cell.column.style || {}} className={cell.column.className}>
+                      <td
+                        {...cell.getCellProps()}
+                        style={cell.column.style || {}}
+                        className={cell.column.className}
+                      >
                         {cell.render('Cell')}
                       </td>
                     )
@@ -71,12 +79,22 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
                 </tr>
               )
             })}
-            <tr className="data-item" >
+            <tr className="data-item">
               {loading ? (
                 // Use our custom loading state to show a loading indicator
-                <td colSpan="10000" className="data-col" style={{borderBottom: 'none', color: '#23406c'}}>Đang tải...</td>
+                <td
+                  colSpan="10000"
+                  className="data-col"
+                  style={{ borderBottom: 'none', color: '#23406c' }}
+                >
+                  Đang tải...
+                </td>
               ) : (
-                <td colSpan="10000" className="data-col" style={{borderBottom: 'none', color: '#23406c'}}>
+                <td
+                  colSpan="10000"
+                  className="data-col"
+                  style={{ borderBottom: 'none', color: '#23406c' }}
+                >
                   Hiển thị {page.length} trên ~{controlledPageCount * pageSize} kết quả
                 </td>
               )}
@@ -87,54 +105,74 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
       */}
-      <div className="row align-items-center">
-      <div className="text-left" style={{whiteSpace: 'nowrap'}}>
-        <div className="pagination dataTables_paginate">
-          <ul className="pagination">
-            <li className="paginate-button-page-item previous">
-            <a href="#!" className="page-link" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            Trang đầu
-          </a>
-            </li>
-            <li className="paginate-button-page-item previous">
-            <a href="#!" className="page-link" onClick={() => previousPage()} disabled={!canPreviousPage}>
-            Trang trước
-          </a>
-            </li>
-             <li className="paginate-button-page-item next">
-            <a href="#!" className="page-link" onClick={() => nextPage()} disabled={!canNextPage}>
-            Trang kế
-          </a>
-            </li>
-             <li className="paginate-button-page-item next">
-            <a href="#!" className="page-link" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            Trang cuối
-          </a>
-            </li>
-          </ul>
+        <div className="row align-items-center">
+          <div className="text-left" style={{ whiteSpace: 'nowrap' }}>
+            <div className="pagination dataTables_paginate">
+              <ul className="pagination">
+                <li className="paginate-button-page-item previous">
+                  <a
+                    href="#!"
+                    className="page-link"
+                    onClick={() => gotoPage(0)}
+                    disabled={!canPreviousPage}
+                  >
+                    Trang đầu
+                  </a>
+                </li>
+                <li className="paginate-button-page-item previous">
+                  <a
+                    href="#!"
+                    className="page-link"
+                    onClick={() => previousPage()}
+                    disabled={!canPreviousPage}
+                  >
+                    Trang trước
+                  </a>
+                </li>
+                <li className="paginate-button-page-item next">
+                  <a
+                    href="#!"
+                    className="page-link"
+                    onClick={() => nextPage()}
+                    disabled={!canNextPage}
+                  >
+                    Trang kế
+                  </a>
+                </li>
+                <li className="paginate-button-page-item next">
+                  <a
+                    href="#!"
+                    className="page-link"
+                    onClick={() => gotoPage(pageCount - 1)}
+                    disabled={!canNextPage}
+                  >
+                    Trang cuối
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
-      </div>
-      <div className="row align-items-center justify-content-end" style={{color: '#23406c'}}> 
-        <div>
+        <div className="row align-items-center justify-content-end" style={{ color: '#23406c' }}>
+          <div>
             Trang{' '}
             <strong>
               {pageIndex + 1} / {pageOptions.length}
             </strong>{' '}
           </div>
           <div>
-          | Nhập số trang {' '}
-          <input
-          className="input-bordered"
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={e => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              gotoPage(page)
-            }}
-            style={{ width: '100px' }}
-          />
-        </div>{' '}
+            | Nhập số trang{' '}
+            <input
+              className="input-bordered"
+              type="number"
+              defaultValue={pageIndex + 1}
+              onChange={e => {
+                const page = e.target.value ? Number(e.target.value) - 1 : 0
+                gotoPage(page)
+              }}
+              style={{ width: '100px' }}
+            />
+          </div>{' '}
           {/* <select
             value={pageSize}
             onChange={e => {
@@ -147,9 +185,7 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
               </option>
             ))}
           </select> */}
-      </div>
-      
-        
+        </div>
       </div>
     </>
   )

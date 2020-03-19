@@ -11,6 +11,7 @@ import { UpdateOrderCommand } from "orders/commands/impl/update-order.command";
 import { OrderDto } from "orders/dtos/orders.dto";
 import { CONSTANTS } from "common/constant";
 import { OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailedEvent } from "tokens/events/impl/ordered-token-created.event";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 
 @Injectable()
 export class OrdersSagas {
@@ -35,9 +36,9 @@ export class OrdersSagas {
       map((event: OrderCreatedSuccessEvent) => {
         Logger.log("Inside [OrdersSagas] orderCreatedSuccess Saga", "OrdersSagas");
         const { streamId, orderDto } = event;
-        const { userId, tokenTypeId, _id } = orderDto;
+        const { userId, tokenType, _id } = orderDto;
         const tokenValue = this.authService.generateTokenWithUserId(userId);
-        const tokenDto = new TokenDto(tokenValue, userId, null, tokenTypeId, _id);
+        const tokenDto = new TokenDto(tokenValue, userId, null, tokenType._id, _id);
         return new CreateOrderedTokenCommand(streamId, tokenDto);
       })
     );
@@ -50,8 +51,9 @@ export class OrdersSagas {
       map((event: OrderedTokenCreatedSuccessEvent) => {
         Logger.log("Inside [OrdersSagas] orderedTokenCreatedSuccess Saga", "OrdersSagas");
         const { streamId, tokenDto } = event;
-        const { _id, userId, tokenTypeId, orderId } = tokenDto;
-        const orderDto = new OrderDto(userId, tokenTypeId, _id, CONSTANTS.STATUS.SUCCESS);
+        const { _id, userId, orderId } = tokenDto;
+        const tempTokenTypeDto = TokenTypeDto.createTempInstance();
+        const orderDto = new OrderDto(userId, tempTokenTypeDto, _id, CONSTANTS.STATUS.SUCCESS);
         orderDto._id = orderId;
         return new UpdateOrderCommand(streamId, orderDto);
       })
@@ -65,8 +67,9 @@ export class OrdersSagas {
       map((event: OrderedTokenCreatedFailedEvent) => {
         Logger.log("Inside [OrdersSagas] orderedTokenCreatedFailed Saga", "OrdersSagas");
         const { streamId, tokenDto } = event;
-        const { _id, userId, tokenTypeId, orderId } = tokenDto;
-        const orderDto = new OrderDto(userId, tokenTypeId, _id, CONSTANTS.STATUS.FAILURE);
+        const { _id, userId, orderId } = tokenDto;
+        const tempTokenTypeDto = TokenTypeDto.createTempInstance();
+        const orderDto = new OrderDto(userId, tempTokenTypeDto, _id, CONSTANTS.STATUS.FAILURE);
         orderDto._id = orderId;
         return new UpdateOrderCommand(streamId, orderDto);
       })

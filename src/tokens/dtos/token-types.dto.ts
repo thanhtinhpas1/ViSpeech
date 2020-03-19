@@ -12,7 +12,7 @@ import { CONSTANTS } from 'common/constant';
 
 @Entity('token_types')
 export class TokenTypeDto extends BaseEntityDto {
-  constructor(name, minutes, price, salePercent = 0) {
+  constructor(name: string, minutes: number, price: number, salePercent: number = 0) {
     super();
     this.name = name;
     this.minutes = minutes;
@@ -50,4 +50,8 @@ export class TokenTypeDto extends BaseEntityDto {
     default: 0,
   })
   salePercent: number;
+
+  static createTempInstance = () => {
+    return new TokenTypeDto("", 0, 0, 0);
+  }
 }

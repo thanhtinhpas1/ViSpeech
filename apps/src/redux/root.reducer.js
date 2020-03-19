@@ -3,7 +3,7 @@ import storage from 'redux-persist/lib/storage'
 import { persistReducer } from 'redux-persist'
 import userReducer from './user/user.reducers'
 import tokenReducer from './token/token.reducers'
-import transactionReducer from './transaction/transaction.reducers'
+import orderReducer from './order/order.reducers'
 
 const userPersistConfig = {
   key: 'user',
@@ -16,7 +16,7 @@ const userPersistConfig = {
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   token: tokenReducer,
-  transaction: transactionReducer,
+  order: orderReducer,
 })
 
 export default rootReducer

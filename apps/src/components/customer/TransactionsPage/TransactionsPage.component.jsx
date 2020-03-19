@@ -4,11 +4,15 @@
 /* eslint-disable no-alert */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react'
+import React, { useCallback } from 'react'
 import { CUSTOMER_PATH } from 'utils/constant'
 import ReactTable from 'components/customer/ReactTable/ReactTable.component'
 
-const TransactionsPage = ({ transactionListObj, getTransactionList }) => {
+const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
+  // useEffect(() => {
+
+  // }, [currentUser._id])
+
   const columns = [
     {
       Header: 'Mã',
@@ -99,6 +103,11 @@ const TransactionsPage = ({ transactionListObj, getTransactionList }) => {
     },
   ]
 
+  const getList = useCallback(({ pageSize, pageIndex }) => {
+    const userId = currentUser._id
+    getOrderList({ userId, pageIndex, pageSize })
+  }, [])
+
   return (
     <div className="page-content">
       <div className="container">
@@ -107,15 +116,19 @@ const TransactionsPage = ({ transactionListObj, getTransactionList }) => {
             <div className="card-head">
               <h4 className="card-title">Lịch sử giao dịch</h4>
             </div>
+            {/* {orderListObj.isLoading === false &&
+              orderListObj.isSuccess === true &&
+              isJsLoaded && ( */}
             <ReactTable
               columns={columns}
-              data={transactionListObj.transactionList}
-              fetchData={getTransactionList}
-              loading={transactionListObj.isLoading}
-              pageCount={8}
+              data={orderListObj.orderList}
+              fetchData={getList}
+              loading={orderListObj.isLoading}
+              pageCount={Math.ceil(orderListObj.orderList.length / 5)}
               defaultPageSize={5}
               pageSize={5}
             />
+            {/* )} */}
           </div>
         </div>
       </div>

@@ -31,8 +31,8 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
         try {
             user.password = Utils.hashPassword(user.password);
             user.roles = [new RoleDto(CONSTANTS.ROLE.USER)];
-            const newUser = await this.userRepository.insert(user);
-            this.eventBus.publish(new UserCreatedSuccessEvent(streamId, newUser));
+            await this.userRepository.insert(user);
+            this.eventBus.publish(new UserCreatedSuccessEvent(streamId, userDto));
         } catch (error) {
             this.eventBus.publish(new UserCreatedFailedEvent(streamId, userDto, error));
         }

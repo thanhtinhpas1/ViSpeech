@@ -21,7 +21,7 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
     const { _id, ...orderInfo } = orderDto;
 
     try {
-      const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenTypeId']);
+      const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenType']);
       return await this.repository.update({ _id }, formattedOrderInfo);
     } catch (error) {
       Logger.error(error, "", "OrderUpdatedEvent");

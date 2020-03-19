@@ -19,8 +19,8 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
   useEffect(() => {
     async function createToken() {
       const cardElement = elements.getElement(CardElement)
-      const { user, minutes, price } = checkoutInfo
-      const result = await OrderService.createPaymentIntent(price * 100)
+      const { user, tokenType } = checkoutInfo
+      const result = await OrderService.createPaymentIntent(tokenType.price * 100)
       const paymentMethodReq = await stripe.createPaymentMethod({
         type: 'card',
         card: cardElement,
@@ -41,13 +41,13 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
           setIsLoading(false)
         } else if (confirmedCardPayment.paymentIntent.status === 'succeeded') {
           // The payment has been processed!
-          // const result = await OrderService.createOrder({
-          //   userId: user._id,
-          //   tokenTypeId,
-          // })
+          const result = await OrderService.createOrder({
+            userId: user._id,
+            tokenType,
+          })
           setIsLoading(false)
           onOrderSuccess({
-            minutes,
+            minutes: tokenType.minutes,
             tokenId:
               'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlZTg2MzEwLTVmNzUtMTFlYS04N2Y2LTQ1ZThlYzg3YzY3ZCIsImlhdCI6MTU4MzQ3NzAyMX0.7ZHNhorBAE4GqXG2KLh2hDNCD1MzrxZgxQzGrUUxW9A',
           })
@@ -168,8 +168,13 @@ const PayOnlineModal = ({ payOnlineModal }) => {
             <div className="popup-body">
               <h4 className="popup-title">Thanh toán mua token</h4>
               <p className="lead" style={{ color: '#495463' }}>
-                Mua token và sử dụng trong vòng <strong>{payOnlineModal.minutes} phút</strong> với
-                tiền <strong>{payOnlineModal.price} $</strong>.
+                Mua token và sử dụng trong vòng{' '}
+                {payOnlineModal.tokenType && (
+                  <>
+                    <strong>{payOnlineModal.tokenType.minutes} phút</strong> với số tiền{' '}
+                    <strong>{payOnlineModal.tokenType.price} $</strong>.
+                  </>
+                )}
               </p>
               <h5 className="mgt-1-5x font-mid">Vui lòng nhập thông tin thẻ</h5>
               <div className="mgt-1-5x">

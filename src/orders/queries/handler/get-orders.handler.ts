@@ -14,13 +14,21 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
 
   async execute(query: GetOrdersQuery) {
     Logger.log("Async GetOrdersQuery...", "GetOrdersQuery");
-    const { limit, offset } = query;
+    const { userId, offset, limit } = query;
     try {
-      if (limit && offset)
+      if (limit && offset && userId) {
+        return await this.repository.find({
+          skip: offset,
+          take: limit,
+          where: { userId }
+        });
+      }
+      if (limit && offset) {
         return await this.repository.find({
           skip: offset,
           take: limit
         });
+      }
       return await this.repository.find();
     } catch (error) {
       Logger.error(error, "", "GetOrdersQuery");

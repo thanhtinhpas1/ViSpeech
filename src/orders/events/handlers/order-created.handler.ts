@@ -9,6 +9,7 @@ import { Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderDto } from "orders/dtos/orders.dto";
 import { Repository } from "typeorm";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 
 @EventsHandler(OrderCreationStartedEvent)
 export class OrderCreationStartedHandler
@@ -23,6 +24,8 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
   constructor(
     @InjectRepository(OrderDto)
     private readonly repository: Repository<OrderDto>,
+    @InjectRepository(TokenTypeDto)
+    private readonly tokenTypeRepository: Repository<TokenTypeDto>,
     private readonly eventBus: EventBus
   ) {}
 
@@ -32,12 +35,11 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
     const order = JSON.parse(JSON.stringify(orderDto));
 
     try {
-      const tokenTypeDto = await this.repository.findOne({ _id: order.tokenTypeId });
-      if (!tokenTypeDto) throw new NotFoundException(`Token type with _id ${order.tokenTypeId} does not exist.`);
-      order.minutes = tokenTypeDto.minutes;
-      order.price = tokenTypeDto.price;
-      const newOrder = await this.repository.insert(order);
-      this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, newOrder));
+      const tokenTypeDto = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
+      if (!tokenTypeDto) throw new NotFoundException(`Token type with _id ${order.tokenType._id} does not exist.`);
+      order.tokenType = tokenTypeDto;
+      await this.repository.insert(order);
+      this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, orderDto));
     } catch (error) {
       this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, error));
     }
