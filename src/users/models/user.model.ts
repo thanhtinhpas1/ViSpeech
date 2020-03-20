@@ -4,6 +4,7 @@ import {UserDeletedEvent} from '../events/impl/user-deleted.event';
 import {UserUpdatedEvent} from '../events/impl/user-updated.event';
 import {UserRoleAssignedEvent} from '../events/impl/user-role-assigned.event';
 import {PasswordChangedEvent} from '../events/impl/password-changed.event';
+import { UserWelcomedEvent } from 'users/events/impl/user-welcomed.event';
 
 export class User extends AggregateRoot {
     [x: string]: any;
@@ -38,5 +39,9 @@ export class User extends AggregateRoot {
 
     changePassword(streamId: string, newPassword: string, oldPassword: string) {
         this.apply(new PasswordChangedEvent(streamId, this.id, newPassword, oldPassword));
+    }
+
+    welcomeUser(streamId: string) {
+        this.apply(new UserWelcomedEvent(streamId, this.id));
     }
 }

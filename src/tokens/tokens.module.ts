@@ -11,7 +11,7 @@ import { TokenTypeDto } from "./dtos/token-types.dto";
 import { TokenDto } from "./dtos/tokens.dto";
 import { EventHandlers } from "./events/handlers";
 import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from "./events/impl/token-created.event";
-import { TokenDeletedEvent } from "./events/impl/token-deleted.event";
+import { TokenDeletedEvent, TokenDeletedByUserIdEvent } from "./events/impl/token-deleted.event";
 import { TokenUpdatedEvent } from "./events/impl/token-updated.event";
 import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
 import { QueryHandlers } from "./queries/handler";
@@ -72,6 +72,7 @@ export class TokensModule implements OnModuleInit {
     TokenCreatedFailEvent: (streamId, data, error) => new TokenCreatedFailedEvent(streamId, data, error),
 
     TokenDeletedEvent: (streamId, data) => new TokenDeletedEvent(streamId, data),
+    TokenDeletedByUserIdEvent: (streamId, data) => new TokenDeletedByUserIdEvent(streamId, data), 
     TokenUpdatedEvent: (streamId, data) => new TokenUpdatedEvent(streamId, data),
     TokenWelcomedEvent: (streamId, data) => new TokenWelcomedEvent(streamId, data),
 

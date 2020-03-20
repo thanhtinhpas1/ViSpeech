@@ -38,6 +38,13 @@ export class TokenRepository {
     return token;
   }
 
+  async deleteTokenByUserId(streamId: string, userId: string) {
+    const token = new Token(undefined);
+    token.setData(userId);
+    token.deleteTokenByUserId(streamId);
+    return token;
+  }
+
   async welcomeToken(streamId: string, tokenId: string) {
     const token = new Token(tokenId);
     token.welcomeToken(streamId);

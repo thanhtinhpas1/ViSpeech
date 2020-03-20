@@ -8,10 +8,11 @@ import {TokenDto, TokenIdRequestParamsDto} from 'tokens/dtos/tokens.dto';
 import {AuthService} from 'auth/auth.service';
 import {CreateUserCommand} from 'users/commands/impl/create-user.command';
 import {WelcomeUserCommand} from 'users/commands/impl/welcome-user.command';
-import {DeleteTokenCommand} from 'tokens/commands/impl/delete-token.command';
+import {DeleteTokenCommand, DeleteTokenByUserIdCommand} from 'tokens/commands/impl/delete-token.command';
 import {FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent} from 'tokens/events/impl/free-token-created.event';
 import {DeleteUserCommand} from 'users/commands/impl/delete-user.command';
 import {UserIdRequestParamsDto} from 'users/dtos/users.dto';
+import { UserDeletedSuccessEvent } from 'users/events/impl/user-deleted.event';
 
 @Injectable()
 export class UsersSagas {
@@ -69,6 +70,18 @@ export class UsersSagas {
                     new DeleteTokenCommand(streamId, new TokenIdRequestParamsDto(_id)),
                     new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId))
                 ];
+            })
+        );
+    };
+
+    @Saga()
+    userDeletedSucess = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(UserDeletedSuccessEvent),
+            map((event: UserDeletedSuccessEvent) => {
+                Logger.log('Inside [UsersSagas] userDeletedSucess Saga', 'UsersSagas');
+                const { streamId, userId } = event;
+                return new DeleteTokenByUserIdCommand(streamId, userId);
             })
         );
     };

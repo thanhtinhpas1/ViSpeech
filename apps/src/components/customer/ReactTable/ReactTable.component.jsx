@@ -52,7 +52,7 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
                   <th
                     {...column.getHeaderProps()}
                     style={column.headerStyle || {}}
-                    className={column.headerClassName}
+                    className={column.headerClassName || {}}
                   >
                     {column.render('Header')}
                   </th>
@@ -70,7 +70,7 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
                       <td
                         {...cell.getCellProps()}
                         style={cell.column.style || {}}
-                        className={cell.column.className}
+                        className={cell.column.className || {}}
                       >
                         {cell.render('Cell')}
                       </td>

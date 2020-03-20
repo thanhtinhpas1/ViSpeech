@@ -7,3 +7,10 @@ export class DeleteTokenCommand implements ICommand {
     public readonly tokenIdDto: TokenIdRequestParamsDto
   ) {}
 }
+
+export class DeleteTokenByUserIdCommand implements ICommand {
+  constructor(
+    public readonly streamId: string,
+    public readonly userId: string
+  ) {}
+}

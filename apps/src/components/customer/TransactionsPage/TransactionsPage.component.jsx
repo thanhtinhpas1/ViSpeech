@@ -126,15 +126,17 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
             <div className="card-head">
               <h4 className="card-title">Lịch sử giao dịch</h4>
             </div>
-            <ReactTable
-              columns={columns}
-              data={orderListObj.orderList}
-              fetchData={getList}
-              loading={orderListObj.isLoading}
-              pageCount={Math.ceil(orderListObj.orderList.length / 5)}
-              defaultPageSize={5}
-              pageSize={5}
-            />
+            {currentUser._id && (
+              <ReactTable
+                columns={columns}
+                data={orderListObj.orderList}
+                fetchData={getList}
+                loading={orderListObj.isLoading}
+                pageCount={Math.ceil(orderListObj.orderList.length / 5)}
+                defaultPageSize={5}
+                pageSize={5}
+              />
+            )}
           </div>
         </div>
       </div>
