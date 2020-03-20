@@ -35,7 +35,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
       token.tokenTypeId = tokenTypeDto._id;
       token.minutes = tokenTypeDto.minutes;
       token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
-      await this.repository.insert(token);
+      await this.repository.save(token);
       this.eventBus.publish(new TokenCreatedSuccessEvent(streamId, tokenDto));
     } catch (error) {
       this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error));

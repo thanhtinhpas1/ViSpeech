@@ -7,6 +7,8 @@ import { OrdersService } from "../services/orders.service";
 import { OrderGuard } from "auth/guards/order.guard";
 import { CONSTANTS } from "common/constant";
 import { AuthGuard } from "@nestjs/passport";
+import { Roles } from "auth/roles.decorator";
+import { GetOrdersByUserIdQuery } from "orders/queries/impl/get-orders-by-userId";
 
 @Controller("orders")
 @ApiTags("Orders")
@@ -56,6 +58,7 @@ export class OrdersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["List Orders"] })
   @ApiResponse({ status: 200, description: "List Orders." })
+  @Roles([CONSTANTS.ROLE.ADMIN])
   @Get()
   async getOrders(@Query() getOrdersQuery: GetOrdersQuery) {
     return this.ordersService.getOrders(getOrdersQuery);
@@ -69,6 +72,18 @@ export class OrdersController {
   @Get(":id")
   async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {
     return this.ordersService.findOne(findOrderQuery);
+  }
+
+  /* List Orders By UserId */
+
+  /*--------------------------------------------*/
+  @ApiOperation({ tags: ['List Orders By UserId'] })
+  @ApiResponse({ status: 200, description: 'List Orders By UserId.' })
+  @Get('/userId')
+  async getOrdersByUserId(
+    @Query() getOrdersByUserIdQuery: GetOrdersByUserIdQuery,
+  ) {
+    return this.ordersService.getOrdersByUserId(getOrdersByUserIdQuery);
   }
 
   @ApiOperation({ tags: ["Get Payment Intent"] })

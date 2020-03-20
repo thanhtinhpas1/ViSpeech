@@ -100,10 +100,10 @@ export class TokensModule implements OnModuleInit {
             name: CONSTANTS.TOKEN_TYPE['500-MINS'],
         });
         if (!freeTokenType[0] && !tokenType_50[0] && !tokenType_200[0] && !tokenType_500[0]) {
-            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
-            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['50-MINS'], 50, 5));
-            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['200-MINS'], 200, 10));
-            getMongoRepository(TokenTypeDto).insert(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['500-MINS'], 500, 20));
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['50-MINS'], 50, 5));
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['200-MINS'], 200, 10));
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['500-MINS'], 500, 20));
         }
     }
 }

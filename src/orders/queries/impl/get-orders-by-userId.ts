@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, IsOptional, IsNumber, IsPositive, Min } from "class-validator";
 import { Type } from "class-transformer";
 
-export class GetTokensByUserIdQuery {
+export class GetOrdersByUserIdQuery {
   constructor(userId: string) {
     this.userId = userId;
   }

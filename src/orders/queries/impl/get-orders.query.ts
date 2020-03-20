@@ -1,12 +1,8 @@
-import { IsOptional, IsNumber, IsPositive, IsString, Min } from "class-validator";
+import { IsOptional, IsNumber, IsPositive, Min } from "class-validator";
 import { Type } from "class-transformer";
 
 export class GetOrdersQuery {
   constructor() { }
-
-  @IsOptional()
-  @IsString()
-  userId: string;
 
   @IsOptional()
   @Type(() => Number)

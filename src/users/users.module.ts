@@ -68,7 +68,7 @@ export class UsersModule implements OnModuleInit {
             const admin = new UserDto('admin', 'admin', 'admin', Utils.hashPassword('admin'),
                 'admin@vispeech.com', null, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
             Logger.log('Seed admin account success', 'UserModule');
-            await getMongoRepository(UserDto).insert(admin);
+            await getMongoRepository(UserDto).save(admin);
         } catch (e) {
             Logger.warn('Seed admin account existed',  'UserModule');
         }

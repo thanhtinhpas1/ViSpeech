@@ -1,13 +1,34 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { TOKEN_TYPE, STATUS } from 'utils/constant'
 import OrderTypes from './order.types'
 import { getOrderListSuccess, getOrderListFailure } from './order.actions'
 import OrderService from '../../services/order.service'
 
-// get transaction list
+// get order list
+const formatOrderList = orderList => {
+  const mapFunc = order => {
+    return {
+      ...order,
+      status: {
+        name: STATUS[order.status].viText,
+        class: STATUS[order.status].cssClass,
+      },
+      date: order.createdDate,
+      tokenType: {
+        name: TOKEN_TYPE[order.tokenType.name].viText,
+        class: TOKEN_TYPE[order.tokenType.name].cssClass,
+      },
+      token: order.token.value,
+    }
+  }
+  return orderList.map(mapFunc)
+}
+
 function* getList({ payload: filterConditions }) {
   try {
-    const orderList = yield OrderService.getOrderList(filterConditions)
+    let orderList = yield OrderService.getOrderList(filterConditions)
+    orderList = formatOrderList(orderList)
     // const numberOfContracts = yield TransactionService.countTransactions(filterConditions)
     // const orderList =
     //   filterConditions.pageIndex === 0

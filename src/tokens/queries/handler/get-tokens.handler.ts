@@ -15,15 +15,8 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
 
   async execute(query: GetTokensQuery) {
     Logger.log("Async GetTokensHandler...", "GetTokensQuery");
-    const { userId, offset, limit } = query;
+    const { offset, limit } = query;
     try {
-      if (limit && offset && userId) {
-        return await this.repository.find({
-          skip: offset,
-          take: limit,
-          where: { userId }
-        });
-      }
       if (limit && offset) {
         return await this.repository.find({
           skip: offset,

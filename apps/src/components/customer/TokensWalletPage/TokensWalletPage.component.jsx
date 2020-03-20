@@ -9,7 +9,7 @@ import ReactTable from 'components/customer/ReactTable/ReactTable.component'
 const TokensWalletPage = ({ currentUser, token, getTokens }) => {
   const columns = [
     {
-      Header: 'Key',
+      Header: 'Token',
       accessor: 'value',
       headerClassName: 'data-col dt-tnxno',
       className: 'data-col dt-tnxno',
@@ -31,14 +31,14 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
       },
     },
     {
-      Header: 'Loại',
+      Header: 'Loại token',
       accessor: 'tokenType',
       headerClassName: 'data-col dt-type',
       className: 'data-col dt-tnxno',
       style: { paddingRight: '30px' },
       Cell: props => {
         const { cell } = props
-        return <div className="d-flex align-items-center">{cell.value.name}</div>
+        return <div className="d-flex align-items-center">{cell.value}</div>
       },
     },
     {
@@ -46,13 +46,12 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
       accessor: 'isValid',
       headerClassName: 'data-col dt-token',
       className: 'data-col dt-amount',
-      style: { paddingTop: '0' },
       Cell: props => {
         const { cell } = props
         return (
           <div className="d-flex align-items-center">
             <div
-              className={`data-state ${cell.value ? 'data-state-approved' : 'data-state-pending'}`}
+              className={`data-state ${cell.value ? 'data-state-approved' : 'data-state-canceled'}`}
             />
             <span className="sub sub-s2" style={{ paddingTop: '0' }}>
               {cell.value ? 'Hợp lệ' : 'Có vấn đề'}
@@ -63,14 +62,14 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
     },
     {
       Header: 'Thời gian còn lại',
-      accessor: 'minutes',
+      accessor: 'minutesLeft',
       headerClassName: 'data-col dt-amount',
       headerStyle: { textAlign: 'center' },
       style: { textAlign: 'center' },
       className: 'data-col dt-account',
       Cell: props => {
         const { cell } = props
-        return <span className="sub sub-date">{cell.value} phút</span>
+        return <span className="lead">{cell.value} phút</span>
       },
     },
     {
@@ -103,7 +102,7 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
         <div className="card content-area">
           <div className="card-innr">
             <div className="card-head">
-              <h4 className="card-title">Ví key</h4>
+              <h4 className="card-title">Ví token</h4>
             </div>
             {currentUser._id && (
               <ReactTable
@@ -111,7 +110,7 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
                 data={token.tokenList}
                 fetchData={getUserTokens}
                 loading={token.isLoading}
-                pageCount={1}
+                pageCount={Math.ceil(token.tokenList.length / 5)}
                 defaultPageSize={5}
                 pageSize={5}
               />

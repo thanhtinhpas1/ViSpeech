@@ -15,9 +15,17 @@ export class GetTokensByUserIdHandler
 
   async execute(query: GetTokensByUserIdQuery): Promise<any> {
     Logger.log("Async GetTokensByUserIdQuery...", "GetTokensByUserIdQuery");
+    const { userId, offset, limit } = query;
     try {
+      if (limit && offset) {
+        return await this.repository.find({
+          skip: offset,
+          take: limit,
+          where: { userId }
+        });
+      }
       return await this.repository.find({
-        where: { userId: query.userId }
+        where: { userId }
       });
     } catch (error) {
       Logger.error(error, "", "GetTokensByUserIdQuery");

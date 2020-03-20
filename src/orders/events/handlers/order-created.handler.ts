@@ -38,7 +38,7 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
       const tokenTypeDto = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
       if (!tokenTypeDto) throw new NotFoundException(`Token type with _id ${order.tokenType._id} does not exist.`);
       order.tokenType = tokenTypeDto;
-      await this.repository.insert(order);
+      await this.repository.save(order);
       this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, orderDto));
     } catch (error) {
       this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, error));

@@ -64,7 +64,7 @@ export default class OrderService {
     const offset = pageIndex * pageSize
     const limit = pageSize
 
-    const api = `${apiUrl}/orders?userId=${encodeURIComponent(
+    const api = `${apiUrl}/orders/userId?userId=${encodeURIComponent(
       userId
     )}&offset=${offset}&limit=${limit}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)

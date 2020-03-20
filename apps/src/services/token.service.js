@@ -3,8 +3,14 @@ import { JWT_TOKEN } from 'utils/constant'
 import apiUrl from './api-url'
 
 export default class TokenService {
-  static getTokens = userId => {
-    const api = `${apiUrl}/tokens/userId?userId=${userId}`
+  static getTokenList = filterConditions => {
+    const { userId, pageIndex, pageSize } = filterConditions
+    const offset = pageIndex * pageSize
+    const limit = pageSize
+
+    const api = `${apiUrl}/tokens/userId?userId=${encodeURIComponent(
+      userId
+    )}&offset=${offset}&limit=${limit}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -30,7 +36,7 @@ export default class TokenService {
       })
   }
 
-  static getTokenTypes = () => {
+  static getTokenTypeList = () => {
     const api = `${apiUrl}/tokens/token-types`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 

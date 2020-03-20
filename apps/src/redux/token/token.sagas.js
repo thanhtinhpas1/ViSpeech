@@ -12,9 +12,29 @@ import {
 } from './token.actions'
 
 // ==== get tokens
+const getTokenTypeByMinnutes = minutes => {
+  const tokenTypes = Object.keys(TOKEN_TYPE)
+  const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === minutes
+  const result = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
+  return TOKEN_TYPE[result].viText
+}
+
+const formatTokenList = tokenList => {
+  const mapFunc = token => {
+    return {
+      ...token,
+      tokenType: getTokenTypeByMinnutes(token.minutes),
+      isValid: token.isValid || true,
+      minutesLeft: token.minutes - (token.usedMinutes || 0),
+    }
+  }
+  return tokenList.map(mapFunc)
+}
+
 export function* getTokens({ payload: userId }) {
   try {
-    const tokenList = yield TokenService.getTokens(userId)
+    let tokenList = yield TokenService.getTokenList(userId)
+    tokenList = formatTokenList(tokenList)
     yield put(getTokensSuccess(tokenList || []))
   } catch (err) {
     yield put(getTokensFailure(err.message))
@@ -34,13 +54,13 @@ const formatTokenTypeList = tokenTypeList => {
       saleOff: null,
     }
   }
-  const filterFunc = tokenType => tokenType.name !== TOKEN_TYPE.FREE
+  const filterFunc = tokenType => tokenType.name !== TOKEN_TYPE.FREE.name
   return tokenTypeList.filter(filterFunc).map(mapFunc)
 }
 
 export function* getTokenTypes() {
   try {
-    let tokenTypeList = yield TokenService.getTokenTypes()
+    let tokenTypeList = yield TokenService.getTokenTypeList()
     tokenTypeList = formatTokenTypeList(tokenTypeList)
     yield put(getTokenTypesSuccess(tokenTypeList || []))
   } catch (err) {

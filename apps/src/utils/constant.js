@@ -12,13 +12,14 @@ export const ROLES = {
   CSR_USER: 'CSR_USER',
 }
 export const TOKEN_TYPE = {
-  FREE: 'FREE',
-  '50-MINS': '50-MINS',
-  '200-MINS': '200-MINS',
-  '500-MINS': '500-MINS',
+  FREE: { name: 'FREE', minutes: 10, viText: 'Miễn phí 10 phút', cssClass: 'badge-success' },
+  '50-MINS': { name: '50-MINS', minutes: 50, viText: '50 phút', cssClass: 'badge-primary' },
+  '200-MINS': { name: '200-MINS', minutes: 200, viText: '200 phút', cssClass: 'badge-light' },
+  '500-MINS': { name: '500-MINS', minutes: 500, viText: '500 phút', cssClass: 'badge-warning' },
 }
 export const STATUS = {
-  PENDING: 'PENDING',
-  SUCCESS: 'SUCCESS',
-  FAILURE: 'FAILURE',
+  PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass: 'data-state-progress' },
+  SUCCESS: { name: 'SUCCESS', viText: 'Thành công', cssClass: 'data-state-approved' },
+  FAILURE: { name: 'FAILURE', viText: 'Thất bại', cssClass: 'data-state-canceled' },
+  // -canceled -missing
 }

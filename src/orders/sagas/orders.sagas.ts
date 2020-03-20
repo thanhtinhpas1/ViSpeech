@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ICommand, ofType, Saga } from "@nestjs/cqrs";
 import { OrderCreationStartedEvent, OrderCreatedSuccessEvent } from "../events/impl/order-created.event";
-import { delay, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { CreateOrderCommand } from "orders/commands/impl/create-order.command";
 import { AuthService } from "auth/auth.service";
@@ -51,9 +51,9 @@ export class OrdersSagas {
       map((event: OrderedTokenCreatedSuccessEvent) => {
         Logger.log("Inside [OrdersSagas] orderedTokenCreatedSuccess Saga", "OrdersSagas");
         const { streamId, tokenDto } = event;
-        const { _id, userId, orderId } = tokenDto;
+        const { userId, orderId } = tokenDto;
         const tempTokenTypeDto = TokenTypeDto.createTempInstance();
-        const orderDto = new OrderDto(userId, tempTokenTypeDto, _id, CONSTANTS.STATUS.SUCCESS);
+        const orderDto = new OrderDto(userId, tempTokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS);
         orderDto._id = orderId;
         return new UpdateOrderCommand(streamId, orderDto);
       })
@@ -67,9 +67,9 @@ export class OrdersSagas {
       map((event: OrderedTokenCreatedFailedEvent) => {
         Logger.log("Inside [OrdersSagas] orderedTokenCreatedFailed Saga", "OrdersSagas");
         const { streamId, tokenDto } = event;
-        const { _id, userId, orderId } = tokenDto;
+        const { userId, orderId } = tokenDto;
         const tempTokenTypeDto = TokenTypeDto.createTempInstance();
-        const orderDto = new OrderDto(userId, tempTokenTypeDto, _id, CONSTANTS.STATUS.FAILURE);
+        const orderDto = new OrderDto(userId, tempTokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
         orderDto._id = orderId;
         return new UpdateOrderCommand(streamId, orderDto);
       })

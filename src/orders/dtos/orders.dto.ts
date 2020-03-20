@@ -3,6 +3,7 @@ import { IsIn, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
 import { CONSTANTS } from 'common/constant';
 import { Column, Entity, ObjectID } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 export class OrderIdRequestParamsDto {
   constructor(orderId) {
@@ -16,21 +17,17 @@ export class OrderIdRequestParamsDto {
 
 @Entity('orders')
 export class OrderDto extends BaseEntityDto {
-  constructor(userId, tokenType: TokenTypeDto, tokenId = null, status = CONSTANTS.STATUS.PENDING) {
+  constructor(userId, tokenType: TokenTypeDto, token: TokenDto, status = CONSTANTS.STATUS.PENDING) {
     super();
     this.userId = userId;
     this.tokenType = tokenType;
-    this.tokenId = tokenId;
+    this.token = token;
     this.status = status;
   }
 
   @IsOptional()
-  @IsUUID()
-  @Column({
-    nullable: false,
-    type: 'uuid',
-  })
-  tokenId: ObjectID;
+  @Column()
+  token: TokenDto;
 
   @IsNotEmpty()
   @Column({

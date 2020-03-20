@@ -22,11 +22,9 @@ import RegisterPage from 'components/common/RegisterPage/RegisterPage.container'
 // import ForgetPasswordContainer from 'components/common/ForgetPassword/ForgetPassword.container'
 // import ResetPasswordContainer from 'components/common/ResetPassword/ResetPassword.container'
 // import RegisterPageContainer from 'components/common/RegisterPage/RegisterPage.container'
-import { getFiles } from 'redux/token/token.actions'
 
 const App = ({ currentUser }) => {
   const [isCssLoaded, setIsCssLoaded] = useState(false)
-  // const [isJsLoaded, setIsJsLoaded] = useState(false)
   const [isUser, setIsUser] = useState(null)
 
   useEffect(() => {
@@ -214,7 +212,6 @@ const App = ({ currentUser }) => {
           // }
         }
       }
-      // setIsJsLoaded(true)
     }
 
     async function loadJsFiles(isLoadJsFiles) {

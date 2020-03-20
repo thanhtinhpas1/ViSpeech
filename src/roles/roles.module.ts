@@ -20,10 +20,10 @@ export class RolesModule implements OnModuleInit {
     const csrUserRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.CSR_USER });
     const adminRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.ADMIN });
     if (!userRole[0] && !csrUserRole[0] && !adminRole[0] && !manageUserRole[0]) {
-      getMongoRepository(RoleDto).insert(new RoleDto(CONSTANTS.ROLE.USER));
-      getMongoRepository(RoleDto).insert(new RoleDto(CONSTANTS.ROLE.MANAGER_USER));
-      getMongoRepository(RoleDto).insert(new RoleDto(CONSTANTS.ROLE.CSR_USER));
-      getMongoRepository(RoleDto).insert(new RoleDto(CONSTANTS.ROLE.ADMIN));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.USER));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.MANAGER_USER));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.CSR_USER));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.ADMIN));
     }
   }
 }

@@ -7,16 +7,13 @@
 import React, { useCallback } from 'react'
 import { CUSTOMER_PATH } from 'utils/constant'
 import ReactTable from 'components/customer/ReactTable/ReactTable.component'
+import * as moment from 'moment'
 
 const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
-  // useEffect(() => {
-
-  // }, [currentUser._id])
-
   const columns = [
     {
       Header: 'Mã',
-      accessor: 'id',
+      accessor: '_id',
       headerClassName: 'data-col dt-tnxno',
       className: 'data-col dt-tnxno',
       Cell: props => {
@@ -26,7 +23,7 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
     },
     {
       Header: 'Trạng thái',
-      accessor: 'state',
+      accessor: 'status',
       headerClassName: 'data-col dt-token',
       className: 'data-col dt-token',
       Cell: props => {
@@ -34,38 +31,51 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
         return (
           <div className="d-flex align-items-center">
             <div className={`data-state ${cell.value.class}`} />
-            <span className="sub sub-s2">{cell.value.name}</span>
+            <span className="sub sub-s2" style={{ paddingTop: 0 }}>
+              {cell.value.name}
+            </span>
           </div>
         )
       },
     },
     {
-      Header: 'Thời gian',
+      Header: 'Thời gian tạo',
       accessor: 'date',
       headerClassName: 'data-col dt-amount',
       className: 'data-col dt-amount',
       Cell: props => {
         const { cell } = props
-        return <span className="sub sub-date">{cell.value}</span>
+        return <span className="sub sub-date">{moment(cell.value).format('DD/MM/YYYY HH:mm')}</span>
       },
     },
     {
-      Header: 'Key',
-      accessor: 'key',
+      Header: 'Token',
+      accessor: 'token',
       headerClassName: 'data-col dt-usd-account',
       className: 'data-col dt-account',
       Cell: props => {
         const { cell } = props
         return (
-          <span className={`${cell.value !== 'Trống' ? 'lead' : 'sub sub-s2'} user-info`}>
-            {cell.value}
+          <span className="lead tnx-id">
+            <div className="copy-wrap w-100">
+              <span className="copy-feedback" />
+              <em className="fas fa-key" />
+              <input type="text" className="copy-address" defaultValue={cell.value} disabled />
+              <button
+                type="button"
+                className="copy-trigger copy-clipboard"
+                data-clipboard-text={cell.value}
+              >
+                <em className="ti ti-files" />
+              </button>
+            </div>
           </span>
         )
       },
     },
     {
-      Header: () => <div className="dt-type-text">Loại</div>,
-      accessor: 'type',
+      Header: () => <div className="dt-type-text">Loại token</div>,
+      accessor: 'tokenType',
       headerClassName: 'data-col dt-type',
       className: 'data-col dt-type',
       Cell: props => {
@@ -116,9 +126,6 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
             <div className="card-head">
               <h4 className="card-title">Lịch sử giao dịch</h4>
             </div>
-            {/* {orderListObj.isLoading === false &&
-              orderListObj.isSuccess === true &&
-              isJsLoaded && ( */}
             <ReactTable
               columns={columns}
               data={orderListObj.orderList}
@@ -128,7 +135,6 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
               defaultPageSize={5}
               pageSize={5}
             />
-            {/* )} */}
           </div>
         </div>
       </div>
