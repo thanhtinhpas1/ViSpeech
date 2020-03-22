@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    enviroment {
+        CI = 'true',
+        PATH = './'
+    }
     stages {
         stage('Deploy') {
             steps {
