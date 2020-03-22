@@ -4,9 +4,15 @@ pipeline {
         PATH = './'
     }
     stages {
-        stage('Deploy') {
+        stage('Build') {
             steps {
-                sh 'chmod +x ./scripts/up.sh && ./scripts/up.sh'
+                sh 'npm install'
+
+            }
+        }
+        stage('Delivery') {
+            steps {
+                sh 'npm start'
             }
         }
     }

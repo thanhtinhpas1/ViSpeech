@@ -27,24 +27,24 @@ services:
        - 27017:27017
      network_mode: bridge
   # API - VISPEECH
-  vispeech:
-    build:
-      context: "."
-    command: ${CONTAINER_COMMAND}
-    restart: always
-    depends_on:
-      - eventstore
-      - mongodb
-    environment:
-      - EVENT_STORE_HOSTNAME=eventstore
-    ports:
-      - ${VISPEECH_PORT}:${VISPEECH_PORT}
-    expose:
-      - ${VISPEECH_PORT}
-    links:
-      - eventstore
-      - mongodb
-    network_mode: bridge
+  # vispeech:
+  #   build:
+  #     context: "."
+  #   command: ${CONTAINER_COMMAND}
+  #   restart: always
+  #   depends_on:
+  #     - eventstore
+  #     - mongodb
+  #   environment:
+  #     - EVENT_STORE_HOSTNAME=eventstore
+  #   ports:
+  #     - ${VISPEECH_PORT}:${VISPEECH_PORT}
+  #   expose:
+  #     - ${VISPEECH_PORT}
+  #   links:
+  #     - eventstore
+  #     - mongodb
+  #   network_mode: bridge
   vispeechdemo:
     build:
       context: "./ViSpeechDemo"
