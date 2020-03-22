@@ -14,9 +14,7 @@ FROM base AS dependencies
 # Install Node.js dependencies
 RUN cd /tmp && yarn --pure-lockfile
 
-RUN rm -rf dist && tsc && rm -rf ./apps/build && npm run build --prefix ./apps
 
-RUN node dist/src/main.js
 ### RELEASE
 FROM base AS development
 
