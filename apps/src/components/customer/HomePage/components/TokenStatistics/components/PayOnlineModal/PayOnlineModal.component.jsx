@@ -41,10 +41,10 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
           setIsLoading(false)
         } else if (confirmedCardPayment.paymentIntent.status === 'succeeded') {
           // The payment has been processed!
-          // const result = await OrderService.createOrder({
-          //   userId: user._id,
-          //   tokenType,
-          // })
+          const result = await OrderService.createOrder({
+            userId: user._id,
+            tokenType,
+          })
           setIsLoading(false)
           onOrderSuccess({
             minutes: tokenType.minutes,

@@ -114,8 +114,8 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
   ]
 
   const getList = useCallback(({ pageSize, pageIndex }) => {
-    // const userId = currentUser._id
-    // getOrderList({ userId, pageIndex, pageSize })
+    const userId = currentUser._id
+    getOrderList({ userId, pageIndex, pageSize })
   }, [])
 
   return (
