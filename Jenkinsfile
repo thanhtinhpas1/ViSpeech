@@ -1,7 +1,6 @@
 pipeline {
     agent any
     enviroment {
-        CI = 'true',
         PATH = './'
     }
     stages {
