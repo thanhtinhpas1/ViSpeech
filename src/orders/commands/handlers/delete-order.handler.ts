@@ -12,9 +12,9 @@ export class DeleteOrderHandler implements ICommandHandler<DeleteOrderCommand> {
 
   async execute(command: DeleteOrderCommand) {
     Logger.log("Async DeleteOrderHandler...", "DeleteOrderCommand");
-    const { orderIdDto } = command;
+    const { streamId, orderIdDto } = command;
     const order = this.publisher.mergeObjectContext(
-      await this.repository.deleteOrder(orderIdDto._id)
+      await this.repository.deleteOrder(streamId, orderIdDto._id)
     );
     order.commit();
   }

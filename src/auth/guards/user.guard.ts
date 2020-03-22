@@ -18,11 +18,11 @@ export class UserGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const id = request.params['_id'] || request.params['id'] || request.params['userId'];
         if (!id) return true;
+
         const payload = this.authService.decode(request);
-        if (payload['roles']) {
-            if (payload['roles'].filter(x => x.name === CONSTANTS.ROLE.ADMIN).length > 0) return true;
-        }
+        if (payload['roles'] && payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.ADMIN) !== -1) return true;
         if (payload['id'] === id) return true;
+
         const user = await this.userRepository.findOne({_id: id});
         if (user['assignerId'] !== payload['id']) {
             Logger.warn('User do not have permission to modify this user.', 'UserGuard');

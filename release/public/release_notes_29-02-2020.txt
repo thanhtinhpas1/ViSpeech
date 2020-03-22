@@ -1,0 +1,2 @@
+- Research CQRS
+- Build basic flow front end Dash board ViSpeech

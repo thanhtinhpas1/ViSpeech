@@ -1,9 +1,10 @@
-import {Logger} from "@nestjs/common";
-import {AggregateRoot} from "@nestjs/cqrs";
-import {UserCreatedEvent, UserCreationStartedEvent} from "../events/impl/user-created.event";
-import {UserDeletedEvent} from "../events/impl/user-deleted.event";
-import {UserUpdatedEvent} from "../events/impl/user-updated.event";
-import {UserRoleAssignedEvent} from "../events/impl/user-role-assigned.event";
+import {AggregateRoot} from '@nestjs/cqrs';
+import {UserCreatedEvent, UserCreationStartedEvent} from '../events/impl/user-created.event';
+import {UserDeletedEvent} from '../events/impl/user-deleted.event';
+import {UserUpdatedEvent} from '../events/impl/user-updated.event';
+import {UserRoleAssignedEvent} from '../events/impl/user-role-assigned.event';
+import {PasswordChangedEvent} from '../events/impl/password-changed.event';
+import { UserWelcomedEvent } from 'users/events/impl/user-welcomed.event';
 
 export class User extends AggregateRoot {
     [x: string]: any;
@@ -16,27 +17,31 @@ export class User extends AggregateRoot {
         this.data = data;
     }
 
-    createUserStart(transactionId: string) {
-        this.apply(new UserCreationStartedEvent(this.data));
+    createUserStart(streamId: string) {
+        this.apply(new UserCreationStartedEvent(streamId, this.data));
     }
 
-    createUser() {
-        this.apply(new UserCreatedEvent(this.data));
+    createUser(streamId: string) {
+        this.apply(new UserCreatedEvent(streamId, this.data));
     }
 
-    updateUser() {
-        this.apply(new UserUpdatedEvent(this.data));
+    updateUser(streamId: string) {
+        this.apply(new UserUpdatedEvent(streamId, this.data));
     }
 
-    deleteUser() {
-        this.apply(new UserDeletedEvent(this.id));
+    deleteUser(streamId: string) {
+        this.apply(new UserDeletedEvent(streamId, this.id));
     }
 
-    assignUserRole(roleName: string, assignerId: string) {
-        try {
-            this.apply(new UserRoleAssignedEvent(this.id, roleName, assignerId));
-        } catch (err) {
-            Logger.error(err.message, '', '[UserModel] assignUserRole');
-        }
+    assignUserRole(streamId: string, roleName: string, assignerId: string) {
+        this.apply(new UserRoleAssignedEvent(streamId, this.id, roleName, assignerId));
+    }
+
+    changePassword(streamId: string, newPassword: string, oldPassword: string) {
+        this.apply(new PasswordChangedEvent(streamId, this.id, newPassword, oldPassword));
+    }
+
+    welcomeUser(streamId: string) {
+        this.apply(new UserWelcomedEvent(streamId, this.id));
     }
 }

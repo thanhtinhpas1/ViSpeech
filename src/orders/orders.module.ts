@@ -20,10 +20,11 @@ import { OrderRepository } from "./repository/order.repository";
 import { OrdersSagas } from "./sagas/orders.sagas";
 import { OrdersService } from "./services/orders.service";
 import { TokensModule } from "tokens/tokens.module";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrderDto]),
+    TypeOrmModule.forFeature([OrderDto, TokenTypeDto]),
     forwardRef(() => AuthModule),
     EventStoreModule.forFeature(),
   ],
@@ -64,13 +65,13 @@ export class OrdersModule implements OnModuleInit {
 
   eventHandlers = {
     // create
-    OrderCreationStartedEvent: (transactionId, data) => new OrderCreationStartedEvent(transactionId, data),
-    OrderCreatedEvent: (transactionId, data) => new OrderCreatedEvent(transactionId, data),
-    OrderCreatedSuccessEvent: (transactionId, data) => new OrderCreatedSuccessEvent(transactionId, data),
-    OrderCreatedFailedEvent: (transactionId, data) => new OrderCreatedFailedEvent(transactionId, data),
+    OrderCreationStartedEvent: (streamId, data) => new OrderCreationStartedEvent(streamId, data),
+    OrderCreatedEvent: (streamId, data) => new OrderCreatedEvent(streamId, data),
+    OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),
+    OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),
 
-    OrderDeletedEvent: data => new OrderDeletedEvent(data),
-    OrderUpdatedEvent: (transactionId, data) => new OrderUpdatedEvent(transactionId, data),
-    OrderWelcomedEvent: data => new OrderWelcomedEvent(data)
+    OrderDeletedEvent: (streamId, data) => new OrderDeletedEvent(streamId, data),
+    OrderUpdatedEvent: (streamId, data) => new OrderUpdatedEvent(streamId, data),
+    OrderWelcomedEvent: (streamId, data) => new OrderWelcomedEvent(streamId, data)
   };
 }

@@ -1,10 +1,10 @@
 import { AggregateRoot } from "@nestjs/cqrs";
 import { TokenCreatedEvent } from "../events/impl/token-created.event";
 import { TokenUpdatedEvent } from "../events/impl/token-updated.event";
-import { TokenDeletedEvent } from "../events/impl/token-deleted.event";
+import { TokenDeletedEvent, TokenDeletedByUserIdEvent } from "../events/impl/token-deleted.event";
 import { TokenWelcomedEvent } from "../events/impl/token-welcomed.event";
 import { FreeTokenCreatedEvent } from "tokens/events/impl/free-token-created.event";
-import { OrderedTokenCreatedEvent } from "tokens/events/impl/ordered-token-created";
+import { OrderedTokenCreatedEvent } from "tokens/events/impl/ordered-token-created.event";
 
 export class Token extends AggregateRoot {
   [x: string]: any;
@@ -17,27 +17,31 @@ export class Token extends AggregateRoot {
     this.data = data;
   }
 
-  createToken(transactionId: string) {
-    this.apply(new TokenCreatedEvent(transactionId, this.data));
+  createToken(streamId: string) {
+    this.apply(new TokenCreatedEvent(streamId, this.data));
   }
 
-  createFreeToken(transactionId: string) {
-    this.apply(new FreeTokenCreatedEvent(transactionId, this.data));
+  createFreeToken(streamId: string) {
+    this.apply(new FreeTokenCreatedEvent(streamId, this.data));
   }
 
-  createOrderedToken(transactionId: string) {
-    this.apply(new OrderedTokenCreatedEvent(transactionId, this.data));
+  createOrderedToken(streamId: string) {
+    this.apply(new OrderedTokenCreatedEvent(streamId, this.data));
   }
 
-  updateToken() {
-    this.apply(new TokenUpdatedEvent(this.data));
+  updateToken(streamId: string) {
+    this.apply(new TokenUpdatedEvent(streamId, this.data));
   }
 
-  welcomeToken() {
-    this.apply(new TokenWelcomedEvent(this.id));
+  welcomeToken(streamId: string) {
+    this.apply(new TokenWelcomedEvent(streamId, this.id));
   }
 
-  deleteToken(transactionId: string) {
-    this.apply(new TokenDeletedEvent(transactionId, this.id));
+  deleteToken(streamId: string) {
+    this.apply(new TokenDeletedEvent(streamId, this.id));
+  }
+
+  deleteTokenByUserId(streamId: string) {
+    this.apply(new TokenDeletedByUserIdEvent(streamId, this.data));
   }
 }

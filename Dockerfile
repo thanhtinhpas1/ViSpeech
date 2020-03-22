@@ -1,8 +1,9 @@
 ### BASE
 FROM node:dubnium-alpine AS base
+
 LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 # Set the working directory
-WORKDIR /app
+WORKDIR /user/src/app/vispeech
 # Copy project specification and dependencies lock files
 COPY package.json yarn.lock tsconfig.json /tmp/
 # Install yarn
@@ -13,11 +14,14 @@ FROM base AS dependencies
 # Install Node.js dependencies
 RUN cd /tmp && yarn --pure-lockfile
 
+
 ### RELEASE
 FROM base AS development
+
 # Copy app sources
 COPY . .
-# Copy dependencies
+
 COPY --from=dependencies /tmp/node_modules ./node_modules
+
 # Expose application port
-EXPOSE 80:80
+EXPOSE 7070:7070

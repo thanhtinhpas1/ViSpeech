@@ -31,7 +31,7 @@ const Header = ({ currentUser, onAuthenticate, logout }) => {
       {
         href: `${CUSTOMER_PATH}/tokens-wallet`,
         emClass: 'ikon-distribution',
-        name: 'Ví key',
+        name: 'Ví token',
       },
       {
         href: `${CUSTOMER_PATH}/transactions`,

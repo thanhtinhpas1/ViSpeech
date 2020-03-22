@@ -13,9 +13,9 @@ export class UpdateOrderHandler implements ICommandHandler<UpdateOrderCommand> {
   async execute(command: UpdateOrderCommand) {
     Logger.log("Async UpdateOrderHandler...", "UpdateOrderCommand");
 
-    const { transactionId, orderDto } = command;
+    const { streamId, orderDto } = command;
     const order = this.publisher.mergeObjectContext(
-      await this.repository.updateOrder(transactionId, orderDto)
+      await this.repository.updateOrder(streamId, orderDto)
     );
     order.commit();
   }

@@ -1,10 +1,11 @@
 import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
-import { Logger } from "@nestjs/common";
+import { Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository } from "typeorm";
 import { TokenTypeDto } from "tokens/dtos/token-types.dto";
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailEvent } from "../impl/ordered-token-created";
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailedEvent } from "../impl/ordered-token-created.event";
+import { Utils } from "utils";
 
 @EventsHandler(OrderedTokenCreatedEvent)
 export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCreatedEvent> {
@@ -13,33 +14,31 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
     private readonly repository: Repository<TokenDto>,
     @InjectRepository(TokenTypeDto)
     private readonly repositoryTokenType: Repository<TokenTypeDto>,
-    private readonly eventBus: EventBus
+    private readonly eventBus: EventBus,
   ) {}
 
   async handle(event: OrderedTokenCreatedEvent) {
-    Logger.log(event, "OrderedTokenCreatedEvent");
-    const token = JSON.parse(JSON.stringify(event.tokenDto));
-    const transactionId = event.transactionId;
+    Logger.log(event.tokenDto._id, "OrderedTokenCreatedEvent");
+    const { streamId, tokenDto } = event;
+    let token = JSON.parse(JSON.stringify(tokenDto));
     let tokenTypeDto = null;
+
     try {
       if (token.tokenTypeId) {
-        tokenTypeDto = await this.repositoryTokenType.find({
-          _id: token.tokenTypeId
-        });
-      } else {
-        tokenTypeDto = await this.repositoryTokenType.find({
-          name: token.tokenType
-        });
+        tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
+        if (!tokenTypeDto) {
+          throw new NotFoundException(`Token type with _id ${token.tokenTypeId} does not exist.`);
+        }
+      } else if (token.tokenType) {
+        tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
       }
-      token.tokenTypeId = tokenTypeDto[0]._id;
-      token.minutes = tokenTypeDto[0].minutes;
-      token.transactionId = transactionId;
-      delete token.tokenType;
-      delete token.orderId;
-      const newToken = await this.repository.save(token);
-      this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(transactionId, newToken));
+      token.tokenTypeId = tokenTypeDto._id;
+      token.minutes = tokenTypeDto.minutes;
+      token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
+      await this.repository.save(token);
+      this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto));
     } catch (error) {
-      this.eventBus.publish(new OrderedTokenCreatedFailEvent(transactionId, token, error));
+      this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));
     }
   }
 }
@@ -48,14 +47,14 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
 export class OrderedTokenCreatedSuccessHandler
   implements IEventHandler<OrderedTokenCreatedSuccessEvent> {
   handle(event: OrderedTokenCreatedSuccessEvent) {
-    Logger.log(event, "OrderedTokenCreatedSuccessEvent");
+    Logger.log(event.tokenDto._id, "OrderedTokenCreatedSuccessEvent");
   }
 }
 
-@EventsHandler(OrderedTokenCreatedFailEvent)
-export class OrderedTokenCreatedFailHandler
-  implements IEventHandler<OrderedTokenCreatedFailEvent> {
-  handle(event: OrderedTokenCreatedFailEvent) {
-    Logger.log(event, "OrderedTokenCreatedFailEvent");
+@EventsHandler(OrderedTokenCreatedFailedEvent)
+export class OrderedTokenCreatedFailedHandler
+  implements IEventHandler<OrderedTokenCreatedFailedEvent> {
+  handle(event: OrderedTokenCreatedFailedEvent) {
+    Logger.log(event.error, "OrderedTokenCreatedFailedEvent");
   }
 }

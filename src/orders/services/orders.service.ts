@@ -7,6 +7,7 @@ import { DeleteOrderCommand } from "../commands/impl/delete-order.command";
 import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
 import { FindOrderQuery } from "orders/queries/impl/find-order.query";
 import { config } from "../../../config";
+import { GetOrdersByUserIdQuery } from "orders/queries/impl/get-orders-by-userId";
 
 const stripe = require("stripe")(config.STRIPE_SECRET_KEY);
 
@@ -17,25 +18,31 @@ export class OrdersService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createOrderStart(transactionId: string, orderDto: OrderDto) {
-    return await this.commandBus.execute(new CreateOrderStartCommand(transactionId, orderDto));
+  async createOrderStart(streamId: string, orderDto: OrderDto) {
+    return await this.commandBus.execute(new CreateOrderStartCommand(streamId, orderDto));
   }
 
-  async createOrder(transactionId: string, orderDto: OrderDto) {
-    return await this.commandBus.execute(new CreateOrderCommand(transactionId, orderDto));
+  async createOrder(streamId: string, orderDto: OrderDto) {
+    return await this.commandBus.execute(new CreateOrderCommand(streamId, orderDto));
   }
 
-  async updateOrder(transactionId: string, orderDto: OrderDto) {
-    return await this.commandBus.execute(new UpdateOrderCommand(transactionId, orderDto));
+  async updateOrder(streamId: string, orderDto: OrderDto) {
+    return await this.commandBus.execute(new UpdateOrderCommand(streamId, orderDto));
   }
 
-  async deleteOrder(orderIdDto: OrderIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteOrderCommand(orderIdDto));
+  async deleteOrder(streamId: string, orderIdDto: OrderIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteOrderCommand(streamId, orderIdDto));
   }
 
-  async findOrders(getOrdersQuery: GetOrdersQuery) {
+  async getOrders(getOrdersQuery: GetOrdersQuery) {
     var query = new GetOrdersQuery();
     Object.assign(query, getOrdersQuery);
+    return await this.queryBus.execute(query);
+  }
+
+  async getOrdersByUserId(getOrdersByUserIdQuery: GetOrdersByUserIdQuery) {
+    var query = new GetOrdersByUserIdQuery(getOrdersByUserIdQuery.userId);
+    Object.assign(query, getOrdersByUserIdQuery);
     return await this.queryBus.execute(query);
   }
 

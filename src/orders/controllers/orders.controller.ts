@@ -2,12 +2,13 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { FindOrderQuery } from "orders/queries/impl/find-order.query";
 import { GetOrdersQuery } from "orders/queries/impl/get-orders.query";
-import { Utils } from "utils";
 import { OrderDto, OrderIdRequestParamsDto } from "../dtos/orders.dto";
 import { OrdersService } from "../services/orders.service";
 import { OrderGuard } from "auth/guards/order.guard";
 import { CONSTANTS } from "common/constant";
 import { AuthGuard } from "@nestjs/passport";
+import { Roles } from "auth/roles.decorator";
+import { GetOrdersByUserIdQuery } from "orders/queries/impl/get-orders-by-userId";
 
 @Controller("orders")
 @ApiTags("Orders")
@@ -20,8 +21,8 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: "Create Order." })
   @Post()
   async createOrder(@Body() orderDto: OrderDto): Promise<OrderDto> {
-    const transactionId = Utils.getUuid();
-    return this.ordersService.createOrderStart(transactionId, orderDto);
+    const streamId = orderDto._id;
+    return this.ordersService.createOrderStart(streamId, orderDto);
   }
 
   /* Update Order */
@@ -34,8 +35,8 @@ export class OrdersController {
     @Param() orderIdDto: OrderIdRequestParamsDto,
     @Body() orderDto: OrderDto
   ) {
-    const transactionId = Utils.getUuid();
-    return this.ordersService.updateOrder(transactionId, {
+    const streamId = orderIdDto._id;
+    return this.ordersService.updateOrder(streamId, {
       ...orderDto,
       _id: orderIdDto._id
     });
@@ -48,7 +49,8 @@ export class OrdersController {
   @ApiResponse({ status: 200, description: "Delete Order." })
   @Delete(":_id")
   async deleteOrder(@Param() orderIdDto: OrderIdRequestParamsDto) {
-    return this.ordersService.deleteOrder(orderIdDto);
+    const streamId = orderIdDto._id;
+    return this.ordersService.deleteOrder(streamId, orderIdDto);
   }
 
   /* List Orders */
@@ -56,9 +58,10 @@ export class OrdersController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["List Orders"] })
   @ApiResponse({ status: 200, description: "List Orders." })
+  @Roles([CONSTANTS.ROLE.ADMIN])
   @Get()
-  async findOrders(@Query() getOrdersQuery: GetOrdersQuery) {
-    return this.ordersService.findOrders(getOrdersQuery);
+  async getOrders(@Query() getOrdersQuery: GetOrdersQuery) {
+    return this.ordersService.getOrders(getOrdersQuery);
   }
 
   /* Find Order */
@@ -69,6 +72,18 @@ export class OrdersController {
   @Get(":id")
   async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {
     return this.ordersService.findOne(findOrderQuery);
+  }
+
+  /* List Orders By UserId */
+
+  /*--------------------------------------------*/
+  @ApiOperation({ tags: ['List Orders By UserId'] })
+  @ApiResponse({ status: 200, description: 'List Orders By UserId.' })
+  @Get('/userId')
+  async getOrdersByUserId(
+    @Query() getOrdersByUserIdQuery: GetOrdersByUserIdQuery,
+  ) {
+    return this.ordersService.getOrdersByUserId(getOrdersByUserIdQuery);
   }
 
   @ApiOperation({ tags: ["Get Payment Intent"] })

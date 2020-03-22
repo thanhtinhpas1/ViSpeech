@@ -15,21 +15,19 @@ export class TokensService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createToken(transactionId: string, tokenDto: TokenDto) {
-    return await this.commandBus.execute(
-      new CreateTokenCommand(transactionId, tokenDto)
-    );
+  async createToken(streamId: string, tokenDto: TokenDto) {
+    return await this.commandBus.execute(new CreateTokenCommand(streamId, tokenDto));
   }
 
-  async updateToken(tokenDto: TokenDto) {
-    return await this.commandBus.execute(new UpdateTokenCommand(tokenDto));
+  async updateToken(streamId: string, tokenDto: TokenDto) {
+    return await this.commandBus.execute(new UpdateTokenCommand(streamId, tokenDto));
   }
 
-  async deleteToken(transactionId: string, tokenIdDto: TokenIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteTokenCommand(transactionId, tokenIdDto));
+  async deleteToken(streamId: string, tokenIdDto: TokenIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteTokenCommand(streamId, tokenIdDto));
   }
 
-  async findTokens(getTokensQuery: GetTokensQuery) {
+  async getTokens(getTokensQuery: GetTokensQuery) {
     const query = new GetTokensQuery();
     Object.assign(query, getTokensQuery);
     return await this.queryBus.execute(query);

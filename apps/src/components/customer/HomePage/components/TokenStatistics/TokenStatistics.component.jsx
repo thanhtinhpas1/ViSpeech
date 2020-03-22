@@ -1,12 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import Utils from 'utils'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.component'
 
 const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
-  // const [payOptions, setPayOptions] = useState([])
+  const [payOnlineModal, setPayOnlineModal] = useState({})
 
   useEffect(() => {
     getTokenTypes()
@@ -29,6 +30,21 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
     // setPayOptions(payOptionsArr)
   }, [getTokenTypes])
 
+  const openPayOnlineModal = () => {
+    const selectedTypeId = window
+      .$('.token-currency-choose .pay-option input[name="tokenType"]:checked')
+      .attr('id')
+    const index = token.tokenTypeList.findIndex(x => x._id === selectedTypeId)
+    let selectedType = token.tokenTypeList[index]
+    selectedType = Utils.removePropertiesFromObject(selectedType, ['defaultChecked', 'saleOff'])
+    const payOnlineObj = {
+      user: currentUser,
+      tokenType: selectedType,
+    }
+    setPayOnlineModal(payOnlineObj)
+    window.$('#pay-online').modal('show')
+  }
+
   return (
     <>
       <div className="card-innr">
@@ -38,7 +54,7 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
           </div>
           <div className="token-balance-text">
             <h3 className="card-sub-title" style={{ fontSize: '16px', color: '#fff' }}>
-              Các gói key
+              Các gói token
             </h3>
           </div>
         </div>
@@ -46,7 +62,7 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
           <div className="token-currency-choose" style={{ color: '#495463' }}>
             <div className="row guttar-15px" style={{ display: 'flex' }}>
               {token.tokenTypeList &&
-                token.tokenTypeList.map(tokenType => {
+                Utils.sortArr(token.tokenTypeList, (a, b) => a.price - b.price).map(tokenType => {
                   return (
                     <div className="col-3" key={tokenType._id}>
                       <TokenType tokenType={tokenType} />
@@ -58,10 +74,9 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
         </div>
         <div style={{ float: 'right' }}>
           <a
-            href="#"
+            href="#!"
             className="btn btn-warning"
-            data-toggle="modal"
-            data-target="#pay-online"
+            onClick={openPayOnlineModal}
             style={{ display: 'flex', justifyContent: 'center' }}
           >
             <em className="pay-icon fas fa-dollar-sign" />
@@ -69,14 +84,7 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
           </a>
         </div>
       </div>
-      <PayOnlineModal
-        payOnlineModal={{
-          user: currentUser,
-          tokenTypeId: '2a34b730-5f7d-11ea-b956-5fe6b0acdf56',
-          price: 5,
-          minutes: 50,
-        }}
-      />
+      <PayOnlineModal payOnlineModal={payOnlineModal} />
     </>
   )
 }

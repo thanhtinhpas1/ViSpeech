@@ -16,10 +16,10 @@ export class CreateTokenHandler
   async execute(command: CreateTokenCommand) {
     Logger.log("Async CreateTokenHandler...", "CreateTokenCommand");
 
-    const { transactionId, tokenDto } = command;
+    const { streamId, tokenDto } = command;
     // use mergeObjectContext for dto dispatch events
     const token = this.publisher.mergeObjectContext(
-      await this.repository.createToken(transactionId, tokenDto)
+      await this.repository.createToken(streamId, tokenDto)
     );
     token.commit();
   }
@@ -36,10 +36,10 @@ export class CreateFreeTokenHandler
   async execute(command: CreateFreeTokenCommand) {
     Logger.log("Async CreateFreeTokenHandler...", "CreateFreeTokenCommand");
 
-    const { transactionId, tokenDto } = command;
+    const { streamId, tokenDto } = command;
     // use mergeObjectContext for dto dispatch events
     const token = this.publisher.mergeObjectContext(
-      await this.repository.createFreeToken(transactionId, tokenDto)
+      await this.repository.createFreeToken(streamId, tokenDto)
     );
     token.commit();
   }
@@ -56,10 +56,10 @@ export class CreateOrderedTokenHandler
   async execute(command: CreateOrderedTokenCommand) {
     Logger.log("Async CreateOrderedTokenHandler...", "CreateOrderedTokenCommand");
 
-    const { transactionId, tokenDto } = command;
+    const { streamId, tokenDto } = command;
     // use mergeObjectContext for dto dispatch events
     const token = this.publisher.mergeObjectContext(
-      await this.repository.createOrderedToken(transactionId, tokenDto)
+      await this.repository.createOrderedToken(streamId, tokenDto)
     );
     token.commit();
   }

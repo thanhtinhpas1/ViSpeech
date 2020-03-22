@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="zxx">
+
+<!-- Mirrored from adhyasoft.com/themeforest/softia/softia/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 17 Jan 2019 16:52:57 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Softia">
+    <meta name="keywords" content="Softia">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <title>Softia</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+
+    <!-- Plugin CSS -->
+    <link href="/plugin/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/plugin/font-awesome/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="/plugin/et-line/style.css" rel="stylesheet">
+    <link href="/plugin/themify-icons/themify-icons.css" rel="stylesheet">
+    <link href="/plugin/owl-carousel/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="/plugin/magnific/magnific-popup.css" rel="stylesheet">
+    <!-- End -->
+
+    <!-- INJECT PLUGIN FOR THIS PAGE -->
+    <script src="/js/record.js"></script>
+    <!-- END INJECT -->
+    <!-- Theme css -->
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/color/default.css" rel="stylesheet" id="color_theme">
+    <!-- End -->
+
+</head>
+
+<!-- ========== Body Starts ========== -->
+<!-- Body Start -->
+
+<body data-spy="scroll" data-target="#navbar" data-offset="98">
+
+<!-- Loading -->
+<div id="loading">
+    <div class="load-circle"><span class="one"></span></div>
+</div>
+<!-- / -->
+
+<!-- Header -->
+<header>
+    <nav class="navbar header-nav navbar-expand-lg">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="#">
+                <img class="light-logo" src="/img/logo-light.svg" title="" alt="">
+                <img class="dark-logo" src="/img/logo.svg" title="" alt="">
+            </a>
+            <!-- / -->
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
+                    aria-controls="navbar"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <!-- / -->
+
+            <!-- Top Menu -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbar">
+                <ul class="navbar-nav ml-auto align-items-center">
+                    <!-- <li class="m-dropdown m-dropdown-multilevel"> -->
+                    <li class="nav-link">
+                        <a class="nav-link" href="#home">Trang chủ</a>
+                        <!-- <i class="fa fa-angle-down m-dropdown-toggle"></i> -->
+                    </li>
+                    <li><a class="nav-link" href="#about">Chúng tôi</a></li>
+                    <li><a class="nav-link" href="#feature">Tính năng</a></li>
+                    <li><a class="nav-link" href="#price">Giá</a></li>
+                    <li><a class="nav-link" href="#contatus">Liên hệ</a></li>
+                    <li><a class="nav-link-btn btn btn-white m-15px-l md-m-0px-l" href="#">Đăng nhập</a></li>
+                </ul>
+            </div>
+            <!-- / -->
+
+        </div><!-- Container -->
+    </nav> <!-- Navbar -->
+</header>
+<!-- Header End -->
+
+<!-- Main -->
+<main>
+
+    <!-- 
+  =====================
+  Home Banner
+  ===================== 
+  -->
+    <section id="home" class="home-banner theme-bg bg-effect">
+        <div id="particles_effect" class="particles-effect"></div>
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-10 col-lg-7">
+                    <div class="banner-text text-center p-30px-t md-p-0px-t">
+                        <h2 class="font-alt">Speech to text</h2>
+                        <p>Hệ thống cung cấp dịch vụ nhận dạng âm thanh Tiếng Việt hàng đầu.</p>
+                    </div>
+                </div>
+                <div class="col-md-10 col-lg-10">
+                    <div class="banner-img m-50px-t m-30px-b">
+                        <div class="clearfix mb-4 mt-3" style="text-align: center;">
+                            <button id="start-btn" class="btn btn-white btn-fixed-width" style="margin-right:1em;">
+                                <i class="fas fa-play mr-1"></i>
+                                Ghi âm
+                            </button>
+                            <button id="stop-btn" class="btn btn-white btn-fixed-width d-none"
+                                    style="margin-right:1em;">
+                                <i class="fas fa-pause mr-1"></i>
+                                Dừng
+                            </button>
+                            <span>
+                  <label for="upload-photo" class="btn btn-white btn-fixed-width" style="margin-bottom: 0">Tải
+                    file</label>
+                  <input type="file" id="upload-photo"/>
+                </span>
+                        </div>
+                        <div class="row">
+                            <div class="col input-field">
+                                <p style="margin-bottom: 0.5em;">Văn bản được xác định</p>
+                                <textarea id="text-recognize" class="textarea-custom" rows="6"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="bg-effect-bottom">
+            <img src="/img/bg-home-1.svg" title="" alt="">
+        </div>
+    </section>
+
+    <!-- 
+  =====================
+  About us
+  ===================== 
+  -->
+    <section id="about" class="section border-bottom gray-bg-g shapes-section">
+        <div class="container">
+            <div class="row justify-content-center m-45px-b md-m-25px-b">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="section-title text-center">
+                        <h2 class="dark-color font-alt">Tính năng</h2>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 m-15px-tb">
+                    <div class="feature-box theme-hover box-shadow">
+                        <div class="icon">
+                            <i class="ti-check-box theme-color"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4 class="dark-color font-alt">Nhận dạng ngôn ngữ chính xác</h4>
+                            <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt
+                                ut labore et
+                                dolore magna aliqua.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 m-15px-tb">
+                    <div class="feature-box theme-hover box-shadow">
+                        <div class="icon">
+                            <i class="ti-rocket theme-color"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4 class="dark-color font-alt">Hỗ trợ thu nhận âm thanh theo thời gian thực và âm thanh
+                                được ghi sẵn
+                                trước</h4>
+                            <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt
+                                ut labore et
+                                dolore magna aliqua.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 m-15px-tb">
+                    <div class="feature-box theme-hover box-shadow">
+                        <div class="icon">
+                            <i class="ti-headphone theme-color"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4 class="dark-color font-alt">Cung cấp dịch vụ cho phép chịu tải cao</h4>
+                            <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt
+                                ut labore et
+                                dolore magna aliqua.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="shapes-box">
+        <span data-parallax='{"x": 150, "y": -20, "rotateZ":500}'>
+          <img src="/img/fl-shape-1.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 250, "y": 150, "rotateZ":500}'>
+          <img src="/img/fl-shape-2.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": -180, "y": 80, "rotateY":2000}'>
+          <img src="/img/fl-shape-3.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": -20, "y": 180}'>
+          <img src="/img/fl-shape-4.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 300, "y": 70}'>
+          <img src="/img/fl-shape-5.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 250, "y": 180, "rotateZ":1500}'>
+          <img src="/img/fl-shape-6.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 180, "y": 10, "rotateZ":2000}'>
+          <img src="/img/fl-shape-7.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 60, "y": -100}'>
+          <img src="/img/fl-shape-9.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": -30, "y": 150, "rotateZ":1500}'>
+          <img src="/img/fl-shape-10.png" title="" alt="">
+        </span>
+        </div>
+    </section>
+
+    <!-- 
+  =====================
+  Feature
+  ===================== 
+  -->
+    <section id="feature" class="section gray-bg border-bottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="side-title p-50px-r md-p-0px-r">
+                        <h2 class="dark-color sub-title m-0px m-20px-b">Hãy trải nghiệm dịch vụ nhận dạng giọng nói
+                            tiếng Việt tốt
+                            nhất của chúng tôi.</h2>
+                        <p class="large-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor
+                            incididunt ut labore et dolore magna aliqua.</p>
+                        <div class="p-15px-t">
+                            <a class="btn btn-theme" href="#">Get Free Try Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center sm-m-30px-t">
+                    <img src="/img/feature-4.svg" title="" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section gray-bg border-bottom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center sm-m-30px-b">
+                    <img src="/img/feature-2.svg" title="" alt="">
+                </div>
+
+                <div class="col-md-6">
+                    <div class="side-title p-50px-l md-p-0px-l">
+                        <h2 class="dark-color sub-title m-0px m-20px-b">A faster way to do<br/> just about anything</h2>
+                        <p class="large-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor
+                            incididunt ut labore et dolore magna aliqua.</p>
+                        <div class="p-15px-t">
+                            <a class="btn btn-theme" href="#">Get Free Try Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="price" class="section gray-bg border-bottom shapes-section">
+        <div class="shapes-box">
+        <span data-parallax='{"x": 150, "y": -20, "rotateZ":500}'>
+          <img src="/img/fl-shape-1.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 250, "y": 150, "rotateZ":500}'>
+          <img src="/img/fl-shape-2.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": -180, "y": 80, "rotateY":2000}'>
+          <img src="/img/fl-shape-3.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": -20, "y": 180}'>
+          <img src="/img/fl-shape-4.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 300, "y": 70}'>
+          <img src="/img/fl-shape-5.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 250, "y": 180, "rotateZ":1500}'>
+          <img src="/img/fl-shape-6.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 180, "y": 10, "rotateZ":2000}'>
+          <img src="/img/fl-shape-7.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": 60, "y": -100}'>
+          <img src="/img/fl-shape-9.png" title="" alt="">
+        </span>
+            <span data-parallax='{"x": -30, "y": 150, "rotateZ":1500}'>
+          <img src="/img/fl-shape-10.png" title="" alt="">
+        </span>
+        </div>
+
+        <div class="container">
+            <div class="row justify-content-center m-45px-b md-m-25px-b">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="section-title text-center">
+                        <h2 class="dark-color font-alt">Pricing Plans</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                            labore et
+                            dolore magna aliqua. Ut enim ad minim veniam.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 m-15px-tb">
+                    <div class="price-table hover-shadow">
+                        <div class="pt-head">
+                            <h6>Basic</h6>
+                            <h4 class="dark-color font-alt"><span>$</span>20</h4>
+                            <p>Per Month</p>
+                        </div>
+                        <div class="pt-body">
+                            <ul>
+                                <li><b>limited</b> Submissions</li>
+                                <li class="pt-no"><b>mailchimp</b> integration</li>
+                                <li class="pt-no"><b>Adwords</b> integration</li>
+                            </ul>
+                        </div>
+                        <div class="pt-action">
+                            <a href="#" class="btn btn-theme">Purchase now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 m-15px-tb">
+                    <div class="price-table hover-shadow box-shadow active">
+                        <div class="pt-head theme-bg">
+                            <h6>Multiple</h6>
+                            <h4 class="font-alt"><span>$</span>60</h4>
+                            <p>Per Month</p>
+                        </div>
+                        <div class="pt-body">
+                            <ul>
+                                <li><b>limited</b> Submissions</li>
+                                <li><b>mailchimp</b> integration</li>
+                                <li class="pt-no"><b>Adwords</b> integration</li>
+                            </ul>
+                        </div>
+                        <div class="pt-action">
+                            <a href="#" class="btn btn-theme">Purchase now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 m-15px-tb">
+                    <div class="price-table hover-shadow">
+                        <div class="pt-head">
+                            <h6>Extended</h6>
+                            <h4 class="dark-color font-alt"><span>$</span>200</h4>
+                            <p>Per Month</p>
+                        </div>
+                        <div class="pt-body">
+                            <ul>
+                                <li><b>limited</b> Submissions</li>
+                                <li><b>mailchimp</b> integration</li>
+                                <li><b>Adwords</b> integration</li>
+                            </ul>
+                        </div>
+                        <div class="pt-action">
+                            <a href="#" class="btn btn-theme">Purchase now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contatus" class="section p-0px-b gray-bg section-contact-down">
+        <div class="container">
+            <div class="row justify-content-center m-60px-b md-m-40px-b">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="section-title text-center">
+                        <h2 class="dark-color font-alt">Drop Your Message</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                            labore et
+                            dolore magna aliqua. Ut enim ad minim veniam.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                    <div class="contact-form contact-form-down">
+                        <form class="contactform" method="post"
+                              action="http://adhyasoft.com/themeforest/softia/softia//php/process-form.php">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="name" name="name" type="text" placeholder="Name"
+                                               class="validate form-control"
+                                               required>
+                                        <span class="input-focus-effect"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="email" type="email" placeholder="Email" name="email"
+                                               class="validate form-control"
+                                               required>
+                                        <span class="input-focus-effect"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                      <textarea id="message" placeholder="Your Comment" name="message" class="form-control"
+                                required></textarea>
+                                        <span class="input-focus-effect"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="send">
+                                        <button class="btn btn-theme" type="submit" name="send"> send message</button>
+                                    </div>
+                                    <span class="output_message"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+<!-- / -->
+
+<!-- Footer -->
+<footer class="footer footer-dark">
+    <section class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-lg-4 sm-m-15px-tb md-m-30px-b">
+                    <h4 class="font-alt">About Us</h4>
+                    <p class="footer-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                        tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <ul class="social-icons">
+                        <li><a class="facebook" href="#"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
+                        <li><a class="google" href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                        <!-- <li><a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a></li> -->
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2 sm-m-15px-tb">
+                    <h4 class="font-alt">Product</h4>
+                    <ul class="fot-link">
+                        <li><a href="#">Features</a></li>
+                        <!-- <li><a href="#">Carrers</a></li> -->
+                        <!-- <li><a href="#">Awards</a></li> -->
+                        <li><a href="#">Users Program</a></li>
+                        <li><a href="#">Locations</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-2 sm-m-15px-tb">
+                    <h4 class="font-alt">Company</h4>
+                    <ul class="fot-link">
+                        <li><a href="#">About</a></li>
+                        <!-- <li><a href="#">Blog</a></li> -->
+                        <!-- <li><a href="#">Press</a></li> -->
+                        <li><a href="#">Policy</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-lg-4 sm-m-15px-tb">
+                    <h4 class="font-alt">Address</h4>
+                    <div class="fot-address">
+                        <p><i class="ti-location-arrow"></i>301 The Greenhouse<br/>London, E2 8DY<br/>UK</p>
+                        <p><i class="ti-headphone"></i> +01 440 444 4526</p>
+                        <p><i class="ti-email"></i> info@yourdomainame.com</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="footer-copy">
+                <div class="row">
+                    <div class="col-12">
+                        <p>All © Copyright by . All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div> <!-- footer-copy -->
+
+        </div> <!-- container -->
+    </section>
+</footer>
+<!-- / -->
+
+
+<!-- Jquery -->
+<script src="/js/jquery-3.2.1.min.js"></script>
+<script src="/js/jquery-migrate-3.0.0.min.js"></script>
+<!-- End -->
+
+<!-- Plugin JS -->
+<script src="/plugin/appear/jquery.appear.js"></script>
+<!--appear-->
+<script src="/plugin/bootstrap/js/popper.min.js"></script>
+<!--popper-->
+<script src="/plugin/bootstrap/js/bootstrap.js"></script>
+<!--bootstrap-->
+<script src="/plugin/particles/particles.min.js"></script>
+<!--bootstrap-->
+<script src="/plugin/particles/particles-app.js"></script>
+<!--bootstrap-->
+<!-- End -->
+
+<!-- Custom -->
+<script src="/js/jquery.parallax-scroll.js"></script>
+<script src="/js/custom.js"></script>
+<!-- End -->
+
+</body>
+<!-- ========== End of Body ========== -->
+
+<!-- Mirrored from adhyasoft.com/themeforest/softia/softia/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 17 Jan 2019 16:53:24 GMT -->
+
+</html>

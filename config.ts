@@ -42,9 +42,9 @@ const configs = {
         DATABASE: {
             // name: process.env.TYPEORM_NAME || 'vispeech',
             type: process.env.TYPEORM_CONNECTION || 'mongodb',
-            host: process.env.TYPEORM_HOST || '0.0.0.0',
-            username: process.env.TYPEORM_USERNAME || 'mongodb',
-            password: process.env.TYPEORM_PASSWORD || 'mongodb',
+            host: process.env.TYPEORM_HOST || '127.0.0.1',
+            // username: process.env.TYPEORM_USERNAME || 'mongodb',
+            // password: process.env.TYPEORM_PASSWORD || 'mongodb',
             database: process.env.TYPEORM_DATABASE || 'vispeech',
             port: process.env.TYPEORM_PORT || 27017,
             synchronize: process.env.TYPEORM_SYNCHRONIZE || true,

@@ -3,7 +3,7 @@ import { BaseEntityDto } from "base/base-entity.dto";
 import { IsNotEmpty, IsString, IsIn } from "class-validator";
 import { CONSTANTS } from "common/constant";
 
-@Entity("roles")
+@Entity('roles')
 export class RoleDto extends BaseEntityDto {
   constructor(name: string) {
     super();

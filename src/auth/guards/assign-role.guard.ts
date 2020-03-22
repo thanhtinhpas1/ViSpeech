@@ -18,12 +18,14 @@ export class AssignRoleGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const id = request.params['_id'] || request.params['id'] || request.params['userId'];
         if (!id) return true;
+
         const payload = this.authService.decode(request);
         if (payload['roles']) {
-            if (payload['roles'].filter(x => x.name === CONSTANTS.ROLE.ADMIN).length > 0) return true;
-            else if (payload['roles'].filter(x => x.name === CONSTANTS.ROLE.MANAGER_USER).length > 0) {
-                const user = await this.userRepository.findOne({_id: id});
-                if (!user && !user['roles']) throw new BadRequestException();
+            if (payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.ADMIN) !== -1) return true;
+            if (payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.MANAGER_USER) !== -1) {
+                const user = await this.userRepository.findOne({ _id: id });
+                if (!user || !user['roles']) throw new BadRequestException();
+                if (payload['id'] === user.assignerId) return true;
                 if (user['roles'].filter(x => x.name === CONSTANTS.ROLE.USER).length >= 0
                     || user.assignerId === payload['id']) {
                     return true;

@@ -5,54 +5,118 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Utils from 'utils'
 import { ADMIN_PATH } from 'utils/constant'
 import * as moment from 'moment'
+import ReactTable from 'components/admin/ReactTable/ReactTable.component'
 
-const UserListPage = ({ userListObj, isJsLoaded, deleteUserObj, getUserList, deleteUser }) => {
+const UserListPage = ({ currentUser, userListObj, deleteUserObj, getUserList, deleteUser }) => {
   useEffect(() => {
     if (deleteUserObj.isLoading === false && deleteUserObj.isSuccess === true) {
       getUserList()
-    } else if (userListObj.isLoading === false && userListObj.isSuccess === null) {
-      getUserList()
     }
-    if (userListObj.isLoading === false && userListObj.isSuccess === true && isJsLoaded) {
-      window.$('#userListDataTable').DataTable({
-        pagingType: 'full_numbers',
-        lengthMenu: [
-          [10, 25, 50, -1],
-          [10, 25, 50, 'All'],
-        ],
-        responsive: true,
-        language: {
-          search: '',
-          // searchPlaceholder: 'Type in to Search',
-          info: 'Hiển thị _START_ đến _END_ trên _TOTAL_ dòng',
-          infoEmpty: 'Không có dữ liệu',
-          infoFiltered: '(filtered from _MAX_ total entries)',
-          paginate: {
-            first: 'Trang đầu',
-            last: 'Trang cuối',
-            next: 'Tiếp theo',
-            previous: 'Quay lại',
-          },
-        },
-      })
+    //  else if (userListObj.isLoading === false && userListObj.isSuccess === null) {
+    //   getUserList()
+    // }
+    // if (userListObj.isLoading === false && userListObj.isSuccess === true && isJsLoaded) {
+    //   window.$('#userListDataTable').DataTable({
+    //     pagingType: 'full_numbers',
+    //     lengthMenu: [
+    //       [10, 25, 50, -1],
+    //       [10, 25, 50, 'All'],
+    //     ],
+    //     responsive: true,
+    //     language: {
+    //       search: '',
+    //       // searchPlaceholder: 'Type in to Search',
+    //       info: 'Hiển thị _START_ đến _END_ trên _TOTAL_ dòng',
+    //       infoEmpty: 'Không có dữ liệu',
+    //       infoFiltered: '(filtered from _MAX_ total entries)',
+    //       paginate: {
+    //         first: 'Trang đầu',
+    //         last: 'Trang cuối',
+    //         next: 'Tiếp theo',
+    //         previous: 'Quay lại',
+    //       },
+    //     },
+    //   })
 
-      const table = window.$('#userListDataTable').DataTable()
+    //   const table = window.$('#userListDataTable').DataTable()
 
-      // Like record
-      table.on('click', '.like', function a() {
-        alert('You clicked on Like button')
-      })
+    //   // Like record
+    //   table.on('click', '.like', function a() {
+    //     alert('You clicked on Like button')
+    //   })
 
-      window.$('.card .material-datatables label').addClass('form-group')
-    }
-  }, [deleteUserObj, userListObj, getUserList, isJsLoaded])
+    //   window.$('.card .material-datatables label').addClass('form-group')
+    // }
+  }, [deleteUserObj, getUserList])
 
-  const onDeleteUser = (e, id) => {
-    deleteUser(id)
-  }
+  const columns = [
+    {
+      Header: 'Họ tên',
+      accessor: 'fullName',
+      Cell: props => {
+        const { cell } = props
+        return <span>{cell.value}</span>
+      },
+    },
+    {
+      Header: 'Tên đăng nhập',
+      accessor: 'username',
+      Cell: props => {
+        const { cell } = props
+        return <span>{cell.value}</span>
+      },
+    },
+    {
+      Header: 'Email',
+      accessor: 'email',
+      Cell: props => {
+        const { cell } = props
+        return <span>{cell.value}</span>
+      },
+    },
+    {
+      Header: 'Vai trò',
+      accessor: 'rolesInText',
+      Cell: props => {
+        const { cell } = props
+        return <span>{cell.value}</span>
+      },
+    },
+    {
+      Header: 'Tạo ngày',
+      accessor: 'createdDate',
+      Cell: props => moment(props.cell.value).format('DD/MM/YYYY HH:mm'),
+    },
+    {
+      Header: '',
+      accessor: '_id',
+      id: 'action',
+      headerClassName: 'text-right',
+      className: 'text-right',
+      Cell: props => {
+        const { cell } = props
+        return (
+          <>
+            <Link
+              to={`${ADMIN_PATH}/user-info/${cell.value}`}
+              className="btn btn-simple btn-warning btn-icon edit"
+            >
+              <i className="material-icons">dvr</i>
+            </Link>
+            <a
+              href="#"
+              className="btn btn-simple btn-danger btn-icon remove"
+              onClick={() => deleteUser(cell.value)}
+            >
+              <i className="material-icons">close</i>
+            </a>
+          </>
+        )
+      },
+    },
+  ]
 
   return (
     <div className="row">
@@ -72,7 +136,7 @@ const UserListPage = ({ userListObj, isJsLoaded, deleteUserObj, getUserList, del
             </h4>
             <div className="toolbar" />
             <div className="material-datatables">
-              {userListObj.isLoading === false && userListObj.isSuccess === true && isJsLoaded && (
+              {/* {userListObj.isLoading === false && userListObj.isSuccess === true && isJsLoaded && (
                 <table
                   id="userListDataTable"
                   className="table table-striped table-no-bordered table-hover"
@@ -134,6 +198,17 @@ const UserListPage = ({ userListObj, isJsLoaded, deleteUserObj, getUserList, del
                     })}
                   </tbody>
                 </table>
+              )} */}
+              {currentUser._id && (
+                <ReactTable
+                  columns={columns}
+                  data={userListObj.userList}
+                  fetchData={getUserList}
+                  loading={userListObj.isLoading}
+                  pageCount={Math.ceil(userListObj.userList.length / 5)}
+                  defaultPageSize={5}
+                  pageSize={5}
+                />
               )}
             </div>
           </div>

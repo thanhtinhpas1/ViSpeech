@@ -4,6 +4,7 @@ import { call, all, takeLatest, put } from 'redux-saga/effects'
 import UserService from 'services/user.service'
 import { JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
+import Utils from 'utils'
 import UserTypes from './user.types'
 import {
   loginSuccess,
@@ -111,9 +112,21 @@ export function* authenticateSaga() {
 }
 
 // ==== get user list
+const formatUserList = userList => {
+  const mapFunc = user => {
+    return {
+      ...user,
+      fullName: `${user.lastName} ${user.firstName}`,
+      rolesInText: Utils.getRolesInText(user.roles),
+    }
+  }
+  return userList.map(mapFunc)
+}
+
 export function* getUserList() {
   try {
-    const userList = yield UserService.getUserList()
+    let userList = yield UserService.getUserList()
+    userList = formatUserList(userList)
     yield put(getUserListSuccess(userList))
   } catch (err) {
     yield put(getUserListFailure(err.message))

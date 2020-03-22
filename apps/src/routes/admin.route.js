@@ -11,7 +11,7 @@ import AdminUserListPage from 'components/admin/UserListPage/UserListPage.contai
 import AdminUserInfoPage from 'components/admin/UserInfoPage/UserInfoPage.container'
 import AdminUserCreatePage from 'components/admin/UserCreatePage/UserCreatePage.container'
 
-const RouteAdmin = ({ currentUser, isJsLoaded }) => {
+const RouteAdmin = ({ currentUser }) => {
   return (
     <Switch>
       {/* WITHOUT login, user can access those links */}
@@ -24,7 +24,7 @@ const RouteAdmin = ({ currentUser, isJsLoaded }) => {
           </Route>
           <Route path={`${ADMIN_PATH}/users`}>
             <AdminLayout>
-              <AdminUserListPage isJsLoaded={isJsLoaded} />
+              <AdminUserListPage />
             </AdminLayout>
           </Route>
           <Route

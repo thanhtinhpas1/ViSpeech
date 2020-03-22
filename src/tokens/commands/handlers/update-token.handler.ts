@@ -13,9 +13,9 @@ export class UpdateTokenHandler implements ICommandHandler<UpdateTokenCommand> {
   async execute(command: UpdateTokenCommand) {
     Logger.log("Async UpdateTokenHandler...", "UpdateTokenCommand");
 
-    const { tokenDto } = command;
+    const { streamId, tokenDto } = command;
     const token = this.publisher.mergeObjectContext(
-      await this.repository.updateToken(tokenDto)
+      await this.repository.updateToken(streamId, tokenDto)
     );
     token.commit();
   }

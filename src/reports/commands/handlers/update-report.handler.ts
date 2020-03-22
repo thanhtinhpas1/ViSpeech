@@ -14,9 +14,9 @@ export class UpdateReportHandler
   async execute(command: UpdateReportCommand) {
     Logger.log("Async UpdateReportHandler...", "UpdateReportCommand");
 
-    const { reportDto } = command;
+    const { streamId, reportDto } = command;
     const report = this.publisher.mergeObjectContext(
-      await this.repository.updateReport(reportDto)
+      await this.repository.updateReport(streamId, reportDto)
     );
     report.commit();
   }

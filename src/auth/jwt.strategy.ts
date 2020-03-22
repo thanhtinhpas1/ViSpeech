@@ -20,7 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       Logger.warn("Authorize by JWT failed", "JwtBearer");
       return null;
     }
-    delete user['password'];
     return user;
   }
 }

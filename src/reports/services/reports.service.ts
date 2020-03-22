@@ -14,16 +14,16 @@ export class ReportsService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createReport(reportDto: ReportDto) {
-    return await this.commandBus.execute(new CreateReportCommand(reportDto));
+  async createReport(streamId: string, reportDto: ReportDto) {
+    return await this.commandBus.execute(new CreateReportCommand(streamId, reportDto));
   }
 
-  async updateReport(reportDto: ReportDto) {
-    return await this.commandBus.execute(new UpdateReportCommand(reportDto));
+  async updateReport(streamId: string, reportDto: ReportDto) {
+    return await this.commandBus.execute(new UpdateReportCommand(streamId, reportDto));
   }
 
-  async deleteReport(reportIdDto: ReportIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteReportCommand(reportIdDto));
+  async deleteReport(streamId: string, reportIdDto: ReportIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteReportCommand(streamId, reportIdDto));
   }
 
   async findReports(getReportsQuery: GetReportsQuery) {

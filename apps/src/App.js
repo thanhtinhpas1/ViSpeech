@@ -22,11 +22,9 @@ import RegisterPage from 'components/common/RegisterPage/RegisterPage.container'
 // import ForgetPasswordContainer from 'components/common/ForgetPassword/ForgetPassword.container'
 // import ResetPasswordContainer from 'components/common/ResetPassword/ResetPassword.container'
 // import RegisterPageContainer from 'components/common/RegisterPage/RegisterPage.container'
-import { getFiles } from 'redux/token/token.actions'
 
 const App = ({ currentUser }) => {
   const [isCssLoaded, setIsCssLoaded] = useState(false)
-  const [isJsLoaded, setIsJsLoaded] = useState(false)
   const [isUser, setIsUser] = useState(null)
 
   useEffect(() => {
@@ -108,21 +106,21 @@ const App = ({ currentUser }) => {
           setIsCssLoaded(true)
           // if (isCssLoaded) {
           // load script
+          // let script = await loadScript(
+          //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/jquery.dataTables.min.js`,
+          //   'customer-jquery.dataTables.min.js',
+          //   'on'
+          // )
+          // console.log(`${script.id} is loaded`)
+          // // load script
+          // script = await loadScript(
+          //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/dataTables.bootstrap4.min.js`,
+          //   'customer-dataTables.bootstrap4.min.js',
+          //   'on'
+          // )
+          // console.log(`${script.id} is loaded`)
+          // load script
           let script = await loadScript(
-            `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/jquery.dataTables.min.js`,
-            'customer-jquery.dataTables.min.js',
-            'on'
-          )
-          console.log(`${script.id} is loaded`)
-          // load script
-          script = await loadScript(
-            `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/dataTables.bootstrap4.min.js`,
-            'customer-dataTables.bootstrap4.min.js',
-            'on'
-          )
-          console.log(`${script.id} is loaded`)
-          // load script
-          script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
             'customer-bootstrap.min.js',
             'on'
@@ -214,7 +212,6 @@ const App = ({ currentUser }) => {
           // }
         }
       }
-      setIsJsLoaded(true)
     }
 
     async function loadJsFiles(isLoadJsFiles) {
@@ -242,19 +239,19 @@ const App = ({ currentUser }) => {
       )
       console.log(`${script.id} is ${status}`)
 
-      script = await loadScript(
-        `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/jquery.dataTables.min.js`,
-        'customer-jquery.dataTables.min.js',
-        action
-      )
-      console.log(`${script.id} is ${status}`)
+      // script = await loadScript(
+      //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/jquery.dataTables.min.js`,
+      //   'customer-jquery.dataTables.min.js',
+      //   action
+      // )
+      // console.log(`${script.id} is ${status}`)
 
-      script = await loadScript(
-        `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/dataTables.bootstrap4.min.js`,
-        'customer-dataTables.bootstrap4.min.js',
-        action
-      )
-      console.log(`${script.id} is ${status}`)
+      // script = await loadScript(
+      //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/dataTables.bootstrap4.min.js`,
+      //   'customer-dataTables.bootstrap4.min.js',
+      //   action
+      // )
+      // console.log(`${script.id} is ${status}`)
 
       // script = await loadScript(
       //   `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
@@ -370,14 +367,8 @@ const App = ({ currentUser }) => {
     <Switch>
       {isCssLoaded && (
         <>
-          <Route
-            path={CUSTOMER_PATH}
-            render={() => <RouteCustomer isJsLoaded={isJsLoaded} currentUser={currentUser} />}
-          />
-          <Route
-            path={ADMIN_PATH}
-            render={() => <RouteAdmin isJsLoaded={isJsLoaded} currentUser={currentUser} />}
-          />
+          <Route path={CUSTOMER_PATH} render={() => <RouteCustomer currentUser={currentUser} />} />
+          <Route path={ADMIN_PATH} render={() => <RouteAdmin currentUser={currentUser} />} />
           {currentUser && isUser != null ? (
             <>
               <Route exact path="/">

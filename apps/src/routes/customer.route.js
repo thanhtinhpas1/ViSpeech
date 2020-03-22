@@ -7,12 +7,12 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { CUSTOMER_PATH } from 'utils/constant'
 import CustomerLayout from 'components/customer/CustomerLayout'
 import CustomerHomePage from 'components/customer/HomePage/HomePage.container'
-import TransactionsPage from 'components/customer/TransactionsPage/TransactionsPage.component'
+import TransactionsPage from 'components/customer/TransactionsPage/TransactionsPage.container'
 import TransactionDetailsPage from 'components/customer/TransactionDetailsPage/TransactionDetailsPage.component'
 import TokensWalletPage from 'components/customer/TokensWalletPage/TokensWalletPage.container'
 import ProfilePage from 'components/customer/ProfilePage/ProfilePage.component'
 
-const RouteCustomer = ({ currentUser, isJsLoaded }) => {
+const RouteCustomer = ({ currentUser }) => {
   return (
     <Switch>
       {/* WITHOUT login, user can access those links */}
@@ -27,7 +27,7 @@ const RouteCustomer = ({ currentUser, isJsLoaded }) => {
             path={`${CUSTOMER_PATH}/transactions`}
             render={() => (
               <CustomerLayout>
-                <TransactionsPage isJsLoaded={isJsLoaded} />
+                <TransactionsPage />
               </CustomerLayout>
             )}
           />
@@ -43,7 +43,7 @@ const RouteCustomer = ({ currentUser, isJsLoaded }) => {
             path={`${CUSTOMER_PATH}/tokens-wallet`}
             render={() => (
               <CustomerLayout>
-                <TokensWalletPage isJsLoaded={isJsLoaded} />
+                <TokensWalletPage />
               </CustomerLayout>
             )}
           />

@@ -1,11 +1,11 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { IEvent, IEventPublisher, IMessageSource } from '@nestjs/cqrs';
-import { TCPClient } from 'geteventstore-promise';
+import {Inject, Injectable, Logger} from '@nestjs/common';
+import {IEvent, IEventPublisher, IMessageSource} from '@nestjs/cqrs';
+import {TCPClient} from 'geteventstore-promise';
 import * as http from 'http';
-import { Subject } from 'rxjs';
+import {Subject} from 'rxjs';
 import * as xml2js from 'xml2js';
-import { config } from '../../../config';
-import { BaseEventStore } from './base-event-store.class';
+import {config} from '../../../config';
+import {BaseEventStore} from './base-event-store.class';
 
 const eventStoreHostUrl = config.EVENT_STORE_SETTINGS.protocol +
     `://${config.EVENT_STORE_SETTINGS.hostname}:${config.EVENT_STORE_SETTINGS.httpPort}/streams/`;
@@ -38,9 +38,8 @@ export class EventStore implements IEventPublisher, IMessageSource {
 
     async publish<T extends IEvent>(event: T) {
         const message = JSON.parse(JSON.stringify(event));
-        const messageKeys = Object.keys(message);
-        const id = message[messageKeys[0]] || message[messageKeys[1]];
-        const streamName = `${this.category}-${id}`;
+        const streamId = message.streamId;
+        const streamName = `${this.category}-${streamId}`;
         const type = event.constructor.name;
         try {
             Logger.log('Write event ...', streamName);
@@ -73,7 +72,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                         rawData += chunk;
                     });
                     res.on('end', () => {
-                        xml2js.parseString(rawData, { explicitArray: false }, (err, result) => {
+                        xml2js.parseString(rawData, {explicitArray: false}, (err, result) => {
                             if (err) {
                                 console.trace(err);
                                 return;

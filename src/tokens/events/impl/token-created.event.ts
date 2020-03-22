@@ -1,24 +1,24 @@
-import { IEvent } from "@nestjs/cqrs";
-import { TokenDto } from "tokens/dtos/tokens.dto";
+import { IEvent } from '@nestjs/cqrs';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 export class TokenCreatedEvent implements IEvent {
   constructor(
-    public readonly transactionId: string,
+    public readonly streamId: string,
     public readonly tokenDto: TokenDto
   ) { }
 }
 
 export class TokenCreatedSuccessEvent implements IEvent {
   constructor(
-    public readonly transactionId: string,
-    public readonly tokenDto: TokenDto
-  ) {}
+    public readonly streamId: string,
+    public readonly tokenDto: any
+  ) { }
 }
 
-export class TokenCreatedFailEvent implements IEvent {
+export class TokenCreatedFailedEvent implements IEvent {
   constructor(
-    public readonly transactionId: string,
+    public readonly streamId: string,
     public readonly tokenDto: TokenDto,
-    public readonly error: object
+    public readonly error: object,
   ) { }
 }

@@ -1,0 +1,37 @@
+::selection {
+    background-color: #0a1992;
+    color: #fff;
+}
+
+::-moz-selection {
+    background-color: #0a1992;
+    color: #fff;
+}
+
+
+a,
+.theme-color,
+.mm-column li.mm-header > a,
+.mm-column li:not(.mm-header) a:hover {
+    color: #0a1992;
+}
+
+.theme-before:before,
+.theme-after:after,
+.btn-theme,
+.theme-bg,
+.theme-hover:hover,
+.fixed-header .header-nav a.btn {
+    background: #0a1992;
+}
+
+.theme-hover:hover {
+    border-color: #0a1992;
+}
+
+
+@media (max-width: 991px) {
+    .header-nav a.btn {
+        background: #0a1992;
+    }
+}

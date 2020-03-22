@@ -13,15 +13,15 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
   constructor(
     @InjectRepository(OrderDto)
     private readonly repository: Repository<OrderDto>
-  ) {}
+  ) { }
 
   async handle(event: OrderUpdatedEvent) {
+    Logger.log(event.orderDto._id, "OrderUpdatedEvent"); // write here
+    const { streamId, orderDto } = event;
+    const { _id, ...orderInfo } = orderDto;
+
     try {
-      Logger.log(event.transactionId, "OrderUpdatedEvent"); // write here
-      const { _id, ...orderInfo } = event.orderDto;
-      orderInfo.tokenTypeId = null;
-      const formattedOrderInfo = Utils.removeNullOrEmptyPropertyOfObj(orderInfo);
-      Logger.log(formattedOrderInfo, "OrderUpdatedEvent formattedOrderInfo"); // write here
+      const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenType']);
       return await this.repository.update({ _id }, formattedOrderInfo);
     } catch (error) {
       Logger.error(error, "", "OrderUpdatedEvent");
