@@ -1,4 +1,0 @@
-- Server static for UI
-- Docker compose for all
-- Model implement for all Business
-- CRUD for all module
