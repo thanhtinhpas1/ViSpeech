@@ -91,9 +91,9 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
     },
   ]
 
-  const getUserTokens = useCallback(({ pageIndex, pageSize }) => {
-    const userId = currentUser._id
-    getTokens({ userId, pageIndex, pageSize })
+  // const getUserTokens = useCallback(({ pageIndex, pageSize }) => {
+  //   const userId = currentUser._id
+  //   getTokens({ userId, pageIndex, pageSize })
   }, [])
 
   return (
