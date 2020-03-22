@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Delivery') {
             steps {
-                sh 'chmod +x ./scripts/up.sh && ./scripts/up.sh'
+                sh 'docker-compose up'
             }
         }
     }
