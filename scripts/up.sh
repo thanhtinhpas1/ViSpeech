@@ -15,4 +15,4 @@ export RELEASE_PAGE_PORT=80
  docker-compose rm --all &&
  docker-compose pull &&
  docker-compose build &&
- docker-compose up -d --force-recreate
+ docker-compose up --force-recreate

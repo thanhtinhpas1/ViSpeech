@@ -12,7 +12,7 @@ export class TokenCreatedSuccessEvent implements IEvent {
   constructor(
     public readonly streamId: string,
     public readonly tokenDto: any
-  ) {}
+  ) { }
 }
 
 export class TokenCreatedFailedEvent implements IEvent {

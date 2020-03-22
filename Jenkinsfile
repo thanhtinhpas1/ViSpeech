@@ -2,17 +2,13 @@ pipeline {
     agent any
     environment {
         PATH = './'
+        GIT_HOST = 'https://github.com/thanhtinhpas1/ViSpeech'
+        BRANCH_HOST = 'dev-master'
     }
     stages {
-        stage('Build') {
-            steps {
-                sh 'npm install'
-
-            }
-        }
         stage('Delivery') {
             steps {
-                sh 'npm start'
+                sh 'chmod +x ./scripts/up.sh && ./scripts/up.sh'
             }
         }
     }

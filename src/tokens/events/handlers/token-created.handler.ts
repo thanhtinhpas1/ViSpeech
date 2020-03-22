@@ -41,10 +41,10 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
       this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error));
     }
   }
+}
 
-  @EventsHandler(TokenCreatedSuccessEvent)
-  export class TokenCreatedSuccessHandler
-  implements IEventHandler < TokenCreatedSuccessEvent > {
+@EventsHandler(TokenCreatedSuccessEvent)
+export class TokenCreatedSuccessHandler implements IEventHandler<TokenCreatedSuccessEvent> {
   handle(event: TokenCreatedSuccessEvent) {
     Logger.log(event.tokenDto._id, "TokenCreatedSuccessEvent");
   }
