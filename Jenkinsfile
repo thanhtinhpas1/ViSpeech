@@ -12,13 +12,13 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'npm install'
-                sh 'cd apps && npm install'
+                sh 'npm install ./apps'
             }
         }
         stage('Delivery') {
             steps {
                 sh 'npm run build'
-                sh 'start:prod'
+                sh 'npm run start:prod'
             }
         }
     }

@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && tsc && rm -rf ./apps/build && react-scripts build",
+    "build": "rm -rf dist && tsc && rm -rf ./apps/build && npm run build ./apps",
     "build:docker": "docker build --force-rm -t vispeech .",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon",
