@@ -12,12 +12,12 @@ export class DeleteReportHandler
     ) {
     }
 
-    async execute(command: DeleteReportCommand) {
-        Logger.log('Async DeleteReportHandler...', 'DeleteReportCommand');
-        const {reportIdDto} = command;
-        const report = this.publisher.mergeObjectContext(
-            await this.repository.deleteReport(reportIdDto._id)
-        );
-        report.commit();
-    }
+  async execute(command: DeleteReportCommand) {
+    Logger.log("Async DeleteReportHandler...", "DeleteReportCommand");
+    const { streamId, reportIdDto } = command;
+    const report = this.publisher.mergeObjectContext(
+      await this.repository.deleteReport(streamId, reportIdDto._id)
+    );
+    report.commit();
+  }
 }

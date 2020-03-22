@@ -1,4 +1,4 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import HomePage from './HomePage.component'
 
 const mapStateToProps = state => ({})

@@ -1,32 +1,53 @@
 import { Injectable } from "@nestjs/common";
 import { Token } from "../models/token.model";
-import { UserDto } from "users/dtos/users.dto";
+import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Injectable()
 export class TokenRepository {
-  async createToken(tokenDto, userDto: UserDto) {
+  async createToken(streamId: string, tokenDto: TokenDto) {
     const token = new Token(undefined);
-    token.setData(tokenDto, userDto);
-    token.createToken();
-    return token;
-  }
-
-  async updateToken(tokenDto) {
-    const token = new Token(tokenDto.id);
     token.setData(tokenDto);
-    token.updateToken();
+    token.createToken(streamId);
     return token;
   }
 
-  async deleteToken(tokenId) {
-    const token = new Token(tokenId);
-    token.deleteToken();
+  async createFreeToken(streamId: string, tokenDto: TokenDto) {
+    const token = new Token(undefined);
+    token.setData(tokenDto);
+    token.createFreeToken(streamId);
     return token;
   }
 
-  async welcomeToken(tokenId) {
+  async createOrderedToken(streamId: string, tokenDto: TokenDto) {
+    const token = new Token(undefined);
+    token.setData(tokenDto);
+    token.createOrderedToken(streamId);
+    return token;
+  }
+
+  async updateToken(streamId: string, tokenDto: TokenDto) {
+    const token = new Token(undefined);
+    token.setData(tokenDto);
+    token.updateToken(streamId);
+    return token;
+  }
+
+  async deleteToken(streamId: string, tokenId: string) {
     const token = new Token(tokenId);
-    token.welcomeToken();
+    token.deleteToken(streamId);
+    return token;
+  }
+
+  async deleteTokenByUserId(streamId: string, userId: string) {
+    const token = new Token(undefined);
+    token.setData(userId);
+    token.deleteTokenByUserId(streamId);
+    return token;
+  }
+
+  async welcomeToken(streamId: string, tokenId: string) {
+    const token = new Token(tokenId);
+    token.welcomeToken(streamId);
     return token;
   }
 }

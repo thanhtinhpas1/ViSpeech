@@ -6,7 +6,6 @@ export class TokensSagas {
   // tokenCreated = (events$: Observable<any>): Observable<ICommand> => {
   //   return events$.pipe(
   //     ofType(TokenCreatedEvent),
-  //     delay(1000),
   //     map(event => {
   //       Logger.log("Inside [TokensSagas] Saga", "TokensSagas");
   //       const tokenId = event.tokenDto[0].id;

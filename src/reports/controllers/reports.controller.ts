@@ -1,58 +1,56 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Roles } from "auth/roles.decorator";
+import { CONSTANTS } from "common/constant";
+import { FindReportQuery } from "reports/queries/impl/find-report.query";
+import { GetReportsQuery } from "reports/queries/impl/get-reports.query";
 import { ReportDto, ReportIdRequestParamsDto } from "../dtos/reports.dto";
 import { ReportsService } from "../services/reports.service";
-import { GetReportsQuery } from "reports/queries/impl/get-reports.query";
-import { FindReportQuery } from "reports/queries/impl/find-report.query";
+import { AuthGuard } from "@nestjs/passport";
+import { ReportGuard } from "auth/guards/report.guard";
 
 @Controller("reports")
+@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportGuard)
 @ApiTags("Reports")
 export class ReportsController {
-  constructor(private readonly reportsService: ReportsService) {}
+  constructor(private readonly reportsService: ReportsService) { }
 
   /* Create Report */
-
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Create Report"] })
   @ApiResponse({ status: 200, description: "Create Report." })
   @Post()
   async createReport(@Body() reportDto: ReportDto): Promise<ReportDto> {
-    return this.reportsService.createReport(reportDto);
+    const streamId = reportDto._id;
+    return this.reportsService.createReport(streamId, reportDto);
   }
 
   /* Update Report */
-
+  // TODO: verify why we need to update report
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Update Report"] })
   @ApiResponse({ status: 200, description: "Update Report." })
-  @Put(":id")
+  @Put(":_id")
   async updateReport(
     @Param() reportIdDto: ReportIdRequestParamsDto,
     @Body() reportDto: ReportDto
   ) {
-    return this.reportsService.updateReport({
-      _id: reportIdDto._id,
-      ...reportDto
+    const streamId = reportIdDto._id;
+    return this.reportsService.updateReport(streamId, {
+      ...reportDto,
+      _id: reportIdDto._id
     });
   }
 
   /* Delete Report */
-
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Delete Report"] })
   @ApiResponse({ status: 200, description: "Delete Report." })
-  @Delete(":id")
+  @Roles([CONSTANTS.ROLE.ADMIN])
+  @Delete(":_id")
   async deleteReport(@Param() reportIdDto: ReportIdRequestParamsDto) {
-    return this.reportsService.deleteReport(reportIdDto);
+    const streamId = reportIdDto._id;
+    return this.reportsService.deleteReport(streamId, reportIdDto);
   }
 
   /* List Reports */
@@ -66,7 +64,6 @@ export class ReportsController {
   }
 
   /* Find Report */
-
   /*--------------------------------------------*/
   @ApiOperation({ tags: ["Get Report"] })
   @ApiResponse({ status: 200, description: "Get Report." })

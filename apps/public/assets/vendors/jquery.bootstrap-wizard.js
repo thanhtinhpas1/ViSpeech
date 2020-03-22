@@ -10,8 +10,8 @@
  * Authors: Vadim Vincent Gabriel (http://vadimg.com), Jason Gill (www.gilluminate.com)
  */
 ;
-(function ($) {
-    var bootstrapWizardCreate = function (element, options) {
+(function($) {
+    var bootstrapWizardCreate = function(element, options) {
         var element = $(element);
         var obj = this;
 
@@ -23,11 +23,11 @@
         var $activeTab = null;
         var $navigation = null;
 
-        this.rebindClick = function (selector, fn) {
+        this.rebindClick = function(selector, fn) {
             selector.unbind('click', fn).bind('click', fn);
         }
 
-        this.fixNavigationButtons = function () {
+        this.fixNavigationButtons = function() {
             // Get the current active tab
             if (!$activeTab.length) {
                 // Select first one
@@ -50,7 +50,7 @@
             }
         };
 
-        this.next = function (e) {
+        this.next = function(e) {
 
             // If we clicked the last then dont activate this
             if (element.hasClass('last')) {
@@ -63,13 +63,12 @@
 
             // Did we click the last button
             $index = obj.nextIndex();
-            if ($index > obj.navigationLength()) {
-            } else {
+            if ($index > obj.navigationLength()) {} else {
                 $navigation.find(baseItemSelector + ':eq(' + $index + ') a').tab('show');
             }
         };
 
-        this.previous = function (e) {
+        this.previous = function(e) {
 
             // If we clicked the first then dont activate this
             if (element.hasClass('first')) {
@@ -81,13 +80,12 @@
             }
 
             $index = obj.previousIndex();
-            if ($index < 0) {
-            } else {
+            if ($index < 0) {} else {
                 $navigation.find(baseItemSelector + ':eq(' + $index + ') a').tab('show');
             }
         };
 
-        this.first = function (e) {
+        this.first = function(e) {
             if ($settings.onFirst && typeof $settings.onFirst === 'function' && $settings.onFirst($activeTab, $navigation, obj.firstIndex()) === false) {
                 return false;
             }
@@ -99,7 +97,7 @@
             $navigation.find(baseItemSelector + ':eq(0) a').tab('show');
 
         };
-        this.last = function (e) {
+        this.last = function(e) {
             if ($settings.onLast && typeof $settings.onLast === 'function' && $settings.onLast($activeTab, $navigation, obj.lastIndex()) === false) {
                 return false;
             }
@@ -110,59 +108,59 @@
             }
             $navigation.find(baseItemSelector + ':eq(' + obj.navigationLength() + ') a').tab('show');
         };
-        this.currentIndex = function () {
+        this.currentIndex = function() {
             return $navigation.find(baseItemSelector).index($activeTab);
         };
-        this.firstIndex = function () {
+        this.firstIndex = function() {
             return 0;
         };
-        this.lastIndex = function () {
+        this.lastIndex = function() {
             return obj.navigationLength();
         };
-        this.getIndex = function (e) {
+        this.getIndex = function(e) {
             return $navigation.find(baseItemSelector).index(e);
         };
-        this.nextIndex = function () {
+        this.nextIndex = function() {
             return $navigation.find(baseItemSelector).index($activeTab) + 1;
         };
-        this.previousIndex = function () {
+        this.previousIndex = function() {
             return $navigation.find(baseItemSelector).index($activeTab) - 1;
         };
-        this.navigationLength = function () {
+        this.navigationLength = function() {
             return $navigation.find(baseItemSelector).length - 1;
         };
-        this.activeTab = function () {
+        this.activeTab = function() {
             return $activeTab;
         };
-        this.nextTab = function () {
+        this.nextTab = function() {
             return $navigation.find(baseItemSelector + ':eq(' + (obj.currentIndex() + 1) + ')').length ? $navigation.find(baseItemSelector + ':eq(' + (obj.currentIndex() + 1) + ')') : null;
         };
-        this.previousTab = function () {
+        this.previousTab = function() {
             if (obj.currentIndex() <= 0) {
                 return null;
             }
             return $navigation.find(baseItemSelector + ':eq(' + parseInt(obj.currentIndex() - 1) + ')');
         };
-        this.show = function (index) {
+        this.show = function(index) {
             if (isNaN(index)) {
                 return element.find(baseItemSelector + ' a[href=#' + index + ']').tab('show');
             } else {
                 return element.find(baseItemSelector + ':eq(' + index + ') a').tab('show');
             }
         };
-        this.disable = function (index) {
+        this.disable = function(index) {
             $navigation.find(baseItemSelector + ':eq(' + index + ')').addClass('disabled');
         };
-        this.enable = function (index) {
+        this.enable = function(index) {
             $navigation.find(baseItemSelector + ':eq(' + index + ')').removeClass('disabled');
         };
-        this.hide = function (index) {
+        this.hide = function(index) {
             $navigation.find(baseItemSelector + ':eq(' + index + ')').hide();
         };
-        this.display = function (index) {
+        this.display = function(index) {
             $navigation.find(baseItemSelector + ':eq(' + index + ')').show();
         };
-        this.remove = function (args) {
+        this.remove = function(args) {
             var $index = args[0];
             var $removeTabPane = typeof args[1] != 'undefined' ? args[1] : false;
             var $item = $navigation.find(baseItemSelector + ':eq(' + $index + ')');
@@ -177,7 +175,7 @@
             $item.remove();
         };
 
-        var innerTabClick = function (e) {
+        var innerTabClick = function(e) {
             // Get the index of the clicked tab
             var clickedIndex = $navigation.find(baseItemSelector).index($(e.currentTarget).parent(baseItemSelector));
             if ($settings.onTabClick && typeof $settings.onTabClick === 'function' && $settings.onTabClick($activeTab, $navigation, obj.currentIndex(), clickedIndex) === false) {
@@ -185,7 +183,7 @@
             }
         };
 
-        var innerTabShown = function (e) { // use shown instead of show to help prevent double firing
+        var innerTabShown = function(e) { // use shown instead of show to help prevent double firing
             $element = $(e.target).parent();
             var nextTab = $navigation.find(baseItemSelector).index($element);
 
@@ -202,7 +200,7 @@
             obj.fixNavigationButtons();
         };
 
-        this.resetWizard = function () {
+        this.resetWizard = function() {
 
             // remove the existing handlers
             $('a[data-toggle="tab"]', $navigation).off('click', innerTabClick);
@@ -241,7 +239,7 @@
         // attach to both shown and shown.bs.tab to support Bootstrap versions 2.3.2 and 3.0.0
         $('a[data-toggle="tab"]', $navigation).on('shown shown.bs.tab', innerTabShown);
     };
-    $.fn.bootstrapWizard = function (options) {
+    $.fn.bootstrapWizard = function(options) {
         //expose methods
         if (typeof options == 'string') {
             var args = Array.prototype.slice.call(arguments, 1)
@@ -250,7 +248,7 @@
             }
             return this.data('bootstrapWizard')[options](args);
         }
-        return this.each(function (index) {
+        return this.each(function(index) {
             var element = $(this);
             // Return early if this element already has a plugin instance
             if (element.data('bootstrapWizard')) return;

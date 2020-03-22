@@ -15,19 +15,19 @@ export class Report extends AggregateRoot {
     this.data = data;
   }
 
-  createReport() {
-    this.apply(new ReportCreatedEvent(this.data));
+  createReport(streamId: string) {
+    this.apply(new ReportCreatedEvent(streamId, this.data));
   }
 
-  updateReport() {
-    this.apply(new ReportUpdatedEvent(this.data));
+  updateReport(streamId: string) {
+    this.apply(new ReportUpdatedEvent(streamId, this.data));
   }
 
-  welcomeReport() {
-    this.apply(new ReportWelcomedEvent(this.id));
+  welcomeReport(streamId: string) {
+    this.apply(new ReportWelcomedEvent(streamId, this.id));
   }
 
-  deleteReport() {
-    this.apply(new ReportDeletedEvent(this.id));
+  deleteReport(streamId: string) {
+    this.apply(new ReportDeletedEvent(streamId, this.id));
   }
 }

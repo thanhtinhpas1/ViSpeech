@@ -2,16 +2,16 @@
  * sweetalert2 v5.3.5
  * Released under the MIT License.
  */
-(function (global, factory) {
+(function(global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
-            (global.Sweetalert2 = factory());
-}(this, function () {
+        (global.Sweetalert2 = factory());
+}(this, function() {
     'use strict';
 
     var swalPrefix = 'swal2-'
 
-    var prefix = function (items) {
+    var prefix = function(items) {
         var result = {}
         for (var i in items) {
             result[items[i]] = swalPrefix + items[i]
@@ -153,7 +153,7 @@
         sweetContainer.innerHTML = sweetHTML
     }
 
-    var extend = function (a, b) {
+    var extend = function(a, b) {
         for (var key in b) {
             if (b.hasOwnProperty(key)) {
                 a[key] = b[key]
@@ -166,7 +166,7 @@
     /*
      * Set hover, active and focus-states for buttons (source: http://www.sitepoint.com/javascript-generate-lighter-darker-color)
      */
-    var colorLuminance = function (hex, lum) {
+    var colorLuminance = function(hex, lum) {
         // Validate hex string
         hex = String(hex).replace(/[^0-9a-f]/gi, '')
         if (hex.length < 6) {
@@ -195,7 +195,7 @@
     /*
      * Add modal + overlay to DOM
      */
-    var init = function () {
+    var init = function() {
         if (typeof document === 'undefined') {
             console.error('SweetAlert2 requires document to initialize')
             return
@@ -213,40 +213,40 @@
         var checkbox = modal.querySelector('.' + swalClasses.checkbox + ' input')
         var textarea = getChildByClass(modal, swalClasses.textarea)
 
-        input.oninput = function () {
+        input.oninput = function() {
             sweetAlert.resetValidationError()
         }
 
-        input.onkeyup = function (event) {
+        input.onkeyup = function(event) {
             event.stopPropagation()
             if (event.keyCode === 13) {
                 sweetAlert.clickConfirm()
             }
         }
 
-        file.onchange = function () {
+        file.onchange = function() {
             sweetAlert.resetValidationError()
         }
 
-        range.oninput = function () {
-            sweetAlert.resetValidationError()
-            range.previousSibling.value = range.value
-        }
-
-        range.onchange = function () {
+        range.oninput = function() {
             sweetAlert.resetValidationError()
             range.previousSibling.value = range.value
         }
 
-        select.onchange = function () {
+        range.onchange = function() {
+            sweetAlert.resetValidationError()
+            range.previousSibling.value = range.value
+        }
+
+        select.onchange = function() {
             sweetAlert.resetValidationError()
         }
 
-        checkbox.onchange = function () {
+        checkbox.onchange = function() {
             sweetAlert.resetValidationError()
         }
 
-        textarea.oninput = function () {
+        textarea.oninput = function() {
             sweetAlert.resetValidationError()
         }
 
@@ -256,44 +256,44 @@
     /*
      * Manipulate DOM
      */
-    var elementByClass = function (className) {
+    var elementByClass = function(className) {
         return sweetContainer.querySelector('.' + className)
     }
 
-    var getModal = function () {
+    var getModal = function() {
         return document.body.querySelector('.' + swalClasses.modal) || init()
     }
 
-    var getIcons = function () {
+    var getIcons = function() {
         var modal = getModal()
         return modal.querySelectorAll('.' + swalClasses.icon)
     }
 
-    var getSpacer = function () {
+    var getSpacer = function() {
         return elementByClass(swalClasses.spacer)
     }
 
-    var getProgressSteps = function () {
+    var getProgressSteps = function() {
         return elementByClass(swalClasses.progresssteps)
     }
 
-    var getValidationError = function () {
+    var getValidationError = function() {
         return elementByClass(swalClasses.validationerror)
     }
 
-    var getConfirmButton = function () {
+    var getConfirmButton = function() {
         return elementByClass(swalClasses.confirm)
     }
 
-    var getCancelButton = function () {
+    var getCancelButton = function() {
         return elementByClass(swalClasses.cancel)
     }
 
-    var getCloseButton = function () {
+    var getCloseButton = function() {
         return elementByClass(swalClasses.close)
     }
 
-    var getFocusableElements = function (focusCancel) {
+    var getFocusableElements = function(focusCancel) {
         var buttons = [getConfirmButton(), getCancelButton()]
         if (focusCancel) {
             buttons.reverse()
@@ -303,11 +303,11 @@
         ))
     }
 
-    var hasClass = function (elem, className) {
+    var hasClass = function(elem, className) {
         return elem.classList.contains(className)
     }
 
-    var focusInput = function (input) {
+    var focusInput = function(input) {
         input.focus()
 
         // place cursor at end of text in text input
@@ -319,27 +319,27 @@
         }
     }
 
-    var addClass = function (elem, className) {
+    var addClass = function(elem, className) {
         if (!elem || !className) {
             return
         }
         var classes = className.split(/\s+/)
-        classes.forEach(function (className) {
+        classes.forEach(function(className) {
             elem.classList.add(className)
         })
     }
 
-    var removeClass = function (elem, className) {
+    var removeClass = function(elem, className) {
         if (!elem || !className) {
             return
         }
         var classes = className.split(/\s+/)
-        classes.forEach(function (className) {
+        classes.forEach(function(className) {
             elem.classList.remove(className)
         })
     }
 
-    var getChildByClass = function (elem, className) {
+    var getChildByClass = function(elem, className) {
         for (var i = 0; i < elem.childNodes.length; i++) {
             if (hasClass(elem.childNodes[i], className)) {
                 return elem.childNodes[i]
@@ -347,7 +347,7 @@
         }
     }
 
-    var show = function (elem, display) {
+    var show = function(elem, display) {
         if (!display) {
             display = 'block'
         }
@@ -355,23 +355,23 @@
         elem.style.display = display
     }
 
-    var hide = function (elem) {
+    var hide = function(elem) {
         elem.style.opacity = ''
         elem.style.display = 'none'
     }
 
-    var empty = function (elem) {
+    var empty = function(elem) {
         while (elem.firstChild) {
             elem.removeChild(elem.firstChild)
         }
     }
 
     // borrowed from jqeury $(elem).is(':visible') implementation
-    var isVisible = function (elem) {
+    var isVisible = function(elem) {
         return elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length
     }
 
-    var removeStyleProperty = function (elem, property) {
+    var removeStyleProperty = function(elem, property) {
         if (elem.style.removeProperty) {
             elem.style.removeProperty(property)
         } else {
@@ -379,7 +379,7 @@
         }
     }
 
-    var fireClick = function (node) {
+    var fireClick = function(node) {
         // Taken from http://www.nonobtrusive.com/2011/11/29/programatically-fire-crossbrowser-click-event-with-javascript/
         // Then fixed for today's Chrome browser.
         if (typeof MouseEvent === 'function') {
@@ -402,7 +402,7 @@
         }
     }
 
-    var stopEventPropagation = function (e) {
+    var stopEventPropagation = function(e) {
         // In particular, make sure the space bar doesn't scroll the main window.
         if (typeof e.stopPropagation === 'function') {
             e.stopPropagation()
@@ -412,7 +412,7 @@
         }
     }
 
-    var animationEndEvent = (function () {
+    var animationEndEvent = (function() {
         var testEl = document.createElement('div')
         var transEndEventNames = {
             'WebkitAnimation': 'webkitAnimationEnd',
@@ -431,7 +431,7 @@
     })()
 
     // Reset the page to its previous state
-    var resetPrevState = function () {
+    var resetPrevState = function() {
         var modal = getModal()
         window.onkeydown = states.previousWindowKeyDown
         if (states.previousActiveElement && states.previousActiveElement.focus) {
@@ -442,7 +442,7 @@
 
     // Measure width of scrollbar
     // https://github.com/twbs/bootstrap/blob/master/js/modal.js#L279-L286
-    var measureScrollbar = function () {
+    var measureScrollbar = function() {
         var scrollDiv = document.createElement('div')
         scrollDiv.style.width = '50px'
         scrollDiv.style.height = '50px'
@@ -455,12 +455,12 @@
 
     // JavaScript Debounce Function
     // https://davidwalsh.name/javascript-debounce-function
-    var debounce = function (func, wait, immediate) {
+    var debounce = function(func, wait, immediate) {
         var timeout
-        return function () {
+        return function() {
             var context = this
             var args = arguments
-            var later = function () {
+            var later = function() {
                 timeout = null
                 if (!immediate) func.apply(context, args)
             }
@@ -478,7 +478,7 @@
     /*
      * Set type, text and actions on modal
      */
-    var setParameters = function (params) {
+    var setParameters = function(params) {
         var modal = getModal()
 
         for (var param in params) {
@@ -547,7 +547,7 @@
                     '(currentProgressStep like JS arrays starts from 0)'
                 )
             }
-            params.progressSteps.forEach(function (step, index) {
+            params.progressSteps.forEach(function(step, index) {
                 var circle = document.createElement('li')
                 addClass(circle, swalClasses.progresscircle)
                 circle.innerHTML = step
@@ -692,7 +692,7 @@
     /*
      * Animations
      */
-    var openModal = function (animation, onComplete) {
+    var openModal = function(animation, onComplete) {
         var modal = getModal()
         if (animation) {
             addClass(modal, swalClasses.show)
@@ -784,8 +784,8 @@
                 params.extraParams = arguments[0].extraParams
 
                 if (params.input === 'email' && params.inputValidator === null) {
-                    params.inputValidator = function (email) {
-                        return new Promise(function (resolve, reject) {
+                    params.inputValidator = function(email) {
+                        return new Promise(function(resolve, reject) {
                             var emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
                             if (emailRegex.test(email)) {
                                 resolve()
@@ -808,17 +808,17 @@
         // Modal interactions
         var modal = getModal()
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             // Close on timer
             if (params.timer) {
-                modal.timeout = setTimeout(function () {
+                modal.timeout = setTimeout(function() {
                     sweetAlert.closeModal(params.onClose)
                     reject('timer')
                 }, params.timer)
             }
 
             // Get input element by specified type or, if type isn't specified, by params.input
-            var getInput = function (inputType) {
+            var getInput = function(inputType) {
                 inputType = inputType || params.input
                 switch (inputType) {
                     case 'select':
@@ -838,7 +838,7 @@
             }
 
             // Get the value of the modal input
-            var getInputValue = function () {
+            var getInputValue = function() {
                 var input = getInput()
                 if (!input) {
                     return null
@@ -857,7 +857,7 @@
 
             // input autofocus
             if (params.input) {
-                setTimeout(function () {
+                setTimeout(function() {
                     var input = getInput()
                     if (input) {
                         focusInput(input)
@@ -865,18 +865,18 @@
                 }, 0)
             }
 
-            var confirm = function (value) {
+            var confirm = function(value) {
                 if (params.showLoaderOnConfirm) {
                     sweetAlert.showLoading()
                 }
 
                 if (params.preConfirm) {
                     params.preConfirm(value, params.extraParams).then(
-                        function (preConfirmValue) {
+                        function(preConfirmValue) {
                             sweetAlert.closeModal(params.onClose)
                             resolve(preConfirmValue || value)
                         },
-                        function (error) {
+                        function(error) {
                             sweetAlert.hideLoading()
                             if (error) {
                                 sweetAlert.showValidationError(error)
@@ -890,7 +890,7 @@
             }
 
             // Mouse interactions
-            var onButtonEvent = function (event) {
+            var onButtonEvent = function(event) {
                 var e = event || window.event
                 var target = e.target || e.srcElement
                 var confirmBtn = getConfirmButton()
@@ -936,11 +936,11 @@
                                 if (params.inputValidator) {
                                     sweetAlert.disableInput()
                                     params.inputValidator(inputValue, params.extraParams).then(
-                                        function () {
+                                        function() {
                                             sweetAlert.enableInput()
                                             confirm(inputValue)
                                         },
-                                        function (error) {
+                                        function(error) {
                                             sweetAlert.enableInput()
                                             if (error) {
                                                 sweetAlert.showValidationError(error)
@@ -975,13 +975,13 @@
             }
 
             // Closing modal by close button
-            getCloseButton().onclick = function () {
+            getCloseButton().onclick = function() {
                 sweetAlert.closeModal(params.onClose)
                 reject('close')
             }
 
             // Closing modal by overlay click
-            sweetContainer.onclick = function (e) {
+            sweetContainer.onclick = function(e) {
                 if (e.target !== sweetContainer) {
                     return
                 }
@@ -1085,7 +1085,7 @@
             /**
              * Show spinner instead of Confirm button and disable Cancel button
              */
-            sweetAlert.showLoading = sweetAlert.enableLoading = function () {
+            sweetAlert.showLoading = sweetAlert.enableLoading = function() {
                 show(getSpacer())
                 show($confirmButton, 'inline-block')
                 addClass($confirmButton, swalClasses.loading)
@@ -1097,7 +1097,7 @@
             /**
              * Show spinner instead of Confirm button and disable Cancel button
              */
-            sweetAlert.hideLoading = sweetAlert.disableLoading = function () {
+            sweetAlert.hideLoading = sweetAlert.disableLoading = function() {
                 if (!params.showConfirmButton) {
                     hide($confirmButton)
                     if (!params.showCancelButton) {
@@ -1110,25 +1110,25 @@
                 $cancelButton.disabled = false
             }
 
-            sweetAlert.enableButtons = function () {
+            sweetAlert.enableButtons = function() {
                 $confirmButton.disabled = false
                 $cancelButton.disabled = false
             }
 
-            sweetAlert.disableButtons = function () {
+            sweetAlert.disableButtons = function() {
                 $confirmButton.disabled = true
                 $cancelButton.disabled = true
             }
 
-            sweetAlert.enableConfirmButton = function () {
+            sweetAlert.enableConfirmButton = function() {
                 $confirmButton.disabled = false
             }
 
-            sweetAlert.disableConfirmButton = function () {
+            sweetAlert.disableConfirmButton = function() {
                 $confirmButton.disabled = true
             }
 
-            sweetAlert.enableInput = function () {
+            sweetAlert.enableInput = function() {
                 var input = getInput()
                 if (!input) {
                     return false
@@ -1144,7 +1144,7 @@
                 }
             }
 
-            sweetAlert.disableInput = function () {
+            sweetAlert.disableInput = function() {
                 var input = getInput()
                 if (!input) {
                     return false
@@ -1161,7 +1161,7 @@
             }
 
             // Set modal min-height to disable scrolling inside the modal
-            sweetAlert.recalculateHeight = debounce(function () {
+            sweetAlert.recalculateHeight = debounce(function() {
                 var modal = getModal()
                 var prevState = modal.style.display
                 modal.style.minHeight = ''
@@ -1171,7 +1171,7 @@
             }, 50)
 
             // Show block with validation error
-            sweetAlert.showValidationError = function (error) {
+            sweetAlert.showValidationError = function(error) {
                 var validationError = getValidationError()
                 validationError.innerHTML = error
                 show(validationError)
@@ -1182,7 +1182,7 @@
             }
 
             // Hide block with validation error
-            sweetAlert.resetValidationError = function () {
+            sweetAlert.resetValidationError = function() {
                 var validationError = getValidationError()
                 hide(validationError)
                 sweetAlert.recalculateHeight()
@@ -1193,20 +1193,20 @@
                 }
             }
 
-            sweetAlert.getProgressSteps = function () {
+            sweetAlert.getProgressSteps = function() {
                 return params.progressSteps
             }
 
-            sweetAlert.setProgressSteps = function (progressSteps) {
+            sweetAlert.setProgressSteps = function(progressSteps) {
                 params.progressSteps = progressSteps
                 setParameters(params)
             }
 
-            sweetAlert.showProgressSteps = function () {
+            sweetAlert.showProgressSteps = function() {
                 show(getProgressSteps())
             }
 
-            sweetAlert.hideProgressSteps = function () {
+            sweetAlert.hideProgressSteps = function() {
                 hide(getProgressSteps())
             }
 
@@ -1285,7 +1285,7 @@
                         placeholder.selected = true
                         select.appendChild(placeholder)
                     }
-                    populateInputOptions = function (inputOptions) {
+                    populateInputOptions = function(inputOptions) {
                         for (var optionValue in inputOptions) {
                             var option = document.createElement('option')
                             option.value = optionValue
@@ -1302,7 +1302,7 @@
                 case 'radio':
                     var radio = getChildByClass(modal, swalClasses.radio)
                     radio.innerHTML = ''
-                    populateInputOptions = function (inputOptions) {
+                    populateInputOptions = function(inputOptions) {
                         for (var radioValue in inputOptions) {
                             var id = 1
                             var radioInput = document.createElement('input')
@@ -1360,7 +1360,7 @@
             if (params.input === 'select' || params.input === 'radio') {
                 if (params.inputOptions instanceof Promise) {
                     sweetAlert.showLoading()
-                    params.inputOptions.then(function (inputOptions) {
+                    params.inputOptions.then(function(inputOptions) {
                         sweetAlert.hideLoading()
                         populateInputOptions(inputOptions)
                     })
@@ -1406,7 +1406,7 @@
     /*
      * Global function to determine if swal2 modal is visible
      */
-    sweetAlert.isVisible = function () {
+    sweetAlert.isVisible = function() {
         var modal = getModal()
         return isVisible(modal)
     }
@@ -1414,21 +1414,21 @@
     /*
      * Global function for chaining sweetAlert modals
      */
-    sweetAlert.queue = function (steps) {
+    sweetAlert.queue = function(steps) {
         queue = steps
         var modal = getModal()
-        var resetQueue = function () {
+        var resetQueue = function() {
             queue = []
             modal.removeAttribute('data-queue-step')
         }
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
             (function step(i, callback) {
                 if (i < queue.length) {
                     modal.setAttribute('data-queue-step', i)
 
-                    sweetAlert(queue[i]).then(function () {
+                    sweetAlert(queue[i]).then(function() {
                         step(i + 1, callback)
-                    }, function (dismiss) {
+                    }, function(dismiss) {
                         resetQueue()
                         reject(dismiss)
                     })
@@ -1443,14 +1443,14 @@
     /*
      * Global function for getting the index of current modal in queue
      */
-    sweetAlert.getQueueStep = function () {
+    sweetAlert.getQueueStep = function() {
         return getModal().getAttribute('data-queue-step')
     }
 
     /*
      * Global function for inserting a modal to the queue
      */
-    sweetAlert.insertQueueStep = function (step, index) {
+    sweetAlert.insertQueueStep = function(step, index) {
         if (index && index < queue.length) {
             return queue.splice(index, 0, step)
         }
@@ -1460,7 +1460,7 @@
     /*
      * Global function for deleting a modal from the queue
      */
-    sweetAlert.deleteQueueStep = function (index) {
+    sweetAlert.deleteQueueStep = function(index) {
         if (typeof queue[index] !== 'undefined') {
             queue.splice(index, 1)
         }
@@ -1469,7 +1469,7 @@
     /*
      * Global function to close sweetAlert
      */
-    sweetAlert.close = sweetAlert.closeModal = function (onComplete) {
+    sweetAlert.close = sweetAlert.closeModal = function(onComplete) {
         var modal = getModal()
         removeClass(modal, swalClasses.show)
         addClass(modal, swalClasses.hide)
@@ -1489,7 +1489,7 @@
 
         resetPrevState()
 
-        var hideModalAndResetState = function () {
+        var hideModalAndResetState = function() {
             hide(modal)
             modal.style.minHeight = ''
             removeClass(sweetContainer, swalClasses.in)
@@ -1518,14 +1518,14 @@
     /*
      * Global function to click 'Confirm' button
      */
-    sweetAlert.clickConfirm = function () {
+    sweetAlert.clickConfirm = function() {
         getConfirmButton().click()
     }
 
     /*
      * Global function to click 'Cancel' button
      */
-    sweetAlert.clickCancel = function () {
+    sweetAlert.clickCancel = function() {
         getCancelButton().click()
     }
 
@@ -1533,7 +1533,7 @@
      * Set default params for each popup
      * @param {Object} userParams
      */
-    sweetAlert.setDefaults = function (userParams) {
+    sweetAlert.setDefaults = function(userParams) {
         if (!userParams) {
             throw new Error('userParams is required')
         }
@@ -1547,18 +1547,17 @@
     /**
      * Reset default params for each popup
      */
-    sweetAlert.resetDefaults = function () {
+    sweetAlert.resetDefaults = function() {
         modalParams = extend({}, defaultParams)
     }
 
-    sweetAlert.noop = function () {
-    }
+    sweetAlert.noop = function() {}
 
     sweetAlert.version = '5.3.5'
 
     if (typeof Promise === 'function') {
-        Promise.prototype.done = Promise.prototype.done || function () { // eslint-disable-line
-            return this.catch(function () {
+        Promise.prototype.done = Promise.prototype.done || function() { // eslint-disable-line
+            return this.catch(function() {
                 // Catch promise rejections silently.
                 // https://github.com/limonte/sweetalert2/issues/177
             })

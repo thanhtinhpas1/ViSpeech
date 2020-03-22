@@ -1,25 +1,35 @@
-import { IsEmpty, IsNotEmpty, IsString, IsNumber, IsPositive, IsOptional, IsUUID } from "class-validator";
-import { Column, Entity, ObjectID } from "typeorm";
-import { BaseEntityDto } from "base/base-entity.dto";
-import { Type } from "class-transformer";
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { Type } from 'class-transformer';
+import { IsEmpty, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
+import { CONSTANTS } from 'common/constant';
+import { ObjectID } from 'mongodb';
+import { Column, Entity } from 'typeorm';
 
 export class TokenIdRequestParamsDto {
   constructor(tokenId) {
-    this.id = tokenId;
+    this._id = tokenId;
   }
 
   @IsString()
   @IsNotEmpty()
-  id: string;
+  _id: string;
 }
 
-@Entity("tokens")
+@Entity('tokens')
 export class TokenDto extends BaseEntityDto {
-  constructor(value, userId, tokenTypeId) {
+  constructor(
+    value,
+    userId,
+    tokenType = CONSTANTS.TOKEN_TYPE.FREE,
+    tokenTypeId = null,
+    orderId = null,
+  ) {
     super();
     this.value = value;
     this.userId = userId;
     this.tokenTypeId = tokenTypeId;
+    this.tokenType = tokenType;
+    this.orderId = orderId;
   }
 
   @IsOptional()
@@ -27,8 +37,7 @@ export class TokenDto extends BaseEntityDto {
   @IsNumber()
   @IsPositive()
   @Column({
-    name: "minutes",
-    default: 0
+    default: 0,
   })
   minutes: number;
 
@@ -37,38 +46,49 @@ export class TokenDto extends BaseEntityDto {
   @IsNumber()
   @IsPositive()
   @Column({
-    name: "used_minutes",
     default: 0,
-    nullable: false
+    nullable: false,
   })
   usedMinutes: number;
 
   @IsString()
   @IsNotEmpty()
-  @Column()
+  @Column({
+    unique: true,
+  })
   value: string;
 
   @IsUUID()
   @Column({
-    name: "user_id",
     nullable: false,
-    type: "uuid"
+    type: 'uuid',
   })
   userId: ObjectID;
 
   @IsOptional()
   @IsUUID()
   @Column({
-    name: "token_type_id",
     nullable: false,
-    type: "uuid"
+    type: 'uuid',
   })
   tokenTypeId: ObjectID;
 
   @IsEmpty()
   @Column({
-    name: "is_valid",
-    default: true
+    default: true,
   })
   isValid: boolean;
+
+  @IsOptional()
+  @IsIn([
+    CONSTANTS.TOKEN_TYPE.FREE,
+    CONSTANTS.TOKEN_TYPE['50-MINS'],
+    CONSTANTS.TOKEN_TYPE['200-MINS'],
+    CONSTANTS.TOKEN_TYPE['500-MINS'],
+  ])
+  tokenType: string;
+
+  @IsOptional()
+  @IsUUID()
+  orderId: ObjectID;
 }

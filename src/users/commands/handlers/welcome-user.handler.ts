@@ -8,13 +8,13 @@ export class WelcomeUserHandler implements ICommandHandler<WelcomeUserCommand> {
   constructor(
     private readonly repository: UserRepository,
     private readonly publisher: EventPublisher
-  ) {}
+  ) { }
 
   async execute(command: WelcomeUserCommand) {
     Logger.log("Async WelcomeUserHandler...", "WelcomeUserCommand");
-    const { userId } = command;
+    const { streamId, userId } = command;
     const user = this.publisher.mergeObjectContext(
-      await this.repository.welcomeUser(userId)
+      await this.repository.welcomeUser(streamId, userId)
     );
     user.commit();
   }

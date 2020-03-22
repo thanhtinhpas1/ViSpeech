@@ -1,22 +1,19 @@
 @import '.././../../default.style.scss';
 
 .active-email-page {
-  padding-top: 30vh;
-  text-align: center;
-
-  &__title {
+    padding-top: 30vh;
+    text-align: center;
+    &__title {
     text-transform: uppercase;
     font-size: $font-size-large;
     text-align: center;
     padding-top: 5rem;
     color: $color-main;
   }
-
-  &__btns {
+    &__btns{
     margin-top: 10px;
     text-align: center;
-
-    div {
+    div{
       margin: 5px auto;
     }
   }

@@ -1,38 +1,51 @@
-import { Injectable } from "@nestjs/common";
-import { User } from "../models/user.model";
+import {Injectable} from '@nestjs/common';
+import {UserDto} from 'users/dtos/users.dto';
+import {User} from '../models/user.model';
 
 @Injectable()
 export class UserRepository {
-  async createUser(userDto) {
-    const user = new User(undefined);
-    user.setData(userDto);
-    user.createUser();
-    return user;
-  }
-
-  async createUserStart(userDto) {
-    const user = new User(undefined);
-    user.setData(userDto);
-    user.createUserStart();
-    return user;
-  }
-
-  async updateUser(userDto) {
-    const user = new User(userDto.id);
-    user.setData(userDto);
-    user.updateUser();
-    return user;
-  }
-
-    async deleteUser(userId) {
-        const user = new User(userId);
-        user.deleteUser();
+    async createUser(streamId: string, userDto: UserDto) {
+        const user = new User(undefined);
+        user.setData(userDto);
+        user.createUser(streamId);
         return user;
     }
 
-    async welcomeUser(userId) {
+    async createUserStart(streamId: string, userDto: UserDto) {
+        const user = new User(undefined);
+        user.setData(userDto);
+        user.createUserStart(streamId);
+        return user;
+    }
+
+    async updateUser(streamId: string, userDto: UserDto) {
+        const user = new User(undefined);
+        user.setData(userDto);
+        user.updateUser(streamId);
+        return user;
+    }
+
+    async deleteUser(streamId: string, userId: string) {
         const user = new User(userId);
-        user.welcomeUser();
+        user.deleteUser(streamId);
+        return user;
+    }
+
+    async welcomeUser(streamId: string, userId: string) {
+        const user = new User(userId);
+        user.welcomeUser(streamId);
+        return user;
+    }
+
+    async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
+        const user = new User(userId);
+        user.assignUserRole(streamId, roleName, assignerId);
+        return user;
+    }
+
+    async changePassword(streamId: string, userId: string, newPassword: string, oldPassword: string) {
+        const user = new User(userId);
+        user.changePassword(streamId, newPassword, oldPassword);
         return user;
     }
 }

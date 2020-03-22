@@ -13,9 +13,9 @@ export class WelcomeOrderHandler
 
   async execute(command: WelcomeOrderCommand) {
     Logger.log("Async WelcomeOrderHandler...", "WelcomeOrderCommand");
-    const { orderId } = command;
+    const { streamId, orderId } = command;
     const order = this.publisher.mergeObjectContext(
-      await this.repository.welcomeOrder(orderId)
+      await this.repository.welcomeOrder(streamId, orderId)
     );
     order.commit();
   }

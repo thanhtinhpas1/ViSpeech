@@ -39,6 +39,6 @@ export class AuthModule implements OnModuleInit {
   constructor(private readonly query$: QueryBus) {}
 
   onModuleInit(): any {
-    this.query$.register(QueryHandlers);
+  this.query$.register(QueryHandlers);
   }
 }

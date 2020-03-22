@@ -19,7 +19,7 @@ can just fix the size of their placeholders.
  * Dual licensed under the MIT and GPL licenses.
  * http://benalman.com/about/license/
  */
-(function ($, e, t) {
+(function($, e, t) {
     "$:nomunge";
     var i = [],
         n = $.resize = $.extend($.resize, {}),
@@ -34,7 +34,7 @@ can just fix the size of their placeholders.
     n[l] = 20;
     n[f] = true;
     $.event.special[u] = {
-        setup: function () {
+        setup: function() {
             if (!n[f] && this[s]) {
                 return false
             }
@@ -49,7 +49,7 @@ can just fix the size of their placeholders.
                 h()
             }
         },
-        teardown: function () {
+        teardown: function() {
             if (!n[f] && this[s]) {
                 return false
             }
@@ -70,7 +70,7 @@ can just fix the size of their placeholders.
                 a = null
             }
         },
-        add: function (e) {
+        add: function(e) {
             if (!n[f] && this[s]) {
                 return false
             }
@@ -83,7 +83,6 @@ can just fix the size of their placeholders.
                 s.h = a !== t ? a : r.height();
                 i.apply(this, arguments)
             }
-
             if ($.isFunction(e)) {
                 i = e;
                 return a
@@ -123,24 +122,23 @@ can just fix the size of their placeholders.
             }
         }
     }
-
     if (!e.requestAnimationFrame) {
-        e.requestAnimationFrame = function () {
-            return e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function (t, i) {
-                return e.setTimeout(function () {
+        e.requestAnimationFrame = function() {
+            return e.webkitRequestAnimationFrame || e.mozRequestAnimationFrame || e.oRequestAnimationFrame || e.msRequestAnimationFrame || function(t, i) {
+                return e.setTimeout(function() {
                     t((new Date).getTime())
                 }, n[l])
             }
         }()
     }
     if (!e.cancelAnimationFrame) {
-        e.cancelAnimationFrame = function () {
+        e.cancelAnimationFrame = function() {
             return e.webkitCancelRequestAnimationFrame || e.mozCancelRequestAnimationFrame || e.oCancelRequestAnimationFrame || e.msCancelRequestAnimationFrame || clearTimeout
         }()
     }
 })(jQuery, this);
 
-(function ($) {
+(function($) {
     var options = {}; // no options
 
     function init(plot) {

@@ -14,10 +14,10 @@ export class CreateReportHandler
   async execute(command: CreateReportCommand) {
     Logger.log("Async CreateReportHandler...", "CreateReportCommand");
 
-    const { reportDto } = command;
+    const { streamId, reportDto } = command;
     // use mergeObjectContext for dto dispatch events
     const report = this.publisher.mergeObjectContext(
-      await this.repository.createReport(reportDto)
+      await this.repository.createReport(streamId, reportDto)
     );
     report.commit();
   }

@@ -9,10 +9,10 @@
  ---------------------*/
 
 var data = [{
-    data: 18000,
-    color: '#f8bd19',
-    label: 'Linda'
-},
+        data: 18000,
+        color: '#f8bd19',
+        label: 'Linda'
+    },
     {
         data: 20000,
         color: '#e44a00',
@@ -179,14 +179,14 @@ var options = {
 
 if ($("#line-chart")[0]) {
     $.plot($("#line-chart"), [{
-        data: d1,
-        lines: {
-            show: true
+            data: d1,
+            lines: {
+                show: true
+            },
+            label: 'Product A',
+            stack: true,
+            color: '#F9D900'
         },
-        label: 'Product A',
-        stack: true,
-        color: '#F9D900'
-    },
         {
             data: d2,
             lines: {
@@ -209,11 +209,13 @@ if ($("#line-chart")[0]) {
 }
 
 
+
+
 /*---------------------------------
     Tooltips for Flot Charts
 ---------------------------------*/
 if ($(".flot-chart-line")[0]) {
-    $(".flot-chart-line").bind("plothover", function (event, pos, item) {
+    $(".flot-chart-line").bind("plothover", function(event, pos, item) {
         if (item) {
             var x = item.datapoint[0].toFixed(2),
                 y = item.datapoint[1].toFixed(2);
@@ -228,6 +230,8 @@ if ($(".flot-chart-line")[0]) {
 
     $("<div class='flot-tooltip' class='chart-tooltip'></div>").appendTo("body");
 }
+
+
 
 
 /*---------------------
@@ -303,11 +307,13 @@ if ($("#area-chart")[0]) {
 }
 
 
+
+
 /*---------------------
  ----- COLUMN CHART -----
  ---------------------*/
 
-$(function () {
+$(function() {
 
     var data = [
         ["January", 10],
@@ -345,11 +351,12 @@ $(function () {
 });
 
 
+
 /*--------------------------------
  ----- STACKED CHART -----
  --------------------------------*/
 
-$(function () {
+$(function() {
 
     var d1 = [];
     for (var i = 0; i <= 10; i += 1) {
@@ -395,7 +402,7 @@ $(function () {
 /*--------------------------------
  ----- REALTIME CHART -----
  --------------------------------*/
-$(function () {
+$(function() {
 
     // We use an inline data source in the example, usually data would
     // be fetched from a server
@@ -471,6 +478,7 @@ $(function () {
     }
 
     update();
+
 
 
 });

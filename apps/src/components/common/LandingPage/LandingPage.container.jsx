@@ -1,4 +1,4 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import LandingPage from './LandingPage.component'
 
 const mapStateToProps = state => ({})

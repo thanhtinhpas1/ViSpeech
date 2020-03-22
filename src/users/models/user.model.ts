@@ -1,38 +1,47 @@
-import { AggregateRoot } from "@nestjs/cqrs";
-import { UserCreationStartedEvent } from "../events/impl/user-created.event";
-import { UserCreatedEvent } from "../events/impl/user-created.event";
-import { UserUpdatedEvent } from "../events/impl/user-updated.event";
-import { UserDeletedEvent } from "../events/impl/user-deleted.event";
-import { UserWelcomedEvent } from "../events/impl/user-welcomed.event";
+import {AggregateRoot} from '@nestjs/cqrs';
+import {UserCreatedEvent, UserCreationStartedEvent} from '../events/impl/user-created.event';
+import {UserDeletedEvent} from '../events/impl/user-deleted.event';
+import {UserUpdatedEvent} from '../events/impl/user-updated.event';
+import {UserRoleAssignedEvent} from '../events/impl/user-role-assigned.event';
+import {PasswordChangedEvent} from '../events/impl/password-changed.event';
+import { UserWelcomedEvent } from 'users/events/impl/user-welcomed.event';
 
 export class User extends AggregateRoot {
-  [x: string]: any;
+    [x: string]: any;
 
-  constructor(private readonly id: string | undefined) {
-    super();
-  }
+    constructor(private readonly id: string | undefined) {
+        super();
+    }
 
-  setData(data) {
-    this.data = data;
-  }
+    setData(data) {
+        this.data = data;
+    }
 
-  createUserStart() {
-    this.apply(new UserCreationStartedEvent(this.data));
-  }
+    createUserStart(streamId: string) {
+        this.apply(new UserCreationStartedEvent(streamId, this.data));
+    }
 
-  createUser() {
-    this.apply(new UserCreatedEvent(this.data));
-  }
+    createUser(streamId: string) {
+        this.apply(new UserCreatedEvent(streamId, this.data));
+    }
 
-  updateUser() {
-    this.apply(new UserUpdatedEvent(this.data));
-  }
+    updateUser(streamId: string) {
+        this.apply(new UserUpdatedEvent(streamId, this.data));
+    }
 
-  welcomeUser() {
-    this.apply(new UserWelcomedEvent(this.id));
-  }
+    deleteUser(streamId: string) {
+        this.apply(new UserDeletedEvent(streamId, this.id));
+    }
 
-  deleteUser() {
-    this.apply(new UserDeletedEvent(this.id));
-  }
+    assignUserRole(streamId: string, roleName: string, assignerId: string) {
+        this.apply(new UserRoleAssignedEvent(streamId, this.id, roleName, assignerId));
+    }
+
+    changePassword(streamId: string, newPassword: string, oldPassword: string) {
+        this.apply(new PasswordChangedEvent(streamId, this.id, newPassword, oldPassword));
+    }
+
+    welcomeUser(streamId: string) {
+        this.apply(new UserWelcomedEvent(streamId, this.id));
+    }
 }

@@ -1,59 +1,88 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ICommand, ofType, Saga } from "@nestjs/cqrs";
-import { delay, map } from "rxjs/operators";
-import { Observable } from "rxjs";
-import { UserCreationStartedEvent } from "users/events/impl/user-created.event";
-import { CreateTokenCommand } from "tokens/commands/impl/create-token.command";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { AuthService } from "auth/auth.service";
-import { TokenCreatedEvent } from "tokens/events/impl/token-created.event";
-import { CreateUserCommand } from "users/commands/impl/create-user.command";
+import {Injectable, Logger} from '@nestjs/common';
+import {ICommand, ofType, Saga} from '@nestjs/cqrs';
+import {flatMap, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {UserCreatedSuccessEvent, UserCreationStartedEvent} from 'users/events/impl/user-created.event';
+import {CreateFreeTokenCommand} from 'tokens/commands/impl/create-token.command';
+import {TokenDto, TokenIdRequestParamsDto} from 'tokens/dtos/tokens.dto';
+import {AuthService} from 'auth/auth.service';
+import {CreateUserCommand} from 'users/commands/impl/create-user.command';
+import {WelcomeUserCommand} from 'users/commands/impl/welcome-user.command';
+import {DeleteTokenCommand, DeleteTokenByUserIdCommand} from 'tokens/commands/impl/delete-token.command';
+import {FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent} from 'tokens/events/impl/free-token-created.event';
+import {DeleteUserCommand} from 'users/commands/impl/delete-user.command';
+import {UserIdRequestParamsDto} from 'users/dtos/users.dto';
+import { UserDeletedSuccessEvent } from 'users/events/impl/user-deleted.event';
 
 @Injectable()
 export class UsersSagas {
-  constructor(
-    private readonly authService: AuthService  ) {}
+    constructor(private readonly authService: AuthService) {
+    }
 
-  // @Saga()
-  // userCreated = (events$: Observable<any>): Observable<ICommand> => {
-  //   return events$.pipe(
-  //     ofType(UserCreatedEvent),
-  //     delay(1000),
-  //     map(event => {
-  //       Logger.log("Inside [UsersSagas] Saga", "UsersSagas");
-  //       const userId = event.userDto[0].id;
-  //       return new WelcomeUserCommand(event.userDto[0]);
-  //     })
-  //   );
-  // };
-  // @Saga()
-  // tokenCreated = (events$: Observable<any>): Observable<ICommand> => {
-  //   return events$.pipe(
-  //     ofType(TokenCreatedEvent),
-  //     delay(1000),
-  //     map(event => {
-  //       Logger.log("Inside [UsersSagas] create user Saga", "UsersSagas");
-  //       const userDto = event.tokenDto[1];
-  //       Logger.log(userDto, "UsersSagas create user");
-  //       return new CreateUserCommand(userDto);
-  //     })
-  //   );
-  // };
+    @Saga()
+    startCreatingUser = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(UserCreationStartedEvent),
+            map((event: UserCreationStartedEvent) => {
+                Logger.log('Inside [UsersSagas] startCreatingUser Saga', 'UsersSagas');
+                const { streamId, userDto } = event;
+                return new CreateUserCommand(streamId, userDto);
+            })
+        );
+    };
 
-  @Saga()
-  userStartCreation = (events$: Observable<any>): Observable<ICommand> => {
-    return events$.pipe(
-      ofType(UserCreationStartedEvent),
-      delay(1000),
-      map(event => {
-        Logger.log("Inside [UsersSagas] start create user Saga", "UsersSagas");
-        const userDto = event.userDto[0];
-        // const tokenValue = this.authService.generate_token_with_userId(
-        //   userDto.id
-        // );
-        // const tokenDto = new TokenDto(tokenValue, userDto.id, null);
-        return new CreateUserCommand(userDto);
-      })
-    );
-  };
+    @Saga()
+    userCreatedSucess = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(UserCreatedSuccessEvent),
+            map((event: UserCreatedSuccessEvent) => {
+                Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
+                const { streamId, userDto } = event;
+                const userId = userDto._id;
+                const tokenValue = this.authService.generateTokenWithUserId(userId);
+                const tokenDto = new TokenDto(tokenValue, userId); // free token
+                return new CreateFreeTokenCommand(streamId, tokenDto);
+            })
+        );
+    };
+
+    @Saga()
+    freeTokenCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(FreeTokenCreatedSuccessEvent),
+            map((event: FreeTokenCreatedSuccessEvent) => {
+                Logger.log('Inside [UsersSagas] freeTokenCreatedSuccess Saga', 'UsersSagas');
+                const { streamId, tokenDto } = event;
+                return new WelcomeUserCommand(streamId, tokenDto.userId);
+            })
+        );
+    };
+
+    @Saga()
+    freeTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(FreeTokenCreatedFailedEvent),
+            flatMap((event: FreeTokenCreatedFailedEvent) => {
+                Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
+                const { streamId, tokenDto } = event;
+                const { _id, userId } = tokenDto;
+                return [
+                    new DeleteTokenCommand(streamId, new TokenIdRequestParamsDto(_id)),
+                    new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId))
+                ];
+            })
+        );
+    };
+
+    @Saga()
+    userDeletedSucess = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(UserDeletedSuccessEvent),
+            map((event: UserDeletedSuccessEvent) => {
+                Logger.log('Inside [UsersSagas] userDeletedSucess Saga', 'UsersSagas');
+                const { streamId, userId } = event;
+                return new DeleteTokenByUserIdCommand(streamId, userId);
+            })
+        );
+    };
 }

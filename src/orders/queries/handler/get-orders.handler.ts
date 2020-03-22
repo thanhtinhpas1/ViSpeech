@@ -10,19 +10,21 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
   constructor(
     @InjectRepository(OrderDto)
     private readonly repository: Repository<OrderDto>
-  ) {}
+  ) { }
 
   async execute(query: GetOrdersQuery) {
+    Logger.log("Async GetOrdersQuery...", "GetOrdersQuery");
+    const { offset, limit } = query;
     try {
-      Logger.log("Async GetOrdersQuery...", "GetOrdersQuery");
-      if (query.limit && query.offset)
+      if (limit && offset) {
         return await this.repository.find({
-          skip: Number(query.offset),
-          take: Number(query.limit)
+          skip: offset,
+          take: limit,
         });
-      return this.repository.find();
+      }
+      return await this.repository.find();
     } catch (error) {
-      Logger.error(error, "GetOrdersQuery");
+      Logger.error(error, "", "GetOrdersQuery");
     }
   }
 }

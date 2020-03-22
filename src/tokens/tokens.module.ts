@@ -1,80 +1,110 @@
-import { CommandBus, CqrsModule, EventBus, QueryBus } from "@nestjs/cqrs";
-import { Module, OnModuleInit } from "@nestjs/common";
+import {forwardRef, Module, OnModuleInit} from "@nestjs/common";
+import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { CONSTANTS } from "common/constant";
+import { EventStore } from "core/event-store/event-store";
+import { EventStoreModule } from "core/event-store/event-store.module";
+import { getMongoRepository } from "typeorm";
 import { CommandHandlers } from "./commands/handlers";
-import { EventHandlers } from "./events/handlers";
-import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokensController } from "./controllers/tokens.controller";
-import { TokenRepository } from "./repository/token.repository";
-import { EventStoreModule } from "../core/event-store/event-store.module";
-import { EventStore } from "../core/event-store/event-store";
-import { TokenCreatedEvent } from "./events/impl/token-created.event";
-import { TokenDeletedEvent } from "./events/impl/token-deleted.event";
+import { TokenTypeDto } from "./dtos/token-types.dto";
+import { TokenDto } from "./dtos/tokens.dto";
+import { EventHandlers } from "./events/handlers";
+import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from "./events/impl/token-created.event";
+import { TokenDeletedEvent, TokenDeletedByUserIdEvent } from "./events/impl/token-deleted.event";
 import { TokenUpdatedEvent } from "./events/impl/token-updated.event";
 import { TokenWelcomedEvent } from "./events/impl/token-welcomed.event";
-import { InjectRepository, TypeOrmModule } from "@nestjs/typeorm";
-import { TokenDto } from "./dtos/tokens.dto";
 import { QueryHandlers } from "./queries/handler";
-import { Repository } from "typeorm";
-import { TokenTypeDto } from "./dtos/token-types.dto";
+import { TokenRepository } from "./repository/token.repository";
+import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokensService } from "./services/tokens.service";
-import { JwtModule } from "@nestjs/jwt";
-import { config } from "../../config";
-import { CONSTANTS } from "common/constant";
+import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailedEvent } from "./events/impl/free-token-created.event";
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailedEvent } from "./events/impl/ordered-token-created.event";
+import { AuthService } from "auth/auth.service";
+import {AuthModule} from "../auth/auth.module";
+
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
-    CqrsModule,
-    EventStoreModule.forFeature(),
-    JwtModule.register({
-      secret: config.JWT.secret
-    })
-  ],
-  controllers: [TokensController],
-  providers: [
-    TokensSagas,
-    ...CommandHandlers,
-    ...EventHandlers,
-    ...QueryHandlers,
-    TokenRepository,
-    TokensService
-  ],
-  exports: [TokensService, JwtModule]
+    imports: [
+        TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
+        forwardRef(() => AuthModule),
+        EventStoreModule.forFeature(),
+    ],
+    controllers: [TokensController],
+    providers: [
+        TokensService,
+        TokensSagas,
+        ...CommandHandlers,
+        ...EventHandlers,
+        ...QueryHandlers,
+        AuthService,
+        TokenRepository,
+        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+    ],
+    exports: [TokensService],
 })
 export class TokensModule implements OnModuleInit {
-  constructor(
-    private readonly command$: CommandBus,
-    private readonly query$: QueryBus,
-    private readonly event$: EventBus,
-    private readonly tokensSagas: TokensSagas,
-    private readonly eventStore: EventStore,
-    @InjectRepository(TokenTypeDto)
-    private readonly repository: Repository<TokenTypeDto>
-  ) {}
-
-  async onModuleInit() {
-    this.eventStore.setEventHandlers(this.eventHandlers);
-    await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
-    this.event$.publisher = this.eventStore;
-    /** ------------ */
-    this.event$.register(EventHandlers);
-    this.command$.register(CommandHandlers);
-    this.query$.register(QueryHandlers);
-    this.event$.registerSagas([TokensSagas]);
-
-    const freeTokenType = await this.repository.find({
-      name: CONSTANTS.TOKEN_TYPE.FREE
-    });
-    if (!freeTokenType[0]) {
-      const freeTokenType = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0);
-      await this.repository.save(freeTokenType);
+    constructor(
+        private readonly command$: CommandBus,
+        private readonly query$: QueryBus,
+        private readonly event$: EventBus,
+        private readonly eventStore: EventStore,
+    ) {
     }
-  }
 
-  eventHandlers = {
-    TokenCreatedEvent: (data, userDto) => new TokenCreatedEvent(data, userDto),
-    TokenDeletedEvent: data => new TokenDeletedEvent(data),
-    TokenUpdatedEvent: data => new TokenUpdatedEvent(data),
-    TokenWelcomedEvent: data => new TokenWelcomedEvent(data)
+    async onModuleInit() {
+        this.eventStore.setEventHandlers(TokensModule.eventHandlers);
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
+        this.event$.publisher = this.eventStore;
+        /** ------------ */
+        this.event$.register(EventHandlers);
+        this.command$.register(CommandHandlers);
+        this.query$.register(QueryHandlers);
+        this.event$.registerSagas([TokensSagas]);
+
+        this.persistTokenTypesToDB();
+    }
+
+  public static eventHandlers = {
+    // create
+    TokenCreatedEvent: (streamId, data) => new TokenCreatedEvent(streamId, data),
+    TokenCreatedSuccessEvent: (streamId, data) => new TokenCreatedSuccessEvent(streamId, data),
+    TokenCreatedFailEvent: (streamId, data, error) => new TokenCreatedFailedEvent(streamId, data, error),
+
+    TokenDeletedEvent: (streamId, data) => new TokenDeletedEvent(streamId, data),
+    TokenDeletedByUserIdEvent: (streamId, data) => new TokenDeletedByUserIdEvent(streamId, data), 
+    TokenUpdatedEvent: (streamId, data) => new TokenUpdatedEvent(streamId, data),
+    TokenWelcomedEvent: (streamId, data) => new TokenWelcomedEvent(streamId, data),
+
+    // free token
+    FreeTokenCreatedEvent: (streamId, data) => new FreeTokenCreatedEvent(streamId, data),
+    FreeTokenCreatedSuccessEvent: (streamId, data) => new FreeTokenCreatedSuccessEvent(streamId, data),
+    FreeTokenCreatedFailEvent: (streamId, data, error) => new FreeTokenCreatedFailedEvent(streamId, data, error),
+
+    // ordered token
+    OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
+    OrderedTokenCreatedSuccessEvent: (streamId, data) => new OrderedTokenCreatedSuccessEvent(streamId, data),
+    OrderedTokenCreatedFailEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
   };
+
+    async persistTokenTypesToDB() {
+        const freeTokenType = await getMongoRepository(TokenTypeDto).find({
+            name: CONSTANTS.TOKEN_TYPE.FREE,
+        });
+        const tokenType_50 = await getMongoRepository(TokenTypeDto).find({
+            name: CONSTANTS.TOKEN_TYPE['50-MINS'],
+        });
+        const tokenType_200 = await getMongoRepository(TokenTypeDto).find({
+            name: CONSTANTS.TOKEN_TYPE['200-MINS'],
+        });
+        const tokenType_500 = await getMongoRepository(TokenTypeDto).find({
+            name: CONSTANTS.TOKEN_TYPE['500-MINS'],
+        });
+        if (!freeTokenType[0] && !tokenType_50[0] && !tokenType_200[0] && !tokenType_500[0]) {
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['50-MINS'], 50, 5));
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['200-MINS'], 200, 10));
+            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['500-MINS'], 500, 20));
+        }
+    }
 }

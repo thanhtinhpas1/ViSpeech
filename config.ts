@@ -36,6 +36,7 @@ const configs = {
                 min: process.env.EVENT_STORE_POOLOPTIONS_MIN || 1,
                 max: process.env.EVENT_STORE_POOLOPTIONS_MAX || 10,
             },
+            category: process.env.EVENT_STORE_CATEGORY || 'vispeech'
         },
 
         DATABASE: {
@@ -54,6 +55,7 @@ const configs = {
         JWT: {
             secret: process.env.JWT_SECRET || 'vispeech',
         },
+        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_o963xS8xNbn1yRD65F5x3Kob00gjj51qc0'
     },
     development: {},
     production: {

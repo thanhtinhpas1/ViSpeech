@@ -1,10 +1,23 @@
 import { ICommand } from "@nestjs/cqrs";
 import { TokenDto } from "../../dtos/tokens.dto";
-import { UserDto } from "users/dtos/users.dto";
 
 export class CreateTokenCommand implements ICommand {
   constructor(
+    public readonly streamId: string,
     public readonly tokenDto: TokenDto,
-    public readonly userDto: UserDto
+  ) {}
+}
+
+export class CreateFreeTokenCommand implements ICommand {
+  constructor(
+    public readonly streamId: string,
+    public readonly tokenDto: TokenDto,
+  ) {}
+}
+
+export class CreateOrderedTokenCommand implements ICommand {
+  constructor(
+    public readonly streamId: string,
+    public readonly tokenDto: TokenDto,
   ) {}
 }

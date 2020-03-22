@@ -1,45 +1,54 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsPositive,
-  IsString,
-  IsUUID
-} from "class-validator";
-import { Column, Entity, ObjectID } from "typeorm";
-import { BaseEntityDto } from "base/base-entity.dto";
-import { Type } from "class-transformer";
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { IsIn, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { CONSTANTS } from 'common/constant';
+import { Column, Entity, ObjectID } from 'typeorm';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 export class OrderIdRequestParamsDto {
-    constructor(orderId) {
-        this.id = orderId;
-    }
+  constructor(orderId) {
+    this._id = orderId;
+  }
 
-    @IsString()
-    @IsNotEmpty()
-    id: string;
+  @IsString()
+  @IsNotEmpty()
+  _id: string;
 }
 
 @Entity('orders')
 export class OrderDto extends BaseEntityDto {
-  @IsUUID()
-  @Column({
-    name: "token_id",
-    nullable: false,
-    type: "uuid"
-  })
-  tokenId: ObjectID;
+  constructor(userId, tokenType: TokenTypeDto, token: TokenDto, status = CONSTANTS.STATUS.PENDING) {
+    super();
+    this.userId = userId;
+    this.tokenType = tokenType;
+    this.token = token;
+    this.status = status;
+  }
 
-  @Type(() => Number)
-  @IsNumber()
-  @IsPositive()
+  @IsOptional()
   @Column()
-  price: number;
+  token: TokenDto;
+
+  @IsNotEmpty()
+  @Column({
+    nullable: false,
+  })
+  tokenType: TokenTypeDto;
 
   @IsUUID()
   @Column({
-    name: "user_id",
     nullable: false,
-    type: "uuid"
+    type: 'uuid',
   })
   userId: ObjectID;
+
+  @IsOptional()
+  @IsString()
+  @IsIn([
+    CONSTANTS.STATUS.PENDING,
+    CONSTANTS.STATUS.SUCCESS,
+    CONSTANTS.STATUS.FAILURE,
+  ])
+  @Column()
+  status: string;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* Javascript plotting library for jQuery, version 0.8.3.
 
 Copyright (c) 2007-2014 IOLA and Ole Laursen.
@@ -29,46 +30,45 @@ Licensed under the MIT license.
  * V. 1.1: Fix error handling so e.g. parsing an empty string does
  * produce a color rather than just crashing.
  */
-(function ($) {
+(function($) {
     $.color = {};
-    $.color.make = function (r, g, b, a) {
+    $.color.make = function(r, g, b, a) {
         var o = {};
         o.r = r || 0;
         o.g = g || 0;
         o.b = b || 0;
         o.a = a != null ? a : 1;
-        o.add = function (c, d) {
+        o.add = function(c, d) {
             for (var i = 0; i < c.length; ++i) o[c.charAt(i)] += d;
             return o.normalize()
         };
-        o.scale = function (c, f) {
+        o.scale = function(c, f) {
             for (var i = 0; i < c.length; ++i) o[c.charAt(i)] *= f;
             return o.normalize()
         };
-        o.toString = function () {
+        o.toString = function() {
             if (o.a >= 1) {
                 return "rgb(" + [o.r, o.g, o.b].join(",") + ")"
             } else {
                 return "rgba(" + [o.r, o.g, o.b, o.a].join(",") + ")"
             }
         };
-        o.normalize = function () {
+        o.normalize = function() {
             function clamp(min, value, max) {
                 return value < min ? min : value > max ? max : value
             }
-
             o.r = clamp(0, parseInt(o.r), 255);
             o.g = clamp(0, parseInt(o.g), 255);
             o.b = clamp(0, parseInt(o.b), 255);
             o.a = clamp(0, o.a, 1);
             return o
         };
-        o.clone = function () {
+        o.clone = function() {
             return $.color.make(o.r, o.b, o.g, o.a)
         };
         return o.normalize()
     };
-    $.color.extract = function (elem, css) {
+    $.color.extract = function(elem, css) {
         var c;
         do {
             c = elem.css(css).toLowerCase();
@@ -78,7 +78,7 @@ Licensed under the MIT license.
         if (c == "rgba(0, 0, 0, 0)") c = "transparent";
         return $.color.parse(c)
     };
-    $.color.parse = function (str) {
+    $.color.parse = function(str) {
         var res, m = $.color.make;
         if (res = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(str)) return m(parseInt(res[1], 10), parseInt(res[2], 10), parseInt(res[3], 10));
         if (res = /rgba\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]+(?:\.[0-9]+)?)\s*\)/.exec(str)) return m(parseInt(res[1], 10), parseInt(res[2], 10), parseInt(res[3], 10), parseFloat(res[4]));
@@ -141,7 +141,7 @@ Licensed under the MIT license.
 })(jQuery);
 
 // the actual Flot code
-(function ($) {
+(function($) {
 
     // Cache the prototype hasOwnProperty for faster access
 
@@ -154,8 +154,8 @@ Licensed under the MIT license.
     // Do not merge this into Flot 0.9, since it requires jQuery 1.4.4+.
 
     if (!$.fn.detach) {
-        $.fn.detach = function () {
-            return this.each(function () {
+        $.fn.detach = function() {
+            return this.each(function() {
                 if (this.parentNode) {
                     this.parentNode.removeChild(this);
                 }
@@ -183,11 +183,11 @@ Licensed under the MIT license.
             element.className = cls;
 
             $(element).css({
-                direction: "ltr",
-                position: "absolute",
-                left: 0,
-                top: 0
-            })
+                    direction: "ltr",
+                    position: "absolute",
+                    left: 0,
+                    top: 0
+                })
                 .appendTo(container);
 
             // If HTML5 Canvas isn't available, fall back to [Ex|Flash]canvas
@@ -215,11 +215,11 @@ Licensed under the MIT license.
 
         var devicePixelRatio = window.devicePixelRatio || 1,
             backingStoreRatio =
-                context.webkitBackingStorePixelRatio ||
-                context.mozBackingStorePixelRatio ||
-                context.msBackingStorePixelRatio ||
-                context.oBackingStorePixelRatio ||
-                context.backingStorePixelRatio || 1;
+            context.webkitBackingStorePixelRatio ||
+            context.mozBackingStorePixelRatio ||
+            context.msBackingStorePixelRatio ||
+            context.oBackingStorePixelRatio ||
+            context.backingStorePixelRatio || 1;
 
         this.pixelRatio = devicePixelRatio / backingStoreRatio;
 
@@ -243,7 +243,7 @@ Licensed under the MIT license.
     // @param {number} width New width of the canvas, in pixels.
     // @param {number} width New height of the canvas, in pixels.
 
-    Canvas.prototype.resize = function (width, height) {
+    Canvas.prototype.resize = function(width, height) {
 
         if (width <= 0 || height <= 0) {
             throw new Error("Invalid dimensions for plot, width = " + width + ", height = " + height);
@@ -288,13 +288,13 @@ Licensed under the MIT license.
 
     // Clears the entire canvas area, not including any overlaid HTML text
 
-    Canvas.prototype.clear = function () {
+    Canvas.prototype.clear = function() {
         this.context.clearRect(0, 0, this.width, this.height);
     };
 
     // Finishes rendering the canvas, including managing the text overlay.
 
-    Canvas.prototype.render = function () {
+    Canvas.prototype.render = function() {
 
         var cache = this._textCache;
 
@@ -350,7 +350,7 @@ Licensed under the MIT license.
     //     uniquely identify the text layer.
     // @return {object} The jQuery-wrapped text-layer div.
 
-    Canvas.prototype.getTextLayer = function (classes) {
+    Canvas.prototype.getTextLayer = function(classes) {
 
         var layer = this.text[classes];
 
@@ -429,7 +429,7 @@ Licensed under the MIT license.
     // @param {number=} width Maximum width of the text before it wraps.
     // @return {object} a text info object.
 
-    Canvas.prototype.getTextInfo = function (layer, text, font, angle, width) {
+    Canvas.prototype.getTextInfo = function(layer, text, font, angle, width) {
 
         var textStyle, layerCache, styleCache, info;
 
@@ -515,7 +515,7 @@ Licensed under the MIT license.
     // @param {string=} valign Vertical alignment of the text; either "top",
     //     "middle" or "bottom".
 
-    Canvas.prototype.addText = function (layer, x, y, text, font, angle, width, halign, valign) {
+    Canvas.prototype.addText = function(layer, x, y, text, font, angle, width, halign, valign) {
 
         var info = this.getTextInfo(layer, text, font, angle, width),
             positions = info.positions;
@@ -588,7 +588,7 @@ Licensed under the MIT license.
     // @param {number=} angle Angle at which the text is rotated, in degrees.
     //     Angle is currently unused, it will be implemented in the future.
 
-    Canvas.prototype.removeText = function (layer, x, y, text, font, angle) {
+    Canvas.prototype.removeText = function(layer, x, y, text, font, angle) {
         if (text == null) {
             var layerCache = this._textCache[layer];
             if (layerCache != null) {
@@ -761,61 +761,61 @@ Licensed under the MIT license.
         plot.setData = setData;
         plot.setupGrid = setupGrid;
         plot.draw = draw;
-        plot.getPlaceholder = function () {
+        plot.getPlaceholder = function() {
             return placeholder;
         };
-        plot.getCanvas = function () {
+        plot.getCanvas = function() {
             return surface.element;
         };
-        plot.getPlotOffset = function () {
+        plot.getPlotOffset = function() {
             return plotOffset;
         };
-        plot.width = function () {
+        plot.width = function() {
             return plotWidth;
         };
-        plot.height = function () {
+        plot.height = function() {
             return plotHeight;
         };
-        plot.offset = function () {
+        plot.offset = function() {
             var o = eventHolder.offset();
             o.left += plotOffset.left;
             o.top += plotOffset.top;
             return o;
         };
-        plot.getData = function () {
+        plot.getData = function() {
             return series;
         };
-        plot.getAxes = function () {
+        plot.getAxes = function() {
             var res = {},
                 i;
-            $.each(xaxes.concat(yaxes), function (_, axis) {
+            $.each(xaxes.concat(yaxes), function(_, axis) {
                 if (axis)
                     res[axis.direction + (axis.n != 1 ? axis.n : "") + "axis"] = axis;
             });
             return res;
         };
-        plot.getXAxes = function () {
+        plot.getXAxes = function() {
             return xaxes;
         };
-        plot.getYAxes = function () {
+        plot.getYAxes = function() {
             return yaxes;
         };
         plot.c2p = canvasToAxisCoords;
         plot.p2c = axisToCanvasCoords;
-        plot.getOptions = function () {
+        plot.getOptions = function() {
             return options;
         };
         plot.highlight = highlight;
         plot.unhighlight = unhighlight;
         plot.triggerRedrawOverlay = triggerRedrawOverlay;
-        plot.pointOffset = function (point) {
+        plot.pointOffset = function(point) {
             return {
                 left: parseInt(xaxes[axisNumber(point, "x") - 1].p2c(+point.x) + plotOffset.left, 10),
                 top: parseInt(yaxes[axisNumber(point, "y") - 1].p2c(+point.y) + plotOffset.top, 10)
             };
         };
         plot.shutdown = shutdown;
-        plot.destroy = function () {
+        plot.destroy = function() {
             shutdown();
             placeholder.removeData("plot").empty();
 
@@ -832,7 +832,7 @@ Licensed under the MIT license.
             highlights = [];
             plot = null;
         };
-        plot.resize = function () {
+        plot.resize = function() {
             var width = placeholder.width(),
                 height = placeholder.height();
             surface.resize(width, height);
@@ -1056,7 +1056,7 @@ Licensed under the MIT license.
 
         function allAxes() {
             // return flat array without annoying null entries
-            return $.grep(xaxes.concat(yaxes), function (a) {
+            return $.grep(xaxes.concat(yaxes), function(a) {
                 return a;
             });
         }
@@ -1243,7 +1243,7 @@ Licensed under the MIT license.
                     axis.datamax = max;
             }
 
-            $.each(allAxes(), function (_, axis) {
+            $.each(allAxes(), function(_, axis) {
                 // init axis
                 axis.datamin = topSentry;
                 axis.datamax = bottomSentry;
@@ -1453,7 +1453,7 @@ Licensed under the MIT license.
                 updateAxis(s.yaxis, ymin, ymax);
             }
 
-            $.each(allAxes(), function (_, axis) {
+            $.each(allAxes(), function(_, axis) {
                 if (axis.datamin == topSentry)
                     axis.datamin = null;
                 if (axis.datamax == bottomSentry)
@@ -1467,9 +1467,9 @@ Licensed under the MIT license.
             // from a previous plot in this container that we'll try to re-use.
 
             placeholder.css("padding", 0) // padding messes up the positioning
-                .children().filter(function () {
-                return !$(this).hasClass("flot-overlay") && !$(this).hasClass('flot-base');
-            }).remove();
+                .children().filter(function() {
+                    return !$(this).hasClass("flot-overlay") && !$(this).hasClass('flot-base');
+                }).remove();
 
             if (placeholder.css("position") == 'static')
                 placeholder.css("position", "relative"); // for positioning labels and overlay
@@ -1551,20 +1551,20 @@ Licensed under the MIT license.
 
             // data point to canvas coordinate
             if (t == identity) // slight optimization
-                axis.p2c = function (p) {
+                axis.p2c = function(p) {
                     return (p - m) * s;
                 };
             else
-                axis.p2c = function (p) {
+                axis.p2c = function(p) {
                     return (t(p) - m) * s;
                 };
             // canvas coordinate to data point
             if (!it)
-                axis.c2p = function (c) {
+                axis.c2p = function(c) {
                     return m + c / s;
                 };
             else
-                axis.c2p = function (c) {
+                axis.c2p = function(c) {
                     return it(m + c / s);
                 };
         }
@@ -1618,7 +1618,7 @@ Licensed under the MIT license.
 
             // Determine the axis's position in its direction and on its side
 
-            $.each(isXAxis ? xaxes : yaxes, function (i, a) {
+            $.each(isXAxis ? xaxes : yaxes, function(i, a) {
                 if (a && (a.show || a.reserveSpace)) {
                     if (a === axis) {
                         found = true;
@@ -1729,7 +1729,7 @@ Licensed under the MIT license.
             // check axis labels, note we don't check the actual
             // labels but instead use the overall width/height to not
             // jump as much around with replots
-            $.each(allAxes(), function (_, axis) {
+            $.each(allAxes(), function(_, axis) {
                 if (axis.reserveSpace && axis.ticks && axis.ticks.length) {
                     if (axis.direction === "x") {
                         margins.left = Math.max(margins.left, axis.labelWidth / 2);
@@ -1763,14 +1763,14 @@ Licensed under the MIT license.
             // If the grid is visible, add its border width to the offset
 
             for (var a in plotOffset) {
-                if (typeof (options.grid.borderWidth) == "object") {
+                if (typeof(options.grid.borderWidth) == "object") {
                     plotOffset[a] += showGrid ? options.grid.borderWidth[a] : 0;
                 } else {
                     plotOffset[a] += showGrid ? options.grid.borderWidth : 0;
                 }
             }
 
-            $.each(axes, function (_, axis) {
+            $.each(axes, function(_, axis) {
                 var axisOpts = axis.options;
                 axis.show = axisOpts.show == null ? axis.used : axisOpts.show;
                 axis.reserveSpace = axisOpts.reserveSpace == null ? axis.show : axisOpts.reserveSpace;
@@ -1779,11 +1779,11 @@ Licensed under the MIT license.
 
             if (showGrid) {
 
-                var allocatedAxes = $.grep(axes, function (axis) {
+                var allocatedAxes = $.grep(axes, function(axis) {
                     return axis.show || axis.reserveSpace;
                 });
 
-                $.each(allocatedAxes, function (_, axis) {
+                $.each(allocatedAxes, function(_, axis) {
                     // make the ticks
                     setupTickGeneration(axis);
                     setTicks(axis);
@@ -1802,7 +1802,7 @@ Licensed under the MIT license.
                 // might stick out
                 adjustLayoutForThingsStickingOut();
 
-                $.each(allocatedAxes, function (_, axis) {
+                $.each(allocatedAxes, function(_, axis) {
                     allocateAxisBoxSecondPhase(axis);
                 });
             }
@@ -1811,7 +1811,7 @@ Licensed under the MIT license.
             plotHeight = surface.height - plotOffset.bottom - plotOffset.top;
 
             // now we got the proper plot dimensions, we can compute the scaling
-            $.each(axes, function (_, axis) {
+            $.each(axes, function(_, axis) {
                 setTransformationHelpers(axis);
             });
 
@@ -1921,7 +1921,7 @@ Licensed under the MIT license.
 
             if (!axis.tickGenerator) {
 
-                axis.tickGenerator = function (axis) {
+                axis.tickGenerator = function(axis) {
 
                     var ticks = [],
                         start = floorInBase(axis.min, axis.tickSize),
@@ -1938,7 +1938,7 @@ Licensed under the MIT license.
                     return ticks;
                 };
 
-                axis.tickFormatter = function (value, axis) {
+                axis.tickFormatter = function(value, axis) {
 
                     var factor = axis.tickDecimals ? Math.pow(10, axis.tickDecimals) : 1;
                     var formatted = "" + Math.round(value * factor) / factor;
@@ -1959,7 +1959,7 @@ Licensed under the MIT license.
             }
 
             if ($.isFunction(opts.tickFormatter))
-                axis.tickFormatter = function (v, axis) {
+                axis.tickFormatter = function(v, axis) {
                     return "" + opts.tickFormatter(v, axis);
                 };
 
@@ -1975,7 +1975,7 @@ Licensed under the MIT license.
                             axis.max = Math.max(axis.max, niceTicks[niceTicks.length - 1]);
                     }
 
-                    axis.tickGenerator = function (axis) {
+                    axis.tickGenerator = function(axis) {
                         // copy ticks, scaled to this axis
                         var ticks = [],
                             v, i;
@@ -2381,7 +2381,7 @@ Licensed under the MIT license.
 
         function drawAxisLabels() {
 
-            $.each(allAxes(), function (_, axis) {
+            $.each(allAxes(), function(_, axis) {
                 var box = axis.box,
                     legacyStyles = axis.direction + "Axis " + axis.direction + axis.n + "Axis",
                     layer = "flot-" + axis.direction + "-axis flot-" + axis.direction + axis.n + "-axis " + legacyStyles,
@@ -2891,7 +2891,7 @@ Licensed under the MIT license.
                     barLeft = -series.bars.barWidth / 2;
             }
 
-            var fillStyleCallback = series.bars.fill ? function (bottom, top) {
+            var fillStyleCallback = series.bars.fill ? function(bottom, top) {
                 return getFillStyle(series.bars, series.color, bottom, top);
             } : null;
             plotBars(series.datapoints, barLeft, barLeft + series.bars.barWidth, fillStyleCallback, series.xaxis, series.yaxis);
@@ -2954,7 +2954,7 @@ Licensed under the MIT license.
                     entries.reverse();
                 } else {
                     var ascending = options.legend.sorted != "descending";
-                    entries.sort(function (a, b) {
+                    entries.sort(function(a, b) {
                         return a.label == b.label ? 0 : (
                             (a.label < b.label) != ascending ? 1 : -1 // Logical XOR
                         );
@@ -3142,7 +3142,7 @@ Licensed under the MIT license.
         function onMouseMove(e) {
             if (options.grid.hoverable)
                 triggerClickHoverEvent("plothover", e,
-                    function (s) {
+                    function(s) {
                         return s["hoverable"] != false;
                     });
         }
@@ -3150,14 +3150,14 @@ Licensed under the MIT license.
         function onMouseLeave(e) {
             if (options.grid.hoverable)
                 triggerClickHoverEvent("plothover", e,
-                    function (s) {
+                    function(s) {
                         return false;
                     });
         }
 
         function onClick(e) {
             triggerClickHoverEvent("plotclick", e,
-                function (s) {
+                function(s) {
                     return s["clickable"] != false;
                 });
         }
@@ -3336,7 +3336,7 @@ Licensed under the MIT license.
             octx.strokeStyle = highlightColor;
 
             drawBar(point[0], point[1], point[2] || 0, barLeft, barLeft + series.bars.barWidth,
-                function () {
+                function() {
                     return fillStyle;
                 }, series.xaxis, series.yaxis, octx, series.bars.horizontal, series.bars.lineWidth);
         }
@@ -3370,7 +3370,7 @@ Licensed under the MIT license.
 
     // Add the plot function to the top level of the jQuery object
 
-    $.plot = function (placeholder, data, options) {
+    $.plot = function(placeholder, data, options) {
         //var t0 = new Date();
         var plot = new Plot($(placeholder), data, options, $.plot.plugins);
         //(window.console ? console.log : alert)("time used (msecs): " + ((new Date()).getTime() - t0.getTime()));
@@ -3383,8 +3383,8 @@ Licensed under the MIT license.
 
     // Also add the plot function as a chainable property
 
-    $.fn.plot = function (data, options) {
-        return this.each(function () {
+    $.fn.plot = function(data, options) {
+        return this.each(function() {
             $.plot(this, data, options);
         });
     };

@@ -7,36 +7,36 @@ import TokenCalculator from './components/TokenCalculator/TokenCalculator.compon
 import TokenSaleGraph from './components/TokenSaleGraph/TokenSaleGraph.component'
 
 const Home = () => {
-    return (
-        <div className="page-content">
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-12">
-                        <div className="token-statistics card card-token height-auto">
-                            <TokenStatistics/>
-                        </div>
-                    </div>
-                    <div className="col-xl-8 col-lg-7">
-                        <div className="token-transaction card card-full-height">
-                            <TokenTransaction/>
-                        </div>
-                    </div>
-                    <div className="col-xl-4 col-lg-5">
-                        <div className="token-calculator card card-full-height">
-                            <TokenCalculator keyQuantity="15"/>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-xl-12 col-lg-12">
-                        <div className="token-sale-graph card card-full-height">
-                            <TokenSaleGraph/>
-                        </div>
-                    </div>
-                </div>
+  return (
+    <div className="page-content">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="token-statistics card card-token height-auto">
+              <TokenStatistics />
             </div>
+          </div>
+          <div className="col-xl-8 col-lg-7">
+            <div className="token-transaction card card-full-height">
+              <TokenTransaction />
+            </div>
+          </div>
+          <div className="col-xl-4 col-lg-5">
+            <div className="token-calculator card card-full-height">
+              <TokenCalculator keyQuantity="15" />
+            </div>
+          </div>
         </div>
-    )
+        <div className="row">
+          <div className="col-xl-12 col-lg-12">
+            <div className="token-sale-graph card card-full-height">
+              <TokenSaleGraph />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default Home

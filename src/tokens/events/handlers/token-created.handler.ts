@@ -1,41 +1,59 @@
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {TokenCreatedEvent} from '../impl/token-created.event';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {Repository} from 'typeorm';
-import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
-import {CONSTANTS} from 'common/constant';
+import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
+import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from "../impl/token-created.event";
+import { Logger, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { TokenTypeDto } from "tokens/dtos/token-types.dto";
+import { TokenDto } from "tokens/dtos/tokens.dto";
+import { Repository } from "typeorm";
+import { Utils } from "utils";
 
 @EventsHandler(TokenCreatedEvent)
 export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
-    constructor(
-        @InjectRepository(TokenDto)
-        private readonly repository: Repository<TokenDto>,
-        @InjectRepository(TokenTypeDto)
-        private readonly repositoryTokenType: Repository<TokenTypeDto>,
-    ) {
-    }
+  constructor(
+    @InjectRepository(TokenDto)
+    private readonly repository: Repository<TokenDto>,
+    @InjectRepository(TokenTypeDto)
+    private readonly repositoryTokenType: Repository<TokenTypeDto>,
+    private readonly eventBus: EventBus,
+  ) { }
 
-    async handle(event: TokenCreatedEvent) {
-        try {
-            Logger.log(event, 'TokenCreatedEvent');
-            const token = event.tokenDto[0];
-            Logger.log(token, 'TokenCreatedEvent');
-            const freeTokenType = await this.repositoryTokenType.find({
-                name: token.tokenType || CONSTANTS.TOKEN_TYPE.FREE
-            });
-            token.tokenTypeId = freeTokenType[0]._id;
-            token.minutes = freeTokenType[0].minutes;
-            delete token.tokenType;
-            Logger.log(token, 'TokenCreatedEvent after');
-            const savedToken = await this.repository.save(token);
-            if (event.tokenDto[1]) { // userDto
-                return event.tokenDto[1];
-            }
-            return savedToken;
-        } catch (error) {
-            Logger.error(error, 'TokenCreatedEvent');
+  async handle(event: TokenCreatedEvent) {
+    Logger.log(event.tokenDto._id, "TokenCreatedEvent");
+    const { streamId, tokenDto } = event;
+    let token = JSON.parse(JSON.stringify(tokenDto));
+    let tokenTypeDto = null;
+
+    try {
+      if (token.tokenTypeId) {
+        tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
+        if (!tokenTypeDto) {
+          throw new NotFoundException(`Token type with _id ${token.tokenTypeId} does not exist.`);
         }
+      } else if (token.tokenType) {
+        tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
+      }
+      token.tokenTypeId = tokenTypeDto._id;
+      token.minutes = tokenTypeDto.minutes;
+      token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
+      await this.repository.save(token);
+      this.eventBus.publish(new TokenCreatedSuccessEvent(streamId, tokenDto));
+    } catch (error) {
+      this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error));
     }
+  }
+
+  @EventsHandler(TokenCreatedSuccessEvent)
+  export class TokenCreatedSuccessHandler
+  implements IEventHandler < TokenCreatedSuccessEvent > {
+  handle(event: TokenCreatedSuccessEvent) {
+    Logger.log(event.tokenDto._id, "TokenCreatedSuccessEvent");
+  }
+}
+
+@EventsHandler(TokenCreatedFailedEvent)
+export class TokenCreatedFailHandler
+  implements IEventHandler<TokenCreatedFailedEvent> {
+  handle(event: TokenCreatedFailedEvent) {
+    Logger.log(event.error, "TokenCreatedFailedEvent");
+  }
 }

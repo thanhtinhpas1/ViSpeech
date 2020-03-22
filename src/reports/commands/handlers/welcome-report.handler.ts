@@ -13,9 +13,9 @@ export class WelcomeReportHandler
 
   async execute(command: WelcomeReportCommand) {
     Logger.log("Async WelcomeReportHandler...", "WelcomeReportCommand");
-    const { reportId } = command;
+    const { streamId, reportId } = command;
     const report = this.publisher.mergeObjectContext(
-      await this.repository.welcomeReport(reportId)
+      await this.repository.welcomeReport(streamId, reportId)
     );
     report.commit();
   }

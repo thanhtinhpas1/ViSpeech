@@ -1,20 +1,16 @@
 @import "../../../default.style.scss";
-
 .upload-avatar-wrap {
   border: 1px solid #adacac;
   width: 70vw;
   margin: 20px auto;
   text-align: center;
-
   .message {
     display: flex;
-
     .ant-alert {
       margin: auto;
       margin-top: 20px;
     }
   }
-
   .current-avatar {
     img {
       margin-top: 20px;
@@ -30,12 +26,10 @@
     $size-input-width: 400px;
     $size-input-height: 20px;
     margin: 30px auto;
-
     &__input {
       max-width: $size-input-width;
       border: 1px dashed #505050;
       margin: 20px auto;
-
       div {
         // width: $size-input-width;
         // height: $size-input-height;

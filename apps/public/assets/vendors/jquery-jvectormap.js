@@ -5,7 +5,7 @@
  *
  */
 
-(function ($) {
+(function($) {
     var apiParams = {
         set: {
             colors: 1,
@@ -23,7 +23,7 @@
         }
     };
 
-    $.fn.vectorMap = function (options) {
+    $.fn.vectorMap = function(options) {
         var map,
             methodName,
             map = this.children('.jvectormap-container').data('mapObject');
@@ -50,7 +50,7 @@
  * Requires: jQuery 1.2.2+
  */
 
-(function (factory) {
+(function(factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(['jquery'], factory);
@@ -61,7 +61,7 @@
         // Browser globals
         factory(jQuery);
     }
-}(function ($) {
+}(function($) {
 
     var toFix = ['wheel', 'mousewheel', 'DOMMouseScroll', 'MozMousePixelScroll'],
         toBind = ('onwheel' in document || document.documentMode >= 9) ? ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'],
@@ -77,7 +77,7 @@
     var special = $.event.special.mousewheel = {
         version: '3.1.9',
 
-        setup: function () {
+        setup: function() {
             if (this.addEventListener) {
                 for (var i = toBind.length; i;) {
                     this.addEventListener(toBind[--i], handler, false);
@@ -90,7 +90,7 @@
             $.data(this, 'mousewheel-page-height', special.getPageHeight(this));
         },
 
-        teardown: function () {
+        teardown: function() {
             if (this.removeEventListener) {
                 for (var i = toBind.length; i;) {
                     this.removeEventListener(toBind[--i], handler, false);
@@ -100,11 +100,11 @@
             }
         },
 
-        getLineHeight: function (elem) {
+        getLineHeight: function(elem) {
             return parseInt($(elem)['offsetParent' in $.fn ? 'offsetParent' : 'parent']().css('fontSize'), 10);
         },
 
-        getPageHeight: function (elem) {
+        getPageHeight: function(elem) {
             return $(elem).height();
         },
 
@@ -114,11 +114,11 @@
     };
 
     $.fn.extend({
-        mousewheel: function (fn) {
+        mousewheel: function(fn) {
             return fn ? this.bind('mousewheel', fn) : this.trigger('mousewheel');
         },
 
-        unmousewheel: function (fn) {
+        unmousewheel: function(fn) {
             return this.unbind('mousewheel', fn);
         }
     });
@@ -266,10 +266,8 @@ var jvm = {
      * @param {Function} child
      * @param {Function} parent
      */
-    inherits: function (child, parent) {
-        function temp() {
-        }
-
+    inherits: function(child, parent) {
+        function temp() {}
         temp.prototype = parent.prototype;
         child.prototype = new temp();
         child.prototype.constructor = child;
@@ -281,7 +279,7 @@ var jvm = {
      * @param {Function} target
      * @param {Function} source
      */
-    mixin: function (target, source) {
+    mixin: function(target, source) {
         var prop;
 
         for (prop in source.prototype) {
@@ -291,7 +289,7 @@ var jvm = {
         }
     },
 
-    min: function (values) {
+    min: function(values) {
         var min = Number.MAX_VALUE,
             i;
 
@@ -311,7 +309,7 @@ var jvm = {
         return min;
     },
 
-    max: function (values) {
+    max: function(values) {
         var max = Number.MIN_VALUE,
             i;
 
@@ -331,7 +329,7 @@ var jvm = {
         return max;
     },
 
-    keys: function (object) {
+    keys: function(object) {
         var keys = [],
             key;
 
@@ -341,7 +339,7 @@ var jvm = {
         return keys;
     },
 
-    values: function (object) {
+    values: function(object) {
         var values = [],
             key,
             i;
@@ -355,13 +353,13 @@ var jvm = {
         return values;
     },
 
-    whenImageLoaded: function (url) {
+    whenImageLoaded: function(url) {
         var deferred = new jvm.$.Deferred(),
             img = jvm.$('<img/>');
 
-        img.error(function () {
+        img.error(function() {
             deferred.reject();
-        }).load(function () {
+        }).load(function() {
             deferred.resolve(img);
         });
         img.attr('src', url);
@@ -369,7 +367,7 @@ var jvm = {
         return deferred;
     },
 
-    isImageUrl: function (s) {
+    isImageUrl: function(s) {
         return /\.\w{3,4}$/.test(s);
     }
 };
@@ -381,7 +379,7 @@ jvm.$ = jQuery;
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
  */
 if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function (searchElement, fromIndex) {
+    Array.prototype.indexOf = function(searchElement, fromIndex) {
 
         var k;
 
@@ -449,7 +447,7 @@ if (!Array.prototype.indexOf) {
  * @param {String} name Tag name of the element
  * @param {Object} config Set of parameters to initialize element with
  */
-jvm.AbstractElement = function (name, config) {
+jvm.AbstractElement = function(name, config) {
     /**
      * Underlying DOM element
      * @type {DOMElement}
@@ -481,7 +479,7 @@ jvm.AbstractElement = function (name, config) {
  * @param {String} name Name of attribute
  * @param {Number|String} config Set of parameters to initialize element with
  */
-jvm.AbstractElement.prototype.set = function (property, value) {
+jvm.AbstractElement.prototype.set = function(property, value) {
     var key;
 
     if (typeof property === 'object') {
@@ -499,7 +497,7 @@ jvm.AbstractElement.prototype.set = function (property, value) {
  * Returns value of attribute.
  * @param {String} name Name of attribute
  */
-jvm.AbstractElement.prototype.get = function (property) {
+jvm.AbstractElement.prototype.get = function(property) {
     return this.properties[property];
 };
 
@@ -509,11 +507,11 @@ jvm.AbstractElement.prototype.get = function (property) {
  * @param {Number|String} config Value of attribute to apply
  * @private
  */
-jvm.AbstractElement.prototype.applyAttr = function (property, value) {
+jvm.AbstractElement.prototype.applyAttr = function(property, value) {
     this.node.setAttribute(property, value);
 };
 
-jvm.AbstractElement.prototype.remove = function () {
+jvm.AbstractElement.prototype.remove = function() {
     jvm.$(this.node).remove();
 };
 /**
@@ -523,7 +521,7 @@ jvm.AbstractElement.prototype.remove = function () {
  * @param {Number} width Width of canvas.
  * @param {Number} height Height of canvas.
  */
-jvm.AbstractCanvasElement = function (container, width, height) {
+jvm.AbstractCanvasElement = function(container, width, height) {
     this.container = container;
     this.setSize(width, height);
     this.rootElement = new jvm[this.classPrefix + 'GroupElement']();
@@ -536,7 +534,7 @@ jvm.AbstractCanvasElement = function (container, width, height) {
  * @param {HTMLElement} element Element to add to canvas.
  * @param {HTMLElement} group Group to add element into or into root group if not provided.
  */
-jvm.AbstractCanvasElement.prototype.add = function (element, group) {
+jvm.AbstractCanvasElement.prototype.add = function(element, group) {
     group = group || this.rootElement;
     group.add(element);
     element.canvas = this;
@@ -548,7 +546,7 @@ jvm.AbstractCanvasElement.prototype.add = function (element, group) {
  * @param {Object} style Styles of the path to create.
  * @param {HTMLElement} group Group to add path into.
  */
-jvm.AbstractCanvasElement.prototype.addPath = function (config, style, group) {
+jvm.AbstractCanvasElement.prototype.addPath = function(config, style, group) {
     var el = new jvm[this.classPrefix + 'PathElement'](config, style);
 
     this.add(el, group);
@@ -561,7 +559,7 @@ jvm.AbstractCanvasElement.prototype.addPath = function (config, style, group) {
  * @param {Object} style Styles of the path to create.
  * @param {HTMLElement} group Group to add circle into.
  */
-jvm.AbstractCanvasElement.prototype.addCircle = function (config, style, group) {
+jvm.AbstractCanvasElement.prototype.addCircle = function(config, style, group) {
     var el = new jvm[this.classPrefix + 'CircleElement'](config, style);
 
     this.add(el, group);
@@ -574,7 +572,7 @@ jvm.AbstractCanvasElement.prototype.addCircle = function (config, style, group) 
  * @param {Object} style Styles of the path to create.
  * @param {HTMLElement} group Group to add circle into.
  */
-jvm.AbstractCanvasElement.prototype.addImage = function (config, style, group) {
+jvm.AbstractCanvasElement.prototype.addImage = function(config, style, group) {
     var el = new jvm[this.classPrefix + 'ImageElement'](config, style);
 
     this.add(el, group);
@@ -587,7 +585,7 @@ jvm.AbstractCanvasElement.prototype.addImage = function (config, style, group) {
  * @param {Object} style Styles of the path to create.
  * @param {HTMLElement} group Group to add circle into.
  */
-jvm.AbstractCanvasElement.prototype.addText = function (config, style, group) {
+jvm.AbstractCanvasElement.prototype.addText = function(config, style, group) {
     var el = new jvm[this.classPrefix + 'TextElement'](config, style);
 
     this.add(el, group);
@@ -598,7 +596,7 @@ jvm.AbstractCanvasElement.prototype.addText = function (config, style, group) {
  * Add group to the another group inside of the canvas.
  * @param {HTMLElement} group Group to add circle into or root group if not provided.
  */
-jvm.AbstractCanvasElement.prototype.addGroup = function (parentGroup) {
+jvm.AbstractCanvasElement.prototype.addGroup = function(parentGroup) {
     var el = new jvm[this.classPrefix + 'GroupElement']();
 
     if (parentGroup) {
@@ -616,7 +614,7 @@ jvm.AbstractCanvasElement.prototype.addGroup = function (parentGroup) {
  * @param {Object} config Set of parameters to initialize element with.
  * @param {Object} style Object with styles to set on element initialization.
  */
-jvm.AbstractShapeElement = function (name, config, style) {
+jvm.AbstractShapeElement = function(name, config, style) {
     this.style = style || {};
     this.style.current = this.style.current || {};
     this.isHovered = false;
@@ -629,7 +627,7 @@ jvm.AbstractShapeElement = function (name, config, style) {
  * @param {Object|String} property Could be string to set only one property or object to set several style properties at once.
  * @param {String} value Value to set in case only one property should be set.
  */
-jvm.AbstractShapeElement.prototype.setStyle = function (property, value) {
+jvm.AbstractShapeElement.prototype.setStyle = function(property, value) {
     var styles = {};
 
     if (typeof property === 'object') {
@@ -642,7 +640,7 @@ jvm.AbstractShapeElement.prototype.setStyle = function (property, value) {
 };
 
 
-jvm.AbstractShapeElement.prototype.updateStyle = function () {
+jvm.AbstractShapeElement.prototype.updateStyle = function() {
     var attrs = {};
 
     jvm.AbstractShapeElement.mergeStyles(attrs, this.style.initial);
@@ -659,7 +657,7 @@ jvm.AbstractShapeElement.prototype.updateStyle = function () {
     this.set(attrs);
 };
 
-jvm.AbstractShapeElement.mergeStyles = function (styles, newStyles) {
+jvm.AbstractShapeElement.mergeStyles = function(styles, newStyles) {
     var key;
 
     newStyles = newStyles || {};
@@ -679,7 +677,7 @@ jvm.AbstractShapeElement.mergeStyles = function (styles, newStyles) {
  * @param {Object} config Set of parameters to initialize element with
  */
 
-jvm.SVGElement = function (name, config) {
+jvm.SVGElement = function(name, config) {
     jvm.SVGElement.parentClass.apply(this, arguments);
 }
 
@@ -693,7 +691,7 @@ jvm.SVGElement.svgns = "http://www.w3.org/2000/svg";
  * @private
  * @returns DOMElement
  */
-jvm.SVGElement.prototype.createElement = function (tagName) {
+jvm.SVGElement.prototype.createElement = function(tagName) {
     return document.createElementNS(jvm.SVGElement.svgns, tagName);
 };
 
@@ -701,7 +699,7 @@ jvm.SVGElement.prototype.createElement = function (tagName) {
  * Adds CSS class for underlying DOM element.
  * @param {String} className Name of CSS class name
  */
-jvm.SVGElement.prototype.addClass = function (className) {
+jvm.SVGElement.prototype.addClass = function(className) {
     this.node.setAttribute('class', className);
 };
 
@@ -712,23 +710,23 @@ jvm.SVGElement.prototype.addClass = function (className) {
  * @returns Function
  * @private
  */
-jvm.SVGElement.prototype.getElementCtr = function (ctr) {
+jvm.SVGElement.prototype.getElementCtr = function(ctr) {
     return jvm['SVG' + ctr];
 };
 
-jvm.SVGElement.prototype.getBBox = function () {
+jvm.SVGElement.prototype.getBBox = function() {
     return this.node.getBBox();
 };
-jvm.SVGGroupElement = function () {
+jvm.SVGGroupElement = function() {
     jvm.SVGGroupElement.parentClass.call(this, 'g');
 }
 
 jvm.inherits(jvm.SVGGroupElement, jvm.SVGElement);
 
-jvm.SVGGroupElement.prototype.add = function (element) {
+jvm.SVGGroupElement.prototype.add = function(element) {
     this.node.appendChild(element.node);
 };
-jvm.SVGCanvasElement = function (container, width, height) {
+jvm.SVGCanvasElement = function(container, width, height) {
     this.classPrefix = 'SVG';
     jvm.SVGCanvasElement.parentClass.call(this, 'svg');
 
@@ -741,20 +739,20 @@ jvm.SVGCanvasElement = function (container, width, height) {
 jvm.inherits(jvm.SVGCanvasElement, jvm.SVGElement);
 jvm.mixin(jvm.SVGCanvasElement, jvm.AbstractCanvasElement);
 
-jvm.SVGCanvasElement.prototype.setSize = function (width, height) {
+jvm.SVGCanvasElement.prototype.setSize = function(width, height) {
     this.width = width;
     this.height = height;
     this.node.setAttribute('width', width);
     this.node.setAttribute('height', height);
 };
 
-jvm.SVGCanvasElement.prototype.applyTransformParams = function (scale, transX, transY) {
+jvm.SVGCanvasElement.prototype.applyTransformParams = function(scale, transX, transY) {
     this.scale = scale;
     this.transX = transX;
     this.transY = transY;
     this.rootElement.node.setAttribute('transform', 'scale(' + scale + ') translate(' + transX + ', ' + transY + ')');
 };
-jvm.SVGShapeElement = function (name, config, style) {
+jvm.SVGShapeElement = function(name, config, style) {
     jvm.SVGShapeElement.parentClass.call(this, name, config);
     jvm.AbstractShapeElement.apply(this, arguments);
 };
@@ -762,14 +760,14 @@ jvm.SVGShapeElement = function (name, config, style) {
 jvm.inherits(jvm.SVGShapeElement, jvm.SVGElement);
 jvm.mixin(jvm.SVGShapeElement, jvm.AbstractShapeElement);
 
-jvm.SVGShapeElement.prototype.applyAttr = function (attr, value) {
+jvm.SVGShapeElement.prototype.applyAttr = function(attr, value) {
     var patternEl,
         imageEl,
         that = this;
 
     if (attr === 'fill' && jvm.isImageUrl(value)) {
         if (!jvm.SVGShapeElement.images[value]) {
-            jvm.whenImageLoaded(value).then(function (img) {
+            jvm.whenImageLoaded(value).then(function(img) {
                 imageEl = new jvm.SVGElement('image');
                 imageEl.node.setAttributeNS('http://www.w3.org/1999/xlink', 'href', value);
                 imageEl.applyAttr('x', '0');
@@ -803,28 +801,28 @@ jvm.SVGShapeElement.prototype.applyAttr = function (attr, value) {
 
 jvm.SVGShapeElement.imageCounter = 1;
 jvm.SVGShapeElement.images = {};
-jvm.SVGPathElement = function (config, style) {
+jvm.SVGPathElement = function(config, style) {
     jvm.SVGPathElement.parentClass.call(this, 'path', config, style);
     this.node.setAttribute('fill-rule', 'evenodd');
 }
 
 jvm.inherits(jvm.SVGPathElement, jvm.SVGShapeElement);
-jvm.SVGCircleElement = function (config, style) {
+jvm.SVGCircleElement = function(config, style) {
     jvm.SVGCircleElement.parentClass.call(this, 'circle', config, style);
 };
 
 jvm.inherits(jvm.SVGCircleElement, jvm.SVGShapeElement);
-jvm.SVGImageElement = function (config, style) {
+jvm.SVGImageElement = function(config, style) {
     jvm.SVGImageElement.parentClass.call(this, 'image', config, style);
 };
 
 jvm.inherits(jvm.SVGImageElement, jvm.SVGShapeElement);
 
-jvm.SVGImageElement.prototype.applyAttr = function (attr, value) {
+jvm.SVGImageElement.prototype.applyAttr = function(attr, value) {
     var that = this;
 
     if (attr == 'image') {
-        jvm.whenImageLoaded(value).then(function (img) {
+        jvm.whenImageLoaded(value).then(function(img) {
             that.node.setAttributeNS('http://www.w3.org/1999/xlink', 'href', value);
             that.width = img[0].width;
             that.height = img[0].height;
@@ -850,13 +848,13 @@ jvm.SVGImageElement.prototype.applyAttr = function (attr, value) {
         jvm.SVGImageElement.parentClass.prototype.applyAttr.apply(this, arguments);
     }
 };
-jvm.SVGTextElement = function (config, style) {
+jvm.SVGTextElement = function(config, style) {
     jvm.SVGTextElement.parentClass.call(this, 'text', config, style);
 }
 
 jvm.inherits(jvm.SVGTextElement, jvm.SVGShapeElement);
 
-jvm.SVGTextElement.prototype.applyAttr = function (attr, value) {
+jvm.SVGTextElement.prototype.applyAttr = function(attr, value) {
     if (attr === 'text') {
         this.node.textContent = value;
     } else {
@@ -871,7 +869,7 @@ jvm.SVGTextElement.prototype.applyAttr = function (attr, value) {
  * @param {Object} config Set of parameters to initialize element with
  */
 
-jvm.VMLElement = function (name, config) {
+jvm.VMLElement = function(name, config) {
     if (!jvm.VMLElement.VMLInitialized) {
         jvm.VMLElement.initializeVML();
     }
@@ -900,7 +898,7 @@ jvm.VMLElement.VMLInitialized = false;
 // The following method of VML handling is borrowed from the
 // Raphael library by Dmitry Baranovsky.
 
-jvm.VMLElement.initializeVML = function () {
+jvm.VMLElement.initializeVML = function() {
     try {
         if (!document.namespaces.rvml) {
             document.namespaces.add("rvml", "urn:schemas-microsoft-com:vml");
@@ -911,14 +909,14 @@ jvm.VMLElement.initializeVML = function () {
          * @private
          * @returns DOMElement
          */
-        jvm.VMLElement.prototype.createElement = function (tagName) {
+        jvm.VMLElement.prototype.createElement = function(tagName) {
             return document.createElement('<rvml:' + tagName + ' class="rvml">');
         };
     } catch (e) {
         /**
          * @private
          */
-        jvm.VMLElement.prototype.createElement = function (tagName) {
+        jvm.VMLElement.prototype.createElement = function(tagName) {
             return document.createElement('<' + tagName + ' xmlns="urn:schemas-microsoft.com:vml" class="rvml">');
         };
     }
@@ -933,7 +931,7 @@ jvm.VMLElement.initializeVML = function () {
  * @returns Function
  * @private
  */
-jvm.VMLElement.prototype.getElementCtr = function (ctr) {
+jvm.VMLElement.prototype.getElementCtr = function(ctr) {
     return jvm['VML' + ctr];
 };
 
@@ -941,7 +939,7 @@ jvm.VMLElement.prototype.getElementCtr = function (ctr) {
  * Adds CSS class for underlying DOM element.
  * @param {String} className Name of CSS class name
  */
-jvm.VMLElement.prototype.addClass = function (className) {
+jvm.VMLElement.prototype.addClass = function(className) {
     jvm.$(this.node).addClass(className);
 };
 
@@ -951,7 +949,7 @@ jvm.VMLElement.prototype.addClass = function (className) {
  * @param {Number|String} config Value of attribute to apply
  * @private
  */
-jvm.VMLElement.prototype.applyAttr = function (attr, value) {
+jvm.VMLElement.prototype.applyAttr = function(attr, value) {
     this.node[attr] = value;
 };
 
@@ -960,7 +958,7 @@ jvm.VMLElement.prototype.applyAttr = function (attr, value) {
  * @returns {Object} Boundary box with numeric fields: x, y, width, height
  * @override
  */
-jvm.VMLElement.prototype.getBBox = function () {
+jvm.VMLElement.prototype.getBBox = function() {
     var node = jvm.$(this.node);
 
     return {
@@ -970,7 +968,7 @@ jvm.VMLElement.prototype.getBBox = function () {
         height: node.height() / this.canvas.scale
     };
 };
-jvm.VMLGroupElement = function () {
+jvm.VMLGroupElement = function() {
     jvm.VMLGroupElement.parentClass.call(this, 'group');
 
     this.node.style.left = '0px';
@@ -980,10 +978,10 @@ jvm.VMLGroupElement = function () {
 
 jvm.inherits(jvm.VMLGroupElement, jvm.VMLElement);
 
-jvm.VMLGroupElement.prototype.add = function (element) {
+jvm.VMLGroupElement.prototype.add = function(element) {
     this.node.appendChild(element.node);
 };
-jvm.VMLCanvasElement = function (container, width, height) {
+jvm.VMLCanvasElement = function(container, width, height) {
     this.classPrefix = 'VML';
     jvm.VMLCanvasElement.parentClass.call(this, 'group');
     jvm.AbstractCanvasElement.apply(this, arguments);
@@ -993,7 +991,7 @@ jvm.VMLCanvasElement = function (container, width, height) {
 jvm.inherits(jvm.VMLCanvasElement, jvm.VMLElement);
 jvm.mixin(jvm.VMLCanvasElement, jvm.AbstractCanvasElement);
 
-jvm.VMLCanvasElement.prototype.setSize = function (width, height) {
+jvm.VMLCanvasElement.prototype.setSize = function(width, height) {
     var paths,
         groups,
         i,
@@ -1021,14 +1019,14 @@ jvm.VMLCanvasElement.prototype.setSize = function (width, height) {
     }
 };
 
-jvm.VMLCanvasElement.prototype.applyTransformParams = function (scale, transX, transY) {
+jvm.VMLCanvasElement.prototype.applyTransformParams = function(scale, transX, transY) {
     this.scale = scale;
     this.transX = transX;
     this.transY = transY;
     this.rootElement.node.coordorigin = (this.width - transX - this.width / 100) + ',' + (this.height - transY - this.height / 100);
     this.rootElement.node.coordsize = this.width / scale + ',' + this.height / scale;
 };
-jvm.VMLShapeElement = function (name, config) {
+jvm.VMLShapeElement = function(name, config) {
     jvm.VMLShapeElement.parentClass.call(this, name, config);
 
     this.fillElement = new jvm.VMLElement('fill');
@@ -1043,7 +1041,7 @@ jvm.VMLShapeElement = function (name, config) {
 jvm.inherits(jvm.VMLShapeElement, jvm.VMLElement);
 jvm.mixin(jvm.VMLShapeElement, jvm.AbstractShapeElement);
 
-jvm.VMLShapeElement.prototype.applyAttr = function (attr, value) {
+jvm.VMLShapeElement.prototype.applyAttr = function(attr, value) {
     switch (attr) {
         case 'fill':
             this.node.fillcolor = value;
@@ -1077,7 +1075,7 @@ jvm.VMLShapeElement.prototype.applyAttr = function (attr, value) {
             jvm.VMLShapeElement.parentClass.prototype.applyAttr.apply(this, arguments);
     }
 };
-jvm.VMLPathElement = function (config, style) {
+jvm.VMLPathElement = function(config, style) {
     var scale = new jvm.VMLElement('skew');
 
     jvm.VMLPathElement.parentClass.call(this, 'shape', config, style);
@@ -1093,7 +1091,7 @@ jvm.VMLPathElement = function (config, style) {
 
 jvm.inherits(jvm.VMLPathElement, jvm.VMLShapeElement);
 
-jvm.VMLPathElement.prototype.applyAttr = function (attr, value) {
+jvm.VMLPathElement.prototype.applyAttr = function(attr, value) {
     if (attr === 'd') {
         this.node.path = jvm.VMLPathElement.pathSvgToVml(value);
     } else {
@@ -1101,13 +1099,13 @@ jvm.VMLPathElement.prototype.applyAttr = function (attr, value) {
     }
 };
 
-jvm.VMLPathElement.pathSvgToVml = function (path) {
+jvm.VMLPathElement.pathSvgToVml = function(path) {
     var cx = 0,
         cy = 0,
         ctrlx, ctrly;
 
     path = path.replace(/(-?\d+)e(-?\d+)/g, '0');
-    return path.replace(/([MmLlHhVvCcSs])\s*((?:-?\d*(?:\.\d+)?\s*,?\s*)+)/g, function (segment, letter, coords, index) {
+    return path.replace(/([MmLlHhVvCcSs])\s*((?:-?\d*(?:\.\d+)?\s*,?\s*)+)/g, function(segment, letter, coords, index) {
         coords = coords.replace(/(\d)-/g, '$1,-')
             .replace(/^\s+/g, '')
             .replace(/\s+$/g, '')
@@ -1177,13 +1175,13 @@ jvm.VMLPathElement.pathSvgToVml = function (path) {
         return '';
     }).replace(/z/g, 'e');
 };
-jvm.VMLCircleElement = function (config, style) {
+jvm.VMLCircleElement = function(config, style) {
     jvm.VMLCircleElement.parentClass.call(this, 'oval', config, style);
 };
 
 jvm.inherits(jvm.VMLCircleElement, jvm.VMLShapeElement);
 
-jvm.VMLCircleElement.prototype.applyAttr = function (attr, value) {
+jvm.VMLCircleElement.prototype.applyAttr = function(attr, value) {
     switch (attr) {
         case 'r':
             this.node.style.width = value * 2 + 'px';
@@ -1210,7 +1208,7 @@ jvm.VMLCircleElement.prototype.applyAttr = function (attr, value) {
  * @param {Number} width
  * @param {Number} height
  */
-jvm.VectorCanvas = function (container, width, height) {
+jvm.VectorCanvas = function(container, width, height) {
     this.mode = window.SVGAngle ? 'svg' : 'vml';
 
     if (this.mode == 'svg') {
@@ -1221,22 +1219,22 @@ jvm.VectorCanvas = function (container, width, height) {
     this.impl.mode = this.mode;
     return this.impl;
 };
-jvm.SimpleScale = function (scale) {
+jvm.SimpleScale = function(scale) {
     this.scale = scale;
 };
 
-jvm.SimpleScale.prototype.getValue = function (value) {
+jvm.SimpleScale.prototype.getValue = function(value) {
     return value;
 };
-jvm.OrdinalScale = function (scale) {
+jvm.OrdinalScale = function(scale) {
     this.scale = scale;
 };
 
-jvm.OrdinalScale.prototype.getValue = function (value) {
+jvm.OrdinalScale.prototype.getValue = function(value) {
     return this.scale[value];
 };
 
-jvm.OrdinalScale.prototype.getTicks = function () {
+jvm.OrdinalScale.prototype.getTicks = function() {
     var ticks = [],
         key;
 
@@ -1249,7 +1247,7 @@ jvm.OrdinalScale.prototype.getTicks = function () {
 
     return ticks;
 };
-jvm.NumericScale = function (scale, normalizeFunction, minValue, maxValue) {
+jvm.NumericScale = function(scale, normalizeFunction, minValue, maxValue) {
     this.scale = [];
 
     normalizeFunction = normalizeFunction || 'linear';
@@ -1261,7 +1259,7 @@ jvm.NumericScale = function (scale, normalizeFunction, minValue, maxValue) {
 };
 
 jvm.NumericScale.prototype = {
-    setMin: function (min) {
+    setMin: function(min) {
         this.clearMinValue = min;
         if (typeof this.normalize === 'function') {
             this.minValue = this.normalize(min);
@@ -1270,7 +1268,7 @@ jvm.NumericScale.prototype = {
         }
     },
 
-    setMax: function (max) {
+    setMax: function(max) {
         this.clearMaxValue = max;
         if (typeof this.normalize === 'function') {
             this.maxValue = this.normalize(max);
@@ -1279,7 +1277,7 @@ jvm.NumericScale.prototype = {
         }
     },
 
-    setScale: function (scale) {
+    setScale: function(scale) {
         var i;
 
         this.scale = [];
@@ -1288,9 +1286,9 @@ jvm.NumericScale.prototype = {
         }
     },
 
-    setNormalizeFunction: function (f) {
+    setNormalizeFunction: function(f) {
         if (f === 'polynomial') {
-            this.normalize = function (value) {
+            this.normalize = function(value) {
                 return Math.pow(value, 0.2);
             }
         } else if (f === 'linear') {
@@ -1302,7 +1300,7 @@ jvm.NumericScale.prototype = {
         this.setMax(this.clearMaxValue);
     },
 
-    getValue: function (value) {
+    getValue: function(value) {
         var lengthes = [],
             fullLength = 0,
             l,
@@ -1348,7 +1346,7 @@ jvm.NumericScale.prototype = {
         return value;
     },
 
-    vectorToNum: function (vector) {
+    vectorToNum: function(vector) {
         var num = 0,
             i;
 
@@ -1358,7 +1356,7 @@ jvm.NumericScale.prototype = {
         return num;
     },
 
-    vectorSubtract: function (vector1, vector2) {
+    vectorSubtract: function(vector1, vector2) {
         var vector = [],
             i;
 
@@ -1368,7 +1366,7 @@ jvm.NumericScale.prototype = {
         return vector;
     },
 
-    vectorAdd: function (vector1, vector2) {
+    vectorAdd: function(vector1, vector2) {
         var vector = [],
             i;
 
@@ -1378,7 +1376,7 @@ jvm.NumericScale.prototype = {
         return vector;
     },
 
-    vectorMult: function (vector, num) {
+    vectorMult: function(vector, num) {
         var result = [],
             i;
 
@@ -1388,7 +1386,7 @@ jvm.NumericScale.prototype = {
         return result;
     },
 
-    vectorLength: function (vector) {
+    vectorLength: function(vector) {
         var result = 0,
             i;
         for (i = 0; i < vector.length; i++) {
@@ -1398,7 +1396,7 @@ jvm.NumericScale.prototype = {
     },
 
     /* Derived from d3 implementation https://github.com/mbostock/d3/blob/master/src/scale/linear.js#L94 */
-    getTicks: function () {
+    getTicks: function() {
         var m = 5,
             extent = [this.clearMinValue, this.clearMaxValue],
             span = extent[1] - extent[0],
@@ -1434,13 +1432,13 @@ jvm.NumericScale.prototype = {
         return ticks;
     }
 };
-jvm.ColorScale = function (colors, normalizeFunction, minValue, maxValue) {
+jvm.ColorScale = function(colors, normalizeFunction, minValue, maxValue) {
     jvm.ColorScale.parentClass.apply(this, arguments);
 }
 
 jvm.inherits(jvm.ColorScale, jvm.NumericScale);
 
-jvm.ColorScale.prototype.setScale = function (scale) {
+jvm.ColorScale.prototype.setScale = function(scale) {
     var i;
 
     for (i = 0; i < scale.length; i++) {
@@ -1448,11 +1446,11 @@ jvm.ColorScale.prototype.setScale = function (scale) {
     }
 };
 
-jvm.ColorScale.prototype.getValue = function (value) {
+jvm.ColorScale.prototype.getValue = function(value) {
     return jvm.ColorScale.numToRgb(jvm.ColorScale.parentClass.prototype.getValue.call(this, value));
 };
 
-jvm.ColorScale.arrayToRgb = function (ar) {
+jvm.ColorScale.arrayToRgb = function(ar) {
     var rgb = '#',
         d,
         i;
@@ -1464,7 +1462,7 @@ jvm.ColorScale.arrayToRgb = function (ar) {
     return rgb;
 };
 
-jvm.ColorScale.numToRgb = function (num) {
+jvm.ColorScale.numToRgb = function(num) {
     num = num.toString(16);
 
     while (num.length < 6) {
@@ -1474,7 +1472,7 @@ jvm.ColorScale.numToRgb = function (num) {
     return '#' + num;
 };
 
-jvm.ColorScale.rgbToArray = function (rgb) {
+jvm.ColorScale.rgbToArray = function(rgb) {
     rgb = rgb.substr(1);
     return [parseInt(rgb.substr(0, 2), 16), parseInt(rgb.substr(2, 2), 16), parseInt(rgb.substr(4, 2), 16)];
 };
@@ -1487,7 +1485,7 @@ jvm.ColorScale.rgbToArray = function (rgb) {
  * @param {String} params.title Legend title.
  * @param {Function} params.labelRender Method to convert series values to legend labels.
  */
-jvm.Legend = function (params) {
+jvm.Legend = function(params) {
     this.params = params || {};
     this.map = this.params.map;
     this.series = this.params.series;
@@ -1506,7 +1504,7 @@ jvm.Legend = function (params) {
     this.render();
 }
 
-jvm.Legend.prototype.render = function () {
+jvm.Legend.prototype.render = function() {
     var ticks = this.series.scale.getTicks(),
         i,
         inner = jvm.$('<div/>').addClass('jvectormap-legend-inner'),
@@ -1572,7 +1570,7 @@ jvm.Legend.prototype.render = function () {
  * @param {Number} params.min Minimum value of the data set. Could be calculated automatically if not provided.
  * @param {Number} params.min Maximum value of the data set. Could be calculated automatically if not provided.
  */
-jvm.DataSeries = function (params, elements, map) {
+jvm.DataSeries = function(params, elements, map) {
     var scaleConstructor;
 
     params = params || {};
@@ -1607,7 +1605,7 @@ jvm.DataSeries = function (params, elements, map) {
 };
 
 jvm.DataSeries.prototype = {
-    setAttributes: function (key, attr) {
+    setAttributes: function(key, attr) {
         var attrs = key,
             code;
 
@@ -1628,7 +1626,7 @@ jvm.DataSeries.prototype = {
      * Set values for the data set.
      * @param {Object} values Object which maps codes of regions or markers to values.
      */
-    setValues: function (values) {
+    setValues: function(values) {
         var max = -Number.MAX_VALUE,
             min = Number.MAX_VALUE,
             val,
@@ -1684,7 +1682,7 @@ jvm.DataSeries.prototype = {
         jvm.$.extend(this.values, values);
     },
 
-    clear: function () {
+    clear: function() {
         var key,
             attrs = {};
 
@@ -1701,7 +1699,7 @@ jvm.DataSeries.prototype = {
      * Set scale of the data series.
      * @param {Array} scale Values representing scale.
      */
-    setScale: function (scale) {
+    setScale: function(scale) {
         this.scale.setScale(scale);
         if (this.values) {
             this.setValues(this.values);
@@ -1712,7 +1710,7 @@ jvm.DataSeries.prototype = {
      * Set normalize function of the data series.
      * @param {Function|String} normilizeFunction.
      */
-    setNormalizeFunction: function (f) {
+    setNormalizeFunction: function(f) {
         this.scale.setNormalizeFunction(f);
         if (this.values) {
             this.setValues(this.values);
@@ -1729,7 +1727,7 @@ jvm.Proj = {
     radDeg: Math.PI / 180,
     radius: 6381372,
 
-    sgn: function (n) {
+    sgn: function(n) {
         if (n > 0) {
             return 1;
         } else if (n < 0) {
@@ -1745,7 +1743,7 @@ jvm.Proj = {
      * @param {Number} lng Longitude in degrees
      * @param {Number} c Central meridian in degrees
      */
-    mill: function (lat, lng, c) {
+    mill: function(lat, lng, c) {
         return {
             x: this.radius * (lng - c) * this.radDeg,
             y: -this.radius * Math.log(Math.tan((45 + 0.4 * lat) * this.radDeg)) / 0.8
@@ -1759,7 +1757,7 @@ jvm.Proj = {
      * @param {Number} y Y of point in Cartesian system as integer
      * @param {Number} c Central meridian in degrees
      */
-    mill_inv: function (x, y, c) {
+    mill_inv: function(x, y, c) {
         return {
             lat: (2.5 * Math.atan(Math.exp(0.8 * y / this.radius)) - 5 * Math.PI / 8) * this.degRad,
             lng: (c * this.radDeg + x / this.radius) * this.degRad
@@ -1772,7 +1770,7 @@ jvm.Proj = {
      * @param {Number} lng Longitude in degrees
      * @param {Number} c Central meridian in degrees
      */
-    merc: function (lat, lng, c) {
+    merc: function(lat, lng, c) {
         return {
             x: this.radius * (lng - c) * this.radDeg,
             y: -this.radius * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360))
@@ -1786,7 +1784,7 @@ jvm.Proj = {
      * @param {Number} y Y of point in Cartesian system as integer
      * @param {Number} c Central meridian in degrees
      */
-    merc_inv: function (x, y, c) {
+    merc_inv: function(x, y, c) {
         return {
             lat: (2 * Math.atan(Math.exp(y / this.radius)) - Math.PI / 2) * this.degRad,
             lng: (c * this.radDeg + x / this.radius) * this.degRad
@@ -1801,7 +1799,7 @@ jvm.Proj = {
      * @param {Number} lng Longitude in degrees
      * @param {Number} c Central meridian in degrees
      */
-    aea: function (lat, lng, c) {
+    aea: function(lat, lng, c) {
         var fi0 = 0,
             lambda0 = c * this.radDeg,
             fi1 = 29.5 * this.radDeg,
@@ -1828,7 +1826,7 @@ jvm.Proj = {
      * @param {Number} y Y of point in Cartesian system as integer
      * @param {Number} c Central meridian in degrees
      */
-    aea_inv: function (xCoord, yCoord, c) {
+    aea_inv: function(xCoord, yCoord, c) {
         var x = xCoord / this.radius,
             y = yCoord / this.radius,
             fi0 = 0,
@@ -1855,7 +1853,7 @@ jvm.Proj = {
      * @param {Number} lng Longitude in degrees
      * @param {Number} c Central meridian in degrees
      */
-    lcc: function (lat, lng, c) {
+    lcc: function(lat, lng, c) {
         var fi0 = 0,
             lambda0 = c * this.radDeg,
             lambda = lng * this.radDeg,
@@ -1881,7 +1879,7 @@ jvm.Proj = {
      * @param {Number} y Y of point in Cartesian system as integer
      * @param {Number} c Central meridian in degrees
      */
-    lcc_inv: function (xCoord, yCoord, c) {
+    lcc_inv: function(xCoord, yCoord, c) {
         var x = xCoord / this.radius,
             y = yCoord / this.radius,
             fi0 = 0,
@@ -1900,10 +1898,9 @@ jvm.Proj = {
         };
     }
 };
-jvm.MapObject = function (config) {
-};
+jvm.MapObject = function(config) {};
 
-jvm.MapObject.prototype.getLabelText = function (key) {
+jvm.MapObject.prototype.getLabelText = function(key) {
     var text;
 
     if (this.config.label) {
@@ -1918,7 +1915,7 @@ jvm.MapObject.prototype.getLabelText = function (key) {
     return text;
 }
 
-jvm.MapObject.prototype.getLabelOffsets = function (key) {
+jvm.MapObject.prototype.getLabelOffsets = function(key) {
     var offsets;
 
     if (this.config.label) {
@@ -1935,7 +1932,7 @@ jvm.MapObject.prototype.getLabelOffsets = function (key) {
  * Set hovered state to the element. Hovered state means mouse cursor is over element. Styles will be updates respectively.
  * @param {Boolean} isHovered <code>true</code> to make element hovered, <code>false</code> otherwise.
  */
-jvm.MapObject.prototype.setHovered = function (isHovered) {
+jvm.MapObject.prototype.setHovered = function(isHovered) {
     if (this.isHovered !== isHovered) {
         this.isHovered = isHovered;
         this.shape.isHovered = isHovered;
@@ -1951,7 +1948,7 @@ jvm.MapObject.prototype.setHovered = function (isHovered) {
  * Set selected state to the element. Styles will be updates respectively.
  * @param {Boolean} isSelected <code>true</code> to make element selected, <code>false</code> otherwise.
  */
-jvm.MapObject.prototype.setSelected = function (isSelected) {
+jvm.MapObject.prototype.setSelected = function(isSelected) {
     if (this.isSelected !== isSelected) {
         this.isSelected = isSelected;
         this.shape.isSelected = isSelected;
@@ -1964,17 +1961,17 @@ jvm.MapObject.prototype.setSelected = function (isSelected) {
     }
 };
 
-jvm.MapObject.prototype.setStyle = function () {
+jvm.MapObject.prototype.setStyle = function() {
     this.shape.setStyle.apply(this.shape, arguments);
 };
 
-jvm.MapObject.prototype.remove = function () {
+jvm.MapObject.prototype.remove = function() {
     this.shape.remove();
     if (this.label) {
         this.label.remove();
     }
 };
-jvm.Region = function (config) {
+jvm.Region = function(config) {
     var bbox,
         text,
         offsets,
@@ -2011,7 +2008,7 @@ jvm.Region = function (config) {
 
 jvm.inherits(jvm.Region, jvm.MapObject);
 
-jvm.Region.prototype.updateLabelPosition = function () {
+jvm.Region.prototype.updateLabelPosition = function() {
     if (this.label) {
         this.label.set({
             x: this.labelX * this.map.scale + this.map.transX * this.map.scale,
@@ -2019,7 +2016,7 @@ jvm.Region.prototype.updateLabelPosition = function () {
         });
     }
 };
-jvm.Marker = function (config) {
+jvm.Marker = function(config) {
     var text,
         offsets;
 
@@ -2048,7 +2045,7 @@ jvm.Marker = function (config) {
 
 jvm.inherits(jvm.Marker, jvm.MapObject);
 
-jvm.Marker.prototype.createShape = function () {
+jvm.Marker.prototype.createShape = function() {
     var that = this;
 
     if (this.shape) {
@@ -2063,13 +2060,13 @@ jvm.Marker.prototype.createShape = function () {
     this.shape.addClass('jvectormap-marker jvectormap-element');
 
     if (this.isImage) {
-        jvm.$(this.shape.node).on('imageloaded', function () {
+        jvm.$(this.shape.node).on('imageloaded', function() {
             that.updateLabelPosition();
         });
     }
 };
 
-jvm.Marker.prototype.updateLabelPosition = function () {
+jvm.Marker.prototype.updateLabelPosition = function() {
     if (this.label) {
         this.label.set({
             x: this.labelX * this.map.scale + this.offsets[0] +
@@ -2079,7 +2076,7 @@ jvm.Marker.prototype.updateLabelPosition = function () {
     }
 };
 
-jvm.Marker.prototype.setStyle = function (property, value) {
+jvm.Marker.prototype.setStyle = function(property, value) {
     var isImage;
 
     jvm.Marker.parentClass.prototype.setStyle.apply(this, arguments);
@@ -2113,7 +2110,7 @@ jvm.Marker.prototype.setStyle = function (property, value) {
  * @param {Boolean} params.markersSelectable When set to true markers on the map could be selected. Default value is <code>false</code>.
  * @param {Boolean} params.markersSelectableOne Allow only one marker to be selected at the moment. Default value is <code>false</code>.
  * @param {Object} params.regionStyle Set the styles for the map's regions. Each region or marker has four states: <code>initial</code> (default state), <code>hover</code> (when the mouse cursor is over the region or marker), <code>selected</code> (when region or marker is selected), <code>selectedHover</code> (when the mouse cursor is over the region or marker and it's selected simultaneously). Styles could be set for each of this states. Default value for that parameter is:
- <pre>{
+<pre>{
   initial: {
     fill: 'white',
     "fill-opacity": 1,
@@ -2131,8 +2128,8 @@ jvm.Marker.prototype.setStyle = function (property, value) {
   selectedHover: {
   }
 }</pre>
- * @param {Object} params.regionLabelStyle Set the styles for the regions' labels. Each region or marker has four states: <code>initial</code> (default state), <code>hover</code> (when the mouse cursor is over the region or marker), <code>selected</code> (when region or marker is selected), <code>selectedHover</code> (when the mouse cursor is over the region or marker and it's selected simultaneously). Styles could be set for each of this states. Default value for that parameter is:
- <pre>{
+* @param {Object} params.regionLabelStyle Set the styles for the regions' labels. Each region or marker has four states: <code>initial</code> (default state), <code>hover</code> (when the mouse cursor is over the region or marker), <code>selected</code> (when region or marker is selected), <code>selectedHover</code> (when the mouse cursor is over the region or marker and it's selected simultaneously). Styles could be set for each of this states. Default value for that parameter is:
+<pre>{
   initial: {
     'font-family': 'Verdana',
     'font-size': '12',
@@ -2145,7 +2142,7 @@ jvm.Marker.prototype.setStyle = function (property, value) {
   }
 }</pre>
  * @param {Object} params.markerStyle Set the styles for the map's markers. Any parameter suitable for <code>regionStyle</code> could be used as well as numeric parameter <code>r</code> to set the marker's radius. Default value for that parameter is:
- <pre>{
+<pre>{
   initial: {
     fill: 'grey',
     stroke: '#505050',
@@ -2166,7 +2163,7 @@ jvm.Marker.prototype.setStyle = function (property, value) {
   }
 }</pre>
  * @param {Object} params.markerLabelStyle Set the styles for the markers' labels. Default value for that parameter is:
- <pre>{
+<pre>{
   initial: {
     'font-family': 'Verdana',
     'font-size': '12',
@@ -2182,11 +2179,11 @@ jvm.Marker.prototype.setStyle = function (property, value) {
  * @param {Object} params.series Object with two keys: <code>markers</code> and <code>regions</code>. Each of which is an array of series configs to be applied to the respective map elements. See <a href="jvm.DataSeries.html">DataSeries</a> description for a list of parameters available.
  * @param {Object|String} params.focusOn This parameter sets the initial position and scale of the map viewport. See <code>setFocus</code> docuemntation for possible parameters.
  * @param {Object} params.labels Defines parameters for rendering static labels. Object could contain two keys: <code>regions</code> and <code>markers</code>. Each key value defines configuration object with the following possible options:
- <ul>
- <li><code>render {Function}</code> - defines method for converting region code or marker index to actual label value.</li>
- <li><code>offsets {Object|Function}</code> - provides method or object which could be used to define label offset by region code or marker index.</li>
- </ul>
- <b>Plase note: static labels feature is not supported in Internet Explorer 8 and below.</b>
+<ul>
+  <li><code>render {Function}</code> - defines method for converting region code or marker index to actual label value.</li>
+  <li><code>offsets {Object|Function}</code> - provides method or object which could be used to define label offset by region code or marker index.</li>
+</ul>
+<b>Plase note: static labels feature is not supported in Internet Explorer 8 and below.</b>
  * @param {Array|Object|String} params.selectedRegions Set initially selected regions.
  * @param {Array|Object|String} params.selectedMarkers Set initially selected markers.
  * @param {Function} params.onRegionTipShow <code>(Event e, Object tip, String code)</code> Will be called right before the region tip is going to be shown.
@@ -2201,7 +2198,7 @@ jvm.Marker.prototype.setStyle = function (property, value) {
  * @param {Function} params.onMarkerSelected <code>(Event e, String code, Boolean isSelected, Array selectedMarkers)</code> Will be called when marker is (de)selected. <code>isSelected</code> parameter of the callback indicates whether marker is selected or not. <code>selectedMarkers</code> contains codes of all currently selected markers.
  * @param {Function} params.onViewportChange <code>(Event e, Number scale)</code> Triggered when the map's viewport is changed (map was panned or zoomed).
  */
-jvm.Map = function (params) {
+jvm.Map = function(params) {
     var map = this,
         e;
 
@@ -2228,7 +2225,7 @@ jvm.Map = function (params) {
 
     this.setBackgroundColor(this.params.backgroundColor);
 
-    this.onResize = function () {
+    this.onResize = function() {
         map.updateSize();
     }
     jvm.$(window).resize(this.onResize);
@@ -2305,11 +2302,11 @@ jvm.Map.prototype = {
      * Set background color of the map.
      * @param {String} backgroundColor Background color in CSS format.
      */
-    setBackgroundColor: function (backgroundColor) {
+    setBackgroundColor: function(backgroundColor) {
         this.container.css('background-color', backgroundColor);
     },
 
-    resize: function () {
+    resize: function() {
         var curBaseScale = this.baseScale;
         if (this.width / this.height > this.defaultWidth / this.defaultHeight) {
             this.baseScale = this.height / this.defaultHeight;
@@ -2326,7 +2323,7 @@ jvm.Map.prototype = {
     /**
      * Synchronize the size of the map with the size of the container. Suitable in situations where the size of the container is changed programmatically or container is shown after it became visible.
      */
-    updateSize: function () {
+    updateSize: function() {
         this.width = this.container.width();
         this.height = this.container.height();
         this.resize();
@@ -2337,7 +2334,7 @@ jvm.Map.prototype = {
     /**
      * Reset all the series and show the map with the initial zoom.
      */
-    reset: function () {
+    reset: function() {
         var key,
             i;
 
@@ -2352,7 +2349,7 @@ jvm.Map.prototype = {
         this.applyTransform();
     },
 
-    applyTransform: function () {
+    applyTransform: function() {
         var maxTransX,
             maxTransY,
             minTransX,
@@ -2396,14 +2393,14 @@ jvm.Map.prototype = {
         this.container.trigger('viewportChange', [this.scale / this.baseScale, this.transX, this.transY]);
     },
 
-    bindContainerEvents: function () {
+    bindContainerEvents: function() {
         var mouseDown = false,
             oldPageX,
             oldPageY,
             map = this;
 
         if (this.params.panOnDrag) {
-            this.container.mousemove(function (e) {
+            this.container.mousemove(function(e) {
                 if (mouseDown) {
                     map.transX -= (oldPageX - e.pageX) / map.scale;
                     map.transY -= (oldPageY - e.pageY) / map.scale;
@@ -2414,21 +2411,21 @@ jvm.Map.prototype = {
                     oldPageY = e.pageY;
                 }
                 return false;
-            }).mousedown(function (e) {
+            }).mousedown(function(e) {
                 mouseDown = true;
                 oldPageX = e.pageX;
                 oldPageY = e.pageY;
                 return false;
             });
 
-            this.onContainerMouseUp = function () {
+            this.onContainerMouseUp = function() {
                 mouseDown = false;
             };
             jvm.$('body').mouseup(this.onContainerMouseUp);
         }
 
         if (this.params.zoomOnScroll) {
-            this.container.mousewheel(function (event, delta, deltaX, deltaY) {
+            this.container.mousewheel(function(event, delta, deltaX, deltaY) {
                 var offset = jvm.$(map.container).offset(),
                     centerX = event.pageX - offset.left,
                     centerY = event.pageY - offset.top,
@@ -2442,7 +2439,7 @@ jvm.Map.prototype = {
         }
     },
 
-    bindContainerTouchEvents: function () {
+    bindContainerTouchEvents: function() {
         var touchStartScale,
             touchStartDistance,
             map = this,
@@ -2451,7 +2448,7 @@ jvm.Map.prototype = {
             centerTouchX,
             centerTouchY,
             lastTouchesLength,
-            handleTouchEvent = function (e) {
+            handleTouchEvent = function(e) {
                 var touches = e.originalEvent.touches,
                     offset,
                     scale,
@@ -2518,14 +2515,14 @@ jvm.Map.prototype = {
         jvm.$(this.container).bind('touchmove', handleTouchEvent);
     },
 
-    bindContainerPointerEvents: function () {
+    bindContainerPointerEvents: function() {
         var map = this,
             gesture = new MSGesture(),
             element = this.container[0],
-            handlePointerDownEvent = function (e) {
+            handlePointerDownEvent = function(e) {
                 gesture.addPointer(e.pointerId);
             },
-            handleGestureEvent = function (e) {
+            handleGestureEvent = function(e) {
                 var offset,
                     scale,
                     transXOld,
@@ -2558,13 +2555,13 @@ jvm.Map.prototype = {
         element.addEventListener("pointerdown", handlePointerDownEvent, false);
     },
 
-    bindElementEvents: function () {
+    bindElementEvents: function() {
         var map = this,
             pageX,
             pageY,
             mouseMoved;
 
-        this.container.mousemove(function (e) {
+        this.container.mousemove(function(e) {
             if (Math.abs(pageX - e.pageX) + Math.abs(pageY - e.pageY) > 2) {
                 mouseMoved = true;
             }
@@ -2572,7 +2569,7 @@ jvm.Map.prototype = {
 
         /* Can not use common class selectors here because of the bug in jQuery
            SVG handling, use with caution. */
-        this.container.delegate("[class~='jvectormap-element']", 'mouseover mouseout', function (e) {
+        this.container.delegate("[class~='jvectormap-element']", 'mouseover mouseout', function(e) {
             var baseVal = jvm.$(this).attr('class').baseVal || jvm.$(this).attr('class'),
                 type = baseVal.indexOf('jvectormap-region') === -1 ? 'marker' : 'region',
                 code = type == 'region' ? jvm.$(this).attr('data-code') : jvm.$(this).attr('data-index'),
@@ -2603,7 +2600,7 @@ jvm.Map.prototype = {
 
         /* Can not use common class selectors here because of the bug in jQuery
            SVG handling, use with caution. */
-        this.container.delegate("[class~='jvectormap-element']", 'mousedown', function (e) {
+        this.container.delegate("[class~='jvectormap-element']", 'mousedown', function(e) {
             pageX = e.pageX;
             pageY = e.pageY;
             mouseMoved = false;
@@ -2611,7 +2608,7 @@ jvm.Map.prototype = {
 
         /* Can not use common class selectors here because of the bug in jQuery
            SVG handling, use with caution. */
-        this.container.delegate("[class~='jvectormap-element']", 'mouseup', function () {
+        this.container.delegate("[class~='jvectormap-element']", 'mouseup', function() {
             var baseVal = jvm.$(this).attr('class').baseVal ? jvm.$(this).attr('class').baseVal : jvm.$(this).attr('class'),
                 type = baseVal.indexOf('jvectormap-region') === -1 ? 'marker' : 'region',
                 code = type == 'region' ? jvm.$(this).attr('data-code') : jvm.$(this).attr('data-index'),
@@ -2632,26 +2629,26 @@ jvm.Map.prototype = {
         });
     },
 
-    bindZoomButtons: function () {
+    bindZoomButtons: function() {
         var map = this;
 
         jvm.$('<div/>').addClass('jvectormap-zoomin').text('+').appendTo(this.container);
         jvm.$('<div/>').addClass('jvectormap-zoomout').html('&#x2212;').appendTo(this.container);
 
-        this.container.find('.jvectormap-zoomin').click(function () {
+        this.container.find('.jvectormap-zoomin').click(function() {
             map.setScale(map.scale * map.params.zoomStep, map.width / 2, map.height / 2, false, map.params.zoomAnimate);
         });
-        this.container.find('.jvectormap-zoomout').click(function () {
+        this.container.find('.jvectormap-zoomout').click(function() {
             map.setScale(map.scale / map.params.zoomStep, map.width / 2, map.height / 2, false, map.params.zoomAnimate);
         });
     },
 
-    createTip: function () {
+    createTip: function() {
         var map = this;
 
         this.tip = jvm.$('<div/>').addClass('jvectormap-tip').appendTo(jvm.$('body'));
 
-        this.container.mousemove(function (e) {
+        this.container.mousemove(function(e) {
             var left = e.pageX - 15 - map.tipWidth,
                 top = e.pageY - 15 - map.tipHeight;
 
@@ -2669,7 +2666,7 @@ jvm.Map.prototype = {
         });
     },
 
-    setScale: function (scale, anchorX, anchorY, isCentered, animate) {
+    setScale: function(scale, anchorX, anchorY, isCentered, animate) {
         var viewportChangeEvent = jvm.$.Event('zoom.jvectormap'),
             interval,
             that = this,
@@ -2709,7 +2706,7 @@ jvm.Map.prototype = {
             transYStart = this.transY * this.scale;
             transXDiff = (transX * scale - transXStart) / count;
             transYDiff = (transY * scale - transYStart) / count;
-            interval = setInterval(function () {
+            interval = setInterval(function() {
                 i += 1;
                 that.scale = scaleStart + scaleDiff * i;
                 that.transX = (transXStart + transXDiff * i) / that.scale;
@@ -2745,7 +2742,7 @@ jvm.Map.prototype = {
      * @param {Number} params.y Number from 0 to 1 specifying the vertical coordinate of the central point of the viewport.
      * @param {Boolean} params.animate Indicates whether or not to animate the scale change and transition.
      */
-    setFocus: function (config) {
+    setFocus: function(config) {
         var bbox,
             itemBbox,
             newBbox,
@@ -2798,7 +2795,7 @@ jvm.Map.prototype = {
         }
     },
 
-    getSelected: function (type) {
+    getSelected: function(type) {
         var key,
             selected = [];
 
@@ -2814,7 +2811,7 @@ jvm.Map.prototype = {
      * Return the codes of currently selected regions.
      * @returns {Array}
      */
-    getSelectedRegions: function () {
+    getSelectedRegions: function() {
         return this.getSelected('regions');
     },
 
@@ -2822,11 +2819,11 @@ jvm.Map.prototype = {
      * Return the codes of currently selected markers.
      * @returns {Array}
      */
-    getSelectedMarkers: function () {
+    getSelectedMarkers: function() {
         return this.getSelected('markers');
     },
 
-    setSelected: function (type, keys) {
+    setSelected: function(type, keys) {
         var i;
 
         if (typeof keys != 'object') {
@@ -2848,7 +2845,7 @@ jvm.Map.prototype = {
      * Set or remove selected state for the regions.
      * @param {String|Array|Object} keys If <code>String</code> or <code>Array</code> the region(s) with the corresponding code(s) will be selected. If <code>Object</code> was provided its keys are  codes of regions, state of which should be changed. Selected state will be set if value is true, removed otherwise.
      */
-    setSelectedRegions: function (keys) {
+    setSelectedRegions: function(keys) {
         this.setSelected('regions', keys);
     },
 
@@ -2856,19 +2853,18 @@ jvm.Map.prototype = {
      * Set or remove selected state for the markers.
      * @param {String|Array|Object} keys If <code>String</code> or <code>Array</code> the marker(s) with the corresponding code(s) will be selected. If <code>Object</code> was provided its keys are  codes of markers, state of which should be changed. Selected state will be set if value is true, removed otherwise.
      */
-    setSelectedMarkers: function (keys) {
+    setSelectedMarkers: function(keys) {
         this.setSelected('markers', keys);
     },
 
-    clearSelected: function (type) {
+    clearSelected: function(type) {
         var select = {},
             selected = this.getSelected(type),
             i;
 
         for (i = 0; i < selected.length; i++) {
             select[selected[i]] = false;
-        }
-        ;
+        };
 
         this.setSelected(type, select);
     },
@@ -2876,14 +2872,14 @@ jvm.Map.prototype = {
     /**
      * Remove the selected state from all the currently selected regions.
      */
-    clearSelectedRegions: function () {
+    clearSelectedRegions: function() {
         this.clearSelected('regions');
     },
 
     /**
      * Remove the selected state from all the currently selected markers.
      */
-    clearSelectedMarkers: function () {
+    clearSelectedMarkers: function() {
         this.clearSelected('markers');
     },
 
@@ -2891,7 +2887,7 @@ jvm.Map.prototype = {
      * Return the instance of Map. Useful when instantiated as a jQuery plug-in.
      * @returns {Map}
      */
-    getMapObject: function () {
+    getMapObject: function() {
         return this;
     },
 
@@ -2899,11 +2895,11 @@ jvm.Map.prototype = {
      * Return the name of the region by region code.
      * @returns {String}
      */
-    getRegionName: function (code) {
+    getRegionName: function(code) {
         return this.mapData.paths[code].name;
     },
 
-    createRegions: function () {
+    createRegions: function() {
         var key,
             region,
             map = this;
@@ -2922,7 +2918,7 @@ jvm.Map.prototype = {
                 label: this.canvas.mode != 'vml' ? (this.params.labels && this.params.labels.regions) : null
             });
 
-            jvm.$(region.shape).bind('selected', function (e, isSelected) {
+            jvm.$(region.shape).bind('selected', function(e, isSelected) {
                 map.container.trigger('regionSelected.jvectormap', [jvm.$(this.node).attr('data-code'), isSelected, map.getSelectedRegions()]);
             });
             this.regions[key] = {
@@ -2932,7 +2928,7 @@ jvm.Map.prototype = {
         }
     },
 
-    createMarkers: function (markers) {
+    createMarkers: function(markers) {
         var i,
             marker,
             point,
@@ -2973,7 +2969,7 @@ jvm.Map.prototype = {
                     label: this.canvas.mode != 'vml' ? (this.params.labels && this.params.labels.markers) : null
                 });
 
-                jvm.$(marker.shape).bind('selected', function (e, isSelected) {
+                jvm.$(marker.shape).bind('selected', function(e, isSelected) {
                     map.container.trigger('markerSelected.jvectormap', [jvm.$(this.node).attr('data-index'), isSelected, map.getSelectedMarkers()]);
                 });
                 if (this.markers[i]) {
@@ -2987,7 +2983,7 @@ jvm.Map.prototype = {
         }
     },
 
-    repositionMarkers: function () {
+    repositionMarkers: function() {
         var i,
             point;
 
@@ -3002,7 +2998,7 @@ jvm.Map.prototype = {
         }
     },
 
-    repositionLabels: function () {
+    repositionLabels: function() {
         var key;
 
         for (key in this.regions) {
@@ -3014,7 +3010,7 @@ jvm.Map.prototype = {
         }
     },
 
-    getMarkerPosition: function (markerConfig) {
+    getMarkerPosition: function(markerConfig) {
         if (jvm.Map.maps[this.params.map].projection) {
             return this.latLngToPoint.apply(this, markerConfig.latLng || [0, 0]);
         } else {
@@ -3031,7 +3027,7 @@ jvm.Map.prototype = {
      * @param {Object} marker Marker configuration parameters.
      * @param {Array} seriesData Values to add to the data series.
      */
-    addMarker: function (key, marker, seriesData) {
+    addMarker: function(key, marker, seriesData) {
         var markers = {},
             data = [],
             values,
@@ -3055,7 +3051,7 @@ jvm.Map.prototype = {
      * @param {Object|Array} markers Markers to add to the map. In case of array is provided, codes of markers will be set as string representations of array indexes.
      * @param {Array} seriesData Values to add to the data series.
      */
-    addMarkers: function (markers, seriesData) {
+    addMarkers: function(markers, seriesData) {
         var i;
 
         seriesData = seriesData || [];
@@ -3063,28 +3059,26 @@ jvm.Map.prototype = {
         this.createMarkers(markers);
         for (i = 0; i < seriesData.length; i++) {
             this.series.markers[i].setValues(seriesData[i] || {});
-        }
-        ;
+        };
     },
 
     /**
      * Remove some markers from the map.
      * @param {Array} markers Array of marker codes to be removed.
      */
-    removeMarkers: function (markers) {
+    removeMarkers: function(markers) {
         var i;
 
         for (i = 0; i < markers.length; i++) {
             this.markers[markers[i]].element.remove();
             delete this.markers[markers[i]];
-        }
-        ;
+        };
     },
 
     /**
      * Remove all markers from the map.
      */
-    removeAllMarkers: function () {
+    removeAllMarkers: function() {
         var i,
             markers = [];
 
@@ -3099,7 +3093,7 @@ jvm.Map.prototype = {
      * @param {Number} lat Latitide of point in degrees.
      * @param {Number} lng Longitude of point in degrees.
      */
-    latLngToPoint: function (lat, lng) {
+    latLngToPoint: function(lat, lng) {
         var point,
             proj = jvm.Map.maps[this.params.map].projection,
             centralMeridian = proj.centralMeridian,
@@ -3133,7 +3127,7 @@ jvm.Map.prototype = {
      * @param {Number} x X-axis of point on map in pixels.
      * @param {Number} y Y-axis of point on map in pixels.
      */
-    pointToLatLng: function (x, y) {
+    pointToLatLng: function(x, y) {
         var proj = jvm.Map.maps[this.params.map].projection,
             centralMeridian = proj.centralMeridian,
             insets = jvm.Map.maps[this.params.map].insets,
@@ -3161,7 +3155,7 @@ jvm.Map.prototype = {
         return false;
     },
 
-    getInsetForPoint: function (x, y) {
+    getInsetForPoint: function(x, y) {
         var insets = jvm.Map.maps[this.params.map].insets,
             i,
             bbox;
@@ -3174,7 +3168,7 @@ jvm.Map.prototype = {
         }
     },
 
-    createSeries: function () {
+    createSeries: function() {
         var i,
             key;
 
@@ -3197,7 +3191,7 @@ jvm.Map.prototype = {
     /**
      * Gracefully remove the map and and all its accessories, unbind event handlers.
      */
-    remove: function () {
+    remove: function() {
         this.tip.remove();
         this.container.remove();
         jvm.$(window).unbind('resize', this.onResize);
@@ -3301,22 +3295,22 @@ jvm.Map.apiEvents = {
  * @param {Number} params.maxLevel Maximum number of levels user can go through
  * @param {Object} params.main Config of the main map. See <a href="./jvm-map/">jvm.Map</a> for more information.
  * @param {Function} params.mapNameByCode Function go generate map name by region code. Default value is:
- <pre>
- function(code, multiMap) {
+<pre>
+function(code, multiMap) {
   return code.toLowerCase()+'_'+
          multiMap.defaultProjection+'_en';
 }
- </pre>
+</pre>
  * @param {Function} params.mapUrlByCode Function to generate map url by region code. Default value is:
- <pre>
- function(code, multiMap){
+<pre>
+function(code, multiMap){
   return 'jquery-jvectormap-data-'+
          code.toLowerCase()+'-'+
          multiMap.defaultProjection+'-en.js';
 }
- </pre>
+</pre>
  */
-jvm.MultiMap = function (params) {
+jvm.MultiMap = function(params) {
     var that = this;
 
     this.maps = {};
@@ -3333,7 +3327,7 @@ jvm.MultiMap = function (params) {
     });
     this.backButton = jvm.$('<div/>').addClass('jvectormap-goback').text('Back').appendTo(this.params.container);
     this.backButton.hide();
-    this.backButton.click(function () {
+    this.backButton.click(function() {
         that.goBack();
     });
 
@@ -3342,7 +3336,7 @@ jvm.MultiMap = function (params) {
 };
 
 jvm.MultiMap.prototype = {
-    addMap: function (name, config) {
+    addMap: function(name, config) {
         var cnt = jvm.$('<div/>').css({
             width: '100%',
             height: '100%'
@@ -3356,7 +3350,7 @@ jvm.MultiMap.prototype = {
         if (this.params.maxLevel > config.multiMapLevel) {
             this.maps[name].container.on('regionClick.jvectormap', {
                 scope: this
-            }, function (e, code) {
+            }, function(e, code) {
                 var multimap = e.data.scope,
                     mapName = multimap.params.mapNameByCode(code, multimap);
 
@@ -3370,15 +3364,15 @@ jvm.MultiMap.prototype = {
         return this.maps[name];
     },
 
-    downloadMap: function (code) {
+    downloadMap: function(code) {
         var that = this,
             deferred = jvm.$.Deferred();
 
         if (!this.mapsLoaded[code]) {
-            jvm.$.get(this.params.mapUrlByCode(code, this)).then(function () {
+            jvm.$.get(this.params.mapUrlByCode(code, this)).then(function() {
                 that.mapsLoaded[code] = true;
                 deferred.resolve();
-            }, function () {
+            }, function() {
                 deferred.reject();
             });
         } else {
@@ -3387,7 +3381,7 @@ jvm.MultiMap.prototype = {
         return deferred;
     },
 
-    drillDown: function (name, code) {
+    drillDown: function(name, code) {
         var currentMap = this.history[this.history.length - 1],
             that = this,
             focusPromise = currentMap.setFocus({
@@ -3396,16 +3390,16 @@ jvm.MultiMap.prototype = {
             }),
             downloadPromise = this.downloadMap(code);
 
-        focusPromise.then(function () {
+        focusPromise.then(function() {
             if (downloadPromise.state() === 'pending') {
                 that.spinner.show();
             }
         });
-        downloadPromise.always(function () {
+        downloadPromise.always(function() {
             that.spinner.hide();
         });
         this.drillDownPromise = jvm.$.when(downloadPromise, focusPromise);
-        this.drillDownPromise.then(function () {
+        this.drillDownPromise.then(function() {
             currentMap.params.container.hide();
             if (!that.maps[name]) {
                 that.addMap(name, {
@@ -3420,7 +3414,7 @@ jvm.MultiMap.prototype = {
         });
     },
 
-    goBack: function () {
+    goBack: function() {
         var currentMap = this.history.pop(),
             prevMap = this.history[this.history.length - 1],
             that = this;
@@ -3430,7 +3424,7 @@ jvm.MultiMap.prototype = {
             x: 0.5,
             y: 0.5,
             animate: true
-        }).then(function () {
+        }).then(function() {
             currentMap.params.container.hide();
             prevMap.params.container.show();
             prevMap.updateSize();
@@ -3448,16 +3442,17 @@ jvm.MultiMap.prototype = {
 };
 
 jvm.MultiMap.defaultParams = {
-    mapNameByCode: function (code, multiMap) {
+    mapNameByCode: function(code, multiMap) {
         return code.toLowerCase() + '_' + multiMap.defaultProjection + '_en';
     },
-    mapUrlByCode: function (code, multiMap) {
+    mapUrlByCode: function(code, multiMap) {
         return 'jquery-jvectormap-data-' + code.toLowerCase() + '-' + multiMap.defaultProjection + '-en.js';
     }
 }
 
 
-// World_mill_en code
+
+// World_mill_en code 
 
 $.fn.vectorMap('addMap', 'world_mill_en', {
     "insets": [{

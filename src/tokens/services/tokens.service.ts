@@ -1,10 +1,10 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { TokenDto, TokenIdRequestParamsDto } from "../dtos/tokens.dto";
 import { CreateTokenCommand } from "../commands/impl/create-token.command";
 import { UpdateTokenCommand } from "../commands/impl/update-token.command";
 import { DeleteTokenCommand } from "../commands/impl/delete-token.command";
-import { GetTokensQuery } from "tokens/queries/impl/get-tokens.query";
+import { GetTokensQuery, GetTokenTypesQuery } from "tokens/queries/impl/get-tokens.query";
 import { GetTokensByUserIdQuery } from "tokens/queries/impl/get-tokens-by-userId";
 import { FindTokenQuery } from "tokens/queries/impl/find-token.query";
 
@@ -15,23 +15,27 @@ export class TokensService {
     private readonly queryBus: QueryBus
   ) {}
 
-  async createToken(tokenDto: TokenDto) {
-    return await this.commandBus.execute(
-      new CreateTokenCommand(tokenDto, null)
-    );
+  async createToken(streamId: string, tokenDto: TokenDto) {
+    return await this.commandBus.execute(new CreateTokenCommand(streamId, tokenDto));
   }
 
-  async updateToken(tokenDto: TokenDto) {
-    return await this.commandBus.execute(new UpdateTokenCommand(tokenDto));
+  async updateToken(streamId: string, tokenDto: TokenDto) {
+    return await this.commandBus.execute(new UpdateTokenCommand(streamId, tokenDto));
   }
 
-  async deleteToken(tokenIdDto: TokenIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteTokenCommand(tokenIdDto));
+  async deleteToken(streamId: string, tokenIdDto: TokenIdRequestParamsDto) {
+    return await this.commandBus.execute(new DeleteTokenCommand(streamId, tokenIdDto));
   }
 
-  async findTokens(getTokensQuery: GetTokensQuery) {
+  async getTokens(getTokensQuery: GetTokensQuery) {
     const query = new GetTokensQuery();
     Object.assign(query, getTokensQuery);
+    return await this.queryBus.execute(query);
+  }
+
+  async findTokenTypes(getTokenTypesQuery: GetTokenTypesQuery) {
+    const query = new GetTokenTypesQuery();
+    Object.assign(query, getTokenTypesQuery);
     return await this.queryBus.execute(query);
   }
 

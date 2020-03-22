@@ -1,81 +1,104 @@
-import {
-  IsEmail,
-  IsEmpty,
-  IsNotEmpty,
-  IsString,
-  IsArray,
-  IsIn
-} from "class-validator";
-import { Column, Entity, Index } from "typeorm";
-import { BaseEntityDto } from "base/base-entity.dto";
-import { CONSTANTS } from "common/constant";
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {IsArray, IsEmail, IsEmpty, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from 'class-validator';
+import {RoleDto} from 'roles/dtos/roles.dto';
+import {Column, Entity, Index} from 'typeorm';
+import {CONSTANTS} from 'common/constant';
 
 export class UserIdRequestParamsDto {
-  constructor(userId) {
-    this._id = userId;
-  }
+    constructor(userId) {
+        this._id = userId;
+    }
 
-  @IsString()
-  @IsNotEmpty()
-  _id: string;
+    @IsString()
+    @IsOptional()
+    _id: string;
 }
 
-@Entity("users")
+export class AssignUserRoleBody {
+    @IsNotEmpty()
+    @IsArray()
+    @IsIn([CONSTANTS.ROLE.USER, CONSTANTS.ROLE.CSR_USER, CONSTANTS.ROLE.MANAGER_USER],
+        {each: true})
+    roleName: string;
+}
+
+export class ChangePasswordBody {
+    @IsNotEmpty()
+    @IsString()
+    readonly oldPassword;
+
+    @IsNotEmpty()
+    @IsString()
+    readonly newPassword;
+}
+
+@Entity('users')
 export class UserDto extends BaseEntityDto {
-  @IsString()
-  @IsNotEmpty()
-  @Column({
-    name: "first_name"
-  })
-  firstName: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Column({
-    name: "last_name"
-  })
-  lastName: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Index({ unique: true })
-  @Column()
-  username: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @Column()
-  password: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  @Column({ unique: true })
-  email: string;
-
-  @IsEmpty()
-  @Column({
-    default: true,
-    name: "firsttime_login_remaining",
-    nullable: true
-  })
-  firstTimeLoginRemaining: boolean;
-
-  @IsEmpty()
-  @Column({
-    name: "is_active",
-    default: true,
-    nullable: true
-  })
-  isActive: boolean;
-
-  @IsArray()
-  @IsNotEmpty()
-  @IsIn(
-    [CONSTANTS.ROLE.USER, CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.ADMIN],
-    {
-      each: true
+    constructor(firstName: string, lastName: string, username: string, password: string, email: string, assignerId: string, roles: RoleDto[]) {
+        super();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.assignerId = assignerId;
+        this.roles = roles;
     }
-  )
-  @Column()
-  roles: string[];
+
+    @IsString()
+    @IsNotEmpty()
+    @Column()
+    firstName: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @Column()
+    lastName: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @Index({unique: true})
+    @Column({nullable: false, update: false})
+    username: string;
+
+    @IsOptional()
+    @IsString()
+    @Column({
+        select: false, nullable: false,
+    })
+    password: string;
+
+    @IsEmail()
+    @IsNotEmpty()
+    @Column({
+        unique: true, update: false,
+    })
+    email: string;
+
+    @IsOptional()
+    @IsUUID()
+    @Column({insert: false})
+    assignerId: string;
+
+    @IsEmpty()
+    @Column({
+        default: true,
+        nullable: true,
+        insert: false,
+    })
+    firstTimeLoginRemaining: boolean;
+
+    @IsEmpty()
+    @Column({
+        default: true,
+        nullable: false,
+        insert: false,
+    })
+    isActive: boolean;
+
+    @IsArray()
+    @IsOptional()
+    @Column()
+    roles: RoleDto[];
 }

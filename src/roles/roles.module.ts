@@ -1,9 +1,7 @@
 import { Module, OnModuleInit } from "@nestjs/common";
-import { InjectRepository, TypeOrmModule } from "@nestjs/typeorm";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { RoleDto } from "./dtos/roles.dto";
-import { CqrsModule } from "@nestjs/cqrs";
-import { EventStoreModule } from "core/event-store/event-store.module";
-import { Repository } from "typeorm";
+import { getMongoRepository } from "typeorm";
 import { CONSTANTS } from "common/constant";
 
 @Module({
@@ -12,20 +10,20 @@ import { CONSTANTS } from "common/constant";
   ]
 })
 export class RolesModule implements OnModuleInit {
-    constructor(
-        @InjectRepository(RoleDto)
-        private readonly repository: Repository<RoleDto>,
-    ) {
-    }
+  async onModuleInit() {
+    this.persistRolesToDB();
+  }
 
-    async onModuleInit() {
-        const userRole = await this.repository.find({name: CONSTANTS.ROLE.USER});
-        const manageUserRole = await this.repository.find({name: CONSTANTS.ROLE.MANAGER_USER});
-        const adminRole = await this.repository.find({name: CONSTANTS.ROLE.ADMIN});
-        if (!userRole[0] || !adminRole[0] || !manageUserRole[0]) {
-            await this.repository.save(new RoleDto(CONSTANTS.ROLE.USER));
-            await this.repository.save(new RoleDto(CONSTANTS.ROLE.MANAGER_USER));
-            await this.repository.save(new RoleDto(CONSTANTS.ROLE.ADMIN));
-        }
+  async persistRolesToDB() {
+    const userRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.USER });
+    const manageUserRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.MANAGER_USER });
+    const csrUserRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.CSR_USER });
+    const adminRole = await getMongoRepository(RoleDto).find({ name: CONSTANTS.ROLE.ADMIN });
+    if (!userRole[0] && !csrUserRole[0] && !adminRole[0] && !manageUserRole[0]) {
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.USER));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.MANAGER_USER));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.CSR_USER));
+      getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.ADMIN));
     }
+  }
 }
