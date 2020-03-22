@@ -1,14 +1,24 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:dubnium-alpine',
+            args '-p 7070:7070'
+        }
+    }
     environment {
-        PATH = './'
-        GIT_HOST = 'https://github.com/thanhtinhpas1/ViSpeech'
-        BRANCH_HOST = 'dev-master'
+        CI = 'true'
     }
     stages {
+        stage('Build') {
+            steps {
+                sh 'npm install'
+                sh 'cd apps && npm install'
+            }
+        }
         stage('Delivery') {
             steps {
-                sh 'docker-compose up'
+                sh 'npm run build'
+                sh 'start:prod'
             }
         }
     }
