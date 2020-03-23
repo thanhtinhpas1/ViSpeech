@@ -23,7 +23,7 @@ COPY . .
 
 COPY --from=dependencies /tmp/node_modules ./node_modules
 
-CMD['npm', 'start:dev']
+CMD ['yarn', 'start:dev']
 
 # Expose application port
 EXPOSE 7070:7070
