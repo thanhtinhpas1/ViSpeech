@@ -63,24 +63,6 @@ services:
       - mongodb
     #  - vispeech
     network_mode: bridge
-  release:
-    build:
-      context: "./release"
-    command: "npm start"
-    restart: always
-    depends_on:
-      - eventstore
-      - mongodb
-    #  - vispeech
-    ports:
-      - ${RELEASE_PAGE_PORT}:${RELEASE_INTERNAL_PORT}
-    expose:
-      - ${RELEASE_PAGE_PORT}
-    links:
-      - eventstore
-      - mongodb
-    #  - vispeech
-    network_mode: bridge
   zoo1:
     image: zookeeper:3.4.9
     hostname: zoo1
