@@ -18,12 +18,14 @@ RUN cd /tmp && yarn --pure-lockfile
 ### RELEASE
 FROM base AS development
 
+# CMD ['npm', 'build']
+
 # Copy app sources
 COPY . .
 
 COPY --from=dependencies /tmp/node_modules ./node_modules
 
-CMD ['yarn', 'start:dev']
+CMD ['npm', 'start:dev']
 
 # Expose application port
 EXPOSE 7070:7070
