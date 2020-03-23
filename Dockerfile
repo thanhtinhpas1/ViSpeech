@@ -1,5 +1,5 @@
 ### BASE
-FROM node:dubnium-alpine AS base
+FROM node:10.0.0 AS base
 
 LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 # Set the working directory

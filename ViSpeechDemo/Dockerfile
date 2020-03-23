@@ -1,6 +1,6 @@
 ### BASE
 
-FROM node:dubnium-alpine AS base
+FROM 10.0.0 AS base
 
 # Set the working directory
 WORKDIR /usr/src/app/demo

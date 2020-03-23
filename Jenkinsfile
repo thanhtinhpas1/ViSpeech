@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:dubnium-alpine'
-        }
-    }
+    agent any
     environment {
         CI = 'true'
     }
