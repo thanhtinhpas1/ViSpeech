@@ -51,7 +51,7 @@ export class TokenCreatedSuccessHandler implements IEventHandler<TokenCreatedSuc
 }
 
 @EventsHandler(TokenCreatedFailedEvent)
-export class TokenCreatedFailHandler
+export class TokenCreatedFailedHandler
   implements IEventHandler<TokenCreatedFailedEvent> {
   handle(event: TokenCreatedFailedEvent) {
     Logger.log(event.error, "TokenCreatedFailedEvent");

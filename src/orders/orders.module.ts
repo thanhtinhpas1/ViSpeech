@@ -2,7 +2,6 @@ import { forwardRef, Module, OnModuleInit } from "@nestjs/common";
 import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "auth/auth.module";
-import { AuthService } from "auth/auth.service";
 import { EventStore } from "core/event-store/event-store";
 import { CommandHandlers as TokenCommandHandlers } from "tokens/commands/handlers";
 import { TokenRepository } from "tokens/repository/token.repository";
@@ -31,7 +30,6 @@ import { TokenTypeDto } from "tokens/dtos/token-types.dto";
   controllers: [OrdersController],
   providers: [
     OrdersService,
-    AuthService,
     OrdersSagas,
     ...CommandHandlers,
     ...TokenCommandHandlers,

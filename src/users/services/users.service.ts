@@ -7,7 +7,6 @@ import {GetUsersQuery} from 'users/queries/impl/get-users.query';
 import {FindUserQuery} from 'users/queries/impl/find-user.query';
 import {CreateUserStartCommand} from 'users/commands/impl/create-user.command';
 import {ChangePasswordCommand} from '../commands/impl/change-password.command';
-import { AssignUserRoleCommand } from 'users/commands/impl/assign-user-role.command';
 
 @Injectable()
 export class UsersService {
@@ -28,9 +27,9 @@ export class UsersService {
         return await this.commandBus.execute(new DeleteUserCommand(streamId, userIdDto));
     }
 
-    async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
-        return await this.commandBus.execute(new AssignUserRoleCommand(streamId, userId, roleName, assignerId));
-    }
+    // async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
+    //     return await this.commandBus.execute(new AssignUserRoleCommand(streamId, userId, roleName, assignerId));
+    // }
 
     async changePassword(streamId: string, userId: string, newPassword: string, oldPassword: string) {
         return await this.commandBus.execute(new ChangePasswordCommand(streamId, userId, newPassword, oldPassword));

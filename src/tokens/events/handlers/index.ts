@@ -1,4 +1,4 @@
-import { TokenCreatedHandler, TokenCreatedFailHandler, TokenCreatedSuccessHandler } from "./token-created.handler";
+import { TokenCreatedHandler, TokenCreatedFailedHandler, TokenCreatedSuccessHandler } from "./token-created.handler";
 import { TokenUpdatedHandler } from "./token-updated.handler";
 import { TokenDeletedHandler, TokenDeletedByUserIdHandler } from "./token-deleted.handler";
 import { TokenWelcomedHandler } from "./token-welcomed.handler";
@@ -9,7 +9,7 @@ export const EventHandlers = [
   // create
   TokenCreatedHandler,
   TokenCreatedSuccessHandler,
-  TokenCreatedFailHandler,
+  TokenCreatedFailedHandler,
 
   TokenUpdatedHandler,
   TokenDeletedHandler,

@@ -3,6 +3,8 @@ export const CONSTANTS = {
     ADMIN: "ADMIN",
     USER: "USER",
     MANAGER_USER: "MANAGER_USER",
+  },
+  PERMISSION: {
     CSR_USER: "CSR_USER",
   },
   TOKEN_TYPE: {
@@ -14,7 +16,10 @@ export const CONSTANTS = {
   STATUS: {
     PENDING: "PENDING",
     SUCCESS: "SUCCESS",
-    FAILURE: "FAILURE"
+    FAILURE: "FAILURE",
+    APPROVED: "APPROVED",
+    REJECTED: "REJECTED",
+    INVALID: "INVALID",
   },
   BEARER_HEADER_AUTHORIZE: "Bearer ",
   AUTH_JWT: 'jwt',

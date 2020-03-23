@@ -41,13 +41,18 @@ export class AuthService {
         return this.jwtService.sign(payload);
     }
 
+    generateEmailTokenWithUserId(userId) {
+        const payload = { id: userId };
+        return this.jwtService.sign(payload, { expiresIn: "2 days" });
+    }
+
     async findUserByUsername(username: string): Promise<UserDto> {
         return await this.queryBus.execute(new FindUserByUsernameQuery(username));
     }
 
     decode(request: any) {
         const authorization = request.headers.authorization;
-        if (!authorization) return false;
+        if (!authorization) return null;
         const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, "");
         return this.jwtService.decode(jwt);
     }
