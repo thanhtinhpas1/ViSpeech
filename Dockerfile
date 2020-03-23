@@ -6,13 +6,11 @@ LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 WORKDIR /user/src/app/vispeech
 # Copy project specification and dependencies lock files
 COPY package.json yarn.lock tsconfig.json /tmp/
-# Install yarn
-RUN apk --no-cache add yarn
 
 ### DEPENDENCIES
 FROM base AS dependencies
 # Install Node.js dependencies
-RUN cd /tmp && yarn --pure-lockfile
+RUN cd /tmp && npm install
 
 ### RELEASE
 FROM base AS development
