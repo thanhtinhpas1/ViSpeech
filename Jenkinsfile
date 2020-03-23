@@ -14,7 +14,7 @@ pipeline {
                 sh 'npm install'
                 sh 'npm install ./apps'
                 sh 'npm run build'
-                sh 'npm run buid ./apps'
+                sh 'npm run build ./apps'
             }
         }
         stage('Delivery') {
