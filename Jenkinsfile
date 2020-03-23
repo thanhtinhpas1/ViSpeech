@@ -11,6 +11,7 @@ pipeline {
         }
         stage('Delivery') {
             steps {
+                sh 'docker rm -f vispeech'
                 sh 'docker run --name=vispeech -d --restart=always -p 7070:7070 vispeech'
             }
         }
