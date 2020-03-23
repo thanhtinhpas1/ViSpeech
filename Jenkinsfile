@@ -1,30 +1,17 @@
 pipeline {
-    agent {
-        dockerfile {
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
     environment {
         CI = 'true'
     }
     stages {
         stage('Build') {
             steps {
-                sh 'npm install'
-                sh 'npm install ./apps'
-                sh 'npm run build'
-                sh 'npm run build ./apps'
-            }
-        }
-        stage('Clean') {
-            steps {
-                sh 'docker rm -f vispeech'
+                sh 'docker build -t vispeech .'
             }
         }
         stage('Delivery') {
             steps {
-                sh 'docker build -t vispeech'
-                sh 'docker run --name vispeech --restart=always -p 7070:7070 vispeech'
+                sh 'docker run --name=vispeech -d --restart=always -p 7070:7070 vispeech'
             }
         }
     }
