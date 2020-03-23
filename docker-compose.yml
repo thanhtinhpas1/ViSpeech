@@ -1,50 +1,50 @@
 # Documentation
 # https://docs.docker.com/compose/compose-file
 
-version: '3'
+version: "3"
 
 services:
   # EVENT STORE
   eventstore:
-     image: eventstore/eventstore
-     ports:
-       - 2113:2113
-       - 1113:1113
-     expose:
-       - 2113
-     environment:
-       - EVENTSTORE_RUN_PROJECTIONS=All
-       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
-     network_mode: bridge
+    image: eventstore/eventstore
+    ports:
+      - 2113:2113
+      - 1113:1113
+    expose:
+      - 2113
+    environment:
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+    network_mode: bridge
   # DATABASE - MYSQL
   mongodb:
-     image: mongo
-     restart: alwaysw
-     environment:
-       MONGO_INITDB_ROOT_USERNAME: root
-       MONGO_INITDB_ROOT_PASSWORD: mongodb
-     ports:
-       - 27017:27017
-     network_mode: bridge
+    image: mongo
+    restart: alwaysw
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongodb
+    ports:
+      - 27017:27017
+    network_mode: bridge
   # API - VISPEECH
-  # vispeech:
-  #   build:
-  #     context: "."
-  #   command: ${CONTAINER_COMMAND}
-  #   restart: always
-  #   depends_on:
-  #     - eventstore
-  #     - mongodb
-  #   environment:
-  #     - EVENT_STORE_HOSTNAME=eventstore
-  #   ports:
-  #     - ${VISPEECH_PORT}:${VISPEECH_PORT}
-  #   expose:
-  #     - ${VISPEECH_PORT}
-  #   links:
-  #     - eventstore
-  #     - mongodb
-  #   network_mode: bridge
+  vispeech:
+    build:
+      context: "."
+    command: ${CONTAINER_COMMAND}
+    restart: always
+    depends_on:
+      - eventstore
+      - mongodb
+    environment:
+      - EVENT_STORE_HOSTNAME=eventstore
+    ports:
+      - ${VISPEECH_PORT}:${VISPEECH_PORT}
+    expose:
+      - ${VISPEECH_PORT}
+    links:
+      - eventstore
+      - mongodb
+    network_mode: bridge
   vispeechdemo:
     build:
       context: "./ViSpeechDemo"
@@ -87,9 +87,9 @@ services:
     ports:
       - "2181:2181"
     environment:
-        ZOO_MY_ID: 1
-        ZOO_PORT: 2181
-        ZOO_SERVERS: server.1=zoo1:2888:3888
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=zoo1:2888:3888
     network_mode: bridge
   kafka1:
     image: confluentinc/cp-kafka:5.4.0

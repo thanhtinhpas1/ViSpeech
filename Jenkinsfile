@@ -6,13 +6,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'docker build -t vispeech .'
+                sh 'chmod +x ./scripts/up.sh'
+                sh 'chmod +x ./scripts/down.sh'
             }
         }
         stage('Delivery') {
             steps {
-                sh 'docker rm -f vispeech'
-                sh 'docker run --name=vispeech -d --restart=always -p 7070:7070 vispeech'
+                sh 'docker-compose up'
             }
         }
     }

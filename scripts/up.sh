@@ -2,7 +2,7 @@
 
 export DIR_DATA_PATH="$PWD"
 
-export CONTAINER_COMMAND="npm start:dev"
+export CONTAINER_COMMAND="npm build && npm start:prod"
 export CONTAINER_SCALE="1"
 export CONTAINER_PORT="7070"
 # release app and vispeechdemo
@@ -12,7 +12,8 @@ export VISPEECH_PORT=7070
 export RELEASE_INTERNAL_PORT=8000
 export RELEASE_PAGE_PORT=80
 
- docker-compose rm --all &&
- docker-compose pull &&
- docker-compose build &&
- docker-compose up --force-recreate
+#  docker-compose rm --all &&
+#  docker-compose pull &&
+#  docker-compose build &&
+#  docker-compose up --force-recreate
+docker-compose up --build
