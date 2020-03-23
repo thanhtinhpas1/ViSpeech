@@ -1,8 +1,6 @@
 pipeline {
     agent {
         dockerfile {
-            filename 'Dockerfile.build'
-            reuseNode true
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
