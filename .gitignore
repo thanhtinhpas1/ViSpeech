@@ -3,10 +3,6 @@
 # Yarn
 *.yarn
 
-# Yarn.lock
-yarn.lock
-apps/yarn.lock
-
 # Logs
 *.log
 npm-debug.log*
