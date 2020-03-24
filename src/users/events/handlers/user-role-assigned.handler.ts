@@ -19,7 +19,7 @@ export class UserRoleAssignedHandler implements IEventHandler<UserRoleAssignedEv
 
         try {
             const roleDto = [new RoleDto(roleName)];
-            await this.userRepository.update({ _id: userId }, { roles: roleDto, assignerId });
+            await this.userRepository.update({ _id: userId }, { roles: roleDto });
             this.eventBus.publish(new UserRoleAssignedSuccessEvent(streamId, userId, roleName, assignerId));
         } catch (error) {
             this.eventBus.publish(new UserRoleAssignedFailedEvent(streamId, userId, roleName, assignerId, error));

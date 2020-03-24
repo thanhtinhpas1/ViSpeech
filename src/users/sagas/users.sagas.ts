@@ -31,20 +31,20 @@ export class UsersSagas {
         );
     };
 
-    @Saga()
-    userCreatedSucess = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(UserCreatedSuccessEvent),
-            map((event: UserCreatedSuccessEvent) => {
-                Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
-                const { streamId, userDto } = event;
-                const userId = userDto._id;
-                const tokenValue = this.authService.generateTokenWithUserId(userId);
-                const tokenDto = new TokenDto(tokenValue, userId); // free token
-                return new CreateFreeTokenCommand(streamId, tokenDto);
-            })
-        );
-    };
+    // @Saga()
+    // userCreatedSucess = (events$: Observable<any>): Observable<ICommand> => {
+    //     return events$.pipe(
+    //         ofType(UserCreatedSuccessEvent),
+    //         map((event: UserCreatedSuccessEvent) => {
+    //             Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
+    //             const { streamId, userDto } = event;
+    //             const userId = userDto._id;
+    //             const tokenValue = this.authService.generateTokenWithUserId(userId);
+    //             const tokenDto = new TokenDto(tokenValue, userId); // free token
+    //             return new CreateFreeTokenCommand(streamId, tokenDto);
+    //         })
+    //     );
+    // };
 
     @Saga()
     freeTokenCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {

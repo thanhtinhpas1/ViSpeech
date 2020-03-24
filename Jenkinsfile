@@ -26,14 +26,14 @@ pipeline {
                 }
             }
         }
-        stage('compile') {
-            steps {
-                sh 'npm run build'
-                dir ('apps') {
-                    sh 'npm run build'
-                }
-            }
-        }
+        // stage('compile') {
+        //     steps {
+        //         sh 'npm run build'
+        //         dir ('apps') {
+        //             sh 'npm run build'
+        //         }
+        //     }
+        // }
         stage('docker') {
             steps {
                 sh 'docker build -t vispeech .'
