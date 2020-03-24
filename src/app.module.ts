@@ -9,6 +9,8 @@ import { RolesModule } from 'roles/roles.module';
 import { TokensModule } from 'tokens/tokens.module';
 import { UsersModule } from 'users/users.module';
 import { config } from '../config';
+import { ProjectsModule } from 'projects/projects.module';
+import { PermissionsModule } from 'permissions/permissions.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { config } from '../config';
     OrdersModule,
     RolesModule,
     ReportsModule,
+    ProjectsModule,
+    PermissionsModule,
   ],
 })
 export class AppModule {

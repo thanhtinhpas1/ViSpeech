@@ -1,4 +1,4 @@
-import {forwardRef, Module, OnModuleInit} from "@nestjs/common";
+import { Module, OnModuleInit, forwardRef} from "@nestjs/common";
 import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CONSTANTS } from "common/constant";
@@ -20,7 +20,6 @@ import { TokensSagas } from "./sagas/tokens.sagas";
 import { TokensService } from "./services/tokens.service";
 import { FreeTokenCreatedEvent, FreeTokenCreatedSuccessEvent, FreeTokenCreatedFailedEvent } from "./events/impl/free-token-created.event";
 import { OrderedTokenCreatedEvent, OrderedTokenCreatedSuccessEvent, OrderedTokenCreatedFailedEvent } from "./events/impl/ordered-token-created.event";
-import { AuthService } from "auth/auth.service";
 import {AuthModule} from "../auth/auth.module";
 
 
@@ -37,7 +36,6 @@ import {AuthModule} from "../auth/auth.module";
         ...CommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
-        AuthService,
         TokenRepository,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
     ],
@@ -69,7 +67,7 @@ export class TokensModule implements OnModuleInit {
     // create
     TokenCreatedEvent: (streamId, data) => new TokenCreatedEvent(streamId, data),
     TokenCreatedSuccessEvent: (streamId, data) => new TokenCreatedSuccessEvent(streamId, data),
-    TokenCreatedFailEvent: (streamId, data, error) => new TokenCreatedFailedEvent(streamId, data, error),
+    TokenCreatedFailedEvent: (streamId, data, error) => new TokenCreatedFailedEvent(streamId, data, error),
 
     TokenDeletedEvent: (streamId, data) => new TokenDeletedEvent(streamId, data),
     TokenDeletedByUserIdEvent: (streamId, data) => new TokenDeletedByUserIdEvent(streamId, data), 
@@ -79,12 +77,12 @@ export class TokensModule implements OnModuleInit {
     // free token
     FreeTokenCreatedEvent: (streamId, data) => new FreeTokenCreatedEvent(streamId, data),
     FreeTokenCreatedSuccessEvent: (streamId, data) => new FreeTokenCreatedSuccessEvent(streamId, data),
-    FreeTokenCreatedFailEvent: (streamId, data, error) => new FreeTokenCreatedFailedEvent(streamId, data, error),
+    FreeTokenCreatedFailedEvent: (streamId, data, error) => new FreeTokenCreatedFailedEvent(streamId, data, error),
 
     // ordered token
     OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
     OrderedTokenCreatedSuccessEvent: (streamId, data) => new OrderedTokenCreatedSuccessEvent(streamId, data),
-    OrderedTokenCreatedFailEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
+    OrderedTokenCreatedFailedEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
   };
 
     async persistTokenTypesToDB() {

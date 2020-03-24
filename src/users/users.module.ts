@@ -68,7 +68,7 @@ export class UsersModule implements OnModuleInit {
         // seed data
         try {
             const admin = new UserDto('admin', 'admin', 'admin', Utils.hashPassword('admin'),
-                'admin@vispeech.com', null, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
+                'admin@vispeech.com', [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
             Logger.log('Seed admin account success', 'UserModule');
             await this.repository.save(admin);
         } catch (e) {

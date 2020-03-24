@@ -6,10 +6,9 @@ import {Roles} from 'auth/roles.decorator';
 import {CONSTANTS} from 'common/constant';
 import {FindUserQuery} from 'users/queries/impl/find-user.query';
 import {GetUsersQuery} from 'users/queries/impl/get-users.query';
-import {AssignUserRoleBody, ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
+import {ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
 import {UsersService} from '../services/users.service';
 import {UserGuard} from 'auth/guards/user.guard';
-import {AssignRoleGuard} from '../../auth/guards/assign-role.guard';
 
 @Controller('users')
 @ApiTags('Users')
@@ -100,15 +99,15 @@ export class UsersController {
     }
 
     /* Assign role to user */
-    @ApiOperation({tags: ['Assign Role']})
-    @ApiResponse({status: 200, description: 'Assign role to user'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
-    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-    @Put(':_id/roles')
-    async assignRoleToUser(@Body() body: AssignUserRoleBody, @Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
-        const payload = this.authService.decode(request);
-        const assignerId = payload['id'];
-        const streamId = userIdDto._id;
-        return this.usersService.assignUserRole(streamId, userIdDto._id, body.roleName, assignerId);
-    }
+    // @ApiOperation({tags: ['Assign Role']})
+    // @ApiResponse({status: 200, description: 'Assign role to user'})
+    // @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
+    // @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    // @Put(':_id/roles')
+    // async assignRoleToUser(@Body() body: AssignUserRoleBody, @Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
+    //     const payload = this.authService.decode(request);
+    //     const assignerId = payload['id'];
+    //     const streamId = userIdDto._id;
+    //     return this.usersService.assignUserRole(streamId, userIdDto._id, body.roleName, assignerId);
+    // }
 }

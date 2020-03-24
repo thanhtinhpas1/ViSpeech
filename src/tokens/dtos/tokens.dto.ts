@@ -17,20 +17,36 @@ export class TokenIdRequestParamsDto {
 
 @Entity('tokens')
 export class TokenDto extends BaseEntityDto {
-  constructor(
-    value,
-    userId,
-    tokenType = CONSTANTS.TOKEN_TYPE.FREE,
-    tokenTypeId = null,
-    orderId = null,
-  ) {
+  constructor(value: string, userId, projectId, tokenType: string = CONSTANTS.TOKEN_TYPE.FREE, tokenTypeId = null, orderId = null) {
     super();
     this.value = value;
     this.userId = userId;
+    this.projectId = projectId;
     this.tokenTypeId = tokenTypeId;
     this.tokenType = tokenType;
     this.orderId = orderId;
   }
+
+  @IsString()
+  @IsNotEmpty()
+  @Column({
+    unique: true,
+  })
+  value: string;
+
+  @IsUUID()
+  @Column({
+    nullable: false,
+    type: 'uuid',
+  })
+  userId: ObjectID;
+
+  @IsUUID()
+  @Column({
+    nullable: false,
+    type: 'uuid',
+  })
+  projectId: ObjectID;
 
   @IsOptional()
   @Type(() => Number)
@@ -50,20 +66,6 @@ export class TokenDto extends BaseEntityDto {
     nullable: false,
   })
   usedMinutes: number;
-
-  @IsString()
-  @IsNotEmpty()
-  @Column({
-    unique: true,
-  })
-  value: string;
-
-  @IsUUID()
-  @Column({
-    nullable: false,
-    type: 'uuid',
-  })
-  userId: ObjectID;
 
   @IsOptional()
   @IsUUID()
