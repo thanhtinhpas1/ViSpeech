@@ -7,8 +7,8 @@ LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 WORKDIR /user/src/app/vispeech
 
 # Copy project specification and dependencies lock files
-COPY package.json yarn.lock tsconfig.json /tmp/
-COPY apps/package.json yarn.lock  /tmp/apps/
+COPY package.json package-lock.json tsconfig.json /tmp/
+COPY apps/package.json package-lock.json /tmp/apps/
 
 ### DEPENDENCIES
 FROM base AS dependencies
