@@ -19,10 +19,11 @@ services:
   # DATABASE - MYSQL
   mongodb:
     image: mongo
-    restart: alwaysw
+    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: mongodb
+      MONGO_DATABASE: vispeech
     ports:
       - 27017:27017
     network_mode: bridge

@@ -58,7 +58,7 @@ export class PermissionsController {
   @ApiOperation({ tags: ['Send Assign Permission Email'] })
   @ApiResponse({ status: 200, description: 'Send Assign Permission Email.' })
   @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
-  @Post()
+  @Post('assign')
   async sendAssignPermissionEmail(@Body() permissionAssignDto: PermissionAssignDto) {
     const streamId = Utils.getUuid();
     return this.permissionsService.sendAssignPermissionEmail(streamId, permissionAssignDto);

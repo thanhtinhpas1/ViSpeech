@@ -20,7 +20,7 @@ import { PermissionsModule } from 'permissions/permissions.module';
       entities: [__dirname + '/../**/*.dto{.ts,.js}'],
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', config.ROOT_PATH),
+      rootPath: join(__dirname, '..', config.APP_ROOT_PATH),
     }),
     /** ------------- */
     UsersModule,

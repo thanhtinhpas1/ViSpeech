@@ -14,7 +14,7 @@ const configs = {
         NAME: process.env.APP_NAME || pkg.name,
         TITLE: process.env.APP_TITLE || 'Users',
         DESCRIPTION: process.env.APP_DESCRIPTION || 'Users API Microservice',
-        ROOT_PATH: process.env.ROOT_PATH || 'apps/build',
+        APP_ROOT_PATH: process.env.APP_ROOT_PATH || 'apps/build',
         // API
         PREFIX: process.env.APP_PREFIX || 'v1',
         VERSION: process.env.APP_VERSION || '1.0',
