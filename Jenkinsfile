@@ -20,9 +20,9 @@ pipeline {
         }
         stage('install') {
             steps {
-                sh 'npm i'
+                sh 'npm install'
                 dir('apps') {
-                    sh 'npm i'
+                    sh 'npm install'
                 }
             }
         }
