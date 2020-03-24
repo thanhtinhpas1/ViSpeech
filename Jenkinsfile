@@ -26,13 +26,11 @@ pipeline {
                 }
             }
         }
-        stages {
-            stage('compile') {
-                steps {
+        stage('compile') {
+            steps {
+                sh 'npm run build'
+                dir ('apps') {
                     sh 'npm run build'
-                    dir ('apps') {
-                        sh 'npm run build'
-                    }
                 }
             }
         }
