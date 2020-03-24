@@ -12,7 +12,7 @@
     "build": "rm -rf dist && tsc && rm -rf ./apps/build && npm run build --prefix ./apps",
     "build:docker": "docker build --force-rm -t vispeech .",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
-    "start:dev": "nodemon",
+    "start:dev": "npm run build --prefix ./apps && nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "prestart:prod": "npm run build --scripts-prepend-node-path",
     "start:prod": "node dist/src/main.js",
