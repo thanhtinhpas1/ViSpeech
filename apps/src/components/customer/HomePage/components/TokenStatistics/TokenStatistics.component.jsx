@@ -3,11 +3,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
 import Utils from 'utils'
+import InfoModal from 'components/customer/InfoModal/InfoModal.component'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.component'
 
-const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
+const TokenStatistics = ({ currentUser, token, getTokenTypes, sendVerifyEmail }) => {
   const [payOnlineModal, setPayOnlineModal] = useState({})
+  const [infoModal, setInfoModal] = useState({})
 
   useEffect(() => {
     getTokenTypes()
@@ -31,6 +33,22 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
   }, [getTokenTypes])
 
   const openPayOnlineModal = () => {
+    if (!Utils.isEmailVerified(currentUser.roles)) {
+      const infoObj = {
+        title: 'Tài khoản chưa được kích hoạt',
+        message: 'Vui lòng xác thực email để kích hoạt tài khoản.',
+        icon: {
+          isSuccess: false,
+        },
+        button: {
+          content: 'Xác thực email',
+          clickFunc: () => sendVerifyEmail(currentUser._id),
+        },
+      }
+      setInfoModal(infoObj)
+      window.$('#info-modal').modal('show')
+      return
+    }
     const selectedTypeId = window
       .$('.token-currency-choose .pay-option input[name="tokenType"]:checked')
       .attr('id')
@@ -85,6 +103,7 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes }) => {
         </div>
       </div>
       <PayOnlineModal payOnlineModal={payOnlineModal} />
+      <InfoModal infoModal={infoModal} />
     </>
   )
 }

@@ -1,8 +1,8 @@
-import {CanActivate, Injectable, Logger} from '@nestjs/common';
-import {AuthService} from 'auth/auth.service';
-import {CONSTANTS} from 'common/constant';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {getMongoRepository} from 'typeorm';
+import { CanActivate, Injectable, Logger } from '@nestjs/common';
+import { AuthService } from 'auth/auth.service';
+import { CONSTANTS } from 'common/constant';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { getMongoRepository } from 'typeorm';
 
 @Injectable()
 export class TokenGuard implements CanActivate {
@@ -11,7 +11,7 @@ export class TokenGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const id = request.params._id || request.params.id || request.params.tokenId;
         if (!id) return true;
@@ -19,11 +19,12 @@ export class TokenGuard implements CanActivate {
         const payload = this.authService.decode(request);
         if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
-        const token = await getMongoRepository(TokenDto).findOne({_id: id});
-        if (token.userId !== payload['id']) {
-            Logger.warn('User do not have permission to modify this token.', 'TokenGuard');
-            return false;
+        const token = await getMongoRepository(TokenDto).findOne({ _id: id });
+        if (token.userId === payload['id']) {
+            return true;
         }
-        return true;
+
+        Logger.warn('User do not have permission to modify this token.', 'TokenGuard');
+        return false;
     }
 }

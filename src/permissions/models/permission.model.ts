@@ -4,6 +4,7 @@ import { PermissionUpdatedEvent } from "../events/impl/permission-updated.event"
 import { PermissionDeletedEvent } from "../events/impl/permission-deleted.event";
 import { PermissionWelcomedEvent } from "../events/impl/permission-welcomed.event";
 import { PermissionAssignEmailSentEvent } from "permissions/events/impl/permission-assign-email-sent.event";
+import { PermissionAssignRepliedEvent } from "permissions/events/impl/permission-assign-replied.event";
 
 export class Permission extends AggregateRoot {
   [x: string]: any;
@@ -34,5 +35,9 @@ export class Permission extends AggregateRoot {
 
   sendAssignPermissionEmail(streamId: string) {
     this.apply(new PermissionAssignEmailSentEvent(streamId, this.data));
+  }
+
+  replyPermissionAssign(streamId: string) {
+    this.apply(new PermissionAssignRepliedEvent(streamId, this.data));
   }
 }

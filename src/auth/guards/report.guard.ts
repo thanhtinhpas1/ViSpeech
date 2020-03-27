@@ -20,10 +20,11 @@ export class ReportGuard implements CanActivate {
         if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const report = getMongoRepository(ReportDto).findOne({ _id: id });
-        if (report['userId'] !== payload['id']) {
-            Logger.warn('User do not have permission to modify this report.', 'ReportGuard')
-            return false;
+        if (report['userId'] === payload['id']) {
+            return true;
         }
-        return true;
+
+        Logger.warn('User do not have permission to modify this report.', 'ReportGuard')
+        return false;
     }
 }

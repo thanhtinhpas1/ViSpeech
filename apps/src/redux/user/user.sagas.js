@@ -21,8 +21,10 @@ import {
   createUserFailure,
   deleteUserSuccess,
   deleteUserFailure,
-  activeEmailSuccess,
-  activeEmailFailure,
+  sendVerifyEmailSuccess,
+  sendVerifyEmailFailure,
+  verifyEmailSuccess,
+  verifyEmailFailure,
   sendEmailResetPasswordSuccess,
   sendEmailResetPasswordFailure,
   verifyTokenResetPasswordSuccess,
@@ -190,18 +192,32 @@ function* deleteUserSaga() {
   yield takeLatest(UserTypes.DELETE_USER, deleteUser)
 }
 
-// === active account by email
-function* activeEmail({ payload }) {
+// send verify email
+function* sendVerifyEmail({ payload }) {
   try {
-    yield UserService.activeEmail(payload)
-    yield put(activeEmailSuccess())
+    yield UserService.sendVerifyEmail(payload)
+    yield put(sendVerifyEmailSuccess())
   } catch (err) {
-    yield put(activeEmailFailure(err.message))
+    yield put(sendVerifyEmailFailure(err.message))
   }
 }
 
-function* activeEmailSaga() {
-  yield takeLatest(UserTypes.ACTIVE_EMAIL, activeEmail)
+function* sendVerifyEmailSaga() {
+  yield takeLatest(UserTypes.SEND_VERIFY_EMAIL, sendVerifyEmail)
+}
+
+// verify email
+function* verifyEmail({ payload }) {
+  try {
+    yield UserService.verifyEmail(payload)
+    yield put(verifyEmailSuccess())
+  } catch (err) {
+    yield put(verifyEmailFailure(err.message))
+  }
+}
+
+function* verifyEmailSaga() {
+  yield takeLatest(UserTypes.VERIFY_EMAIL, verifyEmail)
 }
 
 // send email reset password
@@ -287,7 +303,8 @@ export function* userSaga() {
     call(createUserSaga),
     call(deleteUserSaga),
     call(authenWithSocialSaga),
-    call(activeEmailSaga),
+    call(sendVerifyEmailSaga),
+    call(verifyEmailSaga),
     call(sendEmailResetPasswordSaga),
     call(verifyTokenResetPasswordSaga),
     call(resetPasswordSaga),

@@ -1,4 +1,4 @@
-import {BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards} from '@nestjs/common';
+import {BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards, Logger} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from 'auth/auth.service';
@@ -8,7 +8,8 @@ import {FindUserQuery} from 'users/queries/impl/find-user.query';
 import {GetUsersQuery} from 'users/queries/impl/get-users.query';
 import {ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
 import {UsersService} from '../services/users.service';
-import {UserGuard} from 'auth/guards/user.guard';
+import {UserGuard, VerifyEmailGuard} from 'auth/guards/user.guard';
+import { Utils } from 'utils';
 
 @Controller('users')
 @ApiTags('Users')
@@ -43,7 +44,7 @@ export class UsersController {
         return this.usersService.updateUser(streamId, {...userDto, _id: userIdDto._id});
     }
 
-    /* Update User */
+    /* Change password */
 
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Change password']})
@@ -71,6 +72,32 @@ export class UsersController {
         if (payload['id'] === userIdDto._id) throw new BadRequestException();
         const streamId = userIdDto._id;
         return this.usersService.deleteUser(streamId, userIdDto);
+    }
+
+    /* Send Verify email */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Send Verify Email']})
+    @ApiResponse({status: 200, description: 'Send Verify Email.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
+    @Roles([CONSTANTS.ROLE.USER])
+    @Post('send-verify-email')
+    async sendVerifyEmail(@Body() userIdDto: UserIdRequestParamsDto) {
+        const streamId = userIdDto._id;
+        return this.usersService.sendVerifyEmail(streamId, userIdDto);
+    }
+
+    /* Verify email */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Verify Email']})
+    @ApiResponse({status: 200, description: 'Verify Email.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), VerifyEmailGuard)
+    @Roles([CONSTANTS.ROLE.USER])
+    @Post('verify-email')
+    async verifyEmail(@Body() emailToken: string) {
+        const streamId = Utils.getUuid();
+        return this.usersService.verifyEmail(streamId, emailToken);
     }
 
     /* Find User */

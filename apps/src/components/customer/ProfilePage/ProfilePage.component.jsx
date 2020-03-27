@@ -1,14 +1,60 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import * as moment from 'moment'
+import Utils from 'utils'
+import STORAGE from 'utils/storage'
+import { JWT_TOKEN } from 'utils/constant'
 import PersonalDataTab from './components/PersonalDataTab/PersonalDataTab.component'
 import SettingsTab from './components/SettingsTab/SettingsTab.component'
 import PasswordTab from './components/PasswordTab/PasswordTab.component'
+import InfoModal from '../InfoModal/InfoModal.component'
 
-const ProfilePage = () => {
+const ProfilePage = ({ currentUser, sendVerifyEmailObj, sendVerifyEmail, onAuthenticate }) => {
+  const [infoModal, setInfoModal] = useState({})
+
+  useEffect(() => {
+    const token = STORAGE.getPreferences(JWT_TOKEN)
+    onAuthenticate(token)
+  }, [onAuthenticate])
+
+  useEffect(() => {
+    if (sendVerifyEmailObj.isLoading === false && sendVerifyEmailObj.isSuccess === true) {
+      setInfoModal({
+        title: 'Kích hoạt tài khoản',
+        message:
+          'Mail kích hoạt tài khoản đã được gửi đến bạn.<br/>Vui lòng kiểm tra mail và làm theo hướng dẫn.',
+        icon: { isSuccess: true },
+      })
+    }
+    if (sendVerifyEmailObj.isLoading === false && sendVerifyEmailObj.isSuccess === false) {
+      setInfoModal({
+        title: 'Kích hoạt tài khoản',
+        message: 'Kích hoạt tài khoản thất bại. Vui lòng thử lại sau.',
+        icon: { isSuccess: false },
+      })
+    }
+  }, [sendVerifyEmailObj])
+
+  const onSendVerifyEmail = () => {
+    const infoObj = {
+      title: 'Kích hoạt tài khoản',
+      message: 'Vui lòng chờ giây lát...',
+      icon: {
+        isLoading: true,
+      },
+    }
+    setInfoModal(infoObj)
+    window.$('#info-modal').modal('show')
+    // setTimeout(() => {
+    //   setInfoModal({ message: 'Đã gửi mail.', icon: { isSuccess: true } })
+    // }, 5000)
+    sendVerifyEmail(currentUser._id)
+  }
+
   return (
     <div className="page-content">
       <div className="container">
@@ -80,9 +126,21 @@ const ProfilePage = () => {
                 <h6 className="card-title card-title-sm">Trạng thái tài khoản</h6>
                 <ul className="btn-grp">
                   <li>
-                    <button className="btn btn-auto btn-xs btn-success">
-                      Email đã được xác thực
-                    </button>
+                    {currentUser && !Utils.isEmailVerified(currentUser.roles) ? (
+                      <>
+                        <p className="pdb-0-5x">
+                          Email của bạn chưa được xác thực. Xác thực email để kích hoạt tài khoản.
+                        </p>
+                        <button
+                          className="btn btn-sm btn-auto btn-warning"
+                          onClick={onSendVerifyEmail}
+                        >
+                          Xác thực email
+                        </button>
+                      </>
+                    ) : (
+                      <span className="badge badge-sm badge-success">Email đã được xác thực</span>
+                    )}
                   </li>
                 </ul>
               </div>
@@ -117,6 +175,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+      <InfoModal infoModal={infoModal} />
     </div>
   )
 }

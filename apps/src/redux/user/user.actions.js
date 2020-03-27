@@ -43,18 +43,33 @@ export const authenWithSocial = user => ({
   payload: user,
 })
 
-// Active email
-export const activeEmail = token => ({
-  type: UserTypes.ACTIVE_EMAIL,
-  payload: token,
+// Send verify email
+export const sendVerifyEmail = userId => ({
+  type: UserTypes.SEND_VERIFY_EMAIL,
+  payload: userId,
 })
 
-export const activeEmailSuccess = () => ({
-  type: UserTypes.ACTIVE_EMAIL_SUCCESS,
+export const sendVerifyEmailSuccess = () => ({
+  type: UserTypes.SEND_VERIFY_EMAIL_SUCCESS,
 })
 
-export const activeEmailFailure = message => ({
-  type: UserTypes.ACTIVE_EMAIL_FAILURE,
+export const sendVerifyEmailFailure = message => ({
+  type: UserTypes.SEND_VERIFY_EMAIL_FAILURE,
+  payload: message,
+})
+
+// Verify email
+export const verifyEmail = emailToken => ({
+  type: UserTypes.VERIFY_EMAIL,
+  payload: emailToken,
+})
+
+export const verifyEmailSuccess = () => ({
+  type: UserTypes.VERIFY_EMAIL_SUCCESS,
+})
+
+export const verifyEmailFailure = message => ({
+  type: UserTypes.VERIFY_EMAIL_FAILURE,
   payload: message,
 })
 

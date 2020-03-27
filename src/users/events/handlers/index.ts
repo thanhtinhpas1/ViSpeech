@@ -7,8 +7,9 @@ import {
     UserCreationStartedHandler
 } from "./user-created.handler";
 import {UserWelcomedHandler} from "./user-welcomed.handler";
-import {UserRoleAssignedHandler, UserRoleAssignedSuccessHandler, UserRoleAssignedFailedHandler} from "./user-role-assigned.handler";
 import {PasswordChangedHandler} from './password-changed.handler';
+import { VerifyEmailSentHandler, VerifyEmailSentSuccessHandler, VerifyEmailSentFailedHandler } from "./verify-email-sent.handler";
+import { EmailVerifiedHandler } from "./email-verified.handler";
 
 export const EventHandlers = [
     // create
@@ -25,11 +26,6 @@ export const EventHandlers = [
     // change password
     PasswordChangedHandler,
 
-    // assign user role
-    UserRoleAssignedHandler,
-    UserRoleAssignedSuccessHandler,
-    UserRoleAssignedFailedHandler,
-
     // delete
     UserDeletedHandler,
     UserDeletedSuccessHandler,
@@ -37,4 +33,12 @@ export const EventHandlers = [
 
     // welcome
     UserWelcomedHandler,
+
+    // send verify email
+    VerifyEmailSentHandler,
+    VerifyEmailSentSuccessHandler,
+    VerifyEmailSentFailedHandler,
+
+    // verify email
+    EmailVerifiedHandler
 ];

@@ -20,10 +20,11 @@ export class OrderGuard implements CanActivate {
         if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const order = getMongoRepository(OrderDto).findOne({ _id: id });
-        if (order['userId'] !== payload['id']) {
-            Logger.warn('User do not have permission to modify this order.', 'OrderGuard')
-            return false;
+        if (order['userId'] === payload['id']) {
+            return true;
         }
-        return true;
+
+        Logger.warn('User do not have permission to modify this order.', 'OrderGuard')
+        return false;
     }
 }

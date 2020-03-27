@@ -33,7 +33,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
-  activeEmail: {
+  sendVerifyEmail: {
+    isSuccess: null,
+    isLoading: null,
+    message: null,
+  },
+  verifyEmail: {
     isSuccess: null,
     isLoading: null,
     message: null,
@@ -237,30 +242,59 @@ const userReducer = (state = INITIAL_STATE, action) => {
           message: action.payload,
         },
       }
-    // ACTIVE EMAIL
-    case UserTypes.ACTIVE_EMAIL:
+    // SEND VERIFY EMAIL
+    case UserTypes.SEND_VERIFY_EMAIL:
       return {
         ...state,
-        activeEmail: {
-          ...state.activeEmail,
+        sendVerifyEmail: {
+          ...state.sendVerifyEmail,
           isLoading: true,
         },
       }
-    case UserTypes.ACTIVE_EMAIL_SUCCESS:
+    case UserTypes.SEND_VERIFY_EMAIL_SUCCESS:
       return {
         ...state,
-        activeEmail: {
-          ...state.activeEmail,
+        sendVerifyEmail: {
+          ...state.sendVerifyEmail,
           isLoading: false,
           isSuccess: true,
           message: null,
         },
       }
-    case UserTypes.ACTIVE_EMAIL_FAILURE:
+    case UserTypes.SEND_VERIFY_EMAIL_FAILURE:
       return {
         ...state,
-        activeEmail: {
-          ...state.activeEmail,
+        sendVerifyEmail: {
+          ...state.sendVerifyEmail,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // VERIFY EMAIL
+    case UserTypes.VERIFY_EMAIL:
+      return {
+        ...state,
+        verifyEmail: {
+          ...state.verifyEmail,
+          isLoading: true,
+        },
+      }
+    case UserTypes.VERIFY_EMAIL_SUCCESS:
+      return {
+        ...state,
+        verifyEmail: {
+          ...state.verifyEmail,
+          isLoading: false,
+          isSuccess: true,
+          message: null,
+        },
+      }
+    case UserTypes.VERIFY_EMAIL_FAILURE:
+      return {
+        ...state,
+        verifyEmail: {
+          ...state.verifyEmail,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

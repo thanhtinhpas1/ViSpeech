@@ -44,6 +44,25 @@ export class PermissionAssignDto {
   assigneeId: ObjectID;
 }
 
+export class PermissionResponseDto {
+  constructor(emailToken: string, status: string) {
+    this.emailToken = emailToken;
+    this.status = status;
+  }
+
+  @IsString()
+  @IsNotEmpty()
+  emailToken: string;
+  
+  @IsString()
+  @IsIn([
+    CONSTANTS.STATUS.APPROVED,
+    CONSTANTS.STATUS.REJECTED
+  ])
+  @Column()
+  status: string;
+}
+
 export class PermissionIdRequestParamsDto {
   constructor(permissionId) {
     this._id = permissionId;

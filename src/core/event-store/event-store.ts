@@ -89,7 +89,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                     });
                 });
             } catch (error) {
-                Logger.log('Event', error);
+                Logger.error(error, '', 'Event');
             }
         };
 
