@@ -18,13 +18,14 @@ import { EventHandlers } from './events/handlers';
 import { PasswordChangedEvent } from './events/impl/password-changed.event';
 import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent } from './events/impl/user-created.event';
 import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from './events/impl/user-deleted.event';
-import { UserRoleAssignedEvent, UserRoleAssignedFailedEvent, UserRoleAssignedSuccessEvent } from './events/impl/user-role-assigned.event';
 import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from './events/impl/user-updated.event';
 import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersService } from './services/users.service';
+import { VerifyEmailSentEvent, VerifyEmailSentSuccessEvent, VerifyEmailSentFailedEvent } from './events/impl/verify-email-sent.event';
+import { EmailVerifiedEvent } from './events/impl/email-verified.event';
 
 @Module({
     imports: [
@@ -97,10 +98,18 @@ export class UsersModule implements OnModuleInit {
         UserDeletedFailedEvent: (streamId, data, error) => new UserDeletedFailedEvent(streamId, data, error),
 
         // assign user role
-        UserRoleAssignedEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedEvent(streamId, userId, roleNames, assignerId),
-        UserRoleAssignedSuccessEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedSuccessEvent(streamId, userId, roleNames, assignerId),
-        UserRoleAssignedFailedEvent: (streamId, userId, roleNames, assignerId, error) => new UserRoleAssignedFailedEvent(streamId, userId, roleNames, assignerId, error),
+        // UserRoleAssignedEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedEvent(streamId, userId, roleNames, assignerId),
+        // UserRoleAssignedSuccessEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedSuccessEvent(streamId, userId, roleNames, assignerId),
+        // UserRoleAssignedFailedEvent: (streamId, userId, roleNames, assignerId, error) => new UserRoleAssignedFailedEvent(streamId, userId, roleNames, assignerId, error),
 
         UserWelcomedEvent: (streamId, data) => new UserWelcomedEvent(streamId, data),
+
+        // send verify email
+        VerifyEmailSentEvent: (streamId, data) => new VerifyEmailSentEvent(streamId, data),
+        VerifyEmailSentSuccessEvent: (streamId, data) => new VerifyEmailSentSuccessEvent(streamId, data),
+        VerifyEmailSentFailedEvent: (streamId, data, error) => new VerifyEmailSentFailedEvent(streamId, data, error),
+        
+        // verify email
+        EmailVerifiedEvent: (streamId, data) => new EmailVerifiedEvent(streamId, data),
     };
 }

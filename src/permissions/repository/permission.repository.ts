@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Permission } from "../models/permission.model";
-import { PermissionDto, PermissionAssignDto } from "permissions/dtos/permissions.dto";
+import { PermissionDto, PermissionAssignDto, PermissionResponseDto } from "permissions/dtos/permissions.dto";
 
 @Injectable()
 export class PermissionRepository {
@@ -34,6 +34,13 @@ export class PermissionRepository {
     const permission = new Permission(undefined);
     permission.setData(permissionAssignDto);
     permission.sendAssignPermissionEmail(streamId);
+    return permission;
+  }
+
+  async replyPermissionAssign(streamId: string, permissionResponseDto: PermissionResponseDto) {
+    const permission = new Permission(undefined);
+    permission.setData(permissionResponseDto);
+    permission.replyPermissionAssign(streamId);
     return permission;
   }
 }

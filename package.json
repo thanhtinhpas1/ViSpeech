@@ -35,6 +35,7 @@
     "@nestjs/swagger": "^4.2.6",
     "@nestjs/typeorm": "^6.2.0",
     "axios": "^0.19.2",
+    "@sendgrid/mail": "^6.5.5",
     "babel-jest": "24.9.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.2.3",

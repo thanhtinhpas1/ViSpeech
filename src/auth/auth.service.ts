@@ -36,13 +36,16 @@ export class AuthService {
         return this.jwtService.sign(payload);
     }
 
-    generateTokenWithUserId(userId) {
+    generateTokenWithUserId(userId, expiresIn = null) {
         const payload = {id: userId};
+        if (expiresIn) {
+            return this.jwtService.sign(payload, { expiresIn });
+        }
         return this.jwtService.sign(payload);
     }
 
-    generateEmailTokenWithUserId(userId) {
-        const payload = { id: userId };
+    generateEmailToken(assignerId, projectId, assigneeId, permissions) {
+        const payload = { assignerId, projectId, assigneeId, permissions };
         return this.jwtService.sign(payload, { expiresIn: "2 days" });
     }
 
@@ -50,10 +53,14 @@ export class AuthService {
         return await this.queryBus.execute(new FindUserByUsernameQuery(username));
     }
 
+    decodeJwtToken(jwt) {
+        return this.jwtService.decode(jwt);
+    }
+
     decode(request: any) {
         const authorization = request.headers.authorization;
         if (!authorization) return null;
         const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, "");
-        return this.jwtService.decode(jwt);
+        return this.decodeJwtToken(jwt);
     }
 }

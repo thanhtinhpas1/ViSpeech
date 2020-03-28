@@ -3,12 +3,8 @@ import { ROLES } from './constant'
 const Utils = {
   checkIfIsUser: roleList => {
     return (
-      roleList.findIndex(
-        role =>
-          role.name === ROLES.USER ||
-          role.name === ROLES.MANAGER_USER ||
-          role.name === ROLES.CSR_USER
-      ) !== -1
+      roleList.findIndex(role => role.name === ROLES.USER || role.name === ROLES.MANAGER_USER) !==
+      -1
     )
   },
   getRolesInText: roleList => {
@@ -74,6 +70,9 @@ const Utils = {
   sortArr: (arr, sortFunc) => {
     const result = JSON.parse(JSON.stringify(arr))
     return result.sort(sortFunc)
+  },
+  isEmailVerified: roles => {
+    return Utils.getRolesInArray(roles).indexOf(ROLES.MANAGER_USER) !== -1
   },
 }
 

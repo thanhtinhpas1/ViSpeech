@@ -10,7 +10,8 @@ import CustomerHomePage from 'components/customer/HomePage/HomePage.container'
 import TransactionsPage from 'components/customer/TransactionsPage/TransactionsPage.container'
 import TransactionDetailsPage from 'components/customer/TransactionDetailsPage/TransactionDetailsPage.component'
 import TokensWalletPage from 'components/customer/TokensWalletPage/TokensWalletPage.container'
-import ProfilePage from 'components/customer/ProfilePage/ProfilePage.component'
+import ProfilePage from 'components/customer/ProfilePage/ProfilePage.container'
+import VerifyEmailPage from 'components/customer/VerifyEmailPage/VerifyEmailPage.container'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -55,6 +56,14 @@ const RouteCustomer = ({ currentUser }) => {
               </CustomerLayout>
             )}
           />
+          <Route
+            path={`${CUSTOMER_PATH}/verify-email/:emailToken`}
+            render={props => (
+              <CustomerLayout>
+                <VerifyEmailPage {...props} />
+              </CustomerLayout>
+            )}
+          />
         </>
       ) : (
         <>
@@ -71,6 +80,9 @@ const RouteCustomer = ({ currentUser }) => {
             <Redirect to="/" />
           </Route>
           <Route path={`${CUSTOMER_PATH}/profile`}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={`${CUSTOMER_PATH}/verify-email/:emailToken`}>
             <Redirect to="/" />
           </Route>
         </>

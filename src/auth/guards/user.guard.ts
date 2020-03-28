@@ -1,9 +1,9 @@
-import {CanActivate, Injectable, Logger} from "@nestjs/common";
-import {AuthService} from "../auth.service";
-import {Repository} from "typeorm";
-import {UserDto} from "../../users/dtos/users.dto";
-import {CONSTANTS} from "../../common/constant";
-import {InjectRepository} from "@nestjs/typeorm";
+import { CanActivate, Injectable, Logger, BadRequestException } from "@nestjs/common";
+import { AuthService } from "../auth.service";
+import { Repository } from "typeorm";
+import { UserDto } from "../../users/dtos/users.dto";
+import { CONSTANTS } from "../../common/constant";
+import { InjectRepository } from "@nestjs/typeorm";
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -20,14 +20,44 @@ export class UserGuard implements CanActivate {
         if (!id) return true;
 
         const payload = this.authService.decode(request);
-        if (payload['roles'] && payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.ADMIN) !== -1) return true;
-        if (payload['id'] === id) return true;
-
-        const user = await this.userRepository.findOne({_id: id});
-        if (user['assignerId'] !== payload['id']) {
-            Logger.warn('User do not have permission to modify this user.', 'UserGuard');
-            return false;
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new BadRequestException();
         }
-        return true;
+        if (payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.ADMIN) !== -1) return true;
+        if (payload['id'] === id) {
+            return true;
+        }
+
+        Logger.warn('User do not have permission to modify this user.', 'UserGuard');
+        return false;
+    }
+}
+
+@Injectable()
+export class VerifyEmailGuard implements CanActivate {
+    constructor(
+        private readonly authService: AuthService,
+    ) {
+    }
+
+    async canActivate(context: import("@nestjs/common").ExecutionContext) {
+        const request = context.switchToHttp().getRequest();
+        const emailToken = request.body;
+
+        const requestJwt = this.authService.decode(request);
+        if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
+            throw new BadRequestException();
+        }
+
+        const decodedEmailToken = this.authService.decodeJwtToken(emailToken);
+        if (!decodedEmailToken || !decodedEmailToken['id']) {
+            throw new BadRequestException();
+        }
+
+        if (decodedEmailToken['id'] === requestJwt['id']) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -20,6 +20,7 @@ import { AuthModule } from "../auth/auth.module";
 import { UserDto } from "users/dtos/users.dto";
 import { ProjectDto } from "projects/dtos/projects.dto";
 import { PermissionAssignEmailSentEvent, PermissionAssignEmailSentSuccessEvent, PermissionAssignEmailSentFailedEvent } from "./events/impl/permission-assign-email-sent.event";
+import { PermissionAssignRepliedEvent } from "./events/impl/permission-assign-replied.event";
 
 
 @Module({
@@ -74,5 +75,8 @@ export class PermissionsModule implements OnModuleInit {
         PermissionAssignEmailSentEvent: (streamId, data) => new PermissionAssignEmailSentEvent(streamId, data),
         PermissionAssignEmailSentSuccessEvent: (streamId, data) => new PermissionAssignEmailSentSuccessEvent(streamId, data),
         PermissionAssignEmailSentFailedEvent: (streamId, data, error) => new PermissionAssignEmailSentFailedEvent(streamId, data, error),
+    
+        // reply permission assign
+        PermissionAssignRepliedEvent: (streamId, data) => new PermissionAssignRepliedEvent(streamId, data),
     };
 }

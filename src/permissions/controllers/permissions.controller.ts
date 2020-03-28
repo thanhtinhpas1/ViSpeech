@@ -4,11 +4,10 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CONSTANTS } from 'common/constant';
 import { FindPermissionQuery } from 'permissions/queries/impl/find-permission.query';
 import { GetPermissionsQuery } from 'permissions/queries/impl/get-permissions.query';
-import { PermissionDto, PermissionIdRequestParamsDto, PermissionAssignDto } from '../dtos/permissions.dto';
+import { PermissionDto, PermissionIdRequestParamsDto, PermissionAssignDto, PermissionResponseDto } from '../dtos/permissions.dto';
 import { PermissionsService } from '../services/permissions.service';
 import { Roles } from 'auth/roles.decorator';
-import { PermissionGuard } from 'auth/guards/permission.guard';
-import { AssignRoleGuard } from 'auth/guards/assign-role.guard';
+import { PermissionGuard, AssignPermissionGuard, ReplyPermisisonAssignGuard } from 'auth/guards/permission.guard';
 import { Utils } from 'utils';
 
 @Controller('permissions')
@@ -57,23 +56,23 @@ export class PermissionsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Send Assign Permission Email'] })
   @ApiResponse({ status: 200, description: 'Send Assign Permission Email.' })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
-  @Post('assign')
+  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignPermissionGuard)
+  @Post('assign-permission')
   async sendAssignPermissionEmail(@Body() permissionAssignDto: PermissionAssignDto) {
-    const streamId = Utils.getUuid();
+    const streamId = permissionAssignDto.assignerId;
     return this.permissionsService.sendAssignPermissionEmail(streamId, permissionAssignDto);
   }
 
-  /* Accept permission */
+  /* Reply permission assign */
   /*--------------------------------------------*/
-  // @ApiOperation({ tags: ['Accept permission'] })
-  // @ApiResponse({ status: 200, description: 'Accept permission.' })
-  // @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
-  // @Post()
-  // async acceptPermission(@Body() permissionAssignDto: PermissionAssignDto) {
-  //   const streamId = Utils.getUuid();
-  //   return this.permissionsService.acceptPermission(streamId, permissionAssignDto);
-  // }
+  @ApiOperation({ tags: ['Reply permission assign'] })
+  @ApiResponse({ status: 200, description: 'Reply permission assign.' })
+  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReplyPermisisonAssignGuard)
+  @Post('reply-permission-assign')
+  async replyPermisisonAssign(@Body() permissionResponseDto: PermissionResponseDto) {
+    const streamId = Utils.getUuid();
+    return this.permissionsService.replyPermisisonAssign(streamId, permissionResponseDto);
+  }
 
   /* List Permissions */
 

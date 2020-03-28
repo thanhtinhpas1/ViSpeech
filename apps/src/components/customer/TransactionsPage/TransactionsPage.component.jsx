@@ -113,10 +113,13 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
     },
   ]
 
-  const getList = useCallback(({ pageSize, pageIndex }) => {
-    // const userId = currentUser._id
-    // getOrderList({ userId, pageIndex, pageSize })
-  }, [])
+  const getList = useCallback(
+    ({ pageSize, pageIndex }) => {
+      const userId = currentUser._id
+      getOrderList({ userId, pageIndex, pageSize })
+    },
+    [currentUser._id, getOrderList]
+  )
 
   return (
     <div className="page-content">

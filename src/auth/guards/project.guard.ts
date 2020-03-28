@@ -20,10 +20,11 @@ export class ProjectGuard implements CanActivate {
         if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
-        if (project.userId !== payload['id']) {
-            Logger.warn('User do not have permission to modify this project.', 'ProjectGuard');
-            return false;
+        if (project.userId === payload['id']) {
+            return true;
         }
-        return true;
+
+        Logger.warn('User do not have permission to modify this project.', 'ProjectGuard');
+        return false;
     }
 }

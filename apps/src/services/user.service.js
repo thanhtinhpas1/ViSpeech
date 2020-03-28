@@ -63,7 +63,7 @@ export default class UserService {
   }
 
   static register = ({ username, email, lastName, firstName, password, roles }) => {
-    const api = `${apiUrl}/register`
+    const api = `${apiUrl}/users`
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
@@ -261,28 +261,60 @@ export default class UserService {
       })
   }
 
-  static activeEmail = token => {
-    const api = `${apiUrl}/user/active-email`
+  static sendVerifyEmail = userId => {
+    const api = `${apiUrl}/users/send-verify-email`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
       body: JSON.stringify({
-        token,
+        _id: userId,
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
       },
     })
       .then(response => {
         status = response.status
-        return response.json()
+        return response.text()
       })
       .then(result => {
-        if (status !== 200) {
-          throw new Error(result.message)
+        if (status !== 201) {
+          throw new Error(result.error)
         }
-        return result
+        return result ? JSON.parse(result) : {}
+      })
+      .catch(err => {
+        throw new Error(err)
+      })
+  }
+
+  static verifyEmail = emailToken => {
+    const api = `${apiUrl}/users/verify-email`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    // eslint-disable-next-line no-undef
+    return fetch(api, {
+      method: 'POST',
+      body: JSON.stringify(emailToken),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.text()
+      })
+      .then(result => {
+        if (status !== 201) {
+          throw new Error(result.error)
+        }
+        return result ? JSON.parse(result) : {}
       })
       .catch(err => {
         throw new Error(err)

@@ -37,15 +37,28 @@ export class UserRepository {
         return user;
     }
 
-    async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
-        const user = new User(userId);
-        user.assignUserRole(streamId, roleName, assignerId);
-        return user;
-    }
+    // async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
+    //     const user = new User(userId);
+    //     user.assignUserRole(streamId, roleName, assignerId);
+    //     return user;
+    // }
 
     async changePassword(streamId: string, userId: string, newPassword: string, oldPassword: string) {
         const user = new User(userId);
         user.changePassword(streamId, newPassword, oldPassword);
+        return user;
+    }
+
+    async sendVerifyEmail(streamId: string, userId: string) {
+        const user = new User(userId);
+        user.sendVerifyEmail(streamId);
+        return user;
+    }
+
+    async verifyEmail(streamId: string, emailToken: string) {
+        const user = new User(undefined);
+        user.setData(emailToken);
+        user.verifyEmail(streamId);
         return user;
     }
 }
