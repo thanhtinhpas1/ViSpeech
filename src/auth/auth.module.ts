@@ -35,10 +35,7 @@ import { QueryHandlers } from "../users/queries/handler";
   ],
   exports: [JwtModule, AuthService]
 })
-export class AuthModule implements OnModuleInit {
+export class AuthModule {
   constructor(private readonly query$: QueryBus) {}
 
-  onModuleInit(): any {
-  this.query$.register(QueryHandlers);
-  }
 }

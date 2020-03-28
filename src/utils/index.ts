@@ -1,11 +1,12 @@
 import {v1 as uuidv1} from 'uuid';
+import {CONSTANTS} from '../common/constant';
 
 const bcrypt = require('bcryptjs');
 
 export const Utils = {
     hashPassword: password => {
         const salt = bcrypt.genSaltSync(10);
-      return bcrypt.hashSync(password, salt);
+        return bcrypt.hashSync(password, salt);
     },
     getUuid: () => {
         return uuidv1();
@@ -37,5 +38,10 @@ export const Utils = {
             });
         }
         return result;
+    },
+    extractToken: request => {
+        const authorization = request.headers.authorization;
+        if (!authorization) return null;
+        return authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, '');
     },
 };

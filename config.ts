@@ -54,7 +54,16 @@ const configs = {
         JWT: {
             secret: process.env.JWT_SECRET || 'vispeech',
         },
-        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_o963xS8xNbn1yRD65F5x3Kob00gjj51qc0'
+        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_o963xS8xNbn1yRD65F5x3Kob00gjj51qc0',
+        KAFKA: {
+            HOST: process.env.KAFKA_HOST || '0.0.0.0',
+            PORT: process.env.KAFKA_PORT || 9092,
+        },
+        ASR: {
+            PROTOCOL: process.env.ASR_PROTOCOL || 'http',
+            HOST: process.env.ASR_HOST || '0.0.0.0',
+            PORT: process.env.ASR_PORT || 5000,
+        },
     },
     development: {},
     production: {
