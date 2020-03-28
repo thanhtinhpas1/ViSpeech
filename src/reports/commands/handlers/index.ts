@@ -7,5 +7,5 @@ export const CommandHandlers = [
   CreateReportHandler,
   DeleteReportHandler,
   UpdateReportHandler,
-  WelcomeReportHandler
+  WelcomeReportHandler,
 ];
