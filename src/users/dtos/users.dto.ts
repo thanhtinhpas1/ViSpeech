@@ -55,8 +55,8 @@ export class UserDto extends BaseEntityDto {
 
     @IsString()
     @IsNotEmpty()
-    @Index({unique: true})
-    @Column({nullable: false, update: false})
+    @Index({ unique: true })
+    @Column({ nullable: false, update: false })
     username: string;
 
     @IsOptional()

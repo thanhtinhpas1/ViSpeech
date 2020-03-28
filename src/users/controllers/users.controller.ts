@@ -103,8 +103,8 @@ export class UsersController {
     /* Find User */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get User']})
-    @ApiResponse({status: 200, description: 'Get User.'})
+    @ApiOperation({tags: ['Find User']})
+    @ApiResponse({status: 200, description: 'Find User.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
     @Get(':id')
     async findOneUser(@Param() findUserQuery: FindUserQuery) {
@@ -116,12 +116,10 @@ export class UsersController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['List Users']})
     @ApiResponse({status: 200, description: 'List Users.'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
-    @Roles([CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.ADMIN])
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
-    async getUsers(@Query() getUsersQuery: GetUsersQuery, @Req() request) {
-        const payload = this.authService.decode(request);
-        getUsersQuery.userId = payload['id'];
+    async getUsers(@Query() getUsersQuery: GetUsersQuery) {
         return this.usersService.getUsers(getUsersQuery);
     }
 

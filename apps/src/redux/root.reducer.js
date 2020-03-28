@@ -4,6 +4,7 @@ import { persistReducer } from 'redux-persist'
 import userReducer from './user/user.reducers'
 import tokenReducer from './token/token.reducers'
 import orderReducer from './order/order.reducers'
+import projectReducer from './project/project.reducers'
 
 const userPersistConfig = {
   key: 'user',
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   token: tokenReducer,
   order: orderReducer,
+  project: projectReducer,
 })
 
 export default rootReducer

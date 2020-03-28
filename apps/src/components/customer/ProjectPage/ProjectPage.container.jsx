@@ -1,14 +1,18 @@
 import { connect } from 'react-redux'
-import { getTokens } from 'redux/token/token.actions'
+import { getMyProjectList, getAcceptedProjectList } from 'redux/project/project.actions'
 import ProjectPage from './ProjectPage.component'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
-  token: state.token,
+  getMyProjectListObj: state.project.getMyProjectList,
+  getAcceptedProjectListObj: state.project.getAcceptedProjectList,
 })
 
 const mapDispatchToProps = dispatch => ({
-  getTokens: userId => dispatch(getTokens(userId)),
+  getMyProjects: ({ userId, pageIndex, pageSize }) =>
+    dispatch(getMyProjectList({ userId, pageIndex, pageSize })),
+  getAcceptedProjects: ({ userId, pageIndex, pageSize }) =>
+    dispatch(getAcceptedProjectList({ userId, pageIndex, pageSize })),
 })
 
 const ProjectPageContainer = connect(mapStateToProps, mapDispatchToProps)(ProjectPage)

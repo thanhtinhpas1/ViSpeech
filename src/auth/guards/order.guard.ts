@@ -1,8 +1,8 @@
-import {CanActivate, Injectable, Logger} from '@nestjs/common';
-import {getMongoRepository} from 'typeorm';
-import {CONSTANTS} from '../../common/constant';
-import {AuthService} from '../auth.service';
-import {OrderDto} from 'orders/dtos/orders.dto';
+import { CanActivate, Injectable, Logger, BadRequestException } from "@nestjs/common";
+import { getMongoRepository } from "typeorm";
+import { CONSTANTS } from "../../common/constant";
+import { AuthService } from "../auth.service";
+import { OrderDto } from "orders/dtos/orders.dto";
 
 @Injectable()
 export class OrderGuard implements CanActivate {
@@ -17,7 +17,10 @@ export class OrderGuard implements CanActivate {
         if (!id) return true;
 
         const payload = this.authService.decode(request);
-        if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new BadRequestException();
+        }
+        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const order = getMongoRepository(OrderDto).findOne({_id: id});
         if (order['userId'] === payload['id']) {

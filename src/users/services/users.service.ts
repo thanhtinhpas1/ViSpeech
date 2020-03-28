@@ -47,7 +47,7 @@ export class UsersService {
     }
 
     async getUsers(getUsersQuery: GetUsersQuery) {
-        const query = new GetUsersQuery(getUsersQuery.userId);
+        const query = new GetUsersQuery();
         Object.assign(query, getUsersQuery);
         return await this.queryBus.execute(query);
     }

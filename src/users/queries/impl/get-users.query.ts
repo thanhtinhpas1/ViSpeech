@@ -1,14 +1,8 @@
-import {IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Min} from 'class-validator';
-import {Type} from 'class-transformer';
+import { IsOptional, IsNumber, IsPositive, Min } from "class-validator";
+import { Type } from "class-transformer";
 
 export class GetUsersQuery {
-    constructor(userId: string) {
-        this.userId = userId;
-    }
-
-    @IsNotEmpty()
-    @IsString()
-    userId: string;
+    constructor() { }
 
     @IsOptional()
     @Type(() => Number)

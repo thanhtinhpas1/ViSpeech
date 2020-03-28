@@ -29,9 +29,9 @@ const Header = ({ currentUser, onAuthenticate, logout }) => {
         name: 'Trang chủ',
       },
       {
-        href: `${CUSTOMER_PATH}/tokens-wallet`,
-        emClass: 'ikon-distribution',
-        name: 'Ví token',
+        href: `${CUSTOMER_PATH}/projects`,
+        emClass: 'ikon-coins',
+        name: 'Project',
       },
       {
         href: `${CUSTOMER_PATH}/transactions`,

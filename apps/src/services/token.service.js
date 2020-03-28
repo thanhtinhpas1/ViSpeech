@@ -8,7 +8,7 @@ export default class TokenService {
     const offset = pageIndex * pageSize
     const limit = pageSize
 
-    const api = `${apiUrl}/tokens/userId?userId=${encodeURIComponent(
+    const api = `${apiUrl}/tokens/user-tokens?userId=${encodeURIComponent(
       userId
     )}&offset=${offset}&limit=${limit}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)

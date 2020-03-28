@@ -1,14 +1,14 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
-import {AuthGuard} from '@nestjs/passport';
-import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {CONSTANTS} from 'common/constant';
-import {FindTokenQuery} from 'tokens/queries/impl/find-token.query';
-import {GetTokensByUserIdQuery} from 'tokens/queries/impl/get-tokens-by-userId';
-import {GetTokensQuery, GetTokenTypesQuery} from 'tokens/queries/impl/get-tokens.query';
-import {TokenDto, TokenIdRequestParamsDto} from '../dtos/tokens.dto';
-import {TokensService} from '../services/tokens.service';
-import {Roles} from 'auth/roles.decorator';
-import {TokenGuard} from 'auth/guards/token.guard';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CONSTANTS } from 'common/constant';
+import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
+import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
+import { GetTokensQuery, GetTokenTypesQuery } from 'tokens/queries/impl/get-tokens.query';
+import { TokenDto, TokenIdRequestParamsDto } from '../dtos/tokens.dto';
+import { TokensService } from '../services/tokens.service';
+import { Roles } from 'auth/roles.decorator';
+import { TokenGuard } from 'auth/guards/token.guard';
 
 @Controller('tokens')
 @ApiTags('Tokens')
@@ -18,8 +18,8 @@ export class TokensController {
     }
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Token']})
-    @ApiResponse({status: 200, description: 'Create Token.'})
+    @ApiOperation({ tags: ['Create Token'] })
+    @ApiResponse({ status: 200, description: 'Create Token.' })
     // TODO: Guard to check maked payment
     @Post()
     async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
@@ -31,8 +31,8 @@ export class TokensController {
     /*--------------------------------------------*/
     // TODO: check business flow update -> upgrade type token instead change value
     // TODO: make flow to regenerate token value
-    @ApiOperation({tags: ['Update Token']})
-    @ApiResponse({status: 200, description: 'Update Token.'})
+    @ApiOperation({ tags: ['Update Token'] })
+    @ApiResponse({ status: 200, description: 'Update Token.' })
     @Put(':_id')
     async updateToken(
         @Param() tokenIdDto: TokenIdRequestParamsDto,
@@ -48,8 +48,8 @@ export class TokensController {
     /* Delete Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Delete Token']})
-    @ApiResponse({status: 200, description: 'Delete Token.'})
+    @ApiOperation({ tags: ['Delete Token'] })
+    @ApiResponse({ status: 200, description: 'Delete Token.' })
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Delete(':_id')
     async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
@@ -60,8 +60,8 @@ export class TokensController {
     /* List Tokens */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Tokens']})
-    @ApiResponse({status: 200, description: 'List Tokens.'})
+    @ApiOperation({ tags: ['List Tokens'] })
+    @ApiResponse({ status: 200, description: 'List Tokens.' })
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async getTokens(@Query() getTokensQuery: GetTokensQuery) {
@@ -71,9 +71,9 @@ export class TokensController {
     /* List Tokens By UserId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Tokens By UserId']})
-    @ApiResponse({status: 200, description: 'List Tokens By UserId.'})
-    @Get('/userId')
+    @ApiOperation({ tags: ['List Tokens By UserId'] })
+    @ApiResponse({ status: 200, description: 'List Tokens By UserId.' })
+    @Get('/user-tokens')
     async getTokensByUserId(
         @Query() getTokensByUserIdQuery: GetTokensByUserIdQuery,
     ) {
@@ -85,8 +85,8 @@ export class TokensController {
     /*--------------------------------------------*/
 
     // TODO: check permission find token belong to user
-    @ApiOperation({tags: ['Find Token']})
-    @ApiResponse({status: 200, description: 'Find Token.'})
+    @ApiOperation({ tags: ['Find Token'] })
+    @ApiResponse({ status: 200, description: 'Find Token.' })
     @Get(':id')
     async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
         return this.tokensService.findOne(findTokenQuery);
@@ -95,8 +95,8 @@ export class TokensController {
     /* List Token Types */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Token Types']})
-    @ApiResponse({status: 200, description: 'List Token Types.'})
+    @ApiOperation({ tags: ['List Token Types'] })
+    @ApiResponse({ status: 200, description: 'List Token Types.' })
     @Get('/token-types')
     async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
         return this.tokensService.findTokenTypes(getTokenTypesQuery);

@@ -12,6 +12,8 @@ import TransactionDetailsPage from 'components/customer/TransactionDetailsPage/T
 import TokensWalletPage from 'components/customer/TokensWalletPage/TokensWalletPage.container'
 import ProfilePage from 'components/customer/ProfilePage/ProfilePage.container'
 import VerifyEmailPage from 'components/customer/VerifyEmailPage/VerifyEmailPage.container'
+import ProjectPage from 'components/customer/ProjectPage/ProjectPage.container'
+import CreateProjectPage from 'components/customer/CreateProjectPage/CreateProjectPage.container'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -19,11 +21,15 @@ const RouteCustomer = ({ currentUser }) => {
       {/* WITHOUT login, user can access those links */}
       {currentUser ? (
         <>
-          <Route exact path={CUSTOMER_PATH}>
-            <CustomerLayout>
-              <CustomerHomePage />
-            </CustomerLayout>
-          </Route>
+          <Route
+            exact
+            path={CUSTOMER_PATH}
+            render={props => (
+              <CustomerLayout>
+                <CustomerHomePage {...props} />
+              </CustomerLayout>
+            )}
+          />
           <Route
             path={`${CUSTOMER_PATH}/transactions`}
             render={() => (
@@ -37,14 +43,6 @@ const RouteCustomer = ({ currentUser }) => {
             render={() => (
               <CustomerLayout>
                 <TransactionDetailsPage />
-              </CustomerLayout>
-            )}
-          />
-          <Route
-            path={`${CUSTOMER_PATH}/tokens-wallet`}
-            render={() => (
-              <CustomerLayout>
-                <TokensWalletPage />
               </CustomerLayout>
             )}
           />
@@ -64,6 +62,30 @@ const RouteCustomer = ({ currentUser }) => {
               </CustomerLayout>
             )}
           />
+          <Route
+            path={`${CUSTOMER_PATH}/projects`}
+            render={props => (
+              <CustomerLayout>
+                <ProjectPage {...props} />
+              </CustomerLayout>
+            )}
+          />
+          <Route
+            path={`${CUSTOMER_PATH}/create-project`}
+            render={() => (
+              <CustomerLayout>
+                <CreateProjectPage />
+              </CustomerLayout>
+            )}
+          />
+          <Route
+            path={`${CUSTOMER_PATH}/my-project/:id`}
+            render={props => (
+              <CustomerLayout>
+                <TokensWalletPage {...props} />
+              </CustomerLayout>
+            )}
+          />
         </>
       ) : (
         <>
@@ -76,13 +98,19 @@ const RouteCustomer = ({ currentUser }) => {
           <Route path={`${CUSTOMER_PATH}/transaction-details`}>
             <Redirect to="/" />
           </Route>
-          <Route path={`${CUSTOMER_PATH}/tokens-wallet`}>
-            <Redirect to="/" />
-          </Route>
           <Route path={`${CUSTOMER_PATH}/profile`}>
             <Redirect to="/" />
           </Route>
           <Route path={`${CUSTOMER_PATH}/verify-email/:emailToken`}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={`${CUSTOMER_PATH}/projects`}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={`${CUSTOMER_PATH}/create-project`}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={`${CUSTOMER_PATH}/my-project/:id`}>
             <Redirect to="/" />
           </Route>
         </>

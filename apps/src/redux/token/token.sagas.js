@@ -5,8 +5,8 @@ import TokenService from 'services/token.service'
 import { TOKEN_TYPE } from 'utils/constant'
 import TokenTypes from './token.types'
 import {
-  getTokensSuccess,
-  getTokensFailure,
+  getTokenListSuccess,
+  getTokenListFailure,
   getTokenTypesSuccess,
   getTokenTypesFailure,
 } from './token.actions'
@@ -34,10 +34,10 @@ const formatTokenList = tokenList => {
 export function* getTokens({ payload: userId }) {
   try {
     let tokenList = yield TokenService.getTokenList(userId)
-    tokenList = formatTokenList(tokenList)
-    yield put(getTokensSuccess(tokenList || []))
+    tokenList = formatTokenList(tokenList || [])
+    yield put(getTokenListSuccess(tokenList))
   } catch (err) {
-    yield put(getTokensFailure(err.message))
+    yield put(getTokenListFailure(err.message))
   }
 }
 
@@ -61,8 +61,8 @@ const formatTokenTypeList = tokenTypeList => {
 export function* getTokenTypes() {
   try {
     let tokenTypeList = yield TokenService.getTokenTypeList()
-    tokenTypeList = formatTokenTypeList(tokenTypeList)
-    yield put(getTokenTypesSuccess(tokenTypeList || []))
+    tokenTypeList = formatTokenTypeList(tokenTypeList || [])
+    yield put(getTokenTypesSuccess(tokenTypeList))
   } catch (err) {
     yield put(getTokenTypesFailure(err.message))
   }

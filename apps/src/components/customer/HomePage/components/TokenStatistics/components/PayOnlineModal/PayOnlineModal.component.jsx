@@ -4,10 +4,12 @@
 import React, { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import './PayOnlineModal.style.scss'
 import OrderService from 'services/order.service'
+import { STRIPE_PUBLIC_KEY } from 'utils/constant'
 import PayReviewModal from './components/PayReviewModal/PayReviewModal.component'
 
-const stripePromise = loadStripe('pk_test_QvCrSmhHX1KYmSursjHff12u00sO1Zz8cq')
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
 
 const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
   const stripe = useStripe()
@@ -16,10 +18,15 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  useEffect(() => {
+  const onSubmit = () => {
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make  sure to disable form submission until Stripe.js has loaded.
+      return
+    }
     async function createToken() {
       const cardElement = elements.getElement(CardElement)
-      const { user, tokenType } = checkoutInfo
+      const { user, tokenType, projectId } = checkoutInfo
       const result = await OrderService.createPaymentIntent(tokenType.price * 100)
       const paymentMethodReq = await stripe.createPaymentMethod({
         type: 'card',
@@ -41,10 +48,13 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
           setIsLoading(false)
         } else if (confirmedCardPayment.paymentIntent.status === 'succeeded') {
           // The payment has been processed!
-          // const result = await OrderService.createOrder({
-          //   userId: user._id,
-          //   tokenType,
-          // })
+          await OrderService.createOrder({
+            userId: user._id,
+            tokenType,
+            token: {
+              projectId,
+            },
+          })
           setIsLoading(false)
           onOrderSuccess({
             minutes: tokenType.minutes,
@@ -56,24 +66,13 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
         }
       }
     }
-
-    if (isLoading) {
-      try {
-        createToken()
-      } catch (error) {
-        setErrorMessage(error.message)
-        setIsLoading(false)
-      }
+    try {
+      setIsLoading(true)
+      createToken()
+    } catch (error) {
+      setErrorMessage(error.message)
+      setIsLoading(false)
     }
-  }, [checkoutInfo, elements, isLoading, stripe, onOrderSuccess])
-
-  const onSubmit = () => {
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make  sure to disable form submission until Stripe.js has loaded.
-      return
-    }
-    setIsLoading(true)
   }
 
   const cardElementOptions = {
@@ -150,8 +149,27 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess }) => {
   )
 }
 
-const PayOnlineModal = ({ payOnlineModal }) => {
+const PayOnlineModal = ({ currentUser, payOnlineModal, getMyProjectListObj, getMyProjects }) => {
   const [payReview, setPayReview] = useState({})
+  const [projectId, setProjectId] = useState({})
+
+  useEffect(() => {
+    if (
+      currentUser._id &&
+      getMyProjectListObj.isLoading === false &&
+      getMyProjectListObj.isSuccess === null
+    ) {
+      getMyProjects({ userId: currentUser._id })
+    }
+    if (getMyProjectListObj.myProjectList.length > 0) {
+      setProjectId(getMyProjectListObj.myProjectList[0]._id)
+    }
+  }, [currentUser._id, getMyProjects, getMyProjectListObj])
+
+  const onChangeProject = event => {
+    const selectedProjectId = event.target.value
+    setProjectId(selectedProjectId)
+  }
 
   const onOrderSuccess = orderData => {
     setPayReview({
@@ -162,7 +180,7 @@ const PayOnlineModal = ({ payOnlineModal }) => {
 
   return (
     <>
-      <div className="modal fade" id="pay-online" tabIndex={-1}>
+      <div className="modal fade pay-online-modal" id="pay-online" tabIndex={-1}>
         <div className="modal-dialog modal-dialog-md modal-dialog-centered">
           <div className="modal-content pb-0">
             <div className="popup-body">
@@ -176,10 +194,36 @@ const PayOnlineModal = ({ payOnlineModal }) => {
                   </>
                 )}
               </p>
+              <div className="mgt-1-5x input-item">
+                <h5 className="font-mid">Chọn project</h5>
+                <select
+                  className="custom-select input-item__select-project"
+                  required
+                  id="selected-project"
+                  onChange={onChangeProject}
+                >
+                  {getMyProjectListObj.myProjectList.map(project => {
+                    return <option value={project._id}>{project.name}</option>
+                  })}
+                </select>
+                {/* <select
+                  className="select select-block select-bordered"
+                  required
+                  id="selected-project"
+                  onChange={e => console.log(e.target.value)}
+                >
+                  {getMyProjectListObj.myProjectList.map(project => {
+                    return <option value={project._id}>{project.name}</option>
+                  })}
+                </select> */}
+              </div>
               <h5 className="mgt-1-5x font-mid">Vui lòng nhập thông tin thẻ</h5>
               <div className="mgt-1-5x">
                 <Elements stripe={stripePromise}>
-                  <CheckoutForm checkoutInfo={payOnlineModal} onOrderSuccess={onOrderSuccess} />
+                  <CheckoutForm
+                    checkoutInfo={{ ...payOnlineModal, projectId }}
+                    onOrderSuccess={onOrderSuccess}
+                  />
                 </Elements>
               </div>
             </div>

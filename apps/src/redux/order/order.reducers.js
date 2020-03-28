@@ -37,6 +37,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
+          ...state.getList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

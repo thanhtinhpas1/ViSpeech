@@ -50,11 +50,10 @@ const configs = {
             logger: process.env.TYPEORM_LOGGING || 'debug',
             // extra: process.env.TYPEORM_EXTRA || {charset: 'utf8mb4'},
         },
-
         JWT: {
             secret: process.env.JWT_SECRET || 'vispeech',
         },
-        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY || 'sk_test_o963xS8xNbn1yRD65F5x3Kob00gjj51qc0',
+        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
         KAFKA: {
             HOST: process.env.KAFKA_HOST || '0.0.0.0',
             PORT: process.env.KAFKA_PORT || 9092,

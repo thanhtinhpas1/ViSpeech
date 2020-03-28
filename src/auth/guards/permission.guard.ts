@@ -17,7 +17,10 @@ export class PermissionGuard implements CanActivate {
         if (!id) return true;
 
         const payload = this.authService.decode(request);
-        if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new BadRequestException();
+        }
+        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const permission = await getMongoRepository(PermissionDto).findOne({_id: id});
         if (permission.assignerId === payload['id']) {

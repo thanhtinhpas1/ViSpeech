@@ -1,9 +1,9 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent} from '../impl/project-created.event';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {ProjectDto} from 'projects/dtos/projects.dto';
-import {Repository} from 'typeorm';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from '../impl/project-created.event';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { Repository } from 'typeorm';
 
 @EventsHandler(ProjectCreatedEvent)
 export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent> {
@@ -15,12 +15,11 @@ export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent>
     }
 
     async handle(event: ProjectCreatedEvent) {
-        Logger.log(event.projectDto._id, 'ProjectCreatedEvent');
-        const {streamId, projectDto} = event;
-        let project = JSON.parse(JSON.stringify(projectDto));
+        Logger.log(event.projectDto._id, "ProjectCreatedEvent");
+        const { streamId, projectDto } = event;
 
         try {
-            await this.repository.save(project);
+            await this.repository.save(projectDto);
             this.eventBus.publish(new ProjectCreatedSuccessEvent(streamId, projectDto));
         } catch (error) {
             this.eventBus.publish(new ProjectCreatedFailedEvent(streamId, projectDto, error));

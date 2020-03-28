@@ -1,0 +1,7 @@
+.pay-online-modal {
+    .input-item { 
+        &__select-project:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255,255,255,0);
+        }
+    }
+}

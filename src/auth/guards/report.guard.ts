@@ -1,8 +1,8 @@
-import {CanActivate, Injectable, Logger} from '@nestjs/common';
-import {ReportDto} from 'reports/dtos/reports.dto';
-import {getMongoRepository} from 'typeorm';
-import {CONSTANTS} from '../../common/constant';
-import {AuthService} from '../auth.service';
+import { CanActivate, Injectable, Logger, BadRequestException } from "@nestjs/common";
+import { ReportDto } from "reports/dtos/reports.dto";
+import { getMongoRepository } from "typeorm";
+import { CONSTANTS } from "../../common/constant";
+import { AuthService } from "../auth.service";
 
 @Injectable()
 export class ReportGuard implements CanActivate {
@@ -17,7 +17,10 @@ export class ReportGuard implements CanActivate {
         if (!id) return true;
 
         const payload = this.authService.decode(request);
-        if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new BadRequestException();
+        }
+        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const report = getMongoRepository(ReportDto).findOne({_id: id});
         if (report['userId'] === payload['id']) {

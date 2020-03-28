@@ -132,6 +132,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
+          ...state.getList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -159,6 +160,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
+          ...state.getInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -255,17 +257,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sendVerifyEmail: {
-          ...state.sendVerifyEmail,
           isLoading: false,
           isSuccess: true,
-          message: null,
         },
       }
     case UserTypes.SEND_VERIFY_EMAIL_FAILURE:
       return {
         ...state,
         sendVerifyEmail: {
-          ...state.sendVerifyEmail,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -284,17 +283,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         verifyEmail: {
-          ...state.verifyEmail,
           isLoading: false,
           isSuccess: true,
-          message: null,
         },
       }
     case UserTypes.VERIFY_EMAIL_FAILURE:
       return {
         ...state,
         verifyEmail: {
-          ...state.verifyEmail,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

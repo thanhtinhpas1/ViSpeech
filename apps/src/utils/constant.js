@@ -1,4 +1,5 @@
 export const JWT_TOKEN = 'jwtToken'
+export const STRIPE_PUBLIC_KEY = 'pk_test_Zy4vrDrBVMAPFThf7gA5Uu3g00ADFriXO0'
 export const ITEMS_PER_PAGE = 9
 export const IMG_AVATAR_REF = 'images/avatar'
 export const DEFAULT_AVATAR_URL =

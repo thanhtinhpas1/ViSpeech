@@ -6,14 +6,14 @@ import TokenTransaction from './components/TokenTransaction/TokenTransaction.con
 import TokenCalculator from './components/TokenCalculator/TokenCalculator.component'
 import TokenSaleGraph from './components/TokenSaleGraph/TokenSaleGraph.component'
 
-const Home = () => {
+const Home = ({ history }) => {
   return (
     <div className="page-content">
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
             <div className="token-statistics card card-token height-auto">
-              <TokenStatistics />
+              <TokenStatistics history={history} />
             </div>
           </div>
           <div className="col-xl-8 col-lg-7">

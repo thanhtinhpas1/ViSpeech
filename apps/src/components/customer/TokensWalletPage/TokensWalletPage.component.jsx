@@ -6,7 +6,7 @@ import React, { useCallback } from 'react'
 import { CUSTOMER_PATH } from 'utils/constant'
 import ReactTable from 'components/customer/ReactTable/ReactTable.component'
 
-const TokensWalletPage = ({ currentUser, token, getTokens }) => {
+const TokensWalletPage = ({ currentUser, getTokenListObj, getTokens }) => {
   const columns = [
     {
       Header: 'Token',
@@ -91,10 +91,13 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
     },
   ]
 
-  const getUserTokens = useCallback(({ pageIndex, pageSize }) => {
-    // const userId = currentUser._id
-    // getTokens({ userId, pageIndex, pageSize })
-  }, [])
+  const getUserTokens = useCallback(
+    ({ pageIndex, pageSize }) => {
+      const userId = currentUser._id
+      getTokens({ userId, pageIndex, pageSize })
+    },
+    [currentUser._id, getTokens]
+  )
 
   return (
     <div className="page-content">
@@ -107,10 +110,10 @@ const TokensWalletPage = ({ currentUser, token, getTokens }) => {
             {currentUser._id && (
               <ReactTable
                 columns={columns}
-                data={token.tokenList}
+                data={getTokenListObj.tokenList}
                 fetchData={getUserTokens}
-                loading={token.isLoading}
-                pageCount={Math.ceil(token.tokenList.length / 5)}
+                loading={getTokenListObj.isLoading}
+                pageCount={Math.ceil(getTokenListObj.tokenList.length / 5)}
                 defaultPageSize={5}
                 pageSize={5}
               />

@@ -2,8 +2,8 @@ import {Injectable, Logger} from '@nestjs/common';
 import {ICommand, ofType, Saga} from '@nestjs/cqrs';
 import {flatMap, map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {UserCreationStartedEvent} from 'users/events/impl/user-created.event';
-import {TokenIdRequestParamsDto} from 'tokens/dtos/tokens.dto';
+import {UserCreationStartedEvent, UserCreatedSuccessEvent} from 'users/events/impl/user-created.event';
+import {TokenIdRequestParamsDto, TokenDto} from 'tokens/dtos/tokens.dto';
 import {AuthService} from 'auth/auth.service';
 import {CreateUserCommand} from 'users/commands/impl/create-user.command';
 import {WelcomeUserCommand} from 'users/commands/impl/welcome-user.command';
@@ -12,6 +12,7 @@ import {FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent} from 'tokens/
 import {DeleteUserCommand} from 'users/commands/impl/delete-user.command';
 import {UserIdRequestParamsDto} from 'users/dtos/users.dto';
 import {UserDeletedSuccessEvent} from 'users/events/impl/user-deleted.event';
+import { CreateFreeTokenCommand } from 'tokens/commands/impl/create-token.command';
 
 @Injectable()
 export class UsersSagas {
@@ -30,20 +31,20 @@ export class UsersSagas {
         );
     };
 
-    // @Saga()
-    // userCreatedSucess = (events$: Observable<any>): Observable<ICommand> => {
-    //     return events$.pipe(
-    //         ofType(UserCreatedSuccessEvent),
-    //         map((event: UserCreatedSuccessEvent) => {
-    //             Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
-    //             const { streamId, userDto } = event;
-    //             const userId = userDto._id;
-    //             const tokenValue = this.authService.generateTokenWithUserId(userId);
-    //             const tokenDto = new TokenDto(tokenValue, userId); // free token
-    //             return new CreateFreeTokenCommand(streamId, tokenDto);
-    //         })
-    //     );
-    // };
+    @Saga()
+    userCreatedSucess = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(UserCreatedSuccessEvent),
+            map((event: UserCreatedSuccessEvent) => {
+                Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
+                const { streamId, userDto } = event;
+                const userId = userDto._id;
+                const tokenValue = this.authService.generateTokenWithUserId(userId);
+                const tokenDto = new TokenDto(tokenValue, userId, ""); // free token
+                return new CreateFreeTokenCommand(streamId, tokenDto);
+            })
+        );
+    };
 
     @Saga()
     freeTokenCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {

@@ -4,18 +4,18 @@ export const onClearTokenState = () => ({
   type: TokenTypes.CLEAR_TOKEN_STATE,
 })
 
-// Get tokens
-export const getTokens = userId => ({
+// Get token list
+export const getTokenList = userId => ({
   type: TokenTypes.GET_TOKENS,
   payload: userId,
 })
 
-export const getTokensSuccess = tokenList => ({
+export const getTokenListSuccess = tokenList => ({
   type: TokenTypes.GET_TOKENS_SUCCESS,
-  payload: tokenList,
+  payload: { tokenList },
 })
 
-export const getTokensFailure = message => ({
+export const getTokenListFailure = message => ({
   type: TokenTypes.GET_TOKENS_FAILURE,
   payload: message,
 })
@@ -27,7 +27,7 @@ export const getTokenTypes = () => ({
 
 export const getTokenTypesSuccess = tokenTypeList => ({
   type: TokenTypes.GET_TOKEN_TYPES_SUCCESS,
-  payload: tokenTypeList,
+  payload: { tokenTypeList },
 })
 
 export const getTokenTypesFailure = message => ({

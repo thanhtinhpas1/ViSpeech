@@ -4,10 +4,11 @@
 import React, { useEffect, useState } from 'react'
 import Utils from 'utils'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
+import { CUSTOMER_PATH } from 'utils/constant'
 import TokenType from './components/TokenType/TokenType.component'
-import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.component'
+import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
 
-const TokenStatistics = ({ currentUser, token, getTokenTypes, sendVerifyEmail }) => {
+const TokenStatistics = ({ history, currentUser, getTokenTypeListObj, getTokenTypes }) => {
   const [payOnlineModal, setPayOnlineModal] = useState({})
   const [infoModal, setInfoModal] = useState({})
 
@@ -35,14 +36,18 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes, sendVerifyEmail })
   const openPayOnlineModal = () => {
     if (!Utils.isEmailVerified(currentUser.roles)) {
       const infoObj = {
-        title: 'Tài khoản chưa được kích hoạt',
-        message: 'Vui lòng xác thực email để kích hoạt tài khoản.',
+        title: 'Không thể thực hiện tác vụ',
+        message:
+          'Tài khoản của bạn chưa được kích hoạt. Vui lòng thực hiện xác thực email tại trang cá nhân để kích hoạt tài khoản.',
         icon: {
           isSuccess: false,
         },
         button: {
-          content: 'Xác thực email',
-          clickFunc: () => sendVerifyEmail(currentUser._id),
+          content: 'Đến trang cá nhân',
+          clickFunc: () => {
+            window.$('#info-modal').modal('hide')
+            history.push(`${CUSTOMER_PATH}/profile`)
+          },
         },
       }
       setInfoModal(infoObj)
@@ -52,8 +57,8 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes, sendVerifyEmail })
     const selectedTypeId = window
       .$('.token-currency-choose .pay-option input[name="tokenType"]:checked')
       .attr('id')
-    const index = token.tokenTypeList.findIndex(x => x._id === selectedTypeId)
-    let selectedType = token.tokenTypeList[index]
+    const index = getTokenTypeListObj.tokenTypeList.findIndex(x => x._id === selectedTypeId)
+    let selectedType = getTokenTypeListObj.tokenTypeList[index]
     selectedType = Utils.removePropertiesFromObject(selectedType, ['defaultChecked', 'saleOff'])
     const payOnlineObj = {
       user: currentUser,
@@ -79,14 +84,16 @@ const TokenStatistics = ({ currentUser, token, getTokenTypes, sendVerifyEmail })
         <div className="token-balance token-balance-s2">
           <div className="token-currency-choose" style={{ color: '#495463' }}>
             <div className="row guttar-15px" style={{ display: 'flex' }}>
-              {token.tokenTypeList &&
-                Utils.sortArr(token.tokenTypeList, (a, b) => a.price - b.price).map(tokenType => {
-                  return (
-                    <div className="col-3" key={tokenType._id}>
-                      <TokenType tokenType={tokenType} />
-                    </div>
-                  )
-                })}
+              {getTokenTypeListObj.tokenTypeList &&
+                Utils.sortArr(getTokenTypeListObj.tokenTypeList, (a, b) => a.price - b.price).map(
+                  tokenType => {
+                    return (
+                      <div className="col-3" key={tokenType._id}>
+                        <TokenType tokenType={tokenType} />
+                      </div>
+                    )
+                  }
+                )}
             </div>
           </div>
         </div>

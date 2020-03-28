@@ -1,11 +1,18 @@
 import TokenTypes from './token.types'
 
 const INITIAL_STATE = {
-  tokenList: [],
-  tokenTypeList: null,
-  errorMessage: null,
-  isSuccess: null,
-  isLoading: false,
+  getTokenList: {
+    tokenList: [],
+    isLoading: false,
+    isSuccess: null,
+    errorMessage: null,
+  },
+  getTokenTypeList: {
+    tokenTypeList: [],
+    isLoading: false,
+    isSuccess: null,
+    errorMessage: null,
+  },
 }
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -18,43 +25,57 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case TokenTypes.GET_TOKENS:
       return {
         ...state,
-        isLoading: true,
+        getTokenList: {
+          ...state.getTokenList,
+          isLoading: true,
+        },
       }
     case TokenTypes.GET_TOKENS_SUCCESS:
       return {
         ...state,
-        tokenList: action.payload,
-        isLoading: false,
-        isSuccess: true,
-        message: null,
+        getTokenList: {
+          isLoading: false,
+          isSuccess: true,
+          tokenList: action.payload.tokenList,
+        },
       }
     case TokenTypes.GET_TOKENS_FAILURE:
       return {
         ...state,
-        isLoading: false,
-        isSuccess: false,
-        message: action.payload,
+        getTokenList: {
+          ...state.getTokenList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
       }
     // GET_TOKEN_TYPES
     case TokenTypes.GET_TOKEN_TYPES:
       return {
         ...state,
-        isLoading: true,
+        getTokenTypeList: {
+          ...state.getTokenTypeList,
+          isLoading: true,
+        },
       }
     case TokenTypes.GET_TOKEN_TYPES_SUCCESS:
       return {
         ...state,
-        tokenTypeList: action.payload,
-        isLoading: false,
-        isSuccess: true,
-        message: null,
+        getTokenTypeList: {
+          isLoading: false,
+          isSuccess: true,
+          tokenTypeList: action.payload.tokenTypeList,
+        },
       }
     case TokenTypes.GET_TOKEN_TYPES_FAILURE:
       return {
         ...state,
-        isLoading: false,
-        isSuccess: false,
-        message: action.payload,
+        getTokenTypeList: {
+          ...state.getTokenTypeList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
       }
     default:
       return state

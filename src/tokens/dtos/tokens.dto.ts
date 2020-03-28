@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsEmpty, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
-import { Column, Entity, Double } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 export class TokenIdRequestParamsDto {
     constructor(tokenId) {
@@ -41,12 +41,13 @@ export class TokenDto extends BaseEntityDto {
     })
     userId: ObjectID;
 
-    @IsUUID()
-    @Column({
-        nullable: false,
-        type: 'uuid',
-    })
-    projectId: ObjectID;
+  // @IsUUID()
+  @IsString()
+  @Column({
+    nullable: false,
+    // type: 'uuid',
+  })
+  projectId: string;
 
     @IsOptional()
     @Type(() => Number)

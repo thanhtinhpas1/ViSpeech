@@ -3,11 +3,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ROLES } from 'utils/constant'
 import Utils from 'utils'
 
 const UserCreatePage = ({ createUserObj, createUser }) => {
+  const emptyAllInputField = () => {
+    window.$('#create-user-form')[0].reset()
+  }
+
+  useEffect(() => {
+    if (createUserObj.isLoading === false && createUserObj.isSuccess === true) {
+      emptyAllInputField()
+    }
+  }, [createUserObj])
+
   const onSubmit = event => {
     event.preventDefault()
 
@@ -29,14 +39,6 @@ const UserCreatePage = ({ createUserObj, createUser }) => {
       roles: formattedRoles,
     }
     createUser(user)
-  }
-
-  const emptyAllInputField = () => {
-    window.$('#create-user-form')[0].reset()
-  }
-
-  if (createUserObj.isLoading === false && createUserObj.isSuccess === true) {
-    emptyAllInputField()
   }
 
   return (
