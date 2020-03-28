@@ -1,100 +1,104 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CONSTANTS } from 'common/constant';
-import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
-import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
-import { GetTokensQuery, GetTokenTypesQuery } from 'tokens/queries/impl/get-tokens.query';
-import { TokenDto, TokenIdRequestParamsDto } from '../dtos/tokens.dto';
-import { TokensService } from '../services/tokens.service';
-import { Roles } from 'auth/roles.decorator';
-import { TokenGuard } from 'auth/guards/token.guard';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
+import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {CONSTANTS} from 'common/constant';
+import {FindTokenQuery} from 'tokens/queries/impl/find-token.query';
+import {GetTokensByUserIdQuery} from 'tokens/queries/impl/get-tokens-by-userId';
+import {GetTokensQuery, GetTokenTypesQuery} from 'tokens/queries/impl/get-tokens.query';
+import {TokenDto, TokenIdRequestParamsDto} from '../dtos/tokens.dto';
+import {TokensService} from '../services/tokens.service';
+import {Roles} from 'auth/roles.decorator';
+import {TokenGuard} from 'auth/guards/token.guard';
 
 @Controller('tokens')
 @ApiTags('Tokens')
 @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
 export class TokensController {
-  constructor(private readonly tokensService: TokensService) { }
+    constructor(private readonly tokensService: TokensService) {
+    }
 
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Create Token'] })
-  @ApiResponse({ status: 200, description: 'Create Token.' })
-  // TODO: Guard to check maked payment
-  @Post()
-  async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
-    const streamId = tokenDto._id;
-    return this.tokensService.createToken(streamId, tokenDto);
-  }
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Create Token']})
+    @ApiResponse({status: 200, description: 'Create Token.'})
+    // TODO: Guard to check maked payment
+    @Post()
+    async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
+        const streamId = tokenDto._id;
+        return this.tokensService.createToken(streamId, tokenDto);
+    }
 
-  /* Update Token */
-  /*--------------------------------------------*/
-  // TODO: check business flow update -> upgrade type token instead change value
-  // TODO: make flow to regenerate token value
-  @ApiOperation({ tags: ['Update Token'] })
-  @ApiResponse({ status: 200, description: 'Update Token.' })
-  @Put(':_id')
-  async updateToken(
-    @Param() tokenIdDto: TokenIdRequestParamsDto,
-    @Body() tokenDto: TokenDto,
-  ) {
-    const streamId = tokenIdDto._id;
-    return this.tokensService.updateToken(streamId, {
-      ...tokenDto,
-      _id: tokenIdDto._id,
-    });
-  }
+    /* Update Token */
+    /*--------------------------------------------*/
+    // TODO: check business flow update -> upgrade type token instead change value
+    // TODO: make flow to regenerate token value
+    @ApiOperation({tags: ['Update Token']})
+    @ApiResponse({status: 200, description: 'Update Token.'})
+    @Put(':_id')
+    async updateToken(
+        @Param() tokenIdDto: TokenIdRequestParamsDto,
+        @Body() tokenDto: TokenDto,
+    ) {
+        const streamId = tokenIdDto._id;
+        return this.tokensService.updateToken(streamId, {
+            ...tokenDto,
+            _id: tokenIdDto._id,
+        });
+    }
 
-  /* Delete Token */
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Delete Token'] })
-  @ApiResponse({ status: 200, description: 'Delete Token.' })
-  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-  @Delete(':_id')
-  async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
-    const streamId = tokenIdDto._id;
-    return this.tokensService.deleteToken(streamId, tokenIdDto);
-  }
+    /* Delete Token */
 
-  /* List Tokens */
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Delete Token']})
+    @ApiResponse({status: 200, description: 'Delete Token.'})
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Delete(':_id')
+    async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
+        const streamId = tokenIdDto._id;
+        return this.tokensService.deleteToken(streamId, tokenIdDto);
+    }
 
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ['List Tokens'] })
-  @ApiResponse({ status: 200, description: 'List Tokens.' })
-  @Roles([CONSTANTS.ROLE.ADMIN])
-  @Get()
-  async getTokens(@Query() getTokensQuery: GetTokensQuery) {
-    return this.tokensService.getTokens(getTokensQuery);
-  }
+    /* List Tokens */
 
-  /* List Tokens By UserId */
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['List Tokens']})
+    @ApiResponse({status: 200, description: 'List Tokens.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
+    @Get()
+    async getTokens(@Query() getTokensQuery: GetTokensQuery) {
+        return this.tokensService.getTokens(getTokensQuery);
+    }
 
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ['List Tokens By UserId'] })
-  @ApiResponse({ status: 200, description: 'List Tokens By UserId.' })
-  @Get('/userId')
-  async getTokensByUserId(
-    @Query() getTokensByUserIdQuery: GetTokensByUserIdQuery,
-  ) {
-    return this.tokensService.getTokensByUserId(getTokensByUserIdQuery);
-  }
+    /* List Tokens By UserId */
 
-  /* Find Token */
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['List Tokens By UserId']})
+    @ApiResponse({status: 200, description: 'List Tokens By UserId.'})
+    @Get('/userId')
+    async getTokensByUserId(
+        @Query() getTokensByUserIdQuery: GetTokensByUserIdQuery,
+    ) {
+        return this.tokensService.getTokensByUserId(getTokensByUserIdQuery);
+    }
 
-  /*--------------------------------------------*/
-  // TODO: check permission find token belong to user
-  @ApiOperation({ tags: ['Find Token'] })
-  @ApiResponse({ status: 200, description: 'Find Token.' })
-  @Get(':id')
-  async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
-    return this.tokensService.findOne(findTokenQuery);
-  }
+    /* Find Token */
 
-  /* List Token Types */
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ['List Token Types'] })
-  @ApiResponse({ status: 200, description: 'List Token Types.' })
-  @Get('/token-types')
-  async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
-    return this.tokensService.findTokenTypes(getTokenTypesQuery);
-  }
+    /*--------------------------------------------*/
+
+    // TODO: check permission find token belong to user
+    @ApiOperation({tags: ['Find Token']})
+    @ApiResponse({status: 200, description: 'Find Token.'})
+    @Get(':id')
+    async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
+        return this.tokensService.findOne(findTokenQuery);
+    }
+
+    /* List Token Types */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['List Token Types']})
+    @ApiResponse({status: 200, description: 'List Token Types.'})
+    @Get('/token-types')
+    async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
+        return this.tokensService.findTokenTypes(getTokenTypesQuery);
+    }
 }

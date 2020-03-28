@@ -39,14 +39,14 @@ export class AuthService {
     generateTokenWithUserId(userId, expiresIn = null) {
         const payload = {id: userId};
         if (expiresIn) {
-            return this.jwtService.sign(payload, { expiresIn });
+            return this.jwtService.sign(payload, {expiresIn});
         }
         return this.jwtService.sign(payload);
     }
 
     generateEmailToken(assignerId, projectId, assigneeId, permissions) {
-        const payload = { assignerId, projectId, assigneeId, permissions };
-        return this.jwtService.sign(payload, { expiresIn: "2 days" });
+        const payload = {assignerId, projectId, assigneeId, permissions};
+        return this.jwtService.sign(payload, {expiresIn: '2 days'});
     }
 
     async findUserByUsername(username: string): Promise<UserDto> {
@@ -60,7 +60,7 @@ export class AuthService {
     decode(request: any) {
         const authorization = request.headers.authorization;
         if (!authorization) return null;
-        const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, "");
+        const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, '');
         return this.decodeJwtToken(jwt);
     }
 }

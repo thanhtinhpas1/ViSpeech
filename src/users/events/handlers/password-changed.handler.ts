@@ -1,4 +1,4 @@
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
+import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
 import {Logger, NotFoundException} from '@nestjs/common';
 import {PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent} from '../impl/password-changed.event';
 import {InjectRepository} from '@nestjs/typeorm';
@@ -16,21 +16,21 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
 
     async handle(event: PasswordChangedEvent) {
         Logger.log(event.userId, 'PasswordChangedEvent');
-        const { streamId, userId, newPassword, oldPassword } = event;
+        const {streamId, userId, newPassword, oldPassword} = event;
 
         try {
-            const user = await this.repository.findOne({ _id: userId });
+            const user = await this.repository.findOne({_id: userId});
             if (!user) throw new NotFoundException(`User with _id ${userId} does not exist.`);
 
             const isValid = await Utils.comparePassword(oldPassword, user.password);
             if (isValid) {
-                if (oldPassword === newPassword) throw new Error("New password must be different than old password.");
+                if (oldPassword === newPassword) throw new Error('New password must be different than old password.');
                 user.password = Utils.hashPassword(newPassword);
-                await this.repository.update({ _id: userId }, user);
+                await this.repository.update({_id: userId}, user);
                 this.eventBus.publish(new PasswordChangedSuccessEvent(streamId, userId, newPassword, oldPassword));
                 return;
             }
-            throw new Error("Passwords do not match.");
+            throw new Error('Passwords do not match.');
         } catch (error) {
             this.eventBus.publish(new PasswordChangedFailedEvent(streamId, userId, newPassword, oldPassword, error));
         }

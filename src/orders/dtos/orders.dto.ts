@@ -1,54 +1,54 @@
-import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsIn, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { CONSTANTS } from 'common/constant';
-import { Column, Entity, ObjectID } from 'typeorm';
-import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from 'class-validator';
+import {CONSTANTS} from 'common/constant';
+import {Column, Entity, ObjectID} from 'typeorm';
+import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
 
 export class OrderIdRequestParamsDto {
-  constructor(orderId) {
-    this._id = orderId;
-  }
+    constructor(orderId) {
+        this._id = orderId;
+    }
 
-  @IsString()
-  @IsNotEmpty()
-  _id: string;
+    @IsString()
+    @IsNotEmpty()
+    _id: string;
 }
 
 @Entity('orders')
 export class OrderDto extends BaseEntityDto {
-  constructor(userId, tokenType: TokenTypeDto, token: TokenDto, status = CONSTANTS.STATUS.PENDING) {
-    super();
-    this.userId = userId;
-    this.tokenType = tokenType;
-    this.token = token;
-    this.status = status;
-  }
+    constructor(userId, tokenType: TokenTypeDto, token: TokenDto, status = CONSTANTS.STATUS.PENDING) {
+        super();
+        this.userId = userId;
+        this.tokenType = tokenType;
+        this.token = token;
+        this.status = status;
+    }
 
-  @IsOptional()
-  @Column()
-  token: TokenDto;
+    @IsOptional()
+    @Column()
+    token: TokenDto;
 
-  @IsNotEmpty()
-  @Column({
-    nullable: false,
-  })
-  tokenType: TokenTypeDto;
+    @IsNotEmpty()
+    @Column({
+        nullable: false,
+    })
+    tokenType: TokenTypeDto;
 
-  @IsUUID()
-  @Column({
-    nullable: false,
-    type: 'uuid',
-  })
-  userId: ObjectID;
+    @IsUUID()
+    @Column({
+        nullable: false,
+        type: 'uuid',
+    })
+    userId: ObjectID;
 
-  @IsOptional()
-  @IsString()
-  @IsIn([
-    CONSTANTS.STATUS.PENDING,
-    CONSTANTS.STATUS.SUCCESS,
-    CONSTANTS.STATUS.FAILURE,
-  ])
-  @Column()
-  status: string;
+    @IsOptional()
+    @IsString()
+    @IsIn([
+        CONSTANTS.STATUS.PENDING,
+        CONSTANTS.STATUS.SUCCESS,
+        CONSTANTS.STATUS.FAILURE,
+    ])
+    @Column()
+    status: string;
 }

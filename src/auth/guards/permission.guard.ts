@@ -1,8 +1,8 @@
-import { CanActivate, Injectable, Logger, BadRequestException } from '@nestjs/common';
-import { AuthService } from 'auth/auth.service';
-import { CONSTANTS } from 'common/constant';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { getMongoRepository } from 'typeorm';
+import {BadRequestException, CanActivate, Injectable, Logger} from '@nestjs/common';
+import {AuthService} from 'auth/auth.service';
+import {CONSTANTS} from 'common/constant';
+import {PermissionDto} from 'permissions/dtos/permissions.dto';
+import {getMongoRepository} from 'typeorm';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -19,7 +19,7 @@ export class PermissionGuard implements CanActivate {
         const payload = this.authService.decode(request);
         if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
-        const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
+        const permission = await getMongoRepository(PermissionDto).findOne({_id: id});
         if (permission.assignerId === payload['id']) {
             return true;
         }
@@ -36,7 +36,7 @@ export class AssignPermissionGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import("@nestjs/common").ExecutionContext) {
+    async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const paramId = request.params['_id'] || request.params['id'] || request.params['userId'];
         if (!paramId) return true;
@@ -78,9 +78,9 @@ export class ReplyPermisisonAssignGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import("@nestjs/common").ExecutionContext) {
+    async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const { emailToken } = request.body;
+        const {emailToken} = request.body;
 
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {

@@ -13,7 +13,7 @@ export class ChangePasswordHandler implements ICommandHandler<ChangePasswordComm
 
     async execute(command: ChangePasswordCommand) {
         Logger.log('Async ChangePasswordHandler', 'ChangePasswordCommand');
-        const { streamId, userId, newPassword, oldPassword } = command;
+        const {streamId, userId, newPassword, oldPassword} = command;
         const user = this.publisher.mergeObjectContext(
             await this.repository.changePassword(streamId, userId, newPassword, oldPassword),
         );

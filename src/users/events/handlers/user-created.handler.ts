@@ -25,7 +25,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 
     async handle(event: UserCreatedEvent) {
         Logger.log(event.userDto.username, 'UserCreatedEvent');
-        const { streamId, userDto } = event;
+        const {streamId, userDto} = event;
         const user = JSON.parse(JSON.stringify(userDto));
 
         try {

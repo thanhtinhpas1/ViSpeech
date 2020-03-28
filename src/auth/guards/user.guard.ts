@@ -1,9 +1,9 @@
-import { CanActivate, Injectable, Logger, BadRequestException } from "@nestjs/common";
-import { AuthService } from "../auth.service";
-import { Repository } from "typeorm";
-import { UserDto } from "../../users/dtos/users.dto";
-import { CONSTANTS } from "../../common/constant";
-import { InjectRepository } from "@nestjs/typeorm";
+import {BadRequestException, CanActivate, Injectable, Logger} from '@nestjs/common';
+import {AuthService} from '../auth.service';
+import {Repository} from 'typeorm';
+import {UserDto} from '../../users/dtos/users.dto';
+import {CONSTANTS} from '../../common/constant';
+import {InjectRepository} from '@nestjs/typeorm';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -14,7 +14,7 @@ export class UserGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import("@nestjs/common").ExecutionContext) {
+    async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const id = request.params['_id'] || request.params['id'] || request.params['userId'];
         if (!id) return true;
@@ -40,7 +40,7 @@ export class VerifyEmailGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import("@nestjs/common").ExecutionContext) {
+    async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const emailToken = request.body;
 

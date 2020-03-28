@@ -3,9 +3,9 @@ import {UserCreatedEvent, UserCreationStartedEvent} from '../events/impl/user-cr
 import {UserDeletedEvent} from '../events/impl/user-deleted.event';
 import {UserUpdatedEvent} from '../events/impl/user-updated.event';
 import {PasswordChangedEvent} from '../events/impl/password-changed.event';
-import { UserWelcomedEvent } from 'users/events/impl/user-welcomed.event';
-import { VerifyEmailSentEvent } from 'users/events/impl/verify-email-sent.event';
-import { EmailVerifiedEvent } from 'users/events/impl/email-verified.event';
+import {UserWelcomedEvent} from 'users/events/impl/user-welcomed.event';
+import {VerifyEmailSentEvent} from 'users/events/impl/verify-email-sent.event';
+import {EmailVerifiedEvent} from 'users/events/impl/email-verified.event';
 
 export class User extends AggregateRoot {
     [x: string]: any;

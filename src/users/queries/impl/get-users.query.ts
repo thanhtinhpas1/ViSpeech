@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsNumber, IsPositive, Min } from "class-validator";
-import { Type } from "class-transformer";
+import {IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Min} from 'class-validator';
+import {Type} from 'class-transformer';
 
 export class GetUsersQuery {
     constructor(userId: string) {

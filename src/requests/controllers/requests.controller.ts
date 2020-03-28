@@ -1,31 +1,35 @@
-import {Controller, Logger, Post, Res, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
-import {FileInterceptor} from '@nestjs/platform-express';
-import {ApiConsumes, ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {InjectRepository} from '@nestjs/typeorm';
+import { Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseInterceptors, UseGuards } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import FormData from 'form-data';
 import fs from 'fs';
-import {diskStorage} from 'multer';
-import {extname} from 'path';
-import {Repository} from 'typeorm';
-import {config} from '../../../config';
-import {TokenDto} from '../../tokens/dtos/tokens.dto';
-import {ApiFile} from '../decorators/asr.decorator';
-import {AuthGuard} from '@nestjs/passport';
-import {CONSTANTS} from '../../common/constant';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { Repository } from 'typeorm';
+import { Utils } from 'utils';
+import { config } from '../../../config';
+import { TokenDto } from '../../tokens/dtos/tokens.dto';
+import { ApiFile } from '../decorators/asr.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { CONSTANTS } from 'common/constant';
 
 @Controller('speech')
 @ApiTags('speech')
+// @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+// FIXME: query handler not found
 export class AsrController {
     constructor(
         @InjectRepository(TokenDto)
         private readonly tokenRepository: Repository<TokenDto>,
+        private readonly jwtService: JwtService,
     ) {
     }
 
-    @ApiOperation({tags: ['Request ASR ViSpeech']})
-    @ApiResponse({status: 200, description: 'Request ASR ViSpeech'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @ApiOperation({ tags: ['Request ASR ViSpeech'] })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Request ASR ViSpeech' })
     @Post()
     @ApiConsumes('multipart/form-data')
     @ApiFile('voice')
@@ -41,21 +45,38 @@ export class AsrController {
             }),
         }),
     )
-    requestAsr(@UploadedFile() file, @Res() res) {
+    async requestAsr(@UploadedFile() file, @Req() req, @Res() res) {
+        if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'file is required' });
+        if (file.mimetype !== 'audio/wave')
+            return res.status(HttpStatus.BAD_REQUEST).send({ message: 'just support wav mimetype' });
+
+        const token = Utils.extractToken(req);
+        const payload = this.jwtService.decode(token);
+        const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
+        if (!tokenDto || tokenDto.usedMinutes >= tokenDto.minutes) return res.status(HttpStatus.FORBIDDEN).json({ message: 'Forbidden.' });
+
         const formData = new FormData();
         const stream = fs.createReadStream(file.path);
+
         formData.append('voice', stream);
-        const configHeader = {headers: formData.getHeaders()};
+        const configHeader = { headers: formData.getHeaders() };
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
         axios.post(url, formData, configHeader).then(result => {
-            res.status(200).json(result.data);
+            return res.status(HttpStatus.OK).json(result.data);
         }).catch(err => {
-            res.status(400).send();
-        }).finally(() => {
+            Logger.error(err.message, 'RequestCall');
+            return res.status(HttpStatus.BAD_REQUEST).send();
+        }).finally(async () => {
             stream.close();
+            const duration = Utils.calculateDuration(file.size);
+            console.log(duration)
+            if (duration > tokenDto.usedMinutes) tokenDto.usedMinutes = tokenDto.minutes;
+            else tokenDto.usedMinutes -= duration;
+            // TODO: return command call request -> sagas to upadate token
             fs.unlink(file.path, (err => {
-                Logger.warn(err.message, 'RequestRemoveFile');
+                Logger.warn(err, 'RequestRemoveFile');
             }));
         });
     }
+
 }

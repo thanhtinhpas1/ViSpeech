@@ -1,11 +1,12 @@
-import {Logger, ValidationPipe} from '@nestjs/common';
-import {NestFactory} from '@nestjs/core';
-import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
-import {config} from '../config';
-import {AppModule} from './app.module';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { config } from '../config';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.enableCors();
     const documentOptions = new DocumentBuilder()
         .setTitle(config.TITLE)
@@ -19,7 +20,7 @@ async function bootstrap() {
     const validationOptions = {
         transform: true,
         skipMissingProperties: true,
-        validationError: {target: false},
+        validationError: { target: false },
     };
     /*--------------------------------------------*/
     app.useGlobalPipes(new ValidationPipe(validationOptions));

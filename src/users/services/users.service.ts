@@ -7,15 +7,16 @@ import {GetUsersQuery} from 'users/queries/impl/get-users.query';
 import {FindUserQuery} from 'users/queries/impl/find-user.query';
 import {CreateUserStartCommand} from 'users/commands/impl/create-user.command';
 import {ChangePasswordCommand} from '../commands/impl/change-password.command';
-import { VerifyEmailCommand } from 'users/commands/impl/verify-email.command';
-import { SendVerifyEmailCommand } from 'users/commands/impl/send-verify-email.command';
+import {VerifyEmailCommand} from 'users/commands/impl/verify-email.command';
+import {SendVerifyEmailCommand} from 'users/commands/impl/send-verify-email.command';
 
 @Injectable()
 export class UsersService {
     constructor(
         private readonly commandBus: CommandBus,
         private readonly queryBus: QueryBus,
-    ) { }
+    ) {
+    }
 
     async createUserStart(streamId: string, userDto: UserDto) {
         return await this.commandBus.execute(new CreateUserStartCommand(streamId, userDto));

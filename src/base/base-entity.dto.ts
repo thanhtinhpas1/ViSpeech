@@ -1,6 +1,6 @@
-import { IsEmpty } from 'class-validator';
-import { CreateDateColumn, ObjectIdColumn, UpdateDateColumn, } from 'typeorm';
-import { Utils } from '../utils';
+import {IsEmpty} from 'class-validator';
+import {CreateDateColumn, ObjectIdColumn, UpdateDateColumn,} from 'typeorm';
+import {Utils} from '../utils';
 
 export class BaseEntityDto {
     constructor() {

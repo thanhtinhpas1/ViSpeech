@@ -1,2 +1,1 @@
-export const EventHandlers = [
-];
+export const EventHandlers = [];

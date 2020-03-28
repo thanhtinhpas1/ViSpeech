@@ -1,25 +1,33 @@
-import {forwardRef, Module, OnModuleInit} from '@nestjs/common';
-import {AsrController} from './controllers/requests.controller';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {TokenDto} from '../tokens/dtos/tokens.dto';
-import {MulterModule} from '@nestjs/platform-express';
-import {AuthModule} from '../auth/auth.module';
-import {CommandBus, EventBus, QueryBus} from '@nestjs/cqrs';
-import {EventStore} from '../core/event-store/event-store';
-import {EventHandlers} from './events/handler';
-import {CommandHandlers} from './commands/handler';
-import {QueryHandlers} from './queries/handler';
+import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
+import { AsrController } from './controllers/requests.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MulterModule } from '@nestjs/platform-express';
+import { AuthModule } from '../auth/auth.module';
+import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { EventStore } from '../core/event-store/event-store';
+import { EventHandlers } from './events/handler';
+import { CommandHandlers } from './commands/handler';
+import { QueryHandlers } from './queries/handler';
+import { RequestDto } from './dtos/requests.dto';
+import { EventStoreModule } from '../core/event-store/event-store.module';
+import { TokenDto } from '../tokens/dtos/tokens.dto';
+import { AuthService } from 'auth/auth.service';
+import { TokenRepository } from 'tokens/repository/token.repository';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([TokenDto]),
+        TypeOrmModule.forFeature([RequestDto, TokenDto]),
+        EventStoreModule.forFeature(),
         MulterModule.register({}),
         forwardRef(() => AuthModule),
     ],
     controllers: [
         AsrController,
     ],
-    providers: [],
+    providers: [
+        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+        AuthService, TokenRepository, 
+    ],
 })
 
 export class RequestModule implements OnModuleInit {
@@ -27,7 +35,6 @@ export class RequestModule implements OnModuleInit {
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
-        private readonly reportsSagas: any,
         private readonly eventStore: EventStore,
     ) {
     }

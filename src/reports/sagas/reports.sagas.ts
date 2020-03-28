@@ -1,16 +1,16 @@
-import { Injectable } from "@nestjs/common";
+import {Injectable} from '@nestjs/common';
 
 @Injectable()
 export class ReportsSagas {
-  // @Saga()
-  // reportCreated = (events$: Observable<any>): Observable<ICommand> => {
-  //   return events$.pipe(
-  //     ofType(ReportCreatedEvent),
-  //     map(event => {
-  //       Logger.log("Inside [ReportsSagas] Saga", "ReportsSagas");
-  //       const reportId = event.reportDto[0].id;
-  //       return new WelcomeReportCommand(reportId);
-  //     })
-  //   );
-  // };
+    // @Saga()
+    // reportCreated = (events$: Observable<any>): Observable<ICommand> => {
+    //   return events$.pipe(
+    //     ofType(ReportCreatedEvent),
+    //     map(event => {
+    //       Logger.log("Inside [ReportsSagas] Saga", "ReportsSagas");
+    //       const reportId = event.reportDto[0].id;
+    //       return new WelcomeReportCommand(reportId);
+    //     })
+    //   );
+    // };
 }

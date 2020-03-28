@@ -1,5 +1,6 @@
-import {v1 as uuidv1} from 'uuid';
-import {CONSTANTS} from '../common/constant';
+import { v1 as uuidv1 } from 'uuid';
+import { CONSTANTS } from '../common/constant';
+import { Double } from 'typeorm';
 
 const bcrypt = require('bcryptjs');
 
@@ -44,4 +45,8 @@ export const Utils = {
         if (!authorization) return null;
         return authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, '');
     },
+    calculateDuration(fileSize) {
+        const size = Number(fileSize);
+        return parseFloat(((size - 44) / (60 * 10000)).toFixed(3));
+    }
 };

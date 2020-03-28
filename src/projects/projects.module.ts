@@ -1,22 +1,21 @@
-import { Module, OnModuleInit } from "@nestjs/common";
-import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { EventStore } from "core/event-store/event-store";
-import { EventStoreModule } from "core/event-store/event-store.module";
-import { CommandHandlers } from "./commands/handlers";
-import { ProjectsController } from "./controllers/projects.controller";
-import { ProjectDto } from "./dtos/projects.dto";
-import { EventHandlers } from "./events/handlers";
-import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from "./events/impl/project-created.event";
-import { ProjectDeletedEvent } from "./events/impl/project-deleted.event";
-import { ProjectUpdatedEvent } from "./events/impl/project-updated.event";
-import { ProjectWelcomedEvent } from "./events/impl/project-welcomed.event";
-import { QueryHandlers } from "./queries/handler";
-import { ProjectRepository } from "./repository/project.repository";
-import { ProjectsSagas } from "./sagas/projects.sagas";
-import { ProjectsService } from "./services/projects.service";
-import { AuthModule } from "auth/auth.module";
-
+import {Module, OnModuleInit} from '@nestjs/common';
+import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {EventStore} from 'core/event-store/event-store';
+import {EventStoreModule} from 'core/event-store/event-store.module';
+import {CommandHandlers} from './commands/handlers';
+import {ProjectsController} from './controllers/projects.controller';
+import {ProjectDto} from './dtos/projects.dto';
+import {EventHandlers} from './events/handlers';
+import {ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent} from './events/impl/project-created.event';
+import {ProjectDeletedEvent} from './events/impl/project-deleted.event';
+import {ProjectUpdatedEvent} from './events/impl/project-updated.event';
+import {ProjectWelcomedEvent} from './events/impl/project-welcomed.event';
+import {QueryHandlers} from './queries/handler';
+import {ProjectRepository} from './repository/project.repository';
+import {ProjectsSagas} from './sagas/projects.sagas';
+import {ProjectsService} from './services/projects.service';
+import {AuthModule} from 'auth/auth.module';
 
 @Module({
     imports: [

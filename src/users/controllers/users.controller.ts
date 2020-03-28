@@ -1,4 +1,4 @@
-import {BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards, Logger} from '@nestjs/common';
+import {BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from 'auth/auth.service';
@@ -9,7 +9,7 @@ import {GetUsersQuery} from 'users/queries/impl/get-users.query';
 import {ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
 import {UsersService} from '../services/users.service';
 import {UserGuard, VerifyEmailGuard} from 'auth/guards/user.guard';
-import { Utils } from 'utils';
+import {Utils} from 'utils';
 
 @Controller('users')
 @ApiTags('Users')

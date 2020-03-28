@@ -1,10 +1,10 @@
-import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from '../impl/user-updated.event';
-import { Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserDto } from 'users/dtos/users.dto';
-import { Repository } from 'typeorm';
-import { Utils } from 'utils';
+import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent} from '../impl/user-updated.event';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {UserDto} from 'users/dtos/users.dto';
+import {Repository} from 'typeorm';
+import {Utils} from 'utils';
 
 @EventsHandler(UserUpdatedEvent)
 export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
@@ -17,13 +17,13 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
 
     async handle(event: UserUpdatedEvent) {
         Logger.log(event.userDto.username, 'UserUpdatedEvent');
-        const { streamId, userDto } = event;
+        const {streamId, userDto} = event;
 
         try {
             const formattedUserDto = Utils.removePropertiesFromObject(userDto, ['email', 'assignerId', 'password', 'roles']);
-            await this.repository.update({ _id: userDto._id }, formattedUserDto);
+            await this.repository.update({_id: userDto._id}, formattedUserDto);
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
-        } catch(error) {
+        } catch (error) {
             this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));
         }
     }

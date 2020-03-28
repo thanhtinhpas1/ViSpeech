@@ -1,27 +1,29 @@
-import { forwardRef, Module, OnModuleInit } from "@nestjs/common";
-import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { EventStore } from "core/event-store/event-store";
-import { EventStoreModule } from "core/event-store/event-store.module";
-import { CommandHandlers } from "./commands/handlers";
-import { PermissionsController } from "./controllers/permissions.controller";
-import { PermissionDto } from "./dtos/permissions.dto";
-import { EventHandlers } from "./events/handlers";
-import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from "./events/impl/permission-created.event";
-import { PermissionDeletedEvent } from "./events/impl/permission-deleted.event";
-import { PermissionUpdatedEvent } from "./events/impl/permission-updated.event";
-import { PermissionWelcomedEvent } from "./events/impl/permission-welcomed.event";
-import { QueryHandlers } from "./queries/handler";
-import { PermissionRepository } from "./repository/permission.repository";
-import { PermissionsSagas } from "./sagas/permissions.sagas";
-import { PermissionsService } from "./services/permissions.service";
-import { AuthService } from "auth/auth.service";
-import { AuthModule } from "../auth/auth.module";
-import { UserDto } from "users/dtos/users.dto";
-import { ProjectDto } from "projects/dtos/projects.dto";
-import { PermissionAssignEmailSentEvent, PermissionAssignEmailSentSuccessEvent, PermissionAssignEmailSentFailedEvent } from "./events/impl/permission-assign-email-sent.event";
-import { PermissionAssignRepliedEvent } from "./events/impl/permission-assign-replied.event";
-
+import {forwardRef, Module, OnModuleInit} from '@nestjs/common';
+import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {EventStore} from 'core/event-store/event-store';
+import {EventStoreModule} from 'core/event-store/event-store.module';
+import {CommandHandlers} from './commands/handlers';
+import {PermissionsController} from './controllers/permissions.controller';
+import {PermissionDto} from './dtos/permissions.dto';
+import {EventHandlers} from './events/handlers';
+import {PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent} from './events/impl/permission-created.event';
+import {PermissionDeletedEvent} from './events/impl/permission-deleted.event';
+import {PermissionUpdatedEvent} from './events/impl/permission-updated.event';
+import {PermissionWelcomedEvent} from './events/impl/permission-welcomed.event';
+import {QueryHandlers} from './queries/handler';
+import {PermissionRepository} from './repository/permission.repository';
+import {PermissionsSagas} from './sagas/permissions.sagas';
+import {PermissionsService} from './services/permissions.service';
+import {AuthModule} from '../auth/auth.module';
+import {UserDto} from 'users/dtos/users.dto';
+import {ProjectDto} from 'projects/dtos/projects.dto';
+import {
+    PermissionAssignEmailSentEvent,
+    PermissionAssignEmailSentFailedEvent,
+    PermissionAssignEmailSentSuccessEvent
+} from './events/impl/permission-assign-email-sent.event';
+import {PermissionAssignRepliedEvent} from './events/impl/permission-assign-replied.event';
 
 @Module({
     imports: [
@@ -75,7 +77,7 @@ export class PermissionsModule implements OnModuleInit {
         PermissionAssignEmailSentEvent: (streamId, data) => new PermissionAssignEmailSentEvent(streamId, data),
         PermissionAssignEmailSentSuccessEvent: (streamId, data) => new PermissionAssignEmailSentSuccessEvent(streamId, data),
         PermissionAssignEmailSentFailedEvent: (streamId, data, error) => new PermissionAssignEmailSentFailedEvent(streamId, data, error),
-    
+
         // reply permission assign
         PermissionAssignRepliedEvent: (streamId, data) => new PermissionAssignRepliedEvent(streamId, data),
     };
