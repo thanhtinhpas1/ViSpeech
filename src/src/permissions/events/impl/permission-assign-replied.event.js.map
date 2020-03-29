@@ -1,0 +1,1 @@
+{"version":3,"file":"permission-assign-replied.event.js","sourceRoot":"","sources":["../../../../permissions/events/impl/permission-assign-replied.event.ts"],"names":[],"mappings":";;AAGA,MAAa,4BAA4B;IACrC,YACoB,QAAgB,EAChB,qBAA4C;QAD5C,aAAQ,GAAR,QAAQ,CAAQ;QAChB,0BAAqB,GAArB,qBAAqB,CAAuB;IAEhE,CAAC;CACJ;AAND,oEAMC"}

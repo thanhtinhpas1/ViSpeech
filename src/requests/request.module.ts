@@ -13,6 +13,10 @@ import { EventStoreModule } from '../core/event-store/event-store.module';
 import { TokenDto } from '../tokens/dtos/tokens.dto';
 import { AuthService } from 'auth/auth.service';
 import { TokenRepository } from 'tokens/repository/token.repository';
+import { RequestService } from './services/request.service';
+import { CallAsrEvent } from './events/impl/call-asr.event';
+import { CallAsrSagas } from './sagas/call-asr.sagas';
+import { RequestRepository } from './repository/request.repository';
 
 @Module({
     imports: [
@@ -26,7 +30,9 @@ import { TokenRepository } from 'tokens/repository/token.repository';
     ],
     providers: [
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
-        AuthService, TokenRepository, 
+        AuthService, TokenRepository, RequestService,
+        RequestRepository, ...CommandHandlers,
+        CallAsrSagas,
     ],
 })
 
@@ -47,8 +53,10 @@ export class RequestModule implements OnModuleInit {
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
-        // this.event$.registerSagas([ReportsSagas]);
+        this.event$.registerSagas([CallAsrSagas]);
     }
 
-    eventHandlers = {};
+    eventHandlers = {
+        CallAsrEvent: (streamId, requestDto, tokenDto) => new CallAsrEvent(streamId, requestDto, tokenDto),
+    };
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"order-updated.event.js","sourceRoot":"","sources":["../../../../orders/events/impl/order-updated.event.ts"],"names":[],"mappings":";;AAGA,MAAa,iBAAiB;IAC1B,YACoB,QAAgB,EAChB,QAAkB;QADlB,aAAQ,GAAR,QAAQ,CAAQ;QAChB,aAAQ,GAAR,QAAQ,CAAU;IAEtC,CAAC;CACJ;AAND,8CAMC"}

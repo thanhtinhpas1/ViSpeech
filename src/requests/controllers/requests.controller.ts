@@ -1,30 +1,32 @@
-import { Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
+import { CONSTANTS } from 'common/constant';
 import FormData from 'form-data';
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { RequestService } from 'requests/services/request.service';
 import { Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../../config';
 import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
-import { AuthGuard } from '@nestjs/passport';
-import { CONSTANTS } from 'common/constant';
+import { RequestDto } from 'requests/dtos/requests.dto';
 
 @Controller('speech')
 @ApiTags('speech')
-// @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-// FIXME: query handler not found
+@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
 export class AsrController {
     constructor(
         @InjectRepository(TokenDto)
         private readonly tokenRepository: Repository<TokenDto>,
         private readonly jwtService: JwtService,
+        private readonly requestService: RequestService,
     ) {
     }
 
@@ -53,7 +55,8 @@ export class AsrController {
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
         const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
-        if (!tokenDto || tokenDto.usedMinutes >= tokenDto.minutes) return res.status(HttpStatus.FORBIDDEN).json({ message: 'Forbidden.' });
+        if (!tokenDto || tokenDto.usedMinutes >= tokenDto.minutes)
+            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Token invalid.' });
 
         const formData = new FormData();
         const stream = fs.createReadStream(file.path);
@@ -76,6 +79,9 @@ export class AsrController {
             fs.unlink(file.path, (err => {
                 Logger.warn(err, 'RequestRemoveFile');
             }));
+            const uuid = Utils.getUuid();
+            const requestDto = new RequestDto(uuid, file.origin, duration, file.mimetype);
+            this.requestService.createRequest(uuid, requestDto, tokenDto);
         });
     }
 
