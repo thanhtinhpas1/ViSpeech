@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Logger, Param, Post, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -17,7 +17,6 @@ import { Utils } from 'utils';
 import { config } from '../../../config';
 import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
-import { FindRequestsQuery } from 'requests/queries/impl/find-requests.query';
 
 @Controller('speech')
 @ApiTags('speech')

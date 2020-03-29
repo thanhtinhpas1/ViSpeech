@@ -1,1 +1,0 @@
-{"version":3,"file":"send-assign-permission-email.command.js","sourceRoot":"","sources":["../../../../permissions/commands/impl/send-assign-permission-email.command.ts"],"names":[],"mappings":";;AAGA,MAAa,gCAAgC;IACzC,YACoB,QAAgB,EAChB,mBAAwC;QADxC,aAAQ,GAAR,QAAQ,CAAQ;QAChB,wBAAmB,GAAnB,mBAAmB,CAAqB;IAE5D,CAAC;CACJ;AAND,4EAMC"}

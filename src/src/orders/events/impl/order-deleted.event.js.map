@@ -1,1 +1,0 @@
-{"version":3,"file":"order-deleted.event.js","sourceRoot":"","sources":["../../../../orders/events/impl/order-deleted.event.ts"],"names":[],"mappings":";;AAEA,MAAa,iBAAiB;IAC1B,YACoB,QAAgB,EAChB,OAAe;QADf,aAAQ,GAAR,QAAQ,CAAQ;QAChB,YAAO,GAAP,OAAO,CAAQ;IACnC,CAAC;CACJ;AALD,8CAKC"}
