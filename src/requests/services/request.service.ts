@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { CommandBus, QueryBus } from "@nestjs/cqrs"
-import { RequestDto } from "requests/dtos/requests.dto"
+import { RequestDto, FindRequestsParam } from "requests/dtos/requests.dto"
 import { TokenDto } from "tokens/dtos/tokens.dto"
 import { CallAsrCommand } from "requests/commands/handler/call-asr.command"
 import { FindRequestsQuery } from "requests/queries/impl/find-requests.query"

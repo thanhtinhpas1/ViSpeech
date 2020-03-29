@@ -47,6 +47,6 @@ export const Utils = {
     },
     calculateDuration(fileSize) {
         const size = Number(fileSize);
-        return parseFloat(((size - 44) / (60 * 10000)).toFixed(3));
+        return parseFloat(((size - 44) / (60 * 100000)).toFixed(3));
     }
 };

@@ -14,11 +14,10 @@ export class FindRequestsQuery {
     @IsOptional()
     @IsString()
     @IsUUID()
-    tokenId?: number;
+    tokenId?: string;
 
     @IsOptional()
     @IsString()
     @IsUUID()
-    projectId?: number;
-
+    projectId?: string;
 }

@@ -76,23 +76,11 @@ export class AsrController {
             const usedMinutes = Number(tokenDto.usedMinutes || '0');
             if (duration > (minutes - usedMinutes)) tokenDto.usedMinutes = tokenDto.minutes;
             else tokenDto.usedMinutes = usedMinutes + duration;
-            fs.unlink(file.path, (err => {
-                Logger.warn(err, 'RequestRemoveFile');
-            }));
             const uuid = Utils.getUuid();
             const requestDto = new RequestDto(uuid, tokenDto.projectId, file.originalname, file.encoding, file.size,
                 duration, file.mimetype);
             this.requestService.createRequest(uuid, requestDto, tokenDto);
+            fs.unlinkSync(file.path);
         });
-    }
-
-    /* List Requests */
-    /*--------------------------------------------*/
-    // TODO: guard for request invalid project id (tokenId will get auto)
-    @ApiOperation({ tags: ['List Request'] })
-    @ApiResponse({ status: 200, description: 'List Request.' })
-    @Get()
-    async findReports(@Query() findRequestsQuery: FindRequestsQuery) {
-        return this.requestService.findRequests(findRequestsQuery);
     }
 }

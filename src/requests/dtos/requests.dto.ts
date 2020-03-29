@@ -1,6 +1,17 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsIP, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsIP, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, IsOptional } from 'class-validator';
 import { Column, Entity } from 'typeorm';
+
+export class FindRequestsParam {
+    constructor(projectId: string) {
+        this.projectId = projectId;
+    }
+
+    @IsOptional()
+    @IsUUID()
+    @IsString()
+    projectId: string;
+}
 
 @Entity('requests')
 export class RequestDto extends BaseEntityDto {

@@ -18,6 +18,7 @@ import { QueryHandlers } from './queries/handler';
 import { RequestRepository } from './repository/request.repository';
 import { CallAsrSagas } from './sagas/call-asr.sagas';
 import { RequestService } from './services/request.service';
+import { HistoriesController } from './controllers/histories.controller';
 
 @Module({
     imports: [
@@ -27,7 +28,7 @@ import { RequestService } from './services/request.service';
         forwardRef(() => AuthModule),
     ],
     controllers: [
-        AsrController,
+        AsrController, HistoriesController,
     ],
     providers: [
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,

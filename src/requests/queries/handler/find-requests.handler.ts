@@ -17,7 +17,16 @@ export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
         Logger.log('Async FindRequestsHandler', 'FindRequestsQuery')
         const { limit, offset, tokenId, projectId } = query;
         if (limit && offset) {
-            if (tokenId) {
+            if (projectId) {
+                return await this.requestRepository.find({
+                    skip: offset,
+                    take: limit,
+                    where: {
+                        projectId,
+                    },
+                })
+            }
+            else if (tokenId) {
                 return await this.requestRepository.find({
                     skip: offset,
                     take: limit,
@@ -27,17 +36,29 @@ export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
 
                 })
             }
-            else if (projectId) {
+            else { // case admin
                 return await this.requestRepository.find({
                     skip: offset,
                     take: limit,
-                    where: {
-                        projectId,
-                    },
                 })
             }
-
         }
-        return await this.requestRepository.find();
+        if (projectId) {
+            return await this.requestRepository.find({
+                where: {
+                    projectId,
+                },
+            })
+        }
+        else if (tokenId) {
+            return await this.requestRepository.find({
+                where: {
+                    tokenId,
+                },
+            })
+        }
+        else { // case admin role
+            return await this.requestRepository.find();
+        }
     }
 }
