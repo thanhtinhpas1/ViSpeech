@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Logger, Param, Post, Query, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -10,13 +10,14 @@ import FormData from 'form-data';
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { RequestDto } from 'requests/dtos/requests.dto';
 import { RequestService } from 'requests/services/request.service';
 import { Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../../config';
 import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
-import { RequestDto } from 'requests/dtos/requests.dto';
+import { FindRequestsQuery } from 'requests/queries/impl/find-requests.query';
 
 @Controller('speech')
 @ApiTags('speech')
@@ -51,7 +52,6 @@ export class AsrController {
         if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'file is required' });
         if (file.mimetype !== 'audio/wave')
             return res.status(HttpStatus.BAD_REQUEST).send({ message: 'just support wav mimetype' });
-
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
         const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
@@ -72,17 +72,27 @@ export class AsrController {
         }).finally(async () => {
             stream.close();
             const duration = Utils.calculateDuration(file.size);
-            console.log(duration)
-            if (duration > tokenDto.usedMinutes) tokenDto.usedMinutes = tokenDto.minutes;
-            else tokenDto.usedMinutes -= duration;
-            // TODO: return command call request -> sagas to upadate token
+            const minutes = Number(tokenDto.minutes);
+            const usedMinutes = Number(tokenDto.usedMinutes || '0');
+            if (duration > (minutes - usedMinutes)) tokenDto.usedMinutes = tokenDto.minutes;
+            else tokenDto.usedMinutes = usedMinutes + duration;
             fs.unlink(file.path, (err => {
                 Logger.warn(err, 'RequestRemoveFile');
             }));
             const uuid = Utils.getUuid();
-            const requestDto = new RequestDto(uuid, file.origin, duration, file.mimetype);
+            const requestDto = new RequestDto(uuid, tokenDto.projectId, file.originalname, file.encoding, file.size,
+                duration, file.mimetype);
             this.requestService.createRequest(uuid, requestDto, tokenDto);
         });
     }
 
+    /* List Requests */
+    /*--------------------------------------------*/
+    // TODO: guard for request invalid project id (tokenId will get auto)
+    @ApiOperation({ tags: ['List Request'] })
+    @ApiResponse({ status: 200, description: 'List Request.' })
+    @Get()
+    async findReports(@Query() findRequestsQuery: FindRequestsQuery) {
+        return this.requestService.findRequests(findRequestsQuery);
+    }
 }

@@ -1,5 +1,5 @@
-import { CallAsrHandler } from "./call-asr.handler";
+import { CalledAsrHandler } from "./called-asr.handler";
 
 export const EventHandlers = [
-    CallAsrHandler,
+    CalledAsrHandler,
 ];

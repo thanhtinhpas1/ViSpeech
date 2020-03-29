@@ -41,13 +41,12 @@ export class TokenDto extends BaseEntityDto {
     })
     userId: ObjectID;
 
-  // @IsUUID()
-  @IsString()
-  @Column({
-    nullable: false,
-    // type: 'uuid',
-  })
-  projectId: string;
+    @IsUUID()
+    @IsString()
+    @Column({
+        nullable: false,
+    })
+    projectId: string;
 
     @IsOptional()
     @Type(() => Number)

@@ -2,7 +2,7 @@ import { IEvent } from '@nestjs/cqrs';
 import { RequestDto } from 'requests/dtos/requests.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 
-export class CallAsrEvent implements IEvent {
+export class CalledAsrEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly requestDto: RequestDto,

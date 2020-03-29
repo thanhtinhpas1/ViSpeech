@@ -1,14 +1,18 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsIP, IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import { IsIP, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 
 @Entity('requests')
 export class RequestDto extends BaseEntityDto {
 
-    constructor(tokenId: string, host: string, duration:number, mimeType:string) {
+    constructor(tokenId: string, projectId: string, fileName: string, encoding: string, size: string,
+        duration: number, mimeType: string) {
         super();
         this.tokenId = tokenId;
-        this.host = host;
+        this.fileName = fileName;
+        this.encoding = encoding;
+        this.size = size;
+        this.projectId = projectId;
         this.duration = duration;
         this.mimeType = mimeType;
     }
@@ -18,10 +22,25 @@ export class RequestDto extends BaseEntityDto {
     @Column()
     tokenId: string;
 
-    @IsIP()
-    @IsString()
+    @IsNotEmpty()
+    @IsUUID()
     @Column()
-    host: string;
+    projectId: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @Column()
+    fileName: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @Column()
+    encoding: string;
+
+    @IsString()
+    @IsNotEmpty()
+    @Column()
+    size: string;
 
     @IsNumber()
     @IsPositive()
