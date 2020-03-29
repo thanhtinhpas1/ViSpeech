@@ -38,8 +38,8 @@ export class User extends AggregateRoot {
     //     this.apply(new UserRoleAssignedEvent(streamId, this.id, roleName, assignerId));
     // }
 
-    changePassword(streamId: string, newPassword: string, oldPassword: string) {
-        this.apply(new PasswordChangedEvent(streamId, this.id, newPassword, oldPassword));
+    changePassword(streamId: string) {
+        this.apply(new PasswordChangedEvent(streamId, this.data));
     }
 
     sendVerifyEmail(streamId: string) {

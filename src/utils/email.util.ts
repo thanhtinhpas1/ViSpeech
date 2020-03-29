@@ -1,7 +1,10 @@
 // using Twilio SendGrid's v3 Node.js Library
+
+import { config } from "../../config";
+
 // https://github.com/sendgrid/sendgrid-nodejs
 const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(config.SENDGRID_API_KEY);
 // console.log("SENDGRID_API_KEY ", process.env.SENDGRID_API_KEY)
 
 const hostUrl = 'http://localhost:3000/customer';

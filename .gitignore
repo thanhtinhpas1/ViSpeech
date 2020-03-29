@@ -99,6 +99,3 @@ api/swagger-spec/swagger.json
 eventstore/
 
 .vscode/
-
-# Sendgrid
-sendgrid.env

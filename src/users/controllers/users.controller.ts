@@ -1,4 +1,4 @@
-import {BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards, NotAcceptableException} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from 'auth/auth.service';
@@ -51,12 +51,16 @@ export class UsersController {
     @ApiResponse({status: 200, description: 'Change password.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Put('change-password')
-    async changePassword(@Body() body: ChangePasswordBody, @Req() request) {
-        if (!body || !body.oldPassword || !body.newPassword) throw new BadRequestException();
+    async changePassword(@Body() changePasswordBody: ChangePasswordBody, @Req() request) {
         const payload = this.authService.decode(request);
-        if (!payload) throw new UnauthorizedException();
-        const streamId = payload['id'];
-        return this.usersService.changePassword(streamId, payload['id'], body.newPassword, body.oldPassword);
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new UnauthorizedException();
+        }
+        if (payload['id'] !== changePasswordBody.userId) {
+            throw new NotAcceptableException();
+        }
+        const streamId = changePasswordBody.userId;
+        return this.usersService.changePassword(streamId, changePasswordBody);
     }
 
     /* Delete User */
@@ -69,7 +73,12 @@ export class UsersController {
     @Delete(':_id')
     async deleteUser(@Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
         const payload = this.authService.decode(request);
-        if (payload['id'] === userIdDto._id) throw new BadRequestException();
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new UnauthorizedException();
+        }
+        if (payload['id'] === userIdDto._id) {
+            throw new NotAcceptableException();
+        }
         const streamId = userIdDto._id;
         return this.usersService.deleteUser(streamId, userIdDto);
     }
@@ -79,7 +88,7 @@ export class UsersController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Send Verify Email']})
     @ApiResponse({status: 200, description: 'Send Verify Email.'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Roles([CONSTANTS.ROLE.USER])
     @Post('send-verify-email')
     async sendVerifyEmail(@Body() userIdDto: UserIdRequestParamsDto) {

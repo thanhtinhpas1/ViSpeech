@@ -7,6 +7,7 @@ import {DeleteTokenCommand} from '../commands/impl/delete-token.command';
 import {GetTokensQuery, GetTokenTypesQuery} from 'tokens/queries/impl/get-tokens.query';
 import {GetTokensByUserIdQuery} from 'tokens/queries/impl/get-tokens-by-userId';
 import {FindTokenQuery} from 'tokens/queries/impl/find-token.query';
+import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
 
 @Injectable()
 export class TokensService {
@@ -42,6 +43,12 @@ export class TokensService {
 
     async getTokensByUserId(getTokensByUserIdQuery: GetTokensByUserIdQuery) {
         const query = new GetTokensByUserIdQuery(getTokensByUserIdQuery.userId);
+        return await this.queryBus.execute(query);
+    }
+
+    async getTokensByUserIdAndProjectId(getTokensByUserIdAndProjectIdQuery: GetTokensByUserIdAndProjectIdQuery) {
+        const { userId, projectId } = getTokensByUserIdAndProjectIdQuery;
+        const query = new GetTokensByUserIdAndProjectIdQuery(userId, projectId);
         return await this.queryBus.execute(query);
     }
 

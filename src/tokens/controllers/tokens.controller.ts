@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CONSTANTS } from 'common/constant';
@@ -8,21 +8,29 @@ import { GetTokensQuery, GetTokenTypesQuery } from 'tokens/queries/impl/get-toke
 import { TokenDto, TokenIdRequestParamsDto } from '../dtos/tokens.dto';
 import { TokensService } from '../services/tokens.service';
 import { Roles } from 'auth/roles.decorator';
-import { TokenGuard } from 'auth/guards/token.guard';
+import { TokenGuard, TokenQueryGuard } from 'auth/guards/token.guard';
+import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
+import { AuthService } from 'auth/auth.service';
 
 @Controller('tokens')
 @ApiTags('Tokens')
 @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
 export class TokensController {
-    constructor(private readonly tokensService: TokensService) {
+    constructor(
+        private readonly tokensService: TokensService,
+        private readonly authService: AuthService) {
     }
 
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['Create Token'] })
     @ApiResponse({ status: 200, description: 'Create Token.' })
-    // TODO: Guard to check maked payment
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
+        if (!tokenDto.tokenType && !tokenDto.tokenTypeId) {
+            throw new BadRequestException("Token type or token type id must not be empty.")
+        }
+        tokenDto.value = this.authService.generateTokenWithUserId(tokenDto.userId);
         const streamId = tokenDto._id;
         return this.tokensService.createToken(streamId, tokenDto);
     }
@@ -33,6 +41,7 @@ export class TokensController {
     // TODO: make flow to regenerate token value
     @ApiOperation({ tags: ['Update Token'] })
     @ApiResponse({ status: 200, description: 'Update Token.' })
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updateToken(
         @Param() tokenIdDto: TokenIdRequestParamsDto,
@@ -73,6 +82,7 @@ export class TokensController {
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['List Tokens By UserId'] })
     @ApiResponse({ status: 200, description: 'List Tokens By UserId.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get('/user-tokens')
     async getTokensByUserId(
         @Query() getTokensByUserIdQuery: GetTokensByUserIdQuery,
@@ -80,13 +90,25 @@ export class TokensController {
         return this.tokensService.getTokensByUserId(getTokensByUserIdQuery);
     }
 
+    /* List Tokens By UserId And ProjectId */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['List Tokens By UserId And ProjectId'] })
+    @ApiResponse({ status: 200, description: 'List Tokens By UserId And ProjectId.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
+    @Get('/project-tokens')
+    async getTokensByUserIdAndProjectId(
+        @Query() getTokensByUserIdAndProjectIdQuery: GetTokensByUserIdAndProjectIdQuery,
+    ) {
+        return this.tokensService.getTokensByUserIdAndProjectId(getTokensByUserIdAndProjectIdQuery);
+    }
+
     /* Find Token */
 
     /*--------------------------------------------*/
-
-    // TODO: check permission find token belong to user
     @ApiOperation({ tags: ['Find Token'] })
     @ApiResponse({ status: 200, description: 'Find Token.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get(':id')
     async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
         return this.tokensService.findOne(findTokenQuery);

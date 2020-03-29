@@ -1,4 +1,4 @@
-import { CanActivate, Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from 'auth/auth.service';
 import { CONSTANTS } from 'common/constant';
 import { ProjectDto } from 'projects/dtos/projects.dto';
@@ -18,11 +18,14 @@ export class ProjectGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
         if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const project = await getMongoRepository(ProjectDto).findOne({_id: id});
+        if (!project) {
+            throw new NotFoundException(`Project with _id ${id} does not exist.`);
+        }
         if (project.userId === payload['id']) {
             return true;
         }
@@ -44,13 +47,16 @@ export class ProjectQueryGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
-        if (payload['roles'] && payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {
             const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
+            if (!project) {
+                throw new NotFoundException(`Project with _id ${id} does not exist.`);
+            }
             if (project.userId === payload['id']) {
                 return true;
             }
@@ -61,7 +67,7 @@ export class ProjectQueryGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to query projects.', 'ProjectGuard');
+        Logger.warn('User do not have permission to query projects.', 'ProjectQueryGuard');
         return false;
     }
 }

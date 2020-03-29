@@ -15,7 +15,7 @@ import {CommandHandlers} from './commands/handlers';
 import {UsersController} from './controllers/users.controller';
 import {UserDto} from './dtos/users.dto';
 import {EventHandlers} from './events/handlers';
-import {PasswordChangedEvent} from './events/impl/password-changed.event';
+import {PasswordChangedEvent, PasswordChangedSuccessEvent, PasswordChangedFailedEvent} from './events/impl/password-changed.event';
 import {UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent} from './events/impl/user-created.event';
 import {UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent} from './events/impl/user-deleted.event';
 import {UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent} from './events/impl/user-updated.event';
@@ -90,7 +90,9 @@ export class UsersModule implements OnModuleInit {
         UserUpdatedFailedEvent: (streamId, data, error) => new UserUpdatedFailedEvent(streamId, data, error),
 
         // change password
-        PasswordChangedEvent: (streamId, userId, newPassword, oldPassword) => new PasswordChangedEvent(streamId, userId, newPassword, oldPassword),
+        PasswordChangedEvent: (streamId, data) => new PasswordChangedEvent(streamId, data),
+        PasswordChangedSuccessEvent: (streamId, data) => new PasswordChangedSuccessEvent(streamId, data),
+        PasswordChangedFailedEvent: (streamId, data, error) => new PasswordChangedFailedEvent(streamId, data, error),
 
         // delete
         UserDeletedEvent: (streamId, data) => new UserDeletedEvent(streamId, data),

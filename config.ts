@@ -54,6 +54,7 @@ const configs = {
             secret: process.env.JWT_SECRET || 'vispeech',
         },
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+        SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
         KAFKA: {
             HOST: process.env.KAFKA_HOST || '0.0.0.0',
             PORT: process.env.KAFKA_PORT || 9092,

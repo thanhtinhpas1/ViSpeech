@@ -1,4 +1,4 @@
-import { CanActivate, Injectable, Logger, BadRequestException } from "@nestjs/common";
+import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { getMongoRepository } from "typeorm";
 import { CONSTANTS } from "../../common/constant";
 import { AuthService } from "../auth.service";
@@ -18,11 +18,14 @@ export class OrderGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
         if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const order = getMongoRepository(OrderDto).findOne({_id: id});
+        if (!order) {
+            throw new NotFoundException(`Order with _id ${id} does not exist.`);
+        }
         if (order['userId'] === payload['id']) {
             return true;
         }

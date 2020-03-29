@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {CommandBus, QueryBus} from '@nestjs/cqrs';
-import {UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
+import {UserDto, UserIdRequestParamsDto, ChangePasswordBody} from '../dtos/users.dto';
 import {UpdateUserCommand} from '../commands/impl/update-user.command';
 import {DeleteUserCommand} from '../commands/impl/delete-user.command';
 import {GetUsersQuery} from 'users/queries/impl/get-users.query';
@@ -42,8 +42,8 @@ export class UsersService {
         return await this.commandBus.execute(new VerifyEmailCommand(streamId, emailToken));
     }
 
-    async changePassword(streamId: string, userId: string, newPassword: string, oldPassword: string) {
-        return await this.commandBus.execute(new ChangePasswordCommand(streamId, userId, newPassword, oldPassword));
+    async changePassword(streamId: string, changePasswordBody: ChangePasswordBody) {
+        return await this.commandBus.execute(new ChangePasswordCommand(streamId, changePasswordBody));
     }
 
     async getUsers(getUsersQuery: GetUsersQuery) {

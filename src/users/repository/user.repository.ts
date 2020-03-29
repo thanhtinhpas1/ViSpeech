@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {UserDto} from 'users/dtos/users.dto';
+import {UserDto, ChangePasswordBody} from 'users/dtos/users.dto';
 import {User} from '../models/user.model';
 
 @Injectable()
@@ -43,9 +43,10 @@ export class UserRepository {
     //     return user;
     // }
 
-    async changePassword(streamId: string, userId: string, newPassword: string, oldPassword: string) {
-        const user = new User(userId);
-        user.changePassword(streamId, newPassword, oldPassword);
+    async changePassword(streamId: string, changePasswordBody: ChangePasswordBody) {
+        const user = new User(undefined);
+        user.setData(changePasswordBody);
+        user.changePassword(streamId);
         return user;
     }
 

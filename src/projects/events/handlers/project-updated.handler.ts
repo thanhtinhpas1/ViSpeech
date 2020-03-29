@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { Logger, NotFoundException } from "@nestjs/common";
 import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProjectDto } from "projects/dtos/projects.dto";
@@ -20,6 +20,11 @@ export class ProjectUpdatedHandler implements IEventHandler<ProjectUpdatedEvent>
         const { _id, ...projectInfo } = projectDto;
 
         try {
+            const project = await this.repository.findOne({ _id });
+            if (!project) {
+                throw new NotFoundException(`Project with _id ${_id} does not exist.`);
+            }
+
             const formattedInfo = Utils.removePropertyFromObject(projectInfo, "userId");
             return await this.repository.update({ _id }, formattedInfo);
         } catch (error) {

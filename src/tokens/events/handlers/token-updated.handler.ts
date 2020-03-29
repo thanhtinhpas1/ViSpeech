@@ -20,19 +20,25 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
         Logger.log(event.tokenDto._id, 'TokenUpdatedEvent'); // write here
         const {streamId, tokenDto} = event;
         const {_id, ...tokenInfo} = tokenDto;
-        let tokenTypeDto = null;
+        // let tokenTypeDto = null;
 
         try {
-            if (tokenInfo.tokenTypeId) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({_id: tokenInfo.tokenTypeId});
-                if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with _id ${tokenInfo.tokenTypeId} does not exist.`);
-                }
-            } else if (tokenInfo.tokenType) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({name: tokenInfo.tokenType});
+            // if (tokenInfo.tokenTypeId) {
+            //     tokenTypeDto = await this.repositoryTokenType.findOne({_id: tokenInfo.tokenTypeId});
+            //     if (!tokenTypeDto) {
+            //         throw new NotFoundException(`Token type with _id ${tokenInfo.tokenTypeId} does not exist.`);
+            //     }
+            // } else if (tokenInfo.tokenType) {
+            //     tokenTypeDto = await this.repositoryTokenType.findOne({name: tokenInfo.tokenType});
+            // }
+            // tokenInfo.minutes = tokenTypeDto.minutes;
+            const token = await this.repository.findOne({ _id });
+            if (!token) {
+                throw new NotFoundException(`Token with _id ${_id} does not exist.`);
             }
-            tokenInfo.minutes = tokenTypeDto.minutes;
-            return await this.repository.update({_id}, tokenInfo);
+
+            // Can only update usedMinutes
+            return await this.repository.update({_id}, { usedMinutes: tokenInfo.usedMinutes });
         } catch (error) {
             Logger.error(error, '', 'TokenUpdatedEvent');
         }

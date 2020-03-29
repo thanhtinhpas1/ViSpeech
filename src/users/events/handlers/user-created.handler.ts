@@ -49,6 +49,6 @@ export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSucce
 @EventsHandler(UserCreatedFailedEvent)
 export class UserCreatedFailHandler implements IEventHandler<UserCreatedFailedEvent> {
     handle(event: UserCreatedFailedEvent) {
-        Logger.log(event.error, 'UserCreatedFailEvent');
+        Logger.log(event.error, 'UserCreatedFailedEvent');
     }
 }

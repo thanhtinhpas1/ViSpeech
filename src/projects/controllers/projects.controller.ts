@@ -66,7 +66,7 @@ export class ProjectsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['List Projects'] })
   @ApiResponse({ status: 200, description: 'List Projects.' })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
+  @Roles([CONSTANTS.ROLE.ADMIN])
   @Get()
   async getProjects(@Query() getProjectsQuery: GetProjectsQuery) {
     return this.projectsService.getProjects(getProjectsQuery);

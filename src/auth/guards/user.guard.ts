@@ -1,16 +1,11 @@
-import {BadRequestException, CanActivate, Injectable, Logger} from '@nestjs/common';
+import {BadRequestException, CanActivate, Injectable, Logger, UnauthorizedException} from '@nestjs/common';
 import {AuthService} from '../auth.service';
-import {Repository} from 'typeorm';
-import {UserDto} from '../../users/dtos/users.dto';
 import {CONSTANTS} from '../../common/constant';
-import {InjectRepository} from '@nestjs/typeorm';
 
 @Injectable()
 export class UserGuard implements CanActivate {
     constructor(
         private readonly authService: AuthService,
-        @InjectRepository(UserDto)
-        private userRepository: Repository<UserDto>,
     ) {
     }
 
@@ -21,9 +16,9 @@ export class UserGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
-        if (payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.ADMIN) !== -1) return true;
+        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
         if (payload['id'] === id) {
             return true;
         }
@@ -46,7 +41,7 @@ export class VerifyEmailGuard implements CanActivate {
 
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
 
         const decodedEmailToken = this.authService.decodeJwtToken(emailToken);

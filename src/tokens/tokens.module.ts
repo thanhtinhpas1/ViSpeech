@@ -21,10 +21,11 @@ import {TokensService} from './services/tokens.service';
 import {FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent} from './events/impl/free-token-created.event';
 import {OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent} from './events/impl/ordered-token-created.event';
 import {AuthModule} from '../auth/auth.module';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([TokenDto, TokenTypeDto]),
+        TypeOrmModule.forFeature([TokenDto, TokenTypeDto, PermissionDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
     ],

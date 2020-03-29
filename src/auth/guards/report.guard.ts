@@ -1,4 +1,4 @@
-import { CanActivate, Injectable, Logger, BadRequestException } from "@nestjs/common";
+import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { ReportDto } from "reports/dtos/reports.dto";
 import { getMongoRepository } from "typeorm";
 import { CONSTANTS } from "../../common/constant";
@@ -18,11 +18,14 @@ export class ReportGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
         if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const report = getMongoRepository(ReportDto).findOne({_id: id});
+        if (!report) {
+            throw new NotFoundException(`Report with _id ${id} does not exist.`);
+        }
         if (report['userId'] === payload['id']) {
             return true;
         }

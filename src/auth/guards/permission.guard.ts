@@ -1,4 +1,4 @@
-import {BadRequestException, CanActivate, Injectable, Logger} from '@nestjs/common';
+import {BadRequestException, CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {AuthService} from 'auth/auth.service';
 import {CONSTANTS} from 'common/constant';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
@@ -18,11 +18,14 @@ export class PermissionGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
         if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
         const permission = await getMongoRepository(PermissionDto).findOne({_id: id});
+        if (!permission) {
+            throw new NotFoundException(`Permission with _id ${id} does not exist.`);
+        }
         if (permission.assignerId === payload['id']) {
             return true;
         }
@@ -46,11 +49,11 @@ export class AssignPermissionGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
 
-        const isAdmin = payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.ADMIN) !== -1;
-        const isManagerUser = payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.MANAGER_USER) !== -1;
+        const isAdmin = payload['roles'].includes(CONSTANTS.ROLE.ADMIN);
+        const isManagerUser = payload['roles'].includes(CONSTANTS.ROLE.MANAGER_USER);
         if (isAdmin || (isManagerUser && paramId !== payload['id'])) {
             return true;
         }
@@ -87,7 +90,7 @@ export class ReplyPermisisonAssignGuard implements CanActivate {
 
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
 
         const decodedEmailToken = this.authService.decodeJwtToken(emailToken);

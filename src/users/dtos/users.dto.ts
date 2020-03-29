@@ -23,6 +23,10 @@ export class UserIdRequestParamsDto {
 export class ChangePasswordBody {
     @IsNotEmpty()
     @IsString()
+    readonly userId;
+
+    @IsNotEmpty()
+    @IsString()
     readonly oldPassword;
 
     @IsNotEmpty()

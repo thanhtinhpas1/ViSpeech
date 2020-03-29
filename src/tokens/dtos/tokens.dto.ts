@@ -27,8 +27,8 @@ export class TokenDto extends BaseEntityDto {
         this.orderId = orderId;
     }
 
+    @IsOptional()
     @IsString()
-    @IsNotEmpty()
     @Column({
         unique: true,
     })
@@ -41,7 +41,8 @@ export class TokenDto extends BaseEntityDto {
     })
     userId: ObjectID;
 
-    @IsUUID()
+    // @IsUUID()
+    // free token does not have projectId, set projectId = ""
     @IsString()
     @Column({
         nullable: false,
@@ -77,7 +78,7 @@ export class TokenDto extends BaseEntityDto {
     })
     tokenTypeId: ObjectID;
 
-    @IsEmpty()
+    @IsOptional()
     @Column({
         default: true,
     })

@@ -1,4 +1,4 @@
-import { BadRequestException, CanActivate, Injectable, Logger } from '@nestjs/common';
+import { CanActivate, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'auth/auth.service';
 import { CONSTANTS } from 'common/constant';
@@ -21,7 +21,7 @@ export class RequestGuard implements CanActivate {
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
-            throw new BadRequestException();
+            throw new UnauthorizedException();
         }
         if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
 
