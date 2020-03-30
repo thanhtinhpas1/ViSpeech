@@ -2,9 +2,18 @@ import UserTypes from './user.types'
 
 const INITIAL_STATE = {
   currentUser: null,
-  errorMessage: null,
-  registerUser: null,
-  isLoading: false,
+  login: {
+    user: {},
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
+  register: {
+    newUser: null,
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   getList: {
     userList: [],
     numberOfUsers: 0,
@@ -73,41 +82,56 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case UserTypes.LOGIN_START:
       return {
         ...state,
-        isLoading: true,
+        login: {
+          ...state.login,
+          isLoading: true,
+        },
       }
     case UserTypes.LOGIN_SUCCESS:
       return {
         ...state,
-        errorMessage: null,
         currentUser: action.payload,
-        isLoading: false,
+        login: {
+          isLoading: false,
+          isSuccess: true,
+        },
       }
     case UserTypes.LOGIN_FAILURE:
       return {
         ...state,
-        errorMessage: action.payload,
-        currentUser: null,
-        isLoading: false,
+        login: {
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
       }
     // REGISTER
     case UserTypes.REGISTER_START:
       return {
         ...state,
-        isLoading: true,
+        register: {
+          ...state.register,
+          isLoading: true,
+        },
       }
     case UserTypes.REGISTER_SUCCESS:
       return {
         ...state,
-        errorMessage: null,
-        registerUser: action.payload,
-        isLoading: false,
+        register: {
+          newUser: action.payload,
+          isLoading: false,
+          isSuccess: true,
+        },
       }
     case UserTypes.REGISTER_FAILURE:
       return {
         ...state,
-        errorMessage: action.payload,
-        registerUser: null,
-        isLoading: false,
+        register: {
+          ...state.register,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
       }
     // GET USER LIST
     case UserTypes.GET_USER_LIST:

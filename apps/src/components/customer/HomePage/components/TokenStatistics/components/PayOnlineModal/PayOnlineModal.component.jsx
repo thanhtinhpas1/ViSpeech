@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import OrderService from 'services/order.service'
@@ -10,7 +10,7 @@ import PayReviewModal from './components/PayReviewModal/PayReviewModal.component
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY)
 
-const CheckoutForm = ({ checkoutInfo, onOrderSuccess, getMyProjectListObj }) => {
+const CheckoutForm = ({ checkoutInfo, onOrderSuccess, myProjectList }) => {
   const stripe = useStripe()
   const elements = useElements()
 
@@ -99,12 +99,8 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess, getMyProjectListObj }) => 
     <form onSubmit={onSubmit}>
       <div className="mgt-1-5x input-item">
         <h5 className="font-mid">Chọn project</h5>
-        <select
-          className="custom-select input-item__select-project"
-          required
-          name="selectedProject"
-        >
-          {getMyProjectListObj.myProjectList.map(project => {
+        <select className="custom-select" required name="selectedProject">
+          {myProjectList.map(project => {
             return <option value={project._id}>{project.name}</option>
           })}
         </select>
@@ -114,11 +110,12 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess, getMyProjectListObj }) => 
           id="selected-project"
           onChange={e => console.log(e.target.value)}
         >
-          {getMyProjectListObj.myProjectList.map(project => {
+          {myProjectList.map(project => {
             return <option value={project._id}>{project.name}</option>
           })}
         </select> */}
       </div>
+      <h5 className="mgt-1-5x font-mid">Vui lòng nhập thông tin thẻ</h5>
       <CardElement options={cardElementOptions} />
       <div className="mgt-1-5x pdb-2-5x pdt-1-5x">
         <input
@@ -173,14 +170,8 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess, getMyProjectListObj }) => 
   )
 }
 
-const PayOnlineModal = ({ currentUser, payOnlineModal, getMyProjectListObj, getMyProjects }) => {
+const PayOnlineModal = ({ payOnlineModal, myProjectList }) => {
   const [payReview, setPayReview] = useState({})
-
-  useEffect(() => {
-    if (currentUser._id) {
-      getMyProjects({ userId: currentUser._id })
-    }
-  }, [currentUser._id, getMyProjects])
 
   const onOrderSuccess = orderData => {
     setPayReview({
@@ -205,13 +196,12 @@ const PayOnlineModal = ({ currentUser, payOnlineModal, getMyProjectListObj, getM
                   </>
                 )}
               </p>
-              <h5 className="mgt-1-5x font-mid">Vui lòng nhập thông tin thẻ</h5>
               <div className="mgt-1-5x">
                 <Elements stripe={stripePromise}>
                   <CheckoutForm
                     checkoutInfo={payOnlineModal}
                     onOrderSuccess={onOrderSuccess}
-                    getMyProjectListObj={getMyProjectListObj}
+                    myProjectList={myProjectList}
                   />
                 </Elements>
               </div>

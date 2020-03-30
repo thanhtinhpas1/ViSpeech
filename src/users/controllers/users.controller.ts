@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards, NotAcceptableException} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards, NotAcceptableException, BadRequestException} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from 'auth/auth.service';
@@ -24,7 +24,15 @@ export class UsersController {
     @ApiOperation({tags: ['Create User']})
     @ApiResponse({status: 200, description: 'Create User.'})
     @Post()
-    async createUser(@Body() userDto: UserDto): Promise<UserDto> {
+    async createUser(@Body() userDto: UserDto, @Req() request): Promise<UserDto> {
+        if (!request.body.roles || !Array.isArray(request.body.roles)) {
+            throw new BadRequestException("Missing user roles or user roles must be an array.");
+        }
+        request.body.roles.forEach(role => {
+            if (typeof role !== "object" || !Utils.isValidRole(role.name)) {
+                throw new BadRequestException("User role is not a valid role.");
+            }
+        });
         const streamId = userDto._id;
         return await this.usersService.createUserStart(streamId, userDto);
     }
@@ -104,8 +112,9 @@ export class UsersController {
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), VerifyEmailGuard)
     @Roles([CONSTANTS.ROLE.USER])
     @Post('verify-email')
-    async verifyEmail(@Body() emailToken: string) {
+    async verifyEmail(@Body() body) {
         const streamId = Utils.getUuid();
+        const emailToken = body['emailToken'];
         return this.usersService.verifyEmail(streamId, emailToken);
     }
 

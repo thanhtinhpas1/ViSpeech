@@ -1,5 +1,5 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN } from 'utils/constant'
+import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import apiUrl from './api-url'
 
 export default class TokenService {
@@ -27,12 +27,12 @@ export default class TokenService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message)
+          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err)
+        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -54,12 +54,12 @@ export default class TokenService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message)
+          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err)
+        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
       })
   }
 }

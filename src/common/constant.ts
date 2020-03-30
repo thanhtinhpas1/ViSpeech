@@ -17,7 +17,7 @@ export const CONSTANTS = {
         PENDING: 'PENDING',
         SUCCESS: 'SUCCESS',
         FAILURE: 'FAILURE',
-        APPROVED: 'APPROVED',
+        ACCEPTED: 'ACCEPTED',
         REJECTED: 'REJECTED',
         INVALID: 'INVALID',
     },

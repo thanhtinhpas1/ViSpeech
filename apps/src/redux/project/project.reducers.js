@@ -26,7 +26,7 @@ const INITIAL_STATE = {
   },
 }
 
-const orderReducer = (state = INITIAL_STATE, action) => {
+const projectReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case ProjectTypes.CLEAR_PROJECT_STATE:
       return {
@@ -147,4 +147,4 @@ const orderReducer = (state = INITIAL_STATE, action) => {
   }
 }
 
-export default orderReducer
+export default projectReducer

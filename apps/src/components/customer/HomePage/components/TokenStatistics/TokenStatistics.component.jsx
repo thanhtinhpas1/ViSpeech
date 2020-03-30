@@ -8,30 +8,26 @@ import { CUSTOMER_PATH } from 'utils/constant'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
 
-const TokenStatistics = ({ history, currentUser, getTokenTypeListObj, getTokenTypes }) => {
+const TokenStatistics = ({
+  history,
+  currentUser,
+  getTokenTypeListObj,
+  getMyProjectListObj,
+  getTokenTypes,
+  getMyProjects,
+}) => {
   const [payOnlineModal, setPayOnlineModal] = useState({})
   const [infoModal, setInfoModal] = useState({})
 
   useEffect(() => {
     getTokenTypes()
-    // const payOptionsArr = [
-    //   {
-    //     type: 'free',
-    //     price: 'miễn phí',
-    //     time: '10 tháng',
-    //     defaultChecked: true,
-    //   },
-    //   {
-    //     type: 'three-month',
-    //     price: '100.000đ',
-    //     time: '1 tháng',
-    //     saleOff: { price: '50.000đ', time: '1 tháng' },
-    //   },
-    //   { type: 'payeth', price: '500.000đ', time: '6 tháng' },
-    //   { type: 'one-year', price: '800.000đ', time: '1 năm' },
-    // ]
-    // setPayOptions(payOptionsArr)
   }, [getTokenTypes])
+
+  useEffect(() => {
+    if (currentUser._id) {
+      getMyProjects({ userId: currentUser._id })
+    }
+  }, [currentUser._id, getMyProjects])
 
   const openPayOnlineModal = () => {
     if (!Utils.isEmailVerified(currentUser.roles)) {
@@ -54,6 +50,27 @@ const TokenStatistics = ({ history, currentUser, getTokenTypeListObj, getTokenTy
       window.$('#info-modal').modal('show')
       return
     }
+
+    if (getMyProjectListObj.myProjectList.length === 0) {
+      const infoObj = {
+        title: 'Không thể thực hiện tác vụ',
+        message: 'Bạn chưa có project nào. Tạo project để thực hiện tác vụ này.',
+        icon: {
+          isSuccess: false,
+        },
+        button: {
+          content: 'Tạo project',
+          clickFunc: () => {
+            window.$('#info-modal').modal('hide')
+            history.push(`${CUSTOMER_PATH}/create-project`)
+          },
+        },
+      }
+      setInfoModal(infoObj)
+      window.$('#info-modal').modal('show')
+      return
+    }
+
     const selectedTypeId = window
       .$('.token-currency-choose .pay-option input[name="tokenType"]:checked')
       .attr('id')
@@ -109,7 +126,10 @@ const TokenStatistics = ({ history, currentUser, getTokenTypeListObj, getTokenTy
           </a>
         </div>
       </div>
-      <PayOnlineModal payOnlineModal={payOnlineModal} />
+      <PayOnlineModal
+        payOnlineModal={payOnlineModal}
+        myProjectList={getMyProjectListObj.myProjectList}
+      />
       <InfoModal infoModal={infoModal} />
     </>
   )

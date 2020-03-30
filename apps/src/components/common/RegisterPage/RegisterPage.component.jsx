@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import { ROLES } from 'utils/constant'
 
-const RegisterPage = ({ user, register, onClearUserState }) => {
+const RegisterPage = ({ registerObj, register, onClearUserState }) => {
   useEffect(() => {
     onClearUserState()
   }, [onClearUserState])
@@ -20,13 +20,13 @@ const RegisterPage = ({ user, register, onClearUserState }) => {
       lastName: form.elements.lastName.value,
       firstName: form.elements.firstName.value,
       password: form.elements.password.value,
-      roles: [ROLES.USER],
+      roles: [{ name: ROLES.USER }],
     }
 
     register(user)
   }
 
-  if (user.registerUser) {
+  if (registerObj.newUser) {
     return <Redirect to="/login" />
   }
 
@@ -41,6 +41,18 @@ const RegisterPage = ({ user, register, onClearUserState }) => {
           </div>
           <div className="page-ath-form">
             <h2 className="page-ath-heading">Đăng ký</h2>
+            {registerObj.message && (
+              <div
+                className="alert alert-danger alert-dismissible fade show"
+                id="alert-login"
+                role="alert"
+              >
+                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                {registerObj.message}
+              </div>
+            )}
             <form onSubmit={e => handleOnSubmit(e)}>
               <div className="input-item">
                 <input

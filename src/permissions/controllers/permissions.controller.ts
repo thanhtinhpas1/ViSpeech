@@ -94,7 +94,6 @@ export class PermissionsController {
 
     /*--------------------------------------------*/
 
-    // TODO: check permission find permission belong to user
     @ApiOperation({tags: ['Find Permission']})
     @ApiResponse({status: 200, description: 'Find Permission.'})
     @Get(':id')

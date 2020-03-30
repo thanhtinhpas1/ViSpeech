@@ -3,7 +3,8 @@ import RegisterPage from './RegisterPage.component'
 import { registerStart, onClearUserState } from '../../../redux/user/user.actions'
 
 const mapStateToProps = state => ({
-  user: state.user,
+  currentUser: state.user.currentUser,
+  registerObj: state.user.register,
 })
 
 const mapDispatchToProps = dispatch => ({

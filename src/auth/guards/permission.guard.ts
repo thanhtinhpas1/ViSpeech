@@ -102,7 +102,7 @@ export class ReplyPermisisonAssignGuard implements CanActivate {
 
         const decodedEmailToken = this.authService.decodeJwtToken(emailToken);
         if (!decodedEmailToken || !decodedEmailToken['assignerId'] || !decodedEmailToken['assigneeId'] || !decodedEmailToken['projectId']) {
-            throw new BadRequestException();
+            throw new BadRequestException("Token is invalid.");
         }
 
         if (decodedEmailToken['assigneeId'] === requestJwt['id']) {

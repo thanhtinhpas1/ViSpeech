@@ -66,7 +66,7 @@ export class TokenQueryGuard implements CanActivate {
                 return true;
             }
             const permission = await getMongoRepository(PermissionDto)
-                .findOne({ assigneeId: payload['id'], projectId: token.projectId, status: CONSTANTS.STATUS.APPROVED });
+                .findOne({ assigneeId: payload['id'], projectId: token.projectId, status: CONSTANTS.STATUS.ACCEPTED });
             if (permission) {
                 return true;
             }
@@ -80,7 +80,7 @@ export class TokenQueryGuard implements CanActivate {
         // verify assignee
         if (userId && projectId) {
             const permission = await getMongoRepository(PermissionDto)
-                .findOne({ assigneeId: payload['id'], assignerId: userId, projectId, status: CONSTANTS.STATUS.APPROVED });
+                .findOne({ assigneeId: payload['id'], assignerId: userId, projectId, status: CONSTANTS.STATUS.ACCEPTED });
             if (permission) {
                 return true;
             }

@@ -4,6 +4,7 @@ import {Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
 import {Repository} from 'typeorm';
+import { Utils } from 'utils';
 
 @EventsHandler(PermissionCreatedEvent)
 export class PermissionCreatedHandler implements IEventHandler<PermissionCreatedEvent> {
@@ -20,6 +21,7 @@ export class PermissionCreatedHandler implements IEventHandler<PermissionCreated
         let permission = JSON.parse(JSON.stringify(permissionDto));
 
         try {
+            permission.permissions = Utils.convertToArray(permission.permissions);
             await this.repository.save(permission);
             this.eventBus.publish(new PermissionCreatedSuccessEvent(streamId, permissionDto));
         } catch (error) {

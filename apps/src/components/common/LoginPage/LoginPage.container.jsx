@@ -3,7 +3,8 @@ import LoginPage from './LoginPage.component'
 import { loginStart, onClearUserState } from '../../../redux/user/user.actions'
 
 const mapStateToProps = state => ({
-  user: state.user,
+  currentUser: state.user.currentUser,
+  loginObj: state.user.login,
 })
 
 const mapDispatchToProps = dispatch => ({

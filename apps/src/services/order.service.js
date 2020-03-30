@@ -1,5 +1,5 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN } from 'utils/constant'
+import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import apiUrl from './api-url'
 
 export default class OrderService {
@@ -21,13 +21,14 @@ export default class OrderService {
         return response.text()
       })
       .then(result => {
+        const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          throw new Error(result.error)
+          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
         }
-        return result ? JSON.parse(result) : {}
+        return resultObj
       })
       .catch(err => {
-        throw new Error(err)
+        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -50,12 +51,12 @@ export default class OrderService {
       })
       .then(result => {
         if (status !== 201) {
-          throw new Error(result.error)
+          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err)
+        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -84,12 +85,12 @@ export default class OrderService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message)
+          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err)
+        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
       })
   }
 }

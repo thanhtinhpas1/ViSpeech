@@ -49,7 +49,7 @@ export class VerifyEmailGuard implements CanActivate {
 
         const decodedEmailToken = this.authService.decodeJwtToken(emailToken);
         if (!decodedEmailToken || !decodedEmailToken['id']) {
-            throw new BadRequestException();
+            throw new BadRequestException("Token is invalid.");
         }
 
         if (decodedEmailToken['id'] === requestJwt['id']) {

@@ -31,7 +31,6 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 
         try {
             const assignee = await this.userRepository.findOne({username: assigneeUsername});
-            console.log("assignee ", assignee)
             if (!assignee) {
                 throw new NotFoundException(`User with username "${assigneeUsername}" does not exist.`);
             }
@@ -47,8 +46,8 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
                 throw new NotFoundException(`User with _id ${assignerId} does not exist.`);
             }
 
-            const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions);
-            await EmailUtils.sendInviteToJoinProjectEmail(assigner.username, assignee.username, project.name, assignee.email, joinProjectToken);
+            //const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions);
+            //await EmailUtils.sendInviteToJoinProjectEmail(assigner.username, assignee.username, project.name, assignee.email, joinProjectToken);
             this.eventBus.publish(new PermissionAssignEmailSentSuccessEvent(streamId, permissionAssignDto));
         } catch (error) {
             this.eventBus.publish(new PermissionAssignEmailSentFailedEvent(streamId, permissionAssignDto, error.toString()));

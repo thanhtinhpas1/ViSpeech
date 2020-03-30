@@ -56,7 +56,7 @@ export class PermissionResponseDto {
 
     @IsString()
     @IsIn([
-        CONSTANTS.STATUS.APPROVED,
+        CONSTANTS.STATUS.ACCEPTED,
         CONSTANTS.STATUS.REJECTED
     ])
     @Column()
@@ -114,7 +114,7 @@ export class PermissionDto extends BaseEntityDto {
     @IsString()
     @IsIn([
         CONSTANTS.STATUS.PENDING,
-        CONSTANTS.STATUS.APPROVED,
+        CONSTANTS.STATUS.ACCEPTED,
         CONSTANTS.STATUS.REJECTED,
         CONSTANTS.STATUS.INVALID,
     ])

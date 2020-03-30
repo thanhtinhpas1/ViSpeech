@@ -27,11 +27,11 @@ export class GetAcceptedProjectsByUserIdHandler
         permissions = await this.permissionDtoRepository.find({
           skip: offset,
           take: limit,
-          where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.APPROVED, CONSTANTS.STATUS.REJECTED] } }
+          where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED] } }
         });
       } else {
         permissions = await this.permissionDtoRepository.find({
-          where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.APPROVED, CONSTANTS.STATUS.REJECTED] } }
+          where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED] } }
         });
       }
 

@@ -7,9 +7,15 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  replyPermissionAssign: {
+    reply: null,
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
-const orderReducer = (state = INITIAL_STATE, action) => {
+const permissionReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case PermissionTypes.CLEAR_PERMISSION_STATE:
       return {
@@ -43,9 +49,37 @@ const orderReducer = (state = INITIAL_STATE, action) => {
           message: action.payload,
         },
       }
+    // REPLY PERMISSION
+    case PermissionTypes.REPLY_PERMISSION_ASSIGN:
+      return {
+        ...state,
+        replyPermissionAssign: {
+          ...state.replyPermissionAssign,
+          isLoading: true,
+        },
+      }
+    case PermissionTypes.REPLY_PERMISSION_ASSIGN_SUCCESS:
+      return {
+        ...state,
+        replyPermissionAssign: {
+          isLoading: false,
+          isSuccess: true,
+          reply: action.payload,
+        },
+      }
+    case PermissionTypes.REPLY_PERMISSION_ASSIGN_FAILURE:
+      return {
+        ...state,
+        replyPermissionAssign: {
+          ...state.replyPermissionAssign,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
     default:
       return state
   }
 }
 
-export default orderReducer
+export default permissionReducer

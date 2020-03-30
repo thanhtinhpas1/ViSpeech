@@ -74,8 +74,8 @@ export function* authenWithSocialSaga() {
 // ==== register
 export function* register({ payload: user }) {
   try {
-    const registerUser = yield UserService.register(user)
-    yield put(registerSuccess(registerUser))
+    yield UserService.register(user)
+    yield put(registerSuccess(user))
   } catch (err) {
     yield put(registerFailure(err.message))
   }

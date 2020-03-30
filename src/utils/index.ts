@@ -48,5 +48,15 @@ export const Utils = {
     calculateDuration(fileSize) {
         const size = Number(fileSize);
         return parseFloat(((size - 44) / (60 * 100000)).toFixed(3));
-    }
+    },
+    isValidRole: (roleName) => {
+        const validRoles = Object.keys(CONSTANTS.ROLE);
+        return validRoles.includes(roleName);
+    },
+    convertToArray: param => {
+        if (!Array.isArray(param)) {
+            return [param];
+        }
+        return param;
+    },
 };

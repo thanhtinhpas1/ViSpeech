@@ -41,7 +41,7 @@ export const EmailUtils = {
     },
     sendInviteToJoinProjectEmail: (assigner, assignee, project, to, token) => {
         const subject = 'Lời mời tham gia project';
-        const content = `Chào ${assignee}, người dùng ${assigner} mời bạn tham gia project "${project}". Click vào link dưới đây để chấp nhận lời mời: ${hostUrl}/accept-project/${token}`;
+        const content = `Chào ${assignee}, người dùng ${assigner} mời bạn tham gia project "${project}". Click vào link dưới đây để chấp nhận lời mời: ${hostUrl}/reply-permission-assign/${token}`;
         return sendEmail(to, subject, content);
     },
 };

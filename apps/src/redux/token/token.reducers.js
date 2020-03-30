@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   },
 }
 
-const userReducer = (state = INITIAL_STATE, action) => {
+const tokenReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case TokenTypes.CLEAR_TOKEN_STATE:
       return {
@@ -82,4 +82,4 @@ const userReducer = (state = INITIAL_STATE, action) => {
   }
 }
 
-export default userReducer
+export default tokenReducer
