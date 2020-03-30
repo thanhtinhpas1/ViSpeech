@@ -16,7 +16,7 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
     async execute(query: FindOrderQuery): Promise<any> {
         Logger.log('Async FindOrderQuery...', 'FindOrderQuery');
         try {
-            return await this.repository.findOne(query.id);
+            return await this.repository.findOne({ _id: query.id });
         } catch (error) {
             Logger.error(error, '', 'FindOrderQuery');
         }

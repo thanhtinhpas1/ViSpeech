@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import { ROLES } from './constant'
 
 const Utils = {
@@ -16,11 +17,7 @@ const Utils = {
     return rolesInText.trim()
   },
   getRolesInArray: roleList => {
-    const rolesInArray = []
-    roleList.forEach(role => {
-      rolesInArray.push(role.name)
-    })
-    return rolesInArray
+    return roleList.map(role => role.name)
   },
   formatRolesToSubmit: roleList => {
     const roles = []
@@ -73,6 +70,9 @@ const Utils = {
   },
   isEmailVerified: roles => {
     return Utils.getRolesInArray(roles).indexOf(ROLES.MANAGER_USER) !== -1
+  },
+  useQuery: () => {
+    return new URLSearchParams(useLocation().search)
   },
 }
 

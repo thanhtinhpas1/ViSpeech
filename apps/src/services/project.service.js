@@ -101,4 +101,31 @@ export default class ProjectService {
         throw new Error(err)
       })
   }
+
+  static getProjectInfo = id => {
+    const api = `${apiUrl}/projects/${id}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(result.message)
+        }
+        return result
+      })
+      .catch(err => {
+        throw new Error(err)
+      })
+  }
 }

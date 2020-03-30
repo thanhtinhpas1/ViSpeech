@@ -4,13 +4,13 @@ import apiUrl from './api-url'
 
 export default class TokenService {
   static getTokenList = filterConditions => {
-    const { userId, pageIndex, pageSize } = filterConditions
+    const { userId, projectId, pageIndex, pageSize } = filterConditions
     const offset = pageIndex * pageSize
     const limit = pageSize
 
-    const api = `${apiUrl}/tokens/user-tokens?userId=${encodeURIComponent(
+    const api = `${apiUrl}/tokens/project-tokens?userId=${encodeURIComponent(
       userId
-    )}&offset=${offset}&limit=${limit}`
+    )}&projectId=${projectId}&offset=${offset}&limit=${limit}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400

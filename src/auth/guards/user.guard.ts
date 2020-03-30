@@ -18,7 +18,10 @@ export class UserGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
+
         if (payload['id'] === id) {
             return true;
         }

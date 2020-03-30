@@ -29,19 +29,16 @@ export class GetAcceptedProjectsByUserIdHandler
           take: limit,
           where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.APPROVED, CONSTANTS.STATUS.REJECTED] } }
         });
-        permissions.forEach(async permission => {
-          const project = await this.repository.findOne({ _id: permission.projectId });
-          result.push({ ...project, status: permission.status });
-        })
       } else {
         permissions = await this.permissionDtoRepository.find({
           where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.APPROVED, CONSTANTS.STATUS.REJECTED] } }
         });
-        permissions.forEach(async permission => {
-          const project = await this.repository.findOne({ _id: permission.projectId });
-          result.push({ ...project, status: permission.status });
-        })
       }
+
+      permissions.forEach(async permission => {
+        const project = await this.repository.findOne({ _id: permission.projectId });
+        result.push({ ...project, status: permission.status });
+      })
       return result;
     } catch (error) {
       Logger.error(error, "", "GetAcceptedProjectsByUserIdQuery");

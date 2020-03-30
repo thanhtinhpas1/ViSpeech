@@ -2,11 +2,24 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { CUSTOMER_PATH } from 'utils/constant'
 import ReactTable from 'components/customer/ReactTable/ReactTable.component'
+import { Link } from 'react-router-dom'
 
-const TokensWalletPage = ({ currentUser, getTokenListObj, getTokens }) => {
+const TokensWalletPage = ({
+  match,
+  currentUser,
+  getProjectInfoObj,
+  getTokenListObj,
+  getProjectInfo,
+  getTokens,
+}) => {
+  useEffect(() => {
+    const { id } = match.params
+    getProjectInfo(id)
+  }, [match.params, getProjectInfo])
+
   const columns = [
     {
       Header: 'Token',
@@ -93,10 +106,11 @@ const TokensWalletPage = ({ currentUser, getTokenListObj, getTokens }) => {
 
   const getUserTokens = useCallback(
     ({ pageIndex, pageSize }) => {
+      const { id } = match.params
       const userId = currentUser._id
-      getTokens({ userId, pageIndex, pageSize })
+      getTokens({ userId, projectId: id, pageIndex, pageSize })
     },
-    [currentUser._id, getTokens]
+    [currentUser._id, getTokens, match.params]
   )
 
   return (
@@ -104,9 +118,31 @@ const TokensWalletPage = ({ currentUser, getTokenListObj, getTokens }) => {
       <div className="container">
         <div className="card content-area">
           <div className="card-innr">
-            <div className="card-head">
-              <h4 className="card-title">Ví token</h4>
+            <div className="card-head d-flex justify-content-between align-items-center">
+              {getProjectInfoObj.project && (
+                <>
+                  <h4 className="card-title mb-0">{getProjectInfoObj.project.name}</h4>
+                  {currentUser && getProjectInfoObj.project.userId === currentUser._id && (
+                    <>
+                      <Link
+                        to={`${CUSTOMER_PATH}/assign-permission?projectName=${getProjectInfoObj.project.name}`}
+                        className="btn btn-sm btn-auto btn-primary d-sm-block d-none"
+                      >
+                        Mời tham gia
+                        <em className="fas fa-user-plus ml-3" />
+                      </Link>
+                      <Link
+                        to={`${CUSTOMER_PATH}/assign-permission?projectName=${getProjectInfoObj.project.name}`}
+                        className="btn btn-icon btn-sm btn-primary d-sm-none"
+                      >
+                        <em className="fas fa-user-plus" />
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
             </div>
+            <div className="gaps-1x" />
             {currentUser._id && (
               <ReactTable
                 columns={columns}

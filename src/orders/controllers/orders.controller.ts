@@ -65,16 +65,6 @@ export class OrdersController {
         return this.ordersService.getOrders(getOrdersQuery);
     }
 
-    /* Find Order */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Order']})
-    @ApiResponse({status: 200, description: 'Get Order.'})
-    @Get(':id')
-    async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {
-        return this.ordersService.findOne(findOrderQuery);
-    }
-
     /* List Orders By UserId */
 
     /*--------------------------------------------*/
@@ -97,5 +87,15 @@ export class OrdersController {
         } catch (err) {
             throw err;
         }
+    }
+
+    /* Find Order */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Get Order']})
+    @ApiResponse({status: 200, description: 'Get Order.'})
+    @Get(':id')
+    async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {
+        return this.ordersService.findOne(findOrderQuery);
     }
 }

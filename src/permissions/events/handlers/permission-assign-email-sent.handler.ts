@@ -31,6 +31,7 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 
         try {
             const assignee = await this.userRepository.findOne({username: assigneeUsername});
+            console.log("assignee ", assignee)
             if (!assignee) {
                 throw new NotFoundException(`User with username "${assigneeUsername}" does not exist.`);
             }

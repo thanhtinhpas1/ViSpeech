@@ -2504,7 +2504,8 @@ select {
   appearance: none;
 }
 select:focus {
-  outline: none;
+  outline: none !important;
+  box-shadow: 0 0 0 0.2rem rgba(255,255,255,0) !important;
 }
 select.select-sm {
   height: 37px;

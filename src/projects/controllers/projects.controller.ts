@@ -72,18 +72,6 @@ export class ProjectsController {
     return this.projectsService.getProjects(getProjectsQuery);
   }
 
-  /* Find Project */
-
-  /*--------------------------------------------*/
-  @ApiOperation({ tags: ['Find Project'] })
-  @ApiResponse({ status: 200, description: 'Find Project.' })
-  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
-  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-  @Get(':id')
-  async findOneProject(@Param() findProjectQuery: FindProjectQuery) {
-    return this.projectsService.findOne(findProjectQuery);
-  }
-
   /* List Projects By UserId */
 
   /*--------------------------------------------*/
@@ -110,5 +98,17 @@ export class ProjectsController {
     @Query() getAcceptedProjectsByUserIdQuery: GetAcceptedProjectsByUserIdQuery,
   ) {
     return this.projectsService.getAcceptedProjectsByUserId(getAcceptedProjectsByUserIdQuery);
+  }
+
+  /* Find Project */
+
+  /*--------------------------------------------*/
+  @ApiOperation({ tags: ['Find Project'] })
+  @ApiResponse({ status: 200, description: 'Find Project.' })
+  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
+  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+  @Get(':id')
+  async findOneProject(@Param() findProjectQuery: FindProjectQuery) {
+    return this.projectsService.findOne(findProjectQuery);
   }
 }

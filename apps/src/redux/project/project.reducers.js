@@ -18,6 +18,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  getInfo: {
+    project: {},
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const orderReducer = (state = INITIAL_STATE, action) => {
@@ -103,6 +109,34 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getAcceptedProjectList: {
           ...state.getAcceptedProjectList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET INFO
+    case ProjectTypes.GET_PROJECT_INFO:
+      return {
+        ...state,
+        getInfo: {
+          ...state.getInfo,
+          isLoading: true,
+        },
+      }
+    case ProjectTypes.GET_PROJECT_INFO_SUCCESS:
+      return {
+        ...state,
+        getInfo: {
+          project: action.payload,
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case ProjectTypes.GET_PROJECT_INFO_FAILURE:
+      return {
+        ...state,
+        getInfo: {
+          ...state.getInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

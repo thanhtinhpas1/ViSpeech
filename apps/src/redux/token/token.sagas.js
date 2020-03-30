@@ -31,9 +31,9 @@ const formatTokenList = tokenList => {
   return tokenList.map(mapFunc)
 }
 
-export function* getTokens({ payload: userId }) {
+export function* getTokens({ payload: filterConditions }) {
   try {
-    let tokenList = yield TokenService.getTokenList(userId)
+    let tokenList = yield TokenService.getTokenList(filterConditions)
     tokenList = formatTokenList(tokenList || [])
     yield put(getTokenListSuccess(tokenList))
   } catch (err) {

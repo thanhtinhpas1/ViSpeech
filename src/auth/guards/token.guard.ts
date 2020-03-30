@@ -21,7 +21,9 @@ export class TokenGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const token = await getMongoRepository(TokenDto).findOne({ _id: id });
         if (!token) {
@@ -50,7 +52,9 @@ export class TokenQueryGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {
@@ -59,6 +63,11 @@ export class TokenQueryGuard implements CanActivate {
                 throw new NotFoundException(`Token with _id ${id} does not exist.`);
             }
             if (token.userId === payload['id']) {
+                return true;
+            }
+            const permission = await getMongoRepository(PermissionDto)
+                .findOne({ assigneeId: payload['id'], projectId: token.projectId, status: CONSTANTS.STATUS.APPROVED });
+            if (permission) {
                 return true;
             }
         }

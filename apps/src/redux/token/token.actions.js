@@ -5,9 +5,9 @@ export const onClearTokenState = () => ({
 })
 
 // Get token list
-export const getTokenList = userId => ({
+export const getTokenList = filterConditions => ({
   type: TokenTypes.GET_TOKENS,
-  payload: userId,
+  payload: filterConditions,
 })
 
 export const getTokenListSuccess = tokenList => ({

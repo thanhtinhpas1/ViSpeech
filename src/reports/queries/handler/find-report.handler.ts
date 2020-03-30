@@ -16,7 +16,7 @@ export class FindReportHandler implements IQueryHandler<FindReportQuery> {
     async execute(query: FindReportQuery): Promise<any> {
         Logger.log('Async FindReportQuery...', 'FindReportQuery');
         try {
-            return await this.repository.findOne(query.id);
+            return await this.repository.findOne({ _id: query.id });
         } catch (error) {
             Logger.error(error, '', 'FindReportQuery');
         }

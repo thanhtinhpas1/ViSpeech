@@ -20,7 +20,9 @@ export class ReportGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const report = getMongoRepository(ReportDto).findOne({_id: id});
         if (!report) {

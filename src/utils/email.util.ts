@@ -5,7 +5,7 @@ import { config } from "../../config";
 // https://github.com/sendgrid/sendgrid-nodejs
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(config.SENDGRID_API_KEY);
-// console.log("SENDGRID_API_KEY ", process.env.SENDGRID_API_KEY)
+console.log("SENDGRID_API_KEY ", config.SENDGRID_API_KEY)
 
 const hostUrl = 'http://localhost:3000/customer';
 const sendEmail = (to, subject, contentEmail) => {

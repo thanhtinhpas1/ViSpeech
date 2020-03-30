@@ -103,6 +103,16 @@ export class TokensController {
         return this.tokensService.getTokensByUserIdAndProjectId(getTokensByUserIdAndProjectIdQuery);
     }
 
+    /* List Token Types */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['List Token Types'] })
+    @ApiResponse({ status: 200, description: 'List Token Types.' })
+    @Get('/token-types')
+    async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
+        return this.tokensService.findTokenTypes(getTokenTypesQuery);
+    }
+
     /* Find Token */
 
     /*--------------------------------------------*/
@@ -112,15 +122,5 @@ export class TokensController {
     @Get(':id')
     async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
         return this.tokensService.findOne(findTokenQuery);
-    }
-
-    /* List Token Types */
-
-    /*--------------------------------------------*/
-    @ApiOperation({ tags: ['List Token Types'] })
-    @ApiResponse({ status: 200, description: 'List Token Types.' })
-    @Get('/token-types')
-    async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
-        return this.tokensService.findTokenTypes(getTokenTypesQuery);
     }
 }

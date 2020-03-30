@@ -3,6 +3,7 @@ import {AuthService} from 'auth/auth.service';
 import {CONSTANTS} from 'common/constant';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
 import {getMongoRepository} from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -20,7 +21,9 @@ export class PermissionGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (payload['roles'].includes(CONSTANTS.ROLE.ADMIN)) return true;
+        
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const permission = await getMongoRepository(PermissionDto).findOne({_id: id});
         if (!permission) {
@@ -44,17 +47,21 @@ export class AssignPermissionGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const paramId = request.params['_id'] || request.params['id'] || request.params['userId'];
-        if (!paramId) return true;
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
 
-        const isAdmin = payload['roles'].includes(CONSTANTS.ROLE.ADMIN);
-        const isManagerUser = payload['roles'].includes(CONSTANTS.ROLE.MANAGER_USER);
-        if (isAdmin || (isManagerUser && paramId !== payload['id'])) {
+        const { assigneeUsername, assignerId } = request.body;
+        const assignee = await getMongoRepository(UserDto).findOne({ username: assigneeUsername });
+        if (assignee && assignee._id === assignerId) {
+            return false;
+        }
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        const isManagerUser = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.MANAGER_USER) !== -1;
+        if (isAdmin || (isManagerUser && assignerId === payload['id'])) {
             return true;
         }
         return false;
@@ -86,7 +93,7 @@ export class ReplyPermisisonAssignGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const {emailToken} = request.body;
+        const { emailToken } = request.body;
 
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {

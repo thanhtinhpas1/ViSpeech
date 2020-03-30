@@ -14,6 +14,7 @@ import ProfilePage from 'components/customer/ProfilePage/ProfilePage.container'
 import VerifyEmailPage from 'components/customer/VerifyEmailPage/VerifyEmailPage.container'
 import ProjectPage from 'components/customer/ProjectPage/ProjectPage.container'
 import CreateProjectPage from 'components/customer/CreateProjectPage/CreateProjectPage.container'
+import AssignPermissionPage from 'components/customer/AssignPermissionPage/AssignPermissionPage.container'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -86,6 +87,14 @@ const RouteCustomer = ({ currentUser }) => {
               </CustomerLayout>
             )}
           />
+          <Route
+            path={`${CUSTOMER_PATH}/assign-permission`}
+            render={() => (
+              <CustomerLayout>
+                <AssignPermissionPage />
+              </CustomerLayout>
+            )}
+          />
         </>
       ) : (
         <>
@@ -111,6 +120,9 @@ const RouteCustomer = ({ currentUser }) => {
             <Redirect to="/" />
           </Route>
           <Route path={`${CUSTOMER_PATH}/my-project/:id`}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={`${CUSTOMER_PATH}/assign-permission`}>
             <Redirect to="/" />
           </Route>
         </>

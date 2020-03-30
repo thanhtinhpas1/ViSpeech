@@ -51,3 +51,19 @@ export const createProjectFailure = message => ({
   type: ProjectTypes.CREATE_PROJECT_FAILURE,
   payload: message,
 })
+
+// get project info
+export const getProjectInfo = id => ({
+  type: ProjectTypes.GET_PROJECT_INFO,
+  payload: id,
+})
+
+export const getProjectInfoSuccess = data => ({
+  type: ProjectTypes.GET_PROJECT_INFO_SUCCESS,
+  payload: data,
+})
+
+export const getProjectInfoFailure = message => ({
+  type: ProjectTypes.GET_PROJECT_INFO_FAILURE,
+  payload: message,
+})
