@@ -20,6 +20,7 @@ export class PermissionsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Create Permission']})
     @ApiResponse({status: 200, description: 'Create Permission.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createPermission(@Body() permissionDto: PermissionDto): Promise<PermissionDto> {
         const streamId = permissionDto._id;
@@ -31,6 +32,7 @@ export class PermissionsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Update Permission']})
     @ApiResponse({status: 200, description: 'Update Permission.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updatePermission(
         @Param() permissionIdDto: PermissionIdRequestParamsDto,

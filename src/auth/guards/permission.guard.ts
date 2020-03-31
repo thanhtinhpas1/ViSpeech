@@ -53,10 +53,13 @@ export class AssignPermissionGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const { assigneeUsername, assignerId } = request.body;
+        const { assigneeUsername, assignerId, projectId } = request.body;
         const assignee = await getMongoRepository(UserDto).findOne({ username: assigneeUsername });
-        if (assignee && assignee._id === assignerId) {
-            return false;
+        if (assignee) {
+            const permission = await getMongoRepository(PermissionDto).findOne({ assignerId, assigneeId: assignee._id, projectId });
+            if (permission || assignee._id === assignerId) {
+                return false;
+            }
         }
 
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
@@ -101,11 +104,12 @@ export class ReplyPermisisonAssignGuard implements CanActivate {
         }
 
         const decodedEmailToken = this.authService.decodeJwtToken(emailToken);
-        if (!decodedEmailToken || !decodedEmailToken['assignerId'] || !decodedEmailToken['assigneeId'] || !decodedEmailToken['projectId']) {
+        if (!decodedEmailToken || !decodedEmailToken['assignerId'] || !decodedEmailToken['assigneeId'] || !decodedEmailToken['projectId'] || !decodedEmailToken['permissions']) {
             throw new BadRequestException("Token is invalid.");
         }
 
-        if (decodedEmailToken['assigneeId'] === requestJwt['id']) {
+        const permission = await getMongoRepository(PermissionDto).findOne({ assignerId: decodedEmailToken['assignerId'], assigneeId: decodedEmailToken['assigneeId'], projectId: decodedEmailToken['projectId'], status: CONSTANTS.STATUS.PENDING });
+        if (permission && decodedEmailToken['assigneeId'] === requestJwt['id']) {
             return true;
         }
 

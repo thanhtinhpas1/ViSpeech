@@ -35,10 +35,11 @@ export class GetAcceptedProjectsByUserIdHandler
         });
       }
 
-      permissions.forEach(async permission => {
+      for (const permission of permissions) {
         const project = await this.repository.findOne({ _id: permission.projectId });
         result.push({ ...project, status: permission.status });
-      })
+      }
+
       return result;
     } catch (error) {
       Logger.error(error, "", "GetAcceptedProjectsByUserIdQuery");

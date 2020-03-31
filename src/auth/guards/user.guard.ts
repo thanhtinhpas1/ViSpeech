@@ -1,6 +1,9 @@
 import {BadRequestException, CanActivate, Injectable, Logger, UnauthorizedException} from '@nestjs/common';
 import {AuthService} from '../auth.service';
 import {CONSTANTS} from '../../common/constant';
+import { getMongoRepository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { Utils } from 'utils';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -40,8 +43,7 @@ export class VerifyEmailGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const emailToken = request.body;
-
+        const { emailToken } = request.body;
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
             throw new UnauthorizedException();
@@ -52,7 +54,8 @@ export class VerifyEmailGuard implements CanActivate {
             throw new BadRequestException("Token is invalid.");
         }
 
-        if (decodedEmailToken['id'] === requestJwt['id']) {
+        const user = await getMongoRepository(UserDto).findOne({ _id: decodedEmailToken['id'] });
+        if (user && !Utils.isEmailVerified(user.roles) && decodedEmailToken['id'] === requestJwt['id']) {
             return true;
         }
 

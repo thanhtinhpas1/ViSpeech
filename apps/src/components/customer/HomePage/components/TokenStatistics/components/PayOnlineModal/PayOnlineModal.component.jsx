@@ -25,7 +25,7 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess, myProjectList }) => {
       // Make  sure to disable form submission until Stripe.js has loaded.
       return
     }
-    async function createToken() {
+    async function createToken(projectId) {
       const cardElement = elements.getElement(CardElement)
       const { user, tokenType } = checkoutInfo
       const result = await OrderService.createPaymentIntent(tokenType.price * 100)
@@ -49,7 +49,6 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess, myProjectList }) => {
           setIsLoading(false)
         } else if (confirmedCardPayment.paymentIntent.status === 'succeeded') {
           // The payment has been processed!
-          const projectId = event.target.elements.selectedProject.value
           await OrderService.createOrder({
             userId: user._id,
             tokenType,
@@ -70,7 +69,8 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess, myProjectList }) => {
     }
     try {
       setIsLoading(true)
-      createToken()
+      const projectId = event.target.elements.selectedProject.value
+      createToken(projectId)
     } catch (error) {
       setErrorMessage(error.message)
       setIsLoading(false)
@@ -96,7 +96,7 @@ const CheckoutForm = ({ checkoutInfo, onOrderSuccess, myProjectList }) => {
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={e => onSubmit(e)}>
       <div className="mgt-1-5x input-item">
         <h5 className="font-mid">Chọn project</h5>
         <select className="custom-select" required name="selectedProject">

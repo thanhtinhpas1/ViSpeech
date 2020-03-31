@@ -4,6 +4,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
 import {PermissionDeletedEvent} from '../impl/permission-deleted.event';
 import {Repository} from 'typeorm';
+import { CONSTANTS } from 'common/constant';
 
 @EventsHandler(PermissionDeletedEvent)
 export class PermissionDeletedHandler implements IEventHandler<PermissionDeletedEvent> {
@@ -18,12 +19,12 @@ export class PermissionDeletedHandler implements IEventHandler<PermissionDeleted
         const {streamId, permissionId} = event;
 
         try {
-            const permission = await this.repository.findOne({_id: permissionId});
-            if (permission) {
-                await this.repository.delete({_id: permissionId});
-                return;
+            const permission = await this.repository.findOne({ _id: permissionId });
+            if (!permission) {
+                throw new NotFoundException(`Permission with _id ${permissionId} does not exist.`);
             }
-            throw new NotFoundException(`Permission with _id ${permissionId} does not exist.`);
+
+            return await this.repository.update({_id: permissionId}, { status: CONSTANTS.STATUS.INVALID });
         } catch (error) {
             Logger.error(error, '', 'PermissionDeletedEvent');
         }

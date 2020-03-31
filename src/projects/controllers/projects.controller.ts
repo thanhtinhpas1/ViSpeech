@@ -92,7 +92,6 @@ export class ProjectsController {
   @ApiOperation({ tags: ['List Accepted Projects By UserId'] })
   @ApiResponse({ status: 200, description: 'List Accepted Projects By UserId.' })
   @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
-  @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Get('/accepted-projects')
   async getAcceptedProjectsByUserId(
     @Query() getAcceptedProjectsByUserIdQuery: GetAcceptedProjectsByUserIdQuery,

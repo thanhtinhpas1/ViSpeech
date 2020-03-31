@@ -91,10 +91,7 @@ const ProjectPage = ({
       Cell: props => {
         const { cell } = props
         return (
-          <span
-            className="lead tnx-id"
-            style={{ color: '#2c80ff', letterSpacing: '0.1em', textTransform: 'uppercase' }}
-          >
+          <span className="lead tnx-id" style={{ color: '#2c80ff' }}>
             {cell.value}
           </span>
         )
@@ -128,7 +125,11 @@ const ProjectPage = ({
       className: 'data-col dt-amount',
       Cell: props => {
         const { cell } = props
-        return <span className="sub sub-date">{moment(cell.value).format('DD/MM/YYYY HH:mm')}</span>
+        return (
+          <span className="sub sub-date" style={{ fontSize: '13px' }}>
+            {moment(cell.value).format('DD/MM/YYYY HH:mm')}
+          </span>
+        )
       },
     },
     {
@@ -246,6 +247,7 @@ const ProjectPage = ({
             </ul>
             <div className="tab-content">
               <div className="tab-pane fade active show" id="my-project-list">
+                <div className="gaps-1x" />
                 {currentUser._id && (
                   <ReactTable
                     columns={myProjectTableColumns}
@@ -259,6 +261,7 @@ const ProjectPage = ({
                 )}
               </div>
               <div className="tab-pane fade" id="accepted-project-list">
+                <div className="gaps-1x" />
                 {currentUser._id && (
                   <ReactTable
                     columns={acceptedProjectTableColumns}

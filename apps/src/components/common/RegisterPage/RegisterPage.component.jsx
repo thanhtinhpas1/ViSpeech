@@ -65,7 +65,7 @@ const RegisterPage = ({ registerObj, register, onClearUserState }) => {
               </div>
               <div className="input-item">
                 <input
-                  type="text"
+                  type="email"
                   placeholder="Email"
                   className="input-bordered"
                   name="email"

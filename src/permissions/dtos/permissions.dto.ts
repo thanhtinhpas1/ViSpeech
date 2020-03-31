@@ -87,6 +87,7 @@ export class PermissionDto extends BaseEntityDto {
     @IsNotEmpty()
     @IsArray()
     @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
+    @Column()
     permissions: string[];
 
     @IsUUID()

@@ -14,7 +14,7 @@ const sendEmail = (to, subject, contentEmail) => {
         from: 'vispeech2020@gmail.com',
         subject,
         text: contentEmail,
-        // html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+        html: contentEmail,
     };
     console.log('msg ', msg);
     // (async () => {
@@ -28,20 +28,26 @@ const sendEmail = (to, subject, contentEmail) => {
     return sgMail.send(msg);
 };
 
+const getHtmlEmailContent = (user, content) => {
+    const greeting = `Xin chào <strong>${user}</strong>,`;
+    const closing = `Trân trọng,<br>ViSpeech.`
+    return `${greeting}<br><br>${content}<br><br>${closing}` 
+}
+
 export const EmailUtils = {
     sendVerifyEmail: (name, to, token) => {
         const subject = 'Kích hoạt tài khoản';
-        const content = `Chào ${name}, mời bạn click vào link dưới đây để kích hoạt tài khoản: ${hostUrl}/verify-email/${token}`;
-        return sendEmail(to, subject, content);
+        const content = `Mời bạn truy cập đường dẫn dưới đây để kích hoạt tài khoản:<br>${hostUrl}/verify-email/${token}`;
+        return sendEmail(to, subject, getHtmlEmailContent(name, content));
     },
     sendResetPasswordEmail: (name, to, token) => {
         const subject = 'Lấy lại mật khẩu';
-        const content = `Chào ${name}, mời bạn click vào link dưới đây để thay đổi mật khẩu: ${hostUrl}/reset-password/${token}`;
-        return sendEmail(to, subject, content);
+        const content = `Mời bạn truy cập đường dẫn dưới đây để thay đổi mật khẩu:<br>${hostUrl}/reset-password/${token}`;
+        return sendEmail(to, subject, getHtmlEmailContent(name, content));
     },
     sendInviteToJoinProjectEmail: (assigner, assignee, project, to, token) => {
         const subject = 'Lời mời tham gia project';
-        const content = `Chào ${assignee}, người dùng ${assigner} mời bạn tham gia project "${project}". Click vào link dưới đây để chấp nhận lời mời: ${hostUrl}/reply-permission-assign/${token}`;
-        return sendEmail(to, subject, content);
+        const content = `Người dùng có username <strong>${assigner}</strong> mời bạn tham gia dự án "${project}". Truy cập đường dẫn dưới đây để phản hồi:<br>${hostUrl}/reply-permission-assign/${token}`;
+        return sendEmail(to, subject, getHtmlEmailContent(assignee, content));
     },
 };

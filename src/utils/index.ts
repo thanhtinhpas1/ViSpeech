@@ -53,6 +53,9 @@ export const Utils = {
         const validRoles = Object.keys(CONSTANTS.ROLE);
         return validRoles.includes(roleName);
     },
+    isEmailVerified: roles => {
+        return roles.map(role => role.name).indexOf(CONSTANTS.ROLE.MANAGER_USER) !== -1
+    },
     convertToArray: param => {
         if (!Array.isArray(param)) {
             return [param];
