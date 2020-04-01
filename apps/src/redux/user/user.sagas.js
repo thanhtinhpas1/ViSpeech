@@ -99,11 +99,7 @@ export function* logoutSaga() {
 export function* authenticate({ payload: token }) {
   try {
     const user = yield UserService.authenticate(token)
-    if (user) {
-      yield put(updateCurrentUser(user))
-    } else {
-      yield put(updateCurrentUser(null))
-    }
+    yield put(updateCurrentUser(user || null))
   } catch (err) {
     yield put(updateCurrentUser(null))
   }

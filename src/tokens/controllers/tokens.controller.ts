@@ -14,7 +14,6 @@ import { AuthService } from 'auth/auth.service';
 
 @Controller('tokens')
 @ApiTags('Tokens')
-@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
 export class TokensController {
     constructor(
         private readonly tokensService: TokensService,
@@ -24,6 +23,7 @@ export class TokensController {
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['Create Token'] })
     @ApiResponse({ status: 200, description: 'Create Token.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
@@ -41,6 +41,7 @@ export class TokensController {
     // TODO: make flow to regenerate token value
     @ApiOperation({ tags: ['Update Token'] })
     @ApiResponse({ status: 200, description: 'Update Token.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updateToken(
@@ -59,6 +60,7 @@ export class TokensController {
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['Delete Token'] })
     @ApiResponse({ status: 200, description: 'Delete Token.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Delete(':_id')
     async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
@@ -71,6 +73,7 @@ export class TokensController {
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['List Tokens'] })
     @ApiResponse({ status: 200, description: 'List Tokens.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async getTokens(@Query() getTokensQuery: GetTokensQuery) {

@@ -1,6 +1,4 @@
-import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { ReportDto } from "reports/dtos/reports.dto";
-import { getMongoRepository } from "typeorm";
+import { CanActivate, Injectable, UnauthorizedException } from "@nestjs/common";
 import { CONSTANTS } from "../../common/constant";
 import { AuthService } from "../auth.service";
 
@@ -24,15 +22,15 @@ export class ReportGuard implements CanActivate {
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
-        const report = getMongoRepository(ReportDto).findOne({_id: id});
-        if (!report) {
-            throw new NotFoundException(`Report with _id ${id} does not exist.`);
-        }
-        if (report['userId'] === payload['id']) {
-            return true;
-        }
+        // const report = getMongoRepository(ReportDto).findOne({_id: id});
+        // if (!report) {
+        //     throw new NotFoundException(`Report with _id ${id} does not exist.`);
+        // }
+        // if (report['userId'] === payload['id']) {
+        //     return true;
+        // }
 
-        Logger.warn('User do not have permission to modify this report.', 'ReportGuard');
+        // Logger.warn('User do not have permission to modify this report.', 'ReportGuard');
         return false;
     }
 }

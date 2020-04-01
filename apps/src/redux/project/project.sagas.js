@@ -1,5 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { STATUS } from 'utils/constant'
 import ProjectTypes from './project.types'
 import {
   getMyProjectListSuccess,
@@ -16,8 +17,8 @@ import ProjectService from '../../services/project.service'
 // get my project list
 function* getMyProjectList({ payload: filterConditions }) {
   try {
-    const myProjectList = yield ProjectService.getMyProjectList(filterConditions)
-    yield put(getMyProjectListSuccess(myProjectList || []))
+    const projectList = yield ProjectService.getMyProjectList(filterConditions)
+    yield put(getMyProjectListSuccess(projectList || []))
   } catch (err) {
     yield put(getMyProjectListFailure(err.message))
   }
@@ -27,10 +28,25 @@ export function* getMyProjectListSaga() {
 }
 
 // get accepted project list
+const formatAcceptedProjectList = acceptedProjectList => {
+  const mapFunc = project => {
+    return {
+      ...project,
+      status: {
+        status: project.status,
+        name: STATUS[project.status].viText,
+        class: STATUS[project.status].cssClass,
+      },
+    }
+  }
+  return acceptedProjectList.map(mapFunc)
+}
+
 function* getAcceptedProjectList({ payload: filterConditions }) {
   try {
-    const myProjectList = yield ProjectService.getAcceptedProjectList(filterConditions)
-    yield put(getAcceptedProjectListSuccess(myProjectList || []))
+    let projectList = yield ProjectService.getAcceptedProjectList(filterConditions)
+    projectList = formatAcceptedProjectList(projectList || [])
+    yield put(getAcceptedProjectListSuccess(projectList))
   } catch (err) {
     yield put(getAcceptedProjectListFailure(err.message))
   }

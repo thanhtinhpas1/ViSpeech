@@ -3,9 +3,7 @@ import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
 import {InjectRepository, TypeOrmModule} from '@nestjs/typeorm';
 import {AuthModule} from 'auth/auth.module';
 import {EventStoreModule} from 'core/event-store/event-store.module';
-import {CommandHandlers as TokenCommandHandlers} from 'tokens/commands/handlers';
 import {TokenRepository} from 'tokens/repository/token.repository';
-import {TokensModule} from 'tokens/tokens.module';
 import {Repository} from 'typeorm';
 import {CONSTANTS} from '../common/constant';
 import {EventStore} from '../core/event-store/event-store';
@@ -26,6 +24,9 @@ import {UsersSagas} from './sagas/users.sagas';
 import {UsersService} from './services/users.service';
 import {VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent} from './events/impl/verify-email-sent.event';
 import {EmailVerifiedEvent} from './events/impl/email-verified.event';
+import { CreateFreeTokenHandler } from 'tokens/commands/handlers/create-token.handler';
+import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token.handler';
+import { FreeTokenCreatedSuccessHandler, FreeTokenCreatedFailedHandler } from 'tokens/events/handlers/free-token-created.handler';
 
 @Module({
     imports: [
@@ -36,8 +37,12 @@ import {EmailVerifiedEvent} from './events/impl/email-verified.event';
     controllers: [UsersController],
     providers: [
         UsersService,
-        UsersSagas, ...CommandHandlers, ...TokenCommandHandlers,
+        UsersSagas, ...CommandHandlers,
         ...EventHandlers, ...QueryHandlers,
+        CreateFreeTokenHandler,
+        FreeTokenCreatedSuccessHandler,
+        FreeTokenCreatedFailedHandler,
+        DeleteTokenByUserIdHandler,
         /*** REPOSITORY */
         UserRepository, TokenRepository,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
@@ -58,12 +63,13 @@ export class UsersModule implements OnModuleInit {
     async onModuleInit() {
         this.eventStore.setEventHandlers({
             ...this.eventHandlers,
-            ...TokensModule.eventHandlers,
+            FreeTokenCreatedSuccessHandler,
+            FreeTokenCreatedFailedHandler,
         });
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, ...TokenCommandHandlers]);
+        this.command$.register([...CommandHandlers, CreateFreeTokenHandler, DeleteTokenByUserIdHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
         // seed data

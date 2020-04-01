@@ -12,7 +12,6 @@ import { AuthService } from './auth.service';
 import { UserDto } from '../users/dtos/users.dto';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
-import { FindUserQuery } from 'users/queries/impl/find-user.query';
 
 @Module({
     imports: [

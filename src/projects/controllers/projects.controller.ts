@@ -13,7 +13,6 @@ import { GetAcceptedProjectsByUserIdQuery } from 'projects/queries/impl/get-acce
 
 @Controller('projects')
 @ApiTags('Projects')
-@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
 export class ProjectsController {
   constructor(
     private readonly projectsService: ProjectsService,
@@ -24,6 +23,7 @@ export class ProjectsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Create Project'] })
   @ApiResponse({ status: 200, description: 'Create Project.' })
+  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
   @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Post()
   async createProject(@Body() projectDto: ProjectDto): Promise<ProjectDto> {
@@ -36,6 +36,7 @@ export class ProjectsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Update Project'] })
   @ApiResponse({ status: 200, description: 'Update Project.' })
+  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
   @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Put(':_id')
   async updateProject(
@@ -54,6 +55,7 @@ export class ProjectsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['Delete Project'] })
   @ApiResponse({ status: 200, description: 'Delete Project.' })
+  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
   @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
   @Delete(':_id')
   async deleteProject(@Param() projectIdDto: ProjectIdRequestParamsDto) {
@@ -66,6 +68,7 @@ export class ProjectsController {
   /*--------------------------------------------*/
   @ApiOperation({ tags: ['List Projects'] })
   @ApiResponse({ status: 200, description: 'List Projects.' })
+  @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
   @Roles([CONSTANTS.ROLE.ADMIN])
   @Get()
   async getProjects(@Query() getProjectsQuery: GetProjectsQuery) {

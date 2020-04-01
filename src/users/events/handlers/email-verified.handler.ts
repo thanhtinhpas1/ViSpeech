@@ -6,13 +6,13 @@ import {Repository} from 'typeorm';
 import {EmailVerifiedEvent} from '../impl/email-verified.event';
 import {CONSTANTS} from 'common/constant';
 import {RoleDto} from 'roles/dtos/roles.dto';
-import {AuthService} from 'auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @EventsHandler(EmailVerifiedEvent)
 export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
     constructor(
         @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
-        private readonly authService: AuthService,
+        private readonly jwtService: JwtService,
     ) {
     }
 
@@ -21,7 +21,8 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
         const {streamId, emailToken} = event;
 
         try {
-            const decodedToken = this.authService.decodeJwtToken(emailToken);
+            const decodedToken = this.jwtService.decode(emailToken);
+            console.log(decodedToken)
             const userId = decodedToken['id'];
             const user = await this.repository.findOne({_id: userId});
             if (!user) {
@@ -30,6 +31,7 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
             const userRoles = user.roles.filter(role => role.name !== CONSTANTS.ROLE.USER);
             const managerUserRole = new RoleDto(CONSTANTS.ROLE.MANAGER_USER);
             await this.repository.update({_id: userId}, {roles: [...userRoles, managerUserRole]});
+            // TODO generate new token for user
         } catch (error) {
             Logger.error(error, '', 'EmailVerifiedEvent');
         }

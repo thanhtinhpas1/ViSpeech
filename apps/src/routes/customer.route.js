@@ -89,6 +89,14 @@ const RouteCustomer = ({ currentUser }) => {
             )}
           />
           <Route
+            path={`${CUSTOMER_PATH}/accepted-project/:id`}
+            render={props => (
+              <CustomerLayout>
+                <TokensWalletPage {...props} />
+              </CustomerLayout>
+            )}
+          />
+          <Route
             path={`${CUSTOMER_PATH}/assign-permission`}
             render={() => (
               <CustomerLayout>
@@ -129,6 +137,9 @@ const RouteCustomer = ({ currentUser }) => {
             <Redirect to="/" />
           </Route>
           <Route path={`${CUSTOMER_PATH}/my-project/:id`}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={`${CUSTOMER_PATH}/accepted-project/:id`}>
             <Redirect to="/" />
           </Route>
           <Route path={`${CUSTOMER_PATH}/assign-permission`}>

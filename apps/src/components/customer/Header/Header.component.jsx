@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
@@ -45,8 +46,8 @@ const Header = ({ currentUser, onAuthenticate, logout }) => {
 
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
-    if ((!currentUser && token) || !token) onAuthenticate(token)
-  }, [currentUser, onAuthenticate])
+    if ((!currentUser._id && token) || !token) onAuthenticate(token)
+  }, [currentUser._id, onAuthenticate])
 
   // useEffect(() => {
   //   let interval
@@ -111,7 +112,7 @@ const Header = ({ currentUser, onAuthenticate, logout }) => {
               <ul className="topbar-nav">
                 <li className="topbar-nav-item relative">
                   <span className="user-welcome d-none d-lg-inline-block">
-                    Chào mừng, Khánh Linh
+                    Chào mừng, {currentUser.lastName} {currentUser.firstName}
                   </span>
                   <a href="#" className="toggle-tigger user-thumb">
                     <em className="ti ti-user" />

@@ -55,7 +55,7 @@ export class AsrController {
         const payload = this.jwtService.decode(token);
         const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
         if (!tokenDto || tokenDto.usedMinutes >= tokenDto.minutes)
-            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Token invalid.' });
+            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Invalid token.' });
 
         const formData = new FormData();
         const stream = fs.createReadStream(file.path);
@@ -70,15 +70,20 @@ export class AsrController {
             return res.status(HttpStatus.BAD_REQUEST).send();
         }).finally(async () => {
             stream.close();
+
             const duration = Utils.calculateDuration(file.size);
             const minutes = Number(tokenDto.minutes);
-            const usedMinutes = Number(tokenDto.usedMinutes || '0');
-            if (duration > (minutes - usedMinutes)) tokenDto.usedMinutes = tokenDto.minutes;
-            else tokenDto.usedMinutes = usedMinutes + duration;
-            const uuid = Utils.getUuid();
-            const requestDto = new RequestDto(uuid, tokenDto.projectId, file.originalname, file.encoding, file.size,
+            const usedMinutes = Number(tokenDto.usedMinutes || 0);
+            if (duration > (minutes - usedMinutes)) {
+                tokenDto.usedMinutes = tokenDto.minutes;
+            } else {
+                tokenDto.usedMinutes = usedMinutes + duration;
+            }
+
+            const streamId = Utils.getUuid();
+            const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, file.originalname, file.encoding, file.size,
                 duration, file.mimetype);
-            this.requestService.createRequest(uuid, requestDto, tokenDto);
+            this.requestService.createRequest(streamId, requestDto, tokenDto);
             fs.unlinkSync(file.path);
         });
     }

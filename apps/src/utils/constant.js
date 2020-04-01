@@ -24,8 +24,8 @@ export const STATUS = {
   PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass: 'data-state-progress' },
   SUCCESS: { name: 'SUCCESS', viText: 'Thành công', cssClass: 'data-state-approved' },
   FAILURE: { name: 'FAILURE', viText: 'Thất bại', cssClass: 'data-state-canceled' },
-  ACCEPTED: { name: 'ACCEPTED', viText: 'Chấp nhận', cssClass: '' },
-  REJECTED: { name: 'REJECTED', viText: 'Từ chối', cssClass: '' },
+  ACCEPTED: { name: 'ACCEPTED', viText: 'Chấp nhận', cssClass: 'data-state-approved' },
+  REJECTED: { name: 'REJECTED', viText: 'Từ chối', cssClass: 'data-state-canceled' },
   // -canceled -missing
 }
 export const DEFAULT_ERR_MESSAGE = 'Đã có lỗi xảy ra. Vui lòng thử lại sau ít phút.'

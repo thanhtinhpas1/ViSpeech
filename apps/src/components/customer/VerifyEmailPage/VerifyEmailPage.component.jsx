@@ -1,19 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { useParams } from 'react-router-dom'
 import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import Utils from 'utils'
 import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
 
-const VerifyEmailPage = ({
-  currentUser,
-  history,
-  match,
-  verifyEmailObj,
-  verifyEmail,
-  onAuthenticate,
-}) => {
+const VerifyEmailPage = ({ currentUser, history, verifyEmailObj, verifyEmail, onAuthenticate }) => {
   const [infoModal, setInfoModal] = useState({})
   const [infoTemplate, setInfoTemplate] = useState({})
+  const { emailToken } = useParams()
 
   const onVerifyEmail = useCallback(() => {
     let infoObj = {
@@ -39,10 +34,6 @@ const VerifyEmailPage = ({
       return
     }
 
-    const {
-      params: { emailToken },
-    } = match
-
     infoObj = {
       title: 'Kích hoạt tài khoản',
       message: 'Vui lòng chờ giây lát...',
@@ -53,7 +44,7 @@ const VerifyEmailPage = ({
     setInfoModal(infoObj)
     window.$('#info-modal').modal('show')
     verifyEmail(emailToken)
-  }, [currentUser.roles, history, match, verifyEmail, verifyEmailObj])
+  }, [currentUser.roles, history, emailToken, verifyEmail, verifyEmailObj])
 
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)

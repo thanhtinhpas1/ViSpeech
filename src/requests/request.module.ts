@@ -3,7 +3,7 @@ import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UpdateTokenHandler } from 'tokens/commands/handlers/update-token.handler';
-import { UpdateTokenCommand } from 'tokens/commands/impl/update-token.command';
+import { CreateReportHandler } from 'reports/commands/handlers/create-report.handler';
 import { TokenRepository } from 'tokens/repository/token.repository';
 import { AuthModule } from '../auth/auth.module';
 import { EventStore } from '../core/event-store/event-store';
@@ -19,6 +19,7 @@ import { RequestRepository } from './repository/request.repository';
 import { CallAsrSagas } from './sagas/call-asr.sagas';
 import { RequestService } from './services/request.service';
 import { HistoriesController } from './controllers/histories.controller';
+import { ReportRepository } from 'reports/repository/report.repository';
 
 @Module({
     imports: [
@@ -31,11 +32,15 @@ import { HistoriesController } from './controllers/histories.controller';
         AsrController, HistoriesController,
     ],
     providers: [
-        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
-        TokenRepository, RequestService,
-        RequestRepository, ...CommandHandlers, ...EventHandlers, ...QueryHandlers,
-        UpdateTokenCommand, UpdateTokenHandler,
+        RequestService,
         CallAsrSagas,
+        ...CommandHandlers, ...EventHandlers, ...QueryHandlers,
+        TokenRepository, 
+        RequestRepository, 
+        ReportRepository,
+        UpdateTokenHandler,
+        CreateReportHandler,
+        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
     ],
 })
 
@@ -54,7 +59,7 @@ export class RequestModule implements OnModuleInit {
         this.event$.publisher = this.eventStore;
         /** ------------ */
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, UpdateTokenHandler]);
+        this.command$.register([...CommandHandlers, UpdateTokenHandler, CreateReportHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([CallAsrSagas]);
     }

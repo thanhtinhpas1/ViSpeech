@@ -40,12 +40,16 @@ const TransactionsPage = ({ currentUser, orderListObj, getOrderList }) => {
     },
     {
       Header: 'Thời gian tạo',
-      accessor: 'date',
+      accessor: 'createdDate',
       headerClassName: 'data-col dt-amount',
       className: 'data-col dt-amount',
       Cell: props => {
         const { cell } = props
-        return <span className="sub sub-date">{moment(cell.value).format('DD/MM/YYYY HH:mm')}</span>
+        return (
+          <span className="sub sub-date" style={{ fontSize: '13px' }}>
+            {moment(cell.value).format('DD/MM/YYYY HH:mm')}
+          </span>
+        )
       },
     },
     {

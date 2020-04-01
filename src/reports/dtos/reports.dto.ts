@@ -15,6 +15,12 @@ export class ReportIdRequestParamsDto {
 
 @Entity('reports')
 export class ReportDto extends BaseEntityDto {
+    constructor(usedMinutes: number, dateReport: Date, tokenId) {
+        super();
+        this.usedMinutes = usedMinutes;
+        this.dateReport = dateReport;
+        this.tokenId = tokenId;
+    }
 
     @Type(() => Number)
     @IsNumber()
@@ -34,11 +40,4 @@ export class ReportDto extends BaseEntityDto {
         type: 'uuid'
     })
     tokenId: ObjectID;
-
-    @IsUUID()
-    @Column({
-        nullable: false,
-        type: 'uuid'
-    })
-    userId: ObjectID;
 }
