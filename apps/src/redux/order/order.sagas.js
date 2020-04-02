@@ -11,10 +11,10 @@ const formatOrderList = orderList => {
     return {
       ...order,
       status: {
+        status: order.status,
         name: STATUS[order.status].viText,
         class: STATUS[order.status].cssClass,
       },
-      date: order.createdDate,
       tokenType: {
         name: TOKEN_TYPE[order.tokenType.name].viText,
         class: TOKEN_TYPE[order.tokenType.name].cssClass,
@@ -28,7 +28,7 @@ const formatOrderList = orderList => {
 function* getList({ payload: filterConditions }) {
   try {
     let orderList = yield OrderService.getOrderList(filterConditions)
-    orderList = formatOrderList(orderList)
+    orderList = formatOrderList(orderList || [])
     // const numberOfContracts = yield TransactionService.countTransactions(filterConditions)
     // const orderList =
     //   filterConditions.pageIndex === 0

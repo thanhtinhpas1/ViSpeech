@@ -25,7 +25,7 @@ const formatTokenList = tokenList => {
       ...token,
       tokenType: getTokenTypeByMinnutes(token.minutes),
       isValid: token.isValid || true,
-      minutesLeft: token.minutes - (token.usedMinutes || 0),
+      minutesLeft: Number(token.minutes) - Number(token.usedMinutes || 0),
     }
   }
   return tokenList.map(mapFunc)

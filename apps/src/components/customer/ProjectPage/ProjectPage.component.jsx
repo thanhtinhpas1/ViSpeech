@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useState } from 'react'
-import { CUSTOMER_PATH } from 'utils/constant'
+import { CUSTOMER_PATH, STATUS } from 'utils/constant'
 import ReactTable from 'components/customer/ReactTable/ReactTable.component'
 import { Link } from 'react-router-dom'
 import * as moment from 'moment'
@@ -49,7 +49,7 @@ const ProjectPage = ({
     },
     {
       Header: 'Thời gian tạo',
-      accessor: 'created_date',
+      accessor: 'createdDate',
       headerClassName: 'data-col dt-amount',
       className: 'data-col dt-amount',
       Cell: props => {
@@ -110,7 +110,7 @@ const ProjectPage = ({
     },
     {
       Header: 'Tạo bởi',
-      accessor: 'userId',
+      accessor: 'ownerName',
       headerClassName: 'data-col dt-amount',
       className: 'data-col dt-amount',
       Cell: props => {
@@ -120,7 +120,7 @@ const ProjectPage = ({
     },
     {
       Header: 'Thời gian tạo',
-      accessor: 'created_date',
+      accessor: 'createdDate',
       headerClassName: 'data-col dt-amount',
       className: 'data-col dt-amount',
       Cell: props => {
@@ -133,17 +133,35 @@ const ProjectPage = ({
       },
     },
     {
+      Header: 'Trạng thái',
+      accessor: 'status',
+      headerClassName: 'data-col dt-token',
+      className: 'data-col dt-token',
+      Cell: props => {
+        const { cell } = props
+        return (
+          <div className="d-flex align-items-center">
+            <div className={`data-state ${cell.value.class}`} />
+            <span className="sub sub-s2" style={{ paddingTop: 0 }}>
+              {cell.value.name}
+            </span>
+          </div>
+        )
+      },
+    },
+    {
       Header: '',
       accessor: '_id',
-      id: 'my-project-detail',
+      id: 'accepted-project-detail',
       headerClassName: 'data-col',
       className: 'data-col text-right',
       Cell: props => {
         const { cell } = props
+        const isRejected = cell.row.values.status.status === STATUS.REJECTED.name
         return (
           <Link
-            to={`${CUSTOMER_PATH}/my-project/${cell.value}`}
-            className="btn btn-light-alt btn-xs btn-icon"
+            to={isRejected ? '#!' : `${CUSTOMER_PATH}/accepted-project/${cell.value}`}
+            className={`btn btn-light-alt btn-xs btn-icon ${isRejected ? 'disabled' : ''}`}
           >
             <em className="ti ti-eye" />
           </Link>

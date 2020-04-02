@@ -4,14 +4,14 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
 import {Repository} from 'typeorm';
 import {PermissionAssignRepliedEvent} from '../impl/permission-assign-replied.event';
-import {AuthService} from 'auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @EventsHandler(PermissionAssignRepliedEvent)
 export class PermissionAssignRepliedHandler implements IEventHandler<PermissionAssignRepliedEvent> {
     constructor(
         @InjectRepository(PermissionDto)
         private readonly repository: Repository<PermissionDto>,
-        private readonly authService: AuthService,
+        private readonly jwtService: JwtService,
     ) {
     }
 
@@ -21,7 +21,7 @@ export class PermissionAssignRepliedHandler implements IEventHandler<PermissionA
         const {emailToken, status} = permissionResponseDto;
 
         try {
-            const decodedToken = this.authService.decodeJwtToken(emailToken);
+            const decodedToken = this.jwtService.decode(emailToken);
             const assignerId = decodedToken['assignerId'];
             const assigneeId = decodedToken['assigneeId'];
             const projectId = decodedToken['projectId'];

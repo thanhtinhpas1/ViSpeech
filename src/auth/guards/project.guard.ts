@@ -3,6 +3,7 @@ import { AuthService } from 'auth/auth.service';
 import { CONSTANTS } from 'common/constant';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { getMongoRepository } from 'typeorm';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Injectable()
 export class ProjectGuard implements CanActivate {
@@ -20,11 +21,11 @@ export class ProjectGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        
+
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
-        const project = await getMongoRepository(ProjectDto).findOne({_id: id});
+        const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
         if (!project) {
             throw new NotFoundException(`Project with _id ${id} does not exist.`);
         }
@@ -51,7 +52,7 @@ export class ProjectQueryGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        
+
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
@@ -62,6 +63,12 @@ export class ProjectQueryGuard implements CanActivate {
                 throw new NotFoundException(`Project with _id ${id} does not exist.`);
             }
             if (project.userId === payload['id']) {
+                return true;
+            }
+            // verify assignee
+            const permission = await getMongoRepository(PermissionDto)
+                .findOne({ assigneeId: payload['id'], projectId: id, status: CONSTANTS.STATUS.ACCEPTED });
+            if (permission) {
                 return true;
             }
         }

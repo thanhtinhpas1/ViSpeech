@@ -17,11 +17,12 @@ import { ProjectsSagas } from "./sagas/projects.sagas";
 import { ProjectsService } from "./services/projects.service";
 import { AuthModule } from "auth/auth.module";
 import { PermissionDto } from "permissions/dtos/permissions.dto";
+import { UserDto } from "users/dtos/users.dto";
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([ProjectDto, PermissionDto]),
+        TypeOrmModule.forFeature([ProjectDto, PermissionDto, UserDto]),
         AuthModule,
         EventStoreModule.forFeature(),
     ],

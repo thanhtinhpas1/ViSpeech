@@ -1,15 +1,13 @@
 import {CanActivate, Injectable, Logger} from '@nestjs/common';
 import {Reflector} from '@nestjs/core';
 import {JwtService} from '@nestjs/jwt';
-import {CONSTANTS} from '../common/constant';
-import {QueryBus} from '@nestjs/cqrs';
+import { Utils } from 'utils';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
     constructor(
         private readonly reflector: Reflector,
         private readonly jwtService: JwtService,
-        private readonly queryBus: QueryBus,
     ) {
     }
 
@@ -26,9 +24,8 @@ export class RolesGuard implements CanActivate {
 
     async matchRoles(request, roles: string[]) {
         try {
-            const authorization = request.headers.authorization;
-            if (!authorization) return false;
-            const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, '');
+            const jwt = Utils.extractToken(request);
+            if (!jwt) return false;
             const payload = this.jwtService.decode(jwt);
             if (!payload) return false;
             const userRoles = payload['roles'];

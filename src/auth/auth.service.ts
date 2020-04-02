@@ -28,7 +28,8 @@ export class AuthService {
     }
 
     async validateUserId(userId: string) {
-        const user = await this.userRepository.findOne({ _id: userId });
+        let user = await this.userRepository.findOne({ _id: userId });
+        user = user && Utils.removePropertyFromObject(user, 'password');
         return user || null;
     }
 
@@ -54,14 +55,8 @@ export class AuthService {
         return await this.userRepository.findOne({ username });
     }
 
-    decodeJwtToken(jwt) {
-        return this.jwtService.decode(jwt);
-    }
-
     decode(request: any) {
-        const authorization = request.headers.authorization;
-        if (!authorization) return null;
-        const jwt = authorization.replace(CONSTANTS.BEARER_HEADER_AUTHORIZE, '');
-        return this.decodeJwtToken(jwt);
+        const jwt = Utils.extractToken(request);
+        return this.jwtService.decode(jwt);
     }
 }

@@ -1,7 +1,6 @@
 import {Controller, Get, Post, Request, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {AuthService} from 'auth/auth.service';
-import { Utils } from 'utils';
 
 @Controller()
 export class AuthController {
@@ -19,7 +18,6 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt'))
     @Get('profile')
     getProfile(@Request() req) {
-        delete req.password;
         return req.user;
     }
 

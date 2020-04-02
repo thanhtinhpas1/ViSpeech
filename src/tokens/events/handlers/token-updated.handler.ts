@@ -38,7 +38,7 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
             }
 
             // Can only update usedMinutes
-            return await this.repository.update({_id}, { usedMinutes: tokenInfo.usedMinutes });
+            return await this.repository.update({_id}, { usedMinutes: Number(tokenInfo.usedMinutes) });
         } catch (error) {
             Logger.error(error, '', 'TokenUpdatedEvent');
         }

@@ -3,22 +3,23 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useEffect } from 'react'
+import { useParams, useLocation, Link } from 'react-router-dom'
 import { CUSTOMER_PATH } from 'utils/constant'
 import ReactTable from 'components/customer/ReactTable/ReactTable.component'
-import { Link } from 'react-router-dom'
 
 const TokensWalletPage = ({
-  match,
   currentUser,
   getProjectInfoObj,
   getTokenListObj,
   getProjectInfo,
   getTokens,
 }) => {
+  const { id } = useParams()
+  const { pathname } = useLocation()
+
   useEffect(() => {
-    const { id } = match.params
     getProjectInfo(id)
-  }, [match.params, getProjectInfo])
+  }, [id, getProjectInfo])
 
   const columns = [
     {
@@ -104,13 +105,17 @@ const TokensWalletPage = ({
     },
   ]
 
-  const getUserTokens = useCallback(
+  const getProjectTokens = useCallback(
     ({ pageIndex, pageSize }) => {
-      const { id } = match.params
-      const userId = currentUser._id
-      getTokens({ userId, projectId: id, pageIndex, pageSize })
+      const projectOwnerId = getProjectInfoObj.project.userId
+      if (pathname.includes('accepted-project') && projectOwnerId) {
+        getTokens({ userId: projectOwnerId, projectId: id, pageIndex, pageSize })
+      }
+      if (pathname.includes('my-project')) {
+        getTokens({ userId: currentUser._id, projectId: id, pageIndex, pageSize })
+      }
     },
-    [currentUser._id, getTokens, match.params]
+    [currentUser._id, id, pathname, getProjectInfoObj.project.userId, getTokens]
   )
 
   return (
@@ -147,7 +152,7 @@ const TokensWalletPage = ({
               <ReactTable
                 columns={columns}
                 data={getTokenListObj.tokenList}
-                fetchData={getUserTokens}
+                fetchData={getProjectTokens}
                 loading={getTokenListObj.isLoading}
                 pageCount={Math.ceil(getTokenListObj.tokenList.length / 5)}
                 defaultPageSize={5}

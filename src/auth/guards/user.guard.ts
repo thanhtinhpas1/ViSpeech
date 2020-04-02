@@ -4,6 +4,7 @@ import {CONSTANTS} from '../../common/constant';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { Utils } from 'utils';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -38,6 +39,7 @@ export class UserGuard implements CanActivate {
 export class VerifyEmailGuard implements CanActivate {
     constructor(
         private readonly authService: AuthService,
+        private readonly jwtService: JwtService,
     ) {
     }
 
@@ -49,7 +51,7 @@ export class VerifyEmailGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const decodedEmailToken = this.authService.decodeJwtToken(emailToken);
+        const decodedEmailToken = this.jwtService.decode(emailToken);
         if (!decodedEmailToken || !decodedEmailToken['id']) {
             throw new BadRequestException("Token is invalid.");
         }

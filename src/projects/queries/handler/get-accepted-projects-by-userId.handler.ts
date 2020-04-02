@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { GetAcceptedProjectsByUserIdQuery } from "../impl/get-accepted-projects-by-userId";
 import { PermissionDto } from "permissions/dtos/permissions.dto";
 import { CONSTANTS } from "common/constant";
+import { UserDto } from "users/dtos/users.dto";
 
 @QueryHandler(GetAcceptedProjectsByUserIdQuery)
 export class GetAcceptedProjectsByUserIdHandler
@@ -14,7 +15,9 @@ export class GetAcceptedProjectsByUserIdHandler
     @InjectRepository(ProjectDto)
     private readonly repository: Repository<ProjectDto>,
     @InjectRepository(PermissionDto)
-    private readonly permissionDtoRepository: Repository<PermissionDto>
+    private readonly permissionDtoRepository: Repository<PermissionDto>,
+    @InjectRepository(UserDto)
+    private readonly userDtoRepository: Repository<UserDto>
   ) { }
 
   async execute(query: GetAcceptedProjectsByUserIdQuery): Promise<any> {
@@ -37,7 +40,8 @@ export class GetAcceptedProjectsByUserIdHandler
 
       for (const permission of permissions) {
         const project = await this.repository.findOne({ _id: permission.projectId });
-        result.push({ ...project, status: permission.status });
+        const user = await this.userDtoRepository.findOne({ _id: project.userId.toString() });
+        result.push({ ...project, status: permission.status, ownerName: user.username });
       }
 
       return result;

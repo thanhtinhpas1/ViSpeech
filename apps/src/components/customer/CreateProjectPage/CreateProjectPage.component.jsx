@@ -25,8 +25,8 @@ const CreateProjectPage = ({ currentUser, createProjectObj, createProject }) => 
 
     const form = event.target
     const project = {
-      name: form.elements.name.value,
-      description: form.elements.description.value,
+      name: form.elements.name.value.trim(),
+      description: form.elements.description.value.trim(),
       userId: currentUser._id,
     }
     createProject(project)
