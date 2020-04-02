@@ -15,8 +15,17 @@ import {CommandHandlers} from './commands/handlers';
 import {UsersController} from './controllers/users.controller';
 import {UserDto} from './dtos/users.dto';
 import {EventHandlers} from './events/handlers';
-import {PasswordChangedEvent, PasswordChangedSuccessEvent, PasswordChangedFailedEvent} from './events/impl/password-changed.event';
-import {UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent} from './events/impl/user-created.event';
+import {
+    PasswordChangedEvent,
+    PasswordChangedFailedEvent,
+    PasswordChangedSuccessEvent
+} from './events/impl/password-changed.event';
+import {
+    UserCreatedEvent,
+    UserCreatedFailedEvent,
+    UserCreatedSuccessEvent,
+    UserCreationStartedEvent
+} from './events/impl/user-created.event';
 import {UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent} from './events/impl/user-deleted.event';
 import {UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent} from './events/impl/user-updated.event';
 import {UserWelcomedEvent} from './events/impl/user-welcomed.event';
@@ -24,11 +33,22 @@ import {QueryHandlers} from './queries/handler';
 import {UserRepository} from './repository/user.repository';
 import {UsersSagas} from './sagas/users.sagas';
 import {UsersService} from './services/users.service';
-import {VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent} from './events/impl/verify-email-sent.event';
+import {
+    VerifyEmailSentEvent,
+    VerifyEmailSentFailedEvent,
+    VerifyEmailSentSuccessEvent
+} from './events/impl/verify-email-sent.event';
 import {EmailVerifiedEvent} from './events/impl/email-verified.event';
+import {ClientKafka, ClientsModule} from "@nestjs/microservices";
+import {config} from "../../config";
+import {kafkaClientOptions} from "../common/kafka-client.options";
 
 @Module({
     imports: [
+        ClientsModule.register([{
+            name: config.KAFKA.NAME,
+            ...kafkaClientOptions,
+        }]),
         TypeOrmModule.forFeature([UserDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
@@ -41,6 +61,7 @@ import {EmailVerifiedEvent} from './events/impl/email-verified.event';
         /*** REPOSITORY */
         UserRepository, TokenRepository,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+        ClientKafka,
     ],
     exports: [UsersService],
 })
@@ -83,34 +104,23 @@ export class UsersModule implements OnModuleInit {
         UserCreatedEvent: (streamId, data) => new UserCreatedEvent(streamId, data),
         UserCreatedSuccessEvent: (streamId, data) => new UserCreatedSuccessEvent(streamId, data),
         UserCreatedFailedEvent: (streamId, data, error) => new UserCreatedFailedEvent(streamId, data, error),
-
         // update
         UserUpdatedEvent: (streamId, data) => new UserUpdatedEvent(streamId, data),
         UserUpdatedSuccessEvent: (streamId, data) => new UserUpdatedSuccessEvent(streamId, data),
         UserUpdatedFailedEvent: (streamId, data, error) => new UserUpdatedFailedEvent(streamId, data, error),
-
         // change password
         PasswordChangedEvent: (streamId, data) => new PasswordChangedEvent(streamId, data),
         PasswordChangedSuccessEvent: (streamId, data) => new PasswordChangedSuccessEvent(streamId, data),
         PasswordChangedFailedEvent: (streamId, data, error) => new PasswordChangedFailedEvent(streamId, data, error),
-
         // delete
         UserDeletedEvent: (streamId, data) => new UserDeletedEvent(streamId, data),
         UserDeletedSuccessEvent: (streamId, data) => new UserDeletedSuccessEvent(streamId, data),
         UserDeletedFailedEvent: (streamId, data, error) => new UserDeletedFailedEvent(streamId, data, error),
-
-        // assign user role
-        // UserRoleAssignedEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedEvent(streamId, userId, roleNames, assignerId),
-        // UserRoleAssignedSuccessEvent: (streamId, userId, roleNames, assignerId) => new UserRoleAssignedSuccessEvent(streamId, userId, roleNames, assignerId),
-        // UserRoleAssignedFailedEvent: (streamId, userId, roleNames, assignerId, error) => new UserRoleAssignedFailedEvent(streamId, userId, roleNames, assignerId, error),
-
         UserWelcomedEvent: (streamId, data) => new UserWelcomedEvent(streamId, data),
-
         // send verify email
         VerifyEmailSentEvent: (streamId, data) => new VerifyEmailSentEvent(streamId, data),
         VerifyEmailSentSuccessEvent: (streamId, data) => new VerifyEmailSentSuccessEvent(streamId, data),
         VerifyEmailSentFailedEvent: (streamId, data, error) => new VerifyEmailSentFailedEvent(streamId, data, error),
-
         // verify email
         EmailVerifiedEvent: (streamId, data) => new EmailVerifiedEvent(streamId, data),
     };

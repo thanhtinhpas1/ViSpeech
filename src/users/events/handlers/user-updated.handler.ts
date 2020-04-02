@@ -18,19 +18,19 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
     async handle(event: UserUpdatedEvent) {
         Logger.log(event.userDto.username, 'UserUpdatedEvent');
         const {streamId, userDto} = event;
-        const { _id, ...userInfo } = userDto;
+        const {_id, ...userInfo} = userDto;
 
         try {
-            const user = await this.repository.findOne({ _id });
+            const user = await this.repository.findOne({_id});
             if (!user) {
                 throw new NotFoundException(`User with _id ${_id} does not exist.`);
             }
 
             const formattedInfo = Utils.removePropertiesFromObject(userInfo, ['email', 'password', 'roles']);
-            await this.repository.update({ _id }, formattedInfo);
+            await this.repository.update({_id}, formattedInfo);
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
         } catch (error) {
-            this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));
+            this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error.message));
         }
     }
 }

@@ -31,7 +31,7 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
             const managerUserRole = new RoleDto(CONSTANTS.ROLE.MANAGER_USER);
             await this.repository.update({_id: userId}, {roles: [...userRoles, managerUserRole]});
         } catch (error) {
-            Logger.error(error, '', 'EmailVerifiedEvent');
+            Logger.error(error.message, '', 'EmailVerifiedEvent');
         }
     }
 }

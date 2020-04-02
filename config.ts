@@ -54,10 +54,12 @@ const configs = {
             secret: process.env.JWT_SECRET || 'vispeech',
         },
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-        SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+        SEND_GRID_API_KEY: process.env.SENDGRID_API_KEY || '',
         KAFKA: {
-            HOST: process.env.KAFKA_HOST || '0.0.0.0',
+            NAME: process.env.KAFKA_NAME || 'VISPEECH',
+            HOST: process.env.KAFKA_HOST || 'asr.vietspeech.com',
             PORT: process.env.KAFKA_PORT || 9092,
+            TOPIC: process.env.KAFKA_TOPIC || 'vispeech',
         },
         ASR: {
             PROTOCOL: process.env.ASR_PROTOCOL || 'http',

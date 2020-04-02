@@ -26,7 +26,7 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
             }
             throw new NotFoundException(`User with _id ${userId} does not exist.`);
         } catch (error) {
-            this.eventBus.publish(new UserDeletedFailedEvent(streamId, userId, error));
+            this.eventBus.publish(new UserDeletedFailedEvent(streamId, userId, error.message));
         }
     }
 }

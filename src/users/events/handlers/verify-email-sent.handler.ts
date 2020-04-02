@@ -3,7 +3,11 @@ import {Logger, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {UserDto} from 'users/dtos/users.dto';
 import {Repository} from 'typeorm';
-import {VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent} from '../impl/verify-email-sent.event';
+import {
+    VerifyEmailSentEvent,
+    VerifyEmailSentFailedEvent,
+    VerifyEmailSentSuccessEvent
+} from '../impl/verify-email-sent.event';
 import {AuthService} from 'auth/auth.service';
 import {EmailUtils} from 'utils/email.util';
 
@@ -30,7 +34,7 @@ export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEven
             await EmailUtils.sendVerifyEmail(user.username, user.email, verifyEmailToken);
             this.eventBus.publish(new VerifyEmailSentSuccessEvent(streamId, userId));
         } catch (error) {
-            this.eventBus.publish(new VerifyEmailSentFailedEvent(streamId, userId, error.toString()));
+            this.eventBus.publish(new VerifyEmailSentFailedEvent(streamId, userId, error.message));
         }
     }
 }

@@ -12,9 +12,11 @@ import {config} from '../config';
 import {ProjectsModule} from 'projects/projects.module';
 import {PermissionsModule} from 'permissions/permissions.module';
 import {RequestModule} from './requests/request.module';
+import {KafkaModule} from "./core/kafka/kafka.module";
 
 @Module({
     imports: [
+        KafkaModule.forRoot(),
         TypeOrmModule.forRoot({
             ...config.DATABASE,
             useUnifiedTopology: true,
@@ -36,4 +38,5 @@ import {RequestModule} from './requests/request.module';
     ],
 })
 export class AppModule {
+
 }

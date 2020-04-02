@@ -1,12 +1,12 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {Repository} from 'typeorm';
-import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
-import {FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent} from '../impl/free-token-created.event';
-import {CONSTANTS} from 'common/constant';
-import {Utils} from 'utils';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { Repository } from 'typeorm';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from '../impl/free-token-created.event';
+import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(FreeTokenCreatedEvent)
 export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEvent> {
@@ -21,11 +21,11 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
 
     async handle(event: FreeTokenCreatedEvent) {
         Logger.log(event.tokenDto._id, 'FreeTokenCreatedEvent');
-        const {streamId, tokenDto} = event;
+        const { streamId, tokenDto } = event;
         let token = JSON.parse(JSON.stringify(tokenDto)); // deep clone
 
         try {
-            const tokenTypeDto = await this.repositoryTokenType.findOne({name: CONSTANTS.TOKEN_TYPE.FREE});
+            const tokenTypeDto = await this.repositoryTokenType.findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
             token.tokenTypeId = tokenTypeDto._id;
             token.minutes = tokenTypeDto.minutes;
             token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
@@ -49,6 +49,6 @@ export class FreeTokenCreatedSuccessHandler
 export class FreeTokenCreatedFailedHandler
     implements IEventHandler<FreeTokenCreatedFailedEvent> {
     handle(event: FreeTokenCreatedFailedEvent) {
-        Logger.log(event.error, 'FreeTokenCreatedFailedEvent');
+        Logger.log(event.error ? event.error['errmsg'] : event.error, 'FreeTokenCreatedFailedEvent');
     }
 }

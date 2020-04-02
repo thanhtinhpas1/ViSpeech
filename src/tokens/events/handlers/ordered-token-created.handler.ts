@@ -4,7 +4,11 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {TokenDto} from 'tokens/dtos/tokens.dto';
 import {Repository} from 'typeorm';
 import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
-import {OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent} from '../impl/ordered-token-created.event';
+import {
+    OrderedTokenCreatedEvent,
+    OrderedTokenCreatedFailedEvent,
+    OrderedTokenCreatedSuccessEvent
+} from '../impl/ordered-token-created.event';
 import {Utils} from 'utils';
 
 @EventsHandler(OrderedTokenCreatedEvent)
@@ -39,7 +43,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
             await this.repository.save(token);
             this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
-            this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));
+            this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error.message));
         }
     }
 }
