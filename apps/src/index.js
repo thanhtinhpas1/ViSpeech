@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import './index.css'
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route } from 'react-router-dom'
@@ -10,7 +9,7 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { store, persistor } from './redux/store'
 
-ReactDOM.render(
+ReactDOM.hydrate(
   <Provider store={store}>
     <BrowserRouter>
       <PersistGate persistor={persistor}>

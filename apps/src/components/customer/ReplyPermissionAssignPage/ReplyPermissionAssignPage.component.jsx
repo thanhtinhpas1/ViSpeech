@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { useParams } from 'react-router-dom'
 import { CUSTOMER_PATH, JWT_TOKEN, STATUS } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
@@ -6,19 +7,19 @@ import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplateP
 const ReplyPermissionAssignPage = ({
   currentUser,
   history,
-  match,
   replyPermissionAssignObj,
   replyPermissionAssign,
   onAuthenticate,
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const [infoTemplate, setInfoTemplate] = useState({})
+  const { emailToken } = useParams()
 
   const onReplyPermissionAssign = useCallback(
     status => {
       let infoObj = {
-        title: 'Chấp nhận lời mời',
-        message: 'Bạn đã chấp nhận lời mời tham gia project.',
+        title: 'Phản hồi lời mời',
+        message: 'Bạn đã phản hồi lời mời tham gia project.',
         icon: { isSuccess: true },
         button: {
           content: 'Về trang chủ',
@@ -39,12 +40,8 @@ const ReplyPermissionAssignPage = ({
         return
       }
 
-      const {
-        params: { emailToken },
-      } = match
-
       infoObj = {
-        title: 'Chấp nhận lời mời',
+        title: 'Phản hồi lời mời',
         message: 'Vui lòng chờ giây lát...',
         icon: {
           isLoading: true,
@@ -54,7 +51,7 @@ const ReplyPermissionAssignPage = ({
       window.$('#info-modal').modal('show')
       replyPermissionAssign({ emailToken, status })
     },
-    [history, match, replyPermissionAssign, replyPermissionAssignObj]
+    [history, emailToken, replyPermissionAssign, replyPermissionAssignObj]
   )
 
   useEffect(() => {
@@ -64,7 +61,7 @@ const ReplyPermissionAssignPage = ({
 
   useEffect(() => {
     const infoTemplateObj = {
-      title: 'Chấp nhận lời mời',
+      title: 'Phản hồi lời mời',
       user: currentUser,
       positiveButton: {
         content: STATUS.ACCEPTED.viText,
@@ -84,8 +81,8 @@ const ReplyPermissionAssignPage = ({
       replyPermissionAssignObj.isSuccess === true
     ) {
       setInfoModal({
-        title: 'Chấp nhận lời mời',
-        message: 'Chấp nhận lời mời tham gia project thành công.',
+        title: 'Phản hồi lời mời',
+        message: 'Phản hồi lời mời tham gia project thành công.',
         icon: { isSuccess: true },
         button: {
           content: 'Về trang chủ',
@@ -101,8 +98,8 @@ const ReplyPermissionAssignPage = ({
       replyPermissionAssignObj.isSuccess === false
     ) {
       setInfoModal({
-        title: 'Chấp nhận lời mời',
-        message: 'Chấp nhận lời mời tham gia project thất bại. Vui lòng thử lại sau.',
+        title: 'Phản hồi lời mời',
+        message: 'Phản hồi lời mời tham gia project thất bại. Vui lòng thử lại sau.',
         icon: { isSuccess: false },
       })
     }

@@ -118,7 +118,7 @@ function* getList({ payload: filterConditions }) {
     yield put(getOrderListFailure(err.message))
   }
 }
-export function* getOrderListListSaga() {
+export function* getOrderListSaga() {
   yield takeLatest(OrderTypes.GET_ORDER_LIST, getList)
 }
 
@@ -140,7 +140,7 @@ export function* getOrderListListSaga() {
 
 export function* orderSaga() {
   yield all([
-    call(getOrderListListSaga),
+    call(getOrderListSaga),
     // call(createTransactionSaga),
   ])
 }

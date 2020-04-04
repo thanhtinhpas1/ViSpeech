@@ -4,35 +4,26 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from 'react'
-import { Redirect } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Redirect, useParams } from 'react-router-dom'
 import { ROLES, ADMIN_PATH } from 'utils/constant'
 import Utils from 'utils'
 import InfoTab from './components/InfoTab.component'
 import ActivitiesTab from './components/ActivitiesTab.component'
 import ChangePasswordTab from './components/ChangePasswordTab.component'
 
-const UserInfoPage = ({
-  userInfoObj,
-  deleteUserObj,
-  getUserInfo,
-  match,
-  updateUserInfo,
-  deleteUser,
-}) => {
-  const [userId, setUserId] = useState('')
+const UserInfoPage = ({ userInfoObj, deleteUserObj, getUserInfo, updateUserInfo, deleteUser }) => {
+  const { id } = useParams()
 
   useEffect(() => {
-    const { id } = match.params
     if (id) {
       getUserInfo(id)
-      setUserId(id)
     }
-  }, [match, getUserInfo])
+  }, [id, getUserInfo])
 
   const onSubmit = event => {
     event.preventDefault()
-    if (userId === '') {
+    if (!id) {
       return
     }
 
@@ -51,11 +42,11 @@ const UserInfoPage = ({
       email: form.elements.email.value,
       roles: formattedRoles,
     }
-    updateUserInfo(userId, user)
+    updateUserInfo(id, user)
   }
 
-  const onDeleteUser = (e, id) => {
-    deleteUser(id)
+  const onDeleteUser = (e, userId) => {
+    deleteUser(userId)
   }
 
   if (deleteUserObj.isLoading === false && deleteUserObj.isSuccess === true) {

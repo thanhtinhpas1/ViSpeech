@@ -12,7 +12,7 @@ export const Utils = {
         return uuidv1();
     },
     comparePassword: (plainTextPassword, hashedPassword) => {
-        return bcrypt.compare(plainTextPassword, hashedPassword);
+        return bcrypt.compareSync(plainTextPassword, hashedPassword);
     },
     removePropertyFromObject: (obj, property) => {
         const result = JSON.parse(JSON.stringify(obj));
