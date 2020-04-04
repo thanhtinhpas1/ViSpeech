@@ -16,10 +16,11 @@ import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';
 import { ReportsSagas } from './sagas/reports.sagas';
 import { ReportsService } from './services/reports.service';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([ReportDto]),
+        TypeOrmModule.forFeature([ReportDto, TokenDto]),
         EventStoreModule.forFeature(),
         forwardRef(() => AuthModule),
     ],

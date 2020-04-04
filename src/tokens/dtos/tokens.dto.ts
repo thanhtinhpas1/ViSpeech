@@ -1,6 +1,6 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { Type } from 'class-transformer';
-import { IsEmpty, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
 import { Column, Entity } from 'typeorm';
@@ -34,6 +34,7 @@ export class TokenDto extends BaseEntityDto {
     })
     value: string;
 
+    @IsNotEmpty()
     @IsString()
     @IsUUID()
     @Column({
@@ -44,6 +45,7 @@ export class TokenDto extends BaseEntityDto {
 
     // @IsUUID()
     // free token does not have projectId, set projectId = ""
+    @IsNotEmpty()
     @IsString()
     @Column({
         nullable: false,

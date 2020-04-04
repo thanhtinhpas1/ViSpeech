@@ -76,7 +76,12 @@ const TokenStatistics = ({
       .attr('id')
     const index = getTokenTypeListObj.tokenTypeList.findIndex(x => x._id === selectedTypeId)
     let selectedType = getTokenTypeListObj.tokenTypeList[index]
-    selectedType = Utils.removePropertiesFromObject(selectedType, ['defaultChecked', 'saleOff'])
+    selectedType = Utils.removePropertiesFromObject(selectedType, [
+      'defaultChecked',
+      'saleOff',
+      'createdDate',
+      'updatedDate',
+    ])
     const payOnlineObj = {
       user: currentUser,
       tokenType: selectedType,

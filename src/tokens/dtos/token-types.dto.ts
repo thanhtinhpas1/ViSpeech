@@ -1,6 +1,6 @@
 import {Column, Entity} from 'typeorm';
 import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsIn, IsNotEmpty, IsNumber, IsPositive, IsString,} from 'class-validator';
+import {IsIn, IsNotEmpty, IsNumber, IsPositive, IsString, Min, Max,} from 'class-validator';
 import {Type} from 'class-transformer';
 import {CONSTANTS} from 'common/constant';
 
@@ -25,21 +25,25 @@ export class TokenTypeDto extends BaseEntityDto {
     @Column()
     name: string;
 
+    @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     @IsPositive()
     @Column()
     minutes: number;
 
+    @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     @IsPositive()
     @Column()
     price: number;
 
+    @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
-    @IsPositive()
+    @Min(0)
+    @Max(100)
     @Column({
         default: 0,
     })

@@ -16,6 +16,7 @@ export class PermissionAssignDto {
     @IsNotEmpty()
     assigneeUsername: string;
 
+    @IsNotEmpty()
     @IsUUID()
     @Column({
         nullable: false,
@@ -28,6 +29,7 @@ export class PermissionAssignDto {
     @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
     permissions: string[];
 
+    @IsNotEmpty()
     @IsUUID()
     @Column({
         nullable: false,

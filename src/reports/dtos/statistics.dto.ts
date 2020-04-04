@@ -8,13 +8,15 @@ export class StatisticalDto {
         this.year = year;
     }
     
+    @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     @IsPositive()
     data: number;
 
+    @IsNotEmpty()
     @Type(() => Number)
-    @IsInt()
+    @IsNumber()
     @Min(1970)
     @Max(9999)
     year: number;
@@ -26,11 +28,13 @@ export class StatisticalObject {
         this.to = to;
     }
 
+    @IsNotEmpty()
     @ValidateNested()
     @Type(() => StatisticalDto)
     @IsObject()
     from: StatisticalDto;
 
+    @IsNotEmpty()
     @ValidateNested()
     @Type(() => StatisticalDto)
     @IsObject()

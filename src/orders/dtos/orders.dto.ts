@@ -35,11 +35,11 @@ export class OrderDto extends BaseEntityDto {
     @IsNotEmpty()
     @ValidateNested()
     @Type(() => TokenTypeDto)
-    @Column({
-        nullable: false,
-    })
+    @Column()
     tokenType: TokenTypeDto;
 
+    @IsNotEmpty()
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,

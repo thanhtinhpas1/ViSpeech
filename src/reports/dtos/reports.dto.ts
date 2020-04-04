@@ -22,6 +22,7 @@ export class ReportDto extends BaseEntityDto {
         this.tokenId = tokenId;
     }
 
+    @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     @IsPositive()
@@ -34,6 +35,7 @@ export class ReportDto extends BaseEntityDto {
     @Column()
     dateReport: Date;
 
+    @IsNotEmpty()
     @IsString()
     @IsUUID()
     @Column({
@@ -42,6 +44,7 @@ export class ReportDto extends BaseEntityDto {
     })
     tokenId: ObjectID;
 
+    @IsNotEmpty()
     @IsString()
     @IsUUID()
     @Column({
@@ -50,6 +53,7 @@ export class ReportDto extends BaseEntityDto {
     })
     projectId: ObjectID;
 
+    @IsNotEmpty()
     @IsString()
     @IsUUID()
     @Column({
@@ -58,6 +62,7 @@ export class ReportDto extends BaseEntityDto {
     })
     userId: ObjectID;
 
+    @IsNotEmpty()
     @IsString()
     @IsUUID()
     @Column({
