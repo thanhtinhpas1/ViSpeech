@@ -1,9 +1,10 @@
 import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from 'class-validator';
+import {IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested} from 'class-validator';
 import {CONSTANTS} from 'common/constant';
 import {Column, Entity, ObjectID} from 'typeorm';
 import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
 import {TokenDto} from 'tokens/dtos/tokens.dto';
+import { Type } from 'class-transformer';
 
 export class OrderIdRequestParamsDto {
     constructor(orderId) {
@@ -26,10 +27,14 @@ export class OrderDto extends BaseEntityDto {
     }
 
     @IsOptional()
+    @ValidateNested()
+    @Type(() => TokenDto)
     @Column()
     token: TokenDto;
 
     @IsNotEmpty()
+    @ValidateNested()
+    @Type(() => TokenTypeDto)
     @Column({
         nullable: false,
     })

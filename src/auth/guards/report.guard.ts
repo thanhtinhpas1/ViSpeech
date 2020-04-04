@@ -11,8 +11,8 @@ export class ReportGuard implements CanActivate {
 
     canActivate(context: import('@nestjs/common').ExecutionContext): boolean | Promise<boolean> | import('rxjs').Observable<boolean> {
         const request = context.switchToHttp().getRequest();
-        const id = request.params['_id'] || request.params['id'];
-        if (!id) return true;
+        // const id = request.params['_id'] || request.params['id'];
+        // if (!id) return true;
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {

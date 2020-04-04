@@ -6,6 +6,7 @@ import {UpdateReportCommand} from '../commands/impl/update-report.command';
 import {DeleteReportCommand} from '../commands/impl/delete-report.command';
 import {GetReportsQuery} from 'reports/queries/impl/get-reports.query';
 import {FindReportQuery} from 'reports/queries/impl/find-report.query';
+import { GetStatisticsByProjectIdQuery } from 'reports/queries/impl/get-statistics-by-projectId.query';
 
 @Injectable()
 export class ReportsService {
@@ -35,6 +36,13 @@ export class ReportsService {
 
     async findOne(findReportQuery: FindReportQuery): Promise<ReportDto> {
         var query = new FindReportQuery(findReportQuery.id);
+        return await this.queryBus.execute(query);
+    }
+
+    async getStatisticsByProjectId(getStatisticsByProjectIdQuery: GetStatisticsByProjectIdQuery) {
+        const { id, type } = getStatisticsByProjectIdQuery;
+        var query = new GetStatisticsByProjectIdQuery(id, type);
+        Object.assign(query, getStatisticsByProjectIdQuery);
         return await this.queryBus.execute(query);
     }
 }

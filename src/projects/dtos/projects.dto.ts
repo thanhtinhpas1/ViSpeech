@@ -35,6 +35,7 @@ export class ProjectDto extends BaseEntityDto {
     })
     description: string;
 
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,

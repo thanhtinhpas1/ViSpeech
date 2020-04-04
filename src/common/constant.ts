@@ -21,8 +21,16 @@ export const CONSTANTS = {
         REJECTED: 'REJECTED',
         INVALID: 'INVALID',
     },
+    STATISTICS_TYPE: {
+        DATE: 'DATE',
+        WEEK: 'WEEK',
+        MONTH: 'MONTH',
+        QUARTER: 'QUARTER',
+        YEAR: 'YEAR',
+    },
     BEARER_HEADER_AUTHORIZE: 'Bearer ',
     AUTH_JWT: 'jwt',
     AUTH_LOCAL: 'local',
     ASR_SERVICE: 'ASR_SERVICE',
+    ONE_DAY_IN_MILISECONDS: 86400000,
 };

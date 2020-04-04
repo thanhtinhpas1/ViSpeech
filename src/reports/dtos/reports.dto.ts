@@ -34,10 +34,35 @@ export class ReportDto extends BaseEntityDto {
     @Column()
     dateReport: Date;
 
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,
         type: 'uuid'
     })
     tokenId: ObjectID;
+
+    @IsString()
+    @IsUUID()
+    @Column({
+        nullable: false,
+        type: 'uuid'
+    })
+    projectId: ObjectID;
+
+    @IsString()
+    @IsUUID()
+    @Column({
+        nullable: false,
+        type: 'uuid'
+    })
+    userId: ObjectID;
+
+    @IsString()
+    @IsUUID()
+    @Column({
+        nullable: false,
+        type: 'uuid'
+    })
+    tokenTypeId: ObjectID;
 }

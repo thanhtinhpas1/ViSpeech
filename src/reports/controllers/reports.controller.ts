@@ -8,6 +8,8 @@ import {ReportDto, ReportIdRequestParamsDto} from '../dtos/reports.dto';
 import {ReportsService} from '../services/reports.service';
 import {AuthGuard} from '@nestjs/passport';
 import {ReportGuard} from 'auth/guards/report.guard';
+import { GetStatisticsByProjectIdQuery } from 'reports/queries/impl/get-statistics-by-projectId.query';
+import { GetStatisticsParam } from 'reports/dtos/statistics.dto';
 
 @Controller('reports')
 @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportGuard)
@@ -74,5 +76,19 @@ export class ReportsController {
     @Get(':id')
     async findOneReport(@Param() findReportQuery: FindReportQuery) {
         return this.reportsService.findOne(findReportQuery);
+    }
+
+    /* Get Statistics By ProjectId */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Get Statistics By ProjectId']})
+    @ApiResponse({status: 200, description: 'Get Statistics By ProjectId.'})
+    @Get('projectId/:id/:type')
+    async getStatisticalDataByProjectId(@Query() getStatisticsByProjectIdQuery: GetStatisticsByProjectIdQuery,
+    @Param() getStatisticsParam: GetStatisticsParam) {
+        const { id, type } = getStatisticsParam;
+        getStatisticsByProjectIdQuery.id = id;
+        getStatisticsByProjectIdQuery.type = type;
+        return this.reportsService.getStatisticsByProjectId(getStatisticsByProjectIdQuery);
     }
 }

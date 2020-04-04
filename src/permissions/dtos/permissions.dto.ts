@@ -90,6 +90,7 @@ export class PermissionDto extends BaseEntityDto {
     @Column()
     permissions: string[];
 
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,
@@ -97,6 +98,7 @@ export class PermissionDto extends BaseEntityDto {
     })
     assigneeId: ObjectID;
 
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,
@@ -104,6 +106,7 @@ export class PermissionDto extends BaseEntityDto {
     })
     assignerId: ObjectID;
 
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,

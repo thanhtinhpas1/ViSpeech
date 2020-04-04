@@ -3,7 +3,6 @@ import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {AuthModule} from 'auth/auth.module';
 import {EventStore} from 'core/event-store/event-store';
-import {CommandHandlers as TokenCommandHandlers} from 'tokens/commands/handlers';
 import {TokenRepository} from 'tokens/repository/token.repository';
 import {EventStoreModule} from '../core/event-store/event-store.module';
 import {CommandHandlers} from './commands/handlers';
@@ -18,8 +17,9 @@ import {QueryHandlers} from './queries/handler';
 import {OrderRepository} from './repository/order.repository';
 import {OrdersSagas} from './sagas/orders.sagas';
 import {OrdersService} from './services/orders.service';
-import {TokensModule} from 'tokens/tokens.module';
 import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
+import { CreateOrderedTokenHandler } from 'tokens/commands/handlers/create-token.handler';
+import { OrderedTokenCreatedSuccessHandler, OrderedTokenCreatedFailedHandler } from 'tokens/events/handlers/ordered-token-created.handler';
 
 @Module({
     imports: [
@@ -32,11 +32,13 @@ import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
         OrdersService,
         OrdersSagas,
         ...CommandHandlers,
-        ...TokenCommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
         OrderRepository,
         TokenRepository,
+        CreateOrderedTokenHandler,
+        OrderedTokenCreatedSuccessHandler,
+        OrderedTokenCreatedFailedHandler,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
     ],
     exports: [OrdersService]
@@ -52,12 +54,12 @@ export class OrdersModule implements OnModuleInit {
     }
 
     onModuleInit() {
-        this.eventStore.setEventHandlers({...this.eventHandlers, ...TokensModule.eventHandlers});
+        this.eventStore.setEventHandlers({...this.eventHandlers, OrderedTokenCreatedSuccessHandler, OrderedTokenCreatedFailedHandler});
         this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         /** ------------ */
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, ...TokenCommandHandlers]);
+        this.command$.register([...CommandHandlers, CreateOrderedTokenHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([OrdersSagas]);
     }

@@ -34,6 +34,7 @@ export class TokenDto extends BaseEntityDto {
     })
     value: string;
 
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,
@@ -71,6 +72,7 @@ export class TokenDto extends BaseEntityDto {
     usedMinutes: number;
 
     @IsOptional()
+    @IsString()
     @IsUUID()
     @Column({
         nullable: false,
@@ -94,6 +96,7 @@ export class TokenDto extends BaseEntityDto {
     tokenType: string;
 
     @IsOptional()
+    @IsString()
     @IsUUID()
     orderId: ObjectID;
 }

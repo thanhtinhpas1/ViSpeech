@@ -1,6 +1,5 @@
 import { v1 as uuidv1 } from 'uuid';
 import { CONSTANTS } from '../common/constant';
-import { Double } from 'typeorm';
 
 const bcrypt = require('bcryptjs');
 
@@ -62,4 +61,58 @@ export const Utils = {
         }
         return param;
     },
+    isValidDate: miliseconds => {
+        if (!miliseconds) {
+            return false;
+        }
+        const date = new Date(parseInt(miliseconds));
+        return !isNaN(date.getTime());
+    },
+    getOnlyDate: (date: Date) => {
+        let formattedDate = JSON.parse(JSON.stringify(date)); // string
+        formattedDate = new Date(formattedDate);
+        formattedDate.setHours(0);
+        formattedDate.setMinutes(0);
+        formattedDate.setSeconds(0);
+        formattedDate.setMilliseconds(0);
+        return formattedDate;
+    },
+    addDays: (currentDate: Date, days: number) => {
+        var date = new Date(currentDate.valueOf());
+        date.setDate(date.getDate() + days);
+        return date;
+    },
+    getDates: (fromDate: Date, toDate: Date) => {
+        var dateArray = [];
+        var currentDate = fromDate;
+        while (currentDate <= toDate) {
+          dateArray.push({ date: new Date(currentDate), value: 0 });
+          currentDate = Utils.addDays(currentDate, 1);
+        }
+        return dateArray;
+    },  
+    getWeek: (date: Date) => {
+        var firstDateOfYear = new Date(date.getFullYear(), 0, 1);
+        date = Utils.getOnlyDate(date);
+        var dayNumberOfYear = (date.valueOf() - firstDateOfYear.valueOf() + CONSTANTS.ONE_DAY_IN_MILISECONDS) / CONSTANTS.ONE_DAY_IN_MILISECONDS;
+        return Math.ceil((dayNumberOfYear + firstDateOfYear.getDay()) / 7);
+    },
+    getQuarter: month => {
+        const firstQuarter = [0, 1, 2];
+        const secondQuarter = [3, 4, 5];
+        const thirdQuarter = [6, 7, 8];
+        const fourthQuarter = [9, 10, 11];
+        if (firstQuarter.indexOf(month) > -1) {
+          return 1;
+        }
+        if (secondQuarter.indexOf(month) > -1) {
+          return 2;
+        }
+        if (thirdQuarter.indexOf(month) > -1) {
+          return 3;
+        }
+        if (fourthQuarter.indexOf(month) > -1) {
+          return 4;
+        }
+      }
 };
