@@ -19,7 +19,7 @@ import {OrdersSagas} from './sagas/orders.sagas';
 import {OrdersService} from './services/orders.service';
 import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
 import { CreateOrderedTokenHandler } from 'tokens/commands/handlers/create-token.handler';
-import { OrderedTokenCreatedSuccessHandler, OrderedTokenCreatedFailedHandler } from 'tokens/events/handlers/ordered-token-created.handler';
+import { TokensModule } from 'tokens/tokens.module';
 
 @Module({
     imports: [
@@ -37,8 +37,6 @@ import { OrderedTokenCreatedSuccessHandler, OrderedTokenCreatedFailedHandler } f
         OrderRepository,
         TokenRepository,
         CreateOrderedTokenHandler,
-        OrderedTokenCreatedSuccessHandler,
-        OrderedTokenCreatedFailedHandler,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
     ],
     exports: [OrdersService]
@@ -54,7 +52,7 @@ export class OrdersModule implements OnModuleInit {
     }
 
     onModuleInit() {
-        this.eventStore.setEventHandlers({...this.eventHandlers, OrderedTokenCreatedSuccessHandler, OrderedTokenCreatedFailedHandler});
+        this.eventStore.setEventHandlers({...this.eventHandlers, ...TokensModule.eventHandlers});
         this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         /** ------------ */

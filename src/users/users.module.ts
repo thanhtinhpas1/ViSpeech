@@ -42,10 +42,7 @@ import {config} from "../../config";
 import {kafkaClientOptions} from "../common/kafka-client.options";
 import {CreateFreeTokenHandler} from 'tokens/commands/handlers/create-token.handler';
 import {DeleteTokenByUserIdHandler} from 'tokens/commands/handlers/delete-token.handler';
-import {
-    FreeTokenCreatedFailedHandler,
-    FreeTokenCreatedSuccessHandler
-} from 'tokens/events/handlers/free-token-created.handler';
+import { TokensModule } from 'tokens/tokens.module';
 
 @Module({
     imports: [
@@ -63,8 +60,6 @@ import {
         UsersSagas, ...CommandHandlers,
         ...EventHandlers, ...QueryHandlers,
         CreateFreeTokenHandler,
-        FreeTokenCreatedSuccessHandler,
-        FreeTokenCreatedFailedHandler,
         DeleteTokenByUserIdHandler,
         /*** REPOSITORY */
         UserRepository, TokenRepository,
@@ -87,8 +82,7 @@ export class UsersModule implements OnModuleInit {
     async onModuleInit() {
         this.eventStore.setEventHandlers({
             ...this.eventHandlers,
-            FreeTokenCreatedSuccessHandler,
-            FreeTokenCreatedFailedHandler,
+            ...TokensModule.eventHandlers,
         });
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
