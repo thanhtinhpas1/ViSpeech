@@ -7,7 +7,7 @@ export class StatisticalDto {
         this.data = data;
         this.year = year;
     }
-    
+
     @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
@@ -42,25 +42,52 @@ export class StatisticalObject {
 }
 
 export class GetStatisticsParam {
+    constructor(id: string, userId: string, type: string, totalType: string) {
+        this.id = id;
+        this.userId = userId;
+        this.type = type;
+        this.totalType = totalType;
+    }
+
+    @IsOptional()
+    @IsString()
+    @IsUUID()
+    id: string;
+
+    @IsOptional()
+    @IsString()
+    @IsUUID()
+    userId: string;
+
+    @IsOptional()
+    @IsString()
+    @IsIn([CONSTANTS.STATISTICS_TYPE.DATE, CONSTANTS.STATISTICS_TYPE.WEEK, CONSTANTS.STATISTICS_TYPE.MONTH,
+    CONSTANTS.STATISTICS_TYPE.QUARTER, CONSTANTS.STATISTICS_TYPE.YEAR])
+    type: string;
+
+    @IsOptional()
+    @IsString()
+    @IsIn([CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN, CONSTANTS.TOTAL_STATISTICS_TYPE.PROJECT,
+    CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.TOTAL_STATISTICS_TYPE.USER])
+    totalType: string;
+}
+
+export class GetStatisticsQuery {
     constructor(id: string, type: string) {
         this.id = id;
         this.type = type;
     }
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     @IsUUID()
     id: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.STATISTICS_TYPE.DATE, CONSTANTS.STATISTICS_TYPE.WEEK, CONSTANTS.STATISTICS_TYPE.MONTH, 
-        CONSTANTS.STATISTICS_TYPE.QUARTER, CONSTANTS.STATISTICS_TYPE.YEAR])
+    @IsIn([CONSTANTS.STATISTICS_TYPE.DATE, CONSTANTS.STATISTICS_TYPE.WEEK, CONSTANTS.STATISTICS_TYPE.MONTH,
+    CONSTANTS.STATISTICS_TYPE.QUARTER, CONSTANTS.STATISTICS_TYPE.YEAR])
     type: string;
-}
-
-export class GetStatisticsQuery {
-    constructor() {}
 
     @IsOptional()
     @Type(() => Number)
@@ -107,3 +134,14 @@ export class GetStatisticsQuery {
     toYear: number;
 }
 
+export class GetTotalStatisticsQuery {
+    constructor(type: string) {
+        this.type = type;
+    }
+
+    @IsOptional()
+    @IsString()
+    @IsIn([CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN, CONSTANTS.TOTAL_STATISTICS_TYPE.PROJECT,
+    CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.TOTAL_STATISTICS_TYPE.USER])
+    type: string;
+}

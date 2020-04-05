@@ -3,29 +3,29 @@ import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportDto } from 'reports/dtos/reports.dto';
 import { Repository } from 'typeorm';
-import { GetStatisticsByProjectIdQuery } from '../impl/get-statistics-by-projectId.query';
 import { ReportUtils } from 'utils/report.util';
+import { GetStatisticsByTokenTypeIdQuery } from '../impl/get-statistics-by-tokenTypeId.query';
 
-@QueryHandler(GetStatisticsByProjectIdQuery)
-export class GetStatisticsByProjectIdHandler implements IQueryHandler<GetStatisticsByProjectIdQuery> {
+@QueryHandler(GetStatisticsByTokenTypeIdQuery)
+export class GetStatisticsByTokenTypeIdHandler implements IQueryHandler<GetStatisticsByTokenTypeIdQuery> {
     constructor(
         @InjectRepository(ReportDto)
         private readonly repository: Repository<ReportDto>,
     ) {
     }
 
-    async execute(query: GetStatisticsByProjectIdQuery): Promise<any> {
-        Logger.log('Async GetStatisticsByProjectIdQuery...', 'GetStatisticsByProjectIdQuery');
+    async execute(query: GetStatisticsByTokenTypeIdQuery): Promise<any> {
+        Logger.log('Async GetStatisticsByTokenTypeIdQuery...', 'GetStatisticsByTokenTypeIdQuery');
         const { id, type } = query;
 
         try {
             const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = ReportUtils.getValidStatisticalQueryParams(query);
             let data = ReportUtils.prepareStatisticalData(type, fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear)
-            const reports = await this.repository.find({ projectId: id });
+            const reports = await this.repository.find({ tokenTypeId: id });
             data = ReportUtils.getStatisticalData(type, data, reports);
             return data;
         } catch (error) {
-            Logger.error(error, '', 'GetStatisticsByProjectIdQuery');
+            Logger.error(error, '', 'GetStatisticsByTokenTypeIdQuery');
         }
     }
 }

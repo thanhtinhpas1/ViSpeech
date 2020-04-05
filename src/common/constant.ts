@@ -28,6 +28,12 @@ export const CONSTANTS = {
         QUARTER: 'QUARTER',
         YEAR: 'YEAR',
     },
+    TOTAL_STATISTICS_TYPE: {
+        TOKEN: 'TOKEN',
+        USER: 'USER',
+        PROJECT: 'PROJECT',
+        TOKEN_TYPE: 'TOKEN_TYPE',
+    },
     BEARER_HEADER_AUTHORIZE: 'Bearer ',
     AUTH_JWT: 'jwt',
     AUTH_LOCAL: 'local',
