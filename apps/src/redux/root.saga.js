@@ -4,6 +4,7 @@ import { tokenSaga } from './token/token.sagas'
 import { orderSaga } from './order/order.sagas'
 import { projectSaga } from './project/project.sagas'
 import { permissionSaga } from './permission/permission.sagas'
+import { reportSaga } from './report/report.sagas'
 
 export default function* rootSagas() {
   yield all([
@@ -12,5 +13,6 @@ export default function* rootSagas() {
     call(orderSaga),
     call(projectSaga),
     call(permissionSaga),
+    call(reportSaga),
   ])
 }

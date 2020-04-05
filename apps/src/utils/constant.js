@@ -29,3 +29,16 @@ export const STATUS = {
   // -canceled -missing
 }
 export const DEFAULT_ERR_MESSAGE = 'Đã có lỗi xảy ra. Vui lòng thử lại sau ít phút.'
+export const STATISTICS_TYPE = {
+  DATE: 'date',
+  WEEK: 'week',
+  MONTH: 'month',
+  QUARTER: 'quarter',
+  YEAR: 'year',
+}
+export const TOTAL_STATISTICS_TYPE = {
+  TOKEN: 'token',
+  USER: 'user',
+  PROJECT: 'project',
+  TOKEN_TYPE: 'tokenType',
+}

@@ -1,0 +1,39 @@
+.statistics-page {
+  width: 100%;
+  margin: 0px auto;
+  min-height: 100vh;
+  position: relative;
+  .ant-row {
+    justify-content: center;
+  }
+  &__select-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    .ant-select {
+      margin-right: 20px;
+    }
+    .ant-btn {
+      margin-left: 20px;
+    }
+  }
+  &__chart {
+    width: 100%;
+    margin-top: 30px;
+    .ant-empty {
+      margin: 130px 0px;
+    }
+  }
+  &__loading {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    .ant-spin {
+      i {
+        font-size: 40px;
+      }
+    }
+  }
+}

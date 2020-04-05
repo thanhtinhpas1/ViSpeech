@@ -15,18 +15,23 @@ export class ReportIdRequestParamsDto {
 
 @Entity('reports')
 export class ReportDto extends BaseEntityDto {
-    constructor(usedMinutes: number, dateReport: Date, tokenId) {
+    constructor(usedMinutes: number, dateReport: Date, tokenId, tokenTypeId, projectId, userId) {
         super();
         this.usedMinutes = usedMinutes;
         this.dateReport = dateReport;
         this.tokenId = tokenId;
+        this.tokenTypeId = tokenTypeId;
+        this.projectId = projectId;
+        this.userId = userId;
     }
 
     @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     @IsPositive()
-    @Column()
+    @Column({
+        type: 'double'
+    })
     usedMinutes: number;
 
     @Type(() => Date)

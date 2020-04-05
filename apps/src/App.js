@@ -1,27 +1,20 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
-
+import 'antd/dist/antd.css'
 import React, { useEffect, useState } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import RouteCustomer from 'routes/customer.route'
 import RouteAdmin from 'routes/admin.route'
 import loadScript from 'utils/loadScript'
 import loadLink from 'utils/loadLink'
-// import ChangePasswordContainer from 'components/common/ChangePassword/ChangePassword.container'
 import { connect } from 'react-redux'
 import Utils from 'utils'
 import { CUSTOMER_PATH, ADMIN_PATH } from 'utils/constant'
-// import NotFound404 from 'components/common/NotFound404/NotFound404.component'
-// import ErrorPage from 'components/common/ErrorPage/ErrorPage.component'
 
 import LandingPage from 'components/common/LandingPage/LandingPage.container'
 import LoginPage from 'components/common/LoginPage/LoginPage.container'
 import RegisterPage from 'components/common/RegisterPage/RegisterPage.container'
-// import ActiveEmailContainer from 'components/common/ActiveEmail/ActiveEmail.container'
-// import ForgetPasswordContainer from 'components/common/ForgetPassword/ForgetPassword.container'
-// import ResetPasswordContainer from 'components/common/ResetPassword/ResetPassword.container'
-// import RegisterPageContainer from 'components/common/RegisterPage/RegisterPage.container'
 
 const App = ({ currentUser }) => {
   const [isCssLoaded, setIsCssLoaded] = useState(false)

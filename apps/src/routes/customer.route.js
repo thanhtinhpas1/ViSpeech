@@ -16,6 +16,7 @@ import ProjectPage from 'components/customer/ProjectPage/ProjectPage.container'
 import CreateProjectPage from 'components/customer/CreateProjectPage/CreateProjectPage.container'
 import AssignPermissionPage from 'components/customer/AssignPermissionPage/AssignPermissionPage.container'
 import ReplyPermissionAssignPage from 'components/customer/ReplyPermissionAssignPage/ReplyPermissionAssignPage.container'
+import StatisticsPage from 'components/customer/StatisticsPage/StatisticsPage.container'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -112,6 +113,14 @@ const RouteCustomer = ({ currentUser }) => {
               </CustomerLayout>
             )}
           />
+          <Route
+            path={`${CUSTOMER_PATH}/reports`}
+            render={() => (
+              <CustomerLayout>
+                <StatisticsPage />
+              </CustomerLayout>
+            )}
+          />
         </>
       ) : (
         <>
@@ -146,6 +155,9 @@ const RouteCustomer = ({ currentUser }) => {
             <Redirect to="/" />
           </Route>
           <Route path={`${CUSTOMER_PATH}/reply-permission-assign/:emailToken`}>
+            <Redirect to="/" />
+          </Route>
+          <Route path={`${CUSTOMER_PATH}/reports`}>
             <Redirect to="/" />
           </Route>
         </>

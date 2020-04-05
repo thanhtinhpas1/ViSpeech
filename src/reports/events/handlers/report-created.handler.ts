@@ -18,6 +18,7 @@ export class ReportCreatedHandler implements IEventHandler<ReportCreatedEvent> {
         const {streamId, reportDto} = event;
 
         try {
+            reportDto.usedMinutes = Number(reportDto.usedMinutes);
             return await this.repository.save(reportDto);
         } catch (error) {
             Logger.error(error, '', 'ReportCreatedEvent');
