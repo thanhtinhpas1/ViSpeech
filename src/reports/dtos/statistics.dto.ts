@@ -135,7 +135,8 @@ export class GetStatisticsQuery {
 }
 
 export class GetTotalStatisticsQuery {
-    constructor(type: string) {
+    constructor(totalType: string, type: string) {
+        this.totalType = totalType;
         this.type = type;
     }
 
@@ -143,5 +144,55 @@ export class GetTotalStatisticsQuery {
     @IsString()
     @IsIn([CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN, CONSTANTS.TOTAL_STATISTICS_TYPE.PROJECT,
     CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.TOTAL_STATISTICS_TYPE.USER])
+    totalType: string;
+
+    @IsOptional()
+    @IsString()
+    @IsIn([CONSTANTS.STATISTICS_TYPE.DATE, CONSTANTS.STATISTICS_TYPE.WEEK, CONSTANTS.STATISTICS_TYPE.MONTH,
+    CONSTANTS.STATISTICS_TYPE.QUARTER, CONSTANTS.STATISTICS_TYPE.YEAR])
     type: string;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsNumber()
+    @IsPositive()
+    fromDate: number;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsNumber()
+    @IsPositive()
+    toDate: number;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => StatisticalObject)
+    @IsObject()
+    weekObj: StatisticalObject;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => StatisticalObject)
+    @IsObject()
+    monthObj: StatisticalObject;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => StatisticalObject)
+    @IsObject()
+    quarterObj: StatisticalObject;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsInt()
+    @Min(1970)
+    @Max(9999)
+    fromYear: number;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsInt()
+    @Min(1970)
+    @Max(9999)
+    toYear: number;
 }

@@ -2,11 +2,11 @@ import { CONSTANTS } from '../common/constant';
 import { StatisticalObject, StatisticalDto } from 'reports/dtos/statistics.dto';
 
 export const ReportUtils = {
-    isValidDate: miliseconds => {
-        if (!miliseconds) {
+    isValidDate: milliseconds => {
+        if (!milliseconds) {
             return false;
         }
-        const date = new Date(parseInt(miliseconds));
+        const date = new Date(parseInt(milliseconds));
         return !isNaN(date.getTime());
     },
     getOnlyDate: (date: Date) => {
@@ -28,14 +28,14 @@ export const ReportUtils = {
         var currentDate = fromDate;
         while (currentDate <= toDate) {
             dateArray.push({ date: new Date(currentDate), value: 0 });
-            currentDate = ReportUtils.addDays(currentDate, 1);
+            currentDate = ReportUtils.getOnlyDate(ReportUtils.addDays(currentDate, 1));
         }
         return dateArray;
     },
     getWeek: (date: Date) => {
-        var firstDateOfYear = new Date(date.getFullYear(), 0, 1);
-        date = ReportUtils.getOnlyDate(date);
-        var dayNumberOfYear = (date.valueOf() - firstDateOfYear.valueOf() + CONSTANTS.ONE_DAY_IN_MILISECONDS) / CONSTANTS.ONE_DAY_IN_MILISECONDS;
+        const firstDateOfYear = new Date(date.getFullYear(), 0, 1);
+        const onlyDate = new Date(ReportUtils.getOnlyDate(date));
+        const dayNumberOfYear = (onlyDate.valueOf() - firstDateOfYear.valueOf() + CONSTANTS.ONE_DAY_IN_MILLISECONDS) / CONSTANTS.ONE_DAY_IN_MILLISECONDS;
         return Math.ceil((dayNumberOfYear + firstDateOfYear.getDay()) / 7);
     },
     getQuarter: month => {
@@ -56,9 +56,72 @@ export const ReportUtils = {
             return 4;
         }
     },
+    getMonthOfQuarter: (quarter, isStartMonth) => {
+        const firstQuarter = [0, 1, 2];
+        const secondQuarter = [3, 4, 5];
+        const thirdQuarter = [6, 7, 8];
+        const fourthQuarter = [9, 10, 11];
+        if (quarter === 1) {
+            return isStartMonth ? firstQuarter[0] : firstQuarter[2];
+        }
+        if (quarter === 2) {
+            return isStartMonth ? secondQuarter[0] : secondQuarter[2];
+        }
+        if (quarter === 3) {
+            return isStartMonth ? thirdQuarter[0] : thirdQuarter[2];
+        }
+        if (quarter === 4) {
+            return isStartMonth ? fourthQuarter[0] : fourthQuarter[2];
+        }
+    },
+    getStartDate: (type, queryParams) => {
+        let result = null;
+        const { fromDate, weekObj, monthObj, quarterObj, fromYear } = queryParams;
+
+        if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
+            result = ReportUtils.getOnlyDate(fromDate);
+        } else if (type === CONSTANTS.STATISTICS_TYPE.WEEK) {
+            const { data, year } = weekObj.from;
+            const firstDateOfYear = new Date(year, 0, 1);
+            result = ReportUtils.addDays(firstDateOfYear, (data - 1) * 7 - firstDateOfYear.getDay());
+        } else if (type === CONSTANTS.STATISTICS_TYPE.MONTH) {
+            const { data, year } = monthObj.from;
+            result = new Date(year, data, 1);
+        } else if (type === CONSTANTS.STATISTICS_TYPE.QUARTER) {
+            const { data, year } = quarterObj.from;
+            const month = ReportUtils.getMonthOfQuarter(data, true);
+            result = new Date(year, month, 1);
+        } else if (type === CONSTANTS.STATISTICS_TYPE.YEAR) {
+            result = new Date(fromYear, 0, 1);
+        }
+        return result;
+    },
+    getEndDate: (type, queryParams) => {
+        let result = null;
+        const { toDate, weekObj, monthObj, quarterObj, toYear } = queryParams;
+
+        if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
+            result = ReportUtils.getOnlyDate(toDate);
+        } else if (type === CONSTANTS.STATISTICS_TYPE.WEEK) {
+            const { data, year } = weekObj.to;
+            const firstDateOfYear = new Date(year, 0, 1);
+            const firstDateOfWeek = ReportUtils.addDays(firstDateOfYear, (data - 1) * 7 - firstDateOfYear.getDay());
+            result = ReportUtils.addDays(firstDateOfWeek, 6);
+        } else if (type === CONSTANTS.STATISTICS_TYPE.MONTH) {
+            const { data, year } = monthObj.to;
+            result = new Date(year, data + 1, 0);
+        } else if (type === CONSTANTS.STATISTICS_TYPE.QUARTER) {
+            const { data, year } = quarterObj.to;
+            const month = ReportUtils.getMonthOfQuarter(data, false);
+            result = new Date(year, month + 1, 0);
+        } else if (type === CONSTANTS.STATISTICS_TYPE.YEAR) {
+            result = new Date(toYear, 11, 31);
+        }
+        return result;
+    },
     getValidStatisticalQueryParams: query => {
         const fromDate = ReportUtils.isValidDate(query.fromDate) ? new Date(query.fromDate) : new Date();
-        const toDate = ReportUtils.isValidDate(query.toDate) ? new Date(query.toDate) : new Date();
+        const toDate = ReportUtils.isValidDate(query.toDate) ? new Date(query.toDate) : ReportUtils.addDays(fromDate, 1);
         const weekObj = query.weekObj || new StatisticalObject(new StatisticalDto(1, 2020), new StatisticalDto(10, 2020));
         const monthObj = query.monthObj || new StatisticalObject(new StatisticalDto(0, 2020), new StatisticalDto(11, 2020));
         const quarterObj = query.quarterObj || new StatisticalObject(new StatisticalDto(1, 2020), new StatisticalDto(10, 2020));
@@ -66,12 +129,14 @@ export const ReportUtils = {
         const toYear = query.toYear;
         return { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear };
     },
-    prepareStatisticalData: (type, fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear) => {
+    prepareStatisticalData: (type, queryParams) => {
         let data = [];
+        const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = queryParams;
+
         if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
-            fromDate = ReportUtils.getOnlyDate(fromDate);
-            toDate = ReportUtils.getOnlyDate(toDate)
-            data = ReportUtils.getDates(fromDate, toDate);
+            let from = ReportUtils.getOnlyDate(fromDate);
+            let to = ReportUtils.getOnlyDate(toDate)
+            data = ReportUtils.getDates(from, to);
         } else if (type === CONSTANTS.STATISTICS_TYPE.WEEK) {
             const fromWeek = weekObj.from.data;
             const toWeek = weekObj.to.data;
@@ -138,7 +203,10 @@ export const ReportUtils = {
 
             if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
                 dateReport = ReportUtils.getOnlyDate(dateReport);
-                let index = result.findIndex(el => el.date.valueOf() === dateReport.valueOf());
+                let index = result.findIndex(el => { 
+                    const date = new Date(el.date.valueOf());
+                    return date.valueOf() === dateReport.valueOf() 
+                });
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }
@@ -178,5 +246,15 @@ export const ReportUtils = {
         }
 
         return result;
+    },
+    aggregateBetweenDates: (startDate, endDate) => {
+        return {
+            $match: {
+                dateReport: {
+                    $gte: new Date(startDate),
+                    $lte: new Date(endDate)
+                }
+            }
+        }
     }
 };

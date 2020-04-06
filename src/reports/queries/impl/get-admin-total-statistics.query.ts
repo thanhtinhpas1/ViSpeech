@@ -1,7 +1,7 @@
 import { GetTotalStatisticsQuery } from 'reports/dtos/statistics.dto';
 
 export class GetAdminTotalStatisticsQuery extends GetTotalStatisticsQuery {
-    constructor(type: string) {
-        super(type);
+    constructor(totalType: string, type: string) {
+        super(totalType, type);
     }
 }

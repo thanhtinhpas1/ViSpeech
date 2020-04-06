@@ -19,9 +19,19 @@ export class GetStatisticsByTokenTypeIdAndUserIdHandler implements IQueryHandler
         const { id, userId, type } = query;
 
         try {
-            const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = ReportUtils.getValidStatisticalQueryParams(query);
-            let data = ReportUtils.prepareStatisticalData(type, fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear)
-            const reports = await this.repository.find({ userId, tokenTypeId: id });
+            const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
+            const startDate = ReportUtils.getStartDate(type, queryParams);
+            const endDate = ReportUtils.getEndDate(type, queryParams);
+            let data = ReportUtils.prepareStatisticalData(type, queryParams);
+
+            const reports = await this.repository.find({ where: {
+                userId,
+                tokenTypeId: id,
+                dateReport: {
+                    $gte: new Date(startDate),
+                    $lt: new Date(endDate)
+                },
+            } });
             data = ReportUtils.getStatisticalData(type, data, reports);
             return data;
         } catch (error) {

@@ -17,7 +17,7 @@ import { GetUserTotalStatisticsQuery } from 'reports/queries/impl/get-user-total
 import { GetAdminTotalStatisticsQuery } from 'reports/queries/impl/get-admin-total-statistics.query';
 
 @Controller('reports')
-@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportGuard)
+@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
 @ApiTags('Reports')
 export class ReportsController {
     constructor(private readonly reportsService: ReportsService) {
@@ -145,11 +145,12 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Admin Total Statistics']})
     @ApiResponse({status: 200, description: 'Get Admin Total Statistics.'})
-    @Get('admin-total-statistics/:totalType')
+    @Get('admin-total-statistics/:totalType/:type')
     async getAdminTotalStatistics(@Query() query: GetAdminTotalStatisticsQuery,
     @Param() param: GetStatisticsParam) {
-        const { totalType } = param;
-        query.type = totalType;
+        const { totalType, type } = param;
+        query.totalType = totalType;
+        query.type = type;
         return this.reportsService.getAdminTotalStatistics(query);
     }
 
@@ -158,12 +159,13 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get User Total Statistics']})
     @ApiResponse({status: 200, description: 'Get User Total Statistics.'})
-    @Get('user-total-statistics/:userId/:totalType')
+    @Get('user-total-statistics/:userId/:totalType/:type')
     async getUserTotalStatistics(@Query() query: GetUserTotalStatisticsQuery,
     @Param() param: GetStatisticsParam) {
-        const { userId, totalType } = param;
-        query.type = totalType;
+        const { userId, totalType, type } = param;
         query.userId = userId;
+        query.totalType = totalType;
+        query.type = type;
         return this.reportsService.getUserTotalStatistics(query);
     }
 }
