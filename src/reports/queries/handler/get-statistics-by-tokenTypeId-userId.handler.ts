@@ -16,23 +16,24 @@ export class GetStatisticsByTokenTypeIdAndUserIdHandler implements IQueryHandler
 
     async execute(query: GetStatisticsByTokenTypeIdAndUserIdQuery): Promise<any> {
         Logger.log('Async GetStatisticsByTokenTypeIdAndUserIdQuery...', 'GetStatisticsByTokenTypeIdAndUserIdQuery');
-        const { id, userId, type } = query;
+        const { id, userId, timeType } = query;
 
         try {
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
-            const startDate = ReportUtils.getStartDate(type, queryParams);
-            const endDate = ReportUtils.getEndDate(type, queryParams);
-            let data = ReportUtils.prepareStatisticalData(type, queryParams);
+            const startDate = ReportUtils.getStartDate(timeType, queryParams);
+            const endDate = ReportUtils.getEndDate(timeType, queryParams);
+            let data = ReportUtils.prepareStatisticalData(timeType, queryParams);
 
             const reports = await this.repository.find({ where: {
                 userId,
                 tokenTypeId: id,
                 dateReport: {
                     $gte: new Date(startDate),
-                    $lt: new Date(endDate)
+                    $lte: new Date(endDate)
                 },
             } });
-            data = ReportUtils.getStatisticalData(type, data, reports);
+
+            data = ReportUtils.getStatisticalData(timeType, data, reports);
             return data;
         } catch (error) {
             Logger.error(error, '', 'GetStatisticsByTokenTypeIdAndUserIdQuery');

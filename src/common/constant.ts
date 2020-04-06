@@ -21,18 +21,19 @@ export const CONSTANTS = {
         REJECTED: 'REJECTED',
         INVALID: 'INVALID',
     },
-    STATISTICS_TYPE: {
+    TIME_TYPE: {
         DATE: 'date',
         WEEK: 'week',
         MONTH: 'month',
         QUARTER: 'quarter',
         YEAR: 'year',
     },
-    TOTAL_STATISTICS_TYPE: {
+    STATISTICS_TYPE: {
         TOKEN: 'token',
         USER: 'user',
         PROJECT: 'project',
         TOKEN_TYPE: 'tokenType',
+        USER_TOKEN_TYPE: 'userTokenType'
     },
     BEARER_HEADER_AUTHORIZE: 'Bearer ',
     AUTH_JWT: 'jwt',

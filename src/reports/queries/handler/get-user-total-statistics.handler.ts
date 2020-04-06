@@ -24,67 +24,46 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
 
     async execute(query: GetUserTotalStatisticsQuery): Promise<any> {
         Logger.log('Async GetUserTotalStatisticsQuery...', 'GetUserTotalStatisticsQuery');
-        const { userId, totalType, type } = query;
+        const { userId, statisticsType, timeType } = query;
         let data = [];
 
         try {
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
-            const startDate = ReportUtils.getStartDate(type, queryParams);
-            const endDate = ReportUtils.getEndDate(type, queryParams);
+            const startDate = ReportUtils.getStartDate(timeType, queryParams);
+            const endDate = ReportUtils.getEndDate(timeType, queryParams);
+            
+            let aggregateGroup = {
+                $group: {
+                    _id: {
+                        userId: '$userId'
+                    },
+                    usedMinutes: { $sum: '$usedMinutes' }
+                }
+            }
+            aggregateGroup.$group._id[`${statisticsType}Id`] = `'$${statisticsType}Id'`
+            const groupedReports = await getMongoRepository(ReportDto).aggregate([
+                ReportUtils.aggregateMatchDates(startDate, endDate),
+                aggregateGroup
+            ]).toArray();
 
-            if (totalType === CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN_TYPE) {
+            if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
                 const tokenTypes = await this.tokenTypeRepository.find();
                 for (const tokenType of tokenTypes) {
                     data.push({ data: tokenType, usedMinutes: 0 });
                 }
-                const groupedReports = await getMongoRepository(ReportDto).aggregate([
-                    ReportUtils.aggregateBetweenDates(startDate, endDate),
-                    {
-                        $group: {
-                            _id: {
-                                tokenTypeId: '$tokenTypeId',
-                                userId: '$userId'
-                            },
-                            usedMinutes: { $sum: '$usedMinutes' }
-                        }
-                    }]).toArray();
-                console.log(groupedReports)
-                data = ReportUtils.getTotalStatisticalData(groupedReports, data, 'tokenTypeId');
-            } else if (totalType === CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN) {
+            } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN) {
                 const tokens = await this.tokenRepository.find({ userId });
                 for (const token of tokens) {
                     data.push({ data: token, usedMinutes: 0 });
                 }
-                const groupedReports = await getMongoRepository(ReportDto).aggregate([
-                    ReportUtils.aggregateBetweenDates(startDate, endDate),
-                    {
-                        $group: {
-                            _id: {
-                                tokenId: '$tokenId',
-                                userId: '$userId'
-                            },
-                            usedMinutes: { $sum: '$usedMinutes' }
-                        }
-                    }]).toArray();
-                data = ReportUtils.getTotalStatisticalData(groupedReports, data, 'tokenId');
-            } else if (totalType === CONSTANTS.TOTAL_STATISTICS_TYPE.PROJECT) {
+            } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
                 const projects = await this.projectRepository.find({ userId });
                 for (const project of projects) {
                     data.push({ data: project, usedMinutes: 0 });
                 }
-                const groupedReports = await getMongoRepository(ReportDto).aggregate([
-                    ReportUtils.aggregateBetweenDates(startDate, endDate),
-                    {
-                        $group: {
-                            _id: {
-                                projectId: '$projectId',
-                                userId: '$userId'
-                            },
-                            usedMinutes: { $sum: '$usedMinutes' }
-                        }
-                    }]).toArray();
-                data = ReportUtils.getTotalStatisticalData(groupedReports, data, 'projectId');
             }
+
+            data = ReportUtils.getTotalStatisticalData(groupedReports, data, `'${statisticsType}Id'`);
             return data;
         } catch (error) {
             Logger.error(error, '', 'GetUserTotalStatisticsQuery');

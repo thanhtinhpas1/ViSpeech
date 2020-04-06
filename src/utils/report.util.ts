@@ -32,11 +32,33 @@ export const ReportUtils = {
         }
         return dateArray;
     },
+    getLastDatesOfYear: year => {
+        const lastDateOfYear = new Date(year, 11, 31);
+        if (lastDateOfYear.getDay() === 6) {
+            return [];
+        }
+
+        let lastDatesOfYear = [];
+        let count = 0;
+        while (count <= lastDateOfYear.getDay()) {
+            lastDatesOfYear.push(lastDateOfYear.getDate() - count);
+            count += 1;
+        }
+        return lastDatesOfYear;
+    },
     getWeek: (date: Date) => {
         const firstDateOfYear = new Date(date.getFullYear(), 0, 1);
         const onlyDate = new Date(ReportUtils.getOnlyDate(date));
         const dayNumberOfYear = (onlyDate.valueOf() - firstDateOfYear.valueOf() + CONSTANTS.ONE_DAY_IN_MILLISECONDS) / CONSTANTS.ONE_DAY_IN_MILLISECONDS;
         return Math.ceil((dayNumberOfYear + firstDateOfYear.getDay()) / 7);
+    },
+    getTotalWeeksOfYear: year => {
+        const lastDateOfYear = new Date(year, 11, 31)
+        let lastWeekOfYear = ReportUtils.getWeek(lastDateOfYear)
+        if (lastDateOfYear.getDay() !== 6) {
+            lastWeekOfYear -= 1
+        }
+        return lastWeekOfYear
     },
     getQuarter: month => {
         const firstQuarter = [0, 1, 2];
@@ -78,20 +100,20 @@ export const ReportUtils = {
         let result = null;
         const { fromDate, weekObj, monthObj, quarterObj, fromYear } = queryParams;
 
-        if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
+        if (type === CONSTANTS.TIME_TYPE.DATE) {
             result = ReportUtils.getOnlyDate(fromDate);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.WEEK) {
+        } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const { data, year } = weekObj.from;
             const firstDateOfYear = new Date(year, 0, 1);
             result = ReportUtils.addDays(firstDateOfYear, (data - 1) * 7 - firstDateOfYear.getDay());
-        } else if (type === CONSTANTS.STATISTICS_TYPE.MONTH) {
+        } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
             const { data, year } = monthObj.from;
             result = new Date(year, data, 1);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.QUARTER) {
+        } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
             const { data, year } = quarterObj.from;
             const month = ReportUtils.getMonthOfQuarter(data, true);
             result = new Date(year, month, 1);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.YEAR) {
+        } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
             result = new Date(fromYear, 0, 1);
         }
         return result;
@@ -100,21 +122,21 @@ export const ReportUtils = {
         let result = null;
         const { toDate, weekObj, monthObj, quarterObj, toYear } = queryParams;
 
-        if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
+        if (type === CONSTANTS.TIME_TYPE.DATE) {
             result = ReportUtils.getOnlyDate(toDate);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.WEEK) {
+        } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const { data, year } = weekObj.to;
             const firstDateOfYear = new Date(year, 0, 1);
             const firstDateOfWeek = ReportUtils.addDays(firstDateOfYear, (data - 1) * 7 - firstDateOfYear.getDay());
             result = ReportUtils.addDays(firstDateOfWeek, 6);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.MONTH) {
+        } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
             const { data, year } = monthObj.to;
             result = new Date(year, data + 1, 0);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.QUARTER) {
+        } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
             const { data, year } = quarterObj.to;
             const month = ReportUtils.getMonthOfQuarter(data, false);
             result = new Date(year, month + 1, 0);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.YEAR) {
+        } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
             result = new Date(toYear, 11, 31);
         }
         return result;
@@ -133,18 +155,35 @@ export const ReportUtils = {
         let data = [];
         const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = queryParams;
 
-        if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
+        if (type === CONSTANTS.TIME_TYPE.DATE) {
             let from = ReportUtils.getOnlyDate(fromDate);
             let to = ReportUtils.getOnlyDate(toDate)
             data = ReportUtils.getDates(from, to);
-        } else if (type === CONSTANTS.STATISTICS_TYPE.WEEK) {
+        } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const fromWeek = weekObj.from.data;
             const toWeek = weekObj.to.data;
-            const year = weekObj.from.year;
-            for (let i = fromWeek; i <= toWeek; i++) {
-                data.push({ week: i, year: year, value: 0 });
+            const fromYear = weekObj.from.year;
+            const toYear = weekObj.to.year;
+            const totalWeekOfFromYear = ReportUtils.getTotalWeeksOfYear(fromYear);
+            if (fromYear !== toYear) {
+                for (let i = fromWeek; i <= totalWeekOfFromYear; i++) {
+                    data.push({ week: i, year: fromYear, value: 0 });
+                }
+                for (let j = fromYear + 1; j < toYear; j++) {
+                    const totalWeekOfYear = ReportUtils.getTotalWeeksOfYear(j);
+                    for (let i = 1; i <= totalWeekOfYear; i++) {
+                        data.push({ week: i, year: j, value: 0 });
+                    }
+                }
+                for (let i = 1; i <= toWeek; i++) {
+                    data.push({ week: i, year: toYear, value: 0 });
+                }
+            } else {
+                for (let i = fromWeek; i <= toWeek; i++) {
+                    data.push({ week: i, year: fromYear, value: 0 });
+                }
             }
-        } else if (type === CONSTANTS.STATISTICS_TYPE.MONTH) {
+        } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
             const fromMonth = monthObj.from.data;
             const toMonth = monthObj.to.data;
             const fromYear = monthObj.from.year;
@@ -166,7 +205,7 @@ export const ReportUtils = {
                     data.push({ month: i, year: fromYear, value: 0 });
                 }
             }
-        } else if (type === CONSTANTS.STATISTICS_TYPE.QUARTER) {
+        } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
             const fromQuarter = quarterObj.from.data;
             const toQuarter = quarterObj.to.data;
             const fromYear = quarterObj.from.year;
@@ -188,7 +227,7 @@ export const ReportUtils = {
                     data.push({ quarter: i, year: fromYear, value: 0 });
                 }
             }
-        } else if (type === CONSTANTS.STATISTICS_TYPE.YEAR) {
+        } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
             for (let i = fromYear; i <= toYear; i++) {
                 data.push({ year: i, value: 0 });
             }
@@ -201,31 +240,35 @@ export const ReportUtils = {
         for (const report of reports) {
             let dateReport = new Date(report.dateReport);
 
-            if (type === CONSTANTS.STATISTICS_TYPE.DATE) {
+            if (type === CONSTANTS.TIME_TYPE.DATE) {
                 dateReport = ReportUtils.getOnlyDate(dateReport);
-                let index = result.findIndex(el => { 
+                let index = result.findIndex(el => {
                     const date = new Date(el.date.valueOf());
-                    return date.valueOf() === dateReport.valueOf() 
+                    return date.valueOf() === dateReport.valueOf()
                 });
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }
-            } else if (type === CONSTANTS.STATISTICS_TYPE.WEEK) {
+            } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
+                const lastDatesOfYear = ReportUtils.getLastDatesOfYear(dateReport.getFullYear());
                 let index = result.findIndex(el => el.week === ReportUtils.getWeek(dateReport) && el.year === dateReport.getFullYear());
+                if (lastDatesOfYear.findIndex(date => date === dateReport.getDate()) > -1) {
+                    index = result.findIndex(el => el.week === 1 && el.year === dateReport.getFullYear() + 1);
+                }
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }
-            } else if (type === CONSTANTS.STATISTICS_TYPE.MONTH) {
+            } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
                 let index = result.findIndex(el => el.month === dateReport.getMonth() && el.year === dateReport.getFullYear());
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }
-            } else if (type === CONSTANTS.STATISTICS_TYPE.QUARTER) {
+            } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
                 let index = result.findIndex(el => el.quarter === ReportUtils.getQuarter(dateReport.getMonth()) && el.year === dateReport.getFullYear());
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }
-            } else if (type === CONSTANTS.STATISTICS_TYPE.YEAR) {
+            } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
                 let index = result.findIndex(el => el.year === dateReport.getFullYear());
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
@@ -247,7 +290,7 @@ export const ReportUtils = {
 
         return result;
     },
-    aggregateBetweenDates: (startDate, endDate) => {
+    aggregateMatchDates: (startDate, endDate) => {
         return {
             $match: {
                 dateReport: {

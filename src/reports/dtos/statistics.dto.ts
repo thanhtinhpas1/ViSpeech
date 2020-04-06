@@ -42,11 +42,11 @@ export class StatisticalObject {
 }
 
 export class GetStatisticsParam {
-    constructor(id: string, userId: string, type: string, totalType: string) {
+    constructor(id: string, userId: string, statisticsType: string, timeType: string) {
         this.id = id;
         this.userId = userId;
-        this.type = type;
-        this.totalType = totalType;
+        this.statisticsType = statisticsType;
+        this.timeType = timeType;
     }
 
     @IsOptional()
@@ -61,21 +61,22 @@ export class GetStatisticsParam {
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.STATISTICS_TYPE.DATE, CONSTANTS.STATISTICS_TYPE.WEEK, CONSTANTS.STATISTICS_TYPE.MONTH,
-    CONSTANTS.STATISTICS_TYPE.QUARTER, CONSTANTS.STATISTICS_TYPE.YEAR])
-    type: string;
+    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
+    CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+    timeType: string;
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN, CONSTANTS.TOTAL_STATISTICS_TYPE.PROJECT,
-    CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.TOTAL_STATISTICS_TYPE.USER])
-    totalType: string;
+    @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
+    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
+    statisticsType: string;
 }
 
 export class GetStatisticsQuery {
-    constructor(id: string, type: string) {
+    constructor(id: string, statisticsType: string, timeType: string) {
         this.id = id;
-        this.type = type;
+        this.statisticsType = statisticsType;
+        this.timeType = timeType;
     }
 
     @IsOptional()
@@ -85,9 +86,15 @@ export class GetStatisticsQuery {
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.STATISTICS_TYPE.DATE, CONSTANTS.STATISTICS_TYPE.WEEK, CONSTANTS.STATISTICS_TYPE.MONTH,
-    CONSTANTS.STATISTICS_TYPE.QUARTER, CONSTANTS.STATISTICS_TYPE.YEAR])
-    type: string;
+    @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
+    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE])
+    statisticsType: string;
+
+    @IsOptional()
+    @IsString()
+    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
+    CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+    timeType: string;
 
     @IsOptional()
     @Type(() => Number)
@@ -135,22 +142,22 @@ export class GetStatisticsQuery {
 }
 
 export class GetTotalStatisticsQuery {
-    constructor(totalType: string, type: string) {
-        this.totalType = totalType;
-        this.type = type;
+    constructor(statisticsType: string, timeType: string) {
+        this.statisticsType = statisticsType;
+        this.timeType = timeType;
     }
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN, CONSTANTS.TOTAL_STATISTICS_TYPE.PROJECT,
-    CONSTANTS.TOTAL_STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.TOTAL_STATISTICS_TYPE.USER])
-    totalType: string;
+    @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
+    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
+    statisticsType: string;
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.STATISTICS_TYPE.DATE, CONSTANTS.STATISTICS_TYPE.WEEK, CONSTANTS.STATISTICS_TYPE.MONTH,
-    CONSTANTS.STATISTICS_TYPE.QUARTER, CONSTANTS.STATISTICS_TYPE.YEAR])
-    type: string;
+    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
+    CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+    timeType: string;
 
     @IsOptional()
     @Type(() => Number)

@@ -8,10 +8,8 @@ import {ReportDto, ReportIdRequestParamsDto} from '../dtos/reports.dto';
 import {ReportsService} from '../services/reports.service';
 import {AuthGuard} from '@nestjs/passport';
 import {ReportGuard} from 'auth/guards/report.guard';
-import { GetStatisticsByProjectIdQuery } from 'reports/queries/impl/get-statistics-by-projectId.query';
+import { GetStatisticsByIdQuery } from 'reports/queries/impl/get-statistics-by-id.query';
 import { GetStatisticsParam } from 'reports/dtos/statistics.dto';
-import { GetStatisticsByTokenIdQuery } from 'reports/queries/impl/get-statistics-by-tokenId.query';
-import { GetStatisticsByTokenTypeIdQuery } from 'reports/queries/impl/get-statistics-by-tokenTypeId.query';
 import { GetStatisticsByTokenTypeIdAndUserIdQuery } from 'reports/queries/impl/get-statistics-by-tokenTypeId-userId.query';
 import { GetUserTotalStatisticsQuery } from 'reports/queries/impl/get-user-total-statistics.query';
 import { GetAdminTotalStatisticsQuery } from 'reports/queries/impl/get-admin-total-statistics.query';
@@ -83,46 +81,19 @@ export class ReportsController {
         return this.reportsService.findOne(findReportQuery);
     }
 
-    /* Get Statistics By ProjectId */
+    /* Get Statistics By Id */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Statistics By ProjectId']})
-    @ApiResponse({status: 200, description: 'Get Statistics By ProjectId.'})
-    @Get('projectId/:id/:type')
-    async getStatisticalDataByProjectId(@Query() query: GetStatisticsByProjectIdQuery,
+    @ApiOperation({tags: ['Get Statistics By Id']})
+    @ApiResponse({status: 200, description: 'Get Statistics By Id.'})
+    @Get('statistics-by-id/:id/:statisticsType/:timeType')
+    async getStatisticsById(@Query() query: GetStatisticsByIdQuery,
     @Param() param: GetStatisticsParam) {
-        const { id, type } = param;
+        const { id, statisticsType, timeType } = param;
         query.id = id;
-        query.type = type;
-        return this.reportsService.getStatisticsByProjectId(query);
-    }
-
-    /* Get Statistics By TokenId */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Statistics By TokenId']})
-    @ApiResponse({status: 200, description: 'Get Statistics By TokenId.'})
-    @Get('tokenId/:id/:type')
-    async getStatisticalDataByTokenId(@Query() query: GetStatisticsByTokenIdQuery,
-    @Param() param: GetStatisticsParam) {
-        const { id, type } = param;
-        query.id = id;
-        query.type = type;
-        return this.reportsService.getStatisticsByTokenId(query);
-    }
-
-    /* Get Statistics By TokenTypeId */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Statistics By TokenTypeId']})
-    @ApiResponse({status: 200, description: 'Get Statistics By TokenTypeId.'})
-    @Get('tokenTypeId/:id/:type')
-    async getStatisticalDataByTokenTypeId(@Query() query: GetStatisticsByTokenTypeIdQuery,
-    @Param() param: GetStatisticsParam) {
-        const { id, type } = param;
-        query.id = id;
-        query.type = type;
-        return this.reportsService.getStatisticsByTokenTypeId(query);
+        query.statisticsType = statisticsType;
+        query.timeType = timeType;
+        return this.reportsService.getStatisticsById(query);
     }
 
     /* Get Statistics By TokenTypeId And UserId */
@@ -130,13 +101,13 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Statistics By TokenTypeId And UserId']})
     @ApiResponse({status: 200, description: 'Get Statistics By TokenTypeId And UserId.'})
-    @Get('tokenTypeId-userId/:id/:userId/:type')
+    @Get('user-token-type-statistics/:id/:userId/:timeType')
     async getStatisticalDataByTokenTypeIdAndUserId(@Query() query: GetStatisticsByTokenTypeIdAndUserIdQuery,
     @Param() param: GetStatisticsParam) {
-        const { id, userId, type } = param;
+        const { id, userId, timeType } = param;
         query.id = id;
         query.userId = userId;
-        query.type = type;
+        query.timeType = timeType;
         return this.reportsService.getStatisticsByTokenTypeIdAndUserId(query);
     }
 
@@ -145,12 +116,12 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Admin Total Statistics']})
     @ApiResponse({status: 200, description: 'Get Admin Total Statistics.'})
-    @Get('admin-total-statistics/:totalType/:type')
+    @Get('admin-total-statistics/:statisticsType/:timeType')
     async getAdminTotalStatistics(@Query() query: GetAdminTotalStatisticsQuery,
     @Param() param: GetStatisticsParam) {
-        const { totalType, type } = param;
-        query.totalType = totalType;
-        query.type = type;
+        const { statisticsType, timeType } = param;
+        query.statisticsType = statisticsType;
+        query.timeType = timeType;
         return this.reportsService.getAdminTotalStatistics(query);
     }
 
@@ -159,13 +130,13 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get User Total Statistics']})
     @ApiResponse({status: 200, description: 'Get User Total Statistics.'})
-    @Get('user-total-statistics/:userId/:totalType/:type')
+    @Get('user-total-statistics/:userId/:statisticsType/:timeType')
     async getUserTotalStatistics(@Query() query: GetUserTotalStatisticsQuery,
     @Param() param: GetStatisticsParam) {
-        const { userId, totalType, type } = param;
+        const { userId, statisticsType, timeType } = param;
         query.userId = userId;
-        query.totalType = totalType;
-        query.type = type;
+        query.statisticsType = statisticsType;
+        query.timeType = timeType;
         return this.reportsService.getUserTotalStatistics(query);
     }
 }
