@@ -43,7 +43,13 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
-  getAdminTotalStatistics: {
+  getAdminTotalStatisticsBytokenType: {
+    data: [],
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
+  getAdminTotalStatisticsByuser: {
     data: [],
     isLoading: false,
     isSuccess: null,
@@ -61,28 +67,15 @@ const reportReducer = (state = INITIAL_STATE, action) => {
   const returnObjFailure = {
     ...state,
   }
+  let getStatistics = null
+
   // Only for get statistics by id
   if (
     action.type === ReportTypes.GET_STATISTICS_BY_ID ||
     action.type === ReportTypes.GET_STATISTICS_BY_ID_SUCCESS ||
     action.type === ReportTypes.GET_STATISTICS_BY_ID_FAILURE
   ) {
-    const getStatisticsById = `getStatisticsBy${action.payload.statisticsType}Id`
-    returnObj[getStatisticsById] = {
-      ...state[getStatisticsById],
-      isLoading: true,
-    }
-    returnObjSuccess[getStatisticsById] = {
-      isLoading: false,
-      isSuccess: true,
-      data: action.payload.data,
-    }
-    returnObjFailure[getStatisticsById] = {
-      ...state[getStatisticsById],
-      isLoading: false,
-      isSuccess: false,
-      message: action.payload.message,
-    }
+    getStatistics = `getStatisticsBy${action.payload.statisticsType}Id`
   }
   // Only for get user total statistics
   if (
@@ -90,18 +83,39 @@ const reportReducer = (state = INITIAL_STATE, action) => {
     action.type === ReportTypes.GET_USER_TOTAL_STATISTICS_SUCCESS ||
     action.type === ReportTypes.GET_USER_TOTAL_STATISTICS_FAILURE
   ) {
-    const getUserTotalStatistics = `getUserTotalStatisticsBy${action.payload.statisticsType}`
-    returnObj[getUserTotalStatistics] = {
-      ...state[getUserTotalStatistics],
+    getStatistics = `getUserTotalStatisticsBy${action.payload.statisticsType}`
+  }
+  // Only for get admin total statistics
+  if (
+    action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS ||
+    action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS_SUCCESS ||
+    action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE
+  ) {
+    getStatistics = `getAdminTotalStatisticsBy${action.payload.statisticsType}`
+  }
+
+  if (
+    action.type === ReportTypes.GET_STATISTICS_BY_ID ||
+    action.type === ReportTypes.GET_STATISTICS_BY_ID_SUCCESS ||
+    action.type === ReportTypes.GET_STATISTICS_BY_ID_FAILURE ||
+    action.type === ReportTypes.GET_USER_TOTAL_STATISTICS ||
+    action.type === ReportTypes.GET_USER_TOTAL_STATISTICS_SUCCESS ||
+    action.type === ReportTypes.GET_USER_TOTAL_STATISTICS_FAILURE ||
+    action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS ||
+    action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS_SUCCESS ||
+    action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE
+  ) {
+    returnObj[getStatistics] = {
+      ...state[getStatistics],
       isLoading: true,
     }
-    returnObjSuccess[getUserTotalStatistics] = {
+    returnObjSuccess[getStatistics] = {
       isLoading: false,
       isSuccess: true,
       data: action.payload.data,
     }
-    returnObjFailure[getUserTotalStatistics] = {
-      ...state[getUserTotalStatistics],
+    returnObjFailure[getStatistics] = {
+      ...state[getStatistics],
       isLoading: false,
       isSuccess: false,
       message: action.payload.message,
@@ -157,32 +171,11 @@ const reportReducer = (state = INITIAL_STATE, action) => {
       return returnObjFailure
     // GET ADMIN TOTAL STATISTICS
     case ReportTypes.GET_ADMIN_TOTAL_STATISTICS:
-      return {
-        ...state,
-        getAdminTotalStatistics: {
-          ...state.getAdminTotalStatistics,
-          isLoading: true,
-        },
-      }
+      return returnObj
     case ReportTypes.GET_ADMIN_TOTAL_STATISTICS_SUCCESS:
-      return {
-        ...state,
-        getAdminTotalStatistics: {
-          isLoading: false,
-          isSuccess: true,
-          data: action.payload.data,
-        },
-      }
+      return returnObjSuccess
     case ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE:
-      return {
-        ...state,
-        getAdminTotalStatistics: {
-          ...state.getAdminTotalStatistics,
-          isLoading: false,
-          isSuccess: false,
-          message: action.payload.message,
-        },
-      }
+      return returnObjFailure
     default:
       return state
   }

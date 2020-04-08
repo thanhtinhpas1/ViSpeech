@@ -14,7 +14,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
     constructor(
         @InjectRepository(TokenTypeDto)
         private readonly tokenTypeRepository: Repository<TokenTypeDto>,
-        @InjectRepository(TokenTypeDto)
+        @InjectRepository(UserDto)
         private readonly userRepository: Repository<UserDto>,
     ) {
     }

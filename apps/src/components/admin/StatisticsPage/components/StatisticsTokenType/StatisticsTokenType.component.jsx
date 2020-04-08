@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReportUtils from 'utils/report.util'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
 
@@ -10,9 +10,9 @@ const StatisticsTokenType = ({
   currentUser,
   chartOptions,
   getTokenTypeListObj,
-  getUserTokenTypeStatisticsObj,
+  getStatisticsBytokenTypeIdObj,
   getTokenTypes,
-  getUserTokenTypeStatistics,
+  getStatisticsById,
 }) => {
   const [tokenTypeList, setTokenTypeList] = useState([])
   const placeHolderSelectId = {
@@ -36,24 +36,15 @@ const StatisticsTokenType = ({
     }
   }, [getTokenTypeListObj])
 
-  const getStatisticsById = useCallback(
-    (id, statisticsType, timeType, queryParams) => {
-      if (currentUser._id) {
-        getUserTokenTypeStatistics(id, currentUser._id, timeType, queryParams)
-      }
-    },
-    [currentUser._id, getUserTokenTypeStatistics]
-  )
-
   return (
     <div>
       {currentUser._id && (
         <StatisticsTemplate
           chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.USER_TOKEN_TYPE}
+          statisticsType={ReportUtils.STATISTICS_TYPE.TOKEN_TYPE}
           data={tokenTypeList}
           placeHolderSelectId={placeHolderSelectId}
-          getStatisticsByIdObj={getUserTokenTypeStatisticsObj}
+          getStatisticsByIdObj={getStatisticsBytokenTypeIdObj}
           getStatisticsById={getStatisticsById}
         />
       )}

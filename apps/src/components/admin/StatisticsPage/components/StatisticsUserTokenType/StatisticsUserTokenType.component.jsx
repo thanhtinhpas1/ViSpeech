@@ -6,7 +6,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import ReportUtils from 'utils/report.util'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
 
-const StatisticsTokenType = ({
+const StatisticsUserTokenType = ({
   currentUser,
   chartOptions,
   getTokenTypeListObj,
@@ -15,6 +15,7 @@ const StatisticsTokenType = ({
   getUserTokenTypeStatistics,
 }) => {
   const [tokenTypeList, setTokenTypeList] = useState([])
+  const [userId, setUserId] = useState('')
   const placeHolderSelectId = {
     found: 'Chọn loại token',
     notFound: 'Không tìm thấy loại token',
@@ -23,6 +24,12 @@ const StatisticsTokenType = ({
   useEffect(() => {
     getTokenTypes()
   }, [getTokenTypes])
+
+  useEffect(() => {
+    if (currentUser._id) {
+      setUserId(currentUser._id)
+    }
+  }, [currentUser._id])
 
   useEffect(() => {
     if (getTokenTypeListObj.tokenTypeList.length > 0) {
@@ -38,11 +45,11 @@ const StatisticsTokenType = ({
 
   const getStatisticsById = useCallback(
     (id, statisticsType, timeType, queryParams) => {
-      if (currentUser._id) {
-        getUserTokenTypeStatistics(id, currentUser._id, timeType, queryParams)
+      if (userId) {
+        getUserTokenTypeStatistics(id, userId, timeType, queryParams)
       }
     },
-    [currentUser._id, getUserTokenTypeStatistics]
+    [userId, getUserTokenTypeStatistics]
   )
 
   return (
@@ -61,4 +68,4 @@ const StatisticsTokenType = ({
   )
 }
 
-export default StatisticsTokenType
+export default StatisticsUserTokenType

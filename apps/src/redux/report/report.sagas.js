@@ -67,7 +67,7 @@ function* getAdminTotalStatistics({ payload: { statisticsType, timeType, queryPa
   }
 }
 export function* getAdminTotalStatisticsSaga() {
-  yield takeLatest(ReportTypes.GET_ADMIN_TOTAL_STATISTICS, getAdminTotalStatistics)
+  yield takeEvery(ReportTypes.GET_ADMIN_TOTAL_STATISTICS, getAdminTotalStatistics)
 }
 
 // =================================

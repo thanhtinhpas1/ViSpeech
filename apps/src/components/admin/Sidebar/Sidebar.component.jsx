@@ -54,6 +54,12 @@ const Sidebar = ({ currentUser, onAuthenticate }) => {
               </ul>
             </div>
           </li>
+          <li className="active">
+            <a href={`${ADMIN_PATH}/reports`}>
+              <i className="zmdi zmdi-chart" />
+              <p>Thống kê</p>
+            </a>
+          </li>
           <li>
             <a href="widgets/widgets.html">
               <i className="material-icons">apps</i>

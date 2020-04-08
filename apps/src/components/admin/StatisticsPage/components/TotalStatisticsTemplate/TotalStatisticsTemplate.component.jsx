@@ -3,11 +3,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
-import { Bar } from 'react-chartjs-2'
+import { HorizontalBar } from 'react-chartjs-2'
 import { Row, Spin, Select, DatePicker, Button, Empty } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 import STORAGE from 'utils/storage'
-import * as moment from 'moment'
 import ReportUtils from 'utils/report.util'
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
@@ -24,13 +23,12 @@ const {
   getOnlyDate,
 } = ReportUtils
 
-const StatisticsTemplate = ({
+const TotalStatisticsTemplate = ({
+  userId,
   chartOptions,
   statisticsType,
-  data,
-  placeHolderSelectId,
-  getStatisticsByIdObj,
-  getStatisticsById,
+  getTotalStatisticsObj,
+  getTotalStatistics,
 }) => {
   // for antd range picker
   const [pickerType, setPickerType] = useState(TIME_TYPE.DATE)
@@ -48,69 +46,36 @@ const StatisticsTemplate = ({
   const [quarterData, setQuarterData] = useState(defaultQuarterData)
   const [chartData, setChartData] = useState([])
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-  const [idData, setIdData] = useState('')
 
   useEffect(() => {
-    if (data.length > 0 && data[0]._id) {
-      const id = data[0]._id
+    if (userId) {
       const fromDate = getDateNow().valueOf()
       const toDate = getTenDatesFromNow().valueOf()
-      setIdData(id)
       setIsButtonDisabled(false)
-      getStatisticsById(id, statisticsType, TIME_TYPE.DATE, { fromDate, toDate })
+      getTotalStatistics(userId, statisticsType, TIME_TYPE.DATE, { fromDate, toDate })
     }
-  }, [data, statisticsType, getStatisticsById])
+  }, [userId, statisticsType, getTotalStatistics])
 
   useEffect(() => {
-    const statisticalData = getStatisticsByIdObj.data
+    const statisticalData = getTotalStatisticsObj.data
     if (statisticalData.length > 0) {
       const dataChart = []
-      if (pickerType === TIME_TYPE.DATE) {
-        statisticalData.forEach(element => {
-          dataChart.push({
-            display: moment(element.date).format('DD/MM/YYYY'),
-            value: element.value,
-          })
+      statisticalData.forEach(element => {
+        dataChart.push({
+          display: element.data.display,
+          value: element.usedMinutes,
         })
-      } else if (pickerType === TIME_TYPE.WEEK) {
-        statisticalData.forEach(element => {
-          dataChart.push({
-            display: `Tuần ${element.week}/${element.year}`,
-            value: element.value,
-          })
-        })
-      } else if (pickerType === TIME_TYPE.MONTH) {
-        statisticalData.forEach(element => {
-          dataChart.push({
-            display: `${parseInt(element.month) + 1}/${element.year}`,
-            value: element.value,
-          })
-        })
-      } else if (pickerType === TIME_TYPE.QUARTER) {
-        statisticalData.forEach(element => {
-          dataChart.push({
-            display: `Quý ${element.quarter}/${element.year}`,
-            value: element.value,
-          })
-        })
-      } else if (pickerType === TIME_TYPE.YEAR) {
-        statisticalData.forEach(element => {
-          dataChart.push({
-            display: `${element.year}`,
-            value: element.value,
-          })
-        })
-      }
+      })
       setChartData(dataChart)
     }
-  }, [getStatisticsByIdObj])
+  }, [getTotalStatisticsObj])
 
-  const getStatistics = (id, timeType, queryParams) => {
+  const getStatistics = (timeType, queryParams) => {
     STORAGE.setPreferences(
-      `'vispeech-statistics-by-${statisticsType}Id'`,
+      `'vispeech-user-total-statistics-${statisticsType}'`,
       JSON.stringify(queryParams)
     )
-    getStatisticsById(id, statisticsType, timeType, queryParams)
+    getTotalStatistics(userId, statisticsType, timeType, queryParams)
   }
 
   const resetData = () => {
@@ -145,12 +110,7 @@ const StatisticsTemplate = ({
     setPlaceHolderRangePicker(placeHolder)
   }
 
-  const checkDisabledBtn = (id, value, isStart) => {
-    if (!id) {
-      setIsButtonDisabled(true)
-      return
-    }
-
+  const checkDisabledBtn = (value, isStart) => {
     setIsButtonDisabled(true)
 
     const from = value ? value[0] : valueRangePicker[0]
@@ -265,7 +225,7 @@ const StatisticsTemplate = ({
       from: { quarter: parseInt(value.format('Q')), year: parseInt(value.format('YYYY')) },
     }
     setQuarterData(quarterObj)
-    checkDisabledBtn(idData, value, true)
+    checkDisabledBtn(value, true)
   }
 
   const onChangeToQuarter = value => {
@@ -275,17 +235,11 @@ const StatisticsTemplate = ({
       to: { quarter: parseInt(value.format('Q')), year: parseInt(value.format('YYYY')) },
     }
     setQuarterData(quarterObj)
-    checkDisabledBtn(idData, value, false)
+    checkDisabledBtn(value, false)
   }
 
   const onChangeRangePicker = value => {
     setValueRangePicker(value)
-    checkDisabledBtn(idData, value)
-  }
-
-  const onChangeIdData = value => {
-    setIdData(value)
-    setChartData([])
     checkDisabledBtn(value)
   }
 
@@ -356,7 +310,7 @@ const StatisticsTemplate = ({
       queryParams.toYear = toYear
     }
 
-    getStatistics(idData, pickerType, queryParams)
+    getStatistics(pickerType, queryParams)
   }
 
   const dataChart = {
@@ -376,35 +330,13 @@ const StatisticsTemplate = ({
 
   return (
     <div style={{ position: 'relative' }}>
-      {getStatisticsByIdObj.isLoading && (
+      {getTotalStatisticsObj.isLoading && (
         <div className="statistics-page__loading">
           <Spin indicator={antIcon} />
         </div>
       )}
       <Row>
         <div className="statistics-page__select-type">
-          {data.length > 0 && data[0]._id && (
-            <Select
-              defaultValue={data[0]._id}
-              style={{ minWidth: 180 }}
-              onChange={onChangeIdData}
-              placeholder={placeHolderSelectId.found}
-            >
-              <Option value={data[0]._id}>{data[0].display}</Option>
-              {data
-                .filter((item, index) => index !== 0)
-                .map(item => {
-                  return (
-                    <Option key={item._id} value={item._id}>
-                      {item.display}
-                    </Option>
-                  )
-                })}
-            </Select>
-          )}
-          {data.length === 0 && (
-            <Select style={{ minWidth: 180 }} placeholder={placeHolderSelectId.notFound} />
-          )}
           <Select defaultValue={pickerType} style={{ minWidth: 180 }} onChange={onChangePickerType}>
             <Option value={TIME_TYPE.DATE}>Theo ngày</Option>
             <Option value={TIME_TYPE.WEEK}>Theo tuần</Option>
@@ -444,14 +376,14 @@ const StatisticsTemplate = ({
       </Row>
       <Row>
         <div className="statistics-page__chart">
-          {(chartData.length === 0 || getStatisticsByIdObj.isLoading) && <Empty />}
-          {getStatisticsByIdObj.isLoading === false &&
-            getStatisticsByIdObj.isSuccess === true &&
-            chartData.length > 0 && <Bar data={dataChart} options={chartOptions} />}
+          {(chartData.length === 0 || getTotalStatisticsObj.isLoading) && <Empty />}
+          {getTotalStatisticsObj.isLoading === false &&
+            getTotalStatisticsObj.isSuccess === true &&
+            chartData.length > 0 && <HorizontalBar data={dataChart} options={chartOptions} />}
         </div>
       </Row>
     </div>
   )
 }
 
-export default StatisticsTemplate
+export default TotalStatisticsTemplate
