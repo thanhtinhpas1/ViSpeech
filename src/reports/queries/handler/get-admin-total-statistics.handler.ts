@@ -35,7 +35,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
                     usedMinutes: { $sum: '$usedMinutes' }
                 }
             }
-            aggregateGroup.$group._id[`${statisticsType}Id`] = `'$${statisticsType}Id'`
+            aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
             const groupedReports = await getMongoRepository(ReportDto).aggregate([
                 ReportUtils.aggregateMatchDates(startDate, endDate),
                 aggregateGroup
@@ -53,7 +53,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
                 }
             }
 
-            data = ReportUtils.getTotalStatisticalData(groupedReports, data, `'${statisticsType}Id'`);
+            data = ReportUtils.getTotalStatisticalData(groupedReports, data, `${statisticsType}Id`);
             return data;
         } catch (error) {
             Logger.error(error, '', 'GetAdminTotalStatisticsQuery');

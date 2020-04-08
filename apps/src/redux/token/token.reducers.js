@@ -1,8 +1,14 @@
 import TokenTypes from './token.types'
 
 const INITIAL_STATE = {
-  getTokenList: {
-    tokenList: [],
+  getUserTokenList: {
+    userTokenList: [],
+    isLoading: false,
+    isSuccess: null,
+    errorMessage: null,
+  },
+  getProjectTokenList: {
+    projectTokenList: [],
     isLoading: false,
     isSuccess: null,
     errorMessage: null,
@@ -21,35 +27,63 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
       }
-    // GET_TOKENS
-    case TokenTypes.GET_TOKENS:
+    // GET USER TOKENS
+    case TokenTypes.GET_USER_TOKENS:
       return {
         ...state,
-        getTokenList: {
-          ...state.getTokenList,
+        getUserTokenList: {
+          ...state.getUserTokenList,
           isLoading: true,
         },
       }
-    case TokenTypes.GET_TOKENS_SUCCESS:
+    case TokenTypes.GET_USER_TOKENS_SUCCESS:
       return {
         ...state,
-        getTokenList: {
+        getUserTokenList: {
           isLoading: false,
           isSuccess: true,
-          tokenList: action.payload.tokenList,
+          userTokenList: action.payload.data,
         },
       }
-    case TokenTypes.GET_TOKENS_FAILURE:
+    case TokenTypes.GET_USER_TOKENS_FAILURE:
       return {
         ...state,
-        getTokenList: {
-          ...state.getTokenList,
+        getUserTokenList: {
+          ...state.getUserTokenList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
         },
       }
-    // GET_TOKEN_TYPES
+    // GET PROJECT TOKENS
+    case TokenTypes.GET_PROJECT_TOKENS:
+      return {
+        ...state,
+        getProjectTokenList: {
+          ...state.getProjectTokenList,
+          isLoading: true,
+        },
+      }
+    case TokenTypes.GET_PROJECT_TOKENS_SUCCESS:
+      return {
+        ...state,
+        getProjectTokenList: {
+          isLoading: false,
+          isSuccess: true,
+          projectTokenList: action.payload.data,
+        },
+      }
+    case TokenTypes.GET_PROJECT_TOKENS_FAILURE:
+      return {
+        ...state,
+        getProjectTokenList: {
+          ...state.getProjectTokenList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET TOKEN TYPES
     case TokenTypes.GET_TOKEN_TYPES:
       return {
         ...state,
@@ -64,7 +98,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
         getTokenTypeList: {
           isLoading: false,
           isSuccess: true,
-          tokenTypeList: action.payload.tokenTypeList,
+          tokenTypeList: action.payload.data,
         },
       }
     case TokenTypes.GET_TOKEN_TYPES_FAILURE:

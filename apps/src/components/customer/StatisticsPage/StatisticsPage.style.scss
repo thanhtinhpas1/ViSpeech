@@ -6,6 +6,9 @@
   .ant-row {
     justify-content: center;
   }
+  .ant-col .card-head {
+    text-align: center;
+  }
   &__select-type {
     display: flex;
     justify-content: center;
@@ -17,9 +20,17 @@
     .ant-btn {
       margin-left: 20px;
     }
+    .ant-picker {
+      .ant-picker-input {
+        input {
+          text-align: center;
+        }
+      }
+    }
   }
   &__chart {
     width: 100%;
+    min-height: 250px;
     margin-top: 30px;
     .ant-empty {
       margin: 130px 0px;
@@ -27,7 +38,7 @@
   }
   &__loading {
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     .ant-spin {

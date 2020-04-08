@@ -30,13 +30,13 @@ const Utils = {
     if (!obj) return ''
     const str = []
     Object.keys(obj).forEach(key => {
-      if (obj[key]) {
-        const formarKey = prefix ? `${prefix}[${key}]` : key
+      if (obj[key] != null) {
+        const formatKey = prefix ? `${prefix}[${key}]` : key
         const value = obj[key]
         str.push(
-          value !== null && typeof value === 'object'
-            ? this.parameterizeObject(value, formarKey)
-            : `${encodeURIComponent(formarKey)}=${encodeURIComponent(value)}`
+          value != null && typeof value === 'object'
+            ? Utils.parameterizeObject(value, formatKey)
+            : `${encodeURIComponent(formatKey)}=${encodeURIComponent(value)}`
         )
       }
     })
@@ -47,6 +47,12 @@ const Utils = {
     if (!arr || arr.length === 0) return ''
     const array = arr.map(encodeURIComponent)
     return `&${key}[]=${array.join(`&${key}[]=`)}`
+  },
+  trimByChar: (str, char) => {
+    return str
+      .split(char)
+      .filter(ele => ele)
+      .join(char)
   },
   removePropertyFromObject: (obj, property) => {
     const result = JSON.parse(JSON.stringify(obj))

@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { call, all, takeLatest, put, takeEvery } from 'redux-saga/effects'
 import ReportService from 'services/report.service'
 import ReportTypes from './report.types'
 import {
@@ -7,28 +7,63 @@ import {
   getUserTotalStatisticsFailure,
   getAdminTotalStatisticsSuccess,
   getAdminTotalStatisticsFailure,
+  getStatisticsByIdSuccess,
+  getStatisticsByIdFailure,
+  getUserTokenTypeStatisticsSuccess,
+  getUserTokenTypeStatisticsFailure,
 } from './report.actions'
 
-// get user total statistics
-function* getUserTotalStatistics({ payload: { userId, totalType } }) {
+// get statistics by id
+function* getStatisticsById({ payload: { id, statisticsType, timeType, queryParams } }) {
   try {
-    const data = yield ReportService.getUserTotalStatistics(userId, totalType)
-    yield put(getUserTotalStatisticsSuccess(data))
+    const data = yield ReportService.getStatisticsById(id, statisticsType, timeType, queryParams)
+    yield put(getStatisticsByIdSuccess(data, statisticsType))
   } catch (err) {
-    yield put(getUserTotalStatisticsFailure(err.message))
+    yield put(getStatisticsByIdFailure(err.message, statisticsType))
+  }
+}
+export function* getStatisticsByIdSaga() {
+  yield takeEvery(ReportTypes.GET_STATISTICS_BY_ID, getStatisticsById)
+}
+
+// get user token type statistics
+function* getUserTokenTypeStatistics({ payload: { id, userId, timeType, queryParams } }) {
+  try {
+    const data = yield ReportService.getUserTokenTypeStatistics(id, userId, timeType, queryParams)
+    yield put(getUserTokenTypeStatisticsSuccess(data))
+  } catch (err) {
+    yield put(getUserTokenTypeStatisticsFailure(err.message))
+  }
+}
+export function* getUserTokenTypeStatisticsSaga() {
+  yield takeLatest(ReportTypes.GET_USER_TOKEN_TYPE_STATISTICS, getUserTokenTypeStatistics)
+}
+
+// get user total statistics
+function* getUserTotalStatistics({ payload: { userId, statisticsType, timeType, queryParams } }) {
+  try {
+    const data = yield ReportService.getUserTotalStatistics(
+      userId,
+      statisticsType,
+      timeType,
+      queryParams
+    )
+    yield put(getUserTotalStatisticsSuccess(data, statisticsType))
+  } catch (err) {
+    yield put(getUserTotalStatisticsFailure(err.message, statisticsType))
   }
 }
 export function* getUserTotalStatisticsSaga() {
-  yield takeLatest(ReportTypes.GET_USER_TOTAL_STATISTICS, getUserTotalStatistics)
+  yield takeEvery(ReportTypes.GET_USER_TOTAL_STATISTICS, getUserTotalStatistics)
 }
 
-// get user total statistics
-function* getAdminTotalStatistics({ payload: { totalType } }) {
+// get admin total statistics
+function* getAdminTotalStatistics({ payload: { statisticsType, timeType, queryParams } }) {
   try {
-    const data = yield ReportService.getAdminTotalStatistics(totalType)
-    yield put(getAdminTotalStatisticsSuccess(data))
+    const data = yield ReportService.getAdminTotalStatistics(statisticsType, timeType, queryParams)
+    yield put(getAdminTotalStatisticsSuccess(data, statisticsType))
   } catch (err) {
-    yield put(getAdminTotalStatisticsFailure(err.message))
+    yield put(getAdminTotalStatisticsFailure(err.message, statisticsType))
   }
 }
 export function* getAdminTotalStatisticsSaga() {
@@ -38,5 +73,10 @@ export function* getAdminTotalStatisticsSaga() {
 // =================================
 
 export function* reportSaga() {
-  yield all([call(getUserTotalStatisticsSaga), call(getAdminTotalStatisticsSaga)])
+  yield all([
+    call(getStatisticsByIdSaga),
+    call(getUserTokenTypeStatisticsSaga),
+    call(getUserTotalStatisticsSaga),
+    call(getAdminTotalStatisticsSaga),
+  ])
 }

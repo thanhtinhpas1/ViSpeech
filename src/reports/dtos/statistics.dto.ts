@@ -11,7 +11,7 @@ export class StatisticalDto {
     @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
-    @IsPositive()
+    @Min(0)
     data: number;
 
     @IsNotEmpty()
@@ -87,7 +87,7 @@ export class GetStatisticsQuery {
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
-    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE])
+    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE])
     statisticsType: string;
 
     @IsOptional()

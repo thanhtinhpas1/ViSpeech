@@ -1,17 +1,30 @@
 import { connect } from 'react-redux'
-import { getUserTotalStatistics, getAdminTotalStatistics } from 'redux/report/report.actions'
+import {
+  getUserTotalStatistics,
+  getStatisticsById,
+  getUserTokenTypeStatistics,
+} from 'redux/report/report.actions'
+import { getMyProjectList } from 'redux/project/project.actions'
 import StatisticsPage from './StatisticsPage.component'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
+  getStatisticsByIdObj: state.report.getStatisticsById,
+  getUserTokenTypeStatisticsObj: state.report.getUserTokenTypeStatistics,
   getUserTotalStatisticsObj: state.report.getUserTotalStatistics,
-  getAdminTotalStatisticsObj: state.report.getAdminTotalStatistics,
+  getMyProjectListObj: state.project.getMyProjectList,
 })
 
 const mapDispatchToProps = dispatch => ({
-  getUserTotalStatistics: (userId, totalType) =>
-    dispatch(getUserTotalStatistics(userId, totalType)),
-  getAdminTotalStatistics: totalType => dispatch(getAdminTotalStatistics(totalType)),
+  getStatisticsById: (id, statisticsType, timeType, queryParams) =>
+    dispatch(getStatisticsById(id, statisticsType, timeType, queryParams)),
+  getUserTokenTypeStatistics: (id, userId, timeType, queryParams) =>
+    dispatch(getUserTokenTypeStatistics(id, userId, timeType, queryParams)),
+  getUserTotalStatistics: (userId, totalType, queryParams) =>
+    dispatch(getUserTotalStatistics(userId, totalType, queryParams)),
+
+  //
+  getMyProjects: ({ userId }) => dispatch(getMyProjectList({ userId })),
 })
 
 const StatisticsPageContainer = connect(mapStateToProps, mapDispatchToProps)(StatisticsPage)
