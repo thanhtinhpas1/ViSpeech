@@ -7,7 +7,7 @@ import {GetReportsQuery} from 'reports/queries/impl/get-reports.query';
 import {ReportDto, ReportIdRequestParamsDto} from '../dtos/reports.dto';
 import {ReportsService} from '../services/reports.service';
 import {AuthGuard} from '@nestjs/passport';
-import {ReportGuard} from 'auth/guards/report.guard';
+import {ReportQueryGuard} from 'auth/guards/report.guard';
 import { GetStatisticsByIdQuery } from 'reports/queries/impl/get-statistics-by-id.query';
 import { GetStatisticsParam } from 'reports/dtos/statistics.dto';
 import { GetStatisticsByTokenTypeIdAndUserIdQuery } from 'reports/queries/impl/get-statistics-by-tokenTypeId-userId.query';
@@ -26,6 +26,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Create Report']})
     @ApiResponse({status: 200, description: 'Create Report.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createReport(@Body() reportDto: ReportDto): Promise<ReportDto> {
         const streamId = reportDto._id;
@@ -37,6 +38,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Update Report']})
     @ApiResponse({status: 200, description: 'Update Report.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updateReport(
         @Param() reportIdDto: ReportIdRequestParamsDto,
@@ -66,6 +68,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['List Reports']})
     @ApiResponse({status: 200, description: 'List Reports.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async findReports(@Query() getReportsQuery: GetReportsQuery) {
         return this.reportsService.findReports(getReportsQuery);
@@ -76,6 +79,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Report']})
     @ApiResponse({status: 200, description: 'Get Report.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get(':id')
     async findOneReport(@Param() findReportQuery: FindReportQuery) {
         return this.reportsService.findOne(findReportQuery);
@@ -86,6 +90,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Statistics By Id']})
     @ApiResponse({status: 200, description: 'Get Statistics By Id.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('statistics-by-id/:id/:statisticsType/:timeType')
     async getStatisticsById(@Query() query: GetStatisticsByIdQuery,
     @Param() param: GetStatisticsParam) {
@@ -101,6 +106,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Statistics By TokenTypeId And UserId']})
     @ApiResponse({status: 200, description: 'Get Statistics By TokenTypeId And UserId.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('user-token-type-statistics/:id/:userId/:timeType')
     async getStatisticalDataByTokenTypeIdAndUserId(@Query() query: GetStatisticsByTokenTypeIdAndUserIdQuery,
     @Param() param: GetStatisticsParam) {
@@ -116,6 +122,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Admin Total Statistics']})
     @ApiResponse({status: 200, description: 'Get Admin Total Statistics.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get('admin-total-statistics/:statisticsType/:timeType')
     async getAdminTotalStatistics(@Query() query: GetAdminTotalStatisticsQuery,
     @Param() param: GetStatisticsParam) {
@@ -130,6 +137,7 @@ export class ReportsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get User Total Statistics']})
     @ApiResponse({status: 200, description: 'Get User Total Statistics.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('user-total-statistics/:userId/:statisticsType/:timeType')
     async getUserTotalStatistics(@Query() query: GetUserTotalStatisticsQuery,
     @Param() param: GetStatisticsParam) {
