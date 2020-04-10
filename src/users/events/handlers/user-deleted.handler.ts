@@ -1,9 +1,12 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent} from '../impl/user-deleted.event';
-import {Logger, NotFoundException} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {UserDto} from 'users/dtos/users.dto';
-import {Repository} from 'typeorm';
+import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ClientKafka } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
+import { Repository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { config } from '../../../../config';
+import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from '../impl/user-deleted.event';
 
 @EventsHandler(UserDeletedEvent)
 export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
@@ -15,12 +18,12 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
 
     async handle(event: UserDeletedEvent) {
         Logger.log(event.userId, 'UserDeletedEvent');
-        const {streamId, userId} = event;
+        const { streamId, userId } = event;
 
         try {
-            const user = await this.repository.findOne({_id: userId});
+            const user = await this.repository.findOne({ _id: userId });
             if (user) {
-                await this.repository.delete({_id: userId});
+                await this.repository.delete({ _id: userId });
                 this.eventBus.publish(new UserDeletedSuccessEvent(streamId, userId));
                 return;
             }
@@ -32,17 +35,31 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
 }
 
 @EventsHandler(UserDeletedSuccessEvent)
-export class UserDeletedSuccessHandler
-    implements IEventHandler<UserDeletedSuccessEvent> {
+export class UserDeletedSuccessHandler implements IEventHandler<UserDeletedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
     handle(event: UserDeletedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_DELETED_SUCCESS_EVENT, event);
         Logger.log(event.userId, 'UserDeletedSuccessEvent');
     }
 }
 
 @EventsHandler(UserDeletedFailedEvent)
-export class UserDeletedFailedHandler
-    implements IEventHandler<UserDeletedFailedEvent> {
+export class UserDeletedFailedHandler implements IEventHandler<UserDeletedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
     handle(event: UserDeletedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_DELETED_FAILED_EVENT, event);
         Logger.log(event.error, 'UserDeletedFailedEvent');
     }
 }

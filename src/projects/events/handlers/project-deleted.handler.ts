@@ -29,3 +29,5 @@ export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent>
         }
     }
 }
+
+// TODO: project deleted success and failed

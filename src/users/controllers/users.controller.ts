@@ -1,4 +1,20 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException, UseGuards, NotAcceptableException, BadRequestException} from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Inject,
+    NotAcceptableException,
+    OnModuleInit,
+    Param,
+    Post,
+    Put,
+    Query,
+    Req,
+    UnauthorizedException,
+    UseGuards
+} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {AuthService} from 'auth/auth.service';
@@ -10,13 +26,22 @@ import {ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users
 import {UsersService} from '../services/users.service';
 import {UserGuard, VerifyEmailGuard} from 'auth/guards/user.guard';
 import {Utils} from 'utils';
+import {ClientKafka, MessagePattern, Payload} from '@nestjs/microservices';
+import {config} from '../../../config';
 
 @Controller('users')
 @ApiTags('Users')
-export class UsersController {
+export class UsersController implements OnModuleInit {
     constructor(
         private readonly authService: AuthService,
-        private readonly usersService: UsersService) {
+        private readonly usersService: UsersService,
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+    }
+
+    onModuleInit() {
+        this.clientKafka.subscribeToResponseOf('vispeech-user');
     }
 
     /* Create user
@@ -140,17 +165,4 @@ export class UsersController {
     async getUsers(@Query() getUsersQuery: GetUsersQuery) {
         return this.usersService.getUsers(getUsersQuery);
     }
-
-    /* Assign role to user */
-    // @ApiOperation({tags: ['Assign Role']})
-    // @ApiResponse({status: 200, description: 'Assign role to user'})
-    // @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignRoleGuard)
-    // @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
-    // @Put(':_id/roles')
-    // async assignRoleToUser(@Body() body: AssignUserRoleBody, @Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
-    //     const payload = this.authService.decode(request);
-    //     const assignerId = payload['id'];
-    //     const streamId = userIdDto._id;
-    //     return this.usersService.assignUserRole(streamId, userIdDto._id, body.roleName, assignerId);
-    // }
 }

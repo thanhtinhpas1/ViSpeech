@@ -1,18 +1,20 @@
-import {KafkaOptions, Transport} from "@nestjs/microservices";
-import {config} from "../../config";
+import { KafkaOptions, Transport } from "@nestjs/microservices";
+import { config } from "../../config";
 
 export const kafkaClientOptions: KafkaOptions = {
     transport: Transport.KAFKA,
     options: {
         client: {
-            clientId: '1',
+            clientId: 'vispeech',
             brokers: [`${config.KAFKA.HOST}:${config.KAFKA.PORT}`],
         },
-        consumer: {
-            groupId: 'vispeech-consumer'
+        producer: {
+            transactionalId: config.KAFKA.NAME,
+            allowAutoTopicCreation: true,
         },
-        subscribe: {
-            fromBeginning: true,
+        consumer: {
+            groupId: 'vispeech',
+            allowAutoTopicCreation: true,
         }
     },
 }

@@ -1,18 +1,14 @@
-import {Inject, Logger} from '@nestjs/common';
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {InjectRepository} from '@nestjs/typeorm';
-import {RoleDto} from 'roles/dtos/roles.dto';
-import {Repository} from 'typeorm';
-import {UserDto} from 'users/dtos/users.dto';
-import {Utils} from 'utils';
-import {
-    UserCreatedEvent,
-    UserCreatedFailedEvent,
-    UserCreatedSuccessEvent,
-    UserCreationStartedEvent
-} from '../impl/user-created.event';
-import {config} from "../../../../config";
-import {ClientKafka} from "@nestjs/microservices";
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ClientKafka } from "@nestjs/microservices";
+import { InjectRepository } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
+import { RoleDto } from 'roles/dtos/roles.dto';
+import { Repository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { Utils } from 'utils';
+import { config } from "../../../../config";
+import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent } from '../impl/user-created.event';
 
 @EventsHandler(UserCreationStartedEvent)
 export class UserCreationStartedHandler implements IEventHandler<UserCreationStartedEvent> {
@@ -31,9 +27,8 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 
     async handle(event: UserCreatedEvent) {
         Logger.log(event.userDto.username, 'UserCreatedEvent');
-        const {streamId, userDto} = event;
+        const { streamId, userDto } = event;
         const user = JSON.parse(JSON.stringify(userDto));
-
         try {
             user.password = Utils.hashPassword(user.password);
             user.roles = Utils.convertToArray(user.roles);
@@ -52,10 +47,10 @@ export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSucce
         @Inject(config.KAFKA.NAME)
         private readonly clientKafka: ClientKafka,
     ) {
+        this.clientKafka.connect();
     }
-
     handle(event: UserCreatedSuccessEvent) {
-        this.clientKafka.emit('UserCreatedSuccessEvent', event.userDto);
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_SUCCESS_EVENT, event);
         Logger.log(event.userDto.username, 'UserCreatedSuccessEvent');
     }
 }
@@ -69,7 +64,8 @@ export class UserCreatedFailHandler implements IEventHandler<UserCreatedFailedEv
     }
 
     handle(event: UserCreatedFailedEvent) {
-        this.clientKafka.emit('UserCreatedFailedEvent', event.error);
+        const data = JSON.stringify(event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_FAILED_EVENT, data);
         Logger.log(event.error, 'UserCreatedFailedEvent');
     }
 }

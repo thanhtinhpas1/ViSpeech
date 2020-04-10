@@ -1,5 +1,5 @@
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { Repository } from 'typeorm';
@@ -7,6 +7,8 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from '../impl/free-token-created.event';
 import { CONSTANTS } from 'common/constant';
 import { Utils } from 'utils';
+import { config } from '../../../../config';
+import { ClientKafka } from '@nestjs/microservices';
 
 @EventsHandler(FreeTokenCreatedEvent)
 export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEvent> {
@@ -40,7 +42,15 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
 @EventsHandler(FreeTokenCreatedSuccessEvent)
 export class FreeTokenCreatedSuccessHandler
     implements IEventHandler<FreeTokenCreatedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
     handle(event: FreeTokenCreatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.FREE_TOKEN_CREATED_SUCCESS_EVENT, event);
         Logger.log(event.tokenDto._id, 'FreeTokenCreatedSuccessEvent');
     }
 }
@@ -48,7 +58,14 @@ export class FreeTokenCreatedSuccessHandler
 @EventsHandler(FreeTokenCreatedFailedEvent)
 export class FreeTokenCreatedFailedHandler
     implements IEventHandler<FreeTokenCreatedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: FreeTokenCreatedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.FREE_TOKEN_CREATED_FAILED_EVENT, event);
         Logger.log(event.error ? event.error['errmsg'] : event.error, 'FreeTokenCreatedFailedEvent');
     }
 }

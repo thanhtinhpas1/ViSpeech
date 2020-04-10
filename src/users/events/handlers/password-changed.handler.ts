@@ -1,14 +1,13 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {Logger, NotFoundException} from '@nestjs/common';
-import {
-    PasswordChangedEvent,
-    PasswordChangedFailedEvent,
-    PasswordChangedSuccessEvent
-} from '../impl/password-changed.event';
-import {InjectRepository} from '@nestjs/typeorm';
-import {UserDto} from '../../dtos/users.dto';
-import {Repository} from 'typeorm';
-import {Utils} from '../../../utils';
+import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ClientKafka } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
+import { Repository } from 'typeorm';
+import { config } from '../../../../config';
+import { Utils } from '../../../utils';
+import { UserDto } from '../../dtos/users.dto';
+import { PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent } from '../impl/password-changed.event';
 
 @EventsHandler(PasswordChangedEvent)
 export class PasswordChangedHandler implements IEventHandler<PasswordChangedEvent> {
@@ -20,18 +19,18 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
 
     async handle(event: PasswordChangedEvent) {
         Logger.log(event.streamId, 'PasswordChangedEvent');
-        const {streamId, changePasswordBody} = event;
-        const {userId, oldPassword, newPassword} = changePasswordBody;
+        const { streamId, changePasswordBody } = event;
+        const { userId, oldPassword, newPassword } = changePasswordBody;
 
         try {
-            const user = await this.repository.findOne({_id: userId});
+            const user = await this.repository.findOne({ _id: userId });
             if (!user) throw new NotFoundException(`User with _id ${userId} does not exist.`);
 
             const isValid = await Utils.comparePassword(oldPassword, user.password);
             if (isValid) {
                 if (oldPassword === newPassword) throw new Error('New password must be different from old password.');
                 const newHashedPassword = Utils.hashPassword(newPassword);
-                await this.repository.update({_id: userId}, {password: newHashedPassword});
+                await this.repository.update({ _id: userId }, { password: newHashedPassword });
                 this.eventBus.publish(new PasswordChangedSuccessEvent(streamId, changePasswordBody));
                 return;
             }
@@ -44,14 +43,28 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
 
 @EventsHandler(PasswordChangedSuccessEvent)
 export class PasswordChangedSuccessHandler implements IEventHandler<PasswordChangedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+    }
+
     handle(event: PasswordChangedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PASSWORD_CHANGED_SUCCESS_EVENT, event);
         Logger.log(event.streamId, 'PasswordChangedSuccessEvent');
     }
 }
 
 @EventsHandler(PasswordChangedFailedEvent)
 export class PasswordChangedFailedHandler implements IEventHandler<PasswordChangedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+    }
+    
     handle(event: PasswordChangedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PASSWORD_CHANGED_FAILED_EVENT, event);
         Logger.log(event.error, 'PasswordChangedFailedEvent');
     }
 }

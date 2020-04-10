@@ -1,10 +1,13 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent} from '../impl/permission-created.event';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {PermissionDto} from 'permissions/dtos/permissions.dto';
-import {Repository} from 'typeorm';
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ClientKafka } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { Repository } from 'typeorm';
 import { Utils } from 'utils';
+import { config } from '../../../../config';
+import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from '../impl/permission-created.event';
 
 @EventsHandler(PermissionCreatedEvent)
 export class PermissionCreatedHandler implements IEventHandler<PermissionCreatedEvent> {
@@ -17,7 +20,7 @@ export class PermissionCreatedHandler implements IEventHandler<PermissionCreated
 
     async handle(event: PermissionCreatedEvent) {
         Logger.log(event.permissionDto._id, 'PermissionCreatedEvent');
-        const {streamId, permissionDto} = event;
+        const { streamId, permissionDto } = event;
         let permission = JSON.parse(JSON.stringify(permissionDto));
 
         try {
@@ -33,7 +36,15 @@ export class PermissionCreatedHandler implements IEventHandler<PermissionCreated
 @EventsHandler(PermissionCreatedSuccessEvent)
 export class PermissionCreatedSuccessHandler
     implements IEventHandler<PermissionCreatedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
     handle(event: PermissionCreatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_CREATED_SUCCESS_EVENT, event);
         Logger.log(event.permissionDto._id, 'PermissionCreatedSuccessEvent');
     }
 }
@@ -41,7 +52,14 @@ export class PermissionCreatedSuccessHandler
 @EventsHandler(PermissionCreatedFailedEvent)
 export class PermissionCreatedFailedHandler
     implements IEventHandler<PermissionCreatedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: PermissionCreatedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_CREATED_FAILED_EVENT, event);
         Logger.log(event.error, 'PermissionCreatedFailedEvent');
     }
 }

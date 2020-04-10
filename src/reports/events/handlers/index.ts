@@ -9,3 +9,5 @@ export const EventHandlers = [
     ReportDeletedHandler,
     ReportWelcomedHandler
 ];
+
+// TODO: report success and failed event handle

@@ -1,8 +1,14 @@
 import { Module, OnModuleInit } from "@nestjs/common";
 import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
+import { ClientsModule } from "@nestjs/microservices";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { AuthModule } from "auth/auth.module";
+import { kafkaClientOptions } from "common/kafka-client.options";
 import { EventStore } from "core/event-store/event-store";
 import { EventStoreModule } from "core/event-store/event-store.module";
+import { PermissionDto } from "permissions/dtos/permissions.dto";
+import { UserDto } from "users/dtos/users.dto";
+import { config } from "../../config";
 import { CommandHandlers } from "./commands/handlers";
 import { ProjectsController } from "./controllers/projects.controller";
 import { ProjectDto } from "./dtos/projects.dto";
@@ -15,13 +21,14 @@ import { QueryHandlers } from "./queries/handler";
 import { ProjectRepository } from "./repository/project.repository";
 import { ProjectsSagas } from "./sagas/projects.sagas";
 import { ProjectsService } from "./services/projects.service";
-import { AuthModule } from "auth/auth.module";
-import { PermissionDto } from "permissions/dtos/permissions.dto";
-import { UserDto } from "users/dtos/users.dto";
 
 
 @Module({
     imports: [
+        ClientsModule.register([{
+            name: config.KAFKA.NAME,
+            ...kafkaClientOptions,
+        }]),
         TypeOrmModule.forFeature([ProjectDto, PermissionDto, UserDto]),
         AuthModule,
         EventStoreModule.forFeature(),

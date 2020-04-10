@@ -1,9 +1,12 @@
+import { Inject, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from '../impl/project-created.event';
-import { Logger } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { Repository } from 'typeorm';
+import { config } from '../../../../config';
+import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from '../impl/project-created.event';
 
 @EventsHandler(ProjectCreatedEvent)
 export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent> {
@@ -30,7 +33,14 @@ export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent>
 @EventsHandler(ProjectCreatedSuccessEvent)
 export class ProjectCreatedSuccessHandler
     implements IEventHandler<ProjectCreatedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: ProjectCreatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_CREATED_SUCCESS_EVENT, event);
         Logger.log(event.projectDto._id, 'ProjectCreatedSuccessEvent');
     }
 }
@@ -38,7 +48,14 @@ export class ProjectCreatedSuccessHandler
 @EventsHandler(ProjectCreatedFailedEvent)
 export class ProjectCreatedFailedHandler
     implements IEventHandler<ProjectCreatedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: ProjectCreatedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_CREATED_FAILED_EVENT, event);
         Logger.log(event.error, 'ProjectCreatedFailedEvent');
     }
 }

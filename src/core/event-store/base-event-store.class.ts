@@ -1,4 +1,4 @@
-import {EventFactory, TCPClient} from 'geteventstore-promise';
+import { EventFactory, TCPClient } from 'geteventstore-promise';
 
 /**
  * @class EventStore
@@ -17,10 +17,12 @@ export class BaseEventStore {
 
     connect(config) {
         this.client = new TCPClient(config);
+        this.config = config;
         return this;
     }
 
     getClient() {
+        this.client = new TCPClient(this.config);
         return this.client;
     }
 

@@ -1,4 +1,4 @@
-import {forwardRef, Logger, Module, OnModuleInit} from '@nestjs/common';
+import {forwardRef, Logger, Module, OnModuleInit, Inject} from '@nestjs/common';
 import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
 import {InjectRepository, TypeOrmModule} from '@nestjs/typeorm';
 import {AuthModule} from 'auth/auth.module';
@@ -76,10 +76,13 @@ export class UsersModule implements OnModuleInit {
         private readonly eventStore: EventStore,
         @InjectRepository(UserDto)
         private readonly repository: Repository<UserDto>,
+        @Inject(config.KAFKA.NAME)
+        private readonly client: ClientKafka,
     ) {
     }
 
     async onModuleInit() {
+        this.client.subscribeToResponseOf('UserCreatedFailedEvent');
         this.eventStore.setEventHandlers({
             ...this.eventHandlers,
             ...TokensModule.eventHandlers,

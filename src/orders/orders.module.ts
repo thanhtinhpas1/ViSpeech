@@ -1,28 +1,35 @@
-import {forwardRef, Module, OnModuleInit} from '@nestjs/common';
-import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {AuthModule} from 'auth/auth.module';
-import {EventStore} from 'core/event-store/event-store';
-import {TokenRepository} from 'tokens/repository/token.repository';
-import {EventStoreModule} from '../core/event-store/event-store.module';
-import {CommandHandlers} from './commands/handlers';
-import {OrdersController} from './controllers/orders.controller';
-import {OrderDto} from './dtos/orders.dto';
-import {EventHandlers} from './events/handlers';
-import {OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent, OrderCreationStartedEvent} from './events/impl/order-created.event';
-import {OrderDeletedEvent} from './events/impl/order-deleted.event';
-import {OrderUpdatedEvent} from './events/impl/order-updated.event';
-import {OrderWelcomedEvent} from './events/impl/order-welcomed.event';
-import {QueryHandlers} from './queries/handler';
-import {OrderRepository} from './repository/order.repository';
-import {OrdersSagas} from './sagas/orders.sagas';
-import {OrdersService} from './services/orders.service';
-import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
+import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
+import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { ClientsModule } from '@nestjs/microservices';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from 'auth/auth.module';
+import { kafkaClientOptions } from 'common/kafka-client.options';
+import { EventStore } from 'core/event-store/event-store';
 import { CreateOrderedTokenHandler } from 'tokens/commands/handlers/create-token.handler';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { TokenRepository } from 'tokens/repository/token.repository';
 import { TokensModule } from 'tokens/tokens.module';
+import { config } from '../../config';
+import { EventStoreModule } from '../core/event-store/event-store.module';
+import { CommandHandlers } from './commands/handlers';
+import { OrdersController } from './controllers/orders.controller';
+import { OrderDto } from './dtos/orders.dto';
+import { EventHandlers } from './events/handlers';
+import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent, OrderCreationStartedEvent } from './events/impl/order-created.event';
+import { OrderDeletedEvent } from './events/impl/order-deleted.event';
+import { OrderUpdatedEvent } from './events/impl/order-updated.event';
+import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
+import { QueryHandlers } from './queries/handler';
+import { OrderRepository } from './repository/order.repository';
+import { OrdersSagas } from './sagas/orders.sagas';
+import { OrdersService } from './services/orders.service';
 
 @Module({
     imports: [
+        ClientsModule.register([{
+            name: config.KAFKA.NAME,
+            ...kafkaClientOptions,
+        }]),
         TypeOrmModule.forFeature([OrderDto, TokenTypeDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
@@ -52,7 +59,7 @@ export class OrdersModule implements OnModuleInit {
     }
 
     onModuleInit() {
-        this.eventStore.setEventHandlers({...this.eventHandlers, ...TokensModule.eventHandlers});
+        this.eventStore.setEventHandlers({ ...this.eventHandlers, ...TokensModule.eventHandlers });
         this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         /** ------------ */

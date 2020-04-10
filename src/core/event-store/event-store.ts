@@ -1,11 +1,11 @@
-import {Inject, Injectable, Logger} from '@nestjs/common';
-import {IEvent, IEventPublisher, IMessageSource} from '@nestjs/cqrs';
-import {TCPClient} from 'geteventstore-promise';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { IEvent, IEventPublisher, IMessageSource } from '@nestjs/cqrs';
+import { TCPClient } from 'geteventstore-promise';
 import * as http from 'http';
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 import * as xml2js from 'xml2js';
-import {config} from '../../../config';
-import {BaseEventStore} from './base-event-store.class';
+import { config } from '../../../config';
+import { BaseEventStore } from './base-event-store.class';
 
 const eventStoreHostUrl = config.EVENT_STORE_SETTINGS.protocol +
     `://${config.EVENT_STORE_SETTINGS.hostname}:${config.EVENT_STORE_SETTINGS.httpPort}/streams/`;
@@ -24,16 +24,21 @@ export class EventStore implements IEventPublisher, IMessageSource {
     private eventHandlers: object;
     private category: string;
 
-    constructor(@Inject('EVENT_STORE_PROVIDER') eventStore: any) {
+    constructor(
+        @Inject('EVENT_STORE_PROVIDER') eventStore: any,
+    ) {
         this.eventStore = eventStore;
         this.category = config.EVENT_STORE_SETTINGS.category;
+        this.eventStoreConnect();
+        this.client = this.eventStore.client;
+    }
+    async eventStoreConnect() {
         this.eventStore.connect({
             hostname: config.EVENT_STORE_SETTINGS.hostname,
             port: config.EVENT_STORE_SETTINGS.tcpPort,
             credentials: config.EVENT_STORE_SETTINGS.credentials,
             poolOptions: config.EVENT_STORE_SETTINGS.poolOptions,
         });
-        this.client = this.eventStore.client;
     }
 
     async publish<T extends IEvent>(event: T) {
@@ -72,7 +77,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                         rawData += chunk;
                     });
                     res.on('end', () => {
-                        xml2js.parseString(rawData, {explicitArray: false}, (err, result) => {
+                        xml2js.parseString(rawData, { explicitArray: false }, (err, result) => {
                             if (err) {
                                 console.trace(err);
                                 return;
@@ -94,7 +99,8 @@ export class EventStore implements IEventPublisher, IMessageSource {
         };
 
         const onDropped = (subscription, reason, error) => {
-            console.trace(subscription, reason, error);
+            Logger.warn('Event store disconnected', reason);
+            this.client.subscribeToStream(streamName, onEvent, onDropped, false);
         };
 
         try {

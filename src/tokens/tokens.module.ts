@@ -1,30 +1,37 @@
-import {forwardRef, Module, OnModuleInit} from '@nestjs/common';
-import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {CONSTANTS} from 'common/constant';
-import {EventStore} from 'core/event-store/event-store';
-import {EventStoreModule} from 'core/event-store/event-store.module';
-import {getMongoRepository} from 'typeorm';
-import {CommandHandlers} from './commands/handlers';
-import {TokensController} from './controllers/tokens.controller';
-import {TokenTypeDto} from './dtos/token-types.dto';
-import {TokenDto} from './dtos/tokens.dto';
-import {EventHandlers} from './events/handlers';
-import {TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent} from './events/impl/token-created.event';
-import {TokenDeletedByUserIdEvent, TokenDeletedEvent} from './events/impl/token-deleted.event';
-import {TokenUpdatedEvent} from './events/impl/token-updated.event';
-import {TokenWelcomedEvent} from './events/impl/token-welcomed.event';
-import {QueryHandlers} from './queries/handler';
-import {TokenRepository} from './repository/token.repository';
-import {TokensSagas} from './sagas/tokens.sagas';
-import {TokensService} from './services/tokens.service';
-import {FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent} from './events/impl/free-token-created.event';
-import {OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent} from './events/impl/ordered-token-created.event';
-import {AuthModule} from '../auth/auth.module';
+import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
+import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
+import { EventStore } from 'core/event-store/event-store';
+import { EventStoreModule } from 'core/event-store/event-store.module';
+import { getMongoRepository } from 'typeorm';
+import { CommandHandlers } from './commands/handlers';
+import { TokensController } from './controllers/tokens.controller';
+import { TokenTypeDto } from './dtos/token-types.dto';
+import { TokenDto } from './dtos/tokens.dto';
+import { EventHandlers } from './events/handlers';
+import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
+import { TokenDeletedByUserIdEvent, TokenDeletedEvent } from './events/impl/token-deleted.event';
+import { TokenUpdatedEvent } from './events/impl/token-updated.event';
+import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
+import { QueryHandlers } from './queries/handler';
+import { TokenRepository } from './repository/token.repository';
+import { TokensSagas } from './sagas/tokens.sagas';
+import { TokensService } from './services/tokens.service';
+import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from './events/impl/free-token-created.event';
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from './events/impl/ordered-token-created.event';
+import { AuthModule } from '../auth/auth.module';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { config } from '../../config';
+import { ClientsModule } from '@nestjs/microservices';
+import { kafkaClientOptions } from 'common/kafka-client.options';
 
 @Module({
     imports: [
+        ClientsModule.register([{
+            name: config.KAFKA.NAME,
+            ...kafkaClientOptions,
+        }]),
         TypeOrmModule.forFeature([TokenDto, TokenTypeDto, PermissionDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),

@@ -1,16 +1,19 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {Logger, NotFoundException} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { Logger, NotFoundException, Inject } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import {
     PermissionAssignEmailSentEvent,
     PermissionAssignEmailSentFailedEvent,
     PermissionAssignEmailSentSuccessEvent
 } from '../impl/permission-assign-email-sent.event';
-import {EmailUtils} from 'utils/email.util';
-import {UserDto} from 'users/dtos/users.dto';
-import {ProjectDto} from 'projects/dtos/projects.dto';
-import {AuthService} from 'auth/auth.service';
+import { EmailUtils } from 'utils/email.util';
+import { UserDto } from 'users/dtos/users.dto';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { AuthService } from 'auth/auth.service';
+import { config } from '../../../../config';
+import { ClientKafka } from '@nestjs/microservices';
+import { CONSTANTS } from 'common/constant';
 
 @EventsHandler(PermissionAssignEmailSentEvent)
 export class PermissionAssignEmailSentHandler implements IEventHandler<PermissionAssignEmailSentEvent> {
@@ -26,22 +29,22 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 
     async handle(event: PermissionAssignEmailSentEvent) {
         Logger.log(event.streamId, 'PermissionAssignEmailSentEvent');
-        const {streamId, permissionAssignDto} = event;
-        const {assigneeUsername, projectId, permissions, assignerId} = permissionAssignDto;
+        const { streamId, permissionAssignDto } = event;
+        const { assigneeUsername, projectId, permissions, assignerId } = permissionAssignDto;
 
         try {
-            const assignee = await this.userRepository.findOne({username: assigneeUsername});
+            const assignee = await this.userRepository.findOne({ username: assigneeUsername });
             if (!assignee) {
                 throw new NotFoundException(`User with username "${assigneeUsername}" does not exist.`);
             }
             permissionAssignDto.assigneeId = assignee._id;
 
-            const project = await this.projectRepository.findOne({_id: projectId});
+            const project = await this.projectRepository.findOne({ _id: projectId });
             if (!project) {
                 throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
             }
 
-            const assigner = await this.userRepository.findOne({_id: assignerId});
+            const assigner = await this.userRepository.findOne({ _id: assignerId });
             if (!assigner) {
                 throw new NotFoundException(`User with _id ${assignerId} does not exist.`);
             }
@@ -58,7 +61,14 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 @EventsHandler(PermissionAssignEmailSentSuccessEvent)
 export class PermissionAssignEmailSentSuccessHandler
     implements IEventHandler<PermissionAssignEmailSentSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: PermissionAssignEmailSentSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, event);
         Logger.log(event.streamId, 'PermissionAssignEmailSentSuccessEvent');
     }
 }
@@ -66,7 +76,14 @@ export class PermissionAssignEmailSentSuccessHandler
 @EventsHandler(PermissionAssignEmailSentFailedEvent)
 export class PermissionAssignEmailSentFailedHandler
     implements IEventHandler<PermissionAssignEmailSentFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: PermissionAssignEmailSentFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, event);
         Logger.log(event.error, 'PermissionAssignEmailSentFailedEvent');
     }
 }

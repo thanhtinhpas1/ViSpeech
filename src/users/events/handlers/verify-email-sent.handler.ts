@@ -1,15 +1,14 @@
-import {EventBus, EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {Logger, NotFoundException} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {UserDto} from 'users/dtos/users.dto';
-import {Repository} from 'typeorm';
-import {
-    VerifyEmailSentEvent,
-    VerifyEmailSentFailedEvent,
-    VerifyEmailSentSuccessEvent
-} from '../impl/verify-email-sent.event';
-import {AuthService} from 'auth/auth.service';
-import {EmailUtils} from 'utils/email.util';
+import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ClientKafka } from '@nestjs/microservices';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AuthService } from 'auth/auth.service';
+import { CONSTANTS } from 'common/constant';
+import { Repository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { EmailUtils } from 'utils/email.util';
+import { config } from '../../../../config';
+import { VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent } from '../impl/verify-email-sent.event';
 
 @EventsHandler(VerifyEmailSentEvent)
 export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEvent> {
@@ -22,10 +21,10 @@ export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEven
 
     async handle(event: VerifyEmailSentEvent) {
         Logger.log(event.userId, 'VerifyEmailSentEvent');
-        const {streamId, userId} = event;
+        const { streamId, userId } = event;
 
         try {
-            const user = await this.repository.findOne({_id: userId});
+            const user = await this.repository.findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }
@@ -42,7 +41,14 @@ export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEven
 @EventsHandler(VerifyEmailSentSuccessEvent)
 export class VerifyEmailSentSuccessHandler
     implements IEventHandler<VerifyEmailSentSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: VerifyEmailSentSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.VERIFY_EMAIL_SENT_SUCCESS_EVENT, event);
         Logger.log(event.userId, 'VerifyEmailSentSuccessEvent');
     }
 }
@@ -50,7 +56,14 @@ export class VerifyEmailSentSuccessHandler
 @EventsHandler(VerifyEmailSentFailedEvent)
 export class VerifyEmailSentFailedHandler
     implements IEventHandler<VerifyEmailSentFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
     handle(event: VerifyEmailSentFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.VERIFY_EMAIL_SENT_FAILED_EVENT, event);
         Logger.log(event.error, 'VerifyEmailSentFailedEvent');
     }
 }
