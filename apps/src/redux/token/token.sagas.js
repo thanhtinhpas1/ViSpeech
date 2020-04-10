@@ -3,6 +3,7 @@
 import { call, all, takeLatest, put } from 'redux-saga/effects'
 import TokenService from 'services/token.service'
 import { TOKEN_TYPE } from 'utils/constant'
+import Utils from 'utils'
 import TokenTypes from './token.types'
 import {
   getUserTokenListSuccess,
@@ -11,6 +12,8 @@ import {
   getProjectTokenListFailure,
   getTokenTypesSuccess,
   getTokenTypesFailure,
+  getFreeTokenSuccess,
+  getFreeTokenFailure,
 } from './token.actions'
 
 // ==== get user token list
@@ -71,8 +74,8 @@ const formatTokenTypeList = tokenTypeList => {
       saleOff: null,
     }
   }
-  const filterFunc = tokenType => tokenType.name !== TOKEN_TYPE.FREE.name
-  return tokenTypeList.filter(filterFunc).map(mapFunc)
+  // const filterFunc = tokenType => tokenType.name !== TOKEN_TYPE.FREE.name
+  return Utils.sortArr(tokenTypeList, (a, b) => a.price - b.price).map(mapFunc)
 }
 
 export function* getTokenTypes() {
@@ -89,6 +92,25 @@ export function* getTokenTypesSaga() {
   yield takeLatest(TokenTypes.GET_TOKEN_TYPES, getTokenTypes)
 }
 
+// ==== get free token
+export function* getFreeToken({ payload: userId }) {
+  try {
+    const freeToken = yield TokenService.getFreeToken(userId)
+    yield put(getFreeTokenSuccess(freeToken))
+  } catch (err) {
+    yield put(getFreeTokenFailure(err.message))
+  }
+}
+
+export function* getFreeTokenSaga() {
+  yield takeLatest(TokenTypes.GET_FREE_TOKEN, getFreeToken)
+}
+
 export function* tokenSaga() {
-  yield all([call(getUserTokensSaga), call(getProjectTokensSaga), call(getTokenTypesSaga)])
+  yield all([
+    call(getUserTokensSaga),
+    call(getProjectTokensSaga),
+    call(getTokenTypesSaga),
+    call(getFreeTokenSaga),
+  ])
 }

@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react'
 import Utils from 'utils'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
-import { CUSTOMER_PATH } from 'utils/constant'
+import { CUSTOMER_PATH, TOKEN_TYPE } from 'utils/constant'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
 
@@ -107,15 +107,17 @@ const TokenStatistics = ({
           <div className="token-currency-choose" style={{ color: '#495463' }}>
             <div className="row guttar-15px" style={{ display: 'flex' }}>
               {getTokenTypeListObj.tokenTypeList &&
-                Utils.sortArr(getTokenTypeListObj.tokenTypeList, (a, b) => a.price - b.price).map(
-                  tokenType => {
-                    return (
-                      <div className="col-3" key={tokenType._id}>
-                        <TokenType tokenType={tokenType} />
-                      </div>
-                    )
-                  }
-                )}
+                Utils.sortAndFilter(
+                  getTokenTypeListObj.tokenTypeList,
+                  (a, b) => a.price - b.price,
+                  item => item.name !== TOKEN_TYPE.FREE.name
+                ).map(tokenType => {
+                  return (
+                    <div className="col-3" key={tokenType._id}>
+                      <TokenType tokenType={tokenType} />
+                    </div>
+                  )
+                })}
             </div>
           </div>
         </div>

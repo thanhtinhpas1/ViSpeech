@@ -50,3 +50,19 @@ export const getTokenTypesFailure = message => ({
   type: TokenTypes.GET_TOKEN_TYPES_FAILURE,
   payload: message,
 })
+
+// Get free token
+export const getFreeToken = userId => ({
+  type: TokenTypes.GET_FREE_TOKEN,
+  payload: userId,
+})
+
+export const getFreeTokenSuccess = data => ({
+  type: TokenTypes.GET_FREE_TOKEN_SUCCESS,
+  payload: { data },
+})
+
+export const getFreeTokenFailure = message => ({
+  type: TokenTypes.GET_FREE_TOKEN_FAILURE,
+  payload: message,
+})

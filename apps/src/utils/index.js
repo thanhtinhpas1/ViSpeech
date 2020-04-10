@@ -74,6 +74,15 @@ const Utils = {
     const result = JSON.parse(JSON.stringify(arr))
     return result.sort(sortFunc)
   },
+  filter: (arr, filterFunc) => {
+    const result = JSON.parse(JSON.stringify(arr))
+    return result.filter(filterFunc)
+  },
+  sortAndFilter: (arr, sortFunc, filterFunc) => {
+    const result = JSON.parse(JSON.stringify(arr))
+    const a = result.sort(sortFunc)
+    return a.filter(filterFunc).map(item => item)
+  },
   isEmailVerified: roles => {
     return Utils.getRolesInArray(roles).indexOf(ROLES.MANAGER_USER) !== -1
   },

@@ -8,6 +8,7 @@ import {GetTokensQuery, GetTokenTypesQuery} from 'tokens/queries/impl/get-tokens
 import {GetTokensByUserIdQuery} from 'tokens/queries/impl/get-tokens-by-userId';
 import {FindTokenQuery} from 'tokens/queries/impl/find-token.query';
 import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
+import { FindFreeTokenQuery } from 'tokens/queries/impl/find-free-token.query';
 
 @Injectable()
 export class TokensService {
@@ -54,6 +55,11 @@ export class TokensService {
 
     async findOne(findTokenQuery: FindTokenQuery): Promise<TokenDto> {
         const query = new FindTokenQuery(findTokenQuery.id);
+        return await this.queryBus.execute(query);
+    }
+
+    async findFreeToken(findFreeTokenQuery: FindFreeTokenQuery): Promise<TokenDto> {
+        const query = new FindFreeTokenQuery(findFreeTokenQuery.userId);
         return await this.queryBus.execute(query);
     }
 }

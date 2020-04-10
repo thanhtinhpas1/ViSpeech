@@ -11,6 +11,7 @@ import { Roles } from 'auth/roles.decorator';
 import { TokenGuard, TokenQueryGuard } from 'auth/guards/token.guard';
 import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
 import { AuthService } from 'auth/auth.service';
+import { FindFreeTokenQuery } from 'tokens/queries/impl/find-free-token.query';
 
 @Controller('tokens')
 @ApiTags('Tokens')
@@ -114,6 +115,17 @@ export class TokensController {
     @Get('/token-types')
     async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
         return this.tokensService.findTokenTypes(getTokenTypesQuery);
+    }
+
+    /* Find Free Token */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Find Free Token'] })
+    @ApiResponse({ status: 200, description: 'Find Free Token.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
+    @Get('/free-token/:userId')
+    async findFreeToken(@Param() findFreeTokenQuery: FindFreeTokenQuery) {
+        return this.tokensService.findFreeToken(findFreeTokenQuery);
     }
 
     /* Find Token */

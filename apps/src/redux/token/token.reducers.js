@@ -1,6 +1,12 @@
 import TokenTypes from './token.types'
 
 const INITIAL_STATE = {
+  getFreeToken: {
+    freeToken: null,
+    isLoading: false,
+    isSuccess: null,
+    errorMessage: null,
+  },
   getUserTokenList: {
     userTokenList: [],
     isLoading: false,
@@ -106,6 +112,34 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getTokenTypeList: {
           ...state.getTokenTypeList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET FREE TOKEN
+    case TokenTypes.GET_FREE_TOKEN:
+      return {
+        ...state,
+        getFreeToken: {
+          ...state.getFreeToken,
+          isLoading: true,
+        },
+      }
+    case TokenTypes.GET_FREE_TOKEN_SUCCESS:
+      return {
+        ...state,
+        getFreeToken: {
+          isLoading: false,
+          isSuccess: true,
+          freeToken: action.payload.data,
+        },
+      }
+    case TokenTypes.GET_FREE_TOKEN_FAILURE:
+      return {
+        ...state,
+        getFreeToken: {
+          ...state.getFreeToken,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
