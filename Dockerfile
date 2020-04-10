@@ -8,14 +8,12 @@ WORKDIR /user/src/app/vispeech
 
 # Copy project specification and dependencies lock files
 COPY package.json package-lock.json tsconfig.json /tmp/
-COPY apps/package.json package-lock.json /tmp/apps/
 
 ### DEPENDENCIES
 FROM base AS dependencies
 
 # Install Node.js dependencies
 RUN cd /tmp && npm install
-RUN cd /tmp/apps && npm install
 
 ### RELEASE
 FROM base AS development
@@ -24,7 +22,6 @@ FROM base AS development
 COPY . .
 
 COPY --from=dependencies /tmp/node_modules ./node_modules
-COPY --from=dependencies /tmp/apps/node_modules ./node_modules
 
 CMD npm run start:dev
 # Expose application port

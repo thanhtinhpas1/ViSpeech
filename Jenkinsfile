@@ -14,26 +14,15 @@ pipeline {
                 isRestartedRun()
             }
             steps {
-                sh 'rm -rf dist node_module apps/node_module apps/build'
+                sh 'rm -rf dist node_module'
                 sh 'docker system prune -af --volumes'
             }
         }
         stage('install') {
             steps {
                 sh 'npm install'
-                dir('apps') {
-                    sh 'npm install'
-                }
             }
         }
-        // stage('compile') {
-        //     steps {
-        //         sh 'npm run build'
-        //         dir ('apps') {
-        //             sh 'npm run build'
-        //         }
-        //     }
-        // }
         stage('docker') {
             steps {
                 sh 'docker build -t vispeech .'
