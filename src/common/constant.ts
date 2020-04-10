@@ -76,4 +76,4 @@ export const CONSTANTS = {
         ORDER_CREATED_SUCCESS_EVENT :'OrderCreatedSuccessEvent',
         ORDER_CREATED_FAILED_EVENT :'OrderCreatedSuccessEvent',
     }
-};
+    };
