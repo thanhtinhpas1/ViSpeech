@@ -4,15 +4,15 @@ import {FindOrderQuery} from 'orders/queries/impl/find-order.query';
 import {GetOrdersQuery} from 'orders/queries/impl/get-orders.query';
 import {OrderDto, OrderIdRequestParamsDto} from '../dtos/orders.dto';
 import {OrdersService} from '../services/orders.service';
-import {OrderGuard} from 'auth/guards/order.guard';
+import {OrderGuard, OrderQueryGuard} from 'auth/guards/order.guard';
 import {CONSTANTS} from 'common/constant';
 import {AuthGuard} from '@nestjs/passport';
 import {Roles} from 'auth/roles.decorator';
 import {GetOrdersByUserIdQuery} from 'orders/queries/impl/get-orders-by-userId';
+import { FindOrderByTokenIdQuery } from 'orders/queries/impl/find-order-by-tokenId.query';
 
 @Controller('orders')
 @ApiTags('Orders')
-@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
 export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {
     }
@@ -20,6 +20,7 @@ export class OrdersController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Create Order']})
     @ApiResponse({status: 200, description: 'Create Order.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Post()
     async createOrder(@Body() orderDto: OrderDto): Promise<OrderDto> {
         const streamId = orderDto._id;
@@ -31,6 +32,7 @@ export class OrdersController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Update Order']})
     @ApiResponse({status: 200, description: 'Update Order.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Put(':_id')
     async updateOrder(
         @Param() orderIdDto: OrderIdRequestParamsDto,
@@ -48,6 +50,7 @@ export class OrdersController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Delete Order']})
     @ApiResponse({status: 200, description: 'Delete Order.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Delete(':_id')
     async deleteOrder(@Param() orderIdDto: OrderIdRequestParamsDto) {
         const streamId = orderIdDto._id;
@@ -59,6 +62,7 @@ export class OrdersController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['List Orders']})
     @ApiResponse({status: 200, description: 'List Orders.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async getOrders(@Query() getOrdersQuery: GetOrdersQuery) {
@@ -70,6 +74,7 @@ export class OrdersController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['List Orders By UserId']})
     @ApiResponse({status: 200, description: 'List Orders By UserId.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
     @Get('/userId')
     async getOrdersByUserId(
         @Query() getOrdersByUserIdQuery: GetOrdersByUserIdQuery,
@@ -89,11 +94,23 @@ export class OrdersController {
         }
     }
 
+    /* Get Order By TokenId */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Get Order By TokenId']})
+    @ApiResponse({status: 200, description: 'Get Order By TokenId.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
+    @Get('/get-by-token/:tokenId')
+    async findOrderByTokenId(@Param() findOrderByTokenIdQuery: FindOrderByTokenIdQuery) {
+        return this.ordersService.findOneByTokenId(findOrderByTokenIdQuery);
+    }
+
     /* Find Order */
 
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Get Order']})
     @ApiResponse({status: 200, description: 'Get Order.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
     @Get(':id')
     async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {
         return this.ordersService.findOne(findOrderQuery);
