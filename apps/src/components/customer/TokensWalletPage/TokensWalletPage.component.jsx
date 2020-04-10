@@ -10,9 +10,9 @@ import ReactTable from 'components/customer/ReactTable/ReactTable.component'
 const TokensWalletPage = ({
   currentUser,
   getProjectInfoObj,
-  getTokenListObj,
+  getProjectTokenListObj,
   getProjectInfo,
-  getTokens,
+  getProjectTokens,
 }) => {
   const { id } = useParams()
   const { pathname } = useLocation()
@@ -105,17 +105,17 @@ const TokensWalletPage = ({
     },
   ]
 
-  const getProjectTokens = useCallback(
+  const getProjectTokensList = useCallback(
     ({ pageIndex, pageSize }) => {
       const projectOwnerId = getProjectInfoObj.project.userId
       if (pathname.includes('accepted-project') && projectOwnerId) {
-        getTokens({ userId: projectOwnerId, projectId: id, pageIndex, pageSize })
+        getProjectTokens({ userId: projectOwnerId, projectId: id, pageIndex, pageSize })
       }
       if (pathname.includes('my-project')) {
-        getTokens({ userId: currentUser._id, projectId: id, pageIndex, pageSize })
+        getProjectTokens({ userId: currentUser._id, projectId: id, pageIndex, pageSize })
       }
     },
-    [currentUser._id, id, pathname, getProjectInfoObj.project.userId, getTokens]
+    [currentUser._id, id, pathname, getProjectInfoObj.project.userId, getProjectTokens]
   )
 
   return (
@@ -151,10 +151,10 @@ const TokensWalletPage = ({
             {currentUser._id && (
               <ReactTable
                 columns={columns}
-                data={getTokenListObj.tokenList}
-                fetchData={getProjectTokens}
-                loading={getTokenListObj.isLoading}
-                pageCount={Math.ceil(getTokenListObj.tokenList.length / 5)}
+                data={getProjectTokenListObj.projectTokenList}
+                fetchData={getProjectTokensList}
+                loading={getProjectTokenListObj.isLoading}
+                pageCount={Math.ceil(getProjectTokenListObj.projectTokenList.length / 5)}
                 defaultPageSize={5}
                 pageSize={5}
               />

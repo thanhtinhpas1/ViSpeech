@@ -72,6 +72,10 @@ export class TokenQueryGuard implements CanActivate {
             }
         }
 
+        if (request.params['userId'] && request.params['userId'] === payload['id']) {
+            return true;
+        }
+
         const { userId, projectId } = request.query;
         if (userId && userId === payload['id']) {
             return true;

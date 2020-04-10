@@ -29,14 +29,18 @@ export class TokenTypeDto extends BaseEntityDto {
     @Type(() => Number)
     @IsNumber()
     @IsPositive()
-    @Column()
+    @Column({
+        type: 'double'
+    })
     minutes: number;
 
     @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
     @IsPositive()
-    @Column()
+    @Column({
+        type: 'double'
+    })
     price: number;
 
     @IsNotEmpty()
@@ -46,6 +50,7 @@ export class TokenTypeDto extends BaseEntityDto {
     @Max(100)
     @Column({
         default: 0,
+        type: 'double'
     })
     salePercent: number;
 

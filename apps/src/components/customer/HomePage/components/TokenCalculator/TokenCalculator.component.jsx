@@ -14,8 +14,8 @@ const TokenCalculator = ({ keyQuantity }) => {
         {keyQuantity}
       </h1>
       <div className="token-buy">
-        <a href={`${CUSTOMER_PATH}/tokens-wallet`} className="btn btn-primary">
-          Xem ví key
+        <a href={`${CUSTOMER_PATH}/transactions`} className="btn btn-primary">
+          Xem lịch sử giao dịch
         </a>
       </div>
     </div>

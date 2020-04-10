@@ -6,6 +6,7 @@ import tokenReducer from './token/token.reducers'
 import orderReducer from './order/order.reducers'
 import projectReducer from './project/project.reducers'
 import permissionReducer from './permission/permission.reducers'
+import reportReducer from './report/report.reducers'
 
 const userPersistConfig = {
   key: 'user',
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   order: orderReducer,
   project: projectReducer,
   permission: permissionReducer,
+  report: reportReducer,
 })
 
 export default rootReducer

@@ -39,6 +39,11 @@ const Header = ({ currentUser, onAuthenticate, logout }) => {
         emClass: 'ikon-transactions',
         name: 'Lịch sử giao dịch',
       },
+      {
+        href: `${CUSTOMER_PATH}/reports`,
+        emClass: 'ikon-transactions',
+        name: 'Thống kê',
+      },
     ]
     setUserLinks(userLinksArr)
     setNavbarMenu(navbarMenuArr)

@@ -17,10 +17,13 @@ import { ReportRepository } from './repository/report.repository';
 import { ReportsSagas } from './sagas/reports.sagas';
 import { ReportsService } from './services/reports.service';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { UserDto } from 'users/dtos/users.dto';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { ProjectDto } from 'projects/dtos/projects.dto';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([ReportDto, TokenDto]),
+        TypeOrmModule.forFeature([ReportDto, TokenDto, TokenTypeDto, UserDto, ProjectDto]),
         EventStoreModule.forFeature(),
         forwardRef(() => AuthModule),
     ],
