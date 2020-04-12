@@ -17,7 +17,7 @@ export class GetReportsHandler implements IQueryHandler<GetReportsQuery> {
         Logger.log('Async GetReportsQuery...');
         const {limit, offset} = query;
         try {
-            if (limit && offset)
+            if (limit != null && offset != null)
                 return await this.repository.find({
                     skip: offset,
                     take: limit

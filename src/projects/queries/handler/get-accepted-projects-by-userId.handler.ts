@@ -26,7 +26,7 @@ export class GetAcceptedProjectsByUserIdHandler
     let permissions = [];
     let result = [];
     try {
-      if (limit && offset) {
+      if (limit != null && offset != null) {
         permissions = await this.permissionDtoRepository.find({
           skip: offset,
           take: limit,

@@ -16,7 +16,7 @@ export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
     async execute(query: FindRequestsQuery) {
         Logger.log('Async FindRequestsHandler', 'FindRequestsQuery')
         const { limit, offset, tokenId, projectId } = query;
-        if (limit && offset) {
+        if (limit != null && offset != null) {
             if (projectId) {
                 return await this.requestRepository.find({
                     skip: offset,

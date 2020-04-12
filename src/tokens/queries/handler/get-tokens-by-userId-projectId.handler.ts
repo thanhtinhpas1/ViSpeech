@@ -18,7 +18,7 @@ export class GetTokensByUserIdAndProjectIdHandler
         Logger.log('Async GetTokensByUserIdAndProjectIdQuery...', 'GetTokensByUserIdAndProjectIdQuery');
         const { userId, projectId, offset, limit } = query;
         try {
-            if (limit && offset) {
+            if (limit != null && offset != null) {
                 return await this.repository.find({
                     skip: offset,
                     take: limit,

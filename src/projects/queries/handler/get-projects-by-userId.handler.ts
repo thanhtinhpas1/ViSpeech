@@ -18,7 +18,7 @@ export class GetProjectsByUserIdHandler
         Logger.log('Async GetProjectsByUserIdQuery...', 'GetProjectsByUserIdQuery');
         const {userId, offset, limit} = query;
         try {
-            if (limit && offset) {
+            if (limit != null && offset != null) {
                 return await this.repository.find({
                     skip: offset,
                     take: limit,

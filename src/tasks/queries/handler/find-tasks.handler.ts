@@ -16,7 +16,7 @@ export class FindTaskHandler implements IQueryHandler<FindTasksQuery>{
         const { limit, offset } = query;
         let tasks = [];
         try {
-            tasks = limit && offset ?
+            tasks = limit != null && offset != null ?
                 await this.taskRepository.find({ skip: offset, take: limit }) :
                 await this.taskRepository.find();
             return tasks;

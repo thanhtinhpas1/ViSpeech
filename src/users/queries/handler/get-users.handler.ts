@@ -18,7 +18,7 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
         const { limit, offset } = query;
         let users = [];
         try {
-            users = limit && offset ? 
+            users = limit != null && offset != null ? 
                 await this.repository.find({ skip: offset, take: limit }) : 
                 await this.repository.find();
             users = Utils.removeObjPropertiesFromObjArr(users, ['password']);

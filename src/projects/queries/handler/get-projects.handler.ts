@@ -17,7 +17,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
         Logger.log('Async GetProjectsHandler...', 'GetProjectsQuery');
         const {offset, limit} = query;
         try {
-            if (limit && offset) {
+            if (limit != null && offset != null) {
                 return await this.repository.find({
                     skip: offset,
                     take: limit

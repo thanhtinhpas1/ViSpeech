@@ -18,7 +18,7 @@ export class GetOrdersByUserIdHandler
         Logger.log('Async GetOrdersByUserIdQuery...', 'GetOrdersByUserIdQuery');
         const {userId, offset, limit} = query;
         try {
-            if (limit && offset) {
+            if (limit != null && offset != null) {
                 return await this.repository.find({
                     skip: offset,
                     take: limit,
