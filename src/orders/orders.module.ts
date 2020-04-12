@@ -23,6 +23,8 @@ import { QueryHandlers } from './queries/handler';
 import { OrderRepository } from './repository/order.repository';
 import { OrdersSagas } from './sagas/orders.sagas';
 import { OrdersService } from './services/orders.service';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 @Module({
     imports: [
@@ -30,7 +32,7 @@ import { OrdersService } from './services/orders.service';
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([OrderDto, TokenTypeDto]),
+        TypeOrmModule.forFeature([OrderDto, TokenTypeDto, ProjectDto, TokenDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
     ],

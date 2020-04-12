@@ -8,6 +8,7 @@ import {GetOrdersQuery} from 'orders/queries/impl/get-orders.query';
 import {FindOrderQuery} from 'orders/queries/impl/find-order.query';
 import {config} from '../../../config';
 import {GetOrdersByUserIdQuery} from 'orders/queries/impl/get-orders-by-userId';
+import { FindOrderByTokenIdQuery } from 'orders/queries/impl/find-order-by-tokenId.query';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
@@ -49,6 +50,11 @@ export class OrdersService {
 
     async findOne(findOrderQuery: FindOrderQuery): Promise<OrderDto> {
         var query = new FindOrderQuery(findOrderQuery.id);
+        return await this.queryBus.execute(query);
+    }
+
+    async findOneByTokenId(findOrderByTokenIdQuery: FindOrderByTokenIdQuery): Promise<OrderDto> {
+        var query = new FindOrderByTokenIdQuery(findOrderByTokenIdQuery.tokenId);
         return await this.queryBus.execute(query);
     }
 

@@ -1,13 +1,13 @@
 import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
-import {FindOrderQuery} from '../impl/find-order.query';
 import {Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {OrderDto} from 'orders/dtos/orders.dto';
-import {Repository} from 'typeorm';
+import {Repository, getMongoRepository} from 'typeorm';
+import { FindOrderByTokenIdQuery } from '../impl/find-order-by-tokenId.query';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 
-@QueryHandler(FindOrderQuery)
-export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
+@QueryHandler(FindOrderByTokenIdQuery)
+export class FindOrderByTokenIdHandler implements IQueryHandler<FindOrderByTokenIdQuery> {
     constructor(
         @InjectRepository(OrderDto)
         private readonly repository: Repository<OrderDto>,
@@ -16,20 +16,20 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
     ) {
     }
 
-    async execute(query: FindOrderQuery): Promise<any> {
-        Logger.log('Async FindOrderQuery...', 'FindOrderQuery');
-        const { id } = query;
+    async execute(query: FindOrderByTokenIdQuery): Promise<any> {
+        Logger.log('Async FindOrderByTokenIdQuery...', 'FindOrderByTokenIdQuery');
+        const { tokenId } = query;
         let project = null;
 
         try {
-            const order = await this.repository.findOne({ _id: id });
+            const order = await this.repository.findOne({ where: { "token._id" : tokenId } });
             if (order) {
                 project  = await this.projectDtoRepository.findOne({ _id: order.token.projectId });
                 order.token['projectName'] = project.name
             }
             return order
         } catch (error) {
-            Logger.error(error, '', 'FindOrderQuery');
+            Logger.error(error, '', 'FindOrderByTokenIdQuery');
         }
     }
 }
