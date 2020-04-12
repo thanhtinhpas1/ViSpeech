@@ -141,7 +141,7 @@ export const ReportUtils = {
         }
         return result;
     },
-    getValidStatisticalQueryParams: query => {
+    getValidStatisticalQueryParams:     query => {
         const fromDate = ReportUtils.isValidDate(query.fromDate) ? new Date(query.fromDate) : new Date();
         const toDate = ReportUtils.isValidDate(query.toDate) ? new Date(query.toDate) : ReportUtils.addDays(fromDate, 1);
         const weekObj = query.weekObj || new StatisticalObject(new StatisticalDto(1, 2020), new StatisticalDto(10, 2020));

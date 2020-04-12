@@ -1,7 +1,7 @@
-import {IsDate, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID} from 'class-validator';
-import {Type} from 'class-transformer';
-import {Column, Entity, ObjectID} from 'typeorm';
-import {BaseEntityDto} from 'base/base-entity.dto';
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { Type } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
+import { Column, Entity, ObjectID } from 'typeorm';
 
 export class ReportIdRequestParamsDto {
     constructor(reportId) {
@@ -15,7 +15,8 @@ export class ReportIdRequestParamsDto {
 
 @Entity('reports')
 export class ReportDto extends BaseEntityDto {
-    constructor(usedMinutes: number, dateReport: Date, tokenId, tokenTypeId, projectId, userId) {
+    constructor(usedMinutes: number, dateReport: Date, tokenId: any, tokenTypeId: any, projectId: any, userId: any, totalRequest: number,
+        typeReport: string, ) {
         super();
         this.usedMinutes = usedMinutes;
         this.dateReport = dateReport;
@@ -23,6 +24,8 @@ export class ReportDto extends BaseEntityDto {
         this.tokenTypeId = tokenTypeId;
         this.projectId = projectId;
         this.userId = userId;
+        this.totalRequests = totalRequest;
+        this.typeReport = typeReport;
     }
 
     @IsNotEmpty()
@@ -33,6 +36,14 @@ export class ReportDto extends BaseEntityDto {
         type: 'double'
     })
     usedMinutes: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    @IsPositive()
+    @Column({
+        nullable: false,
+    })
+    totalRequests: number;
 
     @Type(() => Date)
     @IsDate()
@@ -75,4 +86,11 @@ export class ReportDto extends BaseEntityDto {
         type: 'uuid'
     })
     tokenTypeId: ObjectID;
+
+    @IsNotEmpty()
+    @IsString()
+    @Column({
+        nullable: false,
+    })
+    typeReport: string;
 }

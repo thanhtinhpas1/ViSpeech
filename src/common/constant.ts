@@ -73,7 +73,14 @@ export const CONSTANTS = {
         PERMISSION_CREATED_SUCCESS_EVENT: 'PermissionCreatedSuccessEvent',
         PERMISSION_CREATED_FAILED_EVENT: 'PermissionCreatedFailedEvent',
         // ORDER
-        ORDER_CREATED_SUCCESS_EVENT :'OrderCreatedSuccessEvent',
-        ORDER_CREATED_FAILED_EVENT :'OrderCreatedSuccessEvent',
+        ORDER_CREATED_SUCCESS_EVENT: 'OrderCreatedSuccessEvent',
+        ORDER_CREATED_FAILED_EVENT: 'OrderCreatedSuccessEvent',
+    },
+    TASK: {
+        REPORT_DATE: 'REPORT_DATE',
+        REPORT_MONTH: 'REPORT_MONTH',
+        REPORT_QUARTER: 'REPORT_QUARTER',
+        REPORT_YEAR: 'REPORT_YEAR',
+        TIMEOUT: 30000,
     }
-    };
+};

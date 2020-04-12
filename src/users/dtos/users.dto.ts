@@ -1,7 +1,7 @@
-import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString} from 'class-validator';
-import {RoleDto} from 'roles/dtos/roles.dto';
-import {Column, Entity, Index} from 'typeorm';
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { RoleDto } from 'roles/dtos/roles.dto';
+import { Column, Entity, Index } from 'typeorm';
 
 export class UserIdRequestParamsDto {
     constructor(userId) {
@@ -12,13 +12,6 @@ export class UserIdRequestParamsDto {
     @IsOptional()
     _id: string;
 }
-
-// export class AssignUserRoleBody {
-//     @IsNotEmpty()
-//     @IsString()
-//     @IsIn([CONSTANTS.ROLE.USER, CONSTANTS.ROLE.MANAGER_USER])
-//     roleName: string;
-// }
 
 export class ChangePasswordBody {
     @IsNotEmpty()
@@ -76,11 +69,6 @@ export class UserDto extends BaseEntityDto {
         unique: true, update: false,
     })
     email: string;
-
-    // @IsOptional()
-    // @IsUUID()
-    // @Column({insert: false})
-    // assignerId: string;
 
     @IsEmpty()
     @Column({

@@ -4,8 +4,6 @@ import { CalledAsrEvent } from "requests/events/impl/call-asr.event";
 import { Observable } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { UpdateTokenCommand } from "tokens/commands/impl/update-token.command";
-import { CreateReportCommand } from "reports/commands/impl/create-report.command";
-import { ReportDto } from "reports/dtos/reports.dto";
 
 @Injectable()
 export class CallAsrSagas {
@@ -21,11 +19,7 @@ export class CallAsrSagas {
                 if (tokenDto.usedMinutes - requestDto.duration > 0) { // not first time call
                     return [new UpdateTokenCommand(streamId, tokenDto)];
                 }
-                const report = new ReportDto(requestDto.duration, requestDto.createdDate, requestDto.tokenId, tokenDto.tokenTypeId, tokenDto.projectId, tokenDto.userId)
-                return [
-                    new UpdateTokenCommand(streamId, tokenDto),
-                    new CreateReportCommand(streamId, report)
-                ];
+                return [new UpdateTokenCommand(streamId, tokenDto)];
             })
         );
     };

@@ -32,7 +32,10 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
         try {
             user.password = Utils.hashPassword(user.password);
             user.roles = Utils.convertToArray(user.roles);
-            user.roles = user.roles.map(role => new RoleDto(role.name));
+            user.roles = user.roles.map(role => {
+                if (role.name === CONSTANTS.ROLE.ADMIN) return new RoleDto(CONSTANTS.ROLE.USER);
+                return new RoleDto(role.name)
+            });
             await this.userRepository.save(user);
             this.eventBus.publish(new UserCreatedSuccessEvent(streamId, userDto));
         } catch (error) {

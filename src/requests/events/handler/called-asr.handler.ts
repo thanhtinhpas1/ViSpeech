@@ -18,7 +18,6 @@ export class CalledAsrHandler implements IEventHandler<CalledAsrEvent> {
         const { streamId, requestDto, tokenDto } = event;
         try {
             requestDto.duration = Number(requestDto.duration);
-            requestDto.createdDate = new Date(Date.now());
             await this.requestRepository.save(requestDto);
         } catch (error) {
             Logger.error(error, '', 'CalledAsrEvent');
