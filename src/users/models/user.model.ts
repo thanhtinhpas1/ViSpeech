@@ -34,10 +34,6 @@ export class User extends AggregateRoot {
         this.apply(new UserDeletedEvent(streamId, this.id));
     }
 
-    // assignUserRole(streamId: string, roleName: string, assignerId: string) {
-    //     this.apply(new UserRoleAssignedEvent(streamId, this.id, roleName, assignerId));
-    // }
-
     changePassword(streamId: string) {
         this.apply(new PasswordChangedEvent(streamId, this.data));
     }

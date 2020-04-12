@@ -82,7 +82,6 @@ export class UsersModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        this.client.subscribeToResponseOf('UserCreatedFailedEvent');
         this.eventStore.setEventHandlers({
             ...this.eventHandlers,
             ...TokensModule.eventHandlers,

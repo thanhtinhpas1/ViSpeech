@@ -37,14 +37,8 @@ export class UserRepository {
         return user;
     }
 
-    // async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
-    //     const user = new User(userId);
-    //     user.assignUserRole(streamId, roleName, assignerId);
-    //     return user;
-    // }
-
     async changePassword(streamId: string, changePasswordBody: ChangePasswordBody) {
-        const user = new User(undefined);
+        const user = new User(streamId);
         user.setData(changePasswordBody);
         user.changePassword(streamId);
         return user;

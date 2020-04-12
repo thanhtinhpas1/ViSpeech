@@ -62,8 +62,20 @@ export class UsersController implements OnModuleInit {
         return await this.usersService.createUserStart(streamId, userDto);
     }
 
-    /* Update User */
+    /* Change password */
 
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Change password']})
+    @ApiResponse({status: 200, description: 'Change password.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @Put('change-password')
+    async changePassword(@Body() changePasswordBody: ChangePasswordBody) {
+        const streamId = changePasswordBody.userId;
+        return this.usersService.changePassword(streamId, changePasswordBody);
+    }
+
+    /* Update User */
+    
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Update User']})
     @ApiResponse({status: 200, description: 'Update User.'})
@@ -75,25 +87,6 @@ export class UsersController implements OnModuleInit {
     ): Promise<UserDto> {
         const streamId = userIdDto._id;
         return this.usersService.updateUser(streamId, {...userDto, _id: userIdDto._id});
-    }
-
-    /* Change password */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Change password']})
-    @ApiResponse({status: 200, description: 'Change password.'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-    @Put('change-password')
-    async changePassword(@Body() changePasswordBody: ChangePasswordBody, @Req() request) {
-        const payload = this.authService.decode(request);
-        if (!payload || !payload['id'] || !payload['roles']) {
-            throw new UnauthorizedException();
-        }
-        if (payload['id'] !== changePasswordBody.userId) {
-            throw new NotAcceptableException();
-        }
-        const streamId = changePasswordBody.userId;
-        return this.usersService.changePassword(streamId, changePasswordBody);
     }
 
     /* Delete User */

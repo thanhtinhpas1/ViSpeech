@@ -12,9 +12,5 @@ export const kafkaClientOptions: KafkaOptions = {
             transactionalId: config.KAFKA.NAME,
             allowAutoTopicCreation: true,
         },
-        consumer: {
-            groupId: 'vispeech',
-            allowAutoTopicCreation: true,
-        }
     },
 }

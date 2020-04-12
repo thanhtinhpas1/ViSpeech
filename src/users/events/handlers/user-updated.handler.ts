@@ -24,12 +24,12 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
         const { _id, ...userInfo } = userDto;
 
         try {
-            const user = await this.repository.findOne({ _id });
+            const user = await this.repository.findOne({ _id: userDto._id });
             if (!user) {
                 throw new NotFoundException(`User with _id ${_id} does not exist.`);
             }
 
-            const formattedInfo = Utils.removePropertiesFromObject(userInfo, ['email', 'password', 'roles']);
+            const formattedInfo = Utils.removePropertiesFromObject(userInfo, ['username', 'email', 'password', 'roles']);
             await this.repository.update({ _id }, formattedInfo);
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
         } catch (error) {
