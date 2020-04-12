@@ -44,7 +44,6 @@ export class ConstTaskService {
                 });
                 const requests = result[0];
                 const total = result[1];
-                console.log(result);
                 var totalDuration = 0;
                 for (const request of requests) {
                     totalDuration += Number(request.duration);
