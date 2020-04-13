@@ -17,17 +17,14 @@ export class GetTokensByUserIdAndProjectIdHandler
     async execute(query: GetTokensByUserIdAndProjectIdQuery): Promise<any> {
         Logger.log('Async GetTokensByUserIdAndProjectIdQuery...', 'GetTokensByUserIdAndProjectIdQuery');
         const { userId, projectId, offset, limit } = query;
+        let tokens = [];
         try {
-            if (limit != null && offset != null) {
-                return await this.repository.find({
-                    skip: offset,
-                    take: limit,
-                    where: { userId, projectId }
-                });
-            }
-            return await this.repository.find({
-                where: { userId, projectId }
-            });
+            const findOptions = { where: { userId, projectId } }
+            tokens = limit != null && offset != null ?
+                await this.repository.find({ skip: offset, take: limit, ...findOptions }) :
+                await this.repository.find(findOptions);
+            const count = await this.repository.count(findOptions.where);
+            return { data: tokens, count };
         } catch (error) {
             Logger.error(error, '', 'GetTokensByUserIdAndProjectIdQuery');
         }

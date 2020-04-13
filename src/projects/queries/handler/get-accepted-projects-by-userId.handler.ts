@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProjectDto } from "projects/dtos/projects.dto";
-import { Repository } from "typeorm";
+import { Repository, getMongoRepository } from "typeorm";
 import { GetAcceptedProjectsByUserIdQuery } from "../impl/get-accepted-projects-by-userId";
 import { PermissionDto } from "permissions/dtos/permissions.dto";
 import { CONSTANTS } from "common/constant";
@@ -26,16 +26,13 @@ export class GetAcceptedProjectsByUserIdHandler
     let permissions = [];
     let result = [];
     try {
+      const findOptions = {
+        where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED] } }
+      }
       if (limit != null && offset != null) {
-        permissions = await this.permissionDtoRepository.find({
-          skip: offset,
-          take: limit,
-          where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED] } }
-        });
+        permissions = await this.permissionDtoRepository.find({ skip: offset, take: limit, ...findOptions });
       } else {
-        permissions = await this.permissionDtoRepository.find({
-          where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED] } }
-        });
+        permissions = await this.permissionDtoRepository.find(findOptions);
       }
 
       for (const permission of permissions) {
@@ -44,7 +41,8 @@ export class GetAcceptedProjectsByUserIdHandler
         result.push({ ...project, status: permission.status, ownerName: user.username });
       }
 
-      return result;
+      const count = await getMongoRepository(PermissionDto).count(findOptions.where)
+      return { data: result, count };
     } catch (error) {
       Logger.error(error, "", "GetAcceptedProjectsByUserIdQuery");
     }

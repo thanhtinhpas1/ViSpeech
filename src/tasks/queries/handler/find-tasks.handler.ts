@@ -9,7 +9,7 @@ import { FindTasksQuery } from "../impl/find-tasks.query";
 export class FindTaskHandler implements IQueryHandler<FindTasksQuery>{
     constructor(
         @InjectRepository(TaskDto)
-        private readonly taskRepository: Repository<TaskDto>,
+        private readonly repository: Repository<TaskDto>,
     ) { }
     async execute(query: FindTasksQuery) {
         Logger.log('Async FindTaskHandler', 'FindTaskQuery');
@@ -17,9 +17,10 @@ export class FindTaskHandler implements IQueryHandler<FindTasksQuery>{
         let tasks = [];
         try {
             tasks = limit != null && offset != null ?
-                await this.taskRepository.find({ skip: offset, take: limit }) :
-                await this.taskRepository.find();
-            return tasks;
+                await this.repository.find({ skip: offset, take: limit }) :
+                await this.repository.find();
+            const count = await this.repository.count();
+            return { data: tasks, count };
         } catch (error) {
             Logger.error(error.message, '', 'GetTasksQuery');
         }

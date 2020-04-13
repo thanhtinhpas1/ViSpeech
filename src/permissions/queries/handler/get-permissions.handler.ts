@@ -1,9 +1,9 @@
-import {GetPermissionsQuery} from '../impl/get-permissions.query';
-import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {PermissionDto} from 'permissions/dtos/permissions.dto';
-import {Repository} from 'typeorm';
+import { GetPermissionsQuery } from '../impl/get-permissions.query';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { Repository } from 'typeorm';
 
 @QueryHandler(GetPermissionsQuery)
 export class GetPermissionsHandler implements IQueryHandler<GetPermissionsQuery> {
@@ -15,15 +15,14 @@ export class GetPermissionsHandler implements IQueryHandler<GetPermissionsQuery>
 
     async execute(query: GetPermissionsQuery) {
         Logger.log('Async GetPermissionsHandler...', 'GetPermissionsQuery');
-        const {offset, limit} = query;
+        const { offset, limit } = query;
+        let permissisons = []
         try {
-            if (limit != null && offset != null) {
-                return await this.repository.find({
-                    skip: offset,
-                    take: limit
-                });
-            }
-            return await this.repository.find();
+            permissisons = limit != null && offset != null ?
+                await this.repository.find({ skip: offset, take: limit }) :
+                await this.repository.find();
+            const count = await this.repository.count();
+            return { data: permissisons, count };
         } catch (error) {
             Logger.error(error, '', 'GetPermissionsQuery');
         }

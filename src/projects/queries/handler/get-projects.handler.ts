@@ -1,9 +1,9 @@
-import {GetProjectsQuery} from '../impl/get-projects.query';
-import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {ProjectDto} from 'projects/dtos/projects.dto';
-import {Repository} from 'typeorm';
+import { GetProjectsQuery } from '../impl/get-projects.query';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { Repository } from 'typeorm';
 
 @QueryHandler(GetProjectsQuery)
 export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
@@ -15,15 +15,14 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
 
     async execute(query: GetProjectsQuery) {
         Logger.log('Async GetProjectsHandler...', 'GetProjectsQuery');
-        const {offset, limit} = query;
+        const { offset, limit } = query;
+        let projects = [];
         try {
-            if (limit != null && offset != null) {
-                return await this.repository.find({
-                    skip: offset,
-                    take: limit
-                });
-            }
-            return await this.repository.find();
+            projects = limit != null && offset != null ?
+                await this.repository.find({ skip: offset, take: limit }) :
+                await this.repository.find();
+            const count = await this.repository.count();
+            return { data: projects, count };
         } catch (error) {
             Logger.error(error, '', 'GetProjectsQuery');
         }

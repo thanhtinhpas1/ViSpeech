@@ -9,56 +9,35 @@ import { FindRequestsQuery } from "../impl/find-requests.query";
 export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
     constructor(
         @InjectRepository(RequestDto)
-        private readonly requestRepository: Repository<RequestDto>,
+        private readonly repository: Repository<RequestDto>,
     ) {
 
     }
     async execute(query: FindRequestsQuery) {
         Logger.log('Async FindRequestsHandler', 'FindRequestsQuery')
         const { limit, offset, tokenId, projectId } = query;
-        if (limit != null && offset != null) {
+
+        try {
+            const findOptions = {}
+            if (limit != null && offset != null) {
+                findOptions['skip'] = offset;
+                findOptions['take'] = limit;
+            }
             if (projectId) {
-                return await this.requestRepository.find({
-                    skip: offset,
-                    take: limit,
-                    where: {
-                        projectId,
-                    },
-                })
+                findOptions['where'] = { projectId };
             }
             else if (tokenId) {
-                return await this.requestRepository.find({
-                    skip: offset,
-                    take: limit,
-                    where: {
-                        tokenId,
-                    },
-
-                })
+                findOptions['where'] = { tokenId };
             }
             else { // case admin
-                return await this.requestRepository.find({
-                    skip: offset,
-                    take: limit,
-                })
+                findOptions['where'] = {};
             }
-        }
-        if (projectId) {
-            return await this.requestRepository.find({
-                where: {
-                    projectId,
-                },
-            })
-        }
-        else if (tokenId) {
-            return await this.requestRepository.find({
-                where: {
-                    tokenId,
-                },
-            })
-        }
-        else { // case admin role
-            return await this.requestRepository.find();
+
+            const requests = await this.repository.find(findOptions);
+            const count = await this.repository.count(findOptions['where']);
+            return { data: requests, count };
+        } catch (error) {
+            Logger.error(error.message, '', 'FindRequestsQuery');
         }
     }
 }
