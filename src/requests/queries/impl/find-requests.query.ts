@@ -10,7 +10,6 @@ export class FindRequestsQuery {
 
     @IsOptional()
     @Type(() => Number)
-    @IsPositive()
     @IsNumber()
     @Min(0)
     offset?: number;

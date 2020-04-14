@@ -1,7 +1,8 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { Type } from 'class-transformer';
-import { IsDate, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, IsIn } from 'class-validator';
 import { Column, Entity, ObjectID } from 'typeorm';
+import { CONSTANTS } from 'common/constant';
 
 export class ReportIdRequestParamsDto {
     constructor(reportId) {
@@ -15,8 +16,8 @@ export class ReportIdRequestParamsDto {
 
 @Entity('reports')
 export class ReportDto extends BaseEntityDto {
-    constructor(usedMinutes: number, dateReport: Date, tokenId: any, tokenTypeId: any, projectId: any, userId: any, totalRequest: number,
-        typeReport: string, ) {
+    constructor(usedMinutes: number, dateReport: Date, tokenId: any, tokenTypeId: any, projectId: any, userId: any, totalRequests: number,
+        typeReport: string) {
         super();
         this.usedMinutes = usedMinutes;
         this.dateReport = dateReport;
@@ -24,7 +25,7 @@ export class ReportDto extends BaseEntityDto {
         this.tokenTypeId = tokenTypeId;
         this.projectId = projectId;
         this.userId = userId;
-        this.totalRequests = totalRequest;
+        this.totalRequests = totalRequests;
         this.typeReport = typeReport;
     }
 
@@ -38,6 +39,7 @@ export class ReportDto extends BaseEntityDto {
     usedMinutes: number;
 
     @IsNotEmpty()
+    @Type(() => Number)
     @IsNumber()
     @IsPositive()
     @Column({
@@ -89,6 +91,7 @@ export class ReportDto extends BaseEntityDto {
 
     @IsNotEmpty()
     @IsString()
+    @IsIn([CONSTANTS.TASK.REPORT_DATE, CONSTANTS.TASK.REPORT_WEEK, CONSTANTS.TASK.REPORT_MONTH, CONSTANTS.TASK.REPORT_QUARTER, CONSTANTS.TASK.REPORT_YEAR])
     @Column({
         nullable: false,
     })

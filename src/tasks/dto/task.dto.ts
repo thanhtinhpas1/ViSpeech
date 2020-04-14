@@ -50,6 +50,6 @@ export class TaskDto extends BaseEntityDto {
 }
 
 export enum PreviousRunStatus {
-    SUCCESS = "Success",
-    FAILED = "Failed",
+    SUCCESS = "SUCCESS",
+    FAILURE = "FAILURE",
 }

@@ -56,7 +56,7 @@ export class ConstTaskService {
             }
         } catch (error) {
             this.logger.error('Something went wrong when generate report day', error.message, 'ConstTaskService');
-            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_DATE, PreviousRunStatus.FAILED, CronExpression.EVERY_DAY_AT_MIDNIGHT, error.message);
+            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_DATE, PreviousRunStatus.FAILURE, CronExpression.EVERY_DAY_AT_MIDNIGHT, error.message);
             this.taskRepository.save(taskDto);
         }
     }
@@ -94,7 +94,7 @@ export class ConstTaskService {
             }
         } catch (error) {
             this.logger.error('Something went wrong when generate report month', error.message, 'ConstTaskService');
-            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_MONTH, PreviousRunStatus.FAILED, CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT, error.message);
+            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_MONTH, PreviousRunStatus.FAILURE, CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT, error.message);
             this.taskRepository.save(taskDto);
         }
     }
@@ -132,7 +132,7 @@ export class ConstTaskService {
             }
         } catch (error) {
             this.logger.error('Something went wrong when generate report quater', error.message, 'ConstTaskService');
-            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_QUARTER, PreviousRunStatus.FAILED, CronExpression.EVERY_QUARTER, error.message);
+            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_QUARTER, PreviousRunStatus.FAILURE, CronExpression.EVERY_QUARTER, error.message);
             this.taskRepository.save(taskDto);
         }
     }
@@ -170,7 +170,7 @@ export class ConstTaskService {
             }
         } catch (error) {
             this.logger.error('Something went wrong when generate report year', error.message, 'ConstTaskService');
-            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_YEAR, PreviousRunStatus.FAILED, CronExpression.EVERY_YEAR, error.message);
+            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REPORT_YEAR, PreviousRunStatus.FAILURE, CronExpression.EVERY_YEAR, error.message);
             this.taskRepository.save(taskDto);
         }
     }

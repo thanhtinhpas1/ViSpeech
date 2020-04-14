@@ -78,6 +78,7 @@ export const CONSTANTS = {
     },
     TASK: {
         REPORT_DATE: 'REPORT_DATE',
+        REPORT_WEEK: 'REPORT_WEEK',
         REPORT_MONTH: 'REPORT_MONTH',
         REPORT_QUARTER: 'REPORT_QUARTER',
         REPORT_YEAR: 'REPORT_YEAR',
