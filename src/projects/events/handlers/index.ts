@@ -1,6 +1,6 @@
 import {ProjectCreatedFailedHandler, ProjectCreatedHandler, ProjectCreatedSuccessHandler} from './project-created.handler';
-import {ProjectUpdatedHandler} from './project-updated.handler';
-import {ProjectDeletedHandler} from './project-deleted.handler';
+import {ProjectUpdatedHandler, ProjectUpdatedSuccessHandler, ProjectUpdatedFailedHandler} from './project-updated.handler';
+import {ProjectDeletedHandler, ProjectDeletedSuccessHandler, ProjectDeletedFailedHandler} from './project-deleted.handler';
 import {ProjectWelcomedHandler} from './project-welcomed.handler';
 
 export const EventHandlers = [
@@ -9,7 +9,15 @@ export const EventHandlers = [
     ProjectCreatedSuccessHandler,
     ProjectCreatedFailedHandler,
 
+    // update
     ProjectUpdatedHandler,
+    ProjectUpdatedSuccessHandler,
+    ProjectUpdatedFailedHandler,
+
+    // delete
     ProjectDeletedHandler,
+    ProjectDeletedSuccessHandler,
+    ProjectDeletedFailedHandler,
+
     ProjectWelcomedHandler,
 ];

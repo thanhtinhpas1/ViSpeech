@@ -8,3 +8,20 @@ export class OrderUpdatedEvent implements IEvent {
     ) {
     }
 }
+
+export class OrderUpdatedSuccessEvent implements IEvent {
+    constructor(
+        public readonly streamId: string,
+        public readonly orderDto: OrderDto
+    ) {
+    }
+}
+
+export class OrderUpdatedFailedEvent implements IEvent {
+    constructor(
+        public readonly streamId: string,
+        public readonly orderDto: OrderDto,
+        public readonly error: object
+    ) {
+    }
+}

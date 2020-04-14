@@ -59,7 +59,7 @@ export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSucce
 }
 
 @EventsHandler(UserCreatedFailedEvent)
-export class UserCreatedFailHandler implements IEventHandler<UserCreatedFailedEvent> {
+export class UserCreatedFailedHandler implements IEventHandler<UserCreatedFailedEvent> {
     constructor(
         @Inject(config.KAFKA.NAME)
         private readonly clientKafka: ClientKafka,

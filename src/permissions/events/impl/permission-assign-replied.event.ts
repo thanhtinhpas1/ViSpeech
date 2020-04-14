@@ -8,3 +8,20 @@ export class PermissionAssignRepliedEvent implements IEvent {
     ) {
     }
 }
+
+export class PermissionAssignRepliedSuccessEvent implements IEvent {
+    constructor(
+        public readonly streamId: string,
+        public readonly permissionResponseDto: PermissionResponseDto
+    ) {
+    }
+}
+
+export class PermissionAssignRepliedFailedEvent implements IEvent {
+    constructor(
+        public readonly streamId: string,
+        public readonly permissionResponseDto: PermissionResponseDto,
+        public readonly error: object,
+    ) {
+    }
+}

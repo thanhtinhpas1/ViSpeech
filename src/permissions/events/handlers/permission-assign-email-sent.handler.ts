@@ -83,7 +83,7 @@ export class PermissionAssignEmailSentFailedHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionAssignEmailSentFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_FAILED_EVENT, event);
         Logger.log(event.error, 'PermissionAssignEmailSentFailedEvent');
     }
 }

@@ -11,8 +11,8 @@ import { TokenTypeDto } from './dtos/token-types.dto';
 import { TokenDto } from './dtos/tokens.dto';
 import { EventHandlers } from './events/handlers';
 import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
-import { TokenDeletedByUserIdEvent, TokenDeletedEvent } from './events/impl/token-deleted.event';
-import { TokenUpdatedEvent } from './events/impl/token-updated.event';
+import { TokenDeletedByUserIdEvent, TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent, TokenDeletedByUserIdSuccessEvent, TokenDeletedByUserIdFailedEvent } from './events/impl/token-deleted.event';
+import { TokenUpdatedEvent, TokenUpdatedSuccessEvent, TokenUpdatedFailedEvent } from './events/impl/token-updated.event';
 import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { TokenRepository } from './repository/token.repository';
@@ -76,9 +76,21 @@ export class TokensModule implements OnModuleInit {
         TokenCreatedSuccessEvent: (streamId, data) => new TokenCreatedSuccessEvent(streamId, data),
         TokenCreatedFailedEvent: (streamId, data, error) => new TokenCreatedFailedEvent(streamId, data, error),
 
+        // delete
         TokenDeletedEvent: (streamId, data) => new TokenDeletedEvent(streamId, data),
+        TokenDeletedSuccessEvent: (streamId, data) => new TokenDeletedSuccessEvent(streamId, data),
+        TokenDeletedFailedEvent: (streamId, data, error) => new TokenDeletedFailedEvent(streamId, data, error),
+
+        // delete by userId
         TokenDeletedByUserIdEvent: (streamId, data) => new TokenDeletedByUserIdEvent(streamId, data),
+        TokenDeletedByUserIdSuccessEvent: (streamId, data) => new TokenDeletedByUserIdSuccessEvent(streamId, data),
+        TokenDeletedByUserIdFailedEvent: (streamId, data, error) => new TokenDeletedByUserIdFailedEvent(streamId, data, error),
+
+        // update
         TokenUpdatedEvent: (streamId, data) => new TokenUpdatedEvent(streamId, data),
+        TokenUpdatedSuccessEvent: (streamId, data) => new TokenUpdatedSuccessEvent(streamId, data),
+        TokenUpdatedFailedEvent: (streamId, data, error) => new TokenUpdatedFailedEvent(streamId, data, error),
+
         TokenWelcomedEvent: (streamId, data) => new TokenWelcomedEvent(streamId, data),
 
         // free token

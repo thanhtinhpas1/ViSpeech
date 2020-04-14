@@ -1,16 +1,20 @@
-import { Logger, NotFoundException } from "@nestjs/common";
-import { EventsHandler, IEventHandler } from "@nestjs/cqrs";
+import { Logger, NotFoundException, Inject } from "@nestjs/common";
+import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProjectDto } from "projects/dtos/projects.dto";
 import { Repository } from "typeorm";
-import { ProjectUpdatedEvent } from "../impl/project-updated.event";
+import { ProjectUpdatedEvent, ProjectUpdatedSuccessEvent, ProjectUpdatedFailedEvent } from "../impl/project-updated.event";
 import { Utils } from "utils";
+import { CONSTANTS } from "common/constant";
+import { config } from "../../../../config";
+import { ClientKafka } from "@nestjs/microservices";
 
 @EventsHandler(ProjectUpdatedEvent)
 export class ProjectUpdatedHandler implements IEventHandler<ProjectUpdatedEvent> {
     constructor(
         @InjectRepository(ProjectDto)
         private readonly repository: Repository<ProjectDto>,
+        private readonly eventBus: EventBus
     ) {
     }
 
@@ -26,11 +30,40 @@ export class ProjectUpdatedHandler implements IEventHandler<ProjectUpdatedEvent>
             }
 
             const formattedInfo = Utils.removePropertyFromObject(projectInfo, "userId");
-            return await this.repository.update({ _id }, formattedInfo);
+            await this.repository.update({ _id }, formattedInfo);
+            this.eventBus.publish(new ProjectUpdatedSuccessEvent(streamId, projectDto));
         } catch (error) {
-            Logger.error(error, "", "ProjectUpdatedEvent");
+            this.eventBus.publish(new ProjectUpdatedFailedEvent(streamId, projectDto, error));
         }
     }
 }
 
-// TODO: project updated success and failed
+@EventsHandler(ProjectUpdatedSuccessEvent)
+export class ProjectUpdatedSuccessHandler
+    implements IEventHandler<ProjectUpdatedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: ProjectUpdatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_UPDATED_SUCCESS_EVENT, event);
+        Logger.log(event.projectDto._id, 'ProjectUpdatedSuccessEvent');
+    }
+}
+
+@EventsHandler(ProjectUpdatedFailedEvent)
+export class ProjectUpdatedFailedHandler
+    implements IEventHandler<ProjectUpdatedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: ProjectUpdatedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_UPDATED_FAILED_EVENT, event);
+        Logger.log(event.error, 'ProjectUpdatedFailedEvent');
+    }
+}

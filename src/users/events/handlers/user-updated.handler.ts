@@ -48,7 +48,7 @@ export class UserUpdatedSuccessHandler implements IEventHandler<UserUpdatedSucce
     }
 
     handle(event: UserUpdatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.USER_UPDATE_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_UPDATED_SUCCESS_EVENT, event);
         Logger.log(event.userDto.username, 'UserUpdatedSuccessEvent');
     }
 }
@@ -64,7 +64,7 @@ export class UserUpdatedFailedHandler
     }
 
     handle(event: UserUpdatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.USER_UPDATE_FAILED_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_UPDATED_FAILED_EVENT, event);
         Logger.log(event.error, 'UserUpdatedFailedEvent');
     }
 }

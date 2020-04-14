@@ -1,15 +1,19 @@
-import {Logger, NotFoundException} from '@nestjs/common';
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
 import {Repository} from 'typeorm';
-import {PermissionUpdatedEvent} from '../impl/permission-updated.event';
+import {PermissionUpdatedEvent, PermissionUpdatedSuccessEvent, PermissionUpdatedFailedEvent} from '../impl/permission-updated.event';
+import { config } from '../../../../config';
+import { ClientKafka } from '@nestjs/microservices';
+import { CONSTANTS } from 'common/constant';
 
 @EventsHandler(PermissionUpdatedEvent)
 export class PermissionUpdatedHandler implements IEventHandler<PermissionUpdatedEvent> {
     constructor(
         @InjectRepository(PermissionDto)
         private readonly repository: Repository<PermissionDto>,
+        private readonly eventBus: EventBus,
     ) {
     }
 
@@ -24,11 +28,41 @@ export class PermissionUpdatedHandler implements IEventHandler<PermissionUpdated
                 throw new NotFoundException(`Permission with _id ${_id} does not exist.`);
             }
 
-            return await this.repository.update({_id}, permissionInfo);
+            await this.repository.update({_id}, permissionInfo);
+            this.eventBus.publish(new PermissionUpdatedSuccessEvent(streamId, permissionDto));
         } catch (error) {
-            Logger.error(error, '', 'PermissionUpdatedEvent');
+            this.eventBus.publish(new PermissionUpdatedFailedEvent(streamId, permissionDto, error));
         }
     }
 }
 
-// TODO: success and failed event
+@EventsHandler(PermissionUpdatedSuccessEvent)
+export class PermissionUpdatedSuccessHandler
+    implements IEventHandler<PermissionUpdatedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
+    handle(event: PermissionUpdatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_UPDATED_SUCCESS_EVENT, event);
+        Logger.log(event.permissionDto._id, 'PermissionUpdatedSuccessEvent');
+    }
+}
+
+@EventsHandler(PermissionUpdatedFailedEvent)
+export class PermissionUpdatedFailedHandler
+    implements IEventHandler<PermissionUpdatedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: PermissionUpdatedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_UPDATED_FAILED_EVENT, event);
+        Logger.log(event.error, 'PermissionUpdatedFailedEvent');
+    }
+}

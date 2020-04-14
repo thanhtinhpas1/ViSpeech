@@ -1,16 +1,19 @@
-import {Logger, NotFoundException} from '@nestjs/common';
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
-import {PermissionDeletedEvent} from '../impl/permission-deleted.event';
+import {PermissionDeletedEvent, PermissionDeletedSuccessEvent, PermissionDeletedFailedEvent} from '../impl/permission-deleted.event';
 import {Repository} from 'typeorm';
 import { CONSTANTS } from 'common/constant';
+import { config } from '../../../../config';
+import { ClientKafka } from '@nestjs/microservices';
 
 @EventsHandler(PermissionDeletedEvent)
 export class PermissionDeletedHandler implements IEventHandler<PermissionDeletedEvent> {
     constructor(
         @InjectRepository(PermissionDto)
-        private readonly repository: Repository<PermissionDto>
+        private readonly repository: Repository<PermissionDto>,
+        private readonly eventBus: EventBus,
     ) {
     }
 
@@ -24,11 +27,41 @@ export class PermissionDeletedHandler implements IEventHandler<PermissionDeleted
                 throw new NotFoundException(`Permission with _id ${permissionId} does not exist.`);
             }
 
-            return await this.repository.update({_id: permissionId}, { status: CONSTANTS.STATUS.INVALID });
+            await this.repository.update({_id: permissionId}, { status: CONSTANTS.STATUS.INVALID });
+            this.eventBus.publish(new PermissionDeletedSuccessEvent(streamId, permissionId));
         } catch (error) {
-            Logger.error(error, '', 'PermissionDeletedEvent');
+            this.eventBus.publish(new PermissionDeletedFailedEvent(streamId, permissionId, error));
         }
     }
 }
 
-// TODO: success and failed event
+@EventsHandler(PermissionDeletedSuccessEvent)
+export class PermissionDeletedSuccessHandler
+    implements IEventHandler<PermissionDeletedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
+    handle(event: PermissionDeletedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_SUCCESS_EVENT, event);
+        Logger.log(event.permissionId, 'PermissionDeletedSuccessEvent');
+    }
+}
+
+@EventsHandler(PermissionDeletedFailedEvent)
+export class PermissionDeletedFailedHandler
+    implements IEventHandler<PermissionDeletedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: PermissionDeletedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_FAILED_EVENT, event);
+        Logger.log(event.error, 'PermissionDeletedFailedEvent');
+    }
+}

@@ -8,8 +8,8 @@ import { PermissionsController } from './controllers/permissions.controller';
 import { PermissionDto } from './dtos/permissions.dto';
 import { EventHandlers } from './events/handlers';
 import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from './events/impl/permission-created.event';
-import { PermissionDeletedEvent } from './events/impl/permission-deleted.event';
-import { PermissionUpdatedEvent } from './events/impl/permission-updated.event';
+import { PermissionDeletedEvent, PermissionDeletedSuccessEvent, PermissionDeletedFailedEvent } from './events/impl/permission-deleted.event';
+import { PermissionUpdatedEvent, PermissionUpdatedSuccessEvent, PermissionUpdatedFailedEvent } from './events/impl/permission-updated.event';
 import { PermissionWelcomedEvent } from './events/impl/permission-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { PermissionRepository } from './repository/permission.repository';
@@ -23,7 +23,7 @@ import {
     PermissionAssignEmailSentFailedEvent,
     PermissionAssignEmailSentSuccessEvent
 } from './events/impl/permission-assign-email-sent.event';
-import { PermissionAssignRepliedEvent } from './events/impl/permission-assign-replied.event';
+import { PermissionAssignRepliedEvent, PermissionAssignRepliedSuccessEvent, PermissionAssignRepliedFailedEvent } from './events/impl/permission-assign-replied.event';
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
@@ -76,8 +76,16 @@ export class PermissionsModule implements OnModuleInit {
         PermissionCreatedSuccessEvent: (streamId, data) => new PermissionCreatedSuccessEvent(streamId, data),
         PermissionCreatedFailedEvent: (streamId, data, error) => new PermissionCreatedFailedEvent(streamId, data, error),
 
+        // delete
         PermissionDeletedEvent: (streamId, data) => new PermissionDeletedEvent(streamId, data),
+        PermissionDeletedSuccessEvent: (streamId, data) => new PermissionDeletedSuccessEvent(streamId, data),
+        PermissionDeletedFailedEvent: (streamId, data, error) => new PermissionDeletedFailedEvent(streamId, data, error),
+
+        // update
         PermissionUpdatedEvent: (streamId, data) => new PermissionUpdatedEvent(streamId, data),
+        PermissionUpdatedSuccessEvent: (streamId, data) => new PermissionUpdatedSuccessEvent(streamId, data),
+        PermissionUpdatedFailedEvent: (streamId, data, error) => new PermissionUpdatedFailedEvent(streamId, data, error),
+
         PermissionWelcomedEvent: (streamId, data) => new PermissionWelcomedEvent(streamId, data),
 
         // send email assign permisison
@@ -87,5 +95,7 @@ export class PermissionsModule implements OnModuleInit {
 
         // reply permission assign
         PermissionAssignRepliedEvent: (streamId, data) => new PermissionAssignRepliedEvent(streamId, data),
+        PermissionAssignRepliedSuccessEvent: (streamId, data) => new PermissionAssignRepliedSuccessEvent(streamId, data),
+        PermissionAssignRepliedFailedEvent: (streamId, data, error) => new PermissionAssignRepliedFailedEvent(streamId, data, error),
     };
 }

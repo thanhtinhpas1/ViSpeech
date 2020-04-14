@@ -1,10 +1,13 @@
-import {Logger, NotFoundException} from '@nestjs/common';
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
 import {TokenDto} from 'tokens/dtos/tokens.dto';
 import {Repository} from 'typeorm';
-import {TokenUpdatedEvent} from '../impl/token-updated.event';
+import {TokenUpdatedEvent, TokenUpdatedSuccessEvent, TokenUpdatedFailedEvent} from '../impl/token-updated.event';
+import { ClientKafka } from '@nestjs/microservices';
+import { config } from '../../../../config';
+import { CONSTANTS } from 'common/constant';
 
 @EventsHandler(TokenUpdatedEvent)
 export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
@@ -12,7 +15,8 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
         @InjectRepository(TokenDto)
         private readonly repository: Repository<TokenDto>,
         @InjectRepository(TokenTypeDto)
-        private readonly repositoryTokenType: Repository<TokenTypeDto>
+        private readonly repositoryTokenType: Repository<TokenTypeDto>,
+        private readonly eventBus: EventBus,
     ) {
     }
 
@@ -38,11 +42,38 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
             }
 
             // Can only update usedMinutes
-            return await this.repository.update({_id}, { usedMinutes: Number(tokenInfo.usedMinutes) });
+            await this.repository.update({_id}, { usedMinutes: Number(tokenInfo.usedMinutes) });
+            this.eventBus.publish(new TokenUpdatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
-            Logger.error(error, '', 'TokenUpdatedEvent');
+            this.eventBus.publish(new TokenUpdatedFailedEvent(streamId, tokenDto, error));
         }
     }
 }
 
-// TODO: updated token success and failed
+@EventsHandler(TokenUpdatedSuccessEvent)
+export class TokenUpdatedSuccessHandler implements IEventHandler<TokenUpdatedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: TokenUpdatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_SUCCESS_EVENT, event);
+        Logger.log(event.tokenDto._id, 'TokenUpdatedSuccessEvent');
+    }
+}
+
+@EventsHandler(TokenUpdatedFailedEvent)
+export class TokenUpdatedFailedHandler implements IEventHandler<TokenUpdatedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: TokenUpdatedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_FAILED_EVENT, event);
+        Logger.log(event.error, 'TokenUpdatedFailedEvent');
+    }
+}

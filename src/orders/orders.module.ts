@@ -16,8 +16,8 @@ import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
 import { EventHandlers } from './events/handlers';
 import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent, OrderCreationStartedEvent } from './events/impl/order-created.event';
-import { OrderDeletedEvent } from './events/impl/order-deleted.event';
-import { OrderUpdatedEvent } from './events/impl/order-updated.event';
+import { OrderDeletedEvent, OrderDeletedSuccessEvent, OrderDeletedFailedEvent } from './events/impl/order-deleted.event';
+import { OrderUpdatedEvent, OrderUpdatedSuccessEvent, OrderUpdatedFailedEvent } from './events/impl/order-updated.event';
 import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { OrderRepository } from './repository/order.repository';
@@ -78,8 +78,16 @@ export class OrdersModule implements OnModuleInit {
         OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),
         OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),
 
-        OrderDeletedEvent: (streamId, data) => new OrderDeletedEvent(streamId, data),
+        // update
         OrderUpdatedEvent: (streamId, data) => new OrderUpdatedEvent(streamId, data),
+        OrderUpdatedSuccessEvent: (streamId, data) => new OrderUpdatedSuccessEvent(streamId, data),
+        OrderUpdatedFailedEvent: (streamId, data, error) => new OrderUpdatedFailedEvent(streamId, data, error),
+
+        // delete
+        OrderDeletedEvent: (streamId, data) => new OrderDeletedEvent(streamId, data),
+        OrderDeletedSuccessEvent: (streamId, data) => new OrderDeletedSuccessEvent(streamId, data),
+        OrderDeletedFailedEvent: (streamId, data, error) => new OrderDeletedFailedEvent(streamId, data, error),
+
         OrderWelcomedEvent: (streamId, data) => new OrderWelcomedEvent(streamId, data)
     };
 }

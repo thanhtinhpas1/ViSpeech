@@ -1,13 +1,13 @@
 import {PermissionCreatedFailedHandler, PermissionCreatedHandler, PermissionCreatedSuccessHandler} from './permission-created.handler';
-import {PermissionUpdatedHandler} from './permission-updated.handler';
-import {PermissionDeletedHandler} from './permission-deleted.handler';
+import {PermissionUpdatedHandler, PermissionUpdatedSuccessHandler, PermissionUpdatedFailedHandler} from './permission-updated.handler';
+import {PermissionDeletedHandler, PermissionDeletedSuccessHandler, PermissionDeletedFailedHandler} from './permission-deleted.handler';
 import {PermissionWelcomedHandler} from './permission-welcomed.handler';
 import {
     PermissionAssignEmailSentFailedHandler,
     PermissionAssignEmailSentHandler,
     PermissionAssignEmailSentSuccessHandler
 } from './permission-assign-email-sent.handler';
-import {PermissionAssignRepliedHandler} from './permission-assign-replied.handler';
+import {PermissionAssignRepliedHandler, PermissionAssignRepliedSuccessHandler, PermissionAssignRepliedFailedHandler} from './permission-assign-replied.handler';
 
 export const EventHandlers = [
     // create
@@ -15,8 +15,16 @@ export const EventHandlers = [
     PermissionCreatedSuccessHandler,
     PermissionCreatedFailedHandler,
 
+    // update
     PermissionUpdatedHandler,
+    PermissionUpdatedSuccessHandler,
+    PermissionUpdatedFailedHandler,
+
+    // delete
     PermissionDeletedHandler,
+    PermissionDeletedSuccessHandler,
+    PermissionDeletedFailedHandler,
+
     PermissionWelcomedHandler,
 
     // send email assign permisison
@@ -26,4 +34,6 @@ export const EventHandlers = [
 
     // reply permission assign
     PermissionAssignRepliedHandler,
+    PermissionAssignRepliedSuccessHandler,
+    PermissionAssignRepliedFailedHandler,
 ];

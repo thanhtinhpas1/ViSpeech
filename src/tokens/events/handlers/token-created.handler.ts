@@ -70,7 +70,7 @@ export class TokenCreatedFailedHandler implements IEventHandler<TokenCreatedFail
         this.clientKafka.connect();
     }
     handle(event: TokenCreatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDERED_TOKEN_CREATED_FAILED_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_CREATED_FAILED_EVENT, event);
         Logger.log(event.error, 'TokenCreatedFailedEvent');
     }
 }

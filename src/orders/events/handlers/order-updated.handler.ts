@@ -1,16 +1,20 @@
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
-import {OrderUpdatedEvent} from '../impl/order-updated.event';
-import {Logger, NotFoundException} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
+import {OrderUpdatedEvent, OrderUpdatedSuccessEvent, OrderUpdatedFailedEvent} from '../impl/order-updated.event';
+import {Logger, NotFoundException, Inject} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {OrderDto} from 'orders/dtos/orders.dto';
 import {Repository} from 'typeorm';
 import {Utils} from 'utils';
+import { config } from '../../../../config';
+import { ClientKafka } from '@nestjs/microservices';
+import { CONSTANTS } from 'common/constant';
 
 @EventsHandler(OrderUpdatedEvent)
 export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
     constructor(
         @InjectRepository(OrderDto)
-        private readonly repository: Repository<OrderDto>
+        private readonly repository: Repository<OrderDto>,
+        private readonly eventBus: EventBus
     ) {
     }
 
@@ -26,9 +30,40 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
             }
 
             const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenType']);
-            return await this.repository.update({_id}, formattedOrderInfo);
+            await this.repository.update({_id}, formattedOrderInfo);
+            this.eventBus.publish(new OrderUpdatedSuccessEvent(streamId, orderDto));
         } catch (error) {
-            Logger.error(error, '', 'OrderUpdatedEvent');
+            this.eventBus.publish(new OrderUpdatedFailedEvent(streamId, orderDto, error));
         }
+    }
+}
+
+@EventsHandler(OrderUpdatedSuccessEvent)
+export class OrderUpdatedSuccessHandler
+    implements IEventHandler<OrderUpdatedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: OrderUpdatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_SUCCESS_EVENT, event);
+        Logger.log(event.orderDto._id, 'OrderUpdatedSuccessEvent');
+    }
+}
+
+@EventsHandler(OrderUpdatedFailedEvent)
+export class OrderUpdatedFailedHandler
+    implements IEventHandler<OrderUpdatedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: OrderUpdatedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_FAILED_EVENT, event);
+        Logger.log(event.error, 'OrderUpdatedFailedEvent');
     }
 }

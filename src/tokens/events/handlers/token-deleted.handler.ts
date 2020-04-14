@@ -1,15 +1,19 @@
-import {Logger, NotFoundException} from '@nestjs/common';
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {TokenDeletedByUserIdEvent, TokenDeletedEvent} from '../impl/token-deleted.event';
+import {TokenDeletedByUserIdEvent, TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent, TokenDeletedByUserIdSuccessEvent, TokenDeletedByUserIdFailedEvent} from '../impl/token-deleted.event';
 import {Repository} from 'typeorm';
+import { ClientKafka } from '@nestjs/microservices';
+import { config } from '../../../../config';
+import { CONSTANTS } from 'common/constant';
 
 @EventsHandler(TokenDeletedEvent)
 export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
     constructor(
         @InjectRepository(TokenDto)
-        private readonly repository: Repository<TokenDto>
+        private readonly repository: Repository<TokenDto>,
+        private readonly eventBus: EventBus,
     ) {
     }
 
@@ -19,14 +23,45 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
 
         try {
             const token = await this.repository.findOne({_id: tokenId});
-            if (token) {
-                await this.repository.delete({_id: tokenId});
-                return;
+            if (!token) {
+                throw new NotFoundException(`Token with _id ${tokenId} does not exist.`);
             }
-            throw new NotFoundException(`Token with _id ${tokenId} does not exist.`);
+            await this.repository.delete({_id: tokenId});
+            this.eventBus.publish(new TokenDeletedSuccessEvent(streamId, tokenId));
         } catch (error) {
-            Logger.error(error, '', 'TokenDeletedEvent');
+            this.eventBus.publish(new TokenDeletedFailedEvent(streamId, tokenId, error));
         }
+    }
+}
+
+@EventsHandler(TokenDeletedSuccessEvent)
+export class TokenDeletedSuccessHandler
+    implements IEventHandler<TokenDeletedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
+    handle(event: TokenDeletedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_SUCCESS_EVENT, event);
+        Logger.log(event.tokenId, 'TokenDeletedSuccessEvent');
+    }
+}
+
+@EventsHandler(TokenDeletedFailedEvent)
+export class TokenDeletedFailedHandler
+    implements IEventHandler<TokenDeletedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: TokenDeletedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_FAILED_EVENT, event);
+        Logger.log(event.error ? event.error['errmsg'] : event.error, 'TokenDeletedFailedEvent');
     }
 }
 
@@ -34,7 +69,8 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
 export class TokenDeletedByUserIdHandler implements IEventHandler<TokenDeletedByUserIdEvent> {
     constructor(
         @InjectRepository(TokenDto)
-        private readonly repository: Repository<TokenDto>
+        private readonly repository: Repository<TokenDto>,
+        private readonly eventBus: EventBus,
     ) {
     }
 
@@ -44,10 +80,40 @@ export class TokenDeletedByUserIdHandler implements IEventHandler<TokenDeletedBy
 
         try {
             await this.repository.delete({userId});
+            this.eventBus.publish(new TokenDeletedByUserIdSuccessEvent(streamId, userId));
         } catch (error) {
-            Logger.error(error, '', 'TokenDeletedByUserIdEvent');
+            this.eventBus.publish(new TokenDeletedByUserIdFailedEvent(streamId, userId, error));
         }
     }
 }
 
-// TODO: Token deleted success and failed
+@EventsHandler(TokenDeletedByUserIdSuccessEvent)
+export class TokenDeletedByUserIdSuccessHandler
+    implements IEventHandler<TokenDeletedByUserIdSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+
+    handle(event: TokenDeletedByUserIdSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_SUCCESS_EVENT, event);
+        Logger.log(event.userId, 'TokenDeletedByUserIdSuccessEvent');
+    }
+}
+
+@EventsHandler(TokenDeletedByUserIdFailedEvent)
+export class TokenDeletedByUserIdFailedHandler
+    implements IEventHandler<TokenDeletedByUserIdFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: TokenDeletedByUserIdFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_FAILED_EVENT, event);
+        Logger.log(event.error ? event.error['errmsg'] : event.error, 'TokenDeletedByUserIdFailedEvent');
+    }
+}

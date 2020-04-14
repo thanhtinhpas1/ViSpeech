@@ -1,6 +1,6 @@
 import {OrderCreatedFailedHandler, OrderCreatedHandler, OrderCreatedSuccessHandler, OrderCreationStartedHandler} from './order-created.handler';
-import {OrderUpdatedHandler} from './order-updated.handler';
-import {OrderDeletedHandler} from './order-deleted.handler';
+import {OrderUpdatedHandler, OrderUpdatedSuccessHandler, OrderUpdatedFailedHandler} from './order-updated.handler';
+import {OrderDeletedHandler, OrderDeletedSuccessHandler, OrderDeletedFailedHandler} from './order-deleted.handler';
 import {OrderWelcomedHandler} from './order-welcomed.handler';
 
 export const EventHandlers = [
@@ -10,7 +10,15 @@ export const EventHandlers = [
     OrderCreatedSuccessHandler,
     OrderCreatedFailedHandler,
 
+    // update
     OrderUpdatedHandler,
+    OrderUpdatedSuccessHandler,
+    OrderUpdatedFailedHandler,
+
+    // delete
     OrderDeletedHandler,
+    OrderDeletedSuccessHandler,
+    OrderDeletedFailedHandler,
+    
     OrderWelcomedHandler
 ];

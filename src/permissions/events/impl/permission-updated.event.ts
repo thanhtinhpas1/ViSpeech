@@ -7,3 +7,20 @@ export class PermissionUpdatedEvent implements IEvent {
         public readonly permissionDto: PermissionDto) {
     }
 }
+
+export class PermissionUpdatedSuccessEvent implements IEvent {
+    constructor(
+        public readonly streamId: string,
+        public readonly permissionDto: PermissionDto
+    ) {
+    }
+}
+
+export class PermissionUpdatedFailedEvent implements IEvent {
+    constructor(
+        public readonly streamId: string,
+        public readonly permissionDto: PermissionDto,
+        public readonly error: object,
+    ) {
+    }
+}

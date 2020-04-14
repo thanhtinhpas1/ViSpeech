@@ -36,7 +36,7 @@ import {
     VerifyEmailSentFailedEvent,
     VerifyEmailSentSuccessEvent
 } from './events/impl/verify-email-sent.event';
-import {EmailVerifiedEvent} from './events/impl/email-verified.event';
+import {EmailVerifiedEvent, EmailVerifiedSuccessEvent, EmailVerifiedFailedEvent} from './events/impl/email-verified.event';
 import {ClientKafka, ClientsModule} from "@nestjs/microservices";
 import {config} from "../../config";
 import {kafkaClientOptions} from "../common/kafka-client.options";
@@ -109,24 +109,32 @@ export class UsersModule implements OnModuleInit {
         UserCreatedEvent: (streamId, data) => new UserCreatedEvent(streamId, data),
         UserCreatedSuccessEvent: (streamId, data) => new UserCreatedSuccessEvent(streamId, data),
         UserCreatedFailedEvent: (streamId, data, error) => new UserCreatedFailedEvent(streamId, data, error),
+        
         // update
         UserUpdatedEvent: (streamId, data) => new UserUpdatedEvent(streamId, data),
         UserUpdatedSuccessEvent: (streamId, data) => new UserUpdatedSuccessEvent(streamId, data),
         UserUpdatedFailedEvent: (streamId, data, error) => new UserUpdatedFailedEvent(streamId, data, error),
+        
         // change password
         PasswordChangedEvent: (streamId, data) => new PasswordChangedEvent(streamId, data),
         PasswordChangedSuccessEvent: (streamId, data) => new PasswordChangedSuccessEvent(streamId, data),
         PasswordChangedFailedEvent: (streamId, data, error) => new PasswordChangedFailedEvent(streamId, data, error),
+        
         // delete
         UserDeletedEvent: (streamId, data) => new UserDeletedEvent(streamId, data),
         UserDeletedSuccessEvent: (streamId, data) => new UserDeletedSuccessEvent(streamId, data),
         UserDeletedFailedEvent: (streamId, data, error) => new UserDeletedFailedEvent(streamId, data, error),
+        
         UserWelcomedEvent: (streamId, data) => new UserWelcomedEvent(streamId, data),
+        
         // send verify email
         VerifyEmailSentEvent: (streamId, data) => new VerifyEmailSentEvent(streamId, data),
         VerifyEmailSentSuccessEvent: (streamId, data) => new VerifyEmailSentSuccessEvent(streamId, data),
         VerifyEmailSentFailedEvent: (streamId, data, error) => new VerifyEmailSentFailedEvent(streamId, data, error),
+        
         // verify email
         EmailVerifiedEvent: (streamId, data) => new EmailVerifiedEvent(streamId, data),
+        EmailVerifiedSuccessEvent: (streamId, data) => new EmailVerifiedSuccessEvent(streamId, data),
+        EmailVerifiedFailedEvent: (streamId, data, error) => new EmailVerifiedFailedEvent(streamId, data, error),
     };
 }

@@ -1,5 +1,5 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
-import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { EventsHandler, IEventHandler, EventBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,15 +8,14 @@ import { RoleDto } from 'roles/dtos/roles.dto';
 import { Repository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { config } from '../../../../config';
-import { EmailVerifiedEvent } from '../impl/email-verified.event';
+import { EmailVerifiedEvent, EmailVerifiedSuccessEvent, EmailVerifiedFailedEvent } from '../impl/email-verified.event';
 
 @EventsHandler(EmailVerifiedEvent)
 export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
     constructor(
         @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
         private readonly jwtService: JwtService,
-        @Inject(config.KAFKA.NAME)
-        private readonly clientKafka: ClientKafka,
+        private readonly eventBus: EventBus,
     ) {
     }
 
@@ -36,8 +35,37 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
             const managerUserRole = new RoleDto(CONSTANTS.ROLE.MANAGER_USER);
             await this.repository.update({ _id: userId }, { roles: [...userRoles, managerUserRole] });
             // TODO generate new token for user
+            this.eventBus.publish(new EmailVerifiedSuccessEvent(streamId, emailToken));
         } catch (error) {
-            Logger.error(error.message, '', 'EmailVerifiedEvent');
+            this.eventBus.publish(new EmailVerifiedFailedEvent(streamId, emailToken, error));
         }
+    }
+}
+
+@EventsHandler(EmailVerifiedSuccessEvent)
+export class EmailVerifiedSuccessHandler implements IEventHandler<EmailVerifiedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: EmailVerifiedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.EMAIL_VERIFIED_SUCCESS_EVENT, event);
+        Logger.log(event.emailToken, 'EmailVerifiedSuccessEvent');
+    }
+}
+
+@EventsHandler(EmailVerifiedFailedEvent)
+export class EmailVerifiedFailedHandler implements IEventHandler<EmailVerifiedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: EmailVerifiedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.EMAIL_VERIFIED_FAILED_EVENT, event);
+        Logger.log(event.error, 'EmailVerifiedFailedEvent');
     }
 }

@@ -1,15 +1,19 @@
-import {Logger, NotFoundException} from '@nestjs/common';
-import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ProjectDto} from 'projects/dtos/projects.dto';
-import {ProjectDeletedEvent} from '../impl/project-deleted.event';
+import {ProjectDeletedEvent, ProjectDeletedSuccessEvent, ProjectDeletedFailedEvent} from '../impl/project-deleted.event';
 import {Repository} from 'typeorm';
+import { ClientKafka } from '@nestjs/microservices';
+import { config } from '../../../../config';
+import { CONSTANTS } from 'common/constant';
 
 @EventsHandler(ProjectDeletedEvent)
 export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent> {
     constructor(
         @InjectRepository(ProjectDto)
-        private readonly repository: Repository<ProjectDto>
+        private readonly repository: Repository<ProjectDto>,
+        private readonly eventBus: EventBus,
     ) {
     }
 
@@ -19,15 +23,43 @@ export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent>
 
         try {
             const project = await this.repository.findOne({_id: projectId});
-            if (project) {
-                await this.repository.delete({_id: projectId});
-                return;
+            if (!project) {
+                throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
             }
-            throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
+            await this.repository.delete({_id: projectId});
+            this.eventBus.publish(new ProjectDeletedSuccessEvent(streamId, projectId));
         } catch (error) {
-            Logger.error(error, '', 'ProjectDeletedEvent');
+            this.eventBus.publish(new ProjectDeletedFailedEvent(streamId, projectId, error));
         }
     }
 }
 
-// TODO: project deleted success and failed
+@EventsHandler(ProjectDeletedSuccessEvent)
+export class ProjectDeletedSuccessHandler
+    implements IEventHandler<ProjectDeletedSuccessEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: ProjectDeletedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_SUCCESS_EVENT, event);
+        Logger.log(event.projectId, 'ProjectDeletedSuccessEvent');
+    }
+}
+
+@EventsHandler(ProjectDeletedFailedEvent)
+export class ProjectDeletedFailedHandler
+    implements IEventHandler<ProjectDeletedFailedEvent> {
+    constructor(
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
+    ) {
+        this.clientKafka.connect();
+    }
+    handle(event: ProjectDeletedFailedEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_FAILED_EVENT, event);
+        Logger.log(event.error, 'ProjectDeletedFailedEvent');
+    }
+}

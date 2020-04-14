@@ -8,9 +8,9 @@ import { CommandHandlers } from './commands/handlers';
 import { ReportsController } from './controllers/reports.controller';
 import { ReportDto } from './dtos/reports.dto';
 import { EventHandlers } from './events/handlers';
-import { ReportCreatedEvent } from './events/impl/report-created.event';
-import { ReportDeletedEvent } from './events/impl/report-deleted.event';
-import { ReportUpdatedEvent } from './events/impl/report-updated.event';
+import { ReportCreatedEvent, ReportCreatedSuccessEvent, ReportCreatedFailedEvent } from './events/impl/report-created.event';
+import { ReportDeletedEvent, ReportDeletedSuccessEvent, ReportDeletedFailedEvent } from './events/impl/report-deleted.event';
+import { ReportUpdatedEvent, ReportUpdatedSuccessEvent, ReportUpdatedFailedEvent } from './events/impl/report-updated.event';
 import { ReportWelcomedEvent } from './events/impl/report-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';
@@ -20,9 +20,16 @@ import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { UserDto } from 'users/dtos/users.dto';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
+import { ClientsModule } from '@nestjs/microservices';
+import { kafkaClientOptions } from 'common/kafka-client.options';
+import { config } from '../../config';
 
 @Module({
     imports: [
+        ClientsModule.register([{
+            name: config.KAFKA.NAME,
+            ...kafkaClientOptions,
+        }]),
         TypeOrmModule.forFeature([ReportDto, TokenDto, TokenTypeDto, UserDto, ProjectDto]),
         EventStoreModule.forFeature(),
         forwardRef(() => AuthModule),
@@ -60,9 +67,21 @@ export class ReportsModule implements OnModuleInit {
     }
 
     eventHandlers = {
+        // create
         ReportCreatedEvent: (streamId, data) => new ReportCreatedEvent(streamId, data),
+        ReportCreatedSuccessEvent: (streamId, data) => new ReportCreatedSuccessEvent(streamId, data),
+        ReportCreatedFailedEvent: (streamId, data, error) => new ReportCreatedFailedEvent(streamId, data, error),
+
+        // delete
         ReportDeletedEvent: (streamId, data) => new ReportDeletedEvent(streamId, data),
+        ReportDeletedSuccessEvent: (streamId, data) => new ReportDeletedSuccessEvent(streamId, data),
+        ReportDeletedFailedEvent: (streamId, data, error) => new ReportDeletedFailedEvent(streamId, data, error),
+
+        // update
         ReportUpdatedEvent: (streamId, data) => new ReportUpdatedEvent(streamId, data),
+        ReportUpdatedSuccessEvent: (streamId, data) => new ReportUpdatedSuccessEvent(streamId, data),
+        ReportUpdatedFailedEvent: (streamId, data, error) => new ReportUpdatedFailedEvent(streamId, data, error),
+
         ReportWelcomedEvent: (streamId, data) => new ReportWelcomedEvent(streamId, data)
     };
 }
