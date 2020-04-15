@@ -53,7 +53,7 @@ export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSucce
         this.clientKafka.connect();
     }
     handle(event: UserCreatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.userDto.username, 'UserCreatedSuccessEvent');
     }
 }
@@ -67,8 +67,9 @@ export class UserCreatedFailedHandler implements IEventHandler<UserCreatedFailed
     }
 
     handle(event: UserCreatedFailedEvent) {
-        const data = JSON.stringify(event);
-        this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_FAILED_EVENT, data);
-        Logger.log(event.error, 'UserCreatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'UserCreatedFailedEvent');
     }
 }

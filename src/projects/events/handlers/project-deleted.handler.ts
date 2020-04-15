@@ -7,6 +7,7 @@ import {Repository} from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(ProjectDeletedEvent)
 export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent> {
@@ -44,7 +45,7 @@ export class ProjectDeletedSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: ProjectDeletedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.projectId, 'ProjectDeletedSuccessEvent');
     }
 }
@@ -59,7 +60,9 @@ export class ProjectDeletedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: ProjectDeletedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_FAILED_EVENT, event);
-        Logger.log(event.error, 'ProjectDeletedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'ProjectDeletedFailedEvent');
     }
 }

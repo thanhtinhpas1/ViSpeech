@@ -93,5 +93,14 @@ export const Utils = {
     getMilisecondsOfDate(date: number) {
         if (date <= 0) return 0;
         return 1000 * 60 * 60 * 24 * date;
+    },
+    getErrorObj: error => {
+        const errorObj = {
+            code: "",
+            message: "",
+        }
+        errorObj.code = error['code'] || error['status']
+        errorObj.message = error['errmsg'] || error['message']
+        return errorObj
     }
 };

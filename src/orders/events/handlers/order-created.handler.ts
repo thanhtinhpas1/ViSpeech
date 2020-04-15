@@ -8,6 +8,7 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { Repository } from 'typeorm';
 import { config } from '../../../../config';
 import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent, OrderCreationStartedEvent } from '../impl/order-created.event';
+import { Utils } from 'utils';
 
 @EventsHandler(OrderCreationStartedEvent)
 export class OrderCreationStartedHandler
@@ -55,7 +56,7 @@ export class OrderCreatedSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: OrderCreatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_CREATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.orderDto._id, 'OrderCreatedSuccessEvent');
     }
 }
@@ -70,7 +71,9 @@ export class OrderCreatedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: OrderCreatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_CREATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'OrderCreatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_CREATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'OrderCreatedFailedEvent');
     }
 }

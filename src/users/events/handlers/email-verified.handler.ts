@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { config } from '../../../../config';
 import { EmailVerifiedEvent, EmailVerifiedSuccessEvent, EmailVerifiedFailedEvent } from '../impl/email-verified.event';
+import { Utils } from 'utils';
 
 @EventsHandler(EmailVerifiedEvent)
 export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
@@ -51,7 +52,7 @@ export class EmailVerifiedSuccessHandler implements IEventHandler<EmailVerifiedS
         this.clientKafka.connect();
     }
     handle(event: EmailVerifiedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.EMAIL_VERIFIED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.EMAIL_VERIFIED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.emailToken, 'EmailVerifiedSuccessEvent');
     }
 }
@@ -65,7 +66,9 @@ export class EmailVerifiedFailedHandler implements IEventHandler<EmailVerifiedFa
         this.clientKafka.connect();
     }
     handle(event: EmailVerifiedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.EMAIL_VERIFIED_FAILED_EVENT, event);
-        Logger.log(event.error, 'EmailVerifiedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.EMAIL_VERIFIED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'EmailVerifiedFailedEvent');
     }
 }

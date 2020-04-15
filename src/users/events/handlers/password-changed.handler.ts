@@ -50,7 +50,7 @@ export class PasswordChangedSuccessHandler implements IEventHandler<PasswordChan
     }
 
     handle(event: PasswordChangedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PASSWORD_CHANGED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PASSWORD_CHANGED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.streamId, 'PasswordChangedSuccessEvent');
     }
 }
@@ -64,7 +64,9 @@ export class PasswordChangedFailedHandler implements IEventHandler<PasswordChang
     }
     
     handle(event: PasswordChangedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PASSWORD_CHANGED_FAILED_EVENT, event);
-        Logger.log(event.error, 'PasswordChangedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PASSWORD_CHANGED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'PasswordChangedFailedEvent');
     }
 }

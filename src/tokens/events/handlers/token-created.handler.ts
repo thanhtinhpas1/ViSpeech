@@ -56,7 +56,7 @@ export class TokenCreatedSuccessHandler implements IEventHandler<TokenCreatedSuc
         this.clientKafka.connect();
     }
     handle(event: TokenCreatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_CREATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.tokenDto._id, 'TokenCreatedSuccessEvent');
     }
 }
@@ -70,7 +70,9 @@ export class TokenCreatedFailedHandler implements IEventHandler<TokenCreatedFail
         this.clientKafka.connect();
     }
     handle(event: TokenCreatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_CREATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'TokenCreatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_CREATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'TokenCreatedFailedEvent');
     }
 }

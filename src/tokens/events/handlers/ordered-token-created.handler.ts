@@ -61,7 +61,7 @@ export class OrderedTokenCreatedSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: OrderedTokenCreatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDERED_TOKEN_CREATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDERED_TOKEN_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.tokenDto._id, 'OrderedTokenCreatedSuccessEvent');
     }
 }
@@ -76,7 +76,9 @@ export class OrderedTokenCreatedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: OrderedTokenCreatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDERED_TOKEN_CREATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'OrderedTokenCreatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDERED_TOKEN_CREATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'OrderedTokenCreatedFailedEvent');
     }
 }

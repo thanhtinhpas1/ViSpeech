@@ -7,6 +7,7 @@ import {Repository} from 'typeorm';
 import { CONSTANTS } from 'common/constant';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
+import { Utils } from 'utils';
 
 @EventsHandler(PermissionDeletedEvent)
 export class PermissionDeletedHandler implements IEventHandler<PermissionDeletedEvent> {
@@ -46,7 +47,7 @@ export class PermissionDeletedSuccessHandler
     }
 
     handle(event: PermissionDeletedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.permissionId, 'PermissionDeletedSuccessEvent');
     }
 }
@@ -61,7 +62,9 @@ export class PermissionDeletedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionDeletedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_FAILED_EVENT, event);
-        Logger.log(event.error, 'PermissionDeletedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'PermissionDeletedFailedEvent');
     }
 }

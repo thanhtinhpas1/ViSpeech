@@ -7,6 +7,7 @@ import {Repository} from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(TokenDeletedEvent)
 export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
@@ -45,7 +46,7 @@ export class TokenDeletedSuccessHandler
     }
 
     handle(event: TokenDeletedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.tokenId, 'TokenDeletedSuccessEvent');
     }
 }
@@ -60,8 +61,10 @@ export class TokenDeletedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: TokenDeletedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_FAILED_EVENT, event);
-        Logger.log(event.error ? event.error['errmsg'] : event.error, 'TokenDeletedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'TokenDeletedFailedEvent');
     }
 }
 
@@ -98,7 +101,7 @@ export class TokenDeletedByUserIdSuccessHandler
     }
 
     handle(event: TokenDeletedByUserIdSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.userId, 'TokenDeletedByUserIdSuccessEvent');
     }
 }
@@ -113,7 +116,9 @@ export class TokenDeletedByUserIdFailedHandler
         this.clientKafka.connect();
     }
     handle(event: TokenDeletedByUserIdFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_FAILED_EVENT, event);
-        Logger.log(event.error ? event.error['errmsg'] : event.error, 'TokenDeletedByUserIdFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'TokenDeletedByUserIdFailedEvent');
     }
 }

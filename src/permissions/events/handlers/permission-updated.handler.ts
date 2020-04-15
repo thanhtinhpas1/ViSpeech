@@ -7,6 +7,7 @@ import {PermissionUpdatedEvent, PermissionUpdatedSuccessEvent, PermissionUpdated
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(PermissionUpdatedEvent)
 export class PermissionUpdatedHandler implements IEventHandler<PermissionUpdatedEvent> {
@@ -47,7 +48,7 @@ export class PermissionUpdatedSuccessHandler
     }
 
     handle(event: PermissionUpdatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_UPDATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.permissionDto._id, 'PermissionUpdatedSuccessEvent');
     }
 }
@@ -62,7 +63,9 @@ export class PermissionUpdatedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionUpdatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_UPDATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'PermissionUpdatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_UPDATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'PermissionUpdatedFailedEvent');
     }
 }

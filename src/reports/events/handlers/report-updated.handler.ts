@@ -7,6 +7,7 @@ import {Repository} from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(ReportUpdatedEvent)
 export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
@@ -46,7 +47,7 @@ export class ReportUpdatedSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: ReportUpdatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_UPDATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.reportDto._id, 'ReportUpdatedSuccessEvent');
     }
 }
@@ -61,7 +62,9 @@ export class ReportUpdatedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: ReportUpdatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_UPDATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'ReportUpdatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_UPDATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'ReportUpdatedFailedEvent');
     }
 }

@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(PermissionAssignRepliedEvent)
 export class PermissionAssignRepliedHandler implements IEventHandler<PermissionAssignRepliedEvent> {
@@ -47,7 +48,7 @@ export class PermissionAssignRepliedSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionAssignRepliedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_REPLIED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_REPLIED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.streamId, 'PermissionAssignRepliedSuccessEvent');
     }
 }
@@ -62,7 +63,9 @@ export class PermissionAssignRepliedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionAssignRepliedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_REPLIED_FAILED_EVENT, event);
-        Logger.log(event.error, 'PermissionAssignRepliedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_REPLIED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'PermissionAssignRepliedFailedEvent');
     }
 }

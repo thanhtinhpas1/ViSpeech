@@ -50,7 +50,7 @@ export class FreeTokenCreatedSuccessHandler
     }
 
     handle(event: FreeTokenCreatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.FREE_TOKEN_CREATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.FREE_TOKEN_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.tokenDto._id, 'FreeTokenCreatedSuccessEvent');
     }
 }
@@ -65,7 +65,9 @@ export class FreeTokenCreatedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: FreeTokenCreatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.FREE_TOKEN_CREATED_FAILED_EVENT, event);
-        Logger.log(event.error ? event.error['errmsg'] : event.error, 'FreeTokenCreatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.FREE_TOKEN_CREATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'FreeTokenCreatedFailedEvent');
     }
 }

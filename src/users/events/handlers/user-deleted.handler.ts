@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { config } from '../../../../config';
 import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from '../impl/user-deleted.event';
+import { Utils } from 'utils';
 
 @EventsHandler(UserDeletedEvent)
 export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
@@ -43,7 +44,7 @@ export class UserDeletedSuccessHandler implements IEventHandler<UserDeletedSucce
     }
 
     handle(event: UserDeletedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.USER_DELETED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_DELETED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.userId, 'UserDeletedSuccessEvent');
     }
 }
@@ -58,7 +59,9 @@ export class UserDeletedFailedHandler implements IEventHandler<UserDeletedFailed
     }
 
     handle(event: UserDeletedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.USER_DELETED_FAILED_EVENT, event);
-        Logger.log(event.error, 'UserDeletedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.USER_DELETED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'UserDeletedFailedEvent');
     }
 }

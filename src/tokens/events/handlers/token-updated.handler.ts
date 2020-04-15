@@ -8,6 +8,7 @@ import {TokenUpdatedEvent, TokenUpdatedSuccessEvent, TokenUpdatedFailedEvent} fr
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(TokenUpdatedEvent)
 export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
@@ -59,7 +60,7 @@ export class TokenUpdatedSuccessHandler implements IEventHandler<TokenUpdatedSuc
         this.clientKafka.connect();
     }
     handle(event: TokenUpdatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.tokenDto._id, 'TokenUpdatedSuccessEvent');
     }
 }
@@ -73,7 +74,9 @@ export class TokenUpdatedFailedHandler implements IEventHandler<TokenUpdatedFail
         this.clientKafka.connect();
     }
     handle(event: TokenUpdatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'TokenUpdatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'TokenUpdatedFailedEvent');
     }
 }

@@ -7,6 +7,7 @@ import {OrderDto} from 'orders/dtos/orders.dto';
 import {Repository} from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(OrderDeletedEvent)
 export class OrderDeletedHandler implements IEventHandler<OrderDeletedEvent> {
@@ -44,7 +45,7 @@ export class OrderDeletedSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: OrderDeletedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.orderId, 'OrderDeletedSuccessEvent');
     }
 }
@@ -59,7 +60,9 @@ export class OrderDeletedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: OrderDeletedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_FAILED_EVENT, event);
-        Logger.log(event.error, 'OrderDeletedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'OrderDeletedFailedEvent');
     }
 }

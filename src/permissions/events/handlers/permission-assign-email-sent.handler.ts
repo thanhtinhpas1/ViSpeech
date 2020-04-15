@@ -14,6 +14,7 @@ import { AuthService } from 'auth/auth.service';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @EventsHandler(PermissionAssignEmailSentEvent)
 export class PermissionAssignEmailSentHandler implements IEventHandler<PermissionAssignEmailSentEvent> {
@@ -68,7 +69,7 @@ export class PermissionAssignEmailSentSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionAssignEmailSentSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.streamId, 'PermissionAssignEmailSentSuccessEvent');
     }
 }
@@ -83,7 +84,9 @@ export class PermissionAssignEmailSentFailedHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionAssignEmailSentFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_FAILED_EVENT, event);
-        Logger.log(event.error, 'PermissionAssignEmailSentFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'PermissionAssignEmailSentFailedEvent');
     }
 }

@@ -44,7 +44,7 @@ export class PermissionCreatedSuccessHandler
     }
 
     handle(event: PermissionCreatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_CREATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.permissionDto._id, 'PermissionCreatedSuccessEvent');
     }
 }
@@ -59,7 +59,9 @@ export class PermissionCreatedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: PermissionCreatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_CREATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'PermissionCreatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_CREATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'PermissionCreatedFailedEvent');
     }
 }

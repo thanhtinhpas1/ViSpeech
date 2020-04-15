@@ -48,7 +48,7 @@ export class ProjectUpdatedSuccessHandler
         this.clientKafka.connect();
     }
     handle(event: ProjectUpdatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_UPDATED_SUCCESS_EVENT, event);
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.projectDto._id, 'ProjectUpdatedSuccessEvent');
     }
 }
@@ -63,7 +63,9 @@ export class ProjectUpdatedFailedHandler
         this.clientKafka.connect();
     }
     handle(event: ProjectUpdatedFailedEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_UPDATED_FAILED_EVENT, event);
-        Logger.log(event.error, 'ProjectUpdatedFailedEvent');
+        const errorObj = Utils.getErrorObj(event.error)
+        event['errorObj'] = errorObj
+        this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_UPDATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'ProjectUpdatedFailedEvent');
     }
 }
