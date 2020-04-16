@@ -36,7 +36,7 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
             }
             throw new Error('Passwords do not match.');
         } catch (error) {
-            this.eventBus.publish(new PasswordChangedFailedEvent(streamId, changePasswordBody, error.message));
+            this.eventBus.publish(new PasswordChangedFailedEvent(streamId, changePasswordBody, error));
         }
     }
 }

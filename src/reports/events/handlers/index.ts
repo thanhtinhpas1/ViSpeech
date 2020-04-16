@@ -21,5 +21,3 @@ export const EventHandlers = [
 
     ReportWelcomedHandler
 ];
-
-// TODO: report success and failed event handle

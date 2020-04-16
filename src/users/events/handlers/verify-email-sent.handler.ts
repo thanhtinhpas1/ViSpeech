@@ -34,7 +34,7 @@ export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEven
             await EmailUtils.sendVerifyEmail(user.username, user.email, verifyEmailToken);
             this.eventBus.publish(new VerifyEmailSentSuccessEvent(streamId, userId));
         } catch (error) {
-            this.eventBus.publish(new VerifyEmailSentFailedEvent(streamId, userId, error.message));
+            this.eventBus.publish(new VerifyEmailSentFailedEvent(streamId, userId, error));
         }
     }
 }

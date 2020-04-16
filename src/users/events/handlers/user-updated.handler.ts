@@ -33,7 +33,7 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
             await this.repository.update({ _id }, formattedInfo);
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
         } catch (error) {
-            this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error.message));
+            this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));
         }
     }
 }

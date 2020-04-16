@@ -39,7 +39,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
             await this.userRepository.save(user);
             this.eventBus.publish(new UserCreatedSuccessEvent(streamId, userDto));
         } catch (error) {
-            this.eventBus.publish(new UserCreatedFailedEvent(streamId, userDto, error.message));
+            this.eventBus.publish(new UserCreatedFailedEvent(streamId, userDto, error));
         }
     }
 }

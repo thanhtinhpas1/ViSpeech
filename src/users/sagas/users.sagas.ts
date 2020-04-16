@@ -72,11 +72,11 @@ export class UsersSagas {
     };
 
     @Saga()
-    userDeletedSucess = (events$: Observable<any>): Observable<ICommand> => {
+    userDeletedSuccess = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(UserDeletedSuccessEvent),
             map((event: UserDeletedSuccessEvent) => {
-                Logger.log('Inside [UsersSagas] userDeletedSucess Saga', 'UsersSagas');
+                Logger.log('Inside [UsersSagas] userDeletedSuccess Saga', 'UsersSagas');
                 const {streamId, userId} = event;
                 return new DeleteTokenByUserIdCommand(streamId, userId);
             })

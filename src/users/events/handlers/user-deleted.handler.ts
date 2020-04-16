@@ -29,7 +29,7 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
             await this.repository.delete({ _id: userId });
             this.eventBus.publish(new UserDeletedSuccessEvent(streamId, userId));
         } catch (error) {
-            this.eventBus.publish(new UserDeletedFailedEvent(streamId, userId, error.message));
+            this.eventBus.publish(new UserDeletedFailedEvent(streamId, userId, error));
         }
     }
 }

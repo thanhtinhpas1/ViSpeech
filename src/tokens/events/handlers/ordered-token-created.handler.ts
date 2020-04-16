@@ -46,7 +46,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
             await this.repository.save(token);
             this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
-            this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error.message));
+            this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));
         }
     }
 }

@@ -134,7 +134,7 @@ export class UsersModule implements OnModuleInit {
         
         // verify email
         EmailVerifiedEvent: (streamId, data) => new EmailVerifiedEvent(streamId, data),
-        EmailVerifiedSuccessEvent: (streamId, data) => new EmailVerifiedSuccessEvent(streamId, data),
+        EmailVerifiedSuccessEvent: (streamId, emailToken, newToken) => new EmailVerifiedSuccessEvent(streamId, emailToken, newToken),
         EmailVerifiedFailedEvent: (streamId, data, error) => new EmailVerifiedFailedEvent(streamId, data, error),
     };
 }

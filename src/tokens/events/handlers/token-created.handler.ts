@@ -42,7 +42,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
             await this.repository.save(token);
             this.eventBus.publish(new TokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
-            this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error.message));
+            this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error));
         }
     }
 }

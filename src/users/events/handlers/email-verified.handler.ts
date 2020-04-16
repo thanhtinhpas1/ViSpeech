@@ -10,12 +10,14 @@ import { UserDto } from 'users/dtos/users.dto';
 import { config } from '../../../../config';
 import { EmailVerifiedEvent, EmailVerifiedSuccessEvent, EmailVerifiedFailedEvent } from '../impl/email-verified.event';
 import { Utils } from 'utils';
+import { AuthService } from 'auth/auth.service';
 
 @EventsHandler(EmailVerifiedEvent)
 export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
     constructor(
         @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
         private readonly jwtService: JwtService,
+        private readonly authService: AuthService,
         private readonly eventBus: EventBus,
     ) {
     }
@@ -32,11 +34,13 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }
+
             const userRoles = user.roles.filter(role => role.name !== CONSTANTS.ROLE.USER);
-            const managerUserRole = new RoleDto(CONSTANTS.ROLE.MANAGER_USER);
-            await this.repository.update({ _id: userId }, { roles: [...userRoles, managerUserRole] });
-            // TODO generate new token for user
-            this.eventBus.publish(new EmailVerifiedSuccessEvent(streamId, emailToken));
+            const updatedRoles = [...userRoles, new RoleDto(CONSTANTS.ROLE.MANAGER_USER)];
+            await this.repository.update({ _id: userId }, { roles: updatedRoles });
+
+            const newToken = this.authService.generateToken(userId, user.username, updatedRoles);
+            this.eventBus.publish(new EmailVerifiedSuccessEvent(streamId, emailToken, newToken));
         } catch (error) {
             this.eventBus.publish(new EmailVerifiedFailedEvent(streamId, emailToken, error));
         }
