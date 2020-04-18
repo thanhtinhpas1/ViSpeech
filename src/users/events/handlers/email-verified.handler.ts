@@ -28,7 +28,6 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
 
         try {
             const decodedToken = this.jwtService.decode(emailToken);
-            console.log(decodedToken)
             const userId = decodedToken['id'];
             const user = await this.repository.findOne({ _id: userId });
             if (!user) {

@@ -8,6 +8,7 @@ import {GetPermissionsQuery} from 'permissions/queries/impl/get-permissions.quer
 import {FindPermissionQuery} from 'permissions/queries/impl/find-permission.query';
 import {SendAssignPermissionEmailCommand} from 'permissions/commands/impl/send-assign-permission-email.command';
 import {ReplyPermissionAssignCommand} from 'permissions/commands/impl/reply-permission-assign.command';
+import { FindPermisisonsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
 
 @Injectable()
 export class PermissionsService {
@@ -40,6 +41,12 @@ export class PermissionsService {
     async getPermissions(getPermissionsQuery: GetPermissionsQuery) {
         const query = new GetPermissionsQuery();
         Object.assign(query, getPermissionsQuery);
+        return await this.queryBus.execute(query);
+    }
+
+    async findPermissionsByIds(findPermisisonsByIdsQuery: FindPermisisonsByIdsQuery) {
+        const query = new FindPermisisonsByIdsQuery();
+        Object.assign(query, findPermisisonsByIdsQuery);
         return await this.queryBus.execute(query);
     }
 

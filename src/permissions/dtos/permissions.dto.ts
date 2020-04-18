@@ -75,6 +75,16 @@ export class PermissionIdRequestParamsDto {
     _id: string;
 }
 
+export class EmailTokenParamsDto {
+    constructor(emailToken) {
+        this.emailToken = emailToken;
+    }
+
+    @IsString()
+    @IsNotEmpty()
+    emailToken: string;
+}
+
 @Entity('permissions')
 export class PermissionDto extends BaseEntityDto {
     constructor(permissions: string[], assigneeId, assignerId, projectId, status: string = CONSTANTS.STATUS.PENDING) {

@@ -4,22 +4,25 @@ import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {CONSTANTS} from 'common/constant';
 import {FindPermissionQuery} from 'permissions/queries/impl/find-permission.query';
 import {GetPermissionsQuery} from 'permissions/queries/impl/get-permissions.query';
-import {PermissionAssignDto, PermissionDto, PermissionIdRequestParamsDto, PermissionResponseDto} from '../dtos/permissions.dto';
+import {PermissionAssignDto, PermissionDto, PermissionIdRequestParamsDto, PermissionResponseDto, EmailTokenParamsDto} from '../dtos/permissions.dto';
 import {PermissionsService} from '../services/permissions.service';
 import {Roles} from 'auth/roles.decorator';
-import {AssignPermissionGuard, PermissionGuard, ReplyPermisisonAssignGuard} from 'auth/guards/permission.guard';
+import {AssignPermissionGuard, PermissionGuard, ReplyPermisisonAssignGuard, PermissionQueryGuard} from 'auth/guards/permission.guard';
 import {Utils} from 'utils';
+import { FindPermisisonsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('permissions')
 @ApiTags('Permissions')
-@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionGuard)
 export class PermissionsController {
-    constructor(private readonly permissionsService: PermissionsService) {
-    }
+    constructor(
+        private readonly permissionsService: PermissionsService,
+        private readonly jwtService: JwtService) {}
 
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Create Permission']})
     @ApiResponse({status: 200, description: 'Create Permission.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createPermission(@Body() permissionDto: PermissionDto): Promise<PermissionDto> {
@@ -32,6 +35,7 @@ export class PermissionsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Update Permission']})
     @ApiResponse({status: 200, description: 'Update Permission.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updatePermission(
@@ -50,6 +54,7 @@ export class PermissionsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Delete Permission']})
     @ApiResponse({status: 200, description: 'Delete Permission.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Delete(':_id')
     async deletePermission(@Param() permissionIdDto: PermissionIdRequestParamsDto) {
@@ -86,10 +91,28 @@ export class PermissionsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['List Permissions']})
     @ApiResponse({status: 200, description: 'List Permissions.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async getPermissions(@Query() getPermissionsQuery: GetPermissionsQuery) {
         return this.permissionsService.getPermissions(getPermissionsQuery);
+    }
+
+    /* Find Permission By Email Token */
+
+    /*--------------------------------------------*/
+
+    @ApiOperation({tags: ['Find Permission By Email Token']})
+    @ApiResponse({status: 200, description: 'Find Permission By Email Token.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionQueryGuard)
+    @Get('email-token/:emailToken')
+    async findPermissionByEmailToken(@Param() param: EmailTokenParamsDto) {
+        const decodedToken = this.jwtService.decode(param.emailToken);
+        const query = new FindPermisisonsByIdsQuery();
+        query.assigneeId = decodedToken['assigneeId'];
+        query.assignerId = decodedToken['assignerId'];
+        query.projectId = decodedToken['projectId'];
+        return this.permissionsService.findPermissionsByIds(query);
     }
 
     /* Find Permission */
@@ -98,6 +121,7 @@ export class PermissionsController {
 
     @ApiOperation({tags: ['Find Permission']})
     @ApiResponse({status: 200, description: 'Find Permission.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionQueryGuard)
     @Get(':id')
     async findOnePermission(@Param() findPermissionQuery: FindPermissionQuery) {
         return this.permissionsService.findOne(findPermissionQuery);

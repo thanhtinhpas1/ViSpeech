@@ -1,8 +1,8 @@
-import {BadRequestException, CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException} from '@nestjs/common';
-import {AuthService} from 'auth/auth.service';
-import {CONSTANTS} from 'common/constant';
-import {PermissionDto} from 'permissions/dtos/permissions.dto';
-import {getMongoRepository} from 'typeorm';
+import { BadRequestException, CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { AuthService } from 'auth/auth.service';
+import { CONSTANTS } from 'common/constant';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { JwtService } from '@nestjs/jwt';
 
@@ -22,11 +22,11 @@ export class PermissionGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        
+
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
-        const permission = await getMongoRepository(PermissionDto).findOne({_id: id});
+        const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
         if (!permission) {
             throw new NotFoundException(`Permission with _id ${id} does not exist.`);
         }
@@ -69,22 +69,6 @@ export class AssignPermissionGuard implements CanActivate {
             return true;
         }
         return false;
-
-        // if (payload['roles']) {
-        //     if (payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.ADMIN) !== -1) return true;
-        //     if (payload['roles'].findIndex(x => x.name === CONSTANTS.ROLE.MANAGER_USER) !== -1) {
-        //         const user = await this.userRepository.findOne({ _id: id });
-        //         if (!user || !user['roles']) throw new BadRequestException();
-        //         if (payload['id'] === user.assignerId) return true;
-        //         if (user['roles'].findIndex(x => x.name === CONSTANTS.ROLE.USER) !== -1
-        //             || user.assignerId === payload['id']) {
-        //             return true;
-        //         }
-        //         Logger.warn('User do not have permission to modify this user.', 'UserGuard');
-        //         return false;
-        //     }
-        // }
-        // return payload['id'] === id;
     }
 }
 
@@ -106,15 +90,72 @@ export class ReplyPermisisonAssignGuard implements CanActivate {
         }
 
         const decodedEmailToken = this.jwtService.decode(emailToken);
-        if (!decodedEmailToken || !decodedEmailToken['assignerId'] || !decodedEmailToken['assigneeId'] || !decodedEmailToken['projectId'] || !decodedEmailToken['permissions']) {
+        const assignerId = decodedEmailToken['assignerId'];
+        const assigneeId = decodedEmailToken['assigneeId'];
+        const projectId = decodedEmailToken['projectId'];
+        const permissions = decodedEmailToken['permissions'];
+
+        if (!decodedEmailToken || !assignerId || !assigneeId || !projectId || !permissions) {
             throw new BadRequestException("Token is invalid.");
         }
 
-        const permission = await getMongoRepository(PermissionDto).findOne({ assignerId: decodedEmailToken['assignerId'], assigneeId: decodedEmailToken['assigneeId'], projectId: decodedEmailToken['projectId'], status: CONSTANTS.STATUS.PENDING });
-        if (permission && decodedEmailToken['assigneeId'] === requestJwt['id']) {
+        const permission = await getMongoRepository(PermissionDto).findOne({ assignerId, assigneeId, projectId, status: CONSTANTS.STATUS.PENDING });
+        if (permission && assigneeId === requestJwt['id']) {
             return true;
         }
 
+        return false;
+    }
+}
+
+@Injectable()
+export class PermissionQueryGuard implements CanActivate {
+    constructor(
+        private readonly authService: AuthService,
+        private readonly jwtService: JwtService,
+    ) {
+    }
+
+    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+        const request = context.switchToHttp().getRequest();
+
+        const payload = this.authService.decode(request);
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new UnauthorizedException();
+        }
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
+
+        const { id, emailToken } = request.params;
+        if (id) {
+            const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
+            if (!permission) {
+                throw new NotFoundException(`Permission with _id ${id} does not exist.`);
+            }
+            if (permission.assigneeId === payload['id'] || permission.assignerId === payload['id']) {
+                return true;
+            }
+        }
+
+        if (emailToken) {
+            const decodedToken = this.jwtService.decode(emailToken);
+            const assigneeId = decodedToken['assigneeId'];
+            const assignerId = decodedToken['assignerId'];
+            const projectId = decodedToken['projectId'];
+            if (assigneeId && assignerId && projectId) {
+                const permissions = await getMongoRepository(PermissionDto).find({ assigneeId, assignerId, projectId });
+                if (permissions.length === 0) {
+                    throw new NotFoundException(`Permissions with assigneeId ${assigneeId} and 
+                        assignerId ${assignerId} and projectId ${projectId} does not exist.`);
+                }
+                if (assigneeId === payload['id'] || assignerId === payload['id']) {
+                    return true;
+                }
+            }
+        }
+
+        Logger.warn('User do not have permission to query permissions.', 'PermissionQueryGuard');
         return false;
     }
 }

@@ -54,7 +54,7 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
             await EmailUtils.sendInviteToJoinProjectEmail(assigner.username, assignee.username, project.name, assignee.email, joinProjectToken);
             this.eventBus.publish(new PermissionAssignEmailSentSuccessEvent(streamId, permissionAssignDto));
         } catch (error) {
-            this.eventBus.publish(new PermissionAssignEmailSentFailedEvent(streamId, permissionAssignDto, error.toString()));
+            this.eventBus.publish(new PermissionAssignEmailSentFailedEvent(streamId, permissionAssignDto, error));
         }
     }
 }
