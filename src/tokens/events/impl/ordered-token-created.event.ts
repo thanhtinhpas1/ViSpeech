@@ -12,7 +12,8 @@ export class OrderedTokenCreatedEvent implements IEvent {
 export class OrderedTokenCreatedSuccessEvent implements IEvent {
     constructor(
         public readonly streamId: string,
-        public readonly tokenDto: any
+        public readonly tokenDto: any,
+        public readonly formattedToken: any
     ) {
     }
 }

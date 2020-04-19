@@ -44,7 +44,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
             token.minutes = tokenTypeDto.minutes;
             token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
             await this.repository.save(token);
-            this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto));
+            this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, token));
         } catch (error) {
             this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));
         }

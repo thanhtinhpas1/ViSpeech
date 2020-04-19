@@ -100,7 +100,7 @@ export class TokensModule implements OnModuleInit {
 
         // ordered token
         OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
-        OrderedTokenCreatedSuccessEvent: (streamId, data) => new OrderedTokenCreatedSuccessEvent(streamId, data),
+        OrderedTokenCreatedSuccessEvent: (streamId, tokenDto, formattedToken) => new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, formattedToken),
         OrderedTokenCreatedFailedEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
     };
 
