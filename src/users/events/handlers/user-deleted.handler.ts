@@ -19,14 +19,21 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
 
     async handle(event: UserDeletedEvent) {
         Logger.log(event.userId, 'UserDeletedEvent');
-        const { streamId, userId } = event;
+        const { streamId, userId, isDeleted } = event;
 
         try {
             const user = await this.repository.findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }
-            await this.repository.delete({ _id: userId });
+            if (isDeleted === "true") {
+                console.log("haha")
+                await this.repository.delete({ _id: userId });
+            } else if (isDeleted === "false") {
+                console.log("hahaa")
+                await this.repository.update({ _id: userId }, { isActive: false })
+            }
+            
             this.eventBus.publish(new UserDeletedSuccessEvent(streamId, userId));
         } catch (error) {
             this.eventBus.publish(new UserDeletedFailedEvent(streamId, userId, error));

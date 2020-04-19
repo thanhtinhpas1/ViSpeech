@@ -1,5 +1,5 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Column, Entity, Index } from 'typeorm';
 
@@ -36,8 +36,8 @@ export class UserDto extends BaseEntityDto {
         this.username = username;
         this.password = password;
         this.email = email;
-        // this.assignerId = assignerId;
         this.roles = roles;
+        this.isActive = true;
     }
 
     @IsString()
@@ -78,11 +78,11 @@ export class UserDto extends BaseEntityDto {
     })
     firstTimeLoginRemaining: boolean;
 
-    @IsEmpty()
+    @IsNotEmpty()
+    @IsBoolean()
     @Column({
         default: true,
         nullable: false,
-        insert: false,
     })
     isActive: boolean;
 

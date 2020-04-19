@@ -11,7 +11,7 @@ import { TokenTypeDto } from './dtos/token-types.dto';
 import { TokenDto } from './dtos/tokens.dto';
 import { EventHandlers } from './events/handlers';
 import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
-import { TokenDeletedByUserIdEvent, TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent, TokenDeletedByUserIdSuccessEvent, TokenDeletedByUserIdFailedEvent } from './events/impl/token-deleted.event';
+import { TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent } from './events/impl/token-deleted.event';
 import { TokenUpdatedEvent, TokenUpdatedSuccessEvent, TokenUpdatedFailedEvent } from './events/impl/token-updated.event';
 import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
 import { QueryHandlers } from './queries/handler';
@@ -25,6 +25,8 @@ import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
+import { TokenDeletedByUserIdEvent, TokenDeletedByUserIdSuccessEvent, TokenDeletedByUserIdFailedEvent } from './events/impl/token-deleted-by-userId.event';
+import { TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdSuccessEvent, TokenDeletedByProjectIdFailedEvent } from './events/impl/token-deleted-by-projectId.event';
 
 @Module({
     imports: [
@@ -85,6 +87,11 @@ export class TokensModule implements OnModuleInit {
         TokenDeletedByUserIdEvent: (streamId, data) => new TokenDeletedByUserIdEvent(streamId, data),
         TokenDeletedByUserIdSuccessEvent: (streamId, data) => new TokenDeletedByUserIdSuccessEvent(streamId, data),
         TokenDeletedByUserIdFailedEvent: (streamId, data, error) => new TokenDeletedByUserIdFailedEvent(streamId, data, error),
+
+        // delete by projectId
+        TokenDeletedByProjectIdEvent: (streamId, data) => new TokenDeletedByProjectIdEvent(streamId, data),
+        TokenDeletedByProjectIdSuccessEvent: (streamId, data) => new TokenDeletedByProjectIdSuccessEvent(streamId, data),
+        TokenDeletedByProjectIdFailedEvent: (streamId, data, error) => new TokenDeletedByProjectIdFailedEvent(streamId, data, error),
 
         // update
         TokenUpdatedEvent: (streamId, data) => new TokenUpdatedEvent(streamId, data),

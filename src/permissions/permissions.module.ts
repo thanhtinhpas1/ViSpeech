@@ -27,6 +27,8 @@ import { PermissionAssignRepliedEvent, PermissionAssignRepliedSuccessEvent, Perm
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
+import { PermissionDeletedByUserIdEvent, PermissionDeletedByUserIdSuccessEvent, PermissionDeletedByUserIdFailedEvent } from './events/impl/permission-deleted-by-userId.event';
+import { PermissionDeletedByProjectIdEvent, PermissionDeletedByProjectIdSuccessEvent, PermissionDeletedByProjectIdFailedEvent } from './events/impl/permission-deleted-by-projectId.event';
 
 @Module({
     imports: [
@@ -80,6 +82,16 @@ export class PermissionsModule implements OnModuleInit {
         PermissionDeletedEvent: (streamId, data) => new PermissionDeletedEvent(streamId, data),
         PermissionDeletedSuccessEvent: (streamId, data) => new PermissionDeletedSuccessEvent(streamId, data),
         PermissionDeletedFailedEvent: (streamId, data, error) => new PermissionDeletedFailedEvent(streamId, data, error),
+
+        // delete by userId
+        PermissionDeletedByUserIdEvent: (streamId, data) => new PermissionDeletedByUserIdEvent(streamId, data),
+        PermissionDeletedByUserIdSuccessEvent: (streamId, data) => new PermissionDeletedByUserIdSuccessEvent(streamId, data),
+        PermissionDeletedByUserIdFailedEvent: (streamId, data, error) => new PermissionDeletedByUserIdFailedEvent(streamId, data, error),
+
+        // delete by projectId
+        PermissionDeletedByProjectIdEvent: (streamId, data) => new PermissionDeletedByProjectIdEvent(streamId, data),
+        PermissionDeletedByProjectIdSuccessEvent: (streamId, data) => new PermissionDeletedByProjectIdSuccessEvent(streamId, data),
+        PermissionDeletedByProjectIdFailedEvent: (streamId, data, error) => new PermissionDeletedByProjectIdFailedEvent(streamId, data, error),
 
         // update
         PermissionUpdatedEvent: (streamId, data) => new PermissionUpdatedEvent(streamId, data),

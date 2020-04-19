@@ -5,6 +5,8 @@ import {PermissionDeletedEvent} from '../events/impl/permission-deleted.event';
 import {PermissionWelcomedEvent} from '../events/impl/permission-welcomed.event';
 import {PermissionAssignEmailSentEvent} from 'permissions/events/impl/permission-assign-email-sent.event';
 import {PermissionAssignRepliedEvent} from 'permissions/events/impl/permission-assign-replied.event';
+import { PermissionDeletedByUserIdEvent } from 'permissions/events/impl/permission-deleted-by-userId.event';
+import { PermissionDeletedByProjectIdEvent } from 'permissions/events/impl/permission-deleted-by-projectId.event';
 
 export class Permission extends AggregateRoot {
     [x: string]: any;
@@ -31,6 +33,14 @@ export class Permission extends AggregateRoot {
 
     deletePermission(streamId: string) {
         this.apply(new PermissionDeletedEvent(streamId, this.id));
+    }
+
+    deletePermissionByUserId(streamId: string, userId: string) {
+        this.apply(new PermissionDeletedByUserIdEvent(streamId, userId));
+    }
+
+    deletePermissionByProjectId(streamId: string, projectId: string) {
+        this.apply(new PermissionDeletedByProjectIdEvent(streamId, projectId));
     }
 
     sendAssignPermissionEmail(streamId: string) {

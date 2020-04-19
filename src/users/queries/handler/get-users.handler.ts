@@ -18,11 +18,12 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
         const { limit, offset } = query;
         let users = [];
         try {
+            const findOptions = { where: { isActive: true } }
             users = limit != null && offset != null ? 
-                await this.repository.find({ skip: offset, take: limit }) : 
-                await this.repository.find();
+                await this.repository.find({ skip: offset, take: limit, ...findOptions }) : 
+                await this.repository.find(findOptions);
             users = Utils.removeObjPropertiesFromObjArr(users, ['password']);
-            const count = await this.repository.count();
+            const count = await this.repository.count(findOptions.where);
             return { data: users, count };
         } catch (error) {
             Logger.error(error, '', 'GetUsersQuery');

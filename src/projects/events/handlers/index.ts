@@ -2,6 +2,7 @@ import {ProjectCreatedFailedHandler, ProjectCreatedHandler, ProjectCreatedSucces
 import {ProjectUpdatedHandler, ProjectUpdatedSuccessHandler, ProjectUpdatedFailedHandler} from './project-updated.handler';
 import {ProjectDeletedHandler, ProjectDeletedSuccessHandler, ProjectDeletedFailedHandler} from './project-deleted.handler';
 import {ProjectWelcomedHandler} from './project-welcomed.handler';
+import { ProjectDeletedByUserIdHandler, ProjectDeletedByUserIdSuccessHandler, ProjectDeletedByUserIdFailedHandler } from './project-deleted-by-userId.handler';
 
 export const EventHandlers = [
     // create
@@ -18,6 +19,11 @@ export const EventHandlers = [
     ProjectDeletedHandler,
     ProjectDeletedSuccessHandler,
     ProjectDeletedFailedHandler,
+
+    // delete by userId
+    ProjectDeletedByUserIdHandler,
+    ProjectDeletedByUserIdSuccessHandler,
+    ProjectDeletedByUserIdFailedHandler,
 
     ProjectWelcomedHandler,
 ];

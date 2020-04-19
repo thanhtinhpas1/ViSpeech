@@ -41,8 +41,14 @@ import {ClientKafka, ClientsModule} from "@nestjs/microservices";
 import {config} from "../../config";
 import {kafkaClientOptions} from "../common/kafka-client.options";
 import {CreateFreeTokenHandler} from 'tokens/commands/handlers/create-token.handler';
-import {DeleteTokenByUserIdHandler} from 'tokens/commands/handlers/delete-token.handler';
 import { TokensModule } from 'tokens/tokens.module';
+import { ProjectRepository } from 'projects/repository/project.repository';
+import { PermissionRepository } from 'permissions/repository/permission.repository';
+import { DeleteProjectByUserIdHandler } from 'projects/commands/handlers/delete-project-by-userId.handler';
+import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/delete-permission-by-userId.handler';
+import { ProjectsModule } from 'projects/projects.module';
+import { PermissionsModule } from 'permissions/permissions.module';
+import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token-by-userId.handler';
 
 @Module({
     imports: [
@@ -61,8 +67,10 @@ import { TokensModule } from 'tokens/tokens.module';
         ...EventHandlers, ...QueryHandlers,
         CreateFreeTokenHandler,
         DeleteTokenByUserIdHandler,
+        DeleteProjectByUserIdHandler,
+        DeletePermissionByUserIdHandler,
         /*** REPOSITORY */
-        UserRepository, TokenRepository,
+        UserRepository, TokenRepository, ProjectRepository, PermissionRepository,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
         ClientKafka,
     ],
@@ -85,11 +93,14 @@ export class UsersModule implements OnModuleInit {
         this.eventStore.setEventHandlers({
             ...this.eventHandlers,
             ...TokensModule.eventHandlers,
+            ...ProjectsModule.eventHandlers,
+            ...PermissionsModule.eventHandlers,
         });
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, CreateFreeTokenHandler, DeleteTokenByUserIdHandler]);
+        this.command$.register([...CommandHandlers, CreateFreeTokenHandler, 
+            DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
         // seed data
@@ -121,7 +132,7 @@ export class UsersModule implements OnModuleInit {
         PasswordChangedFailedEvent: (streamId, data, error) => new PasswordChangedFailedEvent(streamId, data, error),
         
         // delete
-        UserDeletedEvent: (streamId, data) => new UserDeletedEvent(streamId, data),
+        UserDeletedEvent: (streamId, data, isDeleted) => new UserDeletedEvent(streamId, data, isDeleted),
         UserDeletedSuccessEvent: (streamId, data) => new UserDeletedSuccessEvent(streamId, data),
         UserDeletedFailedEvent: (streamId, data, error) => new UserDeletedFailedEvent(streamId, data, error),
         

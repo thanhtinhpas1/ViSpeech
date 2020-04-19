@@ -24,6 +24,12 @@ export class ProjectRepository {
         return project;
     }
 
+    async deleteProjectByUserId(streamId: string, userId: string) {
+        const project = new Project(undefined);
+        project.deleteProjectByUserId(streamId, userId);
+        return project;
+    }
+
     async welcomeProject(streamId: string, projectId: string) {
         const project = new Project(projectId);
         project.welcomeProject(streamId);

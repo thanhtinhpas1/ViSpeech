@@ -67,6 +67,8 @@ export const CONSTANTS = {
         TOKEN_DELETED_FAILED_EVENT: 'TokenDeletedFailedEvent',
         TOKEN_DELETED_BY_USERID_SUCCESS_EVENT: 'TokenDeletedByUserIdSuccessEvent',
         TOKEN_DELETED_BY_USERID_FAILED_EVENT: 'TokenDeletedByUserIdFailedEvent',
+        TOKEN_DELETED_BY_PROJECTID_SUCCESS_EVENT: 'TokenDeletedByProjectIdSuccessEvent',
+        TOKEN_DELETED_BY_PROJECTID_FAILED_EVENT: 'TokenDeletedByProjectIdFailedEvent',
         TOKEN_UPDATED_SUCCESS_EVENT: 'TokenUpdatedSuccessEvent',
         TOKEN_UPDATED_FAILED_EVENT: 'TokenUpdatedFailedEvent',
         // PROJECT
@@ -74,6 +76,8 @@ export const CONSTANTS = {
         PROJECT_CREATED_FAILED_EVENT: 'ProjectCreatedFailedEvent',
         PROJECT_DELETED_SUCCESS_EVENT: 'ProjectDeletedSuccessEvent',
         PROJECT_DELETED_FAILED_EVENT: 'ProjectDeletedFailedEvent',
+        PROJECT_DELETED_BY_USERID_SUCCESS_EVENT: 'ProjectDeletedByUserIdSuccessEvent',
+        PROJECT_DELETED_BY_USERID_FAILED_EVENT: 'ProjectDeletedByUserIdFailedEvent',
         PROJECT_UPDATED_SUCCESS_EVENT: 'ProjectUpdatedSuccessEvent',
         PROJECT_UPDATED_FAILED_EVENT: 'ProjectUpdatedFailedEvent',
         // REPORT
@@ -92,6 +96,10 @@ export const CONSTANTS = {
         PERMISSION_CREATED_FAILED_EVENT: 'PermissionCreatedFailedEvent',
         PERMISSION_DELETED_SUCCESS_EVENT: 'PermissionDeletedSuccessEvent',
         PERMISSION_DELETED_FAILED_EVENT: 'PermissionDeletedFailedEvent',
+        PERMISSION_DELETED_BY_USERID_SUCCESS_EVENT: 'PermissionDeletedByUserIdSuccessEvent',
+        PERMISSION_DELETED_BY_USERID_FAILED_EVENT: 'PermissionDeletedByUserIdFailedEvent',
+        PERMISSION_DELETED_BY_PROJECTID_SUCCESS_EVENT: 'PermissionDeletedByProjectIdSuccessEvent',
+        PERMISSION_DELETED_BY_PROJECTID_FAILED_EVENT: 'PermissionDeletedByProjectIdFailedEvent',
         PERMISSION_UPDATED_SUCCESS_EVENT: 'PermissionUpdatedSuccessEvent',
         PERMISSION_UPDATED_FAILED_EVENT: 'PermissionUpdatedFailedEvent',
         // ORDER

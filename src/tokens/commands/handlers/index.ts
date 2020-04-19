@@ -1,7 +1,9 @@
 import {CreateFreeTokenHandler, CreateOrderedTokenHandler, CreateTokenHandler} from './create-token.handler';
-import {DeleteTokenByUserIdHandler, DeleteTokenHandler} from './delete-token.handler';
+import {DeleteTokenHandler} from './delete-token.handler';
 import {UpdateTokenHandler} from './update-token.handler';
 import {WelcomeTokenHandler} from './welcome-token.handler';
+import { DeleteTokenByProjectIdHandler } from './delete-token-by-projectId.handler';
+import { DeleteTokenByUserIdHandler } from './delete-token-by-userId.handler';
 
 export const CommandHandlers = [
     CreateTokenHandler,
@@ -9,6 +11,7 @@ export const CommandHandlers = [
     CreateOrderedTokenHandler,
     DeleteTokenHandler,
     DeleteTokenByUserIdHandler,
+    DeleteTokenByProjectIdHandler,
     UpdateTokenHandler,
     WelcomeTokenHandler,
 ];

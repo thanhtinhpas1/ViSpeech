@@ -45,6 +45,13 @@ export class TokenRepository {
         return token;
     }
 
+    async deleteTokenByProjectId(streamId: string, projectId: string) {
+        const token = new Token(undefined);
+        token.setData(projectId);
+        token.deleteTokenByProjectId(streamId);
+        return token;
+    }
+
     async welcomeToken(streamId: string, tokenId: string) {
         const token = new Token(tokenId);
         token.welcomeToken(streamId);

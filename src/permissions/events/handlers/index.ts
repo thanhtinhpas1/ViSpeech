@@ -8,6 +8,8 @@ import {
     PermissionAssignEmailSentSuccessHandler
 } from './permission-assign-email-sent.handler';
 import {PermissionAssignRepliedHandler, PermissionAssignRepliedSuccessHandler, PermissionAssignRepliedFailedHandler} from './permission-assign-replied.handler';
+import { PermissionDeletedByUserIdHandler, PermissionDeletedByUserIdSuccessHandler, PermissionDeletedByUserIdFailedHandler } from './permission-deleted-by-userId.handler';
+import { PermissionDeletedByProjectIdHandler, PermissionDeletedByProjectIdSuccessHandler, PermissionDeletedByProjectIdFailedHandler } from './permission-deleted-by-projectId.handler';
 
 export const EventHandlers = [
     // create
@@ -24,6 +26,16 @@ export const EventHandlers = [
     PermissionDeletedHandler,
     PermissionDeletedSuccessHandler,
     PermissionDeletedFailedHandler,
+
+    // delete by userId
+    PermissionDeletedByUserIdHandler,
+    PermissionDeletedByUserIdSuccessHandler,
+    PermissionDeletedByUserIdFailedHandler,
+
+    // delete by projectId
+    PermissionDeletedByProjectIdHandler,
+    PermissionDeletedByProjectIdSuccessHandler,
+    PermissionDeletedByProjectIdFailedHandler,
 
     PermissionWelcomedHandler,
 

@@ -27,12 +27,8 @@ export class UsersService {
     }
 
     async deleteUser(streamId: string, userIdDto: UserIdRequestParamsDto) {
-        return await this.commandBus.execute(new DeleteUserCommand(streamId, userIdDto));
+        return await this.commandBus.execute(new DeleteUserCommand(streamId, userIdDto, false));
     }
-
-    // async assignUserRole(streamId: string, userId: string, roleName: string, assignerId: string) {
-    //     return await this.commandBus.execute(new AssignUserRoleCommand(streamId, userId, roleName, assignerId));
-    // }
 
     async sendVerifyEmail(streamId: string, userIdDto: UserIdRequestParamsDto) {
         return await this.commandBus.execute(new SendVerifyEmailCommand(streamId, userIdDto));

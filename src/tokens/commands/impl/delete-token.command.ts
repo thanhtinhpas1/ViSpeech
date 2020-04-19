@@ -8,11 +8,3 @@ export class DeleteTokenCommand implements ICommand {
     ) {
     }
 }
-
-export class DeleteTokenByUserIdCommand implements ICommand {
-    constructor(
-        public readonly streamId: string,
-        public readonly userId: string
-    ) {
-    }
-}

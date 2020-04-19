@@ -1,5 +1,5 @@
 import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsNotEmpty, IsOptional, IsString, IsUUID} from 'class-validator';
+import {IsNotEmpty, IsOptional, IsString, IsUUID, IsBoolean} from 'class-validator';
 import {Column, Entity, ObjectID} from 'typeorm';
 
 export class ProjectIdRequestParamsDto {
@@ -19,6 +19,7 @@ export class ProjectDto extends BaseEntityDto {
         this.name = name;
         this.userId = userId;
         this.description = description;
+        this.isValid = true;
     }
 
     @IsString()
@@ -43,4 +44,12 @@ export class ProjectDto extends BaseEntityDto {
         type: 'uuid',
     })
     userId: ObjectID;
+
+    @IsNotEmpty()
+    @IsBoolean()
+    @Column({
+        default: true,
+        nullable: false,
+    })
+    isValid: boolean;
 }

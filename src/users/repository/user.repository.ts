@@ -25,9 +25,9 @@ export class UserRepository {
         return user;
     }
 
-    async deleteUser(streamId: string, userId: string) {
+    async deleteUser(streamId: string, userId: string, isDeleted: boolean) {
         const user = new User(userId);
-        user.deleteUser(streamId);
+        user.deleteUser(streamId, isDeleted);
         return user;
     }
 

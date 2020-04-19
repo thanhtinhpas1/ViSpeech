@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from "@nestjs/common";
+import { Module, OnModuleInit, forwardRef } from "@nestjs/common";
 import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
 import { ClientsModule } from "@nestjs/microservices";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -21,6 +21,7 @@ import { QueryHandlers } from "./queries/handler";
 import { ProjectRepository } from "./repository/project.repository";
 import { ProjectsSagas } from "./sagas/projects.sagas";
 import { ProjectsService } from "./services/projects.service";
+import { ProjectDeletedByUserIdEvent, ProjectDeletedByUserIdSuccessEvent, ProjectDeletedByUserIdFailedEvent } from "./events/impl/project-deleted-by-userId.event";
 
 
 @Module({
@@ -30,7 +31,7 @@ import { ProjectsService } from "./services/projects.service";
             ...kafkaClientOptions,
         }]),
         TypeOrmModule.forFeature([ProjectDto, PermissionDto, UserDto]),
-        AuthModule,
+        forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
     ],
     controllers: [ProjectsController],
@@ -75,6 +76,11 @@ export class ProjectsModule implements OnModuleInit {
         ProjectDeletedEvent: (streamId, data) => new ProjectDeletedEvent(streamId, data),
         ProjectDeletedSuccessEvent: (streamId, data) => new ProjectDeletedSuccessEvent(streamId, data),
         ProjectDeletedFailedEvent: (streamId, data, error) => new ProjectDeletedFailedEvent(streamId, data, error),
+
+        // delete by userId
+        ProjectDeletedByUserIdEvent: (streamId, data) => new ProjectDeletedByUserIdEvent(streamId, data),
+        ProjectDeletedByUserIdSuccessEvent: (streamId, data) => new ProjectDeletedByUserIdSuccessEvent(streamId, data),
+        ProjectDeletedByUserIdFailedEvent: (streamId, data, error) => new ProjectDeletedByUserIdFailedEvent(streamId, data, error),
 
         // update
         ProjectUpdatedEvent: (streamId, data) => new ProjectUpdatedEvent(streamId, data),

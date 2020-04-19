@@ -27,7 +27,7 @@ export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent>
             if (!project) {
                 throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
             }
-            await this.repository.delete({_id: projectId});
+            await this.repository.update({_id: projectId}, {isValid: false});
             this.eventBus.publish(new ProjectDeletedSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new ProjectDeletedFailedEvent(streamId, projectId, error));

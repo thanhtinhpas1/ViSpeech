@@ -3,6 +3,7 @@ import {ProjectCreatedEvent} from '../events/impl/project-created.event';
 import {ProjectUpdatedEvent} from '../events/impl/project-updated.event';
 import {ProjectDeletedEvent} from '../events/impl/project-deleted.event';
 import {ProjectWelcomedEvent} from '../events/impl/project-welcomed.event';
+import { ProjectDeletedByUserIdEvent } from 'projects/events/impl/project-deleted-by-userId.event';
 
 export class Project extends AggregateRoot {
     [x: string]: any;
@@ -29,5 +30,9 @@ export class Project extends AggregateRoot {
 
     deleteProject(streamId: string) {
         this.apply(new ProjectDeletedEvent(streamId, this.id));
+    }
+
+    deleteProjectByUserId(streamId: string, userId: string) {
+        this.apply(new ProjectDeletedByUserIdEvent(streamId, userId));
     }
 }

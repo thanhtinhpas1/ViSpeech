@@ -1,18 +1,20 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {ICommand, ofType, Saga} from '@nestjs/cqrs';
-import {map} from 'rxjs/operators';
+import {map, flatMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {UserCreationStartedEvent, UserCreatedSuccessEvent} from 'users/events/impl/user-created.event';
 import {TokenDto} from 'tokens/dtos/tokens.dto';
 import {AuthService} from 'auth/auth.service';
 import {CreateUserCommand} from 'users/commands/impl/create-user.command';
 import {WelcomeUserCommand} from 'users/commands/impl/welcome-user.command';
-import {DeleteTokenByUserIdCommand} from 'tokens/commands/impl/delete-token.command';
 import {FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent} from 'tokens/events/impl/free-token-created.event';
 import {DeleteUserCommand} from 'users/commands/impl/delete-user.command';
 import {UserIdRequestParamsDto} from 'users/dtos/users.dto';
 import {UserDeletedSuccessEvent} from 'users/events/impl/user-deleted.event';
 import { CreateFreeTokenCommand } from 'tokens/commands/impl/create-token.command';
+import { DeleteProjectByUserIdCommand } from 'projects/commands/impl/delete-project-by-userId.command';
+import { DeletePermissionByUserIdCommand } from 'permissions/commands/impl/delete-permission-by-userId.command';
+import { DeleteTokenByUserIdCommand } from 'tokens/commands/impl/delete-token-by-userId.command';
 
 @Injectable()
 export class UsersSagas {
@@ -66,7 +68,7 @@ export class UsersSagas {
                 Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
                 const {streamId, tokenDto} = event;
                 const {userId} = tokenDto;
-                return new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId));
+                return new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId), true);
             })
         );
     };
@@ -75,10 +77,14 @@ export class UsersSagas {
     userDeletedSuccess = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(UserDeletedSuccessEvent),
-            map((event: UserDeletedSuccessEvent) => {
+            flatMap((event: UserDeletedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] userDeletedSuccess Saga', 'UsersSagas');
                 const {streamId, userId} = event;
-                return new DeleteTokenByUserIdCommand(streamId, userId);
+                return [
+                    new DeleteTokenByUserIdCommand(streamId, userId), 
+                    new DeleteProjectByUserIdCommand(streamId, userId),
+                    new DeletePermissionByUserIdCommand(streamId, userId)
+                ];
             })
         );
     };

@@ -24,6 +24,18 @@ export class PermissionRepository {
         return permission;
     }
 
+    async deletePermissionByUserId(streamId: string, userId: string) {
+        const permission = new Permission(undefined);
+        permission.deletePermissionByUserId(streamId, userId);
+        return permission;
+    }
+
+    async deletePermissionByProjectId(streamId: string, projectId: string) {
+        const permission = new Permission(undefined);
+        permission.deletePermissionByProjectId(streamId, projectId);
+        return permission;
+    }
+
     async welcomePermission(streamId: string, permissionId: string) {
         const permission = new Permission(permissionId);
         permission.welcomePermission(streamId);

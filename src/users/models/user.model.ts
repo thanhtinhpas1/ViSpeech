@@ -30,8 +30,8 @@ export class User extends AggregateRoot {
         this.apply(new UserUpdatedEvent(streamId, this.data));
     }
 
-    deleteUser(streamId: string) {
-        this.apply(new UserDeletedEvent(streamId, this.id));
+    deleteUser(streamId: string, isDeleted: boolean) {
+        this.apply(new UserDeletedEvent(streamId, this.id, isDeleted));
     }
 
     changePassword(streamId: string) {
