@@ -33,7 +33,7 @@ export class OrderGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to modify this order.', 'OrderGuard');
+        Logger.warn('User does not have permission to modify this order.', 'OrderGuard');
         return false;
     }
 }
@@ -83,7 +83,7 @@ export class OrderQueryGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to query orders.', 'OrderGuard');
+        Logger.warn('User does not have permission to query orders.', 'OrderGuard');
         return false;
     }
 }

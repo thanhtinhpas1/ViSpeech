@@ -29,7 +29,11 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
                 throw new NotFoundException(`User with _id ${_id} does not exist.`);
             }
 
-            const formattedInfo = Utils.removePropertiesFromObject(userInfo, ['username', 'email', 'password', 'roles']);
+            let formattedInfo = Utils.removePropertiesFromObject(userInfo, ['password', 'roles']);
+            if (Utils.isEmailVerified(userInfo.roles)) {
+                formattedInfo = Utils.removePropertyFromObject(formattedInfo, 'email');
+            }
+
             await this.repository.update({ _id }, formattedInfo);
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
         } catch (error) {

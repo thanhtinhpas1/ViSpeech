@@ -30,7 +30,7 @@ export class UserGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to modify this user.', 'UserGuard');
+        Logger.warn('User does not have permission to modify this user.', 'UserGuard');
         return false;
     }
 }

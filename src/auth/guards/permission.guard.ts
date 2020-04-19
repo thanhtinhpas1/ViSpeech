@@ -34,7 +34,7 @@ export class PermissionGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to modify this permission.', 'PermissionGuard');
+        Logger.warn('User does not have permission to modify this permission.', 'PermissionGuard');
         return false;
     }
 }
@@ -155,7 +155,7 @@ export class PermissionQueryGuard implements CanActivate {
             }
         }
 
-        Logger.warn('User do not have permission to query permissions.', 'PermissionQueryGuard');
+        Logger.warn('User does not have permission to query permissions.', 'PermissionQueryGuard');
         return false;
     }
 }

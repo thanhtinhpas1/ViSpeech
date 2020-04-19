@@ -69,7 +69,15 @@ export class UsersController implements OnModuleInit {
     @ApiResponse({status: 200, description: 'Change password.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Put('change-password')
-    async changePassword(@Body() changePasswordBody: ChangePasswordBody) {
+    async changePassword(@Body() changePasswordBody: ChangePasswordBody, @Req() request) {
+        const payload = this.authService.decode(request);
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new UnauthorizedException();
+        }
+        if (!request.body.userId || request.body.userId !== payload['id']) {
+            throw new BadRequestException("Missing user id or user does not have permission to change password.");
+        }
+
         const streamId = changePasswordBody.userId;
         return this.usersService.changePassword(streamId, changePasswordBody);
     }

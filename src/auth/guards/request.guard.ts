@@ -33,7 +33,7 @@ export class RequestGuard implements CanActivate {
         // if (!tokenDto) return false;
         // TODO: verify token have permisson on this project (user => project)
 
-        Logger.warn('User do not have permission.', 'RequestGuard');
+        Logger.warn('User does not have permission.', 'RequestGuard');
         return false;
     }
 }

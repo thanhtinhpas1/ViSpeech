@@ -33,7 +33,7 @@ export class ProjectGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to modify this project.', 'ProjectGuard');
+        Logger.warn('User does not have permission to modify this project.', 'ProjectGuard');
         return false;
     }
 }
@@ -78,7 +78,7 @@ export class ProjectQueryGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to query projects.', 'ProjectQueryGuard');
+        Logger.warn('User does not have permission to query projects.', 'ProjectQueryGuard');
         return false;
     }
 }

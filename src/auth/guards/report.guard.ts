@@ -80,7 +80,7 @@ export class ReportQueryGuard implements CanActivate {
             }
         }
 
-        Logger.warn('User do not have permission to query reports.', 'ReportGuard');
+        Logger.warn('User does not have permission to query reports.', 'ReportGuard');
         return false;
     }
 }

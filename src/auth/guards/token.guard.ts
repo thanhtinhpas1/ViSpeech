@@ -33,7 +33,7 @@ export class TokenGuard implements CanActivate {
             return true;
         }
 
-        Logger.warn('User do not have permission to modify this token.', 'TokenGuard');
+        Logger.warn('User does not have permission to modify this token.', 'TokenGuard');
         return false;
     }
 }
@@ -90,7 +90,7 @@ export class TokenQueryGuard implements CanActivate {
             }
         }
 
-        Logger.warn('User do not have permission to query tokens.', 'TokenQueryGuard');
+        Logger.warn('User does not have permission to query tokens.', 'TokenQueryGuard');
         return false;
     }
 }
