@@ -27,10 +27,8 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }
             if (isDeleted === "true") {
-                console.log("haha")
                 await this.repository.delete({ _id: userId });
-            } else if (isDeleted === "false") {
-                console.log("hahaa")
+            } else {
                 await this.repository.update({ _id: userId }, { isActive: false })
             }
             

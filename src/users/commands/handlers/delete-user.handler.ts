@@ -15,8 +15,9 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
         Logger.log('Async DeleteUserHandler...', 'DeleteUserCommand');
 
         const {streamId, userIdDto, isDeleted} = command;
+        const isDeletedStr = isDeleted ? "true" : "false";
         const user = this.publisher.mergeObjectContext(
-            await this.repository.deleteUser(streamId, userIdDto._id, isDeleted)
+            await this.repository.deleteUser(streamId, userIdDto._id, isDeletedStr)
         );
         user.commit();
     }
