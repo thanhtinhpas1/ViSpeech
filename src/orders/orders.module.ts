@@ -25,6 +25,7 @@ import { OrdersSagas } from './sagas/orders.sagas';
 import { OrdersService } from './services/orders.service';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Module({
     imports: [
@@ -32,7 +33,7 @@ import { TokenDto } from 'tokens/dtos/tokens.dto';
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([OrderDto, TokenTypeDto, ProjectDto, TokenDto]),
+        TypeOrmModule.forFeature([OrderDto, TokenTypeDto, ProjectDto, TokenDto, PermissionDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
     ],

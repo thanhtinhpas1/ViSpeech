@@ -49,6 +49,7 @@ import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/d
 import { ProjectsModule } from 'projects/projects.module';
 import { PermissionsModule } from 'permissions/permissions.module';
 import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token-by-userId.handler';
+import {PermissionDto} from "../permissions/dtos/permissions.dto";
 
 @Module({
     imports: [
@@ -56,7 +57,7 @@ import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-toke
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([UserDto]),
+        TypeOrmModule.forFeature([UserDto, PermissionDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
     ],

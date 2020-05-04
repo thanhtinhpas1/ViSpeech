@@ -1,9 +1,11 @@
 import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { getMongoRepository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { OrderDto } from "orders/dtos/orders.dto";
+import { PermissionDto } from "permissions/dtos/permissions.dto";
+import { TokenDto } from "tokens/dtos/tokens.dto";
+import { getMongoRepository, Repository } from "typeorm";
 import { CONSTANTS } from "../../common/constant";
 import { AuthService } from "../auth.service";
-import { OrderDto } from "orders/dtos/orders.dto";
-import { TokenDto } from "tokens/dtos/tokens.dto";
 
 @Injectable()
 export class OrderGuard implements CanActivate {
@@ -25,7 +27,7 @@ export class OrderGuard implements CanActivate {
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
-        const order = await getMongoRepository(OrderDto).findOne({_id: id});
+        const order = await getMongoRepository(OrderDto).findOne({ _id: id });
         if (!order) {
             throw new NotFoundException(`Order with _id ${id} does not exist.`);
         }
@@ -42,6 +44,8 @@ export class OrderGuard implements CanActivate {
 export class OrderQueryGuard implements CanActivate {
     constructor(
         private readonly authService: AuthService,
+        @InjectRepository(PermissionDto)
+        private readonly permissionRepo: Repository<PermissionDto>,
     ) {
     }
 
@@ -65,6 +69,8 @@ export class OrderQueryGuard implements CanActivate {
             if (order.userId === payload['id']) {
                 return true;
             }
+            const permission = await this.permissionRepo.findOne({ where: { projectId: order.token.projectId, assigneeId: payload['id'] } });
+            if (permission) return true;
         }
 
         const tokenId = request.params.tokenId;
@@ -76,6 +82,8 @@ export class OrderQueryGuard implements CanActivate {
             if (token.userId === payload['id']) {
                 return true;
             }
+            const permission = await this.permissionRepo.findOne({ where: { projectId: token.projectId, assigneeId: payload['id'] } });
+            if (permission) return true;
         }
 
         const userId = request.query.userId;

@@ -9,6 +9,7 @@ import {CreateUserStartCommand} from 'users/commands/impl/create-user.command';
 import {ChangePasswordCommand} from '../commands/impl/change-password.command';
 import {VerifyEmailCommand} from 'users/commands/impl/verify-email.command';
 import {SendVerifyEmailCommand} from 'users/commands/impl/send-verify-email.command';
+import {GetAssigneeQuery} from "../queries/impl/get-assignee.query";
 
 @Injectable()
 export class UsersService {
@@ -50,6 +51,11 @@ export class UsersService {
 
     async findOne(findUserQuery: FindUserQuery) {
         const query = new FindUserQuery(findUserQuery.id);
+        return await this.queryBus.execute(query);
+    }
+
+    async getUserAssignee(findAssigneeQuery: GetAssigneeQuery) {
+        const query = new GetAssigneeQuery(findAssigneeQuery.projectId);
         return await this.queryBus.execute(query);
     }
 }

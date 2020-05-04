@@ -26,8 +26,10 @@ import {ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users
 import {UsersService} from '../services/users.service';
 import {UserGuard, VerifyEmailGuard} from 'auth/guards/user.guard';
 import {Utils} from 'utils';
-import {ClientKafka, MessagePattern, Payload} from '@nestjs/microservices';
+import {ClientKafka} from '@nestjs/microservices';
 import {config} from '../../../config';
+import {GetAssigneeQuery} from "../queries/impl/get-assignee.query";
+import {ProjectGuard} from "../../auth/guards/project.guard";
 
 @Controller('users')
 @ApiTags('Users')
@@ -83,7 +85,7 @@ export class UsersController implements OnModuleInit {
     }
 
     /* Update User */
-    
+
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Update User']})
     @ApiResponse({status: 200, description: 'Update User.'})
@@ -165,5 +167,15 @@ export class UsersController implements OnModuleInit {
     @Get()
     async getUsers(@Query() getUsersQuery: GetUsersQuery) {
         return this.usersService.getUsers(getUsersQuery);
+    }
+
+    /* Get Users assignee by project id */
+
+    @ApiOperation({tags: ['List Users in project']})
+    @ApiResponse({status: 200, description: 'List Users in project'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
+    @Get('assignees/:projectId')
+    async getUsersAssignee(@Param() getAssigneeQuery: GetAssigneeQuery) {
+        return await this.usersService.getUserAssignee(getAssigneeQuery);
     }
 }

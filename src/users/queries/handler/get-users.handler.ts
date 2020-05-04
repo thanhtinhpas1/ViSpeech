@@ -16,14 +16,12 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
     async execute(query: GetUsersQuery) {
         Logger.log("Async GetUsersQuery...", "GetUsersQuery");
         const { limit, offset } = query;
-        let users = [];
         try {
-            const findOptions = { where: { isActive: true } }
-            users = limit != null && offset != null ? 
-                await this.repository.find({ skip: offset, take: limit, ...findOptions }) : 
-                await this.repository.find(findOptions);
+            // Admin no need to find active users
+            let [users, count] = limit != null && offset != null ?
+                await this.repository.findAndCount({ skip: offset, take: limit }) :
+                await this.repository.findAndCount();
             users = Utils.removeObjPropertiesFromObjArr(users, ['password']);
-            const count = await this.repository.count(findOptions.where);
             return { data: users, count };
         } catch (error) {
             Logger.error(error, '', 'GetUsersQuery');
