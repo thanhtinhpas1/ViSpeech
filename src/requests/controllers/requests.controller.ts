@@ -17,10 +17,11 @@ import { Utils } from 'utils';
 import { config } from '../../../config';
 import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
+import { AsrServiceGuard } from 'auth/guards/asr.service.guard';
 
 @Controller('speech')
 @ApiTags('speech')
-@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AsrServiceGuard)
 export class AsrController {
     constructor(
         @InjectRepository(TokenDto)

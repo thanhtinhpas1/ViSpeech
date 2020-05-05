@@ -20,10 +20,11 @@ import { CallAsrSagas } from './sagas/call-asr.sagas';
 import { RequestService } from './services/request.service';
 import { HistoriesController } from './controllers/histories.controller';
 import { ReportRepository } from 'reports/repository/report.repository';
+import { OrderDto } from 'orders/dtos/orders.dto';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([RequestDto, TokenDto]),
+        TypeOrmModule.forFeature([RequestDto, TokenDto, OrderDto]),
         EventStoreModule.forFeature(),
         MulterModule.register({}),
         forwardRef(() => AuthModule),
