@@ -117,5 +117,9 @@ export const CONSTANTS = {
         REPORT_QUARTER: 'REPORT_QUARTER',
         REPORT_YEAR: 'REPORT_YEAR',
         TIMEOUT: 30000,
+    },
+    SORT_ORDER: {
+        ASC: 'ASC',
+        DESC: 'DESC'
     }
 };

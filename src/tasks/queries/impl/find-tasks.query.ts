@@ -1,11 +1,12 @@
 import { Type } from "class-transformer";
-import { IsNumber, IsOptional, IsPositive, Min } from "class-validator";
+import { IsNumber, IsOptional, Min, ValidateNested, IsObject } from "class-validator";
+import { BaseSortClass } from "base/base-sort.class";
 
 export class FindTasksQuery {
     @IsOptional()
     @Type(() => Number)
     @IsNumber()
-    @IsPositive()
+    @Min(0)
     limit: number;
 
     @IsOptional()
@@ -13,4 +14,14 @@ export class FindTasksQuery {
     @IsNumber()
     @Min(0)
     offset: number;
+
+    @IsOptional()
+    @IsObject()
+    filters: Object;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => BaseSortClass)
+    @IsObject()
+    sort: BaseSortClass;
 }
