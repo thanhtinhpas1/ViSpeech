@@ -5,8 +5,8 @@ import { ProjectDto } from "projects/dtos/projects.dto";
 import { Repository, getMongoRepository } from "typeorm";
 import { GetAcceptedProjectsByUserIdQuery } from "../impl/get-accepted-projects-by-userId";
 import { PermissionDto } from "permissions/dtos/permissions.dto";
-import { CONSTANTS } from "common/constant";
 import { UserDto } from "users/dtos/users.dto";
+import { Utils } from "utils";
 
 @QueryHandler(GetAcceptedProjectsByUserIdQuery)
 export class GetAcceptedProjectsByUserIdHandler
@@ -22,18 +22,39 @@ export class GetAcceptedProjectsByUserIdHandler
 
   async execute(query: GetAcceptedProjectsByUserIdQuery): Promise<any> {
     Logger.log("Async GetAcceptedProjectsByUserIdQuery...", "GetAcceptedProjectsByUserIdQuery");
-    const { userId, offset, limit } = query;
+    const { userId, offset, limit, filters, sort } = query;
     let permissions = [];
     let result = [];
     try {
       const findOptions = {
-        where: { assigneeId: userId, status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED] } }
+        where: { assigneeId: userId },
+        order: {}
       }
-      if (limit != null && offset != null) {
-        permissions = await this.permissionDtoRepository.find({ skip: offset, take: limit, ...findOptions });
-      } else {
-        permissions = await this.permissionDtoRepository.find(findOptions);
+      if (filters) {
+        if (filters['name']) {
+          const projects = await this.repository.find({ where: { name: new RegExp(filters['name'], 'i') } });
+          if (projects.length > 0) {
+            const projectIds = projects.map(project => project._id)
+            findOptions.where['projectId'] = { $in: [...projectIds] }
+          }
+        }
+        if (filters['ownerName']) {
+          const users = await this.userDtoRepository.find({ where: { username: new RegExp(filters['ownerName'], 'i') } });
+          if (users.length > 0) {
+            const userIds = users.map(user => user._id)
+            findOptions.where['assignerId'] = { $in: [...userIds] }
+          }
+        }
+        if (filters['status']) {
+          findOptions.where['status'] = filters['status']
+        }
       }
+      if (sort) {
+        const sortField = Utils.getCorrectSortField(sort.field)
+        findOptions.order[sortField] = sort.order
+      }
+
+      permissions = await this.permissionDtoRepository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
 
       for (const permission of permissions) {
         const project = await this.repository.findOne({ _id: permission.projectId });

@@ -2,8 +2,9 @@ import { Logger } from "@nestjs/common";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RequestDto } from "requests/dtos/requests.dto";
-import { Repository } from "typeorm";
+import { Repository, getMongoRepository } from "typeorm";
 import { FindRequestsQuery } from "../impl/find-requests.query";
+import { Utils } from "utils";
 
 @QueryHandler(FindRequestsQuery)
 export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
@@ -15,26 +16,40 @@ export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
     }
     async execute(query: FindRequestsQuery) {
         Logger.log('Async FindRequestsHandler', 'FindRequestsQuery')
-        const { limit, offset, tokenId, projectId } = query;
+        const { limit, offset, tokenId, projectId, filters, sort  } = query;
 
         try {
-            const findOptions = {}
-            if (limit != null && offset != null) {
-                findOptions['skip'] = offset;
-                findOptions['take'] = limit;
+            const findOptions = {
+                where: {},
+                order: {}
+            }
+            if (filters) {
+                if (filters['tokenId']) {
+                    findOptions.where['tokenId'] = new RegExp(filters['tokenId'], 'i') 
+                }
+                if (filters['fileName']) {
+                    findOptions.where['fileName'] = new RegExp(filters['fileName'], 'i') 
+                }
+                if (filters['mimeType']) {
+                    findOptions.where['mimeType'] = new RegExp(filters['mimeType'], 'i') 
+                }
+                if (filters['projectId']) {
+                    findOptions.where['projectId'] = new RegExp(filters['projectId'], 'i') 
+                }
+            }   
+            if (sort) {
+                const sortField = Utils.getCorrectSortField(sort.field)
+                findOptions.order[sortField] = sort.order
             }
             if (projectId) {
-                findOptions['where'] = { projectId };
+                findOptions.where['projectId'] = { projectId };
             }
             else if (tokenId) {
-                findOptions['where'] = { tokenId };
-            }
-            else { // case admin
-                findOptions['where'] = {};
+                findOptions.where['tokenId'] = { tokenId };
             }
 
-            const requests = await this.repository.find(findOptions);
-            const count = await this.repository.count(findOptions['where']);
+            const requests = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
+            const count = await getMongoRepository(RequestDto).count(findOptions.where);
             return { data: requests, count };
         } catch (error) {
             Logger.error(error.message, '', 'FindRequestsQuery');

@@ -54,7 +54,7 @@ export const Utils = {
         return validRoles.includes(roleName);
     },
     isEmailVerified: roles => {
-        return Utils.convertToArray(roles).map(role => role.name).indexOf(CONSTANTS.ROLE.MANAGER_USER) !== -1
+        return Utils.convertToArray(roles).map(role => role.name).includes(CONSTANTS.ROLE.MANAGER_USER)
     },
     convertToArray: param => {
         if (!Array.isArray(param)) {
@@ -102,5 +102,14 @@ export const Utils = {
         errorObj.code = error['code'] || error['status']
         errorObj.message = error['errmsg'] || error['message']
         return errorObj
+    },
+    getCorrectSortField: sortField => {
+        if (sortField === 'createdDate') {
+            return 'created_date'
+        }
+        if (sortField === 'updatedDate') {
+            return 'updated_date'
+        }
+        return sortField
     }
 };

@@ -1,5 +1,6 @@
-import {IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, Min} from 'class-validator';
+import {IsNotEmpty, IsNumber, IsOptional, IsString, Min, IsObject, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
+import { BaseSortClass } from 'base/base-sort.class';
 
 export class GetOrdersByUserIdQuery {
     constructor(userId: string) {
@@ -13,7 +14,7 @@ export class GetOrdersByUserIdQuery {
     @IsOptional()
     @Type(() => Number)
     @IsNumber()
-    @IsPositive()
+    @Min(0)
     limit: number;
 
     @IsOptional()
@@ -21,4 +22,14 @@ export class GetOrdersByUserIdQuery {
     @IsNumber()
     @Min(0)
     offset: number;
+
+    @IsOptional()
+    @IsObject()
+    filters: Object;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => BaseSortClass)
+    @IsObject()
+    sort: BaseSortClass;
 }

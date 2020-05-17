@@ -4,6 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { TaskDto } from "tasks/dto/task.dto";
 import { Repository, getMongoRepository } from "typeorm";
 import { FindTasksQuery } from "../impl/find-tasks.query";
+import { Utils } from "utils";
 
 @QueryHandler(FindTasksQuery)
 export class FindTaskHandler implements IQueryHandler<FindTasksQuery>{
@@ -29,8 +30,10 @@ export class FindTaskHandler implements IQueryHandler<FindTasksQuery>{
                 }
             }   
             if (sort) {
-                findOptions.order[sort.field] = sort.order
+                const sortField = Utils.getCorrectSortField(sort.field)
+                findOptions.order[sortField] = sort.order
             }
+
             tasks = await (await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions }));
             const count = await getMongoRepository(TaskDto).count(findOptions.where);
             return { data: tasks, count };

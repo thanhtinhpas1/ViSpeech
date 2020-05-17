@@ -44,22 +44,26 @@ export class TokensService {
 
     async getTokensByUserId(getTokensByUserIdQuery: GetTokensByUserIdQuery) {
         const query = new GetTokensByUserIdQuery(getTokensByUserIdQuery.userId);
+        Object.assign(query, getTokensByUserIdQuery);
         return await this.queryBus.execute(query);
     }
 
     async getTokensByUserIdAndProjectId(getTokensByUserIdAndProjectIdQuery: GetTokensByUserIdAndProjectIdQuery) {
         const { userId, projectId } = getTokensByUserIdAndProjectIdQuery;
         const query = new GetTokensByUserIdAndProjectIdQuery(userId, projectId);
+        Object.assign(query, getTokensByUserIdAndProjectIdQuery);
         return await this.queryBus.execute(query);
     }
 
     async findOne(findTokenQuery: FindTokenQuery): Promise<TokenDto> {
         const query = new FindTokenQuery(findTokenQuery.id);
+        Object.assign(query, findTokenQuery);
         return await this.queryBus.execute(query);
     }
 
     async findFreeToken(findFreeTokenQuery: FindFreeTokenQuery): Promise<TokenDto> {
         const query = new FindFreeTokenQuery(findFreeTokenQuery.userId);
+        Object.assign(query, findFreeTokenQuery);
         return await this.queryBus.execute(query);
     }
 }

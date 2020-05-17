@@ -30,7 +30,7 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
             }
 
             let formattedInfo = Utils.removePropertiesFromObject(userInfo, ['password', 'roles']);
-            if (Utils.isEmailVerified(userInfo.roles)) {
+            if (Utils.isEmailVerified(user.roles)) {
                 formattedInfo = Utils.removePropertyFromObject(formattedInfo, 'email');
             }
 

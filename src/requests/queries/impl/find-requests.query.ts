@@ -1,10 +1,11 @@
-import { IsNumber, IsOptional, IsPositive, IsString, IsUUID, Min } from "class-validator";
+import { IsNumber, IsOptional, IsString, IsUUID, Min, IsObject, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { BaseSortClass } from "base/base-sort.class";
 
 export class FindRequestsQuery {
     @IsOptional()
     @Type(() => Number)
-    @IsPositive()
+    @Min(0)
     @IsNumber()
     limit?: number;
 
@@ -23,4 +24,14 @@ export class FindRequestsQuery {
     @IsString()
     @IsUUID()
     projectId?: string;
+
+    @IsOptional()
+    @IsObject()
+    filters: Object;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => BaseSortClass)
+    @IsObject()
+    sort: BaseSortClass;
 }
