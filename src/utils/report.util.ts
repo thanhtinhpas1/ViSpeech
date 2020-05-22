@@ -19,13 +19,13 @@ export const ReportUtils = {
         return formattedDate;
     },
     addDays: (currentDate: Date, days: number) => {
-        var date = new Date(currentDate.valueOf());
+        const date = new Date(currentDate.valueOf());
         date.setDate(date.getDate() + days);
         return date;
     },
     getDates: (fromDate: Date, toDate: Date) => {
-        var dateArray = [];
-        var currentDate = fromDate;
+        const dateArray = [];
+        let currentDate = fromDate;
         while (currentDate <= toDate) {
             dateArray.push({ date: new Date(currentDate), value: 0 });
             currentDate = ReportUtils.getOnlyDate(ReportUtils.addDays(currentDate, 1));
@@ -38,7 +38,7 @@ export const ReportUtils = {
             return [];
         }
 
-        let lastDatesOfYear = [];
+        const lastDatesOfYear = [];
         let count = 0;
         while (count <= lastDateOfYear.getDay()) {
             lastDatesOfYear.push(lastDateOfYear.getDate() - count);
@@ -49,7 +49,8 @@ export const ReportUtils = {
     getWeek: (date: Date) => {
         const firstDateOfYear = new Date(date.getFullYear(), 0, 1);
         const onlyDate = new Date(ReportUtils.getOnlyDate(date));
-        const dayNumberOfYear = (onlyDate.valueOf() - firstDateOfYear.valueOf() + CONSTANTS.ONE_DAY_IN_MILLISECONDS) / CONSTANTS.ONE_DAY_IN_MILLISECONDS;
+        const dayNumberOfYear = (onlyDate.valueOf() - firstDateOfYear.valueOf() +
+            CONSTANTS.ONE_DAY_IN_MILLISECONDS) / CONSTANTS.ONE_DAY_IN_MILLISECONDS;
         return Math.ceil((dayNumberOfYear + firstDateOfYear.getDay()) / 7);
     },
     getTotalWeeksOfYear: year => {
@@ -156,8 +157,8 @@ export const ReportUtils = {
         const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = queryParams;
 
         if (type === CONSTANTS.TIME_TYPE.DATE) {
-            let from = ReportUtils.getOnlyDate(fromDate);
-            let to = ReportUtils.getOnlyDate(toDate)
+            const from = ReportUtils.getOnlyDate(fromDate);
+            const to = ReportUtils.getOnlyDate(toDate)
             data = ReportUtils.getDates(from, to);
         } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const fromWeek = weekObj.from.data;
@@ -242,7 +243,7 @@ export const ReportUtils = {
 
             if (type === CONSTANTS.TIME_TYPE.DATE) {
                 dateReport = ReportUtils.getOnlyDate(dateReport);
-                let index = result.findIndex(el => {
+                const index = result.findIndex(el => {
                     const date = new Date(el.date.valueOf());
                     return date.valueOf() === dateReport.valueOf()
                 });
@@ -259,17 +260,18 @@ export const ReportUtils = {
                     result[index].value += report.usedMinutes;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
-                let index = result.findIndex(el => el.month === dateReport.getMonth() && el.year === dateReport.getFullYear());
+                const index = result.findIndex(el => el.month === dateReport.getMonth() && el.year === dateReport.getFullYear());
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
-                let index = result.findIndex(el => el.quarter === ReportUtils.getQuarter(dateReport.getMonth()) && el.year === dateReport.getFullYear());
+                const index = result.findIndex(el => el.quarter === ReportUtils.getQuarter(dateReport.getMonth())
+                    && el.year === dateReport.getFullYear());
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
-                let index = result.findIndex(el => el.year === dateReport.getFullYear());
+                const index = result.findIndex(el => el.year === dateReport.getFullYear());
                 if (index > -1) {
                     result[index].value += report.usedMinutes;
                 }

@@ -4,10 +4,16 @@
     "tslint:recommended"
   ],
   "jsRules": {
-    "no-unused-expression": true
+    "no-unused-expression": true,
+    "radix": false
   },
   "rules": {
+    "radix": false,
+    "no-shadowed-variable": false,
+    "semicolon": false,
+    "trailing-comma": false,
     "eofline": false,
+    "no-angle-bracket-type-assertion": true,
     "quotemark": [
       true,
       "single"
@@ -38,9 +44,6 @@
     "arrow-parens": false,
     "object-literal-sort-keys": false,
     "no-unused-expression": false,
-    "max-classes-per-file": [
-      false
-    ],
     "variable-name": [
       false
     ],

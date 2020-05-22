@@ -1,10 +1,11 @@
-import {Logger, ValidationPipe} from '@nestjs/common';
-import {NestFactory} from '@nestjs/core';
-import {config} from '../config';
-import {AppModule} from './app.module';
-import {NestExpressApplication} from "@nestjs/platform-express";
-import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import {kafkaClientOptions} from "./common/kafka-client.options";
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
+import { config } from '../config';
+import { AppModule } from './app.module';
+import { kafkaClientOptions } from './common/kafka-client.options';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);

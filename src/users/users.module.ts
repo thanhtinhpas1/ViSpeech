@@ -1,55 +1,56 @@
-import {forwardRef, Logger, Module, OnModuleInit, Inject} from '@nestjs/common';
-import {CommandBus, EventBus, EventPublisher, QueryBus} from '@nestjs/cqrs';
-import {InjectRepository, TypeOrmModule} from '@nestjs/typeorm';
-import {AuthModule} from 'auth/auth.module';
-import {EventStoreModule} from 'core/event-store/event-store.module';
-import {TokenRepository} from 'tokens/repository/token.repository';
-import {Repository} from 'typeorm';
-import {CONSTANTS} from '../common/constant';
-import {EventStore} from '../core/event-store/event-store';
-import {RoleDto} from '../roles/dtos/roles.dto';
-import {Utils} from '../utils';
-import {CommandHandlers} from './commands/handlers';
-import {UsersController} from './controllers/users.controller';
-import {UserDto} from './dtos/users.dto';
-import {EventHandlers} from './events/handlers';
+import { forwardRef, Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
+import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { ClientKafka, ClientsModule } from '@nestjs/microservices';
+import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { AuthenticateModule } from 'authenticate/authenticate.module';
+import { EventStoreModule } from 'core/event-store/event-store.module';
+import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/delete-permission-by-userId.handler';
+import { PermissionsModule } from 'permissions/permissions.module';
+import { PermissionRepository } from 'permissions/repository/permission.repository';
+import { DeleteProjectByUserIdHandler } from 'projects/commands/handlers/delete-project-by-userId.handler';
+import { ProjectsModule } from 'projects/projects.module';
+import { ProjectRepository } from 'projects/repository/project.repository';
+import { CreateFreeTokenHandler } from 'tokens/commands/handlers/create-token.handler';
+import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token-by-userId.handler';
+import { TokenRepository } from 'tokens/repository/token.repository';
+import { TokensModule } from 'tokens/tokens.module';
+import { Repository } from 'typeorm';
+
+import { CONSTANTS } from 'common/constant';
+import { kafkaClientOptions } from 'common/kafka-client.options';
+import { EventStore } from 'core/event-store/event-store';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { RoleDto } from 'roles/dtos/roles.dto';
+import { Utils } from 'utils';
+import { CommandHandlers } from './commands/handlers';
+import { UsersController } from './controllers/users.controller';
+import { UserDto } from './dtos/users.dto';
+import { EventHandlers } from './events/handlers';
+import { EmailVerifiedEvent, EmailVerifiedFailedEvent, EmailVerifiedSuccessEvent } from './events/impl/email-verified.event';
 import {
     PasswordChangedEvent,
     PasswordChangedFailedEvent,
-    PasswordChangedSuccessEvent
+    PasswordChangedSuccessEvent,
 } from './events/impl/password-changed.event';
 import {
     UserCreatedEvent,
     UserCreatedFailedEvent,
     UserCreatedSuccessEvent,
-    UserCreationStartedEvent
+    UserCreationStartedEvent,
 } from './events/impl/user-created.event';
-import {UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent} from './events/impl/user-deleted.event';
-import {UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent} from './events/impl/user-updated.event';
-import {UserWelcomedEvent} from './events/impl/user-welcomed.event';
-import {QueryHandlers} from './queries/handler';
-import {UserRepository} from './repository/user.repository';
-import {UsersSagas} from './sagas/users.sagas';
-import {UsersService} from './services/users.service';
+import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from './events/impl/user-deleted.event';
+import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from './events/impl/user-updated.event';
+import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
 import {
     VerifyEmailSentEvent,
     VerifyEmailSentFailedEvent,
-    VerifyEmailSentSuccessEvent
+    VerifyEmailSentSuccessEvent,
 } from './events/impl/verify-email-sent.event';
-import {EmailVerifiedEvent, EmailVerifiedSuccessEvent, EmailVerifiedFailedEvent} from './events/impl/email-verified.event';
-import {ClientKafka, ClientsModule} from "@nestjs/microservices";
-import {config} from "../../config";
-import {kafkaClientOptions} from "../common/kafka-client.options";
-import {CreateFreeTokenHandler} from 'tokens/commands/handlers/create-token.handler';
-import { TokensModule } from 'tokens/tokens.module';
-import { ProjectRepository } from 'projects/repository/project.repository';
-import { PermissionRepository } from 'permissions/repository/permission.repository';
-import { DeleteProjectByUserIdHandler } from 'projects/commands/handlers/delete-project-by-userId.handler';
-import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/delete-permission-by-userId.handler';
-import { ProjectsModule } from 'projects/projects.module';
-import { PermissionsModule } from 'permissions/permissions.module';
-import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token-by-userId.handler';
-import {PermissionDto} from "../permissions/dtos/permissions.dto";
+import { QueryHandlers } from './queries/handler';
+import { UserRepository } from './repository/user.repository';
+import { UsersSagas } from './sagas/users.sagas';
+import { UsersService } from './services/users.service';
+import {config} from '../../config';
 
 @Module({
     imports: [
@@ -58,7 +59,7 @@ import {PermissionDto} from "../permissions/dtos/permissions.dto";
             ...kafkaClientOptions,
         }]),
         TypeOrmModule.forFeature([UserDto, PermissionDto]),
-        forwardRef(() => AuthModule),
+        forwardRef(() => AuthenticateModule),
         EventStoreModule.forFeature(),
     ],
     controllers: [UsersController],
@@ -100,7 +101,7 @@ export class UsersModule implements OnModuleInit {
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, CreateFreeTokenHandler, 
+        this.command$.register([...CommandHandlers, CreateFreeTokenHandler,
             DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
@@ -121,29 +122,29 @@ export class UsersModule implements OnModuleInit {
         UserCreatedEvent: (streamId, data) => new UserCreatedEvent(streamId, data),
         UserCreatedSuccessEvent: (streamId, data) => new UserCreatedSuccessEvent(streamId, data),
         UserCreatedFailedEvent: (streamId, data, error) => new UserCreatedFailedEvent(streamId, data, error),
-        
+
         // update
         UserUpdatedEvent: (streamId, data) => new UserUpdatedEvent(streamId, data),
         UserUpdatedSuccessEvent: (streamId, data) => new UserUpdatedSuccessEvent(streamId, data),
         UserUpdatedFailedEvent: (streamId, data, error) => new UserUpdatedFailedEvent(streamId, data, error),
-        
+
         // change password
         PasswordChangedEvent: (streamId, data) => new PasswordChangedEvent(streamId, data),
         PasswordChangedSuccessEvent: (streamId, data) => new PasswordChangedSuccessEvent(streamId, data),
         PasswordChangedFailedEvent: (streamId, data, error) => new PasswordChangedFailedEvent(streamId, data, error),
-        
+
         // delete
         UserDeletedEvent: (streamId, data, isDeleted) => new UserDeletedEvent(streamId, data, isDeleted),
         UserDeletedSuccessEvent: (streamId, data) => new UserDeletedSuccessEvent(streamId, data),
         UserDeletedFailedEvent: (streamId, data, error) => new UserDeletedFailedEvent(streamId, data, error),
-        
+
         UserWelcomedEvent: (streamId, data) => new UserWelcomedEvent(streamId, data),
-        
+
         // send verify email
         VerifyEmailSentEvent: (streamId, data) => new VerifyEmailSentEvent(streamId, data),
         VerifyEmailSentSuccessEvent: (streamId, data) => new VerifyEmailSentSuccessEvent(streamId, data),
         VerifyEmailSentFailedEvent: (streamId, data, error) => new VerifyEmailSentFailedEvent(streamId, data, error),
-        
+
         // verify email
         EmailVerifiedEvent: (streamId, data) => new EmailVerifiedEvent(streamId, data),
         EmailVerifiedSuccessEvent: (streamId, emailToken, newToken) => new EmailVerifiedSuccessEvent(streamId, emailToken, newToken),

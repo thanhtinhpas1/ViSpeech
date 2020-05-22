@@ -1,8 +1,8 @@
 import { v1 as uuidv1 } from 'uuid';
 import { CONSTANTS } from '../common/constant';
-
-const bcrypt = require('bcryptjs');
-const parser = require('cron-parser');
+import { Logger } from '@nestjs/common';
+import bcrypt from 'bcryptjs';
+import parser from 'cron-parser';
 
 export const Utils = {
     hashPassword: password => {
@@ -72,7 +72,7 @@ export const Utils = {
             const interval = parser.parseExpression(cron, options);
             return new Date(interval.prev().toString());
         } catch (err) {
-            console.error('Something went wrong when parse cron', err);
+            Logger.error('Something went wrong when parse cron', err);
             return null;
         }
     },
@@ -86,7 +86,7 @@ export const Utils = {
             const interval = parser.parseExpression(cron, options);
             return new Date(interval.next().toString());
         } catch (err) {
-            console.error('Something went wrong when parse cron', err);
+            Logger.error('Something went wrong when parse cron', err);
             return null;
         }
     },
@@ -96,11 +96,11 @@ export const Utils = {
     },
     getErrorObj: error => {
         const errorObj = {
-            code: "",
-            message: "",
+            code: '',
+            message: '',
         }
-        errorObj.code = error['code'] || error['status']
-        errorObj.message = error['errmsg'] || error['message']
+        errorObj.code = error.code || error.status
+        errorObj.message = error.errmsg || error.message
         return errorObj
     },
     getCorrectSortField: sortField => {
