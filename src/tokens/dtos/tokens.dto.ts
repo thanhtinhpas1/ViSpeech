@@ -1,6 +1,6 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { Type } from 'class-transformer';
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, IsBoolean } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, IsBoolean, Min } from 'class-validator';
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
 import { Column, Entity } from 'typeorm';
@@ -26,6 +26,7 @@ export class TokenDto extends BaseEntityDto {
         this.tokenType = tokenType;
         this.orderId = orderId;
         this.isValid = true;
+        this.usedMinutes = 0;
     }
 
     @IsOptional()
@@ -63,10 +64,10 @@ export class TokenDto extends BaseEntityDto {
     })
     minutes: number;
 
-    @IsOptional()
+    @IsNotEmpty()
     @Type(() => Number)
     @IsNumber()
-    @IsPositive()
+    @Min(0)
     @Column({
         default: 0,
         nullable: false,

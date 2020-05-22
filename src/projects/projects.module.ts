@@ -22,6 +22,9 @@ import { ProjectRepository } from "./repository/project.repository";
 import { ProjectsSagas } from "./sagas/projects.sagas";
 import { ProjectsService } from "./services/projects.service";
 import { ProjectDeletedByUserIdEvent, ProjectDeletedByUserIdSuccessEvent, ProjectDeletedByUserIdFailedEvent } from "./events/impl/project-deleted-by-userId.event";
+import { TokenRepository } from "tokens/repository/token.repository";
+import { DeleteTokenByProjectIdHandler } from "tokens/commands/handlers/delete-token-by-projectId.handler";
+import { TokensModule } from "tokens/tokens.module";
 
 
 @Module({
@@ -41,7 +44,8 @@ import { ProjectDeletedByUserIdEvent, ProjectDeletedByUserIdSuccessEvent, Projec
         ...CommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
-        ProjectRepository,
+        DeleteTokenByProjectIdHandler,
+        ProjectRepository, TokenRepository,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
     ],
     exports: [ProjectsService],
@@ -56,12 +60,12 @@ export class ProjectsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        this.eventStore.setEventHandlers(ProjectsModule.eventHandlers);
+        this.eventStore.setEventHandlers({ ...ProjectsModule.eventHandlers, ...TokensModule.eventHandlers, });
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         /** ------------ */
         this.event$.register(EventHandlers);
-        this.command$.register(CommandHandlers);
+        this.command$.register([...CommandHandlers, DeleteTokenByProjectIdHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([ProjectsSagas]);
     }

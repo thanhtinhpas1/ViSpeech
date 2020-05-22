@@ -42,7 +42,7 @@ export class TokenDeletedByProjectIdSuccessHandler
     }
 
     handle(event: TokenDeletedByProjectIdSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_SUCCESS_EVENT, JSON.stringify(event));
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_PROJECTID_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.projectId, 'TokenDeletedByProjectIdSuccessEvent');
     }
 }
@@ -59,7 +59,7 @@ export class TokenDeletedByProjectIdFailedHandler
     handle(event: TokenDeletedByProjectIdFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj
-        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_USERID_FAILED_EVENT, JSON.stringify(event));
+        this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_PROJECTID_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'TokenDeletedByProjectIdFailedEvent');
     }
 }

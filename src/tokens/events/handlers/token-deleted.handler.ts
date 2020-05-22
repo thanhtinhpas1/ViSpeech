@@ -1,9 +1,9 @@
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {InjectRepository} from '@nestjs/typeorm';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent} from '../impl/token-deleted.event';
-import {Repository} from 'typeorm';
+import { Logger, NotFoundException, Inject } from '@nestjs/common';
+import { EventsHandler, IEventHandler, EventBus } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent } from '../impl/token-deleted.event';
+import { Repository } from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
@@ -20,14 +20,14 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
 
     async handle(event: TokenDeletedEvent) {
         Logger.log(event.tokenId, 'TokenDeletedEvent');
-        const {streamId, tokenId} = event;
+        const { streamId, tokenId } = event;
 
         try {
-            const token = await this.repository.findOne({_id: tokenId});
+            const token = await this.repository.findOne({ _id: tokenId });
             if (!token) {
                 throw new NotFoundException(`Token with _id ${tokenId} does not exist.`);
             }
-            await this.repository.delete({_id: tokenId});
+            await this.repository.update({ _id: tokenId }, { isValid: false });
             this.eventBus.publish(new TokenDeletedSuccessEvent(streamId, tokenId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedFailedEvent(streamId, tokenId, error));

@@ -55,7 +55,7 @@ export class AsrController {
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
         const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
-        if (!tokenDto || tokenDto.usedMinutes >= tokenDto.minutes)
+        if (!tokenDto || !tokenDto.isValid || tokenDto.usedMinutes >= tokenDto.minutes)
             return res.status(HttpStatus.FORBIDDEN).json({ message: 'Invalid token.' });
 
         const formData = new FormData();

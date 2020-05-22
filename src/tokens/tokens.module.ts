@@ -27,6 +27,8 @@ import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { TokenDeletedByUserIdEvent, TokenDeletedByUserIdSuccessEvent, TokenDeletedByUserIdFailedEvent } from './events/impl/token-deleted-by-userId.event';
 import { TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdSuccessEvent, TokenDeletedByProjectIdFailedEvent } from './events/impl/token-deleted-by-projectId.event';
+import { UserDto } from 'users/dtos/users.dto';
+import { ProjectDto } from 'projects/dtos/projects.dto';
 
 @Module({
     imports: [
@@ -34,7 +36,7 @@ import { TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdSuccessEvent, Toke
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([TokenDto, TokenTypeDto, PermissionDto]),
+        TypeOrmModule.forFeature([TokenDto, TokenTypeDto, PermissionDto, UserDto, ProjectDto]),
         forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
     ],

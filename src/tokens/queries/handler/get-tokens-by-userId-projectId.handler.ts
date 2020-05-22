@@ -22,7 +22,6 @@ export class GetTokensByUserIdAndProjectIdHandler
         Logger.log('Async GetTokensByUserIdAndProjectIdQuery...', 'GetTokensByUserIdAndProjectIdQuery');
         const { userId, projectId, offset, limit, filters, sort } = query;
         let tokens = [];
-        Logger.log(`Filters ${JSON.stringify(filters)}`, 'GetTokensByUserIdAndProjectIdQuery');
         try {
             const findOptions = {
                 where: { userId, projectId },

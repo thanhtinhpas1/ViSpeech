@@ -36,6 +36,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
                 if (role.name === CONSTANTS.ROLE.ADMIN) return new RoleDto(CONSTANTS.ROLE.USER);
                 return new RoleDto(role.name)
             });
+            user.isActive = true;
             await this.userRepository.save(user);
             this.eventBus.publish(new UserCreatedSuccessEvent(streamId, userDto));
         } catch (error) {
