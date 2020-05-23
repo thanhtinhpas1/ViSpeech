@@ -25,7 +25,11 @@ import { CommandHandlers } from './commands/handlers';
 import { UsersController } from './controllers/users.controller';
 import { UserDto } from './dtos/users.dto';
 import { EventHandlers } from './events/handlers';
-import { EmailVerifiedEvent, EmailVerifiedFailedEvent, EmailVerifiedSuccessEvent } from './events/impl/email-verified.event';
+import {
+    EmailVerifiedEvent,
+    EmailVerifiedFailedEvent,
+    EmailVerifiedSuccessEvent
+} from './events/impl/email-verified.event';
 import {
     PasswordChangedEvent,
     PasswordChangedFailedEvent,
@@ -49,7 +53,7 @@ import { QueryHandlers } from './queries/handler';
 import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersService } from './services/users.service';
-import {config} from '../../config';
+import { config } from '../../config';
 import { AuthModule } from "../auth/auth.module";
 
 @Module({
@@ -110,9 +114,9 @@ export class UsersModule implements OnModuleInit {
     }
 
     private async seedAdminAccount() {
-        const admin = new UserDto(config.ADMIN.NAME, config.ADMIN.LAST_NAME, config.ADMIN.USERNAME, Utils.hashPassword(config.ADMIN.PASSWORD),
+        const admin = new UserDto(config.ADMIN.NAME, config.ADMIN.LAST_NAME, config.ADMIN.USERNAME, Utils.hashPassword(config.ADMIN.PASS),
             config.ADMIN.EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
-        await this.repository.save(admin).then(rs => {
+        await this.repository.save(admin).then(() => {
             Logger.log('Seed admin account success.', 'UserModule');
         }).catch(err => Logger.warn('User admin existed.', err.message));
     }

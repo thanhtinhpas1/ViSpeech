@@ -1,8 +1,8 @@
-import {Column, Entity} from 'typeorm';
-import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsIn, IsNotEmpty, IsNumber, IsPositive, IsString, Min, Max,} from 'class-validator';
-import {Type} from 'class-transformer';
-import {CONSTANTS} from 'common/constant';
+import { Column, Entity } from 'typeorm';
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { IsIn, IsNotEmpty, IsNumber, IsPositive, IsString, Max, Min, } from 'class-validator';
+import { Type } from 'class-transformer';
+import { CONSTANTS } from 'common/constant';
 
 @Entity('token_types')
 export class TokenTypeDto extends BaseEntityDto {
@@ -22,7 +22,7 @@ export class TokenTypeDto extends BaseEntityDto {
         CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES,
         CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES,
     ])
-    @Column()
+    @Column({unique: true})
     name: string;
 
     @IsNotEmpty()
