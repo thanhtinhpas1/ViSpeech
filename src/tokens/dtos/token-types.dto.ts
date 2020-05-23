@@ -18,9 +18,9 @@ export class TokenTypeDto extends BaseEntityDto {
     @IsString()
     @IsIn([
         CONSTANTS.TOKEN_TYPE.FREE,
-        CONSTANTS.TOKEN_TYPE['50-MINS'],
-        CONSTANTS.TOKEN_TYPE['200-MINS'],
-        CONSTANTS.TOKEN_TYPE['500-MINS'],
+        CONSTANTS.TOKEN_TYPE.TYPE_50_MINUTES,
+        CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES,
+        CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES,
     ])
     @Column()
     name: string;

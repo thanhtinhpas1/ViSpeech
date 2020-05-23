@@ -21,16 +21,15 @@ async function bootstrap() {
         .build();
     const document = SwaggerModule.createDocument(app, documentOptions);
     const validationOptions = {
-        transform: true,
-        skipMissingProperties: true,
-        validationError: {target: false},
+        transform: false,
+        skipMissingProperties: false,
+        validationError: {target: true},
     };
     app.useGlobalPipes(new ValidationPipe(validationOptions));
     app.setGlobalPrefix(config.PREFIX);
     SwaggerModule.setup(config.API_EXPLORER_PATH, app, document);
     /*--------------------------------------------*/
 
-    app.startAllMicroservicesAsync();
     app.connectMicroservice(kafkaClientOptions);
 
     await app.startAllMicroservicesAsync();
@@ -39,4 +38,4 @@ async function bootstrap() {
     });
 }
 
-bootstrap();
+bootstrap().then(r => Logger.log(`Application is running`));

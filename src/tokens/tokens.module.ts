@@ -10,23 +10,51 @@ import { TokensController } from './controllers/tokens.controller';
 import { TokenTypeDto } from './dtos/token-types.dto';
 import { TokenDto } from './dtos/tokens.dto';
 import { EventHandlers } from './events/handlers';
-import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
-import { TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent } from './events/impl/token-deleted.event';
-import { TokenUpdatedEvent, TokenUpdatedSuccessEvent, TokenUpdatedFailedEvent } from './events/impl/token-updated.event';
+import {
+    TokenCreatedEvent,
+    TokenCreatedFailedEvent,
+    TokenCreatedSuccessEvent
+} from './events/impl/token-created.event';
+import {
+    TokenDeletedEvent,
+    TokenDeletedFailedEvent,
+    TokenDeletedSuccessEvent
+} from './events/impl/token-deleted.event';
+import {
+    TokenUpdatedEvent,
+    TokenUpdatedFailedEvent,
+    TokenUpdatedSuccessEvent
+} from './events/impl/token-updated.event';
 import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { TokenRepository } from './repository/token.repository';
 import { TokensSagas } from './sagas/tokens.sagas';
 import { TokensService } from './services/tokens.service';
-import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from './events/impl/free-token-created.event';
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from './events/impl/ordered-token-created.event';
+import {
+    FreeTokenCreatedEvent,
+    FreeTokenCreatedFailedEvent,
+    FreeTokenCreatedSuccessEvent
+} from './events/impl/free-token-created.event';
+import {
+    OrderedTokenCreatedEvent,
+    OrderedTokenCreatedFailedEvent,
+    OrderedTokenCreatedSuccessEvent
+} from './events/impl/ordered-token-created.event';
 import { AuthModule } from '../auth/auth.module';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
-import { TokenDeletedByUserIdEvent, TokenDeletedByUserIdSuccessEvent, TokenDeletedByUserIdFailedEvent } from './events/impl/token-deleted-by-userId.event';
-import { TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdSuccessEvent, TokenDeletedByProjectIdFailedEvent } from './events/impl/token-deleted-by-projectId.event';
+import {
+    TokenDeletedByUserIdEvent,
+    TokenDeletedByUserIdFailedEvent,
+    TokenDeletedByUserIdSuccessEvent
+} from './events/impl/token-deleted-by-userId.event';
+import {
+    TokenDeletedByProjectIdEvent,
+    TokenDeletedByProjectIdFailedEvent,
+    TokenDeletedByProjectIdSuccessEvent
+} from './events/impl/token-deleted-by-projectId.event';
 import { UserDto } from 'users/dtos/users.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 
@@ -114,23 +142,9 @@ export class TokensModule implements OnModuleInit {
     };
 
     async persistTokenTypesToDB() {
-        const freeTokenType = await getMongoRepository(TokenTypeDto).find({
-            name: CONSTANTS.TOKEN_TYPE.FREE,
-        });
-        const tokenType_50 = await getMongoRepository(TokenTypeDto).find({
-            name: CONSTANTS.TOKEN_TYPE['50-MINS'],
-        });
-        const tokenType_200 = await getMongoRepository(TokenTypeDto).find({
-            name: CONSTANTS.TOKEN_TYPE['200-MINS'],
-        });
-        const tokenType_500 = await getMongoRepository(TokenTypeDto).find({
-            name: CONSTANTS.TOKEN_TYPE['500-MINS'],
-        });
-        if (!freeTokenType[0] && !tokenType_50[0] && !tokenType_200[0] && !tokenType_500[0]) {
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, 10, 0));
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['50-MINS'], 50, 5));
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['200-MINS'], 200, 10));
-            getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE['500-MINS'], 500, 20));
-        }
+        await getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, config.TOKEN_TYPE.TYPE_FREE_MINUTES, config.TOKEN_TYPE.TYPE_FREE_PRICE));
+        await getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_50_MINUTES, config.TOKEN_TYPE.TYPE_50_MINUTES, config.TOKEN_TYPE.TYPE_50_PRICE));
+        await getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES, config.TOKEN_TYPE.TYPE_200_MINUTES, config.TOKEN_TYPE.TYPE_200_PRICE));
+        await getMongoRepository(TokenTypeDto).save(new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_PRICE));
     }
 }

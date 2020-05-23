@@ -5,9 +5,12 @@ import bcrypt from 'bcryptjs';
 import parser from 'cron-parser';
 
 export const Utils = {
-    hashPassword: password => {
-        const salt = bcrypt.genSaltSync(10);
-        return bcrypt.hashSync(password, salt);
+    hashPassword: (password: string) => {
+        if (password) {
+            const salt = bcrypt.genSaltSync(10);
+            return bcrypt.hashSync(password, salt);
+        }
+        return null;
     },
     getUuid: () => {
         return uuidv1();

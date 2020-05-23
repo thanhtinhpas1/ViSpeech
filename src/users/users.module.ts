@@ -2,7 +2,6 @@ import { forwardRef, Inject, Logger, Module, OnModuleInit } from '@nestjs/common
 import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientKafka, ClientsModule } from '@nestjs/microservices';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { AuthenticateModule } from 'authenticate/authenticate.module';
 import { EventStoreModule } from 'core/event-store/event-store.module';
 import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/delete-permission-by-userId.handler';
 import { PermissionsModule } from 'permissions/permissions.module';
@@ -51,6 +50,7 @@ import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersService } from './services/users.service';
 import {config} from '../../config';
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
     imports: [
@@ -59,7 +59,7 @@ import {config} from '../../config';
             ...kafkaClientOptions,
         }]),
         TypeOrmModule.forFeature([UserDto, PermissionDto]),
-        forwardRef(() => AuthenticateModule),
+        forwardRef(() => AuthModule),
         EventStoreModule.forFeature(),
     ],
     controllers: [UsersController],
@@ -106,14 +106,15 @@ export class UsersModule implements OnModuleInit {
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
         // seed data
-        try {
-            const admin = new UserDto('admin', 'admin', 'admin', Utils.hashPassword('admin'),
-                'admin@vispeech.com', [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
-            Logger.log('Seed admin account success', 'UserModule');
-            await this.repository.save(admin);
-        } catch (e) {
-            Logger.warn('Seed admin account existed', 'UserModule');
-        }
+        await this.seedAdminAccount();
+    }
+
+    private async seedAdminAccount() {
+        const admin = new UserDto(config.ADMIN.NAME, config.ADMIN.LAST_NAME, config.ADMIN.USERNAME, Utils.hashPassword(config.ADMIN.PASSWORD),
+            config.ADMIN.EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
+        await this.repository.save(admin).then(rs => {
+            Logger.log('Seed admin account success.', 'UserModule');
+        }).catch(err => Logger.warn('User admin existed.', err.message));
     }
 
     eventHandlers = {

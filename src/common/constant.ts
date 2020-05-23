@@ -8,10 +8,10 @@ export const CONSTANTS = {
         CSR_USER: 'CSR_USER',
     },
     TOKEN_TYPE: {
-        'FREE': 'FREE',
-        '50-MINS': '50-MINS',
-        '200-MINS': '200-MINS',
-        '500-MINS': '500-MINS',
+        FREE: 'FREE',
+        TYPE_50_MINUTES: '50-MINUTES',
+        TYPE_200_MINUTES: '200-MINUTES',
+        TYPE_500_MINUTES: '500-MINUTES',
     },
     STATUS: {
         PENDING: 'PENDING',

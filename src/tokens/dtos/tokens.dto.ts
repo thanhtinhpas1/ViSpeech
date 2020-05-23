@@ -1,17 +1,19 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { Type } from 'class-transformer';
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, IsBoolean, Min } from 'class-validator';
+import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, Min } from 'class-validator';
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
 import { Column, Entity } from 'typeorm';
+import { ErrUtil } from "../../utils/err.util";
+import { ERR } from "../../common/error";
 
 export class TokenIdRequestParamsDto {
     constructor(tokenId) {
         this._id = tokenId;
     }
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('_id', ERR.IsNotEmpty))
     _id: string;
 }
 
@@ -30,15 +32,15 @@ export class TokenDto extends BaseEntityDto {
     }
 
     @IsOptional()
-    @IsString()
+    @IsString(ErrUtil.getMessage('value', ERR.IsString))
     @Column({
         unique: true,
     })
     value: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @IsUUID()
+    @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
+    @IsUUID('3', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -47,8 +49,8 @@ export class TokenDto extends BaseEntityDto {
 
     // @IsUUID()
     // free token does not have projectId, set projectId = ""
-    @IsNotEmpty()
-    @IsString()
+    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
     @Column({
         nullable: false,
     })
@@ -56,17 +58,17 @@ export class TokenDto extends BaseEntityDto {
 
     @IsOptional()
     @Type(() => Number)
-    @IsNumber()
-    @IsPositive()
+    @IsNumber({allowInfinity: false, allowNaN: false}, ErrUtil.getMessage('minutes', ERR.IsNumber))
+    @IsPositive(ErrUtil.getMessage('minutes', ERR.IsPositive))
     @Column({
         default: 0,
         type: 'double'
     })
     minutes: number;
 
-    @IsNotEmpty()
+    @IsNotEmpty(ErrUtil.getMessage('minutes', ERR.IsNotEmpty))
     @Type(() => Number)
-    @IsNumber()
+    @IsNumber({allowNaN: false, allowInfinity: false}, ErrUtil.getMessage('usedMinutes', ERR.IsNumber))
     @Min(0)
     @Column({
         default: 0,
@@ -76,16 +78,16 @@ export class TokenDto extends BaseEntityDto {
     usedMinutes: number;
 
     @IsOptional()
-    @IsString()
-    @IsUUID()
+    @IsString(ErrUtil.getMessage('tokenTypeId', ERR.IsString))
+    @IsUUID('3', ErrUtil.getMessage('tokenTypeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     tokenTypeId: ObjectID;
 
-    @IsNotEmpty()
-    @IsBoolean()
+    @IsNotEmpty(ErrUtil.getMessage('isValid', ERR.IsNotEmpty))
+    @IsBoolean(ErrUtil.getMessage('isValid', ERR.IsBoolean))
     @Column({
         default: true,
     })
@@ -94,14 +96,14 @@ export class TokenDto extends BaseEntityDto {
     @IsOptional()
     @IsIn([
         CONSTANTS.TOKEN_TYPE.FREE,
-        CONSTANTS.TOKEN_TYPE['50-MINS'],
-        CONSTANTS.TOKEN_TYPE['200-MINS'],
-        CONSTANTS.TOKEN_TYPE['500-MINS'],
+        CONSTANTS.TOKEN_TYPE.TYPE_50_MINUTES,
+        CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES,
+        CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES,
     ])
     tokenType: string;
 
     @IsOptional()
-    @IsString()
-    @IsUUID()
+    @IsString(ErrUtil.getMessage('orderId', ERR.IsString))
+    @IsUUID('3', ErrUtil.getMessage('orderId', ERR.IsUUID))
     orderId: ObjectID;
 }

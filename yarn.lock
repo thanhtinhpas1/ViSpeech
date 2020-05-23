@@ -1866,6 +1866,21 @@ cron@1.7.2:
   dependencies:
     moment-timezone "^0.5.x"
 
+cron-parser@^2.13.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/cron-parser/-/cron-parser-2.14.0.tgz#a8f4e85a58a4e7d59dc42cdfca76865982b68612"
+  integrity sha512-/VuS5TLnyaB0yNznygEFmujOjn8DxyZRn3F2wN3h8e+4A5zETQYMbtCLCIvz23XhI/1di2B+ke702/grEaPfTg==
+  dependencies:
+    is-nan "^1.3.0"
+    moment-timezone "^0.5.31"
+
+cron@1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/cron/-/cron-1.7.2.tgz#2ea1f35c138a07edac2ac5af5084ed6fee5723db"
+  integrity sha512-+SaJ2OfeRvfQqwXQ2kgr0Y5pzBR/lijf5OpnnaruwWnmI799JfWr2jN2ItOV9s3A/+TFOt6mxvKzQq5F0Jp6VQ==
+  dependencies:
+    moment-timezone "^0.5.x"
+
 cross-spawn@^5.0.1:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -3390,6 +3405,13 @@ is-nan@^1.2.1:
   dependencies:
     define-properties "^1.1.3"
 
+is-nan@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/is-nan/-/is-nan-1.3.0.tgz#85d1f5482f7051c2019f5673ccebdb06f3b0db03"
+  integrity sha512-z7bbREymOqt2CCaZVly8aC4ML3Xhfi0ekuOnjO2L8vKdl+CttdVoGZQhd4adMFAsxQ5VeRVwORs4tU8RH+HFtQ==
+  dependencies:
+    define-properties "^1.1.3"
+
 is-npm@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-npm/-/is-npm-1.0.0.tgz#f2fb63a65e4905b406c86072765a1a4dc793b9f4"
@@ -4512,6 +4534,18 @@ moment-timezone@^0.5.25, moment-timezone@^0.5.x:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+
+moment-timezone@^0.5.31, moment-timezone@^0.5.x:
+  version "0.5.31"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.31.tgz#9c40d8c5026f0c7ab46eda3d63e49c155148de05"
+  integrity sha512-+GgHNg8xRhMXfEbv81iDtrVeTcWt0kWmTEY1XQK14dICTXnWJnT0dxdlPspwqF3keKMVPXwayEsk1DI0AA/jdA==
+  dependencies:
+    moment ">= 2.9.0"
+
+"moment@>= 2.9.0":
+  version "2.26.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.26.0.tgz#5e1f82c6bafca6e83e808b30c8705eed0dcbd39a"
+  integrity sha512-oIixUO+OamkUkwjhAVE18rAMfRJNsNe/Stid/gwHSOfHrOtw9EhAY2AHvdKZ/k/MggcYELFCJz/Sn2pL8b8JMw==
 
 mongodb@^3.5.3:
   version "3.5.5"

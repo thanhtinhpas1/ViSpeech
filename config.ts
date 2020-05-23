@@ -48,7 +48,6 @@ const configs = {
             port: process.env.TYPEORM_PORT || 27017,
             synchronize: process.env.TYPEORM_SYNCHRONIZE || true,
             logger: process.env.TYPEORM_LOGGING || 'debug',
-            // extra: process.env.TYPEORM_EXTRA || {charset: 'utf8mb4'},
         },
         JWT: {
             secret: process.env.JWT_SECRET || 'vispeech',
@@ -66,6 +65,22 @@ const configs = {
             HOST: process.env.ASR_HOST || '0.0.0.0',
             PORT: process.env.ASR_PORT || 5000,
         },
+        TOKEN_TYPE: {
+            TYPE_FREE_PRICE: process.env.TOKEN_FREE_PRICE || 0,
+            TYPE_50_PRICE: process.env.TOKEN_50_PRICE || 5,
+            TYPE_200_PRICE: process.env.TOKEN_200_PRICE || 10,
+            TYPE_500_PRICE: process.env.TOKEN_500_PRICE || 20,
+            TYPE_FREE_MINUTES: process.env.TOKEN_FREE_MINUTES || 10,
+            TYPE_50_MINUTES: process.env.TOKEN_50_MINUTES || 50,
+            TYPE_200_MINUTES: process.env.TOKEN_200_MINUTES || 200,
+            TYPE_500_MINUTES: process.env.TOKEN_500_MINUTES || 500,
+        },
+        ADMIN: {
+            NAME: process.env.ADMIN_NAME || 'admin',
+            LAST_NAME: process.env.ADMIN_LAST_NAME || 'admin',
+            USERNAME: process.env.USERNAME || 'admin',
+            PASS: process.env.ADMIN_PASSWORD || 'admin',
+        }
     },
     development: {},
     production: {

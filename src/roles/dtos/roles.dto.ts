@@ -2,6 +2,8 @@ import {Column, Entity} from 'typeorm';
 import {BaseEntityDto} from 'base/base-entity.dto';
 import {IsIn, IsNotEmpty, IsString} from 'class-validator';
 import {CONSTANTS} from 'common/constant';
+import { ErrUtil } from "../../utils/err.util";
+import { ERR } from "../../common/error";
 
 @Entity('roles')
 export class RoleDto extends BaseEntityDto {
@@ -10,8 +12,8 @@ export class RoleDto extends BaseEntityDto {
         this.name = name;
     }
 
-    @IsNotEmpty()
-    @IsString()
+    @IsNotEmpty(ErrUtil.getMessage('name', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('name', ERR.IsString))
     @IsIn([
         CONSTANTS.ROLE.USER,
         CONSTANTS.ROLE.MANAGER_USER,

@@ -3,6 +3,8 @@ import {IsArray, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from 'class-val
 import {CONSTANTS} from 'common/constant';
 import {ObjectID} from 'mongodb';
 import {Column, Entity} from 'typeorm';
+import { ErrUtil } from "../../utils/err.util";
+import { ERR } from "../../common/error";
 
 export class PermissionAssignDto {
     constructor(assigneeUsername: string, projectId, permissions: string[], assignerId) {
@@ -12,25 +14,25 @@ export class PermissionAssignDto {
         this.assignerId = assignerId;
     }
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('assigneeUsername', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('assigneeUsername', ERR.IsNotEmpty))
     assigneeUsername: string;
 
-    @IsNotEmpty()
-    @IsUUID()
+    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
+    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     projectId: ObjectID;
 
-    @IsNotEmpty()
-    @IsArray()
+    @IsNotEmpty(ErrUtil.getMessage('permissions', ERR.IsNotEmpty))
+    @IsArray(ErrUtil.getMessage('permissions', ERR.IsArray))
     @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
     permissions: string[];
 
-    @IsNotEmpty()
-    @IsUUID()
+    @IsNotEmpty(ErrUtil.getMessage('assignerId', ERR.IsNotEmpty))
+    @IsUUID('3', ErrUtil.getMessage('assignerId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -38,7 +40,7 @@ export class PermissionAssignDto {
     assignerId: ObjectID;
 
     @IsOptional()
-    @IsUUID()
+    @IsUUID('3', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -52,11 +54,11 @@ export class PermissionResponseDto {
         this.status = status;
     }
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('emailToken', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('emailToken', ERR.IsNotEmpty))
     emailToken: string;
 
-    @IsString()
+    @IsString(ErrUtil.getMessage('status', ERR.IsString))
     @IsIn([
         CONSTANTS.STATUS.ACCEPTED,
         CONSTANTS.STATUS.REJECTED
@@ -70,8 +72,8 @@ export class PermissionIdRequestParamsDto {
         this._id = permissionId;
     }
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('_id', ERR.IsNotEmpty))
     _id: string;
 }
 
@@ -80,8 +82,8 @@ export class EmailTokenParamsDto {
         this.emailToken = emailToken;
     }
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('emailToken', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('emailToken', ERR.IsNotEmpty))
     emailToken: string;
 }
 
@@ -96,30 +98,30 @@ export class PermissionDto extends BaseEntityDto {
         this.status = status;
     }
 
-    @IsNotEmpty()
-    @IsArray()
+    @IsNotEmpty(ErrUtil.getMessage('permissions', ERR.IsNotEmpty))
+    @IsArray(ErrUtil.getMessage('permissions', ERR.IsArray))
     @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
     @Column()
     permissions: string[];
 
-    @IsString()
-    @IsUUID()
+    @IsString(ErrUtil.getMessage('assigneeId', ERR.IsString))
+    @IsUUID('3', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     assigneeId: ObjectID;
 
-    @IsString()
-    @IsUUID()
+    @IsString(ErrUtil.getMessage('assignerId', ERR.IsString))
+    @IsUUID('3', ErrUtil.getMessage('assignerId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     assignerId: ObjectID;
 
-    @IsString()
-    @IsUUID()
+    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
+    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -127,7 +129,7 @@ export class PermissionDto extends BaseEntityDto {
     projectId: ObjectID;
 
     @IsOptional()
-    @IsString()
+    @IsString(ErrUtil.getMessage('status', ERR.IsString))
     @IsIn([
         CONSTANTS.STATUS.PENDING,
         CONSTANTS.STATUS.ACCEPTED,

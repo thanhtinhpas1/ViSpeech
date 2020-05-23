@@ -1,6 +1,8 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsIP, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { Column, Entity } from 'typeorm';
+import { ErrUtil } from "../../utils/err.util";
+import { ERR } from "../../common/error";
 
 export class FindRequestsParam {
     constructor(projectId: string) {
@@ -8,8 +10,8 @@ export class FindRequestsParam {
     }
 
     @IsOptional()
-    @IsUUID()
-    @IsString()
+    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
+    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
     projectId: string;
 }
 
@@ -17,7 +19,7 @@ export class FindRequestsParam {
 export class RequestDto extends BaseEntityDto {
 
     constructor(tokenId: string, projectId: string, fileName: string, encoding: string, size: string,
-        duration: number, mimeType: string) {
+                duration: number, mimeType: string) {
         super();
         this.tokenId = tokenId;
         this.fileName = fileName;
@@ -28,41 +30,41 @@ export class RequestDto extends BaseEntityDto {
         this.mimeType = mimeType;
     }
 
-    @IsNotEmpty()
-    @IsString()
+    @IsNotEmpty(ErrUtil.getMessage('tokenId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('tokenId', ERR.IsString))
     @Column()
     tokenId: string;
 
-    @IsNotEmpty()
-    @IsUUID()
+    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
+    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column()
     projectId: string;
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('fileName', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('fileName', ERR.IsNotEmpty))
     @Column()
     fileName: string;
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('encoding', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('encoding', ERR.IsNotEmpty))
     @Column()
     encoding: string;
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('size', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('size', ERR.IsNotEmpty))
     @Column()
     size: string;
 
-    @IsNumber()
-    @IsPositive()
+    @IsNumber({}, ErrUtil.getMessage('duration', ERR.IsNumber))
+    @IsPositive(ErrUtil.getMessage('duration', ERR.IsPositive))
     @Column({
         comment: 'length of voice - minute',
         type: 'double'
     })
     duration: number;
 
-    @IsString()
-    @IsNotEmpty()
+    @IsString(ErrUtil.getMessage('mimeType', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('mimeType', ERR.IsNotEmpty))
     @Column()
     mimeType;
 }
