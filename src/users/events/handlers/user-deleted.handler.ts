@@ -1,4 +1,4 @@
-import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,10 +22,6 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
         const { streamId, userId, isDeleted } = event;
 
         try {
-            const user = await this.repository.findOne({ _id: userId });
-            if (!user) {
-                throw new NotFoundException(`User with _id ${userId} does not exist.`);
-            }
             if (isDeleted === "true") {
                 await this.repository.delete({ _id: userId });
             } else {

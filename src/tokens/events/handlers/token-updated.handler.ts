@@ -1,4 +1,4 @@
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {Logger, Inject} from '@nestjs/common';
 import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
@@ -15,8 +15,6 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
     constructor(
         @InjectRepository(TokenDto)
         private readonly repository: Repository<TokenDto>,
-        @InjectRepository(TokenTypeDto)
-        private readonly repositoryTokenType: Repository<TokenTypeDto>,
         private readonly eventBus: EventBus,
     ) {
     }
@@ -37,10 +35,6 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
             //     tokenTypeDto = await this.repositoryTokenType.findOne({name: tokenInfo.tokenType});
             // }
             // tokenInfo.minutes = tokenTypeDto.minutes;
-            const token = await this.repository.findOne({ _id });
-            if (!token) {
-                throw new NotFoundException(`Token with _id ${_id} does not exist.`);
-            }
 
             // Can only update usedMinutes
             await this.repository.update({_id}, { usedMinutes: Number(tokenInfo.usedMinutes) });

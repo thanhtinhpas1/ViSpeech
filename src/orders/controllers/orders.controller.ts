@@ -2,7 +2,7 @@ import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from 
 import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 import {FindOrderQuery} from 'orders/queries/impl/find-order.query';
 import {GetOrdersQuery} from 'orders/queries/impl/get-orders.query';
-import {OrderDto, OrderIdRequestParamsDto} from '../dtos/orders.dto';
+import {OrderDto, OrderIdRequestParamsDto, PaymentIntent} from '../dtos/orders.dto';
 import {OrdersService} from '../services/orders.service';
 import {OrderGuard, OrderQueryGuard} from 'auth/guards/order.guard';
 import {CONSTANTS} from 'common/constant';
@@ -22,9 +22,9 @@ export class OrdersController {
     @ApiResponse({status: 200, description: 'Create Order.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Post()
-    async createOrder(@Body() orderDto: OrderDto): Promise<OrderDto> {
+    async createOrder(@Body("order") orderDto: OrderDto, @Body("paymentIntent") paymentIntent: PaymentIntent): Promise<OrderDto> {
         const streamId = orderDto._id;
-        return this.ordersService.createOrderStart(streamId, orderDto);
+        return this.ordersService.createOrder(streamId, orderDto, paymentIntent);
     }
 
     /* Update Order */
@@ -33,6 +33,7 @@ export class OrdersController {
     @ApiOperation({tags: ['Update Order']})
     @ApiResponse({status: 200, description: 'Update Order.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updateOrder(
         @Param() orderIdDto: OrderIdRequestParamsDto,
@@ -51,6 +52,7 @@ export class OrdersController {
     @ApiOperation({tags: ['Delete Order']})
     @ApiResponse({status: 200, description: 'Delete Order.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Delete(':_id')
     async deleteOrder(@Param() orderIdDto: OrderIdRequestParamsDto) {
         const streamId = orderIdDto._id;
@@ -84,6 +86,8 @@ export class OrdersController {
 
     @ApiOperation({tags: ['Get Payment Intent']})
     @ApiResponse({status: 200, description: 'Get Payment Intent.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Post('/payment-intent')
     async getPaymentIntent(@Body() body) {
         try {

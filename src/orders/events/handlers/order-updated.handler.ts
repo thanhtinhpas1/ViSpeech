@@ -1,6 +1,6 @@
 import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {OrderUpdatedEvent, OrderUpdatedSuccessEvent, OrderUpdatedFailedEvent} from '../impl/order-updated.event';
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {Logger, Inject} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {OrderDto} from 'orders/dtos/orders.dto';
 import {Repository} from 'typeorm';
@@ -24,11 +24,6 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
         const {_id, ...orderInfo} = orderDto;
 
         try {
-            const order = await this.repository.findOne({ _id });
-            if (!order) {
-                throw new NotFoundException(`Order with _id ${_id} does not exist.`);
-            }
-
             const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenType']);
             await this.repository.update({_id}, formattedOrderInfo);
             this.eventBus.publish(new OrderUpdatedSuccessEvent(streamId, orderDto));

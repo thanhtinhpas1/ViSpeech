@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { OrderCreatedSuccessEvent, OrderCreationStartedEvent } from '../events/impl/order-created.event';
+import { OrderCreatedSuccessEvent } from '../events/impl/order-created.event';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CreateOrderCommand } from 'orders/commands/impl/create-order.command';
@@ -17,18 +17,6 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 export class OrdersSagas {
     constructor(private readonly authService: AuthService) {
     }
-
-    @Saga()
-    startCreatingOrder = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(OrderCreationStartedEvent),
-            map((event: OrderCreationStartedEvent) => {
-                Logger.log('Inside [OrdersSagas] startCreatingOrder Saga', 'OrdersSagas');
-                const { streamId, orderDto } = event;
-                return new CreateOrderCommand(streamId, orderDto);
-            })
-        );
-    };
 
     @Saga()
     orderCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {

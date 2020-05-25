@@ -1,0 +1,10 @@
+{
+    "version": "1.0.0",
+    "npmClient": "npm",
+    "packages": [
+      "src/client",
+      "src/demo",
+      "src/server"
+    ]
+  }
+  

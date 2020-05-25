@@ -4,13 +4,6 @@ import {OrderDto} from 'orders/dtos/orders.dto';
 
 @Injectable()
 export class OrderRepository {
-    async createOrderStart(streamId: string, orderDto: OrderDto) {
-        const order = new Order(undefined);
-        order.setData(orderDto);
-        order.createOrderStart(streamId);
-        return order;
-    }
-
     async createOrder(streamId: string, orderDto: OrderDto) {
         const order = new Order(undefined);
         order.setData(orderDto);

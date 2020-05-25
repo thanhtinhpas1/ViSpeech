@@ -16,22 +16,20 @@ export class OrderGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const id = request.params['_id'] || request.params['id'];
-        if (!id) return true;
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
 
+        const id = request.params['_id'] || request.params['id'];
+        if (!id) return true;
+
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
         const order = await getMongoRepository(OrderDto).findOne({ _id: id });
-        if (!order) {
-            throw new NotFoundException(`Order with _id ${id} does not exist.`);
-        }
-        if (order['userId'] === payload['id']) {
+        if (order && order.userId === payload['id']) {
             return true;
         }
 

@@ -1,4 +1,4 @@
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {Logger, Inject} from '@nestjs/common';
 import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {PermissionDto} from 'permissions/dtos/permissions.dto';
@@ -24,11 +24,6 @@ export class PermissionUpdatedHandler implements IEventHandler<PermissionUpdated
         const {_id, ...permissionInfo} = permissionDto;
 
         try {
-            const permission = await this.repository.findOne({ _id });
-            if (!permission) {
-                throw new NotFoundException(`Permission with _id ${_id} does not exist.`);
-            }
-
             await this.repository.update({_id}, permissionInfo);
             this.eventBus.publish(new PermissionUpdatedSuccessEvent(streamId, permissionDto));
         } catch (error) {

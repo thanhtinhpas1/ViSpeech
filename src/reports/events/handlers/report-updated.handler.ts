@@ -1,6 +1,6 @@
 import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {ReportUpdatedEvent, ReportUpdatedSuccessEvent, ReportUpdatedFailedEvent} from '../impl/report-updated.event';
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {Logger, Inject} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ReportDto} from 'reports/dtos/reports.dto';
 import {Repository} from 'typeorm';
@@ -24,11 +24,6 @@ export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
         const {_id, ...reportInfo} = reportDto;
 
         try {
-            const report = await this.repository.findOne({ _id });
-            if (!report) {
-                throw new NotFoundException(`Report with _id ${_id} does not exist.`);
-            }
-
             await this.repository.update({_id}, reportInfo);
             this.eventBus.publish(new ReportUpdatedSuccessEvent(streamId, reportDto));
         } catch (error) {

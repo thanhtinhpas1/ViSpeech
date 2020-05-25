@@ -30,7 +30,7 @@ services:
   # API - VISPEECH
   vispeech:
     build:
-      context: "."
+      context: "./server"
     command: ${CONTAINER_COMMAND}
     restart: always
     depends_on:
@@ -46,9 +46,23 @@ services:
       - eventstore
       - mongodb
     network_mode: bridge
+  vispeechui:
+    build:
+      context: "./client"
+    command: "npm stard:prod"
+    restard: always
+    depends_on:
+      - eventstore
+      - mongodb
+      - vispeech
+    ports:
+      - ${VISPEECH_PORT_CLIENT}:${VISPEECH_PORT_CLIENT}
+    expose:
+      - ${VISPEECH_PORT_CLIENT}
+    network_mode: bridge
   vispeechdemo:
     build:
-      context: "./ViSpeechDemo"
+      context: "./demo"
     command: "npm start"
     restart: always
     depends_on:
@@ -64,6 +78,14 @@ services:
       - mongodb
     #  - vispeech
     network_mode: bridge
+  nginx:
+    image: nginx
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./services/nginx
+    ports:
+      - '80:80'
   zoo1:
     image: zookeeper:3.4.9
     hostname: zoo1

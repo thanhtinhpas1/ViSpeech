@@ -14,22 +14,20 @@ export class TokenGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const id = request.params._id || request.params.id || request.params.tokenId;
-        if (!id) return true;
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        
+
+        const id = request.params._id || request.params.id || request.params.tokenId;
+        if (!id) return true;
+
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
         const token = await getMongoRepository(TokenDto).findOne({ _id: id });
-        if (!token) {
-            throw new NotFoundException(`Token with _id ${id} does not exist.`);
-        }
-        if (token.userId === payload['id']) {
+        if (token && token.userId === payload['id']) {
             return true;
         }
 

@@ -15,14 +15,15 @@ export class UserGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const id = request.params['_id'] || request.params['id'] || request.params['userId'];
-        if (!id) return true;
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        
+
+        const id = request.params['_id'] || request.params['id'] || request.params['userId'];
+        if (!id) return true;
+
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 

@@ -1,14 +1,6 @@
 import {IEvent} from '@nestjs/cqrs';
 import {OrderDto} from 'orders/dtos/orders.dto';
 
-export class OrderCreationStartedEvent implements IEvent {
-    constructor(
-        public readonly streamId: string,
-        public readonly orderDto: OrderDto
-    ) {
-    }
-}
-
 export class OrderCreatedEvent implements IEvent {
     constructor(
         public readonly streamId: string,

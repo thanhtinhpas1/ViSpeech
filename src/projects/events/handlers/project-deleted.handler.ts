@@ -1,4 +1,4 @@
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {Logger, Inject} from '@nestjs/common';
 import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ProjectDto} from 'projects/dtos/projects.dto';
@@ -23,10 +23,6 @@ export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent>
         const {streamId, projectId} = event;
 
         try {
-            const project = await this.repository.findOne({_id: projectId});
-            if (!project) {
-                throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
-            }
             await this.repository.update({_id: projectId}, {isValid: false});
             this.eventBus.publish(new ProjectDeletedSuccessEvent(streamId, projectId));
         } catch (error) {

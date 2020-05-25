@@ -15,22 +15,20 @@ export class PermissionGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const id = request.params._id || request.params.id;
-        if (!id) return true;
 
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
 
+        const id = request.params._id || request.params.id;
+        if (!id) return true;
+
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         if (isAdmin) return true;
 
         const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
-        if (!permission) {
-            throw new NotFoundException(`Permission with _id ${id} does not exist.`);
-        }
-        if (permission.assignerId === payload['id']) {
+        if (permission && permission.assignerId === payload['id']) {
             return true;
         }
 
@@ -54,15 +52,7 @@ export class AssignPermissionGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const { assigneeUsername, assignerId, projectId } = request.body;
-        const assignee = await getMongoRepository(UserDto).findOne({ username: assigneeUsername });
-        if (assignee) {
-            const permission = await getMongoRepository(PermissionDto).findOne({ assignerId, assigneeId: assignee._id, projectId });
-            if (permission || assignee._id === assignerId) {
-                return false;
-            }
-        }
-
+        const { assignerId } = request.body;
         const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
         const isManagerUser = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.MANAGER_USER) !== -1;
         if (isAdmin || (isManagerUser && assignerId === payload['id'])) {
@@ -73,7 +63,7 @@ export class AssignPermissionGuard implements CanActivate {
 }
 
 @Injectable()
-export class ReplyPermisisonAssignGuard implements CanActivate {
+export class ReplyPermissionAssignGuard implements CanActivate {
     constructor(
         private readonly authService: AuthService,
         private readonly jwtService: JwtService,

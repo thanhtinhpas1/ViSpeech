@@ -1,4 +1,4 @@
-import { Logger, NotFoundException, Inject } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { EventsHandler, IEventHandler, EventBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
@@ -23,10 +23,6 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
         const { streamId, tokenId } = event;
 
         try {
-            const token = await this.repository.findOne({ _id: tokenId });
-            if (!token) {
-                throw new NotFoundException(`Token with _id ${tokenId} does not exist.`);
-            }
             await this.repository.update({ _id: tokenId }, { isValid: false });
             this.eventBus.publish(new TokenDeletedSuccessEvent(streamId, tokenId));
         } catch (error) {

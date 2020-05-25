@@ -1,4 +1,4 @@
-import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,9 +25,6 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
 
         try {
             const user = await this.repository.findOne({ _id: userDto._id });
-            if (!user) {
-                throw new NotFoundException(`User with _id ${_id} does not exist.`);
-            }
 
             let formattedInfo = Utils.removePropertiesFromObject(userInfo, ['password', 'roles']);
             if (Utils.isEmailVerified(user.roles)) {

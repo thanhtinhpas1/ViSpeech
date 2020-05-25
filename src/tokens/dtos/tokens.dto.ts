@@ -40,7 +40,7 @@ export class TokenDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('userId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('userId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',

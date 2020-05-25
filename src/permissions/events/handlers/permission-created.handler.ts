@@ -21,7 +21,7 @@ export class PermissionCreatedHandler implements IEventHandler<PermissionCreated
     async handle(event: PermissionCreatedEvent) {
         Logger.log(event.permissionDto._id, 'PermissionCreatedEvent');
         const { streamId, permissionDto } = event;
-        let permission = JSON.parse(JSON.stringify(permissionDto));
+        const permission = JSON.parse(JSON.stringify(permissionDto));
 
         try {
             permission.permissions = Utils.convertToArray(permission.permissions);

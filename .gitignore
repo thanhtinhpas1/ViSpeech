@@ -95,10 +95,4 @@ api/swagger-spec/swagger.json
 # 0x
 *.0x/
 
-# Event Store
-eventstore/
-
 .vscode/
-
-.env
-dev.env
