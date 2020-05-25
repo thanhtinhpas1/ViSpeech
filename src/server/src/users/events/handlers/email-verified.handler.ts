@@ -1,4 +1,4 @@
-import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { EventsHandler, IEventHandler, EventBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 import { ClientKafka } from '@nestjs/microservices';
@@ -30,9 +30,6 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
             const decodedToken = this.jwtService.decode(emailToken);
             const userId = decodedToken['id'];
             const user = await this.repository.findOne({ _id: userId });
-            if (!user) {
-                throw new NotFoundException(`User with _id ${userId} does not exist.`);
-            }
 
             const userRoles = user.roles.filter(role => role.name !== CONSTANTS.ROLE.USER);
             const updatedRoles = [...userRoles, new RoleDto(CONSTANTS.ROLE.MANAGER_USER)];

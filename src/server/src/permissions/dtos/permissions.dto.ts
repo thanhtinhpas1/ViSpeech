@@ -19,7 +19,7 @@ export class PermissionAssignDto {
     assigneeUsername: string;
 
     @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
-    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -32,7 +32,7 @@ export class PermissionAssignDto {
     permissions: string[];
 
     @IsNotEmpty(ErrUtil.getMessage('assignerId', ERR.IsNotEmpty))
-    @IsUUID('3', ErrUtil.getMessage('assignerId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('assignerId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -40,7 +40,7 @@ export class PermissionAssignDto {
     assignerId: ObjectID;
 
     @IsOptional()
-    @IsUUID('3', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -105,7 +105,7 @@ export class PermissionDto extends BaseEntityDto {
     permissions: string[];
 
     @IsString(ErrUtil.getMessage('assigneeId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -113,15 +113,16 @@ export class PermissionDto extends BaseEntityDto {
     assigneeId: ObjectID;
 
     @IsString(ErrUtil.getMessage('assignerId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('assignerId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('assignerId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     assignerId: ObjectID;
 
+    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',

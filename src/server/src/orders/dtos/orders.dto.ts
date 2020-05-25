@@ -18,6 +18,16 @@ export class OrderIdRequestParamsDto {
     _id: string;
 }
 
+export class PaymentIntent {
+    constructor(id) {
+        this.id = id;
+    }
+
+    @IsString(ErrUtil.getMessage('payment intent id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('payment intent id', ERR.IsNotEmpty))
+    id: string;
+}
+
 @Entity('orders')
 export class OrderDto extends BaseEntityDto {
     constructor(userId, tokenType: TokenTypeDto, token: TokenDto, status = CONSTANTS.STATUS.PENDING) {
@@ -34,7 +44,7 @@ export class OrderDto extends BaseEntityDto {
     @Column()
     token: TokenDto;
 
-    @IsNotEmpty()
+    @IsNotEmpty(ErrUtil.getMessage('tokenType', ERR.IsNotEmpty))
     @ValidateNested()
     @Type(() => TokenTypeDto)
     @Column()
@@ -42,7 +52,7 @@ export class OrderDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('userId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('userId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',

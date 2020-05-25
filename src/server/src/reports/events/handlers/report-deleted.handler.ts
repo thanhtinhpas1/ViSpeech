@@ -1,6 +1,6 @@
 import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {ReportDeletedEvent, ReportDeletedSuccessEvent, ReportDeletedFailedEvent} from '../impl/report-deleted.event';
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {Logger, Inject} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ReportDto} from 'reports/dtos/reports.dto';
 import {Repository} from 'typeorm';
@@ -23,10 +23,6 @@ export class ReportDeletedHandler implements IEventHandler<ReportDeletedEvent> {
         const {streamId, reportId} = event;
 
         try {
-            const report = await this.repository.findOne({_id: reportId});
-            if (!report) {
-                throw new NotFoundException(`Report with _id ${reportId} does not exist.`);
-            }
             await this.repository.delete({_id: reportId});
             this.eventBus.publish(new ReportDeletedSuccessEvent(streamId, reportId));
         } catch (error) {

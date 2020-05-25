@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {CommandBus, QueryBus} from '@nestjs/cqrs';
-import {OrderDto, OrderIdRequestParamsDto} from '../dtos/orders.dto';
-import {CreateOrderCommand, CreateOrderStartCommand} from '../commands/impl/create-order.command';
+import {OrderDto, OrderIdRequestParamsDto, PaymentIntent} from '../dtos/orders.dto';
+import {CreateOrderCommand} from '../commands/impl/create-order.command';
 import {UpdateOrderCommand} from '../commands/impl/update-order.command';
 import {DeleteOrderCommand} from '../commands/impl/delete-order.command';
 import {GetOrdersQuery} from 'orders/queries/impl/get-orders.query';
@@ -20,12 +20,8 @@ export class OrdersService {
     ) {
     }
 
-    async createOrderStart(streamId: string, orderDto: OrderDto) {
-        return await this.commandBus.execute(new CreateOrderStartCommand(streamId, orderDto));
-    }
-
-    async createOrder(streamId: string, orderDto: OrderDto) {
-        return await this.commandBus.execute(new CreateOrderCommand(streamId, orderDto));
+    async createOrder(streamId: string, orderDto: OrderDto, paymentIntent: PaymentIntent) {
+        return await this.commandBus.execute(new CreateOrderCommand(streamId, orderDto, paymentIntent));
     }
 
     async updateOrder(streamId: string, orderDto: OrderDto) {

@@ -15,7 +15,7 @@ import { CommandHandlers } from './commands/handlers';
 import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
 import { EventHandlers } from './events/handlers';
-import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent, OrderCreationStartedEvent } from './events/impl/order-created.event';
+import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent } from './events/impl/order-created.event';
 import { OrderDeletedEvent, OrderDeletedSuccessEvent, OrderDeletedFailedEvent } from './events/impl/order-deleted.event';
 import { OrderUpdatedEvent, OrderUpdatedSuccessEvent, OrderUpdatedFailedEvent } from './events/impl/order-updated.event';
 import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
@@ -75,7 +75,6 @@ export class OrdersModule implements OnModuleInit {
 
     eventHandlers = {
         // create
-        OrderCreationStartedEvent: (streamId, data) => new OrderCreationStartedEvent(streamId, data),
         OrderCreatedEvent: (streamId, data) => new OrderCreatedEvent(streamId, data),
         OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),
         OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),

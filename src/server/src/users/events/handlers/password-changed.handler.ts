@@ -1,4 +1,4 @@
-import { Inject, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Inject, Logger, BadRequestException } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,8 +24,6 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
 
         try {
             const user = await this.repository.findOne({ _id: userId });
-            if (!user) throw new NotFoundException(`User with _id ${userId} does not exist.`);
-
             const isValid = await Utils.comparePassword(oldPassword, user.password);
             if (isValid) {
                 if (oldPassword === newPassword) throw new BadRequestException('New password must be different from old password.');

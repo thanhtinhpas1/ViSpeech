@@ -34,7 +34,7 @@ export class PermissionsService {
         return await this.commandBus.execute(new SendAssignPermissionEmailCommand(streamId, permissionAssignDto));
     }
 
-    async replyPermisisonAssign(streamId: string, permissionResponseDto: PermissionResponseDto) {
+    async replyPermissionAssign(streamId: string, permissionResponseDto: PermissionResponseDto) {
         return await this.commandBus.execute(new ReplyPermissionAssignCommand(streamId, permissionResponseDto));
     }
 

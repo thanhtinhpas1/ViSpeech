@@ -1,5 +1,5 @@
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger, NotFoundException, Inject } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -34,21 +34,10 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
         const { assigneeUsername, projectId, permissions, assignerId } = permissionAssignDto;
 
         try {
-            const assignee = await this.userRepository.findOne({ username: assigneeUsername });
-            if (!assignee) {
-                throw new NotFoundException(`User with username "${assigneeUsername}" does not exist.`);
-            }
-            permissionAssignDto.assigneeId = assignee._id;
-
             const project = await this.projectRepository.findOne({ _id: projectId });
-            if (!project) {
-                throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
-            }
-
             const assigner = await this.userRepository.findOne({ _id: assignerId });
-            if (!assigner) {
-                throw new NotFoundException(`User with _id ${assignerId} does not exist.`);
-            }
+            const assignee = await this.userRepository.findOne({ username: assigneeUsername });
+            permissionAssignDto.assigneeId = assignee._id;
 
             const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions);
             await EmailUtils.sendInviteToJoinProjectEmail(assigner.username, assignee.username, project.name, assignee.email, joinProjectToken);

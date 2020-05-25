@@ -40,7 +40,7 @@ export class TokenDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('userId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('userId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -79,7 +79,7 @@ export class TokenDto extends BaseEntityDto {
 
     @IsOptional()
     @IsString(ErrUtil.getMessage('tokenTypeId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('tokenTypeId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('tokenTypeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -104,6 +104,6 @@ export class TokenDto extends BaseEntityDto {
 
     @IsOptional()
     @IsString(ErrUtil.getMessage('orderId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('orderId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('orderId', ERR.IsUUID))
     orderId: ObjectID;
 }

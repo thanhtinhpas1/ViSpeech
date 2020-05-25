@@ -1,4 +1,4 @@
-import { Logger, NotFoundException, Inject } from "@nestjs/common";
+import { Logger, Inject } from "@nestjs/common";
 import { EventsHandler, IEventHandler, EventBus } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ProjectDto } from "projects/dtos/projects.dto";
@@ -24,11 +24,6 @@ export class ProjectUpdatedHandler implements IEventHandler<ProjectUpdatedEvent>
         const { _id, ...projectInfo } = projectDto;
 
         try {
-            const project = await this.repository.findOne({ _id });
-            if (!project) {
-                throw new NotFoundException(`Project with _id ${_id} does not exist.`);
-            }
-
             const formattedInfo = Utils.removePropertyFromObject(projectInfo, "userId");
             await this.repository.update({ _id }, formattedInfo);
             this.eventBus.publish(new ProjectUpdatedSuccessEvent(streamId, projectDto));

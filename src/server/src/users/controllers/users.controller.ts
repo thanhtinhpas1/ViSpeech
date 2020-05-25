@@ -105,7 +105,7 @@ export class UsersController implements OnModuleInit {
     @ApiOperation({tags: ['Delete User']})
     @ApiResponse({status: 200, description: 'Delete User.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
-    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Delete(':_id')
     async deleteUser(@Param() userIdDto: UserIdRequestParamsDto, @Req() request) {
         const payload = this.authService.decode(request);

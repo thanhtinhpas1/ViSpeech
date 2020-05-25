@@ -1,4 +1,4 @@
-import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -30,9 +30,6 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
         try {
             if (token.tokenTypeId) {
                 tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
-                if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with _id ${token.tokenTypeId} does not exist.`);
-                }
             } else if (token.tokenType) {
                 tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
             }

@@ -1,5 +1,5 @@
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger, NotFoundException, Inject } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { Repository } from 'typeorm';
@@ -34,9 +34,6 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
         try {
             if (token.tokenTypeId) {
                 tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
-                if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with _id ${token.tokenTypeId} does not exist.`);
-                }
             } else if (token.tokenType) {
                 tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
             }

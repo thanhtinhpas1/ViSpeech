@@ -1,7 +1,10 @@
-import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
 import {DeleteReportCommand} from '../impl/delete-report.command';
 import {ReportRepository} from '../../repository/report.repository';
-import {Logger} from '@nestjs/common';
+import {Logger, NotFoundException} from '@nestjs/common';
+import { getMongoRepository } from 'typeorm';
+import { ReportDto } from 'reports/dtos/reports.dto';
+import { ReportDeletedFailedEvent } from 'reports/events/impl/report-deleted.event';
 
 @CommandHandler(DeleteReportCommand)
 export class DeleteReportHandler
@@ -9,15 +12,28 @@ export class DeleteReportHandler
     constructor(
         private readonly repository: ReportRepository,
         private readonly publisher: EventPublisher,
+        private readonly eventBus: EventBus
     ) {
     }
 
     async execute(command: DeleteReportCommand) {
         Logger.log('Async DeleteReportHandler...', 'DeleteReportCommand');
         const {streamId, reportIdDto} = command;
-        const report = this.publisher.mergeObjectContext(
-            await this.repository.deleteReport(streamId, reportIdDto._id)
-        );
-        report.commit();
+        const reportId = reportIdDto._id;
+
+        try {
+            const report = await getMongoRepository(ReportDto).findOne({ _id: reportId });
+            if (!report) {
+                throw new NotFoundException(`Report with _id ${reportId} does not exist.`);
+            }
+
+            // use mergeObjectContext for dto dispatch events
+            const reportModel = this.publisher.mergeObjectContext(
+                await this.repository.deleteReport(streamId, reportId)
+            );
+            reportModel.commit();
+        } catch (error) {
+            this.eventBus.publish(new ReportDeletedFailedEvent(streamId, reportId, error));
+        }
     }
 }

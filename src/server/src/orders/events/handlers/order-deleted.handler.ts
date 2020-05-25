@@ -1,6 +1,6 @@
 import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
 import {OrderDeletedEvent, OrderDeletedSuccessEvent, OrderDeletedFailedEvent} from '../impl/order-deleted.event';
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {Logger, Inject} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import { config } from '../../../../config';
 import {OrderDto} from 'orders/dtos/orders.dto';
@@ -23,10 +23,6 @@ export class OrderDeletedHandler implements IEventHandler<OrderDeletedEvent> {
         const {streamId, orderId} = event;
 
         try {
-            const order = await this.repository.findOne({_id: orderId});
-            if (!order) {
-                throw new NotFoundException(`Order with _id ${orderId} does not exist.`);
-            }
             await this.repository.delete({_id: orderId});
             this.eventBus.publish(new OrderDeletedSuccessEvent(streamId, orderId));
         } catch (error) {

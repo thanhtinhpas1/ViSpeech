@@ -1,4 +1,4 @@
-import { Inject, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,16 +7,8 @@ import { OrderDto } from 'orders/dtos/orders.dto';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { Repository } from 'typeorm';
 import { config } from '../../../../config';
-import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent, OrderCreationStartedEvent } from '../impl/order-created.event';
+import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent } from '../impl/order-created.event';
 import { Utils } from 'utils';
-
-@EventsHandler(OrderCreationStartedEvent)
-export class OrderCreationStartedHandler
-    implements IEventHandler<OrderCreationStartedEvent> {
-    handle(event: OrderCreationStartedEvent) {
-        Logger.log(event.orderDto._id, 'OrderCreationStartedEvent');
-    }
-}
 
 @EventsHandler(OrderCreatedEvent)
 export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
@@ -36,7 +28,6 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
 
         try {
             const tokenTypeDto = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
-            if (!tokenTypeDto) throw new NotFoundException(`Token type with _id ${order.tokenType._id} does not exist.`);
             order.tokenType = tokenTypeDto;
             await this.repository.save(order);
             this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, orderDto));

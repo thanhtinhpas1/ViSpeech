@@ -57,7 +57,7 @@ export class ReportDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrUtil.getMessage('tokenId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('tokenId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('tokenId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('tokenId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid'
@@ -66,7 +66,7 @@ export class ReportDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid'
@@ -75,7 +75,7 @@ export class ReportDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('userId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('userId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid'
@@ -84,7 +84,7 @@ export class ReportDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrUtil.getMessage('tokenTypeId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('tokenTypeId', ERR.IsString))
-    @IsUUID('3', ErrUtil.getMessage('tokenTypeId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('tokenTypeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid'

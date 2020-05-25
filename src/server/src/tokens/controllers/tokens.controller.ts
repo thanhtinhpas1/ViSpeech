@@ -10,16 +10,14 @@ import { TokensService } from '../services/tokens.service';
 import { Roles } from 'auth/roles.decorator';
 import { TokenGuard, TokenQueryGuard } from 'auth/guards/token.guard';
 import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
-import { AuthService } from 'auth/auth.service';
 import { FindFreeTokenQuery } from 'tokens/queries/impl/find-free-token.query';
 
 @Controller('tokens')
 @ApiTags('Tokens')
 export class TokensController {
     constructor(
-        private readonly tokensService: TokensService,
-        private readonly authService: AuthService) {
-    }
+        private readonly tokensService: TokensService
+    ) {}
 
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['Create Token'] })
@@ -28,10 +26,6 @@ export class TokensController {
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
-        if (!tokenDto.tokenType && !tokenDto.tokenTypeId) {
-            throw new BadRequestException("Token type or token type id must not be empty.")
-        }
-        tokenDto.value = this.authService.generateTokenWithUserId(tokenDto.userId);
         const streamId = tokenDto._id;
         return this.tokensService.createToken(streamId, tokenDto);
     }

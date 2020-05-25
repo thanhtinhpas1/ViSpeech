@@ -10,7 +10,7 @@ export class FindRequestsParam {
     }
 
     @IsOptional()
-    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
     projectId: string;
 }
@@ -36,7 +36,8 @@ export class RequestDto extends BaseEntityDto {
     tokenId: string;
 
     @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
-    @IsUUID('3', ErrUtil.getMessage('projectId', ERR.IsUUID))
+    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column()
     projectId: string;
 

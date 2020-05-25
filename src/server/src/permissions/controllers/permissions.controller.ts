@@ -7,7 +7,7 @@ import {GetPermissionsQuery} from 'permissions/queries/impl/get-permissions.quer
 import {PermissionAssignDto, PermissionDto, PermissionIdRequestParamsDto, PermissionResponseDto, EmailTokenParamsDto} from '../dtos/permissions.dto';
 import {PermissionsService} from '../services/permissions.service';
 import {Roles} from 'auth/roles.decorator';
-import {AssignPermissionGuard, PermissionGuard, ReplyPermisisonAssignGuard, PermissionQueryGuard} from 'auth/guards/permission.guard';
+import {AssignPermissionGuard, PermissionGuard, ReplyPermissionAssignGuard, PermissionQueryGuard} from 'auth/guards/permission.guard';
 import {Utils} from 'utils';
 import { FindPermisisonsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
 import { JwtService } from '@nestjs/jwt';
@@ -79,11 +79,11 @@ export class PermissionsController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Reply permission assign']})
     @ApiResponse({status: 200, description: 'Reply permission assign.'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReplyPermisisonAssignGuard)
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReplyPermissionAssignGuard)
     @Post('reply-permission-assign')
-    async replyPermisisonAssign(@Body() permissionResponseDto: PermissionResponseDto) {
+    async replyPermissionAssign(@Body() permissionResponseDto: PermissionResponseDto) {
         const streamId = Utils.getUuid();
-        return this.permissionsService.replyPermisisonAssign(streamId, permissionResponseDto);
+        return this.permissionsService.replyPermissionAssign(streamId, permissionResponseDto);
     }
 
     /* List Permissions */
