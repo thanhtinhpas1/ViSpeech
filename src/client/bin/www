@@ -1,0 +1,129 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('vispeechui:server');
+var http = require('http');
+var { Kafka, logLevel } = require('kafkajs');
+
+const host = 'thanhtinh.cf'
+const kafka = new Kafka({
+  logLevel: logLevel.INFO,
+  brokers: [`${host}:9092`],
+  clientId: 'vispeech',
+})
+
+
+/**
+ * Get port from environment and store in Express.
+ */
+var port = normalizePort(process.env.PORT || '3200');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+var { TOPICS } = require('../kafka/event');
+var io = require('socket.io').listen(server);
+var consumerUtil = require('../kafka/consumer');
+app.set('socket', io);
+
+io.sockets.on('connection', function (socket) {
+  const consumer = kafka.consumer({ groupId: socket.id })
+  consumer.connect()
+
+  console.log('Socket connected');
+  socket.emit('CONNECTED', "Connect socket success");
+
+  const topicNames = Object.values(TOPICS)
+  topicNames.forEach(name => {
+      consumerUtil.run(consumer, name, socket);
+  })
+
+  consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      socket.emit(topic, message.value);
+    },
+  }).catch(err => console.error(err.message));
+
+  socket.on('disconnect', async function () {
+    console.log('Socket disconnect!');
+    await consumer.disconnect();
+    socket.emit('DISCONNECTED', 'Connected socket disconnected');
+  });
+});
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

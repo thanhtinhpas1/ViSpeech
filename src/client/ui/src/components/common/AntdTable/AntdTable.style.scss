@@ -1,0 +1,157 @@
+.dataTables_wrapper {
+    table {
+        width: 100%;
+
+        .dt-amount,
+        .dt-usd-amount,
+        .dt-account,
+        .dt-type-text,
+        .dt-type-md {
+            display: none;
+        }
+
+        tr {
+            background: #fff;
+            margin-bottom: 3px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        thead.ant-table-thead tr {
+            th.ant-table-cell {
+                padding: 0 10px 0 0;
+                font-size: 12px;
+                line-height: 20px;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                color: #2c80ff;
+                text-transform: uppercase;
+                border-bottom: none;
+                &:last-child {
+                    padding-right: 0;
+                }
+                .lead {
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #495463;
+                    letter-spacing: 0.01em;
+                    line-height: 1;
+                    display: block;
+                    margin-top: 0;
+                    margin-bottom: 0;
+                }
+                .sub {
+                    font-size: 10px;
+                    font-weight: 400;
+                    color: #758698;
+                    letter-spacing: 0.01em;
+                    line-height: 1;
+                    padding-top: 7px;
+                    display: block;
+                    &:first-child {
+                        padding-top: 0;
+                    }
+                }
+                .sub-s2 {
+                    font-size: 12px;
+                    color: #495463;
+                    padding-top: 0;
+                }
+            }
+        }
+
+        tbody.ant-table-tbody tr {
+            td.ant-table-cell {
+                padding: 20px 10px 20px 0;
+                border-bottom: 1px solid #e6effb;
+                &:last-child {
+                    padding-right: 0;
+                }
+                .lead {
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #495463;
+                    letter-spacing: 0.01em;
+                    line-height: 1;
+                    display: block;
+                    margin-top: 0;
+                    margin-bottom: 0;
+                }
+                .sub {
+                    font-size: 10px;
+                    font-weight: 400;
+                    color: #758698;
+                    letter-spacing: 0.01em;
+                    line-height: 1;
+                    padding-top: 7px;
+                    display: block;
+                    &:first-child {
+                        padding-top: 0;
+                    }
+                }
+                .sub-s2 {
+                    font-size: 12px;
+                    color: #495463;
+                    padding-top: 0;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    .dataTables_wrapper {
+        table {
+            .dt-account {
+                display: table-cell;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    .dataTables_wrapper {
+        table {
+            thead.ant-table-thead tr {
+                .lead {
+                    font-size: 14px;
+                    font-weight: 700;
+                    letter-spacing: 0.02em;
+                }
+                .sub {
+                    font-size: 12px;
+                    letter-spacing: 0.02em;
+                    padding-top: 7px;
+                }
+                .sub-s2 {
+                    font-size: 13px;
+                    color: #495463;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 576px) {
+    .dataTables_wrapper {
+        table {
+            .dt-amount {
+                display: table-cell;
+            }
+        }
+    }
+}
+
+@media (min-width: 420px) {
+    .dataTables_wrapper {
+        table {
+            .dt-type-text,
+            .dt-type-md {
+                display: inline-block;
+            }
+            .dt-type-sm {
+                display: none;
+            }
+        }
+    }
+}
