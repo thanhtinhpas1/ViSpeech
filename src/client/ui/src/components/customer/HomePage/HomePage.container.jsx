@@ -11,7 +11,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getFreeToken: userId => dispatch(getFreeToken(userId)),
-  getUserOrderList: ({ userId }) => dispatch(getUserOrderList({ userId })),
+  getUserOrderList: ({ userId, pagination, sortField, sortOrder }) =>
+    dispatch(getUserOrderList({ userId, pagination, sortField, sortOrder })),
 })
 
 const HomePageContainer = connect(mapStateToProps, mapDispatchToProps)(HomePage)

@@ -1,8 +1,8 @@
-import {Module, OnModuleInit} from '@nestjs/common';
-import {InjectRepository, TypeOrmModule} from '@nestjs/typeorm';
-import {CONSTANTS} from 'common/constant';
-import {getMongoRepository, Repository} from 'typeorm';
-import {RoleDto} from './dtos/roles.dto';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
+import { getMongoRepository, Repository } from 'typeorm';
+import { RoleDto } from './dtos/roles.dto';
 
 @Module({
     imports: [
@@ -21,13 +21,15 @@ export class RolesModule implements OnModuleInit {
     }
 
     async persistRolesToDB() {
-        const userRole = await getMongoRepository(RoleDto).find({name: CONSTANTS.ROLE.USER});
-        const manageUserRole = await getMongoRepository(RoleDto).find({name: CONSTANTS.ROLE.MANAGER_USER});
-        const adminRole = await getMongoRepository(RoleDto).find({name: CONSTANTS.ROLE.ADMIN});
-        if (!userRole[0] && !adminRole[0] && !manageUserRole[0]) {
-            getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.USER));
-            getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.MANAGER_USER));
-            getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.ADMIN));
+        try {
+            await getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.USER));
+            await getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.MANAGER_USER));
+            await getMongoRepository(RoleDto).save(new RoleDto(CONSTANTS.ROLE.ADMIN));
+        } catch (e) {
+            if ('duplicate key error'.includes(e.message)) {
+                Logger.log('Roles existed.');
+            }
+            Logger.warn('Something went wrong when seed roles.');
         }
     }
 }

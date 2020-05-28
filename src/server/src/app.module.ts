@@ -32,8 +32,6 @@ import { RequestModule } from './requests/request.module';
         RequestModule,
         TaskModule,
     ],
-    providers: [
-    ]
 })
 export class AppModule {
 }

@@ -114,8 +114,8 @@ export class UsersModule implements OnModuleInit {
     }
 
     private async seedAdminAccount() {
-        const admin = new UserDto(config.ADMIN.NAME, config.ADMIN.LAST_NAME, config.ADMIN.USERNAME, Utils.hashPassword(config.ADMIN.PASS),
-            config.ADMIN.EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
+        const admin = new UserDto(config.APPLICATION.ADMIN_NAME, config.APPLICATION.ADMIN_LAST_NAME,'admin', Utils.hashPassword('admin'),
+            config.APPLICATION.ADMIN_EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
         await this.repository.save(admin).then(() => {
             Logger.log('Seed admin account success.', 'UserModule');
         }).catch(err => Logger.warn('User admin existed.', err.message));

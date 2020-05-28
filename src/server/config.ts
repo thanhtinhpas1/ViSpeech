@@ -75,12 +75,13 @@ const configs = {
             TYPE_200_MINUTES: process.env.TOKEN_200_MINUTES || 200,
             TYPE_500_MINUTES: process.env.TOKEN_500_MINUTES || 500,
         },
-        ADMIN: {
-            NAME: process.env.ADMIN_NAME || 'admin',
-            LAST_NAME: process.env.ADMIN_LAST_NAME || 'admin',
-            USERNAME: process.env.USERNAME || 'admin',
-            PASS: process.env.ADMIN_PASSWORD || 'admin',
-        }
+        APPLICATION: {
+            ADMIN_NAME: process.env.ADMIN_NAME || 'admin',
+            ADMIN_LAST_NAME: process.env.ADMIN_LAST_NAME || 'admin',
+            ADMIN_USERNAME: process.env.USERNAME || 'admin',
+            ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'admin',
+            ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@gmail.com',
+        },
     },
     development: {},
     production: {

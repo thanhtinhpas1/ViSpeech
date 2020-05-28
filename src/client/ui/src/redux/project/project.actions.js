@@ -1,6 +1,6 @@
 import ProjectTypes from './project.types'
 
-export const onClearOrderState = () => ({
+export const onClearProjectState = () => ({
   type: ProjectTypes.CLEAR_PROJECT_STATE,
 })
 

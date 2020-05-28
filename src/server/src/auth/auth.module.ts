@@ -35,7 +35,4 @@ import { JwtStrategy } from './jwt.strategy';
     exports: [JwtModule, AuthService]
 })
 export class AuthModule {
-    constructor(private readonly query$: QueryBus) {
-    }
-
 }

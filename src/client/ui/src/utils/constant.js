@@ -16,9 +16,9 @@ export const PERMISSIONS = {
 }
 export const TOKEN_TYPE = {
   FREE: { name: 'FREE', minutes: 10, viText: 'Miễn phí 10 phút', cssClass: 'badge-success' },
-  '50-MINS': { name: '50-MINS', minutes: 50, viText: '50 phút', cssClass: 'badge-primary' },
-  '200-MINS': { name: '200-MINS', minutes: 200, viText: '200 phút', cssClass: 'badge-light' },
-  '500-MINS': { name: '500-MINS', minutes: 500, viText: '500 phút', cssClass: 'badge-warning' },
+  '50-MINUTES': { name: '50-MINUTES', minutes: 50, viText: '50 phút', cssClass: 'badge-primary' },
+  '200-MINUTES': { name: '200-MINUTES', minutes: 200, viText: '200 phút', cssClass: 'badge-light' },
+  '500-MINUTES': { name: '500-MINUTES', minutes: 500, viText: '500 phút', cssClass: 'badge-warning' },
 }
 export const STATUS = {
   PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass: 'data-state-progress' },

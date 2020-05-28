@@ -100,7 +100,7 @@ const Utils = {
       }
     }
     // case duplicate
-    return failedAction ? `${failedAction}.<br/>${errMessage}` : `${errMessage}`
+    return failedAction ? `${failedAction}. ${errMessage}` : `${errMessage}`
   },
   buildSortQuery: (sortField, sortOrder) => {
     if (sortField && sortOrder) {

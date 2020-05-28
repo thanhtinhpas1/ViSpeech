@@ -1,7 +1,7 @@
-import {Column, Entity} from 'typeorm';
-import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsIn, IsNotEmpty, IsString} from 'class-validator';
-import {CONSTANTS} from 'common/constant';
+import { Column, Entity } from 'typeorm';
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { CONSTANTS } from 'common/constant';
 import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
 
@@ -19,6 +19,6 @@ export class RoleDto extends BaseEntityDto {
         CONSTANTS.ROLE.MANAGER_USER,
         CONSTANTS.ROLE.ADMIN,
     ])
-    @Column()
+    @Column({unique: true})
     name: string;
 }

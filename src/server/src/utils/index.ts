@@ -15,7 +15,7 @@ export const Utils = {
     getUuid: () => {
         return uuidv1();
     },
-    comparePassword: (plainTextPassword, hashedPassword) => {
+    comparePassword: (plainTextPassword: string, hashedPassword: string) => {
         return bcrypt.compareSync(plainTextPassword, hashedPassword);
     },
     removePropertyFromObject: (obj, property) => {
@@ -92,10 +92,6 @@ export const Utils = {
             Logger.error('Something went wrong when parse cron', err);
             return null;
         }
-    },
-    getMilisecondsOfDate(date: number) {
-        if (date <= 0) return 0;
-        return 1000 * 60 * 60 * 24 * date;
     },
     getErrorObj: error => {
         const errorObj = {
