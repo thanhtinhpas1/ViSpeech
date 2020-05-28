@@ -48,12 +48,25 @@ export class GetAcceptedProjectsByUserIdHandler
         if (filters['status']) {
           findOptions.where['status'] = filters['status']
         }
+        if (filters['isValid']) {
+          const where = {
+            isValid: filters['isValid'] === "true" 
+          }
+          if (filters['name']) {
+            where['name'] = new RegExp(filters['name'], 'i')
+          }
+          const projects = await this.repository.find({ where });
+          if (projects.length > 0) {
+            const projectIds = projects.map(project => project._id)
+            findOptions.where['projectId'] = { $in: [...projectIds] }
+          }
+        }
       }
       if (sort) {
         const sortField = Utils.getCorrectSortField(sort.field)
         findOptions.order[sortField] = sort.order
       }
-
+      Logger.log(`Find options ${JSON.stringify(findOptions)}`)
       permissions = await this.permissionDtoRepository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
 
       for (const permission of permissions) {

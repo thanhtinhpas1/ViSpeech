@@ -18,9 +18,7 @@ export class AsrServiceGuard implements CanActivate {
         const token = Utils.extractToken(request);
         const order = await this.orderRepo.findOne({
             where: {
-                token: {
-                    value: token
-                }
+                "token.value": token
             }
         })
         if (order && CONSTANTS.STATUS.SUCCESS === order.status) return true;

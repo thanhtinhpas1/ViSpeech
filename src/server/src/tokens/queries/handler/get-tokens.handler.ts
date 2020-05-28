@@ -44,7 +44,7 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
                     findOptions.where['tokenTypeId'] = { $in: [...tokenTypeIds] }
                 }
                 if (filters['isValid']) {
-                    findOptions.where['isValid'] = filters['isValid']
+                    findOptions.where['isValid'] = filters['isValid'] === "true"
                 }
                 if (filters['ownerName']) {
                     const users = await this.userDtoRepository.find({ where: { username: new RegExp(filters['ownerName'], 'i') } });

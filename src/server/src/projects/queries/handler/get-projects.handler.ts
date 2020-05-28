@@ -41,6 +41,9 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
                         findOptions.where['userId'] = { $in: [...userIds] }
                     }
                 }
+                if (filters['isValid']) {
+                    findOptions.where['isValid'] = filters['isValid'] === "true"
+                }
             }
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)

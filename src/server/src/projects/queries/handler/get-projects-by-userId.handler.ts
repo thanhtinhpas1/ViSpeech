@@ -28,6 +28,9 @@ export class GetProjectsByUserIdHandler
                 if (filters['name']) {
                     findOptions.where['name'] = new RegExp(filters['name'], 'i') 
                 }
+                if (filters['isValid']) {
+                    findOptions.where['isValid'] = filters['isValid'] === "true"
+                }
             }   
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)
