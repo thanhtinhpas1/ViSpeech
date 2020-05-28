@@ -33,6 +33,13 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
       }
+    case OrderTypes.CLEAR_CREATE_ORDER_STATE:
+      return {
+        ...state,
+        createOrder: {
+          ...INITIAL_STATE.createOrder,
+        },
+      }
     // GET ORDER LIST
     case OrderTypes.GET_ORDER_LIST:
       return {

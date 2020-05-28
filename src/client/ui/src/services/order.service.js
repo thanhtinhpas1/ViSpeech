@@ -4,14 +4,14 @@ import Utils from 'utils'
 import { apiUrl } from './api-url'
 
 export default class OrderService {
-  static createOrder = order => {
+  static createOrder = (order, paymentIntent) => {
     const api = `${apiUrl}/orders`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
     return fetch(api, {
       method: 'POST',
-      body: JSON.stringify(order),
+      body: JSON.stringify({ order, paymentIntent }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
         Authorization: `Bearer ${jwtToken}`,

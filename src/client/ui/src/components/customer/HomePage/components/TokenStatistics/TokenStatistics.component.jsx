@@ -20,7 +20,14 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
 
   useEffect(() => {
     if (currentUser._id) {
-      getMyProjects({ userId: currentUser._id })
+      const pagination = {
+        current: 1,
+        pageSize: 100,
+      }
+      const filters = {
+        isValid: ['true'],
+      }
+      getMyProjects({ userId: currentUser._id, pagination, filters })
     }
   }, [currentUser._id, getMyProjects])
 
@@ -69,12 +76,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
     const selectedTypeId = window.$('.token-currency-choose .pay-option input[name="tokenType"]:checked').attr('id')
     const index = getTokenTypeListObj.tokenTypeList.findIndex(x => x._id === selectedTypeId)
     let selectedType = getTokenTypeListObj.tokenTypeList[index]
-    selectedType = Utils.removePropertiesFromObject(selectedType, [
-      'defaultChecked',
-      'saleOff',
-      'createdDate',
-      'updatedDate',
-    ])
+    selectedType = Utils.removePropertiesFromObject(selectedType, ['defaultChecked', 'createdDate', 'updatedDate'])
     const payOnlineObj = {
       user: currentUser,
       tokenType: selectedType,

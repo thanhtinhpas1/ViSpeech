@@ -77,9 +77,9 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       title: () => <div className="dt-type-text">Loại token</div>,
       dataIndex: 'tokenType',
       filters: [
-        { text: TOKEN_TYPE['50-MINS'].viText, value: TOKEN_TYPE['50-MINS'].name },
-        { text: TOKEN_TYPE['200-MINS'].viText, value: TOKEN_TYPE['200-MINS'].name },
-        { text: TOKEN_TYPE['500-MINS'].viText, value: TOKEN_TYPE['500-MINS'].name },
+        { text: TOKEN_TYPE['50-MINUTES'].viText, value: TOKEN_TYPE['50-MINUTES'].name },
+        { text: TOKEN_TYPE['200-MINUTES'].viText, value: TOKEN_TYPE['200-MINUTES'].name },
+        { text: TOKEN_TYPE['500-MINUTES'].viText, value: TOKEN_TYPE['500-MINUTES'].name },
       ],
       filterMultiple: false,
       render: tokenType => (

@@ -35,7 +35,7 @@ const PayOnlineModal = ({ payOnlineModal, myProjectList }) => {
                 {payOnlineModal.tokenType && (
                   <>
                     <strong>{payOnlineModal.tokenType.minutes} phút</strong> với số tiền{' '}
-                    <strong>{payOnlineModal.tokenType.price} $</strong>.
+                    <strong>{payOnlineModal.tokenType.saleOffPrice} $</strong>.
                   </>
                 )}
               </p>

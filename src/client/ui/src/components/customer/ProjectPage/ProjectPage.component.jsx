@@ -182,10 +182,12 @@ const ProjectPage = ({
       dataIndex: '_id',
       render: (_id, record) => {
         const isRejected = record.status.value === STATUS.REJECTED.name
+        const isProjectValid = record.isValid.name === STATUS.VALID.name
+        const disableBtn = isRejected || !isProjectValid
         return (
           <Link
-            to={isRejected ? '#!' : `${CUSTOMER_PATH}/accepted-project/${_id}`}
-            className={`btn btn-light-alt btn-xs btn-icon ${isRejected ? 'disabled' : ''}`}
+            to={disableBtn ? '#!' : `${CUSTOMER_PATH}/accepted-project/${_id}`}
+            className={`btn btn-light-alt btn-xs btn-icon ${disableBtn ? 'disabled' : ''}`}
           >
             <em className="ti ti-eye" />
           </Link>
