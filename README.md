@@ -27,9 +27,45 @@ In case you don't feel like downloading dependencies locally, I've added support
 
 ## Installation
 
-```bash
-$ yarn
-```
+<details>
+<summary>With Docker</summary>
+
+1. Install Docker ([from the Docker website](https://www.docker.com/get-started))
+2. Fork and clone the ReactiveTraderCloud repo ([see Contributing page](CONTRIBUTING.md))
+3. From the src folder run: `docker-compose up`
+4. Open a browser and navigate to http://localhost to see the application running
+5. To shutdown the application run: `docker-compose down`
+   </details>
+
+<details>
+<summary>With Docker and Kubernetes</summary>
+
+1. Follow the steps to run with Docker
+2. From the src directory run `docker-compose build`
+3. Set the environment variables:
+   ```bash
+   export DOCKER_USER=localuser
+   export BUILD_VERSION=0.0.0
+   ```
+4. Run the following command:
+   ```bash
+   docker stack deploy --orchestrator kubernetes --compose-file ./docker-compose.yml rtcstack
+   ```
+5. To see your services and pods running, run:
+   ```bash
+   kubectl get services
+   kubectl get pods
+   ```
+6. Open a browser and navigate to http://localhost to see the application running
+
+7. To shutdown / remove stack, run: `kubectl delete stack rtcstack`
+   </details>
+   
+## CI/CD
+
+We practice continuous integration and deployment. Every merge to master causes a build and deployment to our [development environment](https://web-dev.adaptivecluster.com) to occur as follows:
+
+![image](docs/CICD.jpg)
 
 ## Running the app
 

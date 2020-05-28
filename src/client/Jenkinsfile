@@ -18,24 +18,24 @@ pipeline {
                 sh 'docker system prune -af --volumes'
             }
         }
-        stage('install') {
-            steps {
-                sh 'npm install --production'
-                dir('ui') {
-                    sh 'npm install --production'
-                }
-            }
-        }
-        stage('compile') {
-            steps {
-                dir('ui') {
-                    sh 'npm run build'
-                }
-            }
-        }
+//        stage('install') {
+//            steps {
+//                sh 'npm install --production'
+//                dir('ui') {
+//                    sh 'npm install --production'
+//                }
+//            }
+//        }
+//        stage('compile') {
+//            steps {
+//                dir('ui') {
+//                    sh 'npm run build'
+//                }
+//            }
+//        }
         stage('docker') {
             steps {
-                sh 'docker build -t vispeechui .'
+                sh 'docker build -t vispeechui ./src/client'
             }
         }
         stage('delivery') {

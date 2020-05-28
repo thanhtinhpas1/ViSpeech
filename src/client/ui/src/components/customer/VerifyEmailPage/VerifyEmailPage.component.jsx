@@ -44,7 +44,7 @@ const VerifyEmailPage = ({
       button: {
         content: 'Về trang cá nhân',
         clickFunc: () => {
-          window.$('#info-modal').modal('hide')
+          window.$('#verifyEmail-modal').modal('hide')
           history.push(`${CUSTOMER_PATH}/profile`)
         },
       },
@@ -56,7 +56,7 @@ const VerifyEmailPage = ({
       (verifyEmailObj.isLoading === false && verifyEmailObj.isSuccess === true)
     ) {
       setInfoModal(infoObj)
-      window.$('#info-modal').modal('show')
+      window.$('#verifyEmail-modal').modal('show')
       return
     }
 
@@ -68,7 +68,7 @@ const VerifyEmailPage = ({
       },
     }
     setInfoModal(infoObj)
-    window.$('#info-modal').modal('show')
+    window.$('#verifyEmail-modal').modal('show')
 
     verifyEmail(emailToken)
     try {
@@ -123,7 +123,7 @@ const VerifyEmailPage = ({
           button: {
             content: 'Về trang cá nhân',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#verifyEmail-modal').modal('hide')
               history.push(`${CUSTOMER_PATH}/profile`)
             },
           },
@@ -136,7 +136,7 @@ const VerifyEmailPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#verifyEmail-modal').modal('hide')
             },
           },
         })
@@ -144,7 +144,7 @@ const VerifyEmailPage = ({
     }
   }, [verifyEmailObj, history])
 
-  return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />
+  return <InfoTemplatePage infoTemplate={infoTemplate} infoModalId="verifyEmail-modal" infoModal={infoModal} />
 }
 
 export default VerifyEmailPage

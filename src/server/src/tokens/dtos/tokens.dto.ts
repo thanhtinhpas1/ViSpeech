@@ -90,6 +90,7 @@ export class TokenDto extends BaseEntityDto {
     @IsBoolean(ErrUtil.getMessage('isValid', ERR.IsBoolean))
     @Column({
         default: true,
+        nullable: false,
     })
     isValid: boolean;
 

@@ -22,7 +22,7 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
         const { streamId, userId, isDeleted } = event;
 
         try {
-            if (isDeleted === "true") {
+            if (Utils.convertToBoolean(isDeleted)) {
                 await this.repository.delete({ _id: userId });
             } else {
                 await this.repository.update({ _id: userId }, { isActive: false })

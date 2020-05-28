@@ -24,7 +24,7 @@ export class ProjectUpdatedHandler implements IEventHandler<ProjectUpdatedEvent>
         const { _id, ...projectInfo } = projectDto;
 
         try {
-            const formattedInfo = Utils.removePropertyFromObject(projectInfo, "userId");
+            const formattedInfo = Utils.removePropertiesFromObject(projectInfo, ['userId', 'isValid']);
             await this.repository.update({ _id }, formattedInfo);
             this.eventBus.publish(new ProjectUpdatedSuccessEvent(streamId, projectDto));
         } catch (error) {

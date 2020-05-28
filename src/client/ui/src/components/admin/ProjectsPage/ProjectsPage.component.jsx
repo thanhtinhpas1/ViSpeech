@@ -48,7 +48,7 @@ const ProjectsPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#deleteProject-modal').modal('hide')
               getProjectList({ pagination: { current: 1, pageSize: 10 } })
             },
           },
@@ -61,7 +61,7 @@ const ProjectsPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#deleteProject-modal').modal('hide')
             },
           },
         })
@@ -79,7 +79,7 @@ const ProjectsPage = ({
         isLoading: true,
       },
     })
-    window.$('#info-modal').modal('show')
+    window.$('#deleteProject-modal').modal('show')
 
     deleteProject(projectId)
     try {
@@ -215,7 +215,7 @@ const ProjectsPage = ({
           </div>
         </div>
       </div>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="deleteProject-modal" infoModal={infoModal} />
     </div>
   )
 }

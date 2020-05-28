@@ -23,6 +23,7 @@ export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent>
         const { streamId, projectDto } = event;
 
         try {
+            projectDto.isValid = Utils.convertToBoolean(projectDto.isValid);
             await this.repository.save(projectDto);
             this.eventBus.publish(new ProjectCreatedSuccessEvent(streamId, projectDto));
         } catch (error) {

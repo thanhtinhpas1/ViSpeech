@@ -44,7 +44,7 @@ const CreateProjectPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#createProject-modal').modal('hide')
             },
           },
         })
@@ -56,7 +56,7 @@ const CreateProjectPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#createProject-modal').modal('hide')
             },
           },
         })
@@ -82,7 +82,7 @@ const CreateProjectPage = ({
         isLoading: true,
       },
     })
-    window.$('#info-modal').modal('show')
+    window.$('#createProject-modal').modal('show')
 
     createProject(project)
     try {
@@ -132,7 +132,7 @@ const CreateProjectPage = ({
           </div>
         </div>
       </div>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="createProject-modal" infoModal={infoModal} />
     </div>
   )
 }

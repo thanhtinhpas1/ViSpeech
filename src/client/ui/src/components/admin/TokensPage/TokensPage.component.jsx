@@ -41,7 +41,7 @@ const TokensPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#deleteToken-modal').modal('hide')
               getTokenList({ pagination: { current: 1, pageSize: 10 } })
             },
           },
@@ -54,7 +54,7 @@ const TokensPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#deleteToken-modal').modal('hide')
             },
           },
         })
@@ -72,7 +72,7 @@ const TokensPage = ({
         isLoading: true,
       },
     })
-    window.$('#info-modal').modal('show')
+    window.$('#deleteToken-modal').modal('show')
 
     deleteToken(tokenId)
     try {
@@ -259,7 +259,7 @@ const TokensPage = ({
           </div>
         </div>
       </div>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="deleteToken-modal" infoModal={infoModal} />
     </div>
   )
 }

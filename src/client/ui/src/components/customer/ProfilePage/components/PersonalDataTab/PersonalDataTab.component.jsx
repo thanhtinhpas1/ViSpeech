@@ -51,7 +51,7 @@ const PersonalDataTab = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#updateUserInfo-modal').modal('hide')
             },
           },
         })
@@ -63,7 +63,7 @@ const PersonalDataTab = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#updateUserInfo-modal').modal('hide')
             },
           },
         })
@@ -92,7 +92,7 @@ const PersonalDataTab = ({
         isLoading: true,
       },
     })
-    window.$('#info-modal').modal('show')
+    window.$('#updateUserInfo-modal').modal('show')
 
     updateCurrentUser(currentUser._id, user)
     try {
@@ -198,7 +198,7 @@ const PersonalDataTab = ({
           </button>
         </div>
       </form>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="updateUserInfo-modal" infoModal={infoModal} />
     </div>
   )
 }

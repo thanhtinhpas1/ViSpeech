@@ -26,7 +26,7 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
         try {
             const user = await this.repository.findOne({ _id: userDto._id });
 
-            let formattedInfo = Utils.removePropertiesFromObject(userInfo, ['password', 'roles']);
+            let formattedInfo = Utils.removePropertiesFromObject(userInfo, ['password', 'roles', 'isActive']);
             if (Utils.isEmailVerified(user.roles)) {
                 formattedInfo = Utils.removePropertyFromObject(formattedInfo, 'email');
             }

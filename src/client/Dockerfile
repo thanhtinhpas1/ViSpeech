@@ -14,8 +14,8 @@ COPY ui/package.json package-lock.json /tmp/ui/
 FROM base AS dependencies
 
 # Install Node.js dependencies
-RUN cd /tmp && npm install --production
-RUN cd /tmp/ui && npm install --production
+RUN cd /tmp && npm install
+RUN cd /tmp/ui && npm install
 
 ### RELEASE
 FROM base AS development

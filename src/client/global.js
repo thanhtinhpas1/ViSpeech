@@ -2,7 +2,7 @@
 module.exports = {
     proxy: {
         protocol: 'http',
-        host: 'thanhtinh.cf', // TODO: internal network
+        host: 'asr.vietspeech.com', // TODO: internal network
         port: 7070,
         basePath: '/v1'
     },

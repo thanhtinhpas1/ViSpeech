@@ -43,33 +43,33 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
         button: {
           content: 'Đến trang cá nhân',
           clickFunc: () => {
-            window.$('#info-modal').modal('hide')
+            window.$('#buyToken-modal').modal('hide')
             history.push(`${CUSTOMER_PATH}/profile`)
           },
         },
       }
       setInfoModal(infoObj)
-      window.$('#info-modal').modal('show')
+      window.$('#buyToken-modal').modal('show')
       return
     }
 
     if (getMyProjectListObj.myProjectList.length === 0) {
       const infoObj = {
         title: 'Không thể thực hiện tác vụ',
-        message: 'Bạn chưa có project nào. Tạo project để thực hiện tác vụ này.',
+        message: 'Bạn chưa có dự án nào. Tạo dự án để thực hiện tác vụ này.',
         icon: {
           isSuccess: false,
         },
         button: {
-          content: 'Tạo project',
+          content: 'Tạo dự án',
           clickFunc: () => {
-            window.$('#info-modal').modal('hide')
+            window.$('#buyToken-modal').modal('hide')
             history.push(`${CUSTOMER_PATH}/create-project`)
           },
         },
       }
       setInfoModal(infoObj)
-      window.$('#info-modal').modal('show')
+      window.$('#buyToken-modal').modal('show')
       return
     }
 
@@ -129,7 +129,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
         </div>
       </div>
       <PayOnlineModal payOnlineModal={payOnlineModal} myProjectList={getMyProjectListObj.myProjectList} />
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="buyToken-modal" infoModal={infoModal} />
     </>
   )
 }

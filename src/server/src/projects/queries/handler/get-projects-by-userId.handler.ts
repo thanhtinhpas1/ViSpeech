@@ -29,7 +29,7 @@ export class GetProjectsByUserIdHandler
                     findOptions.where['name'] = new RegExp(filters['name'], 'i') 
                 }
                 if (filters['isValid']) {
-                    findOptions.where['isValid'] = filters['isValid'] === "true"
+                    findOptions.where['isValid'] = Utils.convertToBoolean(filters['isValid'])
                 }
             }   
             if (sort) {
