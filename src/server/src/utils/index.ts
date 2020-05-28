@@ -65,6 +65,9 @@ export const Utils = {
         }
         return param;
     },
+    convertToBoolean: value => {
+        return typeof value === 'boolean' ? value : value === 'true'
+    },
     previousDateOfCron(cron: string, currentDate?: Date): Date {
         if (!currentDate) currentDate = new Date();
         const options = {

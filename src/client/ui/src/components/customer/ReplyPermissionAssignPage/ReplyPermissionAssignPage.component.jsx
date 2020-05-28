@@ -52,7 +52,7 @@ const ReplyPermissionAssignPage = ({
         button: {
           content: 'Về trang dự án',
           clickFunc: () => {
-            window.$('#info-modal').modal('hide')
+            window.$('#replyPermissionAssign-modal').modal('hide')
             history.push(`${CUSTOMER_PATH}/projects`)
           },
         },
@@ -61,7 +61,7 @@ const ReplyPermissionAssignPage = ({
       // 2 cases: refresh page or click verify button again
       if (replyPermissionAssignObj.isLoading === false && replyPermissionAssignObj.isSuccess === true) {
         setInfoModal(infoObj)
-        window.$('#info-modal').modal('show')
+        window.$('#replyPermissionAssign-modal').modal('show')
         return
       }
 
@@ -73,7 +73,7 @@ const ReplyPermissionAssignPage = ({
         },
       }
       setInfoModal(infoObj)
-      window.$('#info-modal').modal('show')
+      window.$('#replyPermissionAssign-modal').modal('show')
 
       replyPermissionAssign({ emailToken, status })
       try {
@@ -140,7 +140,7 @@ const ReplyPermissionAssignPage = ({
           button: {
             content: 'Về trang chủ',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#replyPermissionAssign-modal').modal('hide')
               history.push(`${CUSTOMER_PATH}/`)
             },
           },
@@ -156,7 +156,7 @@ const ReplyPermissionAssignPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#replyPermissionAssign-modal').modal('hide')
             },
           },
         })
@@ -164,7 +164,9 @@ const ReplyPermissionAssignPage = ({
     }
   }, [replyPermissionAssignObj, history])
 
-  return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />
+  return (
+    <InfoTemplatePage infoTemplate={infoTemplate} infoModalId="replyPermissionAssign-modal" infoModal={infoModal} />
+  )
 }
 
 export default ReplyPermissionAssignPage

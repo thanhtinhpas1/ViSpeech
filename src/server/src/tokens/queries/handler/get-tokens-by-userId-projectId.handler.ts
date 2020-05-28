@@ -34,7 +34,7 @@ export class GetTokensByUserIdAndProjectIdHandler
                     findOptions.where['tokenTypeId'] = { $in: [...tokenTypeIds] }
                 }
                 if (filters['isValid']) {
-                    findOptions.where['isValid'] = filters['isValid'] === "true"
+                    findOptions.where['isValid'] = Utils.convertToBoolean(filters['isValid'])
                 }
             }   
             if (sort) {

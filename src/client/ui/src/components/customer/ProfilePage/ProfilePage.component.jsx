@@ -65,7 +65,7 @@ const ProfilePage = ({
       },
     }
     setInfoModal(infoObj)
-    window.$('#info-modal').modal('show')
+    window.$('#sendVerifyEmail-modal').modal('show')
 
     sendVerifyEmail(currentUser._id)
     try {
@@ -163,7 +163,7 @@ const ProfilePage = ({
           </div>
         </div>
       </div>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="sendVerifyEmail-modal" infoModal={infoModal} />
     </div>
   )
 }

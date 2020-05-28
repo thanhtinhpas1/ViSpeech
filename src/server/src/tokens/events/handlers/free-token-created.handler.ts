@@ -29,8 +29,9 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
         try {
             const tokenTypeDto = await this.repositoryTokenType.findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
             token.tokenTypeId = tokenTypeDto._id;
-            token.minutes = tokenTypeDto.minutes;
+            token.minutes = Number(tokenTypeDto.minutes);
             token.usedMinutes = 0;
+            token.isValid = Utils.convertToBoolean(token.isValid);
             token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
             await this.repository.save(token);
             this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, tokenDto));

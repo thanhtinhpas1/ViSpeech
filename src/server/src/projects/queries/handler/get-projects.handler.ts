@@ -42,7 +42,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
                     }
                 }
                 if (filters['isValid']) {
-                    findOptions.where['isValid'] = filters['isValid'] === "true"
+                    findOptions.where['isValid'] = Utils.convertToBoolean(filters['isValid'])
                 }
             }
             if (sort) {

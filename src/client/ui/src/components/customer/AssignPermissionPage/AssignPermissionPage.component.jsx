@@ -46,7 +46,7 @@ const AssignPermissionPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#assignPermission-modal').modal('hide')
             },
           },
         })
@@ -58,7 +58,7 @@ const AssignPermissionPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#assignPermission-modal').modal('hide')
             },
           },
         })
@@ -91,7 +91,7 @@ const AssignPermissionPage = ({
         isLoading: true,
       },
     })
-    window.$('#info-modal').modal('show')
+    window.$('#assignPermission-modal').modal('show')
 
     assignPermission(permission)
     try {
@@ -150,7 +150,7 @@ const AssignPermissionPage = ({
           </div>
         </div>
       </div>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="assignPermission-modal" infoModal={infoModal} />
     </div>
   )
 }

@@ -241,13 +241,13 @@ const ProjectPage = ({
       button: {
         content: 'Đến trang cá nhân',
         clickFunc: () => {
-          window.$('#info-modal').modal('hide')
+          window.$('#createProject-modal').modal('hide')
           history.push(`${CUSTOMER_PATH}/profile`)
         },
       },
     }
     setInfoModal(infoObj)
-    window.$('#info-modal').modal('show')
+    window.$('#createProject-modal').modal('show')
   }
 
   return (
@@ -284,7 +284,7 @@ const ProjectPage = ({
                       Tạo mới
                       <em className="fas fa-plus" />
                     </button>
-                    <InfoModal infoModal={infoModal} />
+                    <InfoModal id="createProject-modal" infoModal={infoModal} />
                   </>
                 ))}
             </div>

@@ -2,9 +2,9 @@
 import React from 'react'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
 
-const InfoModal = ({ infoModal }) => {
+const InfoModal = ({ id, infoModal }) => {
   return (
-    <div className="modal fade" id="info-modal" tabIndex={-1}>
+    <div className="modal fade" id={id} tabIndex={-1}>
       <div className="modal-dialog modal-dialog-sm modal-dialog-centered">
         <div className="modal-content pb-0">
           <div className="popup-body text-center">

@@ -54,7 +54,7 @@ const UserListPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#deleteUser-modal').modal('hide')
               getUserList({ pagination: { current: 1, pageSize: 5 } })
             },
           },
@@ -67,7 +67,7 @@ const UserListPage = ({
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#info-modal').modal('hide')
+              window.$('#deleteUser-modal').modal('hide')
             },
           },
         })
@@ -85,7 +85,7 @@ const UserListPage = ({
         isLoading: true,
       },
     })
-    window.$('#info-modal').modal('show')
+    window.$('#deleteUser-modal').modal('show')
 
     deleteUser(userId)
     try {
@@ -226,7 +226,7 @@ const UserListPage = ({
           </div>
         </div>
       </div>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id="deleteUser-modal" infoModal={infoModal} />
     </div>
   )
 }

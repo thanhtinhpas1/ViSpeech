@@ -2,7 +2,7 @@
 import React from 'react'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
 
-const InfoTemplatePage = ({ infoTemplate, infoModal }) => {
+const InfoTemplatePage = ({ infoModalId, infoTemplate, infoModal }) => {
   return (
     <div className="page-content">
       <div className="container">
@@ -91,7 +91,7 @@ const InfoTemplatePage = ({ infoTemplate, infoModal }) => {
           </div>
         </div>
       </div>
-      <InfoModal infoModal={infoModal} />
+      <InfoModal id={infoModalId} infoModal={infoModal} />
     </div>
   )
 }

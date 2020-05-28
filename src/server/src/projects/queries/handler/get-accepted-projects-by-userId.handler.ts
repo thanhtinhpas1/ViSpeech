@@ -50,7 +50,7 @@ export class GetAcceptedProjectsByUserIdHandler
         }
         if (filters['isValid']) {
           const where = {
-            isValid: filters['isValid'] === "true" 
+            isValid: Utils.convertToBoolean(filters['isValid'])
           }
           if (filters['name']) {
             where['name'] = new RegExp(filters['name'], 'i')
