@@ -12,19 +12,19 @@ const Header = () => {
         name: 'Trang chủ',
       },
       {
-        href: 'features.html',
+        href: '#introduce',
         isActive: false,
-        name: 'Tính năng',
+        name: 'Giới thiệu',
       },
       {
-        href: 'price.html',
+        href: '#feature',
         isActive: false,
-        name: 'Bảng giá',
+        name: 'Tính năng',
       },
       {
-        href: 'contact.html',
+        href: '#advantage',
         isActive: false,
-        name: 'Liên hệ',
+        name: 'Lợi ích',
       },
       {
         href: '/login',

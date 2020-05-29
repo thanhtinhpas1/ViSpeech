@@ -13,7 +13,7 @@ COPY package.json package-lock.json tsconfig.json /tmp/
 FROM base AS dependencies
 
 # Install Node.js dependencies
-RUN cd /tmp && npm install
+RUN cd /tmp && npm install --production
 
 ### RELEASE
 FROM base AS development

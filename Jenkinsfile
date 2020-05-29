@@ -18,21 +18,6 @@ pipeline {
                 sh 'docker system prune -af --volumes'
             }
         }
-        stage('install') {
-            steps {
-                sh 'npm install'
-            }
-        }
-//        stage('test') {
-//            steps {
-//                sh 'npm run lint'
-//            }
-//        }
-        stage('build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
         stage('docker') {
             steps {
                 sh 'docker build -t vispeech .'

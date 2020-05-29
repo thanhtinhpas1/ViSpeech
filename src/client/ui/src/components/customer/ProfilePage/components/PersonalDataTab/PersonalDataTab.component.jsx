@@ -144,7 +144,7 @@ const PersonalDataTab = ({
           <div className="col-md-6">
             <div className="input-item input-with-label">
               <label htmlFor="username" className="input-item-label">
-                Username
+                Tên đăng nhập
               </label>
               <input
                 className="input-bordered"
@@ -152,6 +152,7 @@ const PersonalDataTab = ({
                 id="username"
                 name="username"
                 defaultValue={currentUser.username || ''}
+                disabled
               />
             </div>
           </div>
@@ -166,7 +167,8 @@ const PersonalDataTab = ({
                 id="email"
                 name="email"
                 defaultValue={currentUser.email || ''}
-                disabled={Utils.isEmailVerified(currentUser.roles)}
+                disabled
+                // disabled={Utils.isEmailVerified(currentUser.roles)}
               />
             </div>
           </div>
