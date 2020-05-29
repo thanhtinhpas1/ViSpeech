@@ -1354,7 +1354,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   outline: none !important;
 }
 .btn:disabled {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 .btn .ti,
 .btn [class*='fa-'] {
@@ -1523,7 +1523,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 .btn-dark:active,
 .btn-dark.active {
   color: #fff;
-  background: #3e4854;
+  background: rgba(0, 0, 0, 0.12);
   border-color: #3e4854;
 }
 .btn-dark-alt {
