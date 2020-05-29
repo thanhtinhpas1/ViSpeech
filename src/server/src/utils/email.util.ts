@@ -8,7 +8,7 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(config.SEND_GRID_API_KEY);
 Logger.log(config.SEND_GRID_API_KEY, "SEND_GRID_API_KEY")
 
-const hostUrl = 'http://localhost:3000/customer';
+const hostUrl = `http://${config.HOST}:3200/customer`;
 const sendEmail = (to, subject, contentEmail) => {
     const msg = {
         to,
@@ -18,14 +18,6 @@ const sendEmail = (to, subject, contentEmail) => {
         html: contentEmail,
     };
     console.log('msg ', msg);
-    // (async () => {
-    //     try {
-    //       await sgMail.send(msg);
-    //       console.log("success")
-    //     } catch (err) {
-    //       console.error(err.toString());
-    //     }
-    //   })();
     return sgMail.send(msg);
 };
 

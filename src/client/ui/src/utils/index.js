@@ -3,10 +3,10 @@ import { ROLES, SORT_ORDER } from './constant'
 
 const Utils = {
   checkIfIsUser: roleList => {
-    // if (!Array.isArray(roleList)) {
-    //   return ''
-    // }
     return roleList.findIndex(role => role.name === ROLES.USER || role.name === ROLES.MANAGER_USER) !== -1
+  },
+  isAdmin: roleList => {
+    return roleList.findIndex(role => role.name === ROLES.ADMIN) !== -1
   },
   getRolesInArray: roleList => {
     return roleList.map(role => role.name)

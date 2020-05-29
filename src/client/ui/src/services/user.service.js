@@ -1,10 +1,10 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import {DEFAULT_ERR_MESSAGE, JWT_TOKEN} from 'utils/constant'
 import Utils from 'utils'
-import { apiUrl } from './api-url'
+import {apiUrl} from './api-url'
 
 export default class UserService {
-  static login = ({ username, password }) => {
+  static login = ({username, password}) => {
     const api = `${apiUrl}/login`
     let status = 400
     // eslint-disable-next-line no-undef
@@ -26,7 +26,7 @@ export default class UserService {
         if (status !== 201) {
           if (status === 401) {
             const msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
-            throw new Error(msg || DEFAULT_ERR_MESSAGE)
+            throw new Error(msg)
           } else {
             throw new Error(DEFAULT_ERR_MESSAGE)
           }
@@ -35,7 +35,8 @@ export default class UserService {
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -58,17 +59,18 @@ export default class UserService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         STORAGE.setPreferences(JWT_TOKEN, result.user.token)
         return result.user
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
-  static register = ({ username, email, lastName, firstName, password, roles }) => {
+  static register = ({username, email, lastName, firstName, password, roles}) => {
     const api = `${apiUrl}/users`
     let status = 400
     // eslint-disable-next-line no-undef
@@ -93,12 +95,14 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          const msg = 'Thông tin đăng ký chưa chính xác, vui lòng thử lại.'
+          throw new Error(msg)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -120,23 +124,24 @@ export default class UserService {
       .then(result => {
         if (status !== 200) {
           STORAGE.removePreferences(JWT_TOKEN)
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
         STORAGE.removePreferences(JWT_TOKEN)
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
   static getUserList = filterConditions => {
-    const { pagination, sortField, sortOrder, filters } = filterConditions
-    const { current, pageSize } = pagination
+    const {pagination, sortField, sortOrder, filters} = filterConditions
+    const {current, pageSize} = pagination
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    let query = `${Utils.parameterizeObject({offset, limit})}`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
@@ -158,12 +163,13 @@ export default class UserService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -185,12 +191,13 @@ export default class UserService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -216,12 +223,14 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 200) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          const msg = 'Thông tin cập nhật không hợp lệ.'
+          throw new Error(msg)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -247,12 +256,14 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          const msg = 'Thông tin người dùng chưa hợp lệ, vui lòng thử lại.'
+          throw new Error(msg)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -275,12 +286,13 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 200) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -307,12 +319,13 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -324,7 +337,7 @@ export default class UserService {
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
-      body: JSON.stringify({ emailToken }),
+      body: JSON.stringify({emailToken}),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
         Authorization: `Bearer ${jwtToken}`,
@@ -337,12 +350,13 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -366,16 +380,17 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 200) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
-  static resetPassword = ({ password, userId }) => {
+  static resetPassword = ({password, userId}) => {
     const api = `${apiUrl}/user/reset-password`
     let status = 400
     // eslint-disable-next-line no-undef
@@ -396,16 +411,17 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 200) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
-  static changePassword = ({ userId, oldPassword, newPassword }) => {
+  static changePassword = ({userId, oldPassword, newPassword}) => {
     const api = `${apiUrl}/users/change-password`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
@@ -429,12 +445,13 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 200) {
-          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
