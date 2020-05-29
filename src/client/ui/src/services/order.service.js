@@ -29,7 +29,8 @@ export default class OrderService {
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -52,12 +53,13 @@ export default class OrderService {
       })
       .then(result => {
         if (status !== 201) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -90,12 +92,13 @@ export default class OrderService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -128,12 +131,13 @@ export default class OrderService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -159,12 +163,13 @@ export default class OrderService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 }

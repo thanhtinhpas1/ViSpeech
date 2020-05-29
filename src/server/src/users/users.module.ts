@@ -13,7 +13,7 @@ import { CreateFreeTokenHandler } from 'tokens/commands/handlers/create-token.ha
 import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token-by-userId.handler';
 import { TokenRepository } from 'tokens/repository/token.repository';
 import { TokensModule } from 'tokens/tokens.module';
-import { Repository } from 'typeorm';
+import { getMongoRepository, Repository } from 'typeorm';
 
 import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
@@ -25,88 +25,41 @@ import { CommandHandlers } from './commands/handlers';
 import { UsersController } from './controllers/users.controller';
 import { UserDto } from './dtos/users.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    EmailVerifiedEvent,
-    EmailVerifiedFailedEvent,
-    EmailVerifiedSuccessEvent
-} from './events/impl/email-verified.event';
-import {
-    PasswordChangedEvent,
-    PasswordChangedFailedEvent,
-    PasswordChangedSuccessEvent,
-} from './events/impl/password-changed.event';
-import {
-    UserCreatedEvent,
-    UserCreatedFailedEvent,
-    UserCreatedSuccessEvent,
-    UserCreationStartedEvent,
-} from './events/impl/user-created.event';
+import { EmailVerifiedEvent, EmailVerifiedFailedEvent, EmailVerifiedSuccessEvent } from './events/impl/email-verified.event';
+import { PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent, } from './events/impl/password-changed.event';
+import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent, } from './events/impl/user-created.event';
 import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from './events/impl/user-deleted.event';
 import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from './events/impl/user-updated.event';
 import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
-import {
-    VerifyEmailSentEvent,
-    VerifyEmailSentFailedEvent,
-    VerifyEmailSentSuccessEvent,
-} from './events/impl/verify-email-sent.event';
+import { VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent, } from './events/impl/verify-email-sent.event';
 import { QueryHandlers } from './queries/handler';
 import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersService } from './services/users.service';
 import { config } from '../../config';
-import { AuthModule } from "../auth/auth.module";
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [
-        ClientsModule.register([{
-            name: config.KAFKA.NAME,
-            ...kafkaClientOptions,
-        }]),
-        TypeOrmModule.forFeature([UserDto, PermissionDto]),
-        forwardRef(() => AuthModule),
-        EventStoreModule.forFeature(),
-    ],
+    imports: [ClientsModule.register([{
+        name: config.KAFKA.NAME, ...kafkaClientOptions,
+    }]), TypeOrmModule.forFeature([UserDto, PermissionDto]), forwardRef(() => AuthModule), EventStoreModule.forFeature(),],
     controllers: [UsersController],
-    providers: [
-        UsersService,
-        UsersSagas, ...CommandHandlers,
-        ...EventHandlers, ...QueryHandlers,
-        CreateFreeTokenHandler,
-        DeleteTokenByUserIdHandler,
-        DeleteProjectByUserIdHandler,
-        DeletePermissionByUserIdHandler,
-        /*** REPOSITORY */
-        UserRepository, TokenRepository, ProjectRepository, PermissionRepository,
-        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
-        ClientKafka,
-    ],
+    providers: [UsersService, UsersSagas, ...CommandHandlers, ...EventHandlers, ...QueryHandlers, CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler, /*** REPOSITORY */
+        UserRepository, TokenRepository, ProjectRepository, PermissionRepository, QueryBus, EventBus, EventStore, CommandBus, EventPublisher, ClientKafka,],
     exports: [UsersService],
 })
 export class UsersModule implements OnModuleInit {
-    constructor(
-        private readonly command$: CommandBus,
-        private readonly query$: QueryBus,
-        private readonly event$: EventBus,
-        private readonly eventStore: EventStore,
-        @InjectRepository(UserDto)
-        private readonly repository: Repository<UserDto>,
-        @Inject(config.KAFKA.NAME)
-        private readonly client: ClientKafka,
-    ) {
+    constructor(private readonly command$: CommandBus, private readonly query$: QueryBus, private readonly event$: EventBus, private readonly eventStore: EventStore, @InjectRepository(UserDto) private readonly repository: Repository<UserDto>, @Inject(config.KAFKA.NAME) private readonly client: ClientKafka,) {
     }
 
     async onModuleInit() {
         this.eventStore.setEventHandlers({
-            ...this.eventHandlers,
-            ...TokensModule.eventHandlers,
-            ...ProjectsModule.eventHandlers,
-            ...PermissionsModule.eventHandlers,
+            ...this.eventHandlers, ...TokensModule.eventHandlers, ...ProjectsModule.eventHandlers, ...PermissionsModule.eventHandlers,
         });
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, CreateFreeTokenHandler,
-            DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler]);
+        this.command$.register([...CommandHandlers, CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
         // seed data
@@ -114,9 +67,8 @@ export class UsersModule implements OnModuleInit {
     }
 
     private async seedAdminAccount() {
-        const admin = new UserDto(config.APPLICATION.ADMIN_NAME, config.APPLICATION.ADMIN_LAST_NAME,'admin', Utils.hashPassword('admin'),
-            config.APPLICATION.ADMIN_EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
-        await this.repository.save(admin).then(() => {
+        const admin = new UserDto(config.APPLICATION.ADMIN_NAME, config.APPLICATION.ADMIN_LAST_NAME, 'admin', Utils.hashPassword('admin'), config.APPLICATION.ADMIN_EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
+        await getMongoRepository(UserDto).save(admin).then(() => {
             Logger.log('Seed admin account success.', 'UserModule');
         }).catch(err => Logger.warn('User admin existed.', err.message));
     }

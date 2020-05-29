@@ -23,6 +23,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
         iconClass: 'ti-eye',
         name: 'Lịch sử giao dịch',
       },
+      {
+        href: `${CUSTOMER_PATH}/reports`,
+        iconClass: 'ti-bar-chart-alt',
+        name: 'Thống kê',
+      },
     ]
     const navbarMenuArr = [
       {
@@ -44,6 +49,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
         href: `${CUSTOMER_PATH}/reports`,
         emClass: 'ikon-transactions',
         name: 'Thống kê',
+      },
+      {
+        href: `${CUSTOMER_PATH}/trial`,
+        emClass: 'ikon-distribution',
+        name: 'Dùng thử',
       },
     ]
     setUserLinks(userLinksArr)
@@ -99,9 +109,8 @@ const Header = ({ currentUser, authenticate, logout }) => {
                   </a>
                   <div className="toggle-class dropdown-content dropdown-content-right dropdown-arrow-right user-dropdown">
                     <div className="user-status">
-                      <h6 className="user-status-title">Token balance</h6>
+                      <h6 className="user-status-title">{currentUser.email}</h6>
                       <div className="user-status-balance">
-                        12,000,000 <small>TWZ</small>
                       </div>
                     </div>
                     <ul className="user-links">
@@ -154,4 +163,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
 }
 
 export default withRouter(Header)
-// You can get access to the history object’s properties and the closest <Route>'s match via the withRouter higher-order component. withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
+// You can get access to the history object’s properties and the closest
+// <Route>'s match via the withRouter higher-order component.
+// withRouter will pass updated match, location,
+// and history props to the wrapped component whenever it renders.
