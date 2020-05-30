@@ -1,7 +1,7 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsBoolean, IsEnum } from 'class-validator';
+import { IsArray, IsBoolean, IsEmail, IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { RoleDto } from 'roles/dtos/roles.dto';
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { ERR } from "../../common/error";
 import { ErrUtil } from "../../utils/err.util";
 import { USER_TYPE } from "../../requests/dtos/requests.dto";
@@ -28,6 +28,13 @@ export class ChangePasswordBody {
     @IsNotEmpty(ErrUtil.getMessage('newPassword', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('newPassword', ERR.IsString))
     readonly newPassword;
+}
+
+export enum USER_TYPE {
+    NORMAL = 'NORMAL',
+    FACEBOOK = 'FACEBOOK',
+    GOOGLE = 'GOOGLE',
+    TWITTER = 'TWITTER',
 }
 
 @Entity('users')
@@ -58,7 +65,7 @@ export class UserDto extends BaseEntityDto {
 
     @IsString(ErrUtil.getMessage('username', ERR.IsString))
     @IsNotEmpty(ErrUtil.getMessage('username', ERR.IsNotEmpty))
-    @Column({ nullable: false, update: false, unique: true })
+    @Column({nullable: false, update: false, unique: true})
     username: string;
 
     @IsOptional()
