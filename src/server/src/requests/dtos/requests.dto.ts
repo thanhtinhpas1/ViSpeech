@@ -1,5 +1,5 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
@@ -15,11 +15,24 @@ export class FindRequestsParam {
     projectId: string;
 }
 
+export class RequestBody {
+    @IsOptional()
+    @IsString(ErrUtil.getMessage('urlDownload', ERR.IsString))
+    urlDownload: string;
+}
+
+export enum USER_TYPE {
+    NORMAL='NORMAL',
+    FACEBOOK = 'FACEBOOK',
+    GOOGLE = 'GOOGLE',
+    TWITTER = 'TWITTER',
+}
+
 @Entity('requests')
 export class RequestDto extends BaseEntityDto {
 
     constructor(tokenId: string, projectId: string, fileName: string, encoding: string, size: string,
-                duration: number, mimeType: string) {
+                duration: number, mimeType: string, downloadUrl?: string) {
         super();
         this.tokenId = tokenId;
         this.fileName = fileName;
@@ -28,6 +41,7 @@ export class RequestDto extends BaseEntityDto {
         this.projectId = projectId;
         this.duration = duration;
         this.mimeType = mimeType;
+        this.downloadUrl = downloadUrl;
     }
 
     @IsNotEmpty(ErrUtil.getMessage('tokenId', ERR.IsNotEmpty))
@@ -68,4 +82,9 @@ export class RequestDto extends BaseEntityDto {
     @IsNotEmpty(ErrUtil.getMessage('mimeType', ERR.IsNotEmpty))
     @Column()
     mimeType;
+
+    @IsOptional()
+    @IsString(ErrUtil.getMessage('downloadUrl', ERR.IsString))
+    @Column()
+    downloadUrl: string;
 }

@@ -1,9 +1,10 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
+import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsBoolean, IsEnum } from 'class-validator';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Column, Entity, Index } from 'typeorm';
 import { ERR } from "../../common/error";
 import { ErrUtil } from "../../utils/err.util";
+import { USER_TYPE } from "../../requests/dtos/requests.dto";
 
 export class UserIdRequestParamsDto {
     constructor(userId) {
@@ -31,7 +32,8 @@ export class ChangePasswordBody {
 
 @Entity('users')
 export class UserDto extends BaseEntityDto {
-    constructor(firstName: string, lastName: string, username: string, password: string, email: string, roles: RoleDto[]) {
+    constructor(firstName: string, lastName: string, username: string, password: string, email: string, roles: RoleDto[],
+                socialId?: string, typeUser?: USER_TYPE) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,6 +42,8 @@ export class UserDto extends BaseEntityDto {
         this.email = email;
         this.roles = roles;
         this.isActive = true;
+        this.socialId = socialId;
+        this.typeUser = typeUser;
     }
 
     @IsString(ErrUtil.getMessage('newPassword', ERR.IsString))
@@ -86,6 +90,17 @@ export class UserDto extends BaseEntityDto {
         nullable: false,
     })
     isActive: boolean;
+
+    @IsOptional()
+    @IsString(ErrUtil.getMessage('socialId', ERR.IsString))
+    @Column()
+    socialId: string;
+
+    @IsOptional()
+    @IsString()
+    @IsEnum(USER_TYPE)
+    @Column({default: USER_TYPE.NORMAL})
+    typeUser: USER_TYPE;
 
     @IsArray(ErrUtil.getMessage('roles', ERR.IsArray))
     @IsOptional()

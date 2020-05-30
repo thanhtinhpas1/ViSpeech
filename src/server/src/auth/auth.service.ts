@@ -33,7 +33,7 @@ export class AuthService {
     }
 
     generateToken(userId, username, roles) {
-        const payload = {username, id: userId, roles, iat: (new Date())};
+        const payload = {username, id: userId, roles, iat: (new Date()).getDate()};
         return this.jwtService.sign(payload);
     }
 

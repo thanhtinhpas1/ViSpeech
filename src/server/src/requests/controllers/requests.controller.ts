@@ -1,4 +1,15 @@
-import { Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    HttpStatus,
+    Logger,
+    Post,
+    Req,
+    Res,
+    UploadedFile,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -10,7 +21,7 @@ import FormData from 'form-data';
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { RequestDto } from 'requests/dtos/requests.dto';
+import { RequestBody, RequestDto } from 'requests/dtos/requests.dto';
 import { RequestService } from 'requests/services/request.service';
 import { Repository } from 'typeorm';
 import { Utils } from 'utils';
@@ -48,7 +59,7 @@ export class AsrController {
             }),
         }),
     )
-    async requestAsr(@UploadedFile() file, @Req() req, @Res() res) {
+    async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
         if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'file is required' });
         if (file.mimetype !== 'audio/wave')
             return res.status(HttpStatus.BAD_REQUEST).send({ message: 'just support wav mimetype' });
@@ -83,7 +94,7 @@ export class AsrController {
 
             const streamId = Utils.getUuid();
             const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, file.originalname, file.encoding, file.size,
-                duration, file.mimetype);
+                duration, file.mimetype, requestBody?.urlDownload);
             this.requestService.createRequest(streamId, requestDto, tokenDto);
             fs.unlinkSync(file.path);
         });
