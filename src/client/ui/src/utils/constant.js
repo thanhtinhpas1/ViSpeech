@@ -42,3 +42,5 @@ export const SORT_ORDER = {
   ASC: 'ASC',
   DESC: 'DESC',
 }
+export const LOADING_LARGE_SIZE = 60
+export const LOADING_SMALL_SIZE = 25

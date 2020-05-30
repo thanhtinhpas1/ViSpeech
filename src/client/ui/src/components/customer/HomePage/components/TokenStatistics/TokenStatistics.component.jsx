@@ -19,7 +19,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
   }, [getTokenTypes])
 
   useEffect(() => {
-    if (currentUser._id) {
+    if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {
       const pagination = {
         current: 1,
         pageSize: 100,
@@ -29,7 +29,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
       }
       getMyProjects({ userId: currentUser._id, pagination, filters })
     }
-  }, [currentUser._id, getMyProjects])
+  }, [currentUser._id, currentUser.roles, getMyProjects])
 
   const openPayOnlineModal = () => {
     if (!Utils.isEmailVerified(currentUser.roles)) {
@@ -117,15 +117,15 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
           </div>
         </div>
         <div style={{ float: 'right' }}>
-          <a
-            href="#!"
+          <button
+            type="button"
             className="btn btn-warning"
             onClick={openPayOnlineModal}
             style={{ display: 'flex', justifyContent: 'center' }}
           >
             <em className="pay-icon fas fa-dollar-sign" />
             Mua ngay
-          </a>
+          </button>
         </div>
       </div>
       <PayOnlineModal payOnlineModal={payOnlineModal} myProjectList={getMyProjectListObj.myProjectList} />

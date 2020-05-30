@@ -2,14 +2,13 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory, withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 
 const Header = ({ currentUser, authenticate, logout }) => {
   const [userLinks, setUserLinks] = useState([])
   const [navbarMenu, setNavbarMenu] = useState([])
-  const history = useHistory()
 
   useEffect(() => {
     const userLinksArr = [
@@ -67,7 +66,6 @@ const Header = ({ currentUser, authenticate, logout }) => {
 
   const onLogout = () => {
     logout()
-    history.push(`/`)
   }
 
   const handleOnClick = e => {
@@ -110,8 +108,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
                   <div className="toggle-class dropdown-content dropdown-content-right dropdown-arrow-right user-dropdown">
                     <div className="user-status">
                       <h6 className="user-status-title">{currentUser.email}</h6>
-                      <div className="user-status-balance">
-                      </div>
+                      <div className="user-status-balance" />
                     </div>
                     <ul className="user-links">
                       {userLinks.map(link => {
@@ -127,7 +124,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
                     </ul>
                     <ul className="user-links bg-light">
                       <li>
-                        <a href="#!" onClick={onLogout}>
+                        <a href="#" onClick={onLogout}>
                           <i className="ti ti-power-off" />
                           Đăng xuất
                         </a>

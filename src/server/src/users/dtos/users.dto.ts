@@ -4,7 +4,6 @@ import { RoleDto } from 'roles/dtos/roles.dto';
 import { Column, Entity } from 'typeorm';
 import { ERR } from "../../common/error";
 import { ErrUtil } from "../../utils/err.util";
-import { USER_TYPE } from "../../requests/dtos/requests.dto";
 
 export class UserIdRequestParamsDto {
     constructor(userId) {

@@ -33,7 +33,8 @@ import {
   onClearUserState,
   // changePasswordSuccess,
   // changePasswordFailure,
-  updateCurrentUserSuccess,
+  authenticateSuccess,
+  authenticateFailure,
 } from './user.actions'
 
 // ==== login
@@ -96,14 +97,14 @@ export function* logoutSaga() {
 export function* authenticate({ payload: token }) {
   try {
     const user = yield UserService.authenticate(token)
-    yield put(updateCurrentUserSuccess(user || null))
+    yield put(authenticateSuccess(user || null))
   } catch (err) {
-    yield put(updateCurrentUserSuccess(null))
+    yield put(authenticateFailure(err))
   }
 }
 
 export function* authenticateSaga() {
-  yield takeLatest(UserTypes.AUTHENTICATE, authenticate)
+  yield takeLatest(UserTypes.UPDATE_CURRENT_USER_ON_AUTHENTICATE, authenticate)
 }
 
 // ==== get user list

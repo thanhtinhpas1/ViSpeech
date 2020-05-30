@@ -9,7 +9,7 @@ const Utils = {
     return roleList.findIndex(role => role.name === ROLES.ADMIN) !== -1
   },
   getRolesInArray: roleList => {
-    return roleList.map(role => role.name)
+    return (roleList || []).map(role => role.name)
   },
   parameterizeObject: (obj, prefix) => {
     if (!obj) return ''

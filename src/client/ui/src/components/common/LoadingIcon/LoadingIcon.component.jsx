@@ -1,13 +1,13 @@
 import React from 'react'
 import { Spin } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
-// import './LoadingIcon.style.scss'
+import { LOADING_SMALL_SIZE } from 'utils/constant'
 
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
+const antIcon = size => <LoadingOutlined style={{ fontSize: size || LOADING_SMALL_SIZE }} spin />
 
-function LoadingIcon() {
+function LoadingIcon({ size }) {
   return (
-    <Spin indicator={antIcon} />
+    <Spin indicator={antIcon(size)} />
     // <div className="loading-icon">
     //   <div />
     //   <div />

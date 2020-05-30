@@ -36,6 +36,11 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  updateCurrentUserOnAuthenticate: {
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   createUser: {
     isLoading: false,
     isSuccess: null,
@@ -48,12 +53,12 @@ const INITIAL_STATE = {
   },
   sendVerifyEmail: {
     isSuccess: null,
-    isLoading: null,
+    isLoading: false,
     message: null,
   },
   verifyEmail: {
     isSuccess: null,
-    isLoading: null,
+    isLoading: false,
     message: null,
   },
   // reducer for send email reset password + check token in email + reset password
@@ -216,6 +221,35 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         updateCurrentUser: {
           ...state.updateCurrentUser,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // UPDATE CURRENT USER ON AUTHENTICATE
+    case UserTypes.UPDATE_CURRENT_USER_ON_AUTHENTICATE:
+      return {
+        ...state,
+        updateCurrentUserOnAuthenticate: {
+          ...state.updateCurrentUserOnAuthenticate,
+          isLoading: true,
+        },
+      }
+    case UserTypes.UPDATE_CURRENT_USER_ON_AUTHENTICATE_SUCCESS:
+      return {
+        ...state,
+        currentUser: action.payload,
+        updateCurrentUserOnAuthenticate: {
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case UserTypes.UPDATE_CURRENT_USER_ON_AUTHENTICATE_FAILURE:
+      return {
+        ...state,
+        currentUser: null,
+        updateCurrentUserOnAuthenticate: {
+          ...state.updateCurrentUserOnAuthenticate,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
