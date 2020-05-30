@@ -21,13 +21,6 @@ export class RequestBody {
     urlDownload: string;
 }
 
-export enum USER_TYPE {
-    NORMAL='NORMAL',
-    FACEBOOK = 'FACEBOOK',
-    GOOGLE = 'GOOGLE',
-    TWITTER = 'TWITTER',
-}
-
 @Entity('requests')
 export class RequestDto extends BaseEntityDto {
 
