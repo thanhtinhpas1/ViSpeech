@@ -76,6 +76,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
       .addClass('active')
   }
 
+  const onCloseDropdown = () => {
+    window.$('ul.topbar-nav li.topbar-nav-item a.toggle-tigger').removeClass('active')
+    window.$('ul.topbar-nav li.topbar-nav-item div.dropdown-content').removeClass('active')
+  }
+
   return (
     <>
       <div className="topbar-wrap">
@@ -114,7 +119,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
                       {userLinks.map(link => {
                         return (
                           <li key={link.href}>
-                            <Link to={link.href}>
+                            <Link to={link.href} onClick={onCloseDropdown}>
                               <i className={`ti ${link.iconClass}`} />
                               {link.name}
                             </Link>
