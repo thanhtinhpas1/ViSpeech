@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Utils from 'utils'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
-import { CUSTOMER_PATH, TOKEN_TYPE } from 'utils/constant'
+import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
 
@@ -20,14 +20,10 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
 
   useEffect(() => {
     if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {
-      const pagination = {
-        current: 1,
-        pageSize: 100,
-      }
       const filters = {
         isValid: ['true'],
       }
-      getMyProjects({ userId: currentUser._id, pagination, filters })
+      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION, filters })
     }
   }, [currentUser._id, currentUser.roles, getMyProjects])
 

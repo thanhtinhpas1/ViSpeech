@@ -1,40 +1,44 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, IsIn } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
+import { CONSTANTS } from 'common/constant';
 
 export class FindRequestsParam {
-    constructor(projectId: string) {
-        this.projectId = projectId;
-    }
-
     @IsOptional()
     @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
     projectId: string;
+
+    @IsOptional()
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
+    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
+    userId: string;
 }
 
 export class RequestBody {
-    @IsOptional()
-    @IsString(ErrUtil.getMessage('urlDownload', ERR.IsString))
-    urlDownload: string;
+    @IsNotEmpty(ErrUtil.getMessage('audioFileUrl', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('audioFileUrl', ERR.IsString))
+    audioFileUrl: string;
 }
 
 @Entity('requests')
 export class RequestDto extends BaseEntityDto {
 
-    constructor(tokenId: string, projectId: string, fileName: string, encoding: string, size: string,
-                duration: number, mimeType: string, downloadUrl?: string) {
+    constructor(tokenId: string, projectId: string, userId: string, fileName: string, encoding: string, size: string,
+                duration: number, mimeType: string, audioFileUrl: string, status: string) {
         super();
         this.tokenId = tokenId;
+        this.projectId = projectId;
+        this.userId = userId;
         this.fileName = fileName;
         this.encoding = encoding;
         this.size = size;
-        this.projectId = projectId;
         this.duration = duration;
         this.mimeType = mimeType;
-        this.downloadUrl = downloadUrl;
+        this.audioFileUrl = audioFileUrl;
+        this.status = status;
     }
 
     @IsNotEmpty(ErrUtil.getMessage('tokenId', ERR.IsNotEmpty))
@@ -47,6 +51,12 @@ export class RequestDto extends BaseEntityDto {
     @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column()
     projectId: string;
+
+    @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
+    @Column()
+    userId: string;
 
     @IsString(ErrUtil.getMessage('fileName', ERR.IsString))
     @IsNotEmpty(ErrUtil.getMessage('fileName', ERR.IsNotEmpty))
@@ -76,8 +86,18 @@ export class RequestDto extends BaseEntityDto {
     @Column()
     mimeType;
 
-    @IsOptional()
-    @IsString(ErrUtil.getMessage('downloadUrl', ERR.IsString))
+    @IsString(ErrUtil.getMessage('audioFileUrl', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('audioFileUrl', ERR.IsNotEmpty))
     @Column()
-    downloadUrl: string;
+    audioFileUrl: string;
+
+    @IsString(ErrUtil.getMessage('status', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('status', ERR.IsNotEmpty))
+    @IsIn([
+        CONSTANTS.STATUS.PENDING,
+        CONSTANTS.STATUS.SUCCESS,
+        CONSTANTS.STATUS.FAILURE,
+    ])
+    @Column()
+    status: string;
 }

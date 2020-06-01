@@ -4,6 +4,7 @@ import { RequestDto, FindRequestsParam } from "requests/dtos/requests.dto"
 import { TokenDto } from "tokens/dtos/tokens.dto"
 import { CallAsrCommand } from "requests/commands/handler/call-asr.command"
 import { FindRequestsQuery } from "requests/queries/impl/find-requests.query"
+import { FindRequestsByUserIdQuery } from "requests/queries/impl/find-requests-by-userId.query"
 
 
 @Injectable()
@@ -19,6 +20,12 @@ export class RequestService {
 
     async findRequests(findRequestsQuery: FindRequestsQuery) {
         var query = Object.assign(findRequestsQuery);
+        return await this.queryBus.execute(query);
+    }
+
+    async findRequestsByUserId(findRequestsByUserIdQuery: FindRequestsByUserIdQuery) {
+        const query = new FindRequestsByUserIdQuery(findRequestsByUserIdQuery.userId);
+        Object.assign(query, findRequestsByUserIdQuery);
         return await this.queryBus.execute(query);
     }
 }

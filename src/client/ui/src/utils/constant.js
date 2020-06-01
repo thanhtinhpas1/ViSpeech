@@ -44,3 +44,7 @@ export const SORT_ORDER = {
 }
 export const LOADING_LARGE_SIZE = 60
 export const LOADING_SMALL_SIZE = 25
+export const DEFAULT_PAGINATION = {
+  current: 1,
+  pageSize: 100,
+}
