@@ -19,8 +19,9 @@ export class TokenIdRequestParamsDto {
 
 @Entity('tokens')
 export class TokenDto extends BaseEntityDto {
-    constructor(value: string, userId, projectId, tokenType: string = CONSTANTS.TOKEN_TYPE.FREE, tokenTypeId = null, orderId = null) {
+    constructor(value: string, userId, projectId, tokenType: string = CONSTANTS.TOKEN_TYPE.FREE, tokenTypeId = null, orderId = null, name?: string) {
         super();
+        this.name = name;
         this.value = value;
         this.userId = userId;
         this.projectId = projectId;
@@ -30,6 +31,11 @@ export class TokenDto extends BaseEntityDto {
         this.isValid = true;
         this.usedMinutes = 0;
     }
+
+    @IsOptional()
+    @IsString(ErrUtil.getMessage('name', ERR.IsString))
+    @Column({nullable: false, default: 'DEFAULT'})
+    name: string;
 
     @IsOptional()
     @IsString(ErrUtil.getMessage('value', ERR.IsString))
@@ -47,7 +53,6 @@ export class TokenDto extends BaseEntityDto {
     })
     userId: ObjectID;
 
-    // @IsUUID()
     // free token does not have projectId, set projectId = ""
     @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
     @IsString(ErrUtil.getMessage('projectId', ERR.IsString))

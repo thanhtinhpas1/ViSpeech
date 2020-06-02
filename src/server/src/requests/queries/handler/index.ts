@@ -1,6 +1,7 @@
-import { FindUserQuery } from "users/queries/impl/find-user.query";
 import { FindRequestsHandler } from "./find-requests.handler";
+import { FindRequestsByUserIdHandler } from "./find-requests-by-userId.handler";
 
 export const QueryHandlers = [
     FindRequestsHandler,
+    FindRequestsByUserIdHandler,
 ];

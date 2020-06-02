@@ -141,8 +141,18 @@ export const logout = () => ({
 
 // authenticate with jwt
 export const authenticate = token => ({
-  type: UserTypes.AUTHENTICATE,
+  type: UserTypes.UPDATE_CURRENT_USER_ON_AUTHENTICATE,
   payload: token,
+})
+
+export const authenticateSuccess = user => ({
+  type: UserTypes.UPDATE_CURRENT_USER_ON_AUTHENTICATE_SUCCESS,
+  payload: user,
+})
+
+export const authenticateFailure = message => ({
+  type: UserTypes.UPDATE_CURRENT_USER_ON_AUTHENTICATE_FAILURE,
+  payload: message,
 })
 
 // change password

@@ -4,8 +4,8 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
 // import { Button, message } from 'antd'
-import { IMG_AVATAR_REF, DEFAULT_AVATAR_URL } from '../../../utils/constant'
-import storage from '../../../firebase.config'
+import { AUDIO_FILE_PATH, DEFAULT_AVATAR_URL } from 'utils/constant'
+import storage from 'firebaseStorage'
 import './UploadAvatar.style.scss'
 
 class UploadAvatar extends Component {
@@ -40,7 +40,7 @@ class UploadAvatar extends Component {
       return
     }
     this.setState({ isUploadLoading: true }, () => {
-      const uploadTask = storage.ref(`${IMG_AVATAR_REF}/${uploadFile.name}`).put(uploadFile)
+      const uploadTask = storage.ref(`${AUDIO_FILE_PATH}/${uploadFile.name}`).put(uploadFile)
       uploadTask.on(
         'state_changed',
         null,
@@ -52,7 +52,7 @@ class UploadAvatar extends Component {
         () => {
           // complete function ...
           storage
-            .ref(IMG_AVATAR_REF)
+            .ref(AUDIO_FILE_PATH)
             .child(uploadFile.name)
             .getDownloadURL()
             .then(url => {

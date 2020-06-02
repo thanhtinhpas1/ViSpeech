@@ -20,7 +20,7 @@ pipeline {
         }
         stage('docker') {
             steps {
-                sh 'docker build -t vispeech .'
+                sh 'docker build -t vispeech ./src/server'
             }
         }
         stage('delivery') {

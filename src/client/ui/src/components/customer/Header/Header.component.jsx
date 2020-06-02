@@ -2,14 +2,13 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
-import { Link, useHistory, withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 
 const Header = ({ currentUser, authenticate, logout }) => {
   const [userLinks, setUserLinks] = useState([])
   const [navbarMenu, setNavbarMenu] = useState([])
-  const history = useHistory()
 
   useEffect(() => {
     const userLinksArr = [
@@ -22,6 +21,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
         href: `${CUSTOMER_PATH}/transactions`,
         iconClass: 'ti-eye',
         name: 'Lịch sử giao dịch',
+      },
+      {
+        href: `${CUSTOMER_PATH}/reports`,
+        iconClass: 'ti-bar-chart-alt',
+        name: 'Thống kê',
       },
     ]
     const navbarMenuArr = [
@@ -45,6 +49,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
         emClass: 'ikon-transactions',
         name: 'Thống kê',
       },
+      {
+        href: `${CUSTOMER_PATH}/trial`,
+        emClass: 'ikon-distribution',
+        name: 'Dùng thử',
+      },
     ]
     setUserLinks(userLinksArr)
     setNavbarMenu(navbarMenuArr)
@@ -57,7 +66,6 @@ const Header = ({ currentUser, authenticate, logout }) => {
 
   const onLogout = () => {
     logout()
-    history.push(`/`)
   }
 
   const handleOnClick = e => {
@@ -66,6 +74,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
       .$(e.target)
       .parent()
       .addClass('active')
+  }
+
+  const onCloseDropdown = () => {
+    window.$('ul.topbar-nav li.topbar-nav-item a.toggle-tigger').removeClass('active')
+    window.$('ul.topbar-nav li.topbar-nav-item div.dropdown-content').removeClass('active')
   }
 
   return (
@@ -99,16 +112,14 @@ const Header = ({ currentUser, authenticate, logout }) => {
                   </a>
                   <div className="toggle-class dropdown-content dropdown-content-right dropdown-arrow-right user-dropdown">
                     <div className="user-status">
-                      <h6 className="user-status-title">Token balance</h6>
-                      <div className="user-status-balance">
-                        12,000,000 <small>TWZ</small>
-                      </div>
+                      <h6 className="user-status-title">{currentUser.email}</h6>
+                      <div className="user-status-balance" />
                     </div>
                     <ul className="user-links">
                       {userLinks.map(link => {
                         return (
                           <li key={link.href}>
-                            <Link to={link.href}>
+                            <Link to={link.href} onClick={onCloseDropdown}>
                               <i className={`ti ${link.iconClass}`} />
                               {link.name}
                             </Link>
@@ -118,7 +129,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
                     </ul>
                     <ul className="user-links bg-light">
                       <li>
-                        <a href="#!" onClick={onLogout}>
+                        <a href="#" onClick={onLogout}>
                           <i className="ti ti-power-off" />
                           Đăng xuất
                         </a>
@@ -154,4 +165,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
 }
 
 export default withRouter(Header)
-// You can get access to the history object’s properties and the closest <Route>'s match via the withRouter higher-order component. withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
+// You can get access to the history object’s properties and the closest
+// <Route>'s match via the withRouter higher-order component.
+// withRouter will pass updated match, location,
+// and history props to the wrapped component whenever it renders.

@@ -4,8 +4,8 @@
 import React, { useEffect } from 'react'
 import { Button, Alert } from 'antd'
 import Utils from 'utils'
-import AuthenWithFacebook from '../AuthenWithFacebook/AuthenWithFacebook.container'
-import AuthenWithGoogle from '../AuthenWithGoogle/AuthenWithGoogle.container'
+import AuthenWithFacebook from 'components/common/AuthenWithFacebook/AuthenWithFacebook.container'
+import AuthenWithGoogle from 'components/common/AuthenWithGoogle/AuthenWithGoogle.container'
 
 const LoginPage = ({ loginObj, login, onClearUserState }) => {
   useEffect(() => {
@@ -29,7 +29,7 @@ const LoginPage = ({ loginObj, login, onClearUserState }) => {
       <div className="page-ath-wrap">
         <div className="page-ath-content">
           <div className="page-ath-header">
-            <a href="#" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold' }}>
+            <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold' }}>
               SOFTIA.
             </a>
           </div>

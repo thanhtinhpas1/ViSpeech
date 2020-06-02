@@ -1,4 +1,15 @@
-import { Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    HttpStatus,
+    Logger,
+    Post,
+    Req,
+    Res,
+    UploadedFile,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -10,7 +21,7 @@ import FormData from 'form-data';
 import fs from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { RequestDto } from 'requests/dtos/requests.dto';
+import { RequestBody, RequestDto } from 'requests/dtos/requests.dto';
 import { RequestService } from 'requests/services/request.service';
 import { Repository } from 'typeorm';
 import { Utils } from 'utils';
@@ -48,42 +59,51 @@ export class AsrController {
             }),
         }),
     )
-    async requestAsr(@UploadedFile() file, @Req() req, @Res() res) {
-        if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'file is required' });
+    async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
+        // invalid file
+        if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'File is required' });
         if (file.mimetype !== 'audio/wave')
-            return res.status(HttpStatus.BAD_REQUEST).send({ message: 'just support wav mimetype' });
+            return res.status(HttpStatus.BAD_REQUEST).send({ message: 'Only support wav mimetype' });
+
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
         const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
+        
+        // invalid token
         if (!tokenDto || !tokenDto.isValid || tokenDto.usedMinutes >= tokenDto.minutes)
             return res.status(HttpStatus.FORBIDDEN).json({ message: 'Invalid token.' });
+        
+        // not enough token minutes to request
+        const duration = Utils.calculateDuration(file.size); 
+        const minutes = Number(tokenDto.minutes);
+        const usedMinutes = Number(tokenDto.usedMinutes || 0);
+        if (duration > (minutes - usedMinutes)) {
+            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Not enough token\' minutes to request.' });
+        }
 
-        const formData = new FormData();
+        // call asr
+        let requestStatus = CONSTANTS.STATUS.PENDING;
         const stream = fs.createReadStream(file.path);
-
+        const formData = new FormData();
         formData.append('voice', stream);
-        const configHeader = { headers: formData.getHeaders() };
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
-        axios.post(url, formData, configHeader).then(result => {
+        axios.post(url, formData, { headers: formData.getHeaders() }).then(result => {
+            requestStatus = CONSTANTS.STATUS.SUCCESS;
             return res.status(HttpStatus.OK).json(result.data);
         }).catch(err => {
             Logger.error(err.message, 'RequestCall');
+            requestStatus = CONSTANTS.STATUS.FAILURE;
             return res.status(HttpStatus.BAD_REQUEST).send();
         }).finally(async () => {
             stream.close();
 
-            const duration = Utils.calculateDuration(file.size);
-            const minutes = Number(tokenDto.minutes);
-            const usedMinutes = Number(tokenDto.usedMinutes || 0);
-            if (duration > (minutes - usedMinutes)) {
-                tokenDto.usedMinutes = tokenDto.minutes;
-            } else {
+            if (requestStatus === CONSTANTS.STATUS.SUCCESS) {
                 tokenDto.usedMinutes = usedMinutes + duration;
             }
 
             const streamId = Utils.getUuid();
-            const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, file.originalname, file.encoding, file.size,
-                duration, file.mimetype);
+            const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding, file.size,
+                duration, file.mimetype, requestBody.audioFileUrl, requestStatus);
             this.requestService.createRequest(streamId, requestDto, tokenDto);
             fs.unlinkSync(file.path);
         });

@@ -1,7 +1,7 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsArray, IsEmail, IsEmpty, IsNotEmpty, IsOptional, IsString, IsBoolean } from 'class-validator';
+import { IsArray, IsBoolean, IsEmail, IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { RoleDto } from 'roles/dtos/roles.dto';
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { ERR } from "../../common/error";
 import { ErrUtil } from "../../utils/err.util";
 
@@ -29,9 +29,17 @@ export class ChangePasswordBody {
     readonly newPassword;
 }
 
+export enum USER_TYPE {
+    NORMAL = 'NORMAL',
+    FACEBOOK = 'FACEBOOK',
+    GOOGLE = 'GOOGLE',
+    TWITTER = 'TWITTER',
+}
+
 @Entity('users')
 export class UserDto extends BaseEntityDto {
-    constructor(firstName: string, lastName: string, username: string, password: string, email: string, roles: RoleDto[]) {
+    constructor(firstName: string, lastName: string, username: string, password: string, email: string, roles: RoleDto[],
+                socialId?: string, typeUser?: USER_TYPE) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,6 +48,8 @@ export class UserDto extends BaseEntityDto {
         this.email = email;
         this.roles = roles;
         this.isActive = true;
+        this.socialId = socialId;
+        this.typeUser = typeUser;
     }
 
     @IsString(ErrUtil.getMessage('newPassword', ERR.IsString))
@@ -54,7 +64,7 @@ export class UserDto extends BaseEntityDto {
 
     @IsString(ErrUtil.getMessage('username', ERR.IsString))
     @IsNotEmpty(ErrUtil.getMessage('username', ERR.IsNotEmpty))
-    @Column({ nullable: false, update: false, unique: true })
+    @Column({nullable: false, update: false, unique: true})
     username: string;
 
     @IsOptional()
@@ -86,6 +96,17 @@ export class UserDto extends BaseEntityDto {
         nullable: false,
     })
     isActive: boolean;
+
+    @IsOptional()
+    @IsString(ErrUtil.getMessage('socialId', ERR.IsString))
+    @Column()
+    socialId: string;
+
+    @IsOptional()
+    @IsString()
+    @IsEnum(USER_TYPE)
+    @Column({default: USER_TYPE.NORMAL})
+    typeUser: USER_TYPE;
 
     @IsArray(ErrUtil.getMessage('roles', ERR.IsArray))
     @IsOptional()

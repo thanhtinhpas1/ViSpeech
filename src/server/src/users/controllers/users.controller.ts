@@ -15,21 +15,21 @@ import {
     UnauthorizedException,
     UseGuards
 } from '@nestjs/common';
-import {AuthGuard} from '@nestjs/passport';
-import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {AuthService} from 'auth/auth.service';
-import {Roles} from 'auth/roles.decorator';
-import {CONSTANTS} from 'common/constant';
-import {FindUserQuery} from 'users/queries/impl/find-user.query';
-import {GetUsersQuery} from 'users/queries/impl/get-users.query';
-import {ChangePasswordBody, UserDto, UserIdRequestParamsDto} from '../dtos/users.dto';
-import {UsersService} from '../services/users.service';
-import {UserGuard, VerifyEmailGuard} from 'auth/guards/user.guard';
-import {Utils} from 'utils';
-import {ClientKafka} from '@nestjs/microservices';
-import {config} from '../../../config';
-import {GetAssigneeQuery} from "../queries/impl/get-assignee.query";
-import {ProjectGuard} from "../../auth/guards/project.guard";
+import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthService } from 'auth/auth.service';
+import { Roles } from 'auth/roles.decorator';
+import { CONSTANTS } from 'common/constant';
+import { FindUserQuery } from 'users/queries/impl/find-user.query';
+import { GetUsersQuery } from 'users/queries/impl/get-users.query';
+import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
+import { UsersService } from '../services/users.service';
+import { UserGuard, VerifyEmailGuard } from 'auth/guards/user.guard';
+import { Utils } from 'utils';
+import { ClientKafka } from '@nestjs/microservices';
+import { config } from '../../../config';
+import { GetAssigneeQuery } from "../queries/impl/get-assignee.query";
+import { ProjectGuard } from "../../auth/guards/project.guard";
 
 @Controller('users')
 @ApiTags('Users')

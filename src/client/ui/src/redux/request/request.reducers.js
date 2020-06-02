@@ -7,6 +7,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  getListByUserId: {
+    requestList: { data: [], count: 0 },
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const requestReducer = (state = INITIAL_STATE, action) => {
@@ -38,6 +44,34 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getList: {
           ...state.getList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET REQUEST LIST BY USERID
+    case RequestTypes.GET_REQUEST_LIST_BY_USERID:
+      return {
+        ...state,
+        getListByUserId: {
+          ...state.getListByUserId,
+          isLoading: true,
+        },
+      }
+    case RequestTypes.GET_REQUEST_LIST_BY_USERID_SUCCESS:
+      return {
+        ...state,
+        getListByUserId: {
+          isLoading: false,
+          isSuccess: true,
+          requestList: action.payload.data,
+        },
+      }
+    case RequestTypes.GET_REQUEST_LIST_BY_USERID_FAILURE:
+      return {
+        ...state,
+        getListByUserId: {
+          ...state.getListByUserId,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

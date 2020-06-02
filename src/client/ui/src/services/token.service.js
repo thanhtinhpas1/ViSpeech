@@ -1,5 +1,5 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
 import Utils from 'utils'
 import { apiUrl } from './api-url'
 
@@ -32,12 +32,13 @@ export default class TokenService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -66,12 +67,13 @@ export default class TokenService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -93,12 +95,13 @@ export default class TokenService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -130,12 +133,13 @@ export default class TokenService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -157,12 +161,13 @@ export default class TokenService {
       })
       .then(result => {
         if (status !== 200) {
-          throw new Error(result.message || DEFAULT_ERR_MESSAGE)
+          throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return result
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -190,7 +195,8 @@ export default class TokenService {
         return resultObj
       })
       .catch(err => {
-        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 }

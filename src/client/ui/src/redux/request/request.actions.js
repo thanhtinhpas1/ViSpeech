@@ -19,3 +19,19 @@ export const getRequestListFailure = message => ({
   type: RequestTypes.GET_REQUEST_LIST_FAILURE,
   payload: message,
 })
+
+// get request list by userId
+export const getRequestListByUserId = (userId, filterConditions) => ({
+  type: RequestTypes.GET_REQUEST_LIST_BY_USERID,
+  payload: { userId, filterConditions },
+})
+
+export const getRequestListByUserIdSuccess = data => ({
+  type: RequestTypes.GET_REQUEST_LIST_BY_USERID_SUCCESS,
+  payload: { data },
+})
+
+export const getRequestListByUserIdFailure = message => ({
+  type: RequestTypes.GET_REQUEST_LIST_BY_USERID_FAILURE,
+  payload: message,
+})

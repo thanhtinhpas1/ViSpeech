@@ -4,12 +4,14 @@ import { OrderDto } from "orders/dtos/orders.dto";
 import { Repository } from "typeorm";
 import { Utils } from "utils";
 import { CONSTANTS } from "../../common/constant";
+import { AuthService } from "../auth.service";
 
 @Injectable()
 export class AsrServiceGuard implements CanActivate {
     constructor(
         @InjectRepository(OrderDto)
         private readonly orderRepo: Repository<OrderDto>,
+        private readonly authService: AuthService,
     ) {
     }
 
