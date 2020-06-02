@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
@@ -6,6 +7,7 @@ import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
 import SocketUtils from 'utils/socket.util'
+import TokenService from 'services/token.service'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -17,6 +19,7 @@ const {
 const { Option } = Select
 
 const CheckoutForm = ({
+  currentUser,
   checkoutInfo,
   myProjectList,
   createOrderObj,
@@ -47,7 +50,7 @@ const CheckoutForm = ({
       return
     }
 
-    async function createToken(projectId) {
+    async function createToken(projectId, tokenName) {
       const cardElement = elements.getElement(CardElement)
       const { user, tokenType } = checkoutInfo
       let result = null
@@ -93,6 +96,7 @@ const CheckoutForm = ({
           token: {
             userId: user._id,
             projectId,
+            name: tokenName,
           },
         }
         createOrder(order, paymentIntent)
@@ -117,8 +121,8 @@ const CheckoutForm = ({
     }
 
     setIsLoading(true)
-    const { projectId } = values
-    createToken(projectId)
+    const { projectId, tokenName } = values
+    createToken(projectId, tokenName)
   }
 
   useEffect(() => {
@@ -160,6 +164,49 @@ const CheckoutForm = ({
     <Form form={form} onFinish={onSubmit}>
       <h5 className="font-mid">Dự án</h5>
       <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
+        <Select style={{ width: '100%' }} placeholder="Chọn một dự án">
+          {myProjectList.map(project => {
+            return (
+              <Option value={project._id} key={project._id}>
+                {project.name}
+              </Option>
+            )
+          })}
+        </Select>
+      </Form.Item>
+      <h5 className="font-mid">Tên token</h5>
+      <Form.Item
+        name="tokenName"
+        dependencies={['projectId']}
+        hasFeedback
+        rules={[
+          {
+            required: true,
+            message: 'Vui lòng đặt tên cho token.',
+          },
+          ({ getFieldValue }) => ({
+            async validator(rule, value) {
+              const projectId = getFieldValue('projectId')
+              const userId = currentUser && currentUser._id
+              if (userId) {
+                const pagination = {
+                  current: 1,
+                  pageSize: 100,
+                }
+                const tokenList = await TokenService.getProjectTokenList({ userId, projectId, pagination })
+                if (!tokenList) {
+                  return Promise.reject('Đã có lỗi xảy ra. Vui lòng thử lại sau!')
+                }
+                if (tokenList.data.includes(value)) {
+                  return Promise.reject('Tên đã tồn tại. Vui lòng đặt tên khác!')
+                }
+                return Promise.resolve()
+              }
+              return Promise.reject('Đã có lỗi xảy ra. Vui lòng thử lại sau!')
+            },
+          }),
+        ]}
+      >
         <Select style={{ width: '100%' }} placeholder="Chọn một dự án">
           {myProjectList.map(project => {
             return (

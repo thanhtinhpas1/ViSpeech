@@ -18,7 +18,7 @@ export class FindRequestsParam {
 }
 
 export class RequestBody {
-    @IsNotEmpty(ErrUtil.getMessage('audioFileUrl', ERR.IsNotEmpty))
+    @IsOptional()
     @IsString(ErrUtil.getMessage('audioFileUrl', ERR.IsString))
     audioFileUrl: string;
 }
@@ -27,7 +27,7 @@ export class RequestBody {
 export class RequestDto extends BaseEntityDto {
 
     constructor(tokenId: string, projectId: string, userId: string, fileName: string, encoding: string, size: string,
-                duration: number, mimeType: string, audioFileUrl: string, status: string) {
+                duration: number, mimeType: string, status: string, audioFileUrl?: string) {
         super();
         this.tokenId = tokenId;
         this.projectId = projectId;
@@ -86,8 +86,8 @@ export class RequestDto extends BaseEntityDto {
     @Column()
     mimeType;
 
+    @IsOptional()
     @IsString(ErrUtil.getMessage('audioFileUrl', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('audioFileUrl', ERR.IsNotEmpty))
     @Column()
     audioFileUrl: string;
 

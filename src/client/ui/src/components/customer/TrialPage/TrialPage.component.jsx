@@ -1,27 +1,33 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable no-undef */
+/* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-alert */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState } from 'react'
 import { Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import storage from 'firebaseStorage'
 import { AUDIO_FILE_PATH } from 'utils/constant'
+import SpeechService from 'services/speech.service'
+import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
+import RequestTable from './components/RequestTable/RequestTable.container'
 
 const { Dragger } = Upload
 
-const TrialPage = ({}) => {
-  const [fileUrl, setFileUrl] = useState('')
-  //   const [isSpeechRecognizing, setSpeechRecognizing] = useState(false)
+const TrialPage = () => {
+  const [draggerDisabled, setDraggerDisabled] = useState(true)
+  const [tokenValue, setTokenValue] = useState(null)
 
   const handleUpload = ({ file, onProgress, onSuccess, onError }) => {
     if (!file) {
+      onError('File không tồn tại')
       return
     }
 
-    const uploadTask = storage.ref(`${AUDIO_FILE_PATH}/${file.name}`).put(file)
+    if (!tokenValue) {
+      onError('Vui lòng chọn token!')
+      return
+    }
+
+    const uploadTask = storage.ref(`${AUDIO_FILE_PATH}/${Date.now()}-${file.name}`).put(file)
     uploadTask.on(
       'state_changed',
       snapshot => {
@@ -36,9 +42,10 @@ const TrialPage = ({}) => {
           .ref(AUDIO_FILE_PATH)
           .child(file.name)
           .getDownloadURL()
-          .then(url => {
+          .then(async url => {
             onSuccess()
-            setFileUrl(url)
+            const text = await SpeechService.callAsr(file, url, tokenValue)
+            message.info(text)
           })
       }
     )
@@ -55,11 +62,19 @@ const TrialPage = ({}) => {
         console.log(info.file, info.fileList)
       }
       if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`)
+        message.success(`Tải file "${info.file.name}" thành công.`)
       } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
+        message.error(`Tải file "${info.file.name}" thất bại.`)
       }
     },
+  }
+
+  const onSelectTokenFormValuesChange = (projectId, token) => {
+    setDraggerDisabled(true)
+    if (projectId && token) {
+      setTokenValue(token)
+      setDraggerDisabled(false)
+    }
   }
 
   return (
@@ -70,13 +85,15 @@ const TrialPage = ({}) => {
             <div className="card-head">
               <h4 className="card-title">Dùng thử</h4>
             </div>
-            <Dragger {...props}>
+            <SelectTokenForm onSelectTokenFormValuesChange={onSelectTokenFormValuesChange} />
+            <Dragger {...props} disabled={draggerDisabled}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
+            <RequestTable />
           </div>
         </div>
       </div>

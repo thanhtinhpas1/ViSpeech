@@ -103,7 +103,7 @@ export class AsrController {
 
             const streamId = Utils.getUuid();
             const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding, file.size,
-                duration, file.mimetype, requestBody.audioFileUrl, requestStatus);
+                duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
             this.requestService.createRequest(streamId, requestDto, tokenDto);
             fs.unlinkSync(file.path);
         });
