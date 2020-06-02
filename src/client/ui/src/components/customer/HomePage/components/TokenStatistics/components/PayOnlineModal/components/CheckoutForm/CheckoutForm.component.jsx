@@ -2,12 +2,12 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import { Alert, Button, Select, Form, Checkbox } from 'antd'
+import { Alert, Button, Select, Form, Checkbox, Input } from 'antd'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
 import SocketUtils from 'utils/socket.util'
-import TokenService from 'services/token.service'
+import { DEFAULT_PAGINATION } from 'utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -23,11 +23,13 @@ const CheckoutForm = ({
   checkoutInfo,
   myProjectList,
   createOrderObj,
+  getProjectTokenListObj,
   onOrderSuccess,
   createOrder,
   createOrderSuccess,
   createOrderFailure,
   clearCreateOrderState,
+  getProjectTokenList,
 }) => {
   const stripe = useStripe()
   const elements = useElements()
@@ -160,11 +162,21 @@ const CheckoutForm = ({
     hidePostalCode: true,
   }
 
+  const onProjectIdChange = async value => {
+    const userId = currentUser && currentUser._id
+    if (userId) {
+      const filters = {
+        isValid: ['true'],
+      }
+      getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION, filters })
+    }
+  }
+
   return (
     <Form form={form} onFinish={onSubmit}>
       <h5 className="font-mid">Dự án</h5>
       <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
-        <Select style={{ width: '100%' }} placeholder="Chọn một dự án">
+        <Select style={{ width: '100%' }} placeholder="Chọn một dự án" onChange={onProjectIdChange}>
           {myProjectList.map(project => {
             return (
               <Option value={project._id} key={project._id}>
@@ -184,38 +196,20 @@ const CheckoutForm = ({
             required: true,
             message: 'Vui lòng đặt tên cho token.',
           },
-          ({ getFieldValue }) => ({
+          () => ({
             async validator(rule, value) {
-              const projectId = getFieldValue('projectId')
-              const userId = currentUser && currentUser._id
-              if (userId) {
-                const pagination = {
-                  current: 1,
-                  pageSize: 100,
-                }
-                const tokenList = await TokenService.getProjectTokenList({ userId, projectId, pagination })
-                if (!tokenList) {
-                  return Promise.reject('Đã có lỗi xảy ra. Vui lòng thử lại sau!')
-                }
-                if (tokenList.data.includes(value)) {
-                  return Promise.reject('Tên đã tồn tại. Vui lòng đặt tên khác!')
-                }
-                return Promise.resolve()
+              if (getProjectTokenListObj.isSuccess === false) {
+                return Promise.reject('Đã có lỗi xảy ra. Vui lòng thử lại sau!')
               }
-              return Promise.reject('Đã có lỗi xảy ra. Vui lòng thử lại sau!')
+              if (getProjectTokenListObj.projectTokenList.data.some(token => token.name === value)) {
+                return Promise.reject('Tên đã tồn tại. Vui lòng đặt tên khác!')
+              }
+              return Promise.resolve()
             },
           }),
         ]}
       >
-        <Select style={{ width: '100%' }} placeholder="Chọn một dự án">
-          {myProjectList.map(project => {
-            return (
-              <Option value={project._id} key={project._id}>
-                {project.name}
-              </Option>
-            )
-          })}
-        </Select>
+        <Input placeholder="Nhập tên token" />
       </Form.Item>
       <h5 className="font-mid">Thông tin thẻ</h5>
       <Form.Item name="cardElement" rules={[{ required: true, message: 'Vui lòng nhập thông tin thẻ.' }]}>

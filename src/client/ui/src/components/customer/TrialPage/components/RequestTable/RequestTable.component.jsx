@@ -8,7 +8,7 @@ import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import { STATUS, CUSTOMER_PATH } from 'utils/constant'
 import * as moment from 'moment'
 
-const RequestTable = ({ currentUser, getListByUserIdObj, getListByUserId }) => {
+const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListByUserId }) => {
   const columns = [
     {
       title: 'Tên dự án',
@@ -93,17 +93,17 @@ const RequestTable = ({ currentUser, getListByUserIdObj, getListByUserId }) => {
         pageSize: 5,
         current: 1,
       }
-      getListByUserId(userId, { pagination })
+      getRequestListByUserId(userId, { pagination })
     }
-  }, [currentUser._id, getListByUserId])
+  }, [currentUser._id, getRequestListByUserId])
 
   return (
-    <Row>
+    <Row style={{ marginTop: 30 }}>
       <AntdTable
-        dataObj={getListByUserIdObj.requestList}
+        dataObj={getRequestListByUserIdObj.requestList}
         columns={columns}
-        fetchData={getListByUserId}
-        isLoading={getListByUserIdObj.isLoading}
+        fetchData={getRequestListByUserId}
+        isLoading={getRequestListByUserIdObj.isLoading}
         pageSize={5}
         scrollY={500}
       />

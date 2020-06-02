@@ -49,7 +49,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
       return
     }
 
-    if (getMyProjectListObj.myProjectList.length === 0) {
+    if (getMyProjectListObj.myProjectList.data.length === 0) {
       const infoObj = {
         title: 'Không thể thực hiện tác vụ',
         message: 'Bạn chưa có dự án nào. Tạo dự án để thực hiện tác vụ này.',

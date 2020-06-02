@@ -41,31 +41,28 @@ const SelectTokenForm = ({
   }
 
   return (
-    <Row>
+    <Row style={{ marginBottom: 20, marginTop: 20 }}>
       <Form layout="inline" form={form} onValuesChange={onFormValuesChange}>
-        <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
-          {(getMyProjectListObj.myProjectList.data || []).length > 0 && getMyProjectListObj.myProjectList.data[0]._id && (
-            <Select style={{ minWidth: 180 }} onChange={onProjectIdChange} placeholder="Chọn một dự án">
-              <Option value={getMyProjectListObj.myProjectList.data[0]._id._id}>
-                {getMyProjectListObj.myProjectList.data[0].name}
-              </Option>
-              {getMyProjectListObj.myProjectList.data
-                .filter((item, index) => index !== 0)
-                .map(item => {
-                  return (
-                    <Option key={item._id} value={item._id}>
-                      {item.name}
-                    </Option>
-                  )
-                })}
-            </Select>
-          )}
-          {getMyProjectListObj.myProjectList.data.length === 0 && (
-            <Select style={{ minWidth: 180 }} placeholder="Không tìm thấy dự án" />
-          )}
+        <Form.Item name="projectId" label="Dự án" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
+          <Select
+            style={{ minWidth: 180 }}
+            onChange={onProjectIdChange}
+            placeholder={
+              (getMyProjectListObj.myProjectList.data || []).length > 0 ? 'Chọn một dự án' : 'Không tìm thấy dự án'
+            }
+          >
+            {(getMyProjectListObj.myProjectList.data || []).map(item => {
+              return (
+                <Option key={item._id} value={item._id}>
+                  {item.name}
+                </Option>
+              )
+            })}
+          </Select>
         </Form.Item>
         <Form.Item
           name="tokenValue"
+          label="Token"
           dependencies={['projectId']}
           rules={[
             { required: true, message: 'Vui lòng chọn một token.' },
@@ -80,26 +77,22 @@ const SelectTokenForm = ({
             }),
           ]}
         >
-          {(getProjectTokenListObj.projectTokenList.data || []).length > 0 &&
-            getProjectTokenListObj.projectTokenList.data[0]._id && (
-              <Select style={{ minWidth: 180 }} placeholder="Chọn một token">
-                <Option value={getProjectTokenListObj.projectTokenList.data[0]._id._id}>
-                  {getProjectTokenListObj.projectTokenList.data[0].name}
+          <Select
+            style={{ minWidth: 180 }}
+            placeholder={
+              (getProjectTokenListObj.projectTokenList.data || []).length > 0
+                ? 'Chọn một token'
+                : 'Không tìm thấy token'
+            }
+          >
+            {(getProjectTokenListObj.projectTokenList.data || []).map(item => {
+              return (
+                <Option key={item._id} value={item.value}>
+                  {item.name}
                 </Option>
-                {getProjectTokenListObj.projectTokenList.data
-                  .filter((item, index) => index !== 0)
-                  .map(item => {
-                    return (
-                      <Option key={item._id} value={item.value}>
-                        {item.name}
-                      </Option>
-                    )
-                  })}
-              </Select>
-            )}
-          {getProjectTokenListObj.projectTokenList.data.length === 0 && (
-            <Select style={{ minWidth: 180 }} placeholder="Không tìm thấy token" />
-          )}
+              )
+            })}
+          </Select>
         </Form.Item>
       </Form>
     </Row>

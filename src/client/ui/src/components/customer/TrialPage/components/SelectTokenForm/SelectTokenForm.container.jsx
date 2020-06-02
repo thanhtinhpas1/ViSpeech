@@ -11,8 +11,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getMyProjects: ({ userId, pagination, filters }) => dispatch(getMyProjectList({ userId, pagination, filters })),
-  getProjectTokenList: ({ userId, pagination, filters }) =>
-    dispatch(getProjectTokenList({ userId, pagination, filters })),
+  getProjectTokenList: ({ userId, projectId, pagination, filters }) =>
+    dispatch(getProjectTokenList({ userId, projectId, pagination, filters })),
 })
 
 const SelectTokenFormContainer = connect(mapStateToProps, mapDispatchToProps)(SelectTokenForm)

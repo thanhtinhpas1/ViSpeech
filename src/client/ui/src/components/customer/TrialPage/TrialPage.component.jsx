@@ -16,6 +16,15 @@ const TrialPage = () => {
   const [draggerDisabled, setDraggerDisabled] = useState(true)
   const [tokenValue, setTokenValue] = useState(null)
 
+  const callAsr = async (file, url) => {
+    try {
+      const text = await SpeechService.callAsr(file, url, tokenValue)
+      message.info(text)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const handleUpload = ({ file, onProgress, onSuccess, onError }) => {
     if (!file) {
       onError('File không tồn tại')
@@ -27,7 +36,8 @@ const TrialPage = () => {
       return
     }
 
-    const uploadTask = storage.ref(`${AUDIO_FILE_PATH}/${Date.now()}-${file.name}`).put(file)
+    const fileName = `${Date.now()}-${file.name}`
+    const uploadTask = storage.ref(`${AUDIO_FILE_PATH}/${fileName}`).put(file)
     uploadTask.on(
       'state_changed',
       snapshot => {
@@ -40,12 +50,11 @@ const TrialPage = () => {
       () => {
         storage
           .ref(AUDIO_FILE_PATH)
-          .child(file.name)
+          .child(`${fileName}`)
           .getDownloadURL()
           .then(async url => {
             onSuccess()
-            const text = await SpeechService.callAsr(file, url, tokenValue)
-            message.info(text)
+            callAsr(file, url)
           })
       }
     )

@@ -4,7 +4,7 @@ import RequestTable from './RequestTable.component'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
-  getListByUserIdObj: state.request.getListByUserId,
+  getRequestListByUserIdObj: state.request.getListByUserId,
 })
 
 const mapDispatchToProps = dispatch => ({

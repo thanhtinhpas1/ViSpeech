@@ -62,17 +62,17 @@ export class AsrController {
     async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
         // invalid file
         if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'File is required' });
-        if (file.mimetype !== 'audio/wave')
+        if (file.mimetype !== 'audio/wav')
             return res.status(HttpStatus.BAD_REQUEST).send({ message: 'Only support wav mimetype' });
 
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
         const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
-        
+
         // invalid token
         if (!tokenDto || !tokenDto.isValid || tokenDto.usedMinutes >= tokenDto.minutes)
             return res.status(HttpStatus.FORBIDDEN).json({ message: 'Invalid token.' });
-        
+
         // not enough token minutes to request
         const duration = Utils.calculateDuration(file.size); 
         const minutes = Number(tokenDto.minutes);
