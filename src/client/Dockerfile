@@ -28,4 +28,4 @@ COPY --from=dependencies /tmp/ui/node_modules ./node_modules
 
 CMD npm run start:prod
 # Expose application port
-EXPOSE 3000:3000
+EXPOSE 3200:3200
