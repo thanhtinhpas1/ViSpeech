@@ -66,5 +66,8 @@ module.exports = {
         ORDER_DELETED_FAILED_EVENT: 'OrderDeletedFailedEvent',
         ORDER_UPDATED_SUCCESS_EVENT: 'OrderUpdatedSuccessEvent',
         ORDER_UPDATED_FAILED_EVENT: 'OrderUpdatedFailedEvent',
+        // REQUEST
+        REQUEST_UPDATED_SUCCESS_EVENT: 'RequestUpdatedSuccessEvent',
+        REQUEST_UPDATED_FAILED_EVENT: 'RequestUpdatedFailedEvent',
     }
 }

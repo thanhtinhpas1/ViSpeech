@@ -13,6 +13,11 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  updateInfo: {
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const requestReducer = (state = INITIAL_STATE, action) => {
@@ -72,6 +77,32 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getListByUserId: {
           ...state.getListByUserId,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // UPDATE INFO
+    case RequestTypes.UPDATE_REQUEST_INFO:
+      return {
+        ...state,
+        updateInfo: {
+          ...state.updateInfo,
+          isLoading: true,
+        },
+      }
+    case RequestTypes.UPDATE_REQUEST_INFO_SUCCESS:
+      return {
+        ...state,
+        updateInfo: {
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case RequestTypes.UPDATE_REQUEST_INFO_FAILURE:
+      return {
+        ...state,
+        updateInfo: {
           isLoading: false,
           isSuccess: false,
           message: action.payload,

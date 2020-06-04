@@ -19,12 +19,7 @@ export default class SpeechService {
       },
     })
       .then(response => {
-        console.log(response)
-        const resultObj = response ? JSON.parse(response) : {}
-        // if (status !== 201) {
-        //   throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
-        // }
-        return resultObj
+        return response.data || null
       })
       .catch(error => {
         console.debug(error.message)

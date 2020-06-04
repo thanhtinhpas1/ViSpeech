@@ -19,7 +19,7 @@ export class FindRequestsByUserIdQuery {
     @Min(0)
     offset?: number;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     @IsUUID()
     userId: string;

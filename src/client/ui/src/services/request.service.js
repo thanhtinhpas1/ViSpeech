@@ -81,4 +81,34 @@ export default class RequestService {
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
+
+  static updateRequest = (id, transcriptFileUrl) => {
+    const api = `${apiUrl}/requests/transcriptFileUrl/${id}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'PUT',
+      body: JSON.stringify({ transcriptFileUrl }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.text()
+      })
+      .then(result => {
+        const resultObj = result ? JSON.parse(result) : {}
+        if (status !== 200) {
+          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+        }
+        return resultObj
+      })
+      .catch(err => {
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
 }

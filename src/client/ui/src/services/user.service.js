@@ -1,10 +1,10 @@
 import STORAGE from 'utils/storage'
-import {DEFAULT_ERR_MESSAGE, JWT_TOKEN} from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
 import Utils from 'utils'
-import {apiUrl} from './api-url'
+import { apiUrl } from './api-url'
 
 export default class UserService {
-  static login = ({username, password}) => {
+  static login = ({ username, password }) => {
     const api = `${apiUrl}/login`
     let status = 400
     // eslint-disable-next-line no-undef
@@ -70,7 +70,7 @@ export default class UserService {
       })
   }
 
-  static register = ({username, email, lastName, firstName, password, roles}) => {
+  static register = ({ username, email, lastName, firstName, password, roles }) => {
     const api = `${apiUrl}/users`
     let status = 400
     // eslint-disable-next-line no-undef
@@ -136,12 +136,12 @@ export default class UserService {
   }
 
   static getUserList = filterConditions => {
-    const {pagination, sortField, sortOrder, filters} = filterConditions
-    const {current, pageSize} = pagination
+    const { pagination, sortField, sortOrder, filters } = filterConditions
+    const { current, pageSize } = pagination
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({offset, limit})}`
+    let query = `${Utils.parameterizeObject({ offset, limit })}`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
@@ -337,7 +337,7 @@ export default class UserService {
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
-      body: JSON.stringify({emailToken}),
+      body: JSON.stringify({ emailToken }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
         Authorization: `Bearer ${jwtToken}`,
@@ -390,7 +390,7 @@ export default class UserService {
       })
   }
 
-  static resetPassword = ({password, userId}) => {
+  static resetPassword = ({ password, userId }) => {
     const api = `${apiUrl}/user/reset-password`
     let status = 400
     // eslint-disable-next-line no-undef
@@ -421,7 +421,7 @@ export default class UserService {
       })
   }
 
-  static changePassword = ({userId, oldPassword, newPassword}) => {
+  static changePassword = ({ userId, oldPassword, newPassword }) => {
     const api = `${apiUrl}/users/change-password`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 

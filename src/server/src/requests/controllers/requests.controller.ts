@@ -62,7 +62,7 @@ export class AsrController {
     async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
         // invalid file
         if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'File is required' });
-        if (file.mimetype !== 'audio/wav')
+        if (!['audio/wav', 'audio/wave'].includes(file.mimetype))
             return res.status(HttpStatus.BAD_REQUEST).send({ message: 'Only support wav mimetype' });
 
         const token = Utils.extractToken(req);
@@ -83,12 +83,15 @@ export class AsrController {
 
         // call asr
         let requestStatus = CONSTANTS.STATUS.PENDING;
+        const requestId = Utils.getUuid();
         const stream = fs.createReadStream(file.path);
         const formData = new FormData();
         formData.append('voice', stream);
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
         axios.post(url, formData, { headers: formData.getHeaders() }).then(result => {
             requestStatus = CONSTANTS.STATUS.SUCCESS;
+            // send back requestId
+            result.data.requestId = requestId;
             return res.status(HttpStatus.OK).json(result.data);
         }).catch(err => {
             Logger.error(err.message, 'RequestCall');
@@ -101,10 +104,10 @@ export class AsrController {
                 tokenDto.usedMinutes = usedMinutes + duration;
             }
 
-            const streamId = Utils.getUuid();
             const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding, file.size,
                 duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
-            this.requestService.createRequest(streamId, requestDto, tokenDto);
+            requestDto._id = requestId;
+            this.requestService.createRequest(requestId, requestDto, tokenDto);
             fs.unlinkSync(file.path);
         });
     }

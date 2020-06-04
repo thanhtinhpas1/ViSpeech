@@ -35,3 +35,18 @@ export const getRequestListByUserIdFailure = message => ({
   type: RequestTypes.GET_REQUEST_LIST_BY_USERID_FAILURE,
   payload: message,
 })
+
+export const updateRequestInfo = (id, data) => ({
+  type: RequestTypes.UPDATE_REQUEST_INFO,
+  payload: { id, data },
+})
+
+export const updateRequestInfoSuccess = data => ({
+  type: RequestTypes.UPDATE_REQUEST_INFO_SUCCESS,
+  payload: data,
+})
+
+export const updateRequestInfoFailure = message => ({
+  type: RequestTypes.UPDATE_REQUEST_INFO_FAILURE,
+  payload: message,
+})

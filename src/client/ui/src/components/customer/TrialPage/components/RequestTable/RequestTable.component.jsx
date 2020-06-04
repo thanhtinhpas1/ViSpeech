@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Row } from 'antd'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
@@ -97,12 +97,23 @@ const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
     }
   }, [currentUser._id, getRequestListByUserId])
 
+  const getList = useCallback(
+    // eslint-disable-next-line no-unused-vars
+    ({ pagination, sortField, sortOrder, filters }) => {
+      const userId = currentUser._id
+      if (userId) {
+        getRequestListByUserId(userId, { pagination, sortField, sortOrder, filters })
+      }
+    },
+    [currentUser._id, getRequestListByUserId]
+  )
+
   return (
     <Row style={{ marginTop: 30 }}>
       <AntdTable
         dataObj={getRequestListByUserIdObj.requestList}
         columns={columns}
-        fetchData={getRequestListByUserId}
+        fetchData={getList}
         isLoading={getRequestListByUserIdObj.isLoading}
         pageSize={5}
         scrollY={500}

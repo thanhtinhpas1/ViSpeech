@@ -1,27 +1,85 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import storage from 'firebaseStorage'
-import { AUDIO_FILE_PATH } from 'utils/constant'
+import { FILE_PATH } from 'utils/constant'
 import SpeechService from 'services/speech.service'
+import SocketService from 'services/socket.service'
+import RequestService from 'services/request.service'
+import SocketUtils from 'utils/socket.util'
 import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
 import RequestTable from './components/RequestTable/RequestTable.container'
 
 const { Dragger } = Upload
 
-const TrialPage = () => {
+const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
+const { REQUEST_UPDATED_SUCCESS_EVENT, REQUEST_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
+
+const TrialPage = ({ updateRequestInfoObj, updateRequestInfo, updateRequestInfoSuccess, updateRequestInfoFailure }) => {
   const [draggerDisabled, setDraggerDisabled] = useState(true)
   const [tokenValue, setTokenValue] = useState(null)
 
-  const callAsr = async (file, url) => {
+  useEffect(() => {
+    SocketService.socketOnListeningEvent(REQUEST_UPDATED_SUCCESS_EVENT)
+    SocketService.socketOnListeningEvent(REQUEST_UPDATED_FAILED_EVENT)
+  }, [])
+
+  const updateRequest = async (requestId, transcriptFileUrl) => {
+    if (!requestId) return
+
+    updateRequestInfo(requestId, transcriptFileUrl)
     try {
-      const text = await SpeechService.callAsr(file, url, tokenValue)
-      message.info(text)
+      await RequestService.updateRequest(requestId, transcriptFileUrl)
+      invokeCheckSubject.RequestUpdated.subscribe(data => {
+        if (data.error != null) {
+          updateRequestInfoFailure(data.errorObj)
+        } else {
+          updateRequestInfoSuccess(transcriptFileUrl)
+        }
+      })
     } catch (err) {
-      console.log(err)
+      updateRequestInfoFailure({ message: err.message })
+    }
+  }
+
+  const callAsr = async (file, folder, url) => {
+    try {
+      const data = await SpeechService.callAsr(file, url, tokenValue)
+      if (!data || !data.text) {
+        return
+      }
+
+      const { requestId, text } = data
+      const fileName = `transcript`
+      const textFile = new File([new Blob([text], { type: 'text/plain;charset=utf-8' })], fileName, {
+        type: 'text/plain;charset=utf-8',
+      })
+      const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${fileName}`).put(textFile)
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          // onProgress({ percent: progress })
+        },
+        error => {
+          console.log(`Error uploading text file: ${error.message}`)
+        },
+        () => {
+          storage
+            .ref(`${FILE_PATH}/${folder}`)
+            .child(fileName)
+            .getDownloadURL()
+            .then(async transcriptFileUrl => {
+              updateRequest(requestId, transcriptFileUrl)
+              console.log(`Transcript file uploaded with url ${transcriptFileUrl}`)
+            })
+        }
+      )
+    } catch (err) {
+      console.log(`Error uploading text file: ${err.message}`)
     }
   }
 
@@ -36,8 +94,9 @@ const TrialPage = () => {
       return
     }
 
-    const fileName = `${Date.now()}-${file.name}`
-    const uploadTask = storage.ref(`${AUDIO_FILE_PATH}/${fileName}`).put(file)
+    const fileName = `audio-${file.name}`
+    const folder = `${Date.now()}`
+    const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${fileName}`).put(file)
     uploadTask.on(
       'state_changed',
       snapshot => {
@@ -49,12 +108,12 @@ const TrialPage = () => {
       },
       () => {
         storage
-          .ref(AUDIO_FILE_PATH)
-          .child(`${fileName}`)
+          .ref(`${FILE_PATH}/${folder}`)
+          .child(fileName)
           .getDownloadURL()
           .then(async url => {
             onSuccess()
-            callAsr(file, url)
+            callAsr(file, folder, url)
           })
       }
     )
