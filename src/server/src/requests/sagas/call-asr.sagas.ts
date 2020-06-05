@@ -3,7 +3,7 @@ import { ICommand, ofType, Saga } from "@nestjs/cqrs";
 import { Observable } from "rxjs";
 import { flatMap } from "rxjs/operators";
 import { UpdateTokenCommand } from "tokens/commands/impl/update-token.command";
-import { AsrCalledEvent } from "requests/events/impl/Asr-called.event";
+import { AsrCalledEvent } from "requests/events/impl/asr-called.event";
 
 @Injectable()
 export class CallAsrSagas {
