@@ -1,11 +1,12 @@
 import { Controller, UseGuards, Get, Query, Param, Req, ForbiddenException, Put, Body } from "@nestjs/common"; import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"; import { AuthGuard } from "@nestjs/passport"; import { CONSTANTS } from "common/constant";
 import { RequestService } from "requests/services/request.service";
 import { FindRequestsQuery } from "requests/queries/impl/find-requests.query";
-import { FindRequestsParam, RequestIdParamsDto, RequestDto } from "requests/dtos/requests.dto";
+import { FindRequestsParam, RequestIdParamsDto } from "requests/dtos/requests.dto";
 import { Roles } from "auth/roles.decorator";
 import { AuthService } from "auth/auth.service";
 import { RequestGuard } from "auth/guards/request.guard";
 import { FindRequestsByUserIdQuery } from "requests/queries/impl/find-requests-by-userId.query";
+import { FindRequestQuery } from "requests/queries/impl/find-request.query";
 
 @Controller('requests')
 @ApiTags('requests')
@@ -55,11 +56,20 @@ export class HistoriesController {
     @ApiOperation({ tags: ['Update Request TranscriptFileUrl'] })
     @ApiResponse({ status: 200, description: 'Update Request TranscriptFileUrl.' })
     @Put('/transcriptFileUrl/:_id')
-    async updateProject(
+    async updateRequest(
         @Param() requestIdDto: RequestIdParamsDto,
         @Body() body,
     ) {
         const streamId = requestIdDto._id;
         return this.requestService.updateRequestTranscriptFileUrl(streamId, requestIdDto._id, body.transcriptFileUrl);
+    }
+
+    /* Find Request */
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Find Request'] })
+    @ApiResponse({ status: 200, description: 'Find Request.' })
+    @Get(':id')
+    async findOne(@Param() findRequestQuery: FindRequestQuery) {
+        return this.requestService.findOne(findRequestQuery);
     }
 }

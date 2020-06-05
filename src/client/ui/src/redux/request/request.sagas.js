@@ -8,7 +8,23 @@ import {
   getRequestListFailure,
   getRequestListByUserIdSuccess,
   getRequestListByUserIdFailure,
+  getRequestInfoSuccess,
+  getRequestInfoFailure,
 } from './request.actions'
+
+// get request info
+export function* getRequestInfo({ payload: id }) {
+  try {
+    const requestInfo = yield RequestService.getRequestInfo(id)
+    yield put(getRequestInfoSuccess(requestInfo))
+  } catch (err) {
+    yield put(getRequestInfoFailure(err.message))
+  }
+}
+
+export function* getRequestInfoSaga() {
+  yield takeLatest(RequestTypes.GET_REQUEST_INFO, getRequestInfo)
+}
 
 const formatRequestList = requests => {
   const mapFunc = request => {
@@ -55,5 +71,5 @@ export function* getRequestListByUserIdSaga() {
 // =================================
 
 export function* requestSaga() {
-  yield all([call(getRequestListSaga), call(getRequestListByUserIdSaga)])
+  yield all([call(getRequestInfoSaga), call(getRequestListSaga), call(getRequestListByUserIdSaga)])
 }

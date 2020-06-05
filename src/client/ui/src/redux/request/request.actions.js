@@ -4,6 +4,22 @@ export const onClearRequestState = () => ({
   type: RequestTypes.CLEAR_REQUEST_STATE,
 })
 
+// get request info
+export const getRequestInfo = id => ({
+  type: RequestTypes.GET_REQUEST_INFO,
+  payload: id,
+})
+
+export const getRequestInfoSuccess = data => ({
+  type: RequestTypes.GET_REQUEST_INFO_SUCCESS,
+  payload: { data },
+})
+
+export const getRequestInfoFailure = message => ({
+  type: RequestTypes.GET_REQUEST_INFO_FAILURE,
+  payload: message,
+})
+
 // get request list
 export const getRequestList = filterConditions => ({
   type: RequestTypes.GET_REQUEST_LIST,

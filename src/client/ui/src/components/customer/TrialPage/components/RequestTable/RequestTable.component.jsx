@@ -5,7 +5,7 @@ import React, { useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Row } from 'antd'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { STATUS, CUSTOMER_PATH } from 'utils/constant'
+import { STATUS, CUSTOMER_PATH, DEFAULT_PAGINATION } from 'utils/constant'
 import * as moment from 'moment'
 
 const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListByUserId }) => {
@@ -76,11 +76,17 @@ const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
     {
       title: '',
       dataIndex: '_id',
-      render: _id => (
-        <Link to={`${CUSTOMER_PATH}/request-details?id=${_id}`} className="btn btn-light-alt btn-xs btn-icon">
-          <em className="ti ti-eye" />
-        </Link>
-      ),
+      render: (_id, record) => {
+        const isRequestSuccess = record.status.value === STATUS.SUCCESS.name
+        return (
+          <Link
+            to={isRequestSuccess ? `${CUSTOMER_PATH}/request-details/${_id}` : '#!'}
+            className={`btn btn-light-alt btn-xs btn-icon ${isRequestSuccess ? '' : 'disabled'}`}
+          >
+            <em className="ti ti-eye" />
+          </Link>
+        )
+      },
       align: 'right',
       width: 60,
     },
@@ -89,12 +95,14 @@ const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
   useEffect(() => {
     const userId = currentUser._id
     if (userId) {
-      const pagination = {
-        pageSize: 5,
-        current: 1,
-      }
-      getRequestListByUserId(userId, { pagination })
+      getRequestListByUserId(userId, { pagination: DEFAULT_PAGINATION })
     }
+    // const reader = new FileReader()
+    // reader.onload = () => {
+    //   const text = reader.result
+    //   console.log(text)
+    // }
+    // reader.readAsDataURL()
   }, [currentUser._id, getRequestListByUserId])
 
   const getList = useCallback(

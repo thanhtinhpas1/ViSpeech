@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import storage from 'firebaseStorage'
-import { FILE_PATH } from 'utils/constant'
+import { FILE_PATH, DEFAULT_PAGINATION } from 'utils/constant'
 import SpeechService from 'services/speech.service'
 import SocketService from 'services/socket.service'
 import RequestService from 'services/request.service'
@@ -18,7 +18,14 @@ const { Dragger } = Upload
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { REQUEST_UPDATED_SUCCESS_EVENT, REQUEST_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 
-const TrialPage = ({ updateRequestInfoObj, updateRequestInfo, updateRequestInfoSuccess, updateRequestInfoFailure }) => {
+const TrialPage = ({
+  currentUser,
+  updateRequestInfoObj,
+  getRequestListByUserId,
+  updateRequestInfo,
+  updateRequestInfoSuccess,
+  updateRequestInfoFailure,
+}) => {
   const [draggerDisabled, setDraggerDisabled] = useState(true)
   const [tokenValue, setTokenValue] = useState(null)
 
@@ -38,6 +45,7 @@ const TrialPage = ({ updateRequestInfoObj, updateRequestInfo, updateRequestInfoS
           updateRequestInfoFailure(data.errorObj)
         } else {
           updateRequestInfoSuccess(transcriptFileUrl)
+          getRequestListByUserId(currentUser._id, { pagination: DEFAULT_PAGINATION })
         }
       })
     } catch (err) {
@@ -83,7 +91,7 @@ const TrialPage = ({ updateRequestInfoObj, updateRequestInfo, updateRequestInfoS
     }
   }
 
-  const handleUpload = ({ file, onProgress, onSuccess, onError }) => {
+  const handleUpload = async ({ file, onProgress, onSuccess, onError }) => {
     if (!file) {
       onError('File không tồn tại')
       return

@@ -3,7 +3,7 @@ import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RequestDto } from 'requests/dtos/requests.dto';
 import { Repository } from 'typeorm';
-import { AsrCalledEvent } from '../impl/Asr-called.event';
+import { AsrCalledEvent } from '../impl/asr-called.event';
 
 @EventsHandler(AsrCalledEvent)
 export class AsrCalledHandler implements IEventHandler<AsrCalledEvent> {
