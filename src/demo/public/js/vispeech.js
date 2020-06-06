@@ -142,7 +142,7 @@
             console.log("Record file have size: " + AudioBLOB.size)
             $.ajax({
                 method: 'POST',
-                url: 'http://localhost:5000',
+                url: 'http://asr.vietspeech.com:5000',
                 data: data,
                 cache: false,
                 contentType: false,
