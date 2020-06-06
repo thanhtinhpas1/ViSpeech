@@ -1,6 +1,5 @@
 ### BASE
-
-FROM 10.0.0 AS base
+FROM node:12-alpine AS base
 
 # Set the working directory
 WORKDIR /usr/src/app/demo
@@ -13,6 +12,6 @@ RUN npm install
 COPY . .
 
 # Expose application port
-EXPOSE 5000:5000
+EXPOSE 3000:3000
 
 CMD ["node", "bin/www"]

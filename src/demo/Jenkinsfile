@@ -1,0 +1,24 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename 'Dockerfile.build'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v /etc/timezone:/etc/timezone -v $HOME/.cache:/root/.cache -v $HOME/.ivy2:/root/.ivy2 -v $HOME/.npm:/root/.npm'
+        }
+    }
+    environment {
+        CI = 'true'
+    }
+    stages {
+        stage('docker') {
+            steps {
+                sh 'docker build -t vispeechdemo ./src/demo'
+            }
+        }
+        stage('delivery') {
+            steps {
+                sh 'docker rm -f vispeechdemo || true'
+                sh 'docker run --name=vispeechdemo -d --restart=always -p 3000:3000 vispeechdemo'
+            }
+        }
+    }
+}
