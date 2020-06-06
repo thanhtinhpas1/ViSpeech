@@ -13,7 +13,6 @@ import { CommandHandlers } from './commands/handler';
 import { AsrController } from './controllers/requests.controller';
 import { RequestDto } from './dtos/requests.dto';
 import { EventHandlers } from './events/handler';
-import { CalledAsrEvent } from './events/impl/call-asr.event';
 import { QueryHandlers } from './queries/handler';
 import { RequestRepository } from './repository/request.repository';
 import { CallAsrSagas } from './sagas/call-asr.sagas';
@@ -21,10 +20,20 @@ import { RequestService } from './services/request.service';
 import { HistoriesController } from './controllers/histories.controller';
 import { ReportRepository } from 'reports/repository/report.repository';
 import { OrderDto } from 'orders/dtos/orders.dto';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { AsrCalledEvent } from './events/impl/asr-called.event';
+import { RequestTranscriptFileUrlUpdatedEvent, RequestTranscriptFileUrlUpdatedFailedEvent, RequestTranscriptFileUrlUpdatedSuccessEvent } from './events/impl/request-transcript-file-url-updated.event';
+import { ClientsModule } from '@nestjs/microservices';
+import { config } from "../../config";
+import { kafkaClientOptions } from "common/kafka-client.options";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([RequestDto, TokenDto, OrderDto]),
+        ClientsModule.register([{
+            name: config.KAFKA.NAME,
+            ...kafkaClientOptions,
+        }]),
+        TypeOrmModule.forFeature([RequestDto, TokenDto, OrderDto, ProjectDto]),
         EventStoreModule.forFeature(),
         MulterModule.register({}),
         forwardRef(() => AuthModule),
@@ -66,6 +75,10 @@ export class RequestModule implements OnModuleInit {
     }
 
     eventHandlers = {
-        CalledAsrEvent: (streamId, requestDto, tokenDto) => new CalledAsrEvent(streamId, requestDto, tokenDto),
+        AsrCalledEvent: (streamId, requestDto, tokenDto) => new AsrCalledEvent(streamId, requestDto, tokenDto),
+        // update
+        RequestTranscriptFileUrlUpdatedEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedEvent(streamId, id, url),
+        RequestTranscriptFileUrlUpdatedSuccessEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, id, url),
+        RequestTranscriptFileUrlUpdatedFailedEvent: (streamId, id, url, error) => new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, id, url, error),
     };
 }

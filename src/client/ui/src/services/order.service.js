@@ -30,7 +30,7 @@ export default class OrderService {
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -59,7 +59,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -98,7 +98,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -137,7 +137,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -169,7 +169,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 }

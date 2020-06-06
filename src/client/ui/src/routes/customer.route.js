@@ -18,6 +18,7 @@ import AssignPermissionPage from 'components/customer/AssignPermissionPage/Assig
 import ReplyPermissionAssignPage from 'components/customer/ReplyPermissionAssignPage/ReplyPermissionAssignPage.container'
 import StatisticsPage from 'components/customer/StatisticsPage/StatisticsPage.container'
 import TrialPage from 'components/customer/TrialPage/TrialPage.container'
+import TrialDetailsPage from 'components/customer/TrialDetailsPage/TrialDetailsPage.container'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -64,6 +65,9 @@ const RouteCustomer = ({ currentUser }) => {
             </Route>
             <Route path={`${CUSTOMER_PATH}/trial`}>
               <TrialPage />
+            </Route>
+            <Route path={`${CUSTOMER_PATH}/request-details/:id`}>
+              <TrialDetailsPage />
             </Route>
             <Route path={`${CUSTOMER_PATH}/*`}>
               <Redirect to="/404" />

@@ -11,4 +11,11 @@ export class RequestRepository {
         request.createReport(streamId, tokenDto);
         return request;
     }
+
+    async updateRequestTranscriptFileUrl(streamId: string, requestId: string, url: string) {
+        const request = new RequestModel(requestId);
+        request.setData(url);
+        request.updateRequestTranscriptFileUrl(streamId, requestId);
+        return request;
+    }
 }

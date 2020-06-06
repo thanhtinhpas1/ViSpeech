@@ -81,12 +81,15 @@ export class AsrController {
 
         // call asr
         let requestStatus = CONSTANTS.STATUS.PENDING;
+        const requestId = Utils.getUuid();
         const stream = fs.createReadStream(file.path);
         const formData = new FormData();
         formData.append('voice', stream);
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
         axios.post(url, formData, {headers: formData.getHeaders()}).then(result => {
             requestStatus = CONSTANTS.STATUS.SUCCESS;
+            // send back requestId
+            result.data.requestId = requestId;
             return res.status(HttpStatus.OK).json(result.data);
         }).catch(err => {
             Logger.error(err.message, 'RequestCall');
@@ -99,10 +102,10 @@ export class AsrController {
                 tokenDto.usedMinutes = usedMinutes + duration;
             }
 
-            const streamId = Utils.getUuid();
             const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding, file.size,
-                duration, file.mimetype, requestBody.audioFileUrl, requestStatus);
-            this.requestService.createRequest(streamId, requestDto, tokenDto);
+                duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
+            requestDto._id = requestId;
+            this.requestService.createRequest(requestId, requestDto, tokenDto);
             fs.unlinkSync(file.path);
         });
     }
