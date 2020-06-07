@@ -1,14 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Row } from 'antd'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { STATUS, CUSTOMER_PATH, DEFAULT_PAGINATION } from 'utils/constant'
+import { STATUS, CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER } from 'utils/constant'
 import * as moment from 'moment'
 
 const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListByUserId }) => {
+  const [requestData, setRequestData] = useState({ data: [], count: 0 })
+
   const columns = [
     {
       title: 'Tên dự án',
@@ -95,15 +97,19 @@ const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
   useEffect(() => {
     const userId = currentUser._id
     if (userId) {
-      getRequestListByUserId(userId, { pagination: DEFAULT_PAGINATION })
+      getRequestListByUserId(userId, {
+        pagination: DEFAULT_PAGINATION,
+        sortField: 'createdDate',
+        sortOrder: SORT_ORDER.DESC,
+      })
     }
-    // const reader = new FileReader()
-    // reader.onload = () => {
-    //   const text = reader.result
-    //   console.log(text)
-    // }
-    // reader.readAsDataURL()
   }, [currentUser._id, getRequestListByUserId])
+
+  useEffect(() => {
+    if (getRequestListByUserIdObj.isLoading === false && getRequestListByUserIdObj.isSuccess != null) {
+      setRequestData(getRequestListByUserIdObj.requestList)
+    }
+  }, [getRequestListByUserIdObj])
 
   const getList = useCallback(
     // eslint-disable-next-line no-unused-vars
@@ -119,7 +125,7 @@ const RequestTable = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
   return (
     <Row style={{ marginTop: 30 }}>
       <AntdTable
-        dataObj={getRequestListByUserIdObj.requestList}
+        dataObj={requestData}
         columns={columns}
         fetchData={getList}
         isLoading={getRequestListByUserIdObj.isLoading}

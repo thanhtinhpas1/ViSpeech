@@ -9,6 +9,7 @@ const { Option } = Select
 
 const SelectTokenForm = ({
   currentUser,
+  uploading,
   getMyProjectListObj,
   getProjectTokenListObj,
   getMyProjects,
@@ -50,6 +51,7 @@ const SelectTokenForm = ({
             placeholder={
               (getMyProjectListObj.myProjectList.data || []).length > 0 ? 'Chọn một dự án' : 'Không tìm thấy dự án'
             }
+            disabled={uploading}
           >
             {(getMyProjectListObj.myProjectList.data || []).map(item => {
               return (
@@ -84,6 +86,7 @@ const SelectTokenForm = ({
                 ? 'Chọn một token'
                 : 'Không tìm thấy token'
             }
+            disabled={uploading}
           >
             {(getProjectTokenListObj.projectTokenList.data || []).map(item => {
               return (

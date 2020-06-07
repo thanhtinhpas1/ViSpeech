@@ -1,4 +1,5 @@
-import { Controller, UseGuards, Get, Query, Param, Req, ForbiddenException, Put, Body } from "@nestjs/common"; import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"; import { AuthGuard } from "@nestjs/passport"; import { CONSTANTS } from "common/constant";
+import { Controller, UseGuards, Get, Query, Param, Req, ForbiddenException, Put, Body, Post, Res } from "@nestjs/common"; import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"; import { AuthGuard } from "@nestjs/passport"; import { CONSTANTS } from "common/constant";
+import { Response } from 'express'
 import { RequestService } from "requests/services/request.service";
 import { FindRequestsQuery } from "requests/queries/impl/find-requests.query";
 import { FindRequestsParam, RequestIdParamsDto } from "requests/dtos/requests.dto";
@@ -71,5 +72,22 @@ export class HistoriesController {
     @Get(':id')
     async findOne(@Param() findRequestQuery: FindRequestQuery) {
         return this.requestService.findOne(findRequestQuery);
+    }
+
+    /* Download Transcript */
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Download Transcript'] })
+    @ApiResponse({ status: 200, description: 'Download Transcript.' })
+    @Post('/download-transcript/:id')
+    async downloadTranscript(@Body() body, @Param() findRequestQuery: FindRequestQuery, @Res() response: Response) {
+        try {
+            const converted = await this.requestService.downloadTranscript(body.html);
+            response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response.setHeader('Content-Disposition', `attachment; filename=vispeech-transcript.docx`)
+            response.setHeader('Content-Length', converted.length)
+            response.send(converted)
+        } catch (err) {
+            throw err;
+        }
     }
 }

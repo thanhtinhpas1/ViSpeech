@@ -139,4 +139,33 @@ export default class RequestService {
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
+
+  static downloadTranscript = (html, id) => {
+    const api = `${apiUrl}/requests/download-transcript/${id}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'POST',
+      body: JSON.stringify({ html }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.blob()
+      })
+      .then(result => {
+        if (status !== 201) {
+          throw new Error(DEFAULT_ERR_MESSAGE)
+        }
+        return result
+      })
+      .catch(err => {
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
 }
