@@ -29,7 +29,11 @@ const SelectTokenForm = ({
 
   const onFormValuesChange = (changedValue, allValues) => {
     const { projectId, tokenValue } = allValues
-    onSelectTokenFormValuesChange(projectId, tokenValue)
+    const project = projectId ? getMyProjectListObj.myProjectList.data.find(item => item._id === projectId) : null
+    const token = tokenValue
+      ? getProjectTokenListObj.projectTokenList.data.find(item => item.value === tokenValue)
+      : null
+    onSelectTokenFormValuesChange(project, token)
   }
 
   const onProjectIdChange = value => {

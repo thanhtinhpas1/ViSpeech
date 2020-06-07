@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import storage from 'firebaseStorage'
-import { FILE_PATH, DEFAULT_PAGINATION, SORT_ORDER } from 'utils/constant'
+import { FILE_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
 import SpeechService from 'services/speech.service'
 import SocketService from 'services/socket.service'
 import RequestService from 'services/request.service'
@@ -30,6 +30,9 @@ const TrialPage = ({
   const [tokenValue, setTokenValue] = useState(null)
   const [progress, setProgress] = useState(0)
   const [uploading, setUploading] = useState(0)
+  const [projectName, setProjectName] = useState('')
+  const [tokenName, setTokenName] = useState('')
+  const [newRequest, setNewRequest] = useState({})
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(REQUEST_UPDATED_SUCCESS_EVENT)
@@ -40,14 +43,27 @@ const TrialPage = ({
     if (!requestId) return
 
     updateRequestInfo(requestId, transcriptFileUrl)
+    const request = { ...newRequest }
     try {
       await RequestService.updateRequest(requestId, transcriptFileUrl)
       invokeCheckSubject.RequestUpdated.subscribe(data => {
         if (data.error != null) {
+          request.status = {
+            value: 'FAILURE',
+            name: STATUS.FAILURE.viText,
+            class: STATUS.FAILURE.cssClass,
+          }
+          setNewRequest(request)
           updateRequestInfoFailure(data.errorObj)
           setUploading(false)
         } else {
-          setUploading(true)
+          request.status = {
+            value: 'SUCCESS',
+            name: STATUS.SUCCESS.viText,
+            class: STATUS.SUCCESS.cssClass,
+          }
+          setNewRequest(request)
+          setUploading(false)
           updateRequestInfoSuccess(transcriptFileUrl)
           getRequestListByUserId(currentUser._id, {
             pagination: DEFAULT_PAGINATION,
@@ -57,6 +73,11 @@ const TrialPage = ({
         }
       })
     } catch (err) {
+      request.status = {
+        value: 'FAILURE',
+        name: STATUS.FAILURE.viText,
+        class: STATUS.FAILURE.cssClass,
+      }
       setUploading(false)
       updateRequestInfoFailure({ message: err.message })
     }
@@ -104,6 +125,20 @@ const TrialPage = ({
 
   const handleUpload = async ({ file, onProgress, onSuccess, onError }) => {
     setUploading(true)
+    const request = {
+      _id: 'vispeech',
+      createdDate: Date.now(),
+      duration: 0,
+      fileName: file.name,
+      projectName,
+      status: {
+        value: 'PENDING',
+        name: STATUS.PENDING.viText,
+        class: STATUS.PENDING.cssClass,
+      },
+      tokenName,
+    }
+    setNewRequest(request)
 
     if (!file) {
       onError('File không tồn tại')
@@ -159,10 +194,12 @@ const TrialPage = ({
     },
   }
 
-  const onSelectTokenFormValuesChange = (projectId, token) => {
+  const onSelectTokenFormValuesChange = (project, token) => {
     setDraggerDisabled(true)
-    if (projectId && token) {
-      setTokenValue(token)
+    if (project && token) {
+      setTokenValue(token.value)
+      setProjectName(project.name)
+      setTokenName(token.name)
       setDraggerDisabled(false)
     }
   }
@@ -183,7 +220,7 @@ const TrialPage = ({
               <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
-            <RequestTable />
+            <RequestTable newRequest={newRequest} />
           </div>
         </div>
       </div>
