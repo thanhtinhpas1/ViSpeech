@@ -60,18 +60,18 @@ export class UsersSagas {
         );
     };
 
-    @Saga()
-    freeTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(FreeTokenCreatedFailedEvent),
-            map((event: FreeTokenCreatedFailedEvent) => {
-                Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
-                const { streamId, tokenDto } = event;
-                const { userId } = tokenDto;
-                return new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId), true);
-            })
-        );
-    };
+    // @Saga()
+    // freeTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
+    //     return events$.pipe(
+    //         ofType(FreeTokenCreatedFailedEvent),
+    //         map((event: FreeTokenCreatedFailedEvent) => {
+    //             Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
+    //             const { streamId, tokenDto } = event;
+    //             const { userId } = tokenDto;
+    //             return new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId), true);
+    //         })
+    //     );
+    // };
 
     @Saga()
     userDeletedSuccess = (events$: Observable<any>): Observable<ICommand> => {

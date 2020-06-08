@@ -1,5 +1,5 @@
 import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested} from 'class-validator';
+import {IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested, IsBoolean} from 'class-validator';
 import {CONSTANTS} from 'common/constant';
 import {Column, Entity, ObjectID} from 'typeorm';
 import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
@@ -30,12 +30,13 @@ export class PaymentIntent {
 
 @Entity('orders')
 export class OrderDto extends BaseEntityDto {
-    constructor(userId, tokenType: TokenTypeDto, token: TokenDto, status = CONSTANTS.STATUS.PENDING) {
+    constructor(userId, tokenType: TokenTypeDto, token: TokenDto, status = CONSTANTS.STATUS.PENDING, upgradeToken: boolean = false) {
         super();
         this.userId = userId;
         this.tokenType = tokenType;
         this.token = token;
         this.status = status;
+        this.upgradeToken = upgradeToken;
     }
 
     @IsOptional()
@@ -68,4 +69,12 @@ export class OrderDto extends BaseEntityDto {
     ])
     @Column()
     status: string;
+
+    @IsNotEmpty(ErrUtil.getMessage('upgradeToken', ERR.IsNotEmpty))
+    @IsBoolean(ErrUtil.getMessage('upgradeToken', ERR.IsBoolean))
+    @Column({
+        default: true,
+        nullable: false,
+    })
+    upgradeToken: boolean;
 }

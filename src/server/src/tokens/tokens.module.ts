@@ -33,6 +33,7 @@ import {
 } from './events/impl/token-deleted-by-projectId.event';
 import { UserDto } from 'users/dtos/users.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
+import { TokenUpgradedEvent, TokenUpgradedSuccessEvent, TokenUpgradedFailedEvent } from './events/impl/token-upgraded.event';
 
 @Module({
     imports: [ClientsModule.register([{
@@ -95,6 +96,11 @@ export class TokensModule implements OnModuleInit {
         OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
         OrderedTokenCreatedSuccessEvent: (streamId, tokenDto, formattedToken) => new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, formattedToken),
         OrderedTokenCreatedFailedEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
+
+        // upgrade token
+        TokenUpgradedEvent: (streamId, id, data) => new TokenUpgradedEvent(streamId, id, data),
+        TokenUpgradedSuccessEvent: (streamId, id, data) => new TokenUpgradedSuccessEvent(streamId, id, data),
+        TokenUpgradedFailedEvent: (streamId, id, data, error) => new TokenUpgradedFailedEvent(streamId, id, data, error),
     };
 
     async persistTokenTypesToDB() {

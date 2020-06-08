@@ -51,15 +51,17 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
       invokeCheckSubject.UserCreated.subscribe(data => {
         if (data.error != null) {
           registerFailure(data.errorObj)
-        }
-      })
-      invokeCheckSubject.FreeTokenCreated.subscribe(data => {
-        if (data.error != null) {
-          registerFailure(data.errorObj)
         } else {
           registerSuccess(user)
         }
       })
+      // invokeCheckSubject.FreeTokenCreated.subscribe(data => {
+      //   if (data.error != null) {
+      //     registerFailure(data.errorObj)
+      //   } else {
+      //     registerSuccess(user)
+      //   }
+      // })
     } catch (err) {
       const msg = 'Đã có lỗi xảy ra, vui lòng kiểm tra lại thông tin đã nhập.'
       registerFailure({ message: msg })

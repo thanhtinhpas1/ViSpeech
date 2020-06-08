@@ -27,6 +27,8 @@ import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { UserDto } from 'users/dtos/users.dto';
+import { UpgradeTokenOrderCreatedSuccessEvent, UpgradeTokenOrderCreatedEvent, UpgradeTokenOrderCreatedFailedEvent } from './events/impl/upgrade-token-order-created.event';
+import { UpgradeTokenHandler } from 'tokens/commands/handlers/upgrade-token.handler';
 
 @Module({
     imports: [
@@ -48,6 +50,7 @@ import { UserDto } from 'users/dtos/users.dto';
         OrderRepository,
         TokenRepository,
         CreateOrderedTokenHandler,
+        UpgradeTokenHandler,
         QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
     ],
     exports: [OrdersService]
@@ -68,7 +71,7 @@ export class OrdersModule implements OnModuleInit {
         this.event$.publisher = this.eventStore;
         /** ------------ */
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, CreateOrderedTokenHandler]);
+        this.command$.register([...CommandHandlers, CreateOrderedTokenHandler, UpgradeTokenHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([OrdersSagas]);
     }
@@ -78,6 +81,11 @@ export class OrdersModule implements OnModuleInit {
         OrderCreatedEvent: (streamId, data) => new OrderCreatedEvent(streamId, data),
         OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),
         OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),
+
+        // create upgrade token order
+        UpgradeTokenOrderCreatedEvent: (streamId, data) => new UpgradeTokenOrderCreatedEvent(streamId, data),
+        UpgradeTokenOrderCreatedSuccessEvent: (streamId, data) => new UpgradeTokenOrderCreatedSuccessEvent(streamId, data),
+        UpgradeTokenOrderCreatedFailedEvent: (streamId, data, error) => new UpgradeTokenOrderCreatedFailedEvent(streamId, data, error),
 
         // update
         OrderUpdatedEvent: (streamId, data) => new OrderUpdatedEvent(streamId, data),
