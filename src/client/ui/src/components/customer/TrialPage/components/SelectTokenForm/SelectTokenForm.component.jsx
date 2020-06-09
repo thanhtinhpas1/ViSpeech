@@ -9,6 +9,7 @@ const { Option } = Select
 
 const SelectTokenForm = ({
   currentUser,
+  uploading,
   getMyProjectListObj,
   getProjectTokenListObj,
   getMyProjects,
@@ -28,7 +29,11 @@ const SelectTokenForm = ({
 
   const onFormValuesChange = (changedValue, allValues) => {
     const { projectId, tokenValue } = allValues
-    onSelectTokenFormValuesChange(projectId, tokenValue)
+    const project = projectId ? getMyProjectListObj.myProjectList.data.find(item => item._id === projectId) : null
+    const token = tokenValue
+      ? getProjectTokenListObj.projectTokenList.data.find(item => item.value === tokenValue)
+      : null
+    onSelectTokenFormValuesChange(project, token)
   }
 
   const onProjectIdChange = value => {
@@ -50,6 +55,7 @@ const SelectTokenForm = ({
             placeholder={
               (getMyProjectListObj.myProjectList.data || []).length > 0 ? 'Chọn một dự án' : 'Không tìm thấy dự án'
             }
+            disabled={uploading}
           >
             {(getMyProjectListObj.myProjectList.data || []).map(item => {
               return (
@@ -84,6 +90,7 @@ const SelectTokenForm = ({
                 ? 'Chọn một token'
                 : 'Không tìm thấy token'
             }
+            disabled={uploading}
           >
             {(getProjectTokenListObj.projectTokenList.data || []).map(item => {
               return (

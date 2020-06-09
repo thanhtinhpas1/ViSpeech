@@ -6,6 +6,7 @@ import {FreeTokenCreatedFailedHandler, FreeTokenCreatedHandler, FreeTokenCreated
 import {OrderedTokenCreatedFailedHandler, OrderedTokenCreatedHandler, OrderedTokenCreatedSuccessHandler} from './ordered-token-created.handler';
 import { TokenDeletedByUserIdHandler, TokenDeletedByUserIdSuccessHandler, TokenDeletedByUserIdFailedHandler } from './token-deleted-by-userId.handler';
 import { TokenDeletedByProjectIdHandler, TokenDeletedByProjectIdSuccessHandler, TokenDeletedByProjectIdFailedHandler } from './token-deleted-by-projectId.handler';
+import { TokenUpgradedHandler, TokenUpgradedSuccessHandler, TokenUpgradedFailedHandler } from './token-upgraded.handler';
 
 export const EventHandlers = [
     // create
@@ -43,5 +44,10 @@ export const EventHandlers = [
     // ordered token
     OrderedTokenCreatedHandler,
     OrderedTokenCreatedSuccessHandler,
-    OrderedTokenCreatedFailedHandler
+    OrderedTokenCreatedFailedHandler,
+
+    // upgrade token
+    TokenUpgradedHandler,
+    TokenUpgradedSuccessHandler,
+    TokenUpgradedFailedHandler
 ];

@@ -12,6 +12,8 @@ import { OrderDto } from 'orders/dtos/orders.dto';
 import { CONSTANTS } from 'common/constant';
 import { OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from 'tokens/events/impl/ordered-token-created.event';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { UpgradeTokenOrderCreatedSuccessEvent } from 'orders/events/impl/upgrade-token-order-created.event';
+import { UpgradeTokenCommand } from 'tokens/commands/impl/upgrade-token.command';
 
 @Injectable()
 export class OrdersSagas {
@@ -61,6 +63,19 @@ export class OrdersSagas {
                 const orderDto = new OrderDto(userId, tempTokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
                 orderDto._id = orderId;
                 return new UpdateOrderCommand(streamId, orderDto);
+            })
+        );
+    };
+
+    @Saga()
+    upgradeTokenOrderCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(UpgradeTokenOrderCreatedSuccessEvent),
+            map((event: UpgradeTokenOrderCreatedSuccessEvent) => {
+                Logger.log("Inside [OrdersSagas] upgradeTokenOrderCreatedSuccess Saga", "OrdersSagas");
+                const { streamId, orderDto } = event;
+                const { tokenType, token } = orderDto;
+                return new UpgradeTokenCommand(streamId, token._id, tokenType);
             })
         );
     };

@@ -1,19 +1,19 @@
+
 import { CommandHandler, EventPublisher, ICommandHandler, EventBus } from '@nestjs/cqrs';
-import { CreateOrderCommand } from '../impl/create-order.command';
 import { OrderRepository } from '../../repository/order.repository';
 import { Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { config } from '../../../../config';
-import { OrderCreatedFailedEvent } from 'orders/events/impl/order-created.event';
 import { getMongoRepository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { CreateUpgradeTokenOrderCommand } from '../impl/create-upgrade-token-order.command';
 import { UserDto } from 'users/dtos/users.dto';
+import { UpgradeTokenOrderCreatedFailedEvent } from 'orders/events/impl/upgrade-token-order-created.event';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
-@CommandHandler(CreateOrderCommand)
-export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
+@CommandHandler(CreateUpgradeTokenOrderCommand)
+export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpgradeTokenOrderCommand> {
     constructor(
         private readonly repository: OrderRepository,
         private readonly publisher: EventPublisher,
@@ -21,8 +21,8 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
     ) {
     }
 
-    async execute(command: CreateOrderCommand) {
-        Logger.log('Async CreateOrderHandler...', 'CreateOrderCommand');
+    async execute(command: CreateUpgradeTokenOrderCommand) {
+        Logger.log('Async CreateOrderHandler...', 'CreateUpgradeTokenOrderCommand');
         const { streamId, orderDto, paymentIntent } = command;
 
         try {
@@ -38,23 +38,14 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                     throw new NotFoundException(`Token type with _id ${orderDto.tokenType._id} does not exist.`);
                 }
 
-                const validProject = await getMongoRepository(ProjectDto).findOne({ _id: orderDto.token.projectId, isValid: true });
-                if (!validProject) {
-                    throw new BadRequestException(`Project with _id ${orderDto.token.projectId} is not valid.`);
-                }
-
-                if (!orderDto.token.name) {
-                    throw new BadRequestException('Token name is required.');
-                }
-                const projectTokens = await getMongoRepository(TokenDto).find({ where: { userId: orderDto.userId, projectId: orderDto.token.projectId } });
-                const isTokenNameExisted = projectTokens.findIndex(token => token.name === orderDto.token.name) > -1
-                if (isTokenNameExisted) {
-                    throw new BadRequestException('Token name is existed.')
+                const validToken = await getMongoRepository(TokenDto).findOne({ _id: orderDto.token._id, isValid: true, userId: orderDto.userId });
+                if (!validToken) {
+                    throw new BadRequestException(`Token with _id ${orderDto.token._id} is not valid.`);
                 }
 
                 // use mergeObjectContext for dto dispatch events
                 const order = this.publisher.mergeObjectContext(
-                    await this.repository.createOrder(streamId, orderDto)
+                    await this.repository.createUpgradeTokenOrder(streamId, orderDto)
                 );
                 order.commit();
                 return
@@ -66,7 +57,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
             if (error.raw && error.raw.message) {
                 errorMessage = error.raw.message;
             }
-            this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, { message: errorMessage }));
+            this.eventBus.publish(new UpgradeTokenOrderCreatedFailedEvent(streamId, orderDto, { message: errorMessage }));
         }
     }
 }

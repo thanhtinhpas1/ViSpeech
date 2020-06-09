@@ -7,6 +7,7 @@ import {FreeTokenCreatedEvent} from 'tokens/events/impl/free-token-created.event
 import {OrderedTokenCreatedEvent} from 'tokens/events/impl/ordered-token-created.event';
 import { TokenDeletedByProjectIdEvent } from 'tokens/events/impl/token-deleted-by-projectId.event';
 import { TokenDeletedByUserIdEvent } from 'tokens/events/impl/token-deleted-by-userId.event';
+import { TokenUpgradedEvent } from 'tokens/events/impl/token-upgraded.event';
 
 export class Token extends AggregateRoot {
     [x: string]: any;
@@ -49,5 +50,9 @@ export class Token extends AggregateRoot {
 
     deleteTokenByProjectId(streamId: string) {
         this.apply(new TokenDeletedByProjectIdEvent(streamId, this.data));
+    }
+
+    upgradeToken(streamId: string) {
+        this.apply(new TokenUpgradedEvent(streamId, this.id, this.data));
     }
 }

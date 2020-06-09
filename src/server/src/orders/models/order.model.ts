@@ -3,6 +3,7 @@ import {OrderCreatedEvent} from '../events/impl/order-created.event';
 import {OrderUpdatedEvent} from '../events/impl/order-updated.event';
 import {OrderDeletedEvent} from '../events/impl/order-deleted.event';
 import {OrderWelcomedEvent} from '../events/impl/order-welcomed.event';
+import { UpgradeTokenOrderCreatedEvent } from 'orders/events/impl/upgrade-token-order-created.event';
 
 export class Order extends AggregateRoot {
     [x: string]: any;
@@ -17,6 +18,10 @@ export class Order extends AggregateRoot {
 
     createOrder(streamId: string) {
         this.apply(new OrderCreatedEvent(streamId, this.data));
+    }
+
+    createUpgradeTokenOrder(streamId: string) {
+        this.apply(new UpgradeTokenOrderCreatedEvent(streamId, this.data));
     }
 
     updateOrder(streamId: string) {
