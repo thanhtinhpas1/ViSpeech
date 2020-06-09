@@ -49,6 +49,7 @@ export class TokenDto extends BaseEntityDto {
     @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
+        update: false,
         type: 'uuid',
     })
     userId: ObjectID;

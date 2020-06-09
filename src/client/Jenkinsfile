@@ -18,21 +18,6 @@ pipeline {
                 sh 'docker system prune -af --volumes'
             }
         }
-//        stage('install') {
-//            steps {
-//                sh 'npm install --production'
-//                dir('ui') {
-//                    sh 'npm install --production'
-//                }
-//            }
-//        }
-//        stage('compile') {
-//            steps {
-//                dir('ui') {
-//                    sh 'npm run build'
-//                }
-//            }
-//        }
         stage('docker') {
             steps {
                 sh 'docker build -t vispeechui ./src/client'
@@ -41,7 +26,7 @@ pipeline {
         stage('delivery') {
             steps {
                 sh 'docker rm -f vispeechui || true'
-                sh 'docker run --name=vispeechui -d --restart=always -p 3000:3000 vispeechui'
+                sh 'docker run --name=vispeechui -d --restart=always -p 3200:3200 vispeechui'
             }
         }
     }

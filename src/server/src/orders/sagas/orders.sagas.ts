@@ -27,7 +27,7 @@ export class OrdersSagas {
                 const { streamId, orderDto } = event;
                 const { userId, tokenType, _id, token } = orderDto;
                 const tokenValue = this.authService.generateTokenWithUserId(userId);
-                const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id);
+                const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
                 return new CreateOrderedTokenCommand(streamId, tokenDto);
             })
         );

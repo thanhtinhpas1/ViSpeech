@@ -1,7 +1,7 @@
 import { Logger } from "@nestjs/common";
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { RequestRepository } from "requests/repository/request.repository";
-import { CallAsrCommand } from "../handler/call-asr.command";
+import { CallAsrCommand } from "../impl/call-asr.command";
 
 @CommandHandler(CallAsrCommand)
 export class CallAsrHandler implements ICommandHandler<CallAsrCommand>{

@@ -10,15 +10,17 @@ import loadScript from 'utils/loadScript'
 import loadLink from 'utils/loadLink'
 import { connect } from 'react-redux'
 import Utils from 'utils'
-import { CUSTOMER_PATH, ADMIN_PATH } from 'utils/constant'
+import { CUSTOMER_PATH, ADMIN_PATH, LOADING_LARGE_SIZE } from 'utils/constant'
 
 import LandingPage from 'components/common/LandingPage/LandingPage.container'
 import LoginPage from 'components/common/LoginPage/LoginPage.container'
 import RegisterPage from 'components/common/RegisterPage/RegisterPage.container'
 import NotFound404 from 'components/common/NotFound404/NotFound404.component'
+import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import './App.css'
 
-const App = ({ currentUser }) => {
-  const [isCssLoaded, setIsCssLoaded] = useState(false)
+const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
+  const [isCssLoaded, setIsCssLoaded] = useState(null)
   const [isUser, setIsUser] = useState(null)
 
   useEffect(() => {
@@ -82,7 +84,7 @@ const App = ({ currentUser }) => {
         const isUserRole = Utils.checkIfIsUser(currentUser.roles)
         setIsUser(isUserRole)
 
-        if (isUser) {
+        if (isUserRole) {
           // load link
           let link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/bootstrap.min.css`,
@@ -348,11 +350,26 @@ const App = ({ currentUser }) => {
       loadJsFiles(false)
     }
 
-    loadCssFiles(false)
-  }, [currentUser, isUser])
+    if (updateCurrentUserOnAuthenticate.isLoading === false) {
+      if (updateCurrentUserOnAuthenticate.isSuccess == null) {
+        // if reload page
+        setIsCssLoaded(false)
+        loadCssFiles(false)
+      } else if (updateCurrentUserOnAuthenticate.isSuccess === true && currentUser) {
+        // if update current user
+        const isUserRole = Utils.checkIfIsUser(currentUser.roles)
+        setIsUser(isUserRole)
+      }
+    }
+  }, [currentUser, isUser, updateCurrentUserOnAuthenticate])
 
   return (
     <>
+      {!isCssLoaded && (
+        <div className="app-loading">
+          <LoadingIcon size={LOADING_LARGE_SIZE} />
+        </div>
+      )}
       {isCssLoaded && (
         <Switch>
           <Route path="/404">
@@ -390,6 +407,7 @@ const App = ({ currentUser }) => {
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
+  updateCurrentUserOnAuthenticate: state.user.updateCurrentUserOnAuthenticate,
 })
 
 export default connect(mapStateToProps)(App)

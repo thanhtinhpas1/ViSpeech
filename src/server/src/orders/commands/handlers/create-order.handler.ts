@@ -7,6 +7,7 @@ import { OrderCreatedFailedEvent } from 'orders/events/impl/order-created.event'
 import { getMongoRepository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
@@ -34,6 +35,15 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                 const validProject = await getMongoRepository(ProjectDto).findOne({ _id: orderDto.token.projectId, isValid: true });
                 if (!validProject) {
                     throw new NotFoundException(`Project with _id ${orderDto.token.projectId} is not valid.`);
+                }
+
+                if (!orderDto.token.name) {
+                    throw new BadRequestException('Token name is required.');
+                }
+                const projectTokens = await getMongoRepository(TokenDto).find({ where: { userId: orderDto.userId, projectId: orderDto.token.projectId } });
+                const isTokenNameExisted = projectTokens.findIndex(token => token.name === orderDto.token.name) > -1
+                if (isTokenNameExisted) {
+                    throw new BadRequestException('Token name is existed.')
                 }
 
                 // use mergeObjectContext for dto dispatch events

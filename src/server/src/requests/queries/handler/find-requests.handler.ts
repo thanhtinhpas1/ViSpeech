@@ -42,10 +42,10 @@ export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
                 findOptions.order[sortField] = sort.order
             }
             if (projectId) {
-                findOptions.where['projectId'] = { projectId };
+                findOptions.where['projectId'] = projectId;
             }
-            else if (tokenId) {
-                findOptions.where['tokenId'] = { tokenId };
+            if (tokenId) {
+                findOptions.where['tokenId'] = tokenId;
             }
 
             const requests = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });

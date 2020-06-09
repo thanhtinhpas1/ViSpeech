@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('docker') {
             steps {
-                sh 'docker build -t vispeechdemo ./src/vispeechdemo'
+                sh 'docker build -t vispeechdemo ./src/demo'
             }
         }
         stage('delivery') {

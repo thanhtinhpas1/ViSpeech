@@ -25,8 +25,6 @@ const VerifyEmailPage = ({
   const history = useHistory()
 
   useEffect(() => {
-    SocketService.socketEmitEvent(EMAIL_VERIFIED_SUCCESS_EVENT)
-    SocketService.socketEmitEvent(EMAIL_VERIFIED_FAILED_EVENT)
     SocketService.socketOnListeningEvent(EMAIL_VERIFIED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(EMAIL_VERIFIED_FAILED_EVENT)
   }, [])

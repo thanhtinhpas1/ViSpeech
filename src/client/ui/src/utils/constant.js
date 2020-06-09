@@ -2,7 +2,7 @@ export const JWT_TOKEN = 'jwtToken'
 export const STRIPE_PUBLIC_KEY = 'pk_test_Zy4vrDrBVMAPFThf7gA5Uu3g00ADFriXO0'
 export const FB_APP_ID = '192774708560872'
 export const GOOGLE_CLIENT_ID = '653333133801-defos54pjqd9rgovqivjj0mjsjajbpca.apps.googleusercontent.com'
-export const IMG_AVATAR_REF = 'images/avatar'
+export const FILE_PATH = 'files/speech'
 // export const DEFAULT_AVATAR_URL =
 //   'https://firebasestorage.googleapis.com/v0/b/reactjs-caro-game.appspot.com/o/images%2Favatar%2Fdefault.png?alt=media&token=25d140ac-fad5-4c9c-a506-076ea0110ae7'
 export const CUSTOMER_PATH = '/customer'
@@ -41,4 +41,10 @@ export const DEFAULT_ERR_MESSAGE = 'Đã có lỗi xảy ra. Vui lòng thử l�
 export const SORT_ORDER = {
   ASC: 'ASC',
   DESC: 'DESC',
+}
+export const LOADING_LARGE_SIZE = 60
+export const LOADING_SMALL_SIZE = 25
+export const DEFAULT_PAGINATION = {
+  current: 1,
+  pageSize: 100,
 }

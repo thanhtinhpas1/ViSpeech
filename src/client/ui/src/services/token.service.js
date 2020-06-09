@@ -1,16 +1,16 @@
 import STORAGE from 'utils/storage'
-import {DEFAULT_ERR_MESSAGE, JWT_TOKEN} from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
 import Utils from 'utils'
-import {apiUrl} from './api-url'
+import { apiUrl } from './api-url'
 
 export default class TokenService {
   static getTokenList = filterConditions => {
-    const {pagination, sortField, sortOrder, filters} = filterConditions
-    const {current, pageSize} = pagination
+    const { pagination, sortField, sortOrder, filters } = filterConditions
+    const { current, pageSize } = pagination
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({offset, limit})}`
+    let query = `${Utils.parameterizeObject({ offset, limit })}`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
@@ -43,7 +43,7 @@ export default class TokenService {
   }
 
   static getUserTokenList = filterConditions => {
-    const {userId, pageIndex, pageSize} = filterConditions
+    const { userId, pageIndex, pageSize } = filterConditions
     const offset = pageIndex * pageSize
     const limit = pageSize
 
@@ -106,12 +106,12 @@ export default class TokenService {
   }
 
   static getProjectTokenList = filterConditions => {
-    const {userId, projectId, pagination, sortField, sortOrder, filters} = filterConditions
-    const {current, pageSize} = pagination
+    const { userId, projectId, pagination, sortField, sortOrder, filters } = filterConditions
+    const { current, pageSize } = pagination
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({userId, projectId, offset, limit})}`
+    let query = `${Utils.parameterizeObject({ userId, projectId, offset, limit })}`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')

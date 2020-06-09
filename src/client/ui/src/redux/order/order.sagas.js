@@ -17,7 +17,7 @@ const formatOrderList = orderList => {
     return {
       ...order,
       status: {
-        status: order.status,
+        value: order.status,
         name: STATUS[order.status].viText,
         class: STATUS[order.status].cssClass,
       },

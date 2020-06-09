@@ -43,6 +43,7 @@ export class ProjectDto extends BaseEntityDto {
     @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
+        update: false,
         type: 'uuid',
     })
     userId: string;

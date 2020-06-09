@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Utils from 'utils'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
-import { CUSTOMER_PATH, TOKEN_TYPE } from 'utils/constant'
+import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
 
@@ -19,17 +19,13 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
   }, [getTokenTypes])
 
   useEffect(() => {
-    if (currentUser._id) {
-      const pagination = {
-        current: 1,
-        pageSize: 100,
-      }
+    if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {
       const filters = {
         isValid: ['true'],
       }
-      getMyProjects({ userId: currentUser._id, pagination, filters })
+      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION, filters })
     }
-  }, [currentUser._id, getMyProjects])
+  }, [currentUser._id, currentUser.roles, getMyProjects])
 
   const openPayOnlineModal = () => {
     if (!Utils.isEmailVerified(currentUser.roles)) {
@@ -53,7 +49,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
       return
     }
 
-    if (getMyProjectListObj.myProjectList.length === 0) {
+    if (getMyProjectListObj.myProjectList.data.length === 0) {
       const infoObj = {
         title: 'Không thể thực hiện tác vụ',
         message: 'Bạn chưa có dự án nào. Tạo dự án để thực hiện tác vụ này.',
@@ -117,15 +113,15 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
           </div>
         </div>
         <div style={{ float: 'right' }}>
-          <a
-            href="#!"
+          <button
+            type="button"
             className="btn btn-warning"
             onClick={openPayOnlineModal}
             style={{ display: 'flex', justifyContent: 'center' }}
           >
             <em className="pay-icon fas fa-dollar-sign" />
             Mua ngay
-          </a>
+          </button>
         </div>
       </div>
       <PayOnlineModal payOnlineModal={payOnlineModal} myProjectList={getMyProjectListObj.myProjectList} />

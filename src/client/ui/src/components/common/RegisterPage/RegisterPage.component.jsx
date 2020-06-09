@@ -71,7 +71,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
       <div className="page-ath-wrap">
         <div className="page-ath-content">
           <div className="page-ath-header">
-            <a href="#" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold' }}>
+            <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold' }}>
               SOFTIA.
             </a>
           </div>

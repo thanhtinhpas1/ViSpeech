@@ -26,13 +26,13 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
           <div className="card-innr">
             <div className="card-head d-flex justify-content-between align-items-center">
               <h4 className="card-title mb-0">Chi tiết giao dịch</h4>
-              <a href="#!" onClick={history.goBack} className="btn btn-sm btn-auto btn-primary d-sm-block d-none">
+              <button onClick={history.goBack} className="btn btn-sm btn-auto btn-primary d-sm-block d-none">
                 <em className="fas fa-arrow-left mr-3" />
                 Trở lại
-              </a>
-              <a href="#!" onClick={history.goBack} className="btn btn-icon btn-sm btn-primary d-sm-none">
+              </button>
+              <button onClick={history.goBack} className="btn btn-icon btn-sm btn-primary d-sm-none">
                 <em className="fas fa-arrow-left" />
-              </a>
+              </button>
             </div>
             <div className="gaps-1-5x" />
             <div className="data-details d-md-flex">
