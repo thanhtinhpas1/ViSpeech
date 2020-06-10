@@ -155,7 +155,7 @@
           console.log("Record file have size: " + AudioBLOB.size);
           $.ajax({
             method: "POST",
-            url: `${process.env.PUBLIC_URL}/asr`,
+            url: `${document.URL}asr`,
             data: AudioBLOB,
             cache: false,
             contentType: false,

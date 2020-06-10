@@ -234,7 +234,7 @@
         data.append("voice", file, file.name)
         $.ajax({
             method: 'POST',
-            url: `${PUBLIC_URL}/asr`,
+            url: `${document.URL}asr`,
             data: data,
             cache: false,
             contentType: data.contentType,
