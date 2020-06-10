@@ -7,7 +7,7 @@ var bodyParser = require('body-parser')
 var logger = require('morgan');
 var cors = require('cors');
 const global = require('./global');
-
+require('dotenv').config()
 var app = express();
 
 // view engine setup
