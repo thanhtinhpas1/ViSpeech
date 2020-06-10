@@ -5,6 +5,7 @@ LABEL maintainer "VispeechUI <vispeech@hcmus.edu.vn>"
 
 # Set the working directory
 WORKDIR /user/src/app/vispeechui
+ARG mode
 ENV mode=$mode
 
 # Copy project specification and dependencies lock files
