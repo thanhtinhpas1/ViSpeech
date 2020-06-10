@@ -62,8 +62,8 @@ export class AsrController {
     async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
         // invalid file
         if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'File is required' });
-        if (!['audio/wav', 'audio/wave'].includes(file.mimetype))
-            return res.status(HttpStatus.BAD_REQUEST).send({ message: 'Only support wav mimetype' });
+        // if (!['audio/wav', 'audio/wave'].includes(file.mimetype))
+        //     return res.status(HttpStatus.BAD_REQUEST).send({ message: 'Only support wav mimetype' });
 
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
