@@ -114,6 +114,7 @@ export const CONSTANTS = {
         REQUEST_UPDATED_FAILED_EVENT: 'RequestUpdatedFailedEvent',
     },
     TASK: {
+        REFRESH_TOKEN: 'REFRESH_TOKEN',
         REPORT_DATE: 'REPORT_DATE',
         REPORT_WEEK: 'REPORT_WEEK',
         REPORT_MONTH: 'REPORT_MONTH',

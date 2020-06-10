@@ -17,6 +17,10 @@ export class AsrServiceGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+        const payload = this.authService.decode(request);
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
+
         const token = Utils.extractToken(request);
         const order = await this.orderRepo.findOne({
             where: {

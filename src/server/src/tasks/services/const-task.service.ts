@@ -8,6 +8,7 @@ import { PreviousRunStatus, TaskDto } from "tasks/dto/task.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository } from "typeorm";
 import { Utils } from "utils";
+import { config } from "../../../config";
 
 @Injectable()
 export class ConstTaskService {
@@ -20,8 +21,31 @@ export class ConstTaskService {
         private readonly tokenRepository: Repository<TokenDto>,
         @InjectRepository(RequestDto)
         private readonly requestRepository: Repository<RequestDto>,
-    ) { }
+    ) {
+    }
+
     private readonly logger = new Logger(ConstTaskService.name);
+
+    /* TASK REFRESH TOKEN FREE FOR USER EACH DAY */
+    @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
+        name: CONSTANTS.TASK.REFRESH_TOKEN,
+    })
+    async taskRefreshTokenPerDay() {
+        try {
+            const tokens = await this.tokenRepository.find();
+            for (const token of tokens) {
+                if (token.tokenType === CONSTANTS.TOKEN_TYPE.FREE) {
+                    token.minutes = config.TOKEN_TYPE.TYPE_FREE_MINUTES;
+                }
+                this.tokenRepository.save(token);
+                this.logger.debug(`Token refresh token ${token._id}`);
+            }
+        } catch (error) {
+            this.logger.error('Something went wrong when refresh token per day', error.message, 'ConstTaskService');
+            const taskDto = this.generateTaskDto(CONSTANTS.TASK.REFRESH_TOKEN, PreviousRunStatus.FAILURE, CronExpression.EVERY_DAY_AT_MIDNIGHT, error.message);
+            this.taskRepository.save(taskDto);
+        }
+    }
 
     /* TASK GENERATE REPORT FOR DAY */
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
@@ -175,7 +199,7 @@ export class ConstTaskService {
         }
     }
 
-    generateTaskDto(name: string, previousRunStatus: PreviousRunStatus, cron: string, errorLog?: string, ): TaskDto {
+    generateTaskDto(name: string, previousRunStatus: PreviousRunStatus, cron: string, errorLog?: string,): TaskDto {
         const taskDto = new TaskDto();
         taskDto.name = name;
         taskDto.errorLog = errorLog;
