@@ -25,7 +25,7 @@ app.use('/api', proxy(url, {
   proxyReqPathResolver: function (req) {
     return new Promise(function (resolve, reject) {
       setTimeout(function () {   // simulate async
-        const path = `${global.proxy.basePath}${req.url}`;
+        const path = `${process.env.BASE_PATH}${req.url}`;
         resolve(path);
       }, 200);
     });
