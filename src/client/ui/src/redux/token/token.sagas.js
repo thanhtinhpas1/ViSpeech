@@ -35,7 +35,7 @@ export function* getUserTokensSaga() {
 
 const getTokenTypeByMinutes = minutes => {
   const tokenTypes = Object.keys(TOKEN_TYPE)
-  const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === minutes
+  const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === Number(minutes)
   const result = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
   return {
     name: TOKEN_TYPE[result].viText,
@@ -90,10 +90,9 @@ export function* getProjectTokensSaga() {
 
 // ==== get token types
 const formatTokenTypeList = tokenTypeList => {
-  const mapFunc = (tokenType, index) => {
+  const mapFunc = tokenType => {
     return {
       ...tokenType,
-      defaultChecked: index === 1,
       saleOffPrice: ((100 - Number(tokenType.salePercent || 0)) * Number(tokenType.price)) / 100,
     }
   }

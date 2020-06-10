@@ -9,6 +9,7 @@ import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { CreateUpgradeTokenOrderCommand } from '../impl/create-upgrade-token-order.command';
 import { UserDto } from 'users/dtos/users.dto';
 import { UpgradeTokenOrderCreatedFailedEvent } from 'orders/events/impl/upgrade-token-order-created.event';
+import { CONSTANTS } from 'common/constant';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
@@ -41,6 +42,11 @@ export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpg
                 const validToken = await getMongoRepository(TokenDto).findOne({ _id: orderDto.token._id, isValid: true, userId: orderDto.userId });
                 if (!validToken) {
                     throw new BadRequestException(`Token with _id ${orderDto.token._id} is not valid.`);
+                }
+
+                const freeTokenType = await getMongoRepository(TokenTypeDto).findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
+                if (validToken.tokenTypeId === freeTokenType._id) {
+                    throw new BadRequestException(`Cannot upgrade free token. Token id: ${orderDto.token._id}.`);
                 }
 
                 // use mergeObjectContext for dto dispatch events

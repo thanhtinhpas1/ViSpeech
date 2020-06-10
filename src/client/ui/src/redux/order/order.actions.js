@@ -71,3 +71,19 @@ export const createOrderFailure = message => ({
   type: OrderTypes.CREATE_ORDER_FAILURE,
   payload: message,
 })
+
+// create upgrade token order
+export const createUpgradeTokenOrder = data => ({
+  type: OrderTypes.CREATE_UPGRADE_TOKEN_ORDER,
+  payload: data,
+})
+
+export const createUpgradeTokenOrderSuccess = ({ order }) => ({
+  type: OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_SUCCESS,
+  payload: { order },
+})
+
+export const createUpgradeTokenOrderFailure = message => ({
+  type: OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_FAILURE,
+  payload: message,
+})

@@ -13,9 +13,22 @@ import {
 } from './request.actions'
 
 // get request info
+const formatRequestInfo = request => {
+  const formatRequest = {
+    ...request,
+    status: {
+      value: request.status,
+      name: STATUS[request.status].viText,
+      class: STATUS[request.status].cssClass,
+    },
+  }
+  return formatRequest
+}
+
 export function* getRequestInfo({ payload: id }) {
   try {
-    const requestInfo = yield RequestService.getRequestInfo(id)
+    let requestInfo = yield RequestService.getRequestInfo(id)
+    requestInfo = formatRequestInfo(requestInfo)
     yield put(getRequestInfoSuccess(requestInfo))
   } catch (err) {
     yield put(getRequestInfoFailure(err.message))

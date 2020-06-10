@@ -25,6 +25,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  createUpgradeTokenOrder: {
+    data: {},
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const orderReducer = (state = INITIAL_STATE, action) => {
@@ -147,6 +153,34 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         ...state,
         createOrder: {
           ...state.createOrder,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // CREATE UPGRADE TOKEN ORDER
+    case OrderTypes.CREATE_UPGRADE_TOKEN_ORDER:
+      return {
+        ...state,
+        createUpgradeTokenOrder: {
+          ...state.createUpgradeTokenOrder,
+          isLoading: true,
+        },
+      }
+    case OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_SUCCESS:
+      return {
+        ...state,
+        createUpgradeTokenOrder: {
+          isLoading: false,
+          isSuccess: true,
+          data: action.payload,
+        },
+      }
+    case OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_FAILURE:
+      return {
+        ...state,
+        createUpgradeTokenOrder: {
+          ...state.createUpgradeTokenOrder,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

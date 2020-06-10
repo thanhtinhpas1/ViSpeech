@@ -3,6 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Radio } from 'antd'
 import Utils from 'utils'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
 import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
@@ -12,11 +13,40 @@ import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container
 const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj, getTokenTypes, getMyProjects }) => {
   const [payOnlineModal, setPayOnlineModal] = useState({})
   const [infoModal, setInfoModal] = useState({})
+  const [selectedTokenTypeId, setSelectedTokenTypeId] = useState(null)
+  const [defaultTokenTypeId, setDefaultTokenTypeId] = useState(null)
   const history = useHistory()
 
   useEffect(() => {
     getTokenTypes()
   }, [getTokenTypes])
+
+  const changeTokenTypeCss = selectedId => {
+    window.$(`.token-currency-choose .pay-option label.pay-option-check-select`).removeClass('pay-option-check-select')
+    window
+      .$(`.token-currency-choose .pay-option input[value=${selectedId}]`)
+      .parent()
+      .parent()
+      .siblings('label')
+      .addClass('pay-option-check-select')
+  }
+
+  useEffect(() => {
+    if (
+      getTokenTypeListObj.isLoading === false &&
+      getTokenTypeListObj.isSuccess != null &&
+      getTokenTypeListObj.tokenTypeList.length > 0
+    ) {
+      const id = Utils.sortAndFilter(
+        getTokenTypeListObj.tokenTypeList,
+        (a, b) => a.price - b.price,
+        item => item.name !== TOKEN_TYPE.FREE.name
+      )[0]._id
+      setDefaultTokenTypeId(id)
+      setSelectedTokenTypeId(id)
+      changeTokenTypeCss(id)
+    }
+  }, [getTokenTypeListObj])
 
   useEffect(() => {
     if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {
@@ -69,8 +99,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
       return
     }
 
-    const selectedTypeId = window.$('.token-currency-choose .pay-option input[name="tokenType"]:checked').attr('id')
-    const index = getTokenTypeListObj.tokenTypeList.findIndex(x => x._id === selectedTypeId)
+    const index = getTokenTypeListObj.tokenTypeList.findIndex(x => x._id === selectedTokenTypeId)
     let selectedType = getTokenTypeListObj.tokenTypeList[index]
     selectedType = Utils.removePropertiesFromObject(selectedType, ['defaultChecked', 'createdDate', 'updatedDate'])
     const payOnlineObj = {
@@ -79,6 +108,11 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
     }
     setPayOnlineModal(payOnlineObj)
     window.$('#pay-online').modal('show')
+  }
+
+  const onChangeTokenType = e => {
+    setSelectedTokenTypeId(e.target.value)
+    changeTokenTypeCss(e.target.value)
   }
 
   return (
@@ -96,20 +130,28 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
         </div>
         <div className="token-balance token-balance-s2">
           <div className="token-currency-choose" style={{ color: '#495463' }}>
-            <div className="row guttar-15px" style={{ display: 'flex' }}>
-              {getTokenTypeListObj.tokenTypeList &&
-                Utils.sortAndFilter(
-                  getTokenTypeListObj.tokenTypeList,
-                  (a, b) => a.price - b.price,
-                  item => item.name !== TOKEN_TYPE.FREE.name
-                ).map(tokenType => {
-                  return (
-                    <div className="col-3" key={tokenType._id}>
-                      <TokenType tokenType={tokenType} />
-                    </div>
-                  )
-                })}
-            </div>
+            {getTokenTypeListObj.tokenTypeList.length > 0 && (
+              <Radio.Group
+                name="radiogroup"
+                style={{ width: '100%' }}
+                onChange={onChangeTokenType}
+                defaultValue={defaultTokenTypeId}
+              >
+                <div className="row guttar-15px" style={{ display: 'flex' }}>
+                  {Utils.sortAndFilter(
+                    getTokenTypeListObj.tokenTypeList,
+                    (a, b) => a.price - b.price,
+                    item => item.name !== TOKEN_TYPE.FREE.name
+                  ).map(tokenType => {
+                    return (
+                      <div className="col-3" key={tokenType._id}>
+                        <TokenType tokenType={tokenType} />
+                      </div>
+                    )
+                  })}
+                </div>
+              </Radio.Group>
+            )}
           </div>
         </div>
         <div style={{ float: 'right' }}>
