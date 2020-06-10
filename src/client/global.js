@@ -1,8 +1,7 @@
 
 module.exports = {
     proxy: {
-        protocol: 'http',
-        host: 'asr.vietspeech.com', // TODO: internal network
+        host: `${process.env.ASR_URL}` || 'http://asr.vietspeech.com', // TODO: internal network
         port: 7070,
         basePath: '/v1'
     },
