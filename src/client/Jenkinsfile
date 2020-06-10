@@ -20,7 +20,7 @@ pipeline {
         }
         stage('docker') {
             steps {
-                sh 'docker build -t vispeechui ./src/client'
+                sh 'docker build --build-arg mode=prod -t vispeechui ./src/client'
             }
         }
         stage('delivery') {
