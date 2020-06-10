@@ -17,6 +17,8 @@ export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {
     }
 
+    /* Create Order */
+
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Create Order']})
     @ApiResponse({status: 200, description: 'Create Order.'})
@@ -25,6 +27,18 @@ export class OrdersController {
     async createOrder(@Body("order") orderDto: OrderDto, @Body("paymentIntent") paymentIntent: PaymentIntent): Promise<OrderDto> {
         const streamId = orderDto._id;
         return this.ordersService.createOrder(streamId, orderDto, paymentIntent);
+    }
+
+    /* Create Upgrade Token Order */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Create Upgrade Token Order']})
+    @ApiResponse({status: 200, description: 'Create Upgrade Token Order.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
+    @Post('/upgrade-token')
+    async createUpgradeTokenOrder(@Body("order") orderDto: OrderDto, @Body("paymentIntent") paymentIntent: PaymentIntent): Promise<OrderDto> {
+        const streamId = orderDto._id;
+        return this.ordersService.createUpgradeTokenOrder(streamId, orderDto, paymentIntent);
     }
 
     /* Update Order */

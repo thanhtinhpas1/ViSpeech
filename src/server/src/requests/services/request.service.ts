@@ -7,7 +7,7 @@ import { FindRequestsByUserIdQuery } from "requests/queries/impl/find-requests-b
 import { CallAsrCommand } from "requests/commands/impl/call-asr.command"
 import { UpdateRequestTranscriptFileUrlCommand } from "requests/commands/impl/update-request-transcript-file-url.command"
 import { FindRequestQuery } from "requests/queries/impl/find-request.query"
-
+import HtmlDocx from 'html-docx-js'
 
 @Injectable()
 export class RequestService {
@@ -38,5 +38,9 @@ export class RequestService {
         const query = new FindRequestsByUserIdQuery(findRequestsByUserIdQuery.userId);
         Object.assign(query, findRequestsByUserIdQuery);
         return await this.queryBus.execute(query);
+    }
+
+    async downloadTranscript(html: string) {
+        return HtmlDocx.asBlob(html)
     }
 }

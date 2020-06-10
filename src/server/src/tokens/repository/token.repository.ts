@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {Token} from '../models/token.model';
 import {TokenDto} from 'tokens/dtos/tokens.dto';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 
 @Injectable()
 export class TokenRepository {
@@ -49,6 +50,13 @@ export class TokenRepository {
         const token = new Token(undefined);
         token.setData(projectId);
         token.deleteTokenByProjectId(streamId);
+        return token;
+    }
+
+    async upgradeToken(streamId: string, id: string, tokenTypeDto: TokenTypeDto) {
+        const token = new Token(id);
+        token.setData(tokenTypeDto);
+        token.upgradeToken(streamId);
         return token;
     }
 

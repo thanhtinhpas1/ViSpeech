@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { Upload, message } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import storage from 'firebaseStorage'
-import { FILE_PATH, DEFAULT_PAGINATION } from 'utils/constant'
+import { FILE_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
 import SpeechService from 'services/speech.service'
 import SocketService from 'services/socket.service'
 import RequestService from 'services/request.service'
@@ -20,7 +20,7 @@ const { REQUEST_UPDATED_SUCCESS_EVENT, REQUEST_UPDATED_FAILED_EVENT } = KAFKA_TO
 
 const TrialPage = ({
   currentUser,
-  updateRequestInfoObj,
+  // updateRequestInfoObj,
   getRequestListByUserId,
   updateRequestInfo,
   updateRequestInfoSuccess,
@@ -28,6 +28,11 @@ const TrialPage = ({
 }) => {
   const [draggerDisabled, setDraggerDisabled] = useState(true)
   const [tokenValue, setTokenValue] = useState(null)
+  const [progress, setProgress] = useState(0)
+  const [uploading, setUploading] = useState(0)
+  const [projectName, setProjectName] = useState('')
+  const [tokenName, setTokenName] = useState('')
+  const [newRequest, setNewRequest] = useState({})
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(REQUEST_UPDATED_SUCCESS_EVENT)
@@ -38,17 +43,42 @@ const TrialPage = ({
     if (!requestId) return
 
     updateRequestInfo(requestId, transcriptFileUrl)
+    const request = { ...newRequest }
     try {
       await RequestService.updateRequest(requestId, transcriptFileUrl)
       invokeCheckSubject.RequestUpdated.subscribe(data => {
         if (data.error != null) {
+          request.status = {
+            value: 'FAILURE',
+            name: STATUS.FAILURE.viText,
+            class: STATUS.FAILURE.cssClass,
+          }
+          setNewRequest(request)
           updateRequestInfoFailure(data.errorObj)
+          setUploading(false)
         } else {
+          request.status = {
+            value: 'SUCCESS',
+            name: STATUS.SUCCESS.viText,
+            class: STATUS.SUCCESS.cssClass,
+          }
+          setNewRequest(request)
+          setUploading(false)
           updateRequestInfoSuccess(transcriptFileUrl)
-          getRequestListByUserId(currentUser._id, { pagination: DEFAULT_PAGINATION })
+          getRequestListByUserId(currentUser._id, {
+            pagination: DEFAULT_PAGINATION,
+            sortField: 'createdDate',
+            sortOrder: SORT_ORDER.DESC,
+          })
         }
       })
     } catch (err) {
+      request.status = {
+        value: 'FAILURE',
+        name: STATUS.FAILURE.viText,
+        class: STATUS.FAILURE.cssClass,
+      }
+      setUploading(false)
       updateRequestInfoFailure({ message: err.message })
     }
   }
@@ -57,6 +87,7 @@ const TrialPage = ({
     try {
       const data = await SpeechService.callAsr(file, url, tokenValue)
       if (!data || !data.text) {
+        setUploading(false)
         return
       }
 
@@ -69,10 +100,11 @@ const TrialPage = ({
       uploadTask.on(
         'state_changed',
         snapshot => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-          // onProgress({ percent: progress })
+          const progressValue = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          setProgress(progressValue)
         },
         error => {
+          setUploading(false)
           console.log(`Error uploading text file: ${error.message}`)
         },
         () => {
@@ -92,6 +124,22 @@ const TrialPage = ({
   }
 
   const handleUpload = async ({ file, onProgress, onSuccess, onError }) => {
+    setUploading(true)
+    const request = {
+      _id: 'vispeech',
+      createdDate: Date.now(),
+      duration: 0,
+      fileName: file.name,
+      projectName,
+      status: {
+        value: 'PENDING',
+        name: STATUS.PENDING.viText,
+        class: STATUS.PENDING.cssClass,
+      },
+      tokenName,
+    }
+    setNewRequest(request)
+
     if (!file) {
       onError('File không tồn tại')
       return
@@ -108,8 +156,8 @@ const TrialPage = ({
     uploadTask.on(
       'state_changed',
       snapshot => {
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        onProgress({ percent: progress })
+        const progressValue = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+        onProgress({ percent: progressValue })
       },
       error => {
         onError(error)
@@ -140,15 +188,18 @@ const TrialPage = ({
       if (status === 'done') {
         message.success(`Tải file "${info.file.name}" thành công.`)
       } else if (status === 'error') {
+        setUploading(false)
         message.error(`Tải file "${info.file.name}" thất bại.`)
       }
     },
   }
 
-  const onSelectTokenFormValuesChange = (projectId, token) => {
+  const onSelectTokenFormValuesChange = (project, token) => {
     setDraggerDisabled(true)
-    if (projectId && token) {
-      setTokenValue(token)
+    if (project && token) {
+      setTokenValue(token.value)
+      setProjectName(project.name)
+      setTokenName(token.name)
       setDraggerDisabled(false)
     }
   }
@@ -161,15 +212,15 @@ const TrialPage = ({
             <div className="card-head">
               <h4 className="card-title">Dùng thử</h4>
             </div>
-            <SelectTokenForm onSelectTokenFormValuesChange={onSelectTokenFormValuesChange} />
-            <Dragger {...props} disabled={draggerDisabled}>
+            <SelectTokenForm uploading={uploading} onSelectTokenFormValuesChange={onSelectTokenFormValuesChange} />
+            <Dragger {...props} disabled={draggerDisabled || uploading}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
-            <RequestTable />
+            <RequestTable newRequest={newRequest} />
           </div>
         </div>
       </div>
