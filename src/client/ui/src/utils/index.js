@@ -1,4 +1,5 @@
 import { useLocation } from 'react-router-dom'
+import jwtDecode from 'jwt-decode'
 import { ROLES, SORT_ORDER } from './constant'
 
 const Utils = {
@@ -63,11 +64,6 @@ const Utils = {
     const result = JSON.parse(JSON.stringify(arr))
     return result.filter(filterFunc)
   },
-  sortAndFilter: (arr, sortFunc, filterFunc) => {
-    const result = JSON.parse(JSON.stringify(arr))
-    const a = result.sort(sortFunc)
-    return a.filter(filterFunc).map(item => item)
-  },
   getSortOrder: sortOrder => {
     let result = sortOrder
     if (sortOrder === 'ascend') {
@@ -124,6 +120,27 @@ const Utils = {
       return `&${Utils.parameterizeObject({ filters: formatFilters })}`
     }
     return ''
+  },
+  sortAndFilterTokenTypeList: (
+    list,
+    excludedNames,
+    sortBy,
+    getUpgradeTokenType = false,
+    curTokenTypeMinutes = 0,
+    sortType = SORT_ORDER.ASC
+  ) => {
+    const result = [...(list || [])]
+    const sortFunc = (a, b) => {
+      return sortType === SORT_ORDER.ASC ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]
+    }
+    result.sort(sortFunc)
+    if (getUpgradeTokenType) {
+      return result.filter(item => !excludedNames.includes(item.name) && item.minutes > curTokenTypeMinutes)
+    }
+    return result.filter(item => !excludedNames.includes(item.name))
+  },
+  decodeJwtToken: token => {
+    return jwtDecode(token)
   },
 }
 

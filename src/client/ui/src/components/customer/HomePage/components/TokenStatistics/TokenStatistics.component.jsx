@@ -7,6 +7,7 @@ import { Radio } from 'antd'
 import Utils from 'utils'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
 import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
+import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
 
@@ -37,14 +38,14 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
       getTokenTypeListObj.isSuccess != null &&
       getTokenTypeListObj.tokenTypeList.length > 0
     ) {
-      const id = Utils.sortAndFilter(
+      const tokenTypeId = Utils.sortAndFilterTokenTypeList(
         getTokenTypeListObj.tokenTypeList,
-        (a, b) => a.price - b.price,
-        item => item.name !== TOKEN_TYPE.FREE.name
+        [TOKEN_TYPE.FREE.name],
+        'price'
       )[0]._id
-      setDefaultTokenTypeId(id)
-      setSelectedTokenTypeId(id)
-      changeTokenTypeCss(id)
+      setDefaultTokenTypeId(tokenTypeId)
+      setSelectedTokenTypeId(tokenTypeId)
+      changeTokenTypeCss(tokenTypeId)
     }
   }, [getTokenTypeListObj])
 
@@ -130,6 +131,11 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
         </div>
         <div className="token-balance token-balance-s2">
           <div className="token-currency-choose" style={{ color: '#495463' }}>
+            {getTokenTypeListObj.isLoading && getTokenTypeListObj.isSuccess == null && (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <LoadingIcon size={30} color="#fff" />
+              </div>
+            )}
             {getTokenTypeListObj.tokenTypeList.length > 0 && (
               <Radio.Group
                 name="radiogroup"
@@ -138,10 +144,10 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
                 defaultValue={defaultTokenTypeId}
               >
                 <div className="row guttar-15px" style={{ display: 'flex' }}>
-                  {Utils.sortAndFilter(
+                  {Utils.sortAndFilterTokenTypeList(
                     getTokenTypeListObj.tokenTypeList,
-                    (a, b) => a.price - b.price,
-                    item => item.name !== TOKEN_TYPE.FREE.name
+                    [TOKEN_TYPE.FREE.name],
+                    'price'
                   ).map(tokenType => {
                     return (
                       <div className="col-3" key={tokenType._id}>
@@ -160,6 +166,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
             className="btn btn-warning"
             onClick={openPayOnlineModal}
             style={{ display: 'flex', justifyContent: 'center' }}
+            disabled={getTokenTypeListObj.tokenTypeList.length === 0}
           >
             <em className="pay-icon fas fa-dollar-sign" />
             Mua ngay

@@ -1,6 +1,6 @@
 import {IsString, IsUUID, IsOptional} from 'class-validator';
 
-export class FindPermisisonsByIdsQuery {
+export class FindPermissionsByIdsQuery {
     constructor() { }
 
     @IsOptional()

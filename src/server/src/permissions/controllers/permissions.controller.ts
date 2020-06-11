@@ -9,7 +9,7 @@ import {PermissionsService} from '../services/permissions.service';
 import {Roles} from 'auth/roles.decorator';
 import {AssignPermissionGuard, PermissionGuard, ReplyPermissionAssignGuard, PermissionQueryGuard} from 'auth/guards/permission.guard';
 import {Utils} from 'utils';
-import { FindPermisisonsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
+import { FindPermissionsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
 import { JwtService } from '@nestjs/jwt';
 
 @Controller('permissions')
@@ -108,7 +108,7 @@ export class PermissionsController {
     @Get('email-token/:emailToken')
     async findPermissionByEmailToken(@Param() param: EmailTokenParamsDto) {
         const decodedToken = this.jwtService.decode(param.emailToken);
-        const query = new FindPermisisonsByIdsQuery();
+        const query = new FindPermissionsByIdsQuery();
         query.assigneeId = decodedToken['assigneeId'];
         query.assignerId = decodedToken['assignerId'];
         query.projectId = decodedToken['projectId'];

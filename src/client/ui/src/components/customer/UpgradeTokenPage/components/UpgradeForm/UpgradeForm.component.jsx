@@ -36,7 +36,7 @@ const UpgradeForm = ({
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [currentTokenType, setCurrentTokenType] = useState('')
+  const [currentTokenTypeMinutes, setCurrentTokenTypeMinutes] = useState(0)
   const [defaultTokenTypeId, setDefaultTokenTypeId] = useState(null)
 
   const cardElementOptions = {
@@ -73,15 +73,20 @@ const UpgradeForm = ({
       getTokenTypeListObj.isSuccess != null &&
       getTokenTypeListObj.tokenTypeList.length > 0
     ) {
-      const id = Utils.sortAndFilter(
+      const tokenTypeIds = Utils.sortAndFilterTokenTypeList(
         getTokenTypeListObj.tokenTypeList,
-        (a, b) => a.price - b.price,
-        item => ![TOKEN_TYPE.FREE.name, currentTokenType].includes(item.name)
-      )[0]._id
-      changeTokenTypeCss(id)
-      setDefaultTokenTypeId(id)
+        [TOKEN_TYPE.FREE.name],
+        'price',
+        true,
+        currentTokenTypeMinutes
+      )
+      if (tokenTypeIds.length > 0) {
+        const id = tokenTypeIds[0]._id
+        changeTokenTypeCss(id)
+        setDefaultTokenTypeId(id)
+      }
     }
-  }, [getTokenTypeListObj, currentTokenType])
+  }, [getTokenTypeListObj, currentTokenTypeMinutes])
 
   useEffect(() => {
     clearCreateUpgradeTokenOrderState()
@@ -193,7 +198,7 @@ const UpgradeForm = ({
       getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION, filters })
       form.resetFields(['tokenId'])
       form.resetFields(['currentTokenType'])
-      setCurrentTokenType('')
+      setCurrentTokenTypeMinutes(0)
     }
   }
 
@@ -202,7 +207,7 @@ const UpgradeForm = ({
     const tokenTypes = Object.keys(TOKEN_TYPE)
     const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === token.minutes
     const index = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
-    setCurrentTokenType(TOKEN_TYPE[index].name)
+    setCurrentTokenTypeMinutes(TOKEN_TYPE[index].minutes)
     form.setFieldsValue({ currentTokenType: TOKEN_TYPE[index].viText })
   }
 
@@ -283,27 +288,39 @@ const UpgradeForm = ({
           <Form.Item name="tokenTypeId">
             <div className="token-balance token-balance-s2">
               <div className="token-currency-choose" style={{ color: '#495463' }}>
-                {getTokenTypeListObj.tokenTypeList.length > 0 && (
-                  <Radio.Group
-                    name="radiogroup"
-                    style={{ width: '100%' }}
-                    onChange={onTokenTypeChange}
-                    defaultValue={defaultTokenTypeId}
-                  >
-                    <div className="row guttar-15px" style={{ display: 'flex' }}>
-                      {Utils.sortAndFilter(
-                        getTokenTypeListObj.tokenTypeList,
-                        (a, b) => a.price - b.price,
-                        item => ![TOKEN_TYPE.FREE.name, currentTokenType].includes(item.name)
-                      ).map(tokenType => {
-                        return (
-                          <div className="col-3" key={tokenType._id}>
-                            <TokenType tokenType={tokenType} />
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </Radio.Group>
+                {Utils.sortAndFilterTokenTypeList(
+                  getTokenTypeListObj.tokenTypeList,
+                  [TOKEN_TYPE.FREE.name],
+                  'price',
+                  true,
+                  currentTokenTypeMinutes
+                ).length === 0 ? (
+                  <p>Token đã được nâng cấp lên gói cao nhất</p>
+                ) : (
+                  (getTokenTypeListObj.tokenTypeList || []).length > 0 && (
+                    <Radio.Group
+                      name="radiogroup"
+                      style={{ width: '100%' }}
+                      onChange={onTokenTypeChange}
+                      defaultValue={defaultTokenTypeId}
+                    >
+                      <div className="row guttar-15px" style={{ display: 'flex' }}>
+                        {Utils.sortAndFilterTokenTypeList(
+                          getTokenTypeListObj.tokenTypeList,
+                          [TOKEN_TYPE.FREE.name],
+                          'price',
+                          true,
+                          currentTokenTypeMinutes
+                        ).map(tokenType => {
+                          return (
+                            <div className="col-3" key={tokenType._id}>
+                              <TokenType tokenType={tokenType} />
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </Radio.Group>
+                  )
                 )}
               </div>
             </div>
@@ -350,7 +367,21 @@ const UpgradeForm = ({
               style={{ marginBottom: '20px' }}
             />
           )}
-          <Button htmlType="submit" loading={isLoading} type="primary" size="large">
+          <Button
+            htmlType="submit"
+            loading={isLoading}
+            type="primary"
+            size="large"
+            disabled={
+              Utils.sortAndFilterTokenTypeList(
+                getTokenTypeListObj.tokenTypeList,
+                [TOKEN_TYPE.FREE.name],
+                'price',
+                true,
+                currentTokenTypeMinutes
+              ).length === 0
+            }
+          >
             Nâng cấp <i className="ti ti-arrow-up mgl-1x" />
           </Button>
         </li>

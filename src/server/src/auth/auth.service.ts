@@ -45,9 +45,9 @@ export class AuthService {
         return this.jwtService.sign(payload);
     }
 
-    generateEmailToken(assignerId, projectId, assigneeId, permissions) {
+    generateEmailToken(assignerId, projectId, assigneeId, permissions, expiresIn = null) {
         const payload = {assignerId, projectId, assigneeId, permissions};
-        return this.jwtService.sign(payload, {expiresIn: '2 days'});
+        return this.jwtService.sign(payload, {expiresIn: expiresIn || '2 days'});
     }
 
     decode(request: any) {
