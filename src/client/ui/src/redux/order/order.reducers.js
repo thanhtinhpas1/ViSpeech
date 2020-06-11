@@ -46,6 +46,13 @@ const orderReducer = (state = INITIAL_STATE, action) => {
           ...INITIAL_STATE.createOrder,
         },
       }
+    case OrderTypes.CLEAR_CREATE_UPGRADE_TOKEN_ORDER_STATE:
+      return {
+        ...state,
+        createUpgradeTokenOrder: {
+          ...INITIAL_STATE.createUpgradeTokenOrder,
+        },
+      }
     // GET ORDER LIST
     case OrderTypes.GET_ORDER_LIST:
       return {

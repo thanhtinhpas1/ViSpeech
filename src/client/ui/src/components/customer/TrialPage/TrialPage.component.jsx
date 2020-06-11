@@ -28,7 +28,7 @@ const TrialPage = ({
 }) => {
   const [draggerDisabled, setDraggerDisabled] = useState(true)
   const [tokenValue, setTokenValue] = useState(null)
-  const [progress, setProgress] = useState(0)
+  // const [progress, setProgress] = useState(0)
   const [uploading, setUploading] = useState(false)
   const [projectName, setProjectName] = useState('')
   const [tokenName, setTokenName] = useState('')
@@ -88,8 +88,8 @@ const TrialPage = ({
       uploadTask.on(
         'state_changed',
         snapshot => {
-          const progressValue = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-          setProgress(progressValue)
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          // setProgress(progressValue)
         },
         error => {
           setUploading(false)

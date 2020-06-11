@@ -101,7 +101,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
 
     const index = getTokenTypeListObj.tokenTypeList.findIndex(x => x._id === selectedTokenTypeId)
     let selectedType = getTokenTypeListObj.tokenTypeList[index]
-    selectedType = Utils.removePropertiesFromObject(selectedType, ['defaultChecked', 'createdDate', 'updatedDate'])
+    selectedType = Utils.removePropertiesFromObject(selectedType, ['createdDate', 'updatedDate'])
     const payOnlineObj = {
       user: currentUser,
       tokenType: selectedType,

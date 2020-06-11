@@ -5,9 +5,6 @@ import UpgradeTokenPage from './UpgradeTokenPage.component'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
-  getTokenTypeListObj: state.token.getTokenTypeList,
-  getMyProjectListObj: state.project.getMyProjectList,
-  getProjectTokenListObj: state.token.getProjectTokenList,
 })
 
 const mapDispatchToProps = dispatch => ({

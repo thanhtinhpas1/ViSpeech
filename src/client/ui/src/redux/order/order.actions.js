@@ -8,6 +8,10 @@ export const onClearCreateOrderState = () => ({
   type: OrderTypes.CLEAR_CREATE_ORDER_STATE,
 })
 
+export const onClearCreateUpgradeTokenOrderState = () => ({
+  type: OrderTypes.CLEAR_CREATE_UPGRADE_TOKEN_ORDER_STATE,
+})
+
 // get order list
 export const getOrderList = filterConditions => ({
   type: OrderTypes.GET_ORDER_LIST,

@@ -98,9 +98,9 @@ export class TokensModule implements OnModuleInit {
         OrderedTokenCreatedFailedEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
 
         // upgrade token
-        TokenUpgradedEvent: (streamId, id, data) => new TokenUpgradedEvent(streamId, id, data),
-        TokenUpgradedSuccessEvent: (streamId, id, data) => new TokenUpgradedSuccessEvent(streamId, id, data),
-        TokenUpgradedFailedEvent: (streamId, id, data, error) => new TokenUpgradedFailedEvent(streamId, id, data, error),
+        TokenUpgradedEvent: (streamId, token, tokenType) => new TokenUpgradedEvent(streamId, token, tokenType),
+        TokenUpgradedSuccessEvent: (streamId, token, tokenType) => new TokenUpgradedSuccessEvent(streamId, token, tokenType),
+        TokenUpgradedFailedEvent: (streamId, token, tokenType, error) => new TokenUpgradedFailedEvent(streamId, token, tokenType, error),
     };
 
     async persistTokenTypesToDB() {

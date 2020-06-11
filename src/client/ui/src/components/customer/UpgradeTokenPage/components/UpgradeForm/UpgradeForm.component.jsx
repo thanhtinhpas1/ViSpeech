@@ -4,27 +4,38 @@ import React, { useState, useEffect } from 'react'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { Alert, Button, Select, Form, Checkbox, Input, Col, Row, Radio } from 'antd'
 import Utils from 'utils'
-// import OrderService from 'services/order.service'
 import { DEFAULT_PAGINATION, TOKEN_TYPE } from 'utils/constant'
 import TokenType from 'components/customer/HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
+import SocketService from 'services/socket.service'
+import OrderService from 'services/order.service'
+import SocketUtils from 'utils/socket.util'
 
 const { Option } = Select
 
+const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
+const {
+  TOKEN_UPGRADED_SUCCESS_EVENT,
+  TOKEN_UPGRADED_FAILED_EVENT,
+  UPGRADE_TOKEN_ORDER_CREATED_FAILED_EVENT,
+} = KAFKA_TOPIC
+
 const UpgradeForm = ({
   currentUser,
-  errorMessage,
-  isLoading,
   getMyProjectListObj,
   getTokenTypeListObj,
   getProjectTokenListObj,
-  getMyProjects,
-  getTokenTypes,
+  createUpgradeTokenOrderObj,
   getProjectTokenList,
-  onSubmit,
+  createUpgradeTokenOrder,
+  createUpgradeTokenOrderSuccess,
+  createUpgradeTokenOrderFailure,
+  clearCreateUpgradeTokenOrderState,
 }) => {
   const stripe = useStripe()
   const elements = useElements()
   const [form] = Form.useForm()
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
   const [currentTokenType, setCurrentTokenType] = useState('')
   const [defaultTokenTypeId, setDefaultTokenTypeId] = useState(null)
 
@@ -45,10 +56,6 @@ const UpgradeForm = ({
     },
     hidePostalCode: true,
   }
-
-  useEffect(() => {
-    getTokenTypes()
-  }, [getTokenTypes])
 
   const changeTokenTypeCss = selectedId => {
     window.$(`.token-currency-choose .pay-option label.pay-option-check-select`).removeClass('pay-option-check-select')
@@ -77,13 +84,105 @@ const UpgradeForm = ({
   }, [getTokenTypeListObj, currentTokenType])
 
   useEffect(() => {
-    if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {
-      const filters = {
-        isValid: ['true'],
-      }
-      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION, filters })
+    clearCreateUpgradeTokenOrderState()
+    SocketService.socketOnListeningEvent(UPGRADE_TOKEN_ORDER_CREATED_FAILED_EVENT)
+    SocketService.socketOnListeningEvent(TOKEN_UPGRADED_SUCCESS_EVENT)
+    SocketService.socketOnListeningEvent(TOKEN_UPGRADED_FAILED_EVENT)
+  }, [clearCreateUpgradeTokenOrderState])
+
+  const onSubmit = values => {
+    if (!stripe || !elements) {
+      // Stripe.js has not yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return
     }
-  }, [currentUser._id, currentUser.roles, getMyProjects])
+
+    async function upgradeToken(projectId, tokenId, tokenTypeToUpgrade) {
+      const cardElement = elements.getElement(CardElement)
+      let result = null
+
+      try {
+        result = await OrderService.createPaymentIntent(tokenTypeToUpgrade.saleOffPrice * 100)
+      } catch (err) {
+        setErrorMessage(err.message || err)
+        setIsLoading(false)
+        return
+      }
+
+      const paymentMethodReq = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name: `${currentUser.firstName} ${currentUser.lastName}`,
+          email: currentUser.email,
+        },
+      })
+      if (paymentMethodReq.error) {
+        setErrorMessage(paymentMethodReq.error.message)
+        setIsLoading(false)
+        return
+      }
+
+      const confirmedCardPayment = await stripe.confirmCardPayment(result.clientSecret, {
+        payment_method: paymentMethodReq.paymentMethod.id,
+      })
+      if (confirmedCardPayment.error) {
+        setErrorMessage(confirmedCardPayment.error.message)
+        setIsLoading(false)
+        return
+      }
+      if (confirmedCardPayment.paymentIntent && confirmedCardPayment.paymentIntent.status === 'succeeded') {
+        // The payment has been processed!
+        const paymentIntent = {
+          id: confirmedCardPayment.paymentIntent.id,
+        }
+        const order = {
+          userId: currentUser._id,
+          tokenType: Utils.removePropertyFromObject(tokenTypeToUpgrade, 'saleOffPrice'),
+          token: {
+            _id: tokenId,
+            userId: currentUser._id,
+            projectId,
+          },
+        }
+        createUpgradeTokenOrder(order)
+        try {
+          await OrderService.createUpgradeTokenOrder(order, paymentIntent)
+          invokeCheckSubject.UpgradeTokenOrderCreated.subscribe(data => {
+            if (data.error != null) {
+              createUpgradeTokenOrderFailure(data.errorObj)
+            }
+          })
+          invokeCheckSubject.TokenUpgraded.subscribe(data => {
+            if (data.error != null) {
+              createUpgradeTokenOrderFailure(data.errorObj)
+            } else {
+              createUpgradeTokenOrderSuccess({ order })
+            }
+          })
+        } catch (err) {
+          createUpgradeTokenOrderFailure({ message: err.message })
+        }
+      }
+    }
+
+    setIsLoading(true)
+    const { projectId, tokenId, tokenTypeId } = values
+    let selectedType = getTokenTypeListObj.tokenTypeList.find(x => x._id === tokenTypeId)
+    selectedType = Utils.removePropertiesFromObject(selectedType, ['createdDate', 'updatedDate'])
+    upgradeToken(projectId, tokenId, selectedType)
+  }
+
+  useEffect(() => {
+    if (createUpgradeTokenOrderObj.isLoading === false && createUpgradeTokenOrderObj.isSuccess != null) {
+      setIsLoading(false)
+      if (createUpgradeTokenOrderObj.isSuccess === true) {
+        form.resetFields()
+      } else {
+        setErrorMessage(Utils.buildFailedMessage(createUpgradeTokenOrderObj.message, 'Nâng cấp token thất bại'))
+      }
+    }
+  }, [createUpgradeTokenOrderObj, form])
 
   const onProjectIdChange = async value => {
     const userId = currentUser && currentUser._id
@@ -107,7 +206,7 @@ const UpgradeForm = ({
     form.setFieldsValue({ currentTokenType: TOKEN_TYPE[index].viText })
   }
 
-  const onChangeTokenType = e => {
+  const onTokenTypeChange = e => {
     changeTokenTypeCss(e.target.value)
   }
 
@@ -181,32 +280,34 @@ const UpgradeForm = ({
       <Row gutter={24} style={{ marginBottom: 20 }}>
         <Col span={24}>
           <h5 className="font-mid">Nâng cấp lên gói</h5>
-          <div className="token-balance token-balance-s2">
-            <div className="token-currency-choose" style={{ color: '#495463' }}>
-              {getTokenTypeListObj.tokenTypeList.length > 0 && (
-                <Radio.Group
-                  name="radiogroup"
-                  style={{ width: '100%' }}
-                  onChange={onChangeTokenType}
-                  defaultValue={defaultTokenTypeId}
-                >
-                  <div className="row guttar-15px" style={{ display: 'flex' }}>
-                    {Utils.sortAndFilter(
-                      getTokenTypeListObj.tokenTypeList,
-                      (a, b) => a.price - b.price,
-                      item => ![TOKEN_TYPE.FREE.name, currentTokenType].includes(item.name)
-                    ).map(tokenType => {
-                      return (
-                        <div className="col-3" key={tokenType._id}>
-                          <TokenType tokenType={tokenType} />
-                        </div>
-                      )
-                    })}
-                  </div>
-                </Radio.Group>
-              )}
+          <Form.Item name="tokenTypeId">
+            <div className="token-balance token-balance-s2">
+              <div className="token-currency-choose" style={{ color: '#495463' }}>
+                {getTokenTypeListObj.tokenTypeList.length > 0 && (
+                  <Radio.Group
+                    name="radiogroup"
+                    style={{ width: '100%' }}
+                    onChange={onTokenTypeChange}
+                    defaultValue={defaultTokenTypeId}
+                  >
+                    <div className="row guttar-15px" style={{ display: 'flex' }}>
+                      {Utils.sortAndFilter(
+                        getTokenTypeListObj.tokenTypeList,
+                        (a, b) => a.price - b.price,
+                        item => ![TOKEN_TYPE.FREE.name, currentTokenType].includes(item.name)
+                      ).map(tokenType => {
+                        return (
+                          <div className="col-3" key={tokenType._id}>
+                            <TokenType tokenType={tokenType} />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </Radio.Group>
+                )}
+              </div>
             </div>
-          </div>
+          </Form.Item>
         </Col>
       </Row>
       <h5 className="font-mid">Thông tin thẻ</h5>
@@ -231,6 +332,15 @@ const UpgradeForm = ({
       </Form.Item>
       <ul className="d-flex flex-wrap align-items-center guttar-30px">
         <li>
+          {createUpgradeTokenOrderObj.isLoading === false && createUpgradeTokenOrderObj.isSuccess === true && (
+            <Alert
+              message="Nâng cấp token thành công"
+              type="success"
+              showIcon
+              closable
+              style={{ marginBottom: '20px' }}
+            />
+          )}
           {errorMessage != null && (
             <Alert
               message={Utils.buildFailedMessage({ message: errorMessage })}
