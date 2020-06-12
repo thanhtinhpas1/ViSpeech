@@ -3,19 +3,19 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import GoogleLogin from 'react-google-login'
-import { GOOGLE_CLIENT_ID } from 'utils/constant'
+import { GOOGLE_CLIENT_ID, USER_TYPE } from 'utils/constant'
 
-const AuthenWithGoogle = ({ loginObj, authenWithSocial }) => {
+const LoginWithGoogle = ({ loginWithSocialObj, loginWithSocial }) => {
   const responseGoogle = response => {
     if (response.accessToken) {
-      // response.profileObj
+      loginWithSocial(response.accessToken, USER_TYPE.GOOGLE)
     }
   }
 
   return (
     <GoogleLogin
       clientId={GOOGLE_CLIENT_ID}
-      disabled={loginObj.isLoading}
+      disabled={loginWithSocialObj.isLoading}
       cookiePolicy="single_host_origin"
       render={renderProps => (
         <button
@@ -52,9 +52,9 @@ const AuthenWithGoogle = ({ loginObj, authenWithSocial }) => {
   //       const googleID = profile.getId()
   //       const displayName = profile.getName()
   //       const avatar = profile.getImageUrl()
-  //       const { authenWithSocial } = this.props
+  //       const { loginWithSocial } = this.props
   //       console.log('google login', email, googleID, displayName, avatar)
-  //       authenWithSocial({ email, googleID, displayName, avatar })
+  //       loginWithSocial({ email, googleID, displayName, avatar })
   //     },
   //     error => {
   //       console.error(error)
@@ -99,4 +99,4 @@ const AuthenWithGoogle = ({ loginObj, authenWithSocial }) => {
   // }
 }
 
-export default AuthenWithGoogle
+export default LoginWithGoogle

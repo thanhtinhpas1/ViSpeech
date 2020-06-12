@@ -20,12 +20,13 @@ import StatisticsPage from 'components/customer/StatisticsPage/StatisticsPage.co
 import TrialPage from 'components/customer/TrialPage/TrialPage.container'
 import TrialDetailsPage from 'components/customer/TrialDetailsPage/TrialDetailsPage.container'
 import UpgradeTokenPage from 'components/customer/UpgradeTokenPage/UpgradeTokenPage.container'
+import Utils from 'utils'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
     <>
       {/* WITHOUT login, user can access those links */}
-      {currentUser && (
+      {currentUser && Utils.isUser(currentUser.roles) && (
         <CustomerLayout>
           <Switch>
             <Route exact path={CUSTOMER_PATH}>
@@ -80,7 +81,7 @@ const RouteCustomer = ({ currentUser }) => {
         </CustomerLayout>
       )}
 
-      {!currentUser && (
+      {(!currentUser || !Utils.isUser(currentUser.roles)) && (
         <Switch>
           <Route exact path={CUSTOMER_PATH}>
             <Redirect to="/" />

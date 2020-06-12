@@ -3,11 +3,11 @@ import jwtDecode from 'jwt-decode'
 import { ROLES, SORT_ORDER } from './constant'
 
 const Utils = {
-  checkIfIsUser: roleList => {
-    return roleList.findIndex(role => role.name === ROLES.USER || role.name === ROLES.MANAGER_USER) !== -1
+  isUser: roleList => {
+    return (roleList || []).findIndex(role => [ROLES.USER, ROLES.MANAGER_USER].includes(role.name)) !== -1
   },
   isAdmin: roleList => {
-    return roleList.findIndex(role => role.name === ROLES.ADMIN) !== -1
+    return (roleList || []).findIndex(role => role.name === ROLES.ADMIN) !== -1
   },
   getRolesInArray: roleList => {
     return (roleList || []).map(role => role.name)

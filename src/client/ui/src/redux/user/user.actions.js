@@ -37,9 +37,19 @@ export const registerFailure = error => ({
 })
 
 // LOGIN or REGISTER using fb/gg account
-export const authenWithSocial = user => ({
-  type: UserTypes.AUTHEN_WITH_SOCIAL,
+export const loginWithSocial = (accessToken, userType) => ({
+  type: UserTypes.LOGIN_WITH_SOCIAL,
+  payload: { accessToken, userType },
+})
+
+export const loginWithSocialSuccess = user => ({
+  type: UserTypes.LOGIN_WITH_SOCIAL_SUCCESS,
   payload: user,
+})
+
+export const loginWithSocialFailure = error => ({
+  type: UserTypes.LOGIN_WITH_SOCIAL_FAILURE,
+  payload: error,
 })
 
 // Send verify email

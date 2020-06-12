@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { Utils } from 'utils';
+import { CreateUserStartCommand } from 'users/commands/impl/create-user.command';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +13,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         @InjectRepository(UserDto)
         private readonly userRepository: Repository<UserDto>,
+        private readonly commandBus: CommandBus,
     ) {
     }
 
@@ -30,6 +33,17 @@ export class AuthService {
         let user = await this.userRepository.findOne({_id: userId});
         user = user && Utils.removePropertyFromObject(user, 'password');
         return user || null;
+    }
+
+    async validateUserSocialId(socialId: string, userDto: UserDto) {
+        let socialUser = await this.userRepository.findOne({socialId});
+        if (!socialUser) {
+            const streamId = Utils.getUuid()
+            this.commandBus.execute(new CreateUserStartCommand(streamId, userDto));
+            return {};
+        }
+        socialUser = Utils.removePropertyFromObject(socialUser, 'password');
+        return socialUser;
     }
 
     generateToken(userId, username, roles) {

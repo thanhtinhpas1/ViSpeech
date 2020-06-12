@@ -21,12 +21,19 @@ import './App.css'
 
 const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
   const [isCssLoaded, setIsCssLoaded] = useState(null)
-  const [isUser, setIsUser] = useState(null)
+  const [isUser, setIsUser] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
     async function loadAllLibraries() {
       const currentPath = window.location.pathname
-      if (!currentUser) {
+      const isUserRole = (currentUser && Utils.isUser(currentUser.roles)) || false
+      const isAdminRole = (currentUser && Utils.isAdmin(currentUser.roles)) || false
+      const invalidUser = !isUserRole && !isAdminRole
+      setIsUser(isUserRole)
+      setIsAdmin(isAdminRole)
+
+      if (!currentUser || invalidUser) {
         // loadLink
         let link = await loadLink(
           `${process.env.PUBLIC_URL}/assets/css/customer/bootstrap.min.css`,
@@ -81,9 +88,6 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       }
 
       if (currentUser) {
-        const isUserRole = Utils.checkIfIsUser(currentUser.roles)
-        setIsUser(isUserRole)
-
         if (isUserRole) {
           // load link
           let link = await loadLink(
@@ -137,7 +141,9 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           )
           console.log(`${script.id} is loaded`)
           // }
-        } else {
+        }
+
+        if (isAdminRole) {
           // load link
           let link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/admin/bootstrap.min.css`,
@@ -350,18 +356,20 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       loadJsFiles(false)
     }
 
+    setIsUser(false)
+    setIsAdmin(false)
     if (updateCurrentUserOnAuthenticate.isLoading === false) {
-      if (updateCurrentUserOnAuthenticate.isSuccess == null) {
+      if ([null, false].includes(updateCurrentUserOnAuthenticate.isSuccess)) {
         // if reload page
         setIsCssLoaded(false)
         loadCssFiles(false)
       } else if (updateCurrentUserOnAuthenticate.isSuccess === true && currentUser) {
         // if update current user
-        const isUserRole = Utils.checkIfIsUser(currentUser.roles)
+        const isUserRole = Utils.isUser(currentUser.roles)
         setIsUser(isUserRole)
       }
     }
-  }, [currentUser, isUser, updateCurrentUserOnAuthenticate])
+  }, [currentUser, updateCurrentUserOnAuthenticate])
 
   return (
     <>
@@ -377,13 +385,17 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           </Route>
           <Route path={CUSTOMER_PATH} render={() => <RouteCustomer currentUser={currentUser} />} />
           <Route path={ADMIN_PATH} render={() => <RouteAdmin currentUser={currentUser} />} />
-          {currentUser && isUser != null ? (
+
+          {currentUser && (isUser || isAdmin) && (
             <Switch>
               <Route path="/*">
-                <Redirect to={isUser ? CUSTOMER_PATH : ADMIN_PATH} />
+                {isUser && <Redirect to={CUSTOMER_PATH} />}
+                {isAdmin && <Redirect to={ADMIN_PATH} />}
               </Route>
             </Switch>
-          ) : (
+          )}
+
+          {((currentUser && !isUser && !isAdmin) || !currentUser) && (
             <Switch>
               <Route exact path="/">
                 <LandingPage />
