@@ -1,12 +1,13 @@
 import STORAGE from 'utils/storage'
-import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, USER_TYPE } from 'utils/constant'
+import {DEFAULT_ERR_MESSAGE, JWT_TOKEN, USER_TYPE} from 'utils/constant'
 import Utils from 'utils'
-import { apiUrl } from './api-url'
+import {apiUrl} from './api-url'
 
 export default class UserService {
   static login = ({ username, password }) => {
     const api = `${apiUrl}/login`
     let status = 400
+    var msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
@@ -25,7 +26,6 @@ export default class UserService {
       .then(result => {
         if (status !== 201) {
           if (status === 401) {
-            const msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
             throw new Error(msg)
           } else {
             throw new Error(DEFAULT_ERR_MESSAGE)
@@ -36,7 +36,9 @@ export default class UserService {
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        if (err instanceof Error)
+          throw new Error(err.message)
+        else throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -104,7 +106,9 @@ export default class UserService {
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        if (err instanceof Error)
+          throw new Error(err.message)
+        else throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -232,7 +236,9 @@ export default class UserService {
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        if (err instanceof Error)
+          throw new Error(err.message)
+        else throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -265,7 +271,9 @@ export default class UserService {
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        if (err instanceof Error)
+          throw new Error(err.message)
+        else throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
