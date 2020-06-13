@@ -7,8 +7,8 @@ export default class UserService {
   static login = ({ username, password }) => {
     const api = `${apiUrl}/login`
     let status = 400
-    var msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
     // eslint-disable-next-line no-undef
+    const msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
     return fetch(api, {
       method: 'POST',
       body: JSON.stringify({
@@ -36,9 +36,7 @@ export default class UserService {
       })
       .catch(err => {
         console.debug(err.message)
-        if (err instanceof Error)
-          throw new Error(err.message)
-        else throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(err.message === msg ? msg : DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -77,6 +75,7 @@ export default class UserService {
   static register = ({ username, email, lastName, firstName, password, roles }) => {
     const api = `${apiUrl}/users`
     let status = 400
+    const msg = 'Thông tin đăng ký chưa chính xác, vui lòng thử lại.'
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
@@ -99,16 +98,13 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          const msg = 'Thông tin đăng ký chưa chính xác, vui lòng thử lại.'
           throw new Error(msg)
         }
         return resultObj
       })
       .catch(err => {
         console.debug(err.message)
-        if (err instanceof Error)
-          throw new Error(err.message)
-        else throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(err.message === msg ? msg : DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -212,6 +208,7 @@ export default class UserService {
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
+    const msg = 'Thông tin cập nhật không hợp lệ.'
     return fetch(api, {
       method: 'PUT',
       body: JSON.stringify({
@@ -229,23 +226,20 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 200) {
-          const msg = 'Thông tin cập nhật không hợp lệ.'
           throw new Error(msg)
         }
         return resultObj
       })
       .catch(err => {
         console.debug(err.message)
-        if (err instanceof Error)
-          throw new Error(err.message)
-        else throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(err.message === msg ? msg : DEFAULT_ERR_MESSAGE)
       })
   }
 
   static createUser = data => {
     const api = `${apiUrl}/users`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
-
+    const msg = 'Thông tin người dùng chưa hợp lệ, vui lòng thử lại.'
     let status = 400
     return fetch(api, {
       method: 'POST',
@@ -264,16 +258,13 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          const msg = 'Thông tin người dùng chưa hợp lệ, vui lòng thử lại.'
           throw new Error(msg)
         }
         return resultObj
       })
       .catch(err => {
         console.debug(err.message)
-        if (err instanceof Error)
-          throw new Error(err.message)
-        else throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(err.message === msg ? msg : DEFAULT_ERR_MESSAGE)
       })
   }
 
