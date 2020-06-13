@@ -52,6 +52,14 @@ const configs = {
         JWT: {
             secret: process.env.JWT_SECRET || 'vispeech',
         },
+        FACEBOOK: {
+            clientId: process.env.FB_APP_ID || '',
+            clientSecret: process.env.FB_APP_SECRET || ''
+        },
+        GOOGLE: {
+            clientId: process.env.GG_CLIENT_ID || '',
+            clientSecret: process.env.GG_CLIENT_SECRET || ''
+        },
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
         SEND_GRID_API_KEY: process.env.SENDGRID_API_KEY || '',
         KAFKA: {
