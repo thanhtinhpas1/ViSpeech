@@ -109,10 +109,10 @@ export class TokensModule implements OnModuleInit {
             const tokenType50 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_50_MINUTES, config.TOKEN_TYPE.TYPE_50_MINUTES, config.TOKEN_TYPE.TYPE_50_PRICE);
             const tokenType200 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES, config.TOKEN_TYPE.TYPE_200_MINUTES, config.TOKEN_TYPE.TYPE_200_PRICE);
             const tokenType500 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_PRICE);
-            await getMongoRepository(TokenTypeDto).save(tokenTypeFree);
-            await getMongoRepository(TokenTypeDto).save(tokenType50);
-            await getMongoRepository(TokenTypeDto).save(tokenType200);
-            await getMongoRepository(TokenTypeDto).save(tokenType500);
+            await getMongoRepository(TokenTypeDto).insert(tokenTypeFree);
+            await getMongoRepository(TokenTypeDto).insert(tokenType50);
+            await getMongoRepository(TokenTypeDto).insert(tokenType200);
+            await getMongoRepository(TokenTypeDto).insert(tokenType500);
         } catch (e) {
             if ('duplicate key error'.includes(e.message)) {
                 Logger.log('Token types existed.');
