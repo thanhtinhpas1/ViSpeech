@@ -18,26 +18,26 @@ export class UpgradeTokenHandler implements ICommandHandler<UpgradeTokenCommand>
 
     async execute(command: UpgradeTokenCommand) {
         Logger.log('Async UpgradeTokenHandler...', 'UpgradeTokenCommand');
-        const { streamId, id, tokenTypeDto } = command;
+        const { streamId, tokenDto, tokenTypeDto } = command;
 
         try {
-            const token = await getMongoRepository(TokenDto).findOne({ _id: id });
+            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenDto._id });
             if (!token) {
-                throw new NotFoundException(`Token with _id ${id} does not exist.`);
+                throw new NotFoundException(`Token with _id ${tokenDto._id} does not exist.`);
             }
 
             const tokenType = await getMongoRepository(TokenTypeDto).findOne({ _id: tokenTypeDto._id });
             if (!tokenType) {
-                throw new NotFoundException(`Token type with _id ${id} does not exist.`);
+                throw new NotFoundException(`Token type with _id ${tokenTypeDto._id} does not exist.`);
             }
 
             // use mergeObjectContext for dto dispatch events
             const tokenModel = this.publisher.mergeObjectContext(
-                await this.repository.upgradeToken(streamId, id, tokenType)
+                await this.repository.upgradeToken(streamId, tokenDto, tokenType)
             );
             tokenModel.commit();
         } catch (error) {
-            this.eventBus.publish(new TokenUpgradedFailedEvent(streamId, id, tokenTypeDto, error));
+            this.eventBus.publish(new TokenUpgradedFailedEvent(streamId, tokenDto, tokenTypeDto, error));
         }
     }
 }

@@ -30,6 +30,8 @@ import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
 import { AsrServiceGuard } from 'auth/guards/asr.service.guard';
 
+const { getAudioDurationInSeconds } = require('get-audio-duration');
+
 @Controller('speech')
 @ApiTags('speech')
 @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AsrServiceGuard)
@@ -74,7 +76,9 @@ export class AsrController {
             return res.status(HttpStatus.FORBIDDEN).json({ message: 'Invalid token.' });
 
         // not enough token minutes to request
-        const duration = Utils.calculateDuration(file.size); 
+        // const duration = Utils.calculateDuration(file.size);
+        const seconds = await getAudioDurationInSeconds(file.path);
+        const duration = parseFloat((seconds / 60.0).toFixed(4));
         const minutes = Number(tokenDto.minutes);
         const usedMinutes = Number(tokenDto.usedMinutes || 0);
         if (duration > (minutes - usedMinutes)) {

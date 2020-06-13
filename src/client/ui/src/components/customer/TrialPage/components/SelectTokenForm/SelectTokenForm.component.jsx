@@ -42,6 +42,7 @@ const SelectTokenForm = ({
         isValid: ['true'],
       }
       getProjectTokenList({ userId: currentUser._id, projectId: value, pagination: DEFAULT_PAGINATION, filters })
+      form.resetFields(['tokenValue'])
     }
   }
 

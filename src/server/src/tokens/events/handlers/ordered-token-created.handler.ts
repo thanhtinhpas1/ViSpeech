@@ -38,10 +38,11 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
                 tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
             }
             token.tokenTypeId = tokenTypeDto._id;
+            token.tokenType = tokenTypeDto.name;
             token.minutes = Number(tokenTypeDto.minutes);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
-            token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
+            token = Utils.removePropertiesFromObject(token, ['orderId']);
             await this.repository.save(token);
             this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, token));
         } catch (error) {

@@ -28,8 +28,8 @@ const TrialPage = ({
 }) => {
   const [draggerDisabled, setDraggerDisabled] = useState(true)
   const [tokenValue, setTokenValue] = useState(null)
-  const [progress, setProgress] = useState(0)
-  const [uploading, setUploading] = useState(0)
+  // const [progress, setProgress] = useState(0)
+  const [uploading, setUploading] = useState(false)
   const [projectName, setProjectName] = useState('')
   const [tokenName, setTokenName] = useState('')
   const [newRequest, setNewRequest] = useState({})
@@ -43,42 +43,30 @@ const TrialPage = ({
     if (!requestId) return
 
     updateRequestInfo(requestId, transcriptFileUrl)
-    const request = { ...newRequest }
     try {
       await RequestService.updateRequest(requestId, transcriptFileUrl)
       invokeCheckSubject.RequestUpdated.subscribe(data => {
         if (data.error != null) {
-          request.status = {
-            value: 'FAILURE',
-            name: STATUS.FAILURE.viText,
-            class: STATUS.FAILURE.cssClass,
-          }
-          setNewRequest(request)
           updateRequestInfoFailure(data.errorObj)
-          setUploading(false)
         } else {
-          request.status = {
-            value: 'SUCCESS',
-            name: STATUS.SUCCESS.viText,
-            class: STATUS.SUCCESS.cssClass,
-          }
-          setNewRequest(request)
-          setUploading(false)
           updateRequestInfoSuccess(transcriptFileUrl)
-          getRequestListByUserId(currentUser._id, {
-            pagination: DEFAULT_PAGINATION,
-            sortField: 'createdDate',
-            sortOrder: SORT_ORDER.DESC,
-          })
         }
+        setUploading(false)
+        setNewRequest({})
+        getRequestListByUserId(currentUser._id, {
+          pagination: DEFAULT_PAGINATION,
+          sortField: 'createdDate',
+          sortOrder: SORT_ORDER.DESC,
+        })
       })
     } catch (err) {
-      request.status = {
-        value: 'FAILURE',
-        name: STATUS.FAILURE.viText,
-        class: STATUS.FAILURE.cssClass,
-      }
       setUploading(false)
+      setNewRequest({})
+      getRequestListByUserId(currentUser._id, {
+        pagination: DEFAULT_PAGINATION,
+        sortField: 'createdDate',
+        sortOrder: SORT_ORDER.DESC,
+      })
       updateRequestInfoFailure({ message: err.message })
     }
   }
@@ -100,8 +88,8 @@ const TrialPage = ({
       uploadTask.on(
         'state_changed',
         snapshot => {
-          const progressValue = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-          setProgress(progressValue)
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          // setProgress(progressValue)
         },
         error => {
           setUploading(false)
@@ -124,7 +112,6 @@ const TrialPage = ({
   }
 
   const handleUpload = async ({ file, onProgress, onSuccess, onError }) => {
-    setUploading(true)
     const request = {
       _id: 'vispeech',
       createdDate: Date.now(),
@@ -139,6 +126,7 @@ const TrialPage = ({
       tokenName,
     }
     setNewRequest(request)
+    setUploading(true)
 
     if (!file) {
       onError('File không tồn tại')
@@ -220,7 +208,7 @@ const TrialPage = ({
               <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
-            <RequestTable newRequest={newRequest} />
+            <RequestTable newRequest={newRequest} uploading={uploading} />
           </div>
         </div>
       </div>

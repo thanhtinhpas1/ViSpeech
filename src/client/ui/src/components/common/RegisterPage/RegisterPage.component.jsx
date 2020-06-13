@@ -4,22 +4,23 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, Alert } from 'antd'
-import { ROLES } from 'utils/constant'
+import { ROLES, USER_TYPE } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
 import Utils from 'utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
-const { FREE_TOKEN_CREATED_SUCCESS_EVENT, FREE_TOKEN_CREATED_FAILED_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
+const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSuccess, registerFailure }) => {
   const history = useHistory()
 
   useEffect(() => {
+    SocketService.socketOnListeningEvent(USER_CREATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(USER_CREATED_FAILED_EVENT)
-    SocketService.socketOnListeningEvent(FREE_TOKEN_CREATED_SUCCESS_EVENT)
-    SocketService.socketOnListeningEvent(FREE_TOKEN_CREATED_FAILED_EVENT)
+    // SocketService.socketOnListeningEvent(FREE_TOKEN_CREATED_SUCCESS_EVENT)
+    // SocketService.socketOnListeningEvent(FREE_TOKEN_CREATED_FAILED_EVENT)
   }, [])
 
   useEffect(() => {
@@ -43,6 +44,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
       firstName: form.elements.firstName.value,
       password: form.elements.password.value,
       roles: [{ name: ROLES.USER }],
+      userType: USER_TYPE.NORMAL,
     }
 
     registerStart()

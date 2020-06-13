@@ -53,10 +53,10 @@ export class TokenRepository {
         return token;
     }
 
-    async upgradeToken(streamId: string, id: string, tokenTypeDto: TokenTypeDto) {
-        const token = new Token(id);
-        token.setData(tokenTypeDto);
-        token.upgradeToken(streamId);
+    async upgradeToken(streamId: string, tokenDto: TokenDto, tokenTypeDto: TokenTypeDto) {
+        const token = new Token(tokenDto._id);
+        token.setData(tokenDto);
+        token.upgradeToken(streamId, tokenTypeDto);
         return token;
     }
 

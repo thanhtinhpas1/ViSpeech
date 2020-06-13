@@ -14,7 +14,6 @@ import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-toke
 import { TokenRepository } from 'tokens/repository/token.repository';
 import { TokensModule } from 'tokens/tokens.module';
 import { getMongoRepository, Repository } from 'typeorm';
-
 import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { EventStore } from 'core/event-store/event-store';
@@ -23,7 +22,7 @@ import { RoleDto } from 'roles/dtos/roles.dto';
 import { Utils } from 'utils';
 import { CommandHandlers } from './commands/handlers';
 import { UsersController } from './controllers/users.controller';
-import { UserDto } from './dtos/users.dto';
+import { UserDto, USER_TYPE } from './dtos/users.dto';
 import { EventHandlers } from './events/handlers';
 import { EmailVerifiedEvent, EmailVerifiedFailedEvent, EmailVerifiedSuccessEvent } from './events/impl/email-verified.event';
 import { PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent, } from './events/impl/password-changed.event';
@@ -54,7 +53,7 @@ export class UsersModule implements OnModuleInit {
 
     async onModuleInit() {
         this.eventStore.setEventHandlers({
-            ...this.eventHandlers, ...TokensModule.eventHandlers, ...ProjectsModule.eventHandlers, ...PermissionsModule.eventHandlers,
+            ...UsersModule.eventHandlers, ...TokensModule.eventHandlers, ...ProjectsModule.eventHandlers, ...PermissionsModule.eventHandlers,
         });
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
@@ -67,13 +66,13 @@ export class UsersModule implements OnModuleInit {
     }
 
     private async seedAdminAccount() {
-        const admin = new UserDto(config.APPLICATION.ADMIN_NAME, config.APPLICATION.ADMIN_LAST_NAME, 'admin', Utils.hashPassword('admin'), config.APPLICATION.ADMIN_EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)]);
+        const admin = new UserDto(config.APPLICATION.ADMIN_NAME, config.APPLICATION.ADMIN_LAST_NAME, 'admin', Utils.hashPassword('admin'), config.APPLICATION.ADMIN_EMAIL, [new RoleDto(CONSTANTS.ROLE.ADMIN)], USER_TYPE.NORMAL);
         await getMongoRepository(UserDto).save(admin).then(() => {
             Logger.log('Seed admin account success.', 'UserModule');
         }).catch(err => Logger.warn('User admin existed.', err.message));
     }
 
-    eventHandlers = {
+    public static eventHandlers = {
         // create
         UserCreationStartedEvent: (streamId, data) => new UserCreationStartedEvent(streamId, data),
         UserCreatedEvent: (streamId, data) => new UserCreatedEvent(streamId, data),

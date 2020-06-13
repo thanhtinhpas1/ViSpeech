@@ -1,5 +1,5 @@
 import STORAGE from 'utils/storage'
-import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, USER_TYPE } from 'utils/constant'
 import Utils from 'utils'
 import { apiUrl } from './api-url'
 
@@ -31,7 +31,7 @@ export default class UserService {
             throw new Error(DEFAULT_ERR_MESSAGE)
           }
         }
-        STORAGE.setPreferences(JWT_TOKEN, result.token)
+        STORAGE.setPreferences(JWT_TOKEN, result.jwtToken)
         return result
       })
       .catch(err => {
@@ -40,14 +40,17 @@ export default class UserService {
       })
   }
 
-  static authenWithSocial = user => {
-    const api = `${apiUrl}/user/authen-with-social`
+  static loginWithSocial = (accessToken, userType) => {
+    if (![USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE].includes(userType)) {
+      throw new Error('Loại người dùng không hợp lệ.')
+    }
+    const api = userType === USER_TYPE.FACEBOOK ? `${apiUrl}/login-facebook` : `${apiUrl}/login-google`
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
       body: JSON.stringify({
-        ...user,
+        access_token: accessToken,
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -58,11 +61,10 @@ export default class UserService {
         return response.json()
       })
       .then(result => {
-        if (status !== 200) {
+        if (status !== 201) {
           throw new Error(DEFAULT_ERR_MESSAGE)
         }
-        STORAGE.setPreferences(JWT_TOKEN, result.user.token)
-        return result.user
+        return result
       })
       .catch(err => {
         console.debug(err.message)

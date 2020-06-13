@@ -26,7 +26,7 @@ export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEven
 
         try {
             const user = await this.repository.findOne({ _id: userId });
-            const verifyEmailToken = this.authService.generateTokenWithUserId(userId, '2 days');
+            const verifyEmailToken = this.authService.generateTokenWithUserId(userId, `${CONSTANTS.TOKEN_EXPIRATION.VERIFY_EMAIL} days`);
             await EmailUtils.sendVerifyEmail(user.username, user.email, verifyEmailToken);
             this.eventBus.publish(new VerifyEmailSentSuccessEvent(streamId, userId));
         } catch (error) {

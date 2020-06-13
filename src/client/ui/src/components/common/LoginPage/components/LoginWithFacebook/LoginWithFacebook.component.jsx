@@ -2,11 +2,12 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
-import { FB_APP_ID } from 'utils/constant'
+import { FB_APP_ID, USER_TYPE } from 'utils/constant'
 
-const AuthenWithFacebook = ({ loginObj, authenWithSocial }) => {
+const LoginWithFacebook = ({ loginWithSocialObj, loginWithSocial }) => {
   const responseFacebook = response => {
     if (response.accessToken) {
+      loginWithSocial(response.accessToken, USER_TYPE.FACEBOOK)
     }
   }
 
@@ -16,7 +17,7 @@ const AuthenWithFacebook = ({ loginObj, authenWithSocial }) => {
       textButton="Facebook"
       fields="name, email, picture"
       callback={responseFacebook}
-      isDisabled={loginObj.isLoading}
+      isDisabled={loginWithSocialObj.isLoading}
       render={renderProps => (
         <button
           type="button"
@@ -76,7 +77,7 @@ const AuthenWithFacebook = ({ loginObj, authenWithSocial }) => {
   //             const facebookID = userInfo.id
   //             const displayName = userInfo.firstName + userInfo.lastName
   //             const avatar = userInfo.picture.data.url
-  //             authenWithSocial({
+  //             loginWithSocial({
   //               email,
   //               facebookID,
   //               displayName,
@@ -99,4 +100,4 @@ const AuthenWithFacebook = ({ loginObj, authenWithSocial }) => {
   // )
 }
 
-export default AuthenWithFacebook
+export default LoginWithFacebook

@@ -35,10 +35,12 @@ export class ConstTaskService {
             const tokens = await this.tokenRepository.find();
             for (const token of tokens) {
                 if (token.tokenType === CONSTANTS.TOKEN_TYPE.FREE) {
-                    token.minutes = config.TOKEN_TYPE.TYPE_FREE_MINUTES;
+                    // token.minutes = Number(config.TOKEN_TYPE.TYPE_FREE_MINUTES);
+                    token.usedMinutes = 0;
                 }
-                this.tokenRepository.save(token);
-                this.logger.debug(`Token refresh token ${token._id}`);
+                // this.tokenRepository.save(token);
+                this.tokenRepository.update({ _id: token._id }, { usedMinutes: Number(token.usedMinutes) });
+                this.logger.debug(`Refresh token usedMinutes ${token._id}`);
             }
         } catch (error) {
             this.logger.error('Something went wrong when refresh token per day', error.message, 'ConstTaskService');

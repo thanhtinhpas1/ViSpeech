@@ -39,7 +39,7 @@ export enum USER_TYPE {
 @Entity('users')
 export class UserDto extends BaseEntityDto {
     constructor(firstName: string, lastName: string, username: string, password: string, email: string, roles: RoleDto[],
-                socialId?: string, typeUser?: USER_TYPE) {
+        userType: USER_TYPE = USER_TYPE.NORMAL, socialId?: string) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,16 +49,16 @@ export class UserDto extends BaseEntityDto {
         this.roles = roles;
         this.isActive = true;
         this.socialId = socialId;
-        this.typeUser = typeUser;
+        this.userType = userType;
     }
 
-    @IsString(ErrUtil.getMessage('newPassword', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('newPassword', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('firstName', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('firstName', ERR.IsNotEmpty))
     @Column()
     firstName: string;
 
     @IsString(ErrUtil.getMessage('lastName', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('lastName', ERR.IsNotEmpty))
+    @IsOptional()
     @Column()
     lastName: string;
 
@@ -106,7 +106,7 @@ export class UserDto extends BaseEntityDto {
     @IsString()
     @IsEnum(USER_TYPE)
     @Column({default: USER_TYPE.NORMAL})
-    typeUser: USER_TYPE;
+    userType: USER_TYPE;
 
     @IsArray(ErrUtil.getMessage('roles', ERR.IsArray))
     @IsOptional()

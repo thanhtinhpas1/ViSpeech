@@ -3,7 +3,6 @@ import { ICommand, ofType, Saga } from '@nestjs/cqrs';
 import { OrderCreatedSuccessEvent } from '../events/impl/order-created.event';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { CreateOrderCommand } from 'orders/commands/impl/create-order.command';
 import { AuthService } from 'auth/auth.service';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { CreateOrderedTokenCommand } from 'tokens/commands/impl/create-token.command';
@@ -14,6 +13,7 @@ import { OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from 
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { UpgradeTokenOrderCreatedSuccessEvent } from 'orders/events/impl/upgrade-token-order-created.event';
 import { UpgradeTokenCommand } from 'tokens/commands/impl/upgrade-token.command';
+import { TokenUpgradedSuccessEvent, TokenUpgradedFailedEvent } from 'tokens/events/impl/token-upgraded.event';
 
 @Injectable()
 export class OrdersSagas {
@@ -75,7 +75,38 @@ export class OrdersSagas {
                 Logger.log("Inside [OrdersSagas] upgradeTokenOrderCreatedSuccess Saga", "OrdersSagas");
                 const { streamId, orderDto } = event;
                 const { tokenType, token } = orderDto;
-                return new UpgradeTokenCommand(streamId, token._id, tokenType);
+                token.orderId = orderDto._id
+                return new UpgradeTokenCommand(streamId, token, tokenType);
+            })
+        );
+    };
+
+    @Saga()
+    tokenUpgradedSuccess = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(TokenUpgradedSuccessEvent),
+            map((event: TokenUpgradedSuccessEvent) => {
+                Logger.log("Inside [OrdersSagas] tokenUpgradedSuccessEvent Saga", "OrdersSagas");
+                const { streamId, tokenDto, tokenTypeDto } = event;
+                const { userId, orderId } = tokenDto;
+                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS);
+                orderDto._id = orderId;
+                return new UpdateOrderCommand(streamId, orderDto);
+            })
+        );
+    };
+
+    @Saga()
+    tokenUpgradedFailed = (events$: Observable<any>): Observable<ICommand> => {
+        return events$.pipe(
+            ofType(TokenUpgradedFailedEvent),
+            map((event: TokenUpgradedFailedEvent) => {
+                Logger.log("Inside [OrdersSagas] tokenUpgradedFailedEvent Saga", "OrdersSagas");
+                const { streamId, tokenDto, tokenTypeDto } = event;
+                const { userId, orderId } = tokenDto;
+                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
+                orderDto._id = orderId;
+                return new UpdateOrderCommand(streamId, orderDto);
             })
         );
     };

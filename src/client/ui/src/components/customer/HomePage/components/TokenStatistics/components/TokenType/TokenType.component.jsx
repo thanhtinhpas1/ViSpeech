@@ -1,15 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react'
+import { Radio } from 'antd'
 
 const TokenType = ({ tokenType }) => (
   <div className="pay-option h-100">
-    <input
-      className="pay-option-check"
-      type="radio"
-      id={tokenType._id}
-      name="tokenType"
-      defaultChecked={tokenType.defaultChecked}
-    />
+    <Radio className="pay-option-check" value={tokenType._id} name="tokenType" style={{ marginRight: 0 }} />
     <label className="pay-option-label h-100" htmlFor={tokenType._id}>
       <span className="pay-title">
         <em className="pay-icon">

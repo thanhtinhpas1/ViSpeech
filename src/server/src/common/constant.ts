@@ -129,5 +129,10 @@ export const CONSTANTS = {
     SORT_ORDER: {
         ASC: 'ASC',
         DESC: 'DESC'
+    },
+    TOKEN_EXPIRATION: {
+        VERIFY_EMAIL: 1,
+        REPLY_PERMISSION_ASSIGN: 2,
+        RESET_PASSWORD: 1,
     }
 };

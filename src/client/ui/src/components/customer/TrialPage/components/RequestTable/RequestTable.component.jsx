@@ -8,7 +8,7 @@ import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import { STATUS, CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER } from 'utils/constant'
 import * as moment from 'moment'
 
-const RequestTable = ({ currentUser, newRequest, getRequestListByUserIdObj, getRequestListByUserId }) => {
+const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUserIdObj, getRequestListByUserId }) => {
   const [requestData, setRequestData] = useState({ data: [], count: 0 })
 
   const columns = [
@@ -106,11 +106,11 @@ const RequestTable = ({ currentUser, newRequest, getRequestListByUserIdObj, getR
   }, [currentUser._id, getRequestListByUserId])
 
   useEffect(() => {
-    if (newRequest.projectName) {
+    if (uploading === false && newRequest.projectName) {
       const newRequestData = { data: [newRequest, ...requestData.data], count: requestData.count + 1 }
       setRequestData(newRequestData)
     }
-  }, [newRequest])
+  }, [newRequest, requestData, uploading])
 
   useEffect(() => {
     if (getRequestListByUserIdObj.isLoading === false && getRequestListByUserIdObj.isSuccess != null) {

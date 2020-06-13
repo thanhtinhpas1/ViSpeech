@@ -19,12 +19,14 @@ import ReplyPermissionAssignPage from 'components/customer/ReplyPermissionAssign
 import StatisticsPage from 'components/customer/StatisticsPage/StatisticsPage.container'
 import TrialPage from 'components/customer/TrialPage/TrialPage.container'
 import TrialDetailsPage from 'components/customer/TrialDetailsPage/TrialDetailsPage.container'
+import UpgradeTokenPage from 'components/customer/UpgradeTokenPage/UpgradeTokenPage.container'
+import Utils from 'utils'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
     <>
       {/* WITHOUT login, user can access those links */}
-      {currentUser && (
+      {currentUser && Utils.isUser(currentUser.roles) && (
         <CustomerLayout>
           <Switch>
             <Route exact path={CUSTOMER_PATH}>
@@ -69,6 +71,9 @@ const RouteCustomer = ({ currentUser }) => {
             <Route path={`${CUSTOMER_PATH}/request-details/:id`}>
               <TrialDetailsPage />
             </Route>
+            <Route path={`${CUSTOMER_PATH}/upgrade-token`}>
+              <UpgradeTokenPage />
+            </Route>
             <Route path={`${CUSTOMER_PATH}/*`}>
               <Redirect to="/404" />
             </Route>
@@ -76,7 +81,7 @@ const RouteCustomer = ({ currentUser }) => {
         </CustomerLayout>
       )}
 
-      {!currentUser && (
+      {(!currentUser || !Utils.isUser(currentUser.roles)) && (
         <Switch>
           <Route exact path={CUSTOMER_PATH}>
             <Redirect to="/" />

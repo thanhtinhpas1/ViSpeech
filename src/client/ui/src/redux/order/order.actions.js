@@ -8,6 +8,10 @@ export const onClearCreateOrderState = () => ({
   type: OrderTypes.CLEAR_CREATE_ORDER_STATE,
 })
 
+export const onClearCreateUpgradeTokenOrderState = () => ({
+  type: OrderTypes.CLEAR_CREATE_UPGRADE_TOKEN_ORDER_STATE,
+})
+
 // get order list
 export const getOrderList = filterConditions => ({
   type: OrderTypes.GET_ORDER_LIST,
@@ -69,5 +73,21 @@ export const createOrderSuccess = ({ order, token }) => ({
 
 export const createOrderFailure = message => ({
   type: OrderTypes.CREATE_ORDER_FAILURE,
+  payload: message,
+})
+
+// create upgrade token order
+export const createUpgradeTokenOrder = data => ({
+  type: OrderTypes.CREATE_UPGRADE_TOKEN_ORDER,
+  payload: data,
+})
+
+export const createUpgradeTokenOrderSuccess = ({ order }) => ({
+  type: OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_SUCCESS,
+  payload: { order },
+})
+
+export const createUpgradeTokenOrderFailure = message => ({
+  type: OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_FAILURE,
   payload: message,
 })
