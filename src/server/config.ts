@@ -20,7 +20,7 @@ const configs = {
         VERSION: process.env.APP_VERSION || '1.0',
         API_EXPLORER_PATH: process.env.APP_API_EXPLORER_PATH || '/api',
         // Server
-        HOST: process.env.APP_HOST || 'asr.vietspeech.com',
+        HOST: process.env.APP_HOST || '0.0.0.0',
         PORT: process.env.APP_PORT || 7070,
         // Event Store
         EVENT_STORE_SETTINGS: {
@@ -64,13 +64,13 @@ const configs = {
         SEND_GRID_API_KEY: process.env.SENDGRID_API_KEY || '',
         KAFKA: {
             NAME: process.env.KAFKA_NAME || 'VISPEECH',
-            HOST: process.env.KAFKA_HOST || '0.0.0.0',
+            HOST: process.env.KAFKA_HOST || 'asr.vietspeech.com',
             PORT: process.env.KAFKA_PORT || 9092,
             TOPIC: process.env.KAFKA_TOPIC || 'vispeech',
         },
         ASR: {
             PROTOCOL: process.env.ASR_PROTOCOL || 'http',
-            HOST: process.env.ASR_HOST || '0.0.0.0',
+            HOST: process.env.ASR_HOST || 'asr.vietspeech.com',
             PORT: process.env.ASR_PORT || 5000,
         },
         TOKEN_TYPE: {
