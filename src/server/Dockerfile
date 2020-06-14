@@ -5,9 +5,6 @@ LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 
 # Set the working directory
 WORKDIR /user/src/app/vispeech
-
-# Set the working directory
-WORKDIR /user/src/app/vispeechui
 ARG mode
 ENV mode=$mode
 
