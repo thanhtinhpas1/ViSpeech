@@ -20,7 +20,7 @@ const configs = {
         VERSION: process.env.APP_VERSION || '1.0',
         API_EXPLORER_PATH: process.env.APP_API_EXPLORER_PATH || '/api',
         // Server
-        HOST: process.env.APP_HOST || '0.0.0.0',
+        HOST: process.env.APP_HOST || 'asr.vietspeech.com',
         PORT: process.env.APP_PORT || 7070,
         // Event Store
         EVENT_STORE_SETTINGS: {
