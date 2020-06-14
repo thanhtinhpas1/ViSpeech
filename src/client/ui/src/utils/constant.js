@@ -48,3 +48,9 @@ export const DEFAULT_PAGINATION = {
   current: 1,
   pageSize: 100,
 }
+export const USER_TYPE = {
+  NORMAL: 'NORMAL',
+  FACEBOOK: 'FACEBOOK',
+  GOOGLE: 'GOOGLE',
+  TWITTER: 'TWITTER',
+}

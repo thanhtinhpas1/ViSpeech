@@ -1,7 +1,7 @@
 import STORAGE from 'utils/storage'
-import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
+import {DEFAULT_ERR_MESSAGE, JWT_TOKEN, USER_TYPE} from 'utils/constant'
 import Utils from 'utils'
-import { apiUrl } from './api-url'
+import {apiUrl} from './api-url'
 
 export default class UserService {
   static login = ({ username, password }) => {
@@ -25,29 +25,32 @@ export default class UserService {
       .then(result => {
         if (status !== 201) {
           if (status === 401) {
-            const msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
-            throw new Error(msg)
+            throw new Error()
           } else {
             throw new Error(DEFAULT_ERR_MESSAGE)
           }
         }
-        STORAGE.setPreferences(JWT_TOKEN, result.token)
+        STORAGE.setPreferences(JWT_TOKEN, result.jwtToken)
         return result
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        const msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
+        throw new Error(msg)
       })
   }
 
-  static authenWithSocial = user => {
-    const api = `${apiUrl}/user/authen-with-social`
+  static loginWithSocial = (accessToken, userType) => {
+    if (![USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE].includes(userType)) {
+      throw new Error('Loại người dùng không hợp lệ.')
+    }
+    const api = userType === USER_TYPE.FACEBOOK ? `${apiUrl}/login-facebook` : `${apiUrl}/login-google`
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
       body: JSON.stringify({
-        ...user,
+        access_token: accessToken,
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -58,11 +61,10 @@ export default class UserService {
         return response.json()
       })
       .then(result => {
-        if (status !== 200) {
+        if (status !== 201) {
           throw new Error(DEFAULT_ERR_MESSAGE)
         }
-        STORAGE.setPreferences(JWT_TOKEN, result.user.token)
-        return result.user
+        return result
       })
       .catch(err => {
         console.debug(err.message)
@@ -95,14 +97,14 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          const msg = 'Thông tin đăng ký chưa chính xác, vui lòng thử lại.'
-          throw new Error(msg)
+          throw new Error()
         }
         return resultObj
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        const msg = 'Thông tin đăng ký chưa chính xác, vui lòng thử lại.'
+        throw new Error(msg)
       })
   }
 
@@ -223,21 +225,20 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 200) {
-          const msg = 'Thông tin cập nhật không hợp lệ.'
-          throw new Error(msg)
+          throw new Error()
         }
         return resultObj
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        const msg = 'Thông tin cập nhật không hợp lệ.'
+        throw new Error(msg)
       })
   }
 
   static createUser = data => {
     const api = `${apiUrl}/users`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
-
     let status = 400
     return fetch(api, {
       method: 'POST',
@@ -256,14 +257,14 @@ export default class UserService {
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
         if (status !== 201) {
-          const msg = 'Thông tin người dùng chưa hợp lệ, vui lòng thử lại.'
-          throw new Error(msg)
+          throw new Error()
         }
         return resultObj
       })
       .catch(err => {
         console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        const msg = 'Thông tin người dùng chưa hợp lệ, vui lòng thử lại.'
+        throw new Error(msg)
       })
   }
 

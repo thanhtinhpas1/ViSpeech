@@ -5567,6 +5567,11 @@ select.select-sm {
     font-size: 12px;
   }
 }
+.pay-option {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 .pay-option-label {
   width: 100%;
   background: #e6effb;
@@ -5586,21 +5591,21 @@ select.select-sm {
   border: 2px solid #fff;
   background: #ffc100;
   content: '';
-  top: 0;
-  right: -5px;
+  top: 1px;
+  right: -13px;
   transform: translate(-50%, -50%) scale(0);
   transition: all 0.4s ease;
 }
 .pay-option-check {
   position: absolute;
-  height: 1px;
-  width: 1px;
+  height: 100%;
+  width: 100%;
   opacity: 0;
 }
-.pay-option-check:checked ~ label {
+label.pay-option-check-select {
   border-color: #ffc100;
 }
-.pay-option-check:checked ~ label:after {
+label.pay-option-check-select:after {
   transform: translate(-50%, -50%) scale(1);
 }
 .pay-list {

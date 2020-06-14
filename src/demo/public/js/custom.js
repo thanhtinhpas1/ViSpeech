@@ -209,7 +209,7 @@
                 method: form.attr("method"),
                 data: form.serialize(),
                 success: function (result) {
-                    if (result == "success") {
+                    if (result === "success") {
                         $(".contactform").find(".output_message").addClass("success");
                         $(".output_message").text("Message Sent!");
                     } else {
@@ -229,21 +229,21 @@
     /* ---------------------------------------------- */
     // upload audio
     $('#upload-photo').on('change', () => {
-        var file = $('#upload-photo').prop('files')[0]
-        var data = new FormData()
+        const file = $('#upload-photo').prop('files')[0];
+        const data = new FormData();
         data.append("voice", file, file.name)
         $.ajax({
             method: 'POST',
-            url: 'http://asr.vietspeech.com:5000',
+            url: `${document.URL}asr`,
             data: data,
             cache: false,
-            contentType: false,
+            contentType: data.contentType,
             processData: false,
             success: (res) => {
                 $('#text-recognize').val(res.text)
             },
             error: (err) => {
-                $('#text-recognize').val(err)
+                $('#text-recognize').val(err.message)
             }
         })
     })

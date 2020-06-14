@@ -66,7 +66,6 @@ export class GetAcceptedProjectsByUserIdHandler
         const sortField = Utils.getCorrectSortField(sort.field)
         findOptions.order[sortField] = sort.order
       }
-      Logger.log(`Find options ${JSON.stringify(findOptions)}`)
       permissions = await this.permissionDtoRepository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
 
       for (const permission of permissions) {

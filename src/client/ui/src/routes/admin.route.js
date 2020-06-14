@@ -18,13 +18,13 @@ import StatisticsPage from 'components/admin/StatisticsPage/StatisticsPage.compo
 import ProjectsPage from 'components/admin/ProjectsPage/ProjectsPage.container'
 import TokensPage from 'components/admin/TokensPage/TokensPage.container'
 import TransactionsPage from 'components/admin/TransactionsPage/TransactionsPage.container'
-import Utils from "../utils";
+import Utils from 'utils'
 
 const RouteAdmin = ({ currentUser }) => {
   return (
     <>
       {/* WITHOUT login, user can access those links */}
-      {currentUser && Utils.isAdmin(currentUser?.roles) && (
+      {currentUser && Utils.isAdmin(currentUser.roles) && (
         <AdminLayout>
           <Switch>
             <Route exact path={ADMIN_PATH}>
@@ -73,7 +73,7 @@ const RouteAdmin = ({ currentUser }) => {
         </AdminLayout>
       )}
 
-      {(!currentUser || !Utils.isAdmin(currentUser?.roles)) && (
+      {(!currentUser || !Utils.isAdmin(currentUser.roles)) && (
         <Switch>
           <Route exact path={ADMIN_PATH}>
             <Redirect to="/" />

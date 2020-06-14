@@ -39,9 +39,34 @@ const ReplyPermissionAssignPage = ({
 
   useEffect(() => {
     if (currentUser._id) {
-      findPermissionByEmailToken(emailToken)
+      const decodedToken = Utils.decodeJwtToken(emailToken)
+      if (decodedToken.assigneeId === currentUser._id) {
+        if (Number(`${decodedToken.exp}000`) >= Date.now()) {
+          findPermissionByEmailToken(emailToken)
+        } else {
+          setInfoTemplate({
+            title: 'Phản hồi lời mời',
+            user: currentUser,
+            content: 'Xin lỗi! Lời mời tham gia dự án đã hết hiệu lực.',
+            positiveButton: {
+              content: 'Về trang dự án',
+              clickFunc: () => history.push(`${CUSTOMER_PATH}/projects`),
+            },
+          })
+        }
+      } else {
+        setInfoTemplate({
+          title: 'Phản hồi lời mời',
+          user: currentUser,
+          content: 'Xin lỗi! Lời mời tham gia dự án này không dành cho bạn. Bạn không có quyền phản hồi.',
+          positiveButton: {
+            content: 'Về trang dự án',
+            clickFunc: () => history.push(`${CUSTOMER_PATH}/projects`),
+          },
+        })
+      }
     }
-  }, [currentUser._id, emailToken, findPermissionByEmailToken])
+  }, [currentUser, history, emailToken, findPermissionByEmailToken])
 
   const onReplyPermissionAssign = useCallback(
     async status => {
@@ -150,7 +175,7 @@ const ReplyPermissionAssignPage = ({
           title: 'Phản hồi lời mời',
           message: Utils.buildFailedMessage(
             replyPermissionAssignObj.message,
-            'Phản hồi lời mời tham gia dự án thất bại'
+            'Phản hồi lời mời tham gia dự án thất bại. Vui lòng thử lại sau ít phút.'
           ),
           icon: { isSuccess: false },
           button: {

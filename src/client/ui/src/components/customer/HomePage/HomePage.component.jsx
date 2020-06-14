@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
-import { SORT_ORDER } from 'utils/constant'
+import { SORT_ORDER, TOKEN_TYPE } from 'utils/constant'
 import TokenStatistics from './components/TokenStatistics/TokenStatistics.container'
 import TokenTransaction from './components/TokenTransaction/TokenTransaction.container'
 import TokenCalculator from './components/TokenCalculator/TokenCalculator.component'
@@ -36,11 +36,15 @@ const Home = ({ currentUser, getUserOrderListObj, getFreeTokenObj, getFreeToken,
                   <h4 className="card-title" style={{ fontSize: '16px', color: '#fff', textTransform: 'uppercase' }}>
                     Token miễn phí
                   </h4>
-                  <div>Miễn phí 10 phút sử dụng</div>
+                  <div>Miễn phí {TOKEN_TYPE.FREE.minutes} phút sử dụng</div>
                 </div>
                 <div className="card-opt">
                   <span className="lead tnx-id">
-                    {getFreeTokenObj.isLoading && getFreeTokenObj.isSuccess == null && <LoadingIcon />}
+                    {getFreeTokenObj.isLoading && getFreeTokenObj.isSuccess == null && (
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <LoadingIcon size={30} color="#fff" />
+                      </div>
+                    )}
                     {getFreeTokenObj.isLoading === false && getFreeTokenObj.isSuccess === false && (
                       <div>Lấy token miễn phí thất bại</div>
                     )}

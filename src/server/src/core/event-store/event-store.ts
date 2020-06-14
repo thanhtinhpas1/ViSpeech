@@ -32,6 +32,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
         this.eventStoreConnect();
         this.client = this.eventStore.client;
     }
+
     async eventStoreConnect() {
         this.eventStore.connect({
             hostname: config.EVENT_STORE_SETTINGS.hostname,
@@ -77,7 +78,7 @@ export class EventStore implements IEventPublisher, IMessageSource {
                         rawData += chunk;
                     });
                     res.on('end', () => {
-                        xml2js.parseString(rawData, { explicitArray: false }, (err, result) => {
+                        xml2js.parseString(rawData, {explicitArray: false}, (err, result) => {
                             if (err) {
                                 console.trace(err);
                                 return;
@@ -99,6 +100,8 @@ export class EventStore implements IEventPublisher, IMessageSource {
         };
 
         const onDropped = (subscription, reason, error) => {
+            this.client.closeAllPools();
+            console.trace(subscription, reason, error);
             Logger.warn('Event store disconnected', reason);
             this.client.subscribeToStream(streamName, onEvent, onDropped, false);
         };

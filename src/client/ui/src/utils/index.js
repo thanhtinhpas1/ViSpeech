@@ -1,12 +1,13 @@
 import { useLocation } from 'react-router-dom'
+import jwtDecode from 'jwt-decode'
 import { ROLES, SORT_ORDER } from './constant'
 
 const Utils = {
-  checkIfIsUser: roleList => {
-    return roleList.findIndex(role => role.name === ROLES.USER || role.name === ROLES.MANAGER_USER) !== -1
+  isUser: roleList => {
+    return (roleList || []).findIndex(role => [ROLES.USER, ROLES.MANAGER_USER].includes(role.name)) !== -1
   },
   isAdmin: roleList => {
-    return roleList.findIndex(role => role.name === ROLES.ADMIN) !== -1
+    return (roleList || []).findIndex(role => role.name === ROLES.ADMIN) !== -1
   },
   getRolesInArray: roleList => {
     return (roleList || []).map(role => role.name)
@@ -62,11 +63,6 @@ const Utils = {
   filter: (arr, filterFunc) => {
     const result = JSON.parse(JSON.stringify(arr))
     return result.filter(filterFunc)
-  },
-  sortAndFilter: (arr, sortFunc, filterFunc) => {
-    const result = JSON.parse(JSON.stringify(arr))
-    const a = result.sort(sortFunc)
-    return a.filter(filterFunc).map(item => item)
   },
   getSortOrder: sortOrder => {
     let result = sortOrder
@@ -124,6 +120,27 @@ const Utils = {
       return `&${Utils.parameterizeObject({ filters: formatFilters })}`
     }
     return ''
+  },
+  sortAndFilterTokenTypeList: (
+    list,
+    excludedNames,
+    sortBy,
+    getUpgradeTokenType = false,
+    curTokenTypeMinutes = 0,
+    sortType = SORT_ORDER.ASC
+  ) => {
+    const result = [...(list || [])]
+    const sortFunc = (a, b) => {
+      return sortType === SORT_ORDER.ASC ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]
+    }
+    result.sort(sortFunc)
+    if (getUpgradeTokenType) {
+      return result.filter(item => !excludedNames.includes(item.name) && item.minutes > curTokenTypeMinutes)
+    }
+    return result.filter(item => !excludedNames.includes(item.name))
+  },
+  decodeJwtToken: token => {
+    return jwtDecode(token)
   },
 }
 

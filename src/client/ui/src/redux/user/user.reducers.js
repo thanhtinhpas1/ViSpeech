@@ -8,6 +8,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  loginWithSocial: {
+    user: {},
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   register: {
     data: null,
     isLoading: false,
@@ -109,6 +115,33 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         login: {
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // LOGIN WITH SOCIAL
+    case UserTypes.LOGIN_WITH_SOCIAL:
+      return {
+        ...state,
+        loginWithSocial: {
+          ...state.loginWithSocial,
+          isLoading: true,
+        },
+      }
+    case UserTypes.LOGIN_WITH_SOCIAL_SUCCESS:
+      return {
+        ...state,
+        currentUser: action.payload,
+        loginWithSocial: {
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case UserTypes.LOGIN_WITH_SOCIAL_FAILURE:
+      return {
+        ...state,
+        loginWithSocial: {
           isLoading: false,
           isSuccess: false,
           message: action.payload,

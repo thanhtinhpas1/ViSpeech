@@ -23,6 +23,6 @@ COPY . .
 
 COPY --from=dependencies /tmp/node_modules ./node_modules
 
-CMD npm run start:dev
+CMD npm run start:prod
 # Expose application port
 EXPOSE 7070:7070

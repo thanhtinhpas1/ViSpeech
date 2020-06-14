@@ -15,6 +15,7 @@ import { CreateFreeTokenCommand } from 'tokens/commands/impl/create-token.comman
 import { DeleteProjectByUserIdCommand } from 'projects/commands/impl/delete-project-by-userId.command';
 import { DeletePermissionByUserIdCommand } from 'permissions/commands/impl/delete-permission-by-userId.command';
 import { DeleteTokenByUserIdCommand } from 'tokens/commands/impl/delete-token-by-userId.command';
+import { CONSTANTS } from 'common/constant';
 
 @Injectable()
 export class UsersSagas {
@@ -42,7 +43,7 @@ export class UsersSagas {
                 const { streamId, userDto } = event;
                 const userId = userDto._id;
                 const tokenValue = this.authService.generateTokenWithUserId(userId);
-                const tokenDto = new TokenDto(tokenValue, userId, ""); // free token
+                const tokenDto = new TokenDto(tokenValue, userId, "", CONSTANTS.TOKEN_TYPE.FREE); // free token
                 return new CreateFreeTokenCommand(streamId, tokenDto);
             })
         );
@@ -60,18 +61,18 @@ export class UsersSagas {
         );
     };
 
-    @Saga()
-    freeTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(FreeTokenCreatedFailedEvent),
-            map((event: FreeTokenCreatedFailedEvent) => {
-                Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
-                const { streamId, tokenDto } = event;
-                const { userId } = tokenDto;
-                return new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId), true);
-            })
-        );
-    };
+    // @Saga()
+    // freeTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
+    //     return events$.pipe(
+    //         ofType(FreeTokenCreatedFailedEvent),
+    //         map((event: FreeTokenCreatedFailedEvent) => {
+    //             Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
+    //             const { streamId, tokenDto } = event;
+    //             const { userId } = tokenDto;
+    //             return new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId), true);
+    //         })
+    //     );
+    // };
 
     @Saga()
     userDeletedSuccess = (events$: Observable<any>): Observable<ICommand> => {

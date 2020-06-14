@@ -47,6 +47,8 @@ const SocketUtils = {
     TOKEN_DELETED_BY_PROJECTID_FAILED_EVENT: 'TokenDeletedByProjectIdFailedEvent',
     TOKEN_UPDATED_SUCCESS_EVENT: 'TokenUpdatedSuccessEvent',
     TOKEN_UPDATED_FAILED_EVENT: 'TokenUpdatedFailedEvent',
+    TOKEN_UPGRADED_SUCCESS_EVENT: 'TokenUpgradedSuccessEvent',
+    TOKEN_UPGRADED_FAILED_EVENT: 'TokenUpgradedFailedEvent',
     // PROJECT
     PROJECT_CREATED_SUCCESS_EVENT: 'ProjectCreatedSuccessEvent',
     PROJECT_CREATED_FAILED_EVENT: 'ProjectCreatedFailedEvent',
@@ -81,6 +83,8 @@ const SocketUtils = {
     // ORDER
     ORDER_CREATED_SUCCESS_EVENT: 'OrderCreatedSuccessEvent',
     ORDER_CREATED_FAILED_EVENT: 'OrderCreatedFailedEvent',
+    UPGRADE_TOKEN_ORDER_CREATED_SUCCESS_EVENT: 'UpgradeTokenOrderCreatedSuccessEvent',
+    UPGRADE_TOKEN_ORDER_CREATED_FAILED_EVENT: 'UpgradeTokenOrderCreatedFailedEvent',
     ORDER_DELETED_SUCCESS_EVENT: 'OrderDeletedSuccessEvent',
     ORDER_DELETED_FAILED_EVENT: 'OrderDeletedFailedEvent',
     ORDER_UPDATED_SUCCESS_EVENT: 'OrderUpdatedSuccessEvent',

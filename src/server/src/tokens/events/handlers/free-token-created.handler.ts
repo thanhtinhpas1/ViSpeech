@@ -29,11 +29,12 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
         try {
             const tokenTypeDto = await this.repositoryTokenType.findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
             token.tokenTypeId = tokenTypeDto._id;
+            token.tokenType = tokenTypeDto.name;
             token.minutes = Number(tokenTypeDto.minutes);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
             token.name = 'Token miễn phí';
-            token = Utils.removePropertiesFromObject(token, ['tokenType', 'orderId']);
+            token = Utils.removePropertiesFromObject(token, ['orderId']);
             await this.repository.save(token);
             this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {

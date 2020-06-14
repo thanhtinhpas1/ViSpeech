@@ -24,7 +24,7 @@ const TokenTransaction = ({ userOrderListObj }) => {
   }, [userOrderListObj])
 
   return (
-    <div className="card-innr">
+    <div className="card-innr" style={{ overflow: 'auto' }}>
       <div className="card-head has-aside">
         <h4 className="card-title">Lịch sử giao dịch</h4>
         <div className="card-opt">
@@ -48,7 +48,7 @@ const TokenTransaction = ({ userOrderListObj }) => {
           {tableData.map(rowData => {
             return (
               <tr key={rowData.id}>
-                <td>
+                <td style={{ maxWidth: '280px', display: 'inline-block', whiteSpace: 'break-spaces' }}>
                   <span className="lead tnx-id">{rowData.id}</span>
                 </td>
                 <td>

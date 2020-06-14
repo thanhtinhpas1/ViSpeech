@@ -33,6 +33,7 @@ import {
 } from './events/impl/token-deleted-by-projectId.event';
 import { UserDto } from 'users/dtos/users.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
+import { TokenUpgradedEvent, TokenUpgradedSuccessEvent, TokenUpgradedFailedEvent } from './events/impl/token-upgraded.event';
 
 @Module({
     imports: [ClientsModule.register([{
@@ -95,6 +96,11 @@ export class TokensModule implements OnModuleInit {
         OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
         OrderedTokenCreatedSuccessEvent: (streamId, tokenDto, formattedToken) => new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, formattedToken),
         OrderedTokenCreatedFailedEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
+
+        // upgrade token
+        TokenUpgradedEvent: (streamId, token, tokenType) => new TokenUpgradedEvent(streamId, token, tokenType),
+        TokenUpgradedSuccessEvent: (streamId, token, tokenType) => new TokenUpgradedSuccessEvent(streamId, token, tokenType),
+        TokenUpgradedFailedEvent: (streamId, token, tokenType, error) => new TokenUpgradedFailedEvent(streamId, token, tokenType, error),
     };
 
     async persistTokenTypesToDB() {
@@ -103,10 +109,10 @@ export class TokensModule implements OnModuleInit {
             const tokenType50 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_50_MINUTES, config.TOKEN_TYPE.TYPE_50_MINUTES, config.TOKEN_TYPE.TYPE_50_PRICE);
             const tokenType200 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES, config.TOKEN_TYPE.TYPE_200_MINUTES, config.TOKEN_TYPE.TYPE_200_PRICE);
             const tokenType500 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_PRICE);
-            await getMongoRepository(TokenTypeDto).save(tokenTypeFree);
-            await getMongoRepository(TokenTypeDto).save(tokenType50);
-            await getMongoRepository(TokenTypeDto).save(tokenType200);
-            await getMongoRepository(TokenTypeDto).save(tokenType500);
+            await getMongoRepository(TokenTypeDto).insert(tokenTypeFree);
+            await getMongoRepository(TokenTypeDto).insert(tokenType50);
+            await getMongoRepository(TokenTypeDto).insert(tokenType200);
+            await getMongoRepository(TokenTypeDto).insert(tokenType500);
         } catch (e) {
             if ('duplicate key error'.includes(e.message)) {
                 Logger.log('Token types existed.');

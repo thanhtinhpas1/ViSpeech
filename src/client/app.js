@@ -6,8 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser')
 var logger = require('morgan');
 var cors = require('cors');
-const global = require('./global');
-
+require('dotenv').config()
 var app = express();
 
 // view engine setup
@@ -21,12 +20,12 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'ui/build')));
 
-const url = `${global.proxy.protocol}://${global.proxy.host}:${global.proxy.port}`;
+const url = process.env.API_URL || 'http://asr.vietspeech.com:7070'
 app.use('/api', proxy(url, {
   proxyReqPathResolver: function (req) {
     return new Promise(function (resolve, reject) {
       setTimeout(function () {   // simulate async
-        const path = `${global.proxy.basePath}${req.url}`;
+        const path = `${process.env.BASE_PATH}${req.url}`;
         resolve(path);
       }, 200);
     });
