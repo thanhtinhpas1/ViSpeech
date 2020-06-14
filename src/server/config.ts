@@ -64,7 +64,7 @@ const configs = {
         SEND_GRID_API_KEY: process.env.SENDGRID_API_KEY || '',
         KAFKA: {
             NAME: process.env.KAFKA_NAME || 'VISPEECH',
-            HOST: process.env.KAFKA_HOST || 'asr.vietspeech.com',
+            HOST: process.env.KAFKA_HOST || '0.0.0.0',
             PORT: process.env.KAFKA_PORT || 9092,
             TOPIC: process.env.KAFKA_TOPIC || 'vispeech',
         },
