@@ -25,7 +25,8 @@ export default class UserService {
       .then(result => {
         if (status !== 201) {
           if (status === 401) {
-            throw new Error()
+            const msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
+            throw new Error(msg)
           } else {
             throw new Error(DEFAULT_ERR_MESSAGE)
           }
@@ -35,8 +36,7 @@ export default class UserService {
       })
       .catch(err => {
         console.debug(err.message)
-        const msg = 'Tên tài khoản hoặc mật khẩu chưa đúng.'
-        throw new Error(msg)
+        throw new Error(err.message || DEFAULT_ERR_MESSAGE)
       })
   }
 

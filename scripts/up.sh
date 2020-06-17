@@ -2,7 +2,7 @@
 
 export DIR_DATA_PATH="$PWD"
 
-export CONTAINER_COMMAND="npm build && npm start:prod"
+export CONTAINER_COMMAND="npm start:prod"
 export CONTAINER_SCALE="1"
 export CONTAINER_PORT="7070"
 # release app and vispeechdemo

@@ -9,13 +9,13 @@ services:
     image: eventstore/eventstore
     ports:
       - 2113:2113
-      - 1113:1113
-    expose:
-      - 2113
+      - 1113
     environment:
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
     network_mode: bridge
+    healthcheck:
+      test: ['CMD', 'WGET', '--spider', 'http://localhost:2113']
   # DATABASE - MYSQL
   mongodb:
     image: mongo
@@ -27,10 +27,12 @@ services:
     ports:
       - 27017:27017
     network_mode: bridge
+    healthcheck:
+      test: ['CMD', 'pgrep', 'mongo']
   # API - VISPEECH
   vispeech:
     build:
-      context: "./server"
+      context: "./src/server"
     command: ${CONTAINER_COMMAND}
     restart: always
     depends_on:
@@ -48,8 +50,8 @@ services:
     network_mode: bridge
   vispeechui:
     build:
-      context: "./client"
-    command: "npm stard:prod"
+      context: "./src/client"
+    command: "npm start:prod"
     restard: always
     depends_on:
       - eventstore
@@ -62,7 +64,7 @@ services:
     network_mode: bridge
   vispeechdemo:
     build:
-      context: "./demo"
+      context: "./src/demo"
     command: "npm start"
     restart: always
     depends_on:
@@ -78,38 +80,61 @@ services:
       - mongodb
     #  - vispeech
     network_mode: bridge
-  nginx:
-    image: nginx
-    restart: always
+  vispeechrelease:
     build:
-      dockerfile: Dockerfile
-      context: ./services/nginx
+      context: "./src/demo"
+    command: "npm start"
+    restart: always
+    depends_on:
+      - eventstore
+      - mongodb
+      - vispeech
     ports:
-      - '80:80'
+      - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
+    expose:
+      - ${VISPEECH_PORT_DEMO}
+    links:
+      - eventstore
+      - mongodb
+    #  - vispeech
+    network_mode: bridge
   zoo1:
     image: zookeeper:3.4.9
     hostname: zoo1
     ports:
-      - "2181:2181"
+      - 2181:2181
     environment:
-      ZOO_MY_ID: 1
-      ZOO_PORT: 2181
-      ZOO_SERVERS: server.1=zoo1:2888:3888
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      - ZOO_MY_ID=1
+      - ZOO_PORT=2181
+      - ZOO_SERVERS=server.1=zoo1:2888:3888
+    volumes:
+      - ./zk-single-kafka-single/zoo1/data:/dat
+      - ./zk-single-kafka-single/zoo1/datalog:/datalog
     network_mode: bridge
+    healthcheck:
+      test: ['CMD', 'pgrep', 'zoo1']
   kafka1:
     image: confluentinc/cp-kafka:5.4.0
     hostname: kafka1
     ports:
-      - "9092:9092"
+      - 9092:9092
+    expose:
+      - 9092
     environment:
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-zoo1}:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
+      KAFKA_ZOOKEEPER_CONNECT: zoo1:2181
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./zk-single-kafka-single/kafka1/data:/var/lib/kafka/data
     depends_on:
       - zoo1
+    links:
+      - zoo1
+    healthcheck:
+      test: ['CMD', 'pgrep', 'kafka1']
+    network_mode: bridge
