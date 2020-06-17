@@ -5,9 +5,9 @@
   "scripts": {
     "start": "node ./bin/www",
     "start:dev": "nodemon ./bin/www",
-    "prestart:staging": "npm run build:staging --prefix ui/",
+    "prestart:staging": "env-cmd -f .env.staging npm run build:staging --prefix ui/",
     "start:staging": "node ./bin/www",
-    "prestart:prod": "npm run build --prefix ui/",
+    "prestart:prod": "env-cmd -f .env npm run build --prefix ui/",
     "start:prod": "node ./bin/www"
   },
   "dependencies": {
