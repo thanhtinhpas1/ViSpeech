@@ -1,49 +1,41 @@
-var express = require('express');
-var router = express.Router();
-var formidable = require('formidable');
+const express = require('express');
+const router = express.Router();
+const ViSpeech = require('asr-vietspeech');
+const fs = require('fs');
+const formidable = require('formidable')
 
-const newPath = "../public/audios/"
-const fs = require('fs')
-const http = require('http')
-const https = require('https')
-
-// const options = {
-//   host: 'http://127.0.0.1',
-//   port: 5000,
-//   path: '/',
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'multipart/form-data',
-//     'Accept-Encoding': 'gzip, deflate',
-//     'Connection': 'keep-alive',
-//     'cache-control': 'no-cache'
-//   }
-// };
-
-// // GET FILE UPLOAD RECORD OF CLIENT
-// router.post('file', (req, res) => {
-//   var form = new formidable.IncomingForm();
-//   form.parse(req, function (err, fields, files) {
-//     var oldpath = files.filetoupload.path
-//     var date = new Date().getMilliseconds()
-//     var fullPath = newPath + date + '/' + files.filetoupload.name;
-//     fs.rename(oldpath, fullPath).then(value => {
-//       options.formData = fs.createReadStream(fullPath)
-//       http.request(options, (res) => {
-//         if (res) {
-//           console.log(res)
-//           res.json(res.text)
-//         }
-//       })
-//     }).catch(err => {
-
-//     })
-//   });
-// })
+// The audio file's encoding, sample rate in hertz, timeout, maxSize, token
+const config = {
+    token: process.env.API_KEY, // set api key get from asr system
+    encoding: 'LINEAR16', // set encoding
+    sampleRateHertz: 16000, // set rate Hz
+    timeout: 10000, // 10 seconds
+    maxSize: 51200 // 50 Mb
+};
+const asrViSpeech = new ViSpeech(config);
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('index', {title: 'Express'});
+    res.render('index', {title: 'Asr VietSpeech'});
 });
+
+router.post('/asr', (req, res, next) => {
+    const form = new formidable.IncomingForm();
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            console.warn(err.message)
+            res.status(500);
+        }
+        const oldPath = files.voice.path;
+        const file = fs.createReadStream(oldPath);
+        asrViSpeech.call(file).then(result => {
+            console.info('Call ASR success');
+            res.send(result);
+        }).catch(err => {
+            console.warn(err.message)
+            res.status(401);
+        })
+    })
+})
 
 module.exports = router;

@@ -14,19 +14,19 @@ pipeline {
                 isRestartedRun()
             }
             steps {
-                sh 'rm -rf ui/node_module ui/build'
+                sh 'rm -rf dist node_module'
                 sh 'docker system prune -af --volumes'
             }
         }
         stage('docker') {
             steps {
-                sh 'docker build -t vispeechui ./src/client'
+                sh 'docker build -t vispeech ./src/server'
             }
         }
         stage('delivery') {
             steps {
-                sh 'docker rm -f vispeechui || true'
-                sh 'docker run --name=vispeechui -d --restart=always -p 3200:3200 vispeechui'
+                sh 'docker rm -f vispeech || true'
+                sh 'docker run --name=vispeech -d --restart=always -p 7070:7070 vispeech'
             }
         }
     }

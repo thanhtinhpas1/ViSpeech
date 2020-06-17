@@ -1,10 +1,11 @@
 import { CanActivate, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { OrderDto } from "orders/dtos/orders.dto";
-import { Repository } from "typeorm";
+import { Repository, getMongoRepository } from "typeorm";
 import { Utils } from "utils";
 import { CONSTANTS } from "../../common/constant";
 import { AuthService } from "../auth.service";
+import { UserDto } from "users/dtos/users.dto";
 
 @Injectable()
 export class AsrServiceGuard implements CanActivate {
@@ -17,6 +18,12 @@ export class AsrServiceGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+        const payload = this.authService.decode(request);
+
+        const user = await getMongoRepository(UserDto).findOne({ _id: payload['id'] });
+        const isAdmin = user.roles.findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
+
         const token = Utils.extractToken(request);
         const order = await this.orderRepo.findOne({
             where: {

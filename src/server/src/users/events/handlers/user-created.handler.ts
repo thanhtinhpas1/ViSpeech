@@ -5,10 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Repository } from 'typeorm';
-import { UserDto } from 'users/dtos/users.dto';
+import { UserDto, USER_TYPE } from 'users/dtos/users.dto';
 import { Utils } from 'utils';
 import { config } from "../../../../config";
 import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent } from '../impl/user-created.event';
+import { AuthService } from 'auth/auth.service';
 
 @EventsHandler(UserCreationStartedEvent)
 export class UserCreationStartedHandler implements IEventHandler<UserCreationStartedEvent> {
@@ -21,6 +22,7 @@ export class UserCreationStartedHandler implements IEventHandler<UserCreationSta
 export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
     constructor(
         private readonly eventBus: EventBus,
+        private readonly authService: AuthService,
         @InjectRepository(UserDto) private readonly userRepository: Repository<UserDto>,
     ) {
     }
@@ -38,6 +40,9 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
             });
             user.isActive = true;
             await this.userRepository.save(user);
+            if ([USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE].includes(user.userType)) {
+                userDto['jwtToken'] = this.authService.generateToken(user._id, user.username, user.roles);
+            }
             this.eventBus.publish(new UserCreatedSuccessEvent(streamId, userDto));
         } catch (error) {
             this.eventBus.publish(new UserCreatedFailedEvent(streamId, userDto, error));

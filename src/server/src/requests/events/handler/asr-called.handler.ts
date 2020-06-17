@@ -3,24 +3,24 @@ import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RequestDto } from 'requests/dtos/requests.dto';
 import { Repository } from 'typeorm';
-import { CalledAsrEvent } from '../impl/call-asr.event';
+import { AsrCalledEvent } from '../impl/asr-called.event';
 
-@EventsHandler(CalledAsrEvent)
-export class CalledAsrHandler implements IEventHandler<CalledAsrEvent> {
+@EventsHandler(AsrCalledEvent)
+export class AsrCalledHandler implements IEventHandler<AsrCalledEvent> {
     constructor(
         @InjectRepository(RequestDto)
         private readonly requestRepository: Repository<RequestDto>
     ) {
     }
 
-    async handle(event: CalledAsrEvent) {
-        Logger.log(event.tokenDto._id, 'CalledAsrEvent');
+    async handle(event: AsrCalledEvent) {
+        Logger.log(event.tokenDto._id, 'AsrCalledEvent');
         const { streamId, requestDto, tokenDto } = event;
         try {
             requestDto.duration = Number(requestDto.duration);
             await this.requestRepository.save(requestDto);
         } catch (error) {
-            Logger.error(error, '', 'CalledAsrEvent');
+            Logger.error(error, '', 'AsrCalledEvent');
         }
     }
 }

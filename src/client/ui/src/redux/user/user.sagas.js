@@ -51,24 +51,6 @@ export function* loginStartSaga() {
   yield takeLatest(UserTypes.LOGIN_START, login)
 }
 
-// === authen with social
-/**
- *
- * @param {Object} payload is user
- */
-export function* authenWithSocial({ payload }) {
-  try {
-    const user = yield UserService.authenWithSocial(payload)
-    yield put(loginSuccess(user))
-  } catch (err) {
-    yield put(loginFailure(err.message))
-  }
-}
-
-export function* authenWithSocialSaga() {
-  yield takeLatest(UserTypes.AUTHEN_WITH_SOCIAL, authenWithSocial)
-}
-
 // ==== register
 // export function* register({ payload: user }) {
 //   try {
@@ -270,7 +252,6 @@ export function* userSaga() {
     call(updateUserInfoSaga),
     call(createUserSaga),
     // call(deleteUserSaga),
-    call(authenWithSocialSaga),
     // call(sendVerifyEmailSaga),
     // call(verifyEmailSaga),
     call(sendEmailResetPasswordSaga),

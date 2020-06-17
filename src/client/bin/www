@@ -9,7 +9,8 @@ var debug = require('debug')('vispeechui:server');
 var http = require('http');
 var { Kafka, logLevel } = require('kafkajs');
 
-const host = 'thanhtinh.cf'
+const host = process.env.KAFKA_HOST;
+console.log(host)
 const kafka = new Kafka({
   logLevel: logLevel.INFO,
   brokers: [`${host}:9092`],
@@ -125,5 +126,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  console.info('Listening on ' + bind);
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
@@ -87,29 +88,52 @@ const VerifyEmailPage = ({
   }, [currentUser.roles, history, emailToken, verifyEmailObj, verifyEmail, verifyEmailSuccess, verifyEmailFailure])
 
   useEffect(() => {
-    if (Utils.isEmailVerified(currentUser.roles)) {
-      setInfoTemplate({
-        title: 'Kích hoạt tài khoản',
-        user: currentUser,
-        content: 'Tài khoản của bạn đã được kích hoạt.',
-        positiveButton: {
-          content: 'Về trang cá nhân',
-          clickFunc: () => history.push(`${CUSTOMER_PATH}/profile`),
-        },
-      })
-    } else {
-      setInfoTemplate({
-        title: 'Kích hoạt tài khoản',
-        user: currentUser,
-        content:
-          'Bạn đã yêu cầu kích hoạt tài khoản.<br/>Nhấn vào nút kích hoạt tài khoản để có thể sử dụng nhiều thao tác trên ViSpeech.',
-        positiveButton: {
-          content: 'Kích hoạt tài khoản',
-          clickFunc: () => onVerifyEmail(),
-        },
-      })
+    const decodedToken = Utils.decodeJwtToken(emailToken)
+    if (decodedToken.exp && decodedToken.id) {
+      if (decodedToken.id !== currentUser._id) {
+        setInfoTemplate({
+          title: 'Kích hoạt tài khoản',
+          user: currentUser,
+          content: 'Xin lỗi! Yêu cầu kích hoạt tài khoản này không phải của bạn.',
+          positiveButton: {
+            content: 'Về trang cá nhân',
+            clickFunc: () => history.push(`${CUSTOMER_PATH}/profile`),
+          },
+        })
+      } else if (Utils.isEmailVerified(currentUser.roles)) {
+        setInfoTemplate({
+          title: 'Kích hoạt tài khoản',
+          user: currentUser,
+          content: 'Tài khoản của bạn đã được kích hoạt.',
+          positiveButton: {
+            content: 'Về trang cá nhân',
+            clickFunc: () => history.push(`${CUSTOMER_PATH}/profile`),
+          },
+        })
+      } else if (Number(`${decodedToken.exp}000`) < Date.now()) {
+        setInfoTemplate({
+          title: 'Kích hoạt tài khoản',
+          user: currentUser,
+          content: 'Xin lỗi! Yêu cầu kích hoạt tài khoản của bạn đã hết hiệu lực.',
+          positiveButton: {
+            content: 'Về trang cá nhân',
+            clickFunc: () => history.push(`${CUSTOMER_PATH}/profile`),
+          },
+        })
+      } else {
+        setInfoTemplate({
+          title: 'Kích hoạt tài khoản',
+          user: currentUser,
+          content:
+            'Bạn đã yêu cầu kích hoạt tài khoản.<br/>Nhấn vào nút kích hoạt tài khoản để có thể sử dụng nhiều thao tác trên ViSpeech.',
+          positiveButton: {
+            content: 'Kích hoạt tài khoản',
+            clickFunc: () => onVerifyEmail(),
+          },
+        })
+      }
     }
-  }, [currentUser, history, onVerifyEmail])
+  }, [currentUser, emailToken, history, onVerifyEmail])
 
   useEffect(() => {
     if (verifyEmailObj.isLoading === false && verifyEmailObj.isSuccess != null) {

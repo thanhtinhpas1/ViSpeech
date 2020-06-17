@@ -8,6 +8,7 @@ import { getMongoRepository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { UserDto } from 'users/dtos/users.dto';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
@@ -27,6 +28,11 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
         try {
             const paymentIntentObj = await stripe.paymentIntents.retrieve(paymentIntent.id);
             if (paymentIntentObj && paymentIntentObj.status === 'succeeded') {
+                const user = await getMongoRepository(UserDto).findOne({ _id: orderDto.userId.toString() });
+                if (!user) {
+                    throw new NotFoundException(`User with _id ${orderDto.userId} does not exist.`);
+                }
+
                 const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ _id: orderDto.tokenType._id });
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with _id ${orderDto.tokenType._id} does not exist.`);
@@ -34,7 +40,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
 
                 const validProject = await getMongoRepository(ProjectDto).findOne({ _id: orderDto.token.projectId, isValid: true });
                 if (!validProject) {
-                    throw new NotFoundException(`Project with _id ${orderDto.token.projectId} is not valid.`);
+                    throw new BadRequestException(`Project with _id ${orderDto.token.projectId} is not valid.`);
                 }
 
                 if (!orderDto.token.name) {

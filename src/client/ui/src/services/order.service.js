@@ -30,7 +30,37 @@ export default class OrderService {
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
+
+  static createUpgradeTokenOrder = (order, paymentIntent) => {
+    const api = `${apiUrl}/orders/upgrade-token`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'POST',
+      body: JSON.stringify({ order, paymentIntent }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.text()
+      })
+      .then(result => {
+        const resultObj = result ? JSON.parse(result) : {}
+        if (status !== 201) {
+          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+        }
+        return resultObj
+      })
+      .catch(err => {
+        console.debug(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -59,7 +89,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -98,7 +128,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -137,7 +167,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
@@ -169,7 +199,7 @@ throw new Error(DEFAULT_ERR_MESSAGE)
       })
       .catch(err => {
         console.debug(err.message)
-throw new Error(DEFAULT_ERR_MESSAGE)
+        throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 }

@@ -1,6 +1,12 @@
 import RequestTypes from './request.types'
 
 const INITIAL_STATE = {
+  getInfo: {
+    request: {},
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   getList: {
     requestList: { data: [], count: 0 },
     isLoading: false,
@@ -13,6 +19,11 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  updateInfo: {
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const requestReducer = (state = INITIAL_STATE, action) => {
@@ -20,6 +31,34 @@ const requestReducer = (state = INITIAL_STATE, action) => {
     case RequestTypes.CLEAR_REQUEST_STATE:
       return {
         ...INITIAL_STATE,
+      }
+    // GET INFO
+    case RequestTypes.GET_REQUEST_INFO:
+      return {
+        ...state,
+        getInfo: {
+          ...state.getInfo,
+          isLoading: true,
+        },
+      }
+    case RequestTypes.GET_REQUEST_INFO_SUCCESS:
+      return {
+        ...state,
+        getInfo: {
+          request: action.payload.data,
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case RequestTypes.GET_REQUEST_INFO_FAILURE:
+      return {
+        ...state,
+        getInfo: {
+          ...state.getInfo,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
       }
     // GET REQUEST LIST
     case RequestTypes.GET_REQUEST_LIST:
@@ -72,6 +111,32 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getListByUserId: {
           ...state.getListByUserId,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // UPDATE INFO
+    case RequestTypes.UPDATE_REQUEST_INFO:
+      return {
+        ...state,
+        updateInfo: {
+          ...state.updateInfo,
+          isLoading: true,
+        },
+      }
+    case RequestTypes.UPDATE_REQUEST_INFO_SUCCESS:
+      return {
+        ...state,
+        updateInfo: {
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case RequestTypes.UPDATE_REQUEST_INFO_FAILURE:
+      return {
+        ...state,
+        updateInfo: {
           isLoading: false,
           isSuccess: false,
           message: action.payload,

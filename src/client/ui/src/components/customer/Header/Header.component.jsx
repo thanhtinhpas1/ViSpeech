@@ -54,6 +54,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
         emClass: 'ikon-distribution',
         name: 'Dùng thử',
       },
+      {
+        href: `${CUSTOMER_PATH}/upgrade-token`,
+        emClass: 'ikon-distribution',
+        name: 'Nâng cấp token',
+      },
     ]
     setUserLinks(userLinksArr)
     setNavbarMenu(navbarMenuArr)

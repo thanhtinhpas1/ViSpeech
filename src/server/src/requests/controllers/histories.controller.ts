@@ -1,20 +1,19 @@
-import { Controller, UseGuards, Get, Query, Param, Req, ForbiddenException } from "@nestjs/common"; import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"; import { AuthGuard } from "@nestjs/passport"; import { CONSTANTS } from "common/constant";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TokenDto } from "tokens/dtos/tokens.dto";
+import { Controller, UseGuards, Get, Query, Param, Req, ForbiddenException, Put, Body, Post, Res } from "@nestjs/common"; import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"; import { AuthGuard } from "@nestjs/passport"; import { CONSTANTS } from "common/constant";
+import { Response } from 'express'
 import { RequestService } from "requests/services/request.service";
 import { FindRequestsQuery } from "requests/queries/impl/find-requests.query";
-import { FindRequestsParam } from "requests/dtos/requests.dto";
+import { FindRequestsParam, RequestIdParamsDto } from "requests/dtos/requests.dto";
 import { Roles } from "auth/roles.decorator";
 import { AuthService } from "auth/auth.service";
 import { RequestGuard } from "auth/guards/request.guard";
 import { FindRequestsByUserIdQuery } from "requests/queries/impl/find-requests-by-userId.query";
+import { FindRequestQuery } from "requests/queries/impl/find-request.query";
 
 @Controller('requests')
 @ApiTags('requests')
 @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), RequestGuard)
 export class HistoriesController {
     constructor(
-        @InjectRepository(TokenDto)
         private readonly authService: AuthService,
         private readonly requestService: RequestService,
     ) {
@@ -47,9 +46,48 @@ export class HistoriesController {
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['List Request By UserId'] })
     @ApiResponse({ status: 200, description: 'List Request By UserId.' })
-    @Get('userId/:userId')
+    @Get('/userId/:userId')
     async findRequestsByUserId(@Param() requestsParam: FindRequestsParam, @Query() query: FindRequestsByUserIdQuery) {
         query.userId = requestsParam.userId;
-        return this.requestService.findRequests(query);
+        return this.requestService.findRequestsByUserId(query);
+    }
+
+    /* Update Request TranscriptFileUrl */
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Update Request TranscriptFileUrl'] })
+    @ApiResponse({ status: 200, description: 'Update Request TranscriptFileUrl.' })
+    @Put('/transcriptFileUrl/:_id')
+    async updateRequest(
+        @Param() requestIdDto: RequestIdParamsDto,
+        @Body() body,
+    ) {
+        const streamId = requestIdDto._id;
+        return this.requestService.updateRequestTranscriptFileUrl(streamId, requestIdDto._id, body.transcriptFileUrl);
+    }
+
+    /* Find Request */
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Find Request'] })
+    @ApiResponse({ status: 200, description: 'Find Request.' })
+    @Get(':id')
+    async findOne(@Param() findRequestQuery: FindRequestQuery) {
+        return this.requestService.findOne(findRequestQuery);
+    }
+
+    /* Download Transcript */
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Download Transcript'] })
+    @ApiResponse({ status: 200, description: 'Download Transcript.' })
+    @Post('/download-transcript/:id')
+    async downloadTranscript(@Body() body, @Param() findRequestQuery: FindRequestQuery, @Res() response: Response) {
+        try {
+            const converted = await this.requestService.downloadTranscript(body.html);
+            response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response.setHeader('Content-Disposition', `attachment; filename=vispeech-transcript.docx`)
+            response.setHeader('Content-Length', converted.length)
+            response.send(converted)
+        } catch (err) {
+            throw err;
+        }
     }
 }

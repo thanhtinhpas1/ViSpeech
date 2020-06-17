@@ -19,7 +19,7 @@ export class TokenIdRequestParamsDto {
 
 @Entity('tokens')
 export class TokenDto extends BaseEntityDto {
-    constructor(value: string, userId, projectId, tokenType: string = CONSTANTS.TOKEN_TYPE.FREE, tokenTypeId = null, orderId = null, name?: string) {
+    constructor(value: string, userId, projectId, tokenType: string, tokenTypeId = null, orderId = null, name?: string) {
         super();
         this.name = name;
         this.value = value;
@@ -49,6 +49,7 @@ export class TokenDto extends BaseEntityDto {
     @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
+        update: false,
         type: 'uuid',
     })
     userId: ObjectID;
