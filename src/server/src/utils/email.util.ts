@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import { config } from "../../config";
 import { CONSTANTS } from 'common/constant';
 
-const hostUrl = `http://${config.HOST}:3200/customer`;
+const hostUrl = `http://asr.vietspeech.com:3200/customer`;
 const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -17,7 +17,7 @@ const transport = nodemailer.createTransport({
     const greeting = `Xin chào <strong>${user}</strong>,`
     const tokenExpire = `Lưu ý, ${expireText} sẽ hết hiệu lực trong vòng ${expiresIn} ngày kể từ lúc nhận được mail này.`
     const closing = `Trân trọng,<br>ViSpeech.`
-    return `${greeting}<br><br>${content}<br><br>${tokenExpire}<br><br>${closing}` 
+    return `${greeting}<br><br>${content}<br><br>${tokenExpire}<br><br>${closing}`
 }
 
 const sendEmail = (to, subject, contentEmail) => {

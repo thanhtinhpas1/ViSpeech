@@ -5,6 +5,8 @@ LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
 
 # Set the working directory
 WORKDIR /user/src/app/vispeech
+ARG mode
+ENV mode=$mode
 
 # Copy project specification and dependencies lock files
 COPY package.json package-lock.json tsconfig.json /tmp/
@@ -23,6 +25,7 @@ COPY . .
 
 COPY --from=dependencies /tmp/node_modules ./node_modules
 
-CMD npm run start:prod
+CMD npm run start:$mode
+
 # Expose application port
 EXPOSE 7070:7070

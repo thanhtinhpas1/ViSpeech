@@ -70,7 +70,7 @@ const configs = {
         },
         ASR: {
             PROTOCOL: process.env.ASR_PROTOCOL || 'http',
-            HOST: process.env.ASR_HOST || '0.0.0.0',
+            HOST: process.env.ASR_HOST || 'asr.vietspeech.com',
             PORT: process.env.ASR_PORT || 5000,
         },
         TOKEN_TYPE: {
