@@ -2,10 +2,10 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect } from 'react'
-import { Button, Alert } from 'antd'
+import React, {useEffect} from 'react'
+import {Alert, Button} from 'antd'
 import Utils from 'utils'
-import { JWT_TOKEN } from 'utils/constant'
+import {JWT_TOKEN} from 'utils/constant'
 import STORAGE from 'utils/storage'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -84,7 +84,7 @@ const LoginPage = ({
             <h2 className="page-ath-heading">Đăng nhập</h2>
             {!loginObj.isLoading && loginObj.isSuccess === false && (
               <Alert
-                message={Utils.buildFailedMessage(loginObj.message)}
+                message={Utils.buildFailedMessage(loginObj)}
                 type="error"
                 showIcon
                 closable
