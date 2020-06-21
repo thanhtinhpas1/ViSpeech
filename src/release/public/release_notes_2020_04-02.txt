@@ -1,0 +1,4 @@
+- finish project implement & payment
+- finish call python api & track history
+- finish buy token with multiple choice
+- finish unit 1.2, 1.3 thesis, edit unit 2

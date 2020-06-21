@@ -1,0 +1,4 @@
+- Finish implement Kafka integrate API Gate & UI
+- Finish implement Project Add member
+- Prepare socket integrate Proxy & UI
+- Edit Thesis Unit 3

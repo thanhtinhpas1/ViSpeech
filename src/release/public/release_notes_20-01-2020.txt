@@ -1,0 +1,4 @@
+- Research Event store & Sagas
+- Build Domain Driven Design
+- Read Martinfowler CQRS Article
+- Basic flow Write side & Read side
