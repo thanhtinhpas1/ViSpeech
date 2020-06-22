@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import { CONSTANTS } from 'common/constant';
 
-const hostUrl = `http://asr.vietspeech.com:3200/customer`;
+const hostUrl = `http://localhost:3000/customer`;
 const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,

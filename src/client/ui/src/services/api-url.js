@@ -1,2 +1,2 @@
-export const apiUrl = `${process.env.PUBLIC_URL}/api`
-export const socketUrl =`${process.env.PUBLIC_URL}`
+export const apiUrl = `http://localhost:3200/api`
+export const socketUrl =`http://localhost:3200`
