@@ -17,7 +17,7 @@ const juice = require('juice')
 const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
   const { id } = useParams()
   const history = useHistory()
-  const [editorValue, setEditorValue] = useState('')
+  const [editorValue, setEditorValue] = useState(null)
   const [editorHtml, setEditorHml] = useState('')
 
   useEffect(() => {
@@ -42,6 +42,8 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
     }
     if (getRequestInfoObj.request.transcriptFileUrl) {
       getTranscriptData()
+    } else {
+      setEditorValue('')
     }
   }, [getRequestInfoObj.request.transcriptFileUrl])
 
@@ -171,8 +173,8 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
               )}
             </Row>
             <Row style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              {editorValue === '' && <LoadingIcon size={30} />}
-              {editorValue !== '' && (
+              {editorValue == null && <LoadingIcon size={30} />}
+              {editorValue != null && (
                 <>
                   <ReactQuill
                     style={{ width: '100%' }}
@@ -183,7 +185,12 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
                     bounds=".app"
                     defaultValue={editorValue}
                   />
-                  <Button type="primary" style={{ marginTop: 20 }} onClick={saveAsDocx}>
+                  <Button
+                    type="primary"
+                    style={{ marginTop: 20 }}
+                    disabled={[null, ''].includes(editorValue)}
+                    onClick={saveAsDocx}
+                  >
                     Tải xuống
                   </Button>
                 </>

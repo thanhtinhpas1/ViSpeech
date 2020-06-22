@@ -102,7 +102,10 @@ export const Utils = {
             message: '',
         }
         errorObj.code = error.code || error.status
-        errorObj.message = error.errmsg || error.message || error?.writeErrors?.errmsg || ''
+        errorObj.message = error.errmsg || error.message
+        if (errorObj.message == null || errorObj.message === '') {
+            errorObj.message = error?.writeErrors?.errmsg || ''
+        }
         return errorObj
     },
     getCorrectSortField: sortField => {

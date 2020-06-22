@@ -26,6 +26,7 @@ import { RequestTranscriptFileUrlUpdatedEvent, RequestTranscriptFileUrlUpdatedFa
 import { ClientsModule } from '@nestjs/microservices';
 import { config } from "../../config";
 import { kafkaClientOptions } from "common/kafka-client.options";
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 
 @Module({
     imports: [
@@ -33,7 +34,7 @@ import { kafkaClientOptions } from "common/kafka-client.options";
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([RequestDto, TokenDto, OrderDto, ProjectDto]),
+        TypeOrmModule.forFeature([RequestDto, TokenDto, TokenTypeDto, OrderDto, ProjectDto]),
         EventStoreModule.forFeature(),
         MulterModule.register({}),
         forwardRef(() => AuthModule),
