@@ -1,6 +1,6 @@
-import {BaseEntityDto} from 'base/base-entity.dto';
-import {IsNotEmpty, IsOptional, IsString, IsUUID, IsBoolean} from 'class-validator';
-import {Column, Entity, ObjectID} from 'typeorm';
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Column, Entity } from 'typeorm';
 import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
 

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { JWT_TOKEN, ADMIN_PATH } from 'utils/constant'
+import React, {useEffect} from 'react'
+import {useLocation} from 'react-router-dom'
+import {ADMIN_PATH, JWT_TOKEN} from 'utils/constant'
 import STORAGE from 'utils/storage'
 
 const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
@@ -91,37 +91,37 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/projects` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/projects`}>
-              <i className="material-icons">library_books</i>
+              <i className="material-icons">business</i>
               <p>Danh sách dự án</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/tokens` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/tokens`}>
-              <i className="material-icons">library_books</i>
-              <p>Danh sách token</p>
+              <i className="material-icons">vpn_key</i>
+              <p>Danh sách API key</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/transactions` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/transactions`}>
-              <i className="material-icons">library_books</i>
+              <i className="material-icons">history</i>
               <p>Lịch sử giao dịch</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/reports` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/reports`}>
-              <i className="material-icons">equalizer</i>
+              <i className="material-icons">bar_chart</i>
               <p>Thống kê</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/histories` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/histories`}>
-              <i className="material-icons">library_books</i>
+              <i className="material-icons">audiotrack</i>
               <p>Lịch sử sử dụng dịch vụ</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/tasks` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/tasks`}>
-              <i className="material-icons">schedule</i>
+              <i className="material-icons">admin_panel_settings</i>
               <p>Danh sách thực thi</p>
             </a>
           </li>

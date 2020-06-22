@@ -2,11 +2,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react'
-import { Button, Row } from 'antd'
-import { useParams, useHistory } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import {Button, Row} from 'antd'
+import {useHistory, useParams} from 'react-router-dom'
 import ReactQuill from 'react-quill'
-import { saveAs } from 'file-saver'
+import {saveAs} from 'file-saver'
 import './TrialDetailsPage.style.css'
 import * as moment from 'moment'
 import RequestService from 'services/request.service'
@@ -139,7 +139,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
                   </span>
                 </div>
                 <div className="fake-class">
-                  <span className="data-details-title">Tên token</span>
+                  <span className="data-details-title">Tên Api Key</span>
                   <span className="data-details-info">
                     <strong>{getRequestInfoObj.request.tokenName}</strong>
                   </span>

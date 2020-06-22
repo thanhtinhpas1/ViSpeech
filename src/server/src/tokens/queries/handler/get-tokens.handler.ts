@@ -3,12 +3,11 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { Repository, getMongoRepository } from 'typeorm';
+import { getMongoRepository, Repository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { Utils } from 'utils';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { UserDto } from 'users/dtos/users.dto';
-import { CONSTANTS } from 'common/constant';
 
 @QueryHandler(GetTokensQuery)
 export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
@@ -77,7 +76,7 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
             const count = await getMongoRepository(TokenDto).count(findOptions.where);
             return { data: result, count };
         } catch (error) {
-            Logger.error(error, '', 'GetTokensQuery');
+            Logger.error(error.message, '', 'GetTokensQuery');
         }
     }
 }
