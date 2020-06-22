@@ -8,7 +8,6 @@ import { PreviousRunStatus, TaskDto } from "tasks/dto/task.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository } from "typeorm";
 import { Utils } from "utils";
-import { config } from "../../../config";
 
 @Injectable()
 export class ConstTaskService {
