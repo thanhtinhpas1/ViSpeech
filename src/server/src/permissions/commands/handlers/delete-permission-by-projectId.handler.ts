@@ -1,6 +1,6 @@
-import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
-import {PermissionRepository} from '../../repository/permission.repository';
-import {Logger, NotFoundException} from '@nestjs/common';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { PermissionRepository } from '../../repository/permission.repository';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { DeletePermissionByProjectIdCommand } from '../impl/delete-permission-by-projectId.command copy';
 import { PermissionDeletedByProjectIdFailedEvent } from 'permissions/events/impl/permission-deleted-by-projectId.event';
 import { getMongoRepository } from 'typeorm';
@@ -20,7 +20,7 @@ export class DeletePermissionByProjectIdHandler implements ICommandHandler<Delet
         const {streamId, projectId} = command;
 
         try {
-            const permissions = await getMongoRepository(PermissionDto).find({ projectId })
+            const permissions = await getMongoRepository(PermissionDto).find({projectId})
             if (permissions.length === 0) {
                 throw new NotFoundException(`Permission with projectId ${projectId} does not exist.`);
             }

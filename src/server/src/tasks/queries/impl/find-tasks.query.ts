@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsNumber, IsOptional, Min, ValidateNested, IsObject } from "class-validator";
+import { IsNumber, IsObject, IsOptional, Min, ValidateNested } from "class-validator";
 import { BaseSortClass } from "base/base-sort.class";
 
 export class FindTasksQuery {

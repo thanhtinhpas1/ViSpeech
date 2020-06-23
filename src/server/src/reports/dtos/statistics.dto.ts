@@ -1,5 +1,18 @@
 import { Type } from "class-transformer";
-import { IsNumber, IsPositive, IsObject, ValidateNested, IsNotEmpty, IsString, IsUUID, IsIn, IsOptional, IsInt, Max, Min } from "class-validator";
+import {
+    IsIn,
+    IsInt,
+    IsNotEmpty,
+    IsNumber,
+    IsObject,
+    IsOptional,
+    IsPositive,
+    IsString,
+    IsUUID,
+    Max,
+    Min,
+    ValidateNested
+} from "class-validator";
 import { CONSTANTS } from "common/constant";
 
 export class StatisticalDto {
@@ -62,13 +75,13 @@ export class GetStatisticsParam {
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
-    CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+        CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
     timeType: string;
 
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
-    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
+        CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
     statisticsType: string;
 }
 
@@ -87,13 +100,13 @@ export class GetStatisticsQuery {
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
-    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE])
+        CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE])
     statisticsType: string;
 
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
-    CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+        CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
     timeType: string;
 
     @IsOptional()
@@ -150,13 +163,13 @@ export class GetTotalStatisticsQuery {
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
-    CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
+        CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
     statisticsType: string;
 
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
-    CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+        CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
     timeType: string;
 
     @IsOptional()

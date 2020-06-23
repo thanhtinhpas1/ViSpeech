@@ -1,5 +1,5 @@
-import {ICommand} from '@nestjs/cqrs';
-import {UserIdRequestParamsDto} from 'users/dtos/users.dto';
+import { ICommand } from '@nestjs/cqrs';
+import { UserIdRequestParamsDto } from 'users/dtos/users.dto';
 
 export class SendVerifyEmailCommand implements ICommand {
     constructor(

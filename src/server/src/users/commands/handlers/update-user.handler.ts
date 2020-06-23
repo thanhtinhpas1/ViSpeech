@@ -1,7 +1,7 @@
-import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
-import {UpdateUserCommand} from '../impl/update-user.command';
-import {UserRepository} from '../../repository/user.repository';
-import {Logger, NotFoundException} from '@nestjs/common';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { UpdateUserCommand } from '../impl/update-user.command';
+import { UserRepository } from '../../repository/user.repository';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { UserUpdatedFailedEvent } from 'users/events/impl/user-updated.event';
@@ -20,7 +20,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
         const {streamId, userDto} = command;
 
         try {
-            const user = await getMongoRepository(UserDto).findOne({ _id: userDto._id });
+            const user = await getMongoRepository(UserDto).findOne({_id: userDto._id});
             if (!user) {
                 throw new NotFoundException(`User with _id ${userDto._id} does not exist.`);
             }

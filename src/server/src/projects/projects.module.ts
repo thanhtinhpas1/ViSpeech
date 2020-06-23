@@ -1,4 +1,4 @@
-import { Module, OnModuleInit, forwardRef } from "@nestjs/common";
+import { forwardRef, Module, OnModuleInit } from "@nestjs/common";
 import { CommandBus, EventBus, EventPublisher, QueryBus } from "@nestjs/cqrs";
 import { ClientsModule } from "@nestjs/microservices";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -13,15 +13,31 @@ import { CommandHandlers } from "./commands/handlers";
 import { ProjectsController } from "./controllers/projects.controller";
 import { ProjectDto } from "./dtos/projects.dto";
 import { EventHandlers } from "./events/handlers";
-import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from "./events/impl/project-created.event";
-import { ProjectDeletedEvent, ProjectDeletedSuccessEvent, ProjectDeletedFailedEvent } from "./events/impl/project-deleted.event";
-import { ProjectUpdatedEvent, ProjectUpdatedSuccessEvent, ProjectUpdatedFailedEvent } from "./events/impl/project-updated.event";
+import {
+    ProjectCreatedEvent,
+    ProjectCreatedFailedEvent,
+    ProjectCreatedSuccessEvent
+} from "./events/impl/project-created.event";
+import {
+    ProjectDeletedEvent,
+    ProjectDeletedFailedEvent,
+    ProjectDeletedSuccessEvent
+} from "./events/impl/project-deleted.event";
+import {
+    ProjectUpdatedEvent,
+    ProjectUpdatedFailedEvent,
+    ProjectUpdatedSuccessEvent
+} from "./events/impl/project-updated.event";
 import { ProjectWelcomedEvent } from "./events/impl/project-welcomed.event";
 import { QueryHandlers } from "./queries/handler";
 import { ProjectRepository } from "./repository/project.repository";
 import { ProjectsSagas } from "./sagas/projects.sagas";
 import { ProjectsService } from "./services/projects.service";
-import { ProjectDeletedByUserIdEvent, ProjectDeletedByUserIdSuccessEvent, ProjectDeletedByUserIdFailedEvent } from "./events/impl/project-deleted-by-userId.event";
+import {
+    ProjectDeletedByUserIdEvent,
+    ProjectDeletedByUserIdFailedEvent,
+    ProjectDeletedByUserIdSuccessEvent
+} from "./events/impl/project-deleted-by-userId.event";
 import { TokenRepository } from "tokens/repository/token.repository";
 import { DeleteTokenByProjectIdHandler } from "tokens/commands/handlers/delete-token-by-projectId.handler";
 import { TokensModule } from "tokens/tokens.module";
@@ -60,7 +76,7 @@ export class ProjectsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        this.eventStore.setEventHandlers({ ...ProjectsModule.eventHandlers, ...TokensModule.eventHandlers, });
+        this.eventStore.setEventHandlers({...ProjectsModule.eventHandlers, ...TokensModule.eventHandlers,});
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         /** ------------ */

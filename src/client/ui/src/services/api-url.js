@@ -1,2 +1,2 @@
-export const apiUrl = `http://localhost:3200/api`
-export const socketUrl =`http://localhost:3200`
+export const apiUrl = `http://asr.vietspeech.com:3200/api`
+export const socketUrl =`http://asr.vietspeech.com:3200`

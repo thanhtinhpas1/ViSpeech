@@ -1,6 +1,6 @@
-import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
-import {PermissionRepository} from '../../repository/permission.repository';
-import {Logger, NotFoundException} from '@nestjs/common';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { PermissionRepository } from '../../repository/permission.repository';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { DeletePermissionByUserIdCommand } from '../impl/delete-permission-by-userId.command';
 import { getMongoRepository } from 'typeorm';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
@@ -20,8 +20,8 @@ export class DeletePermissionByUserIdHandler implements ICommandHandler<DeletePe
         const {streamId, userId} = command;
 
         try {
-            const permissionsWithAssigneeId = await getMongoRepository(PermissionDto).find({ assigneeId: userId });
-            const permissionsWithAssignerId = await getMongoRepository(PermissionDto).find({ assignerId: userId })
+            const permissionsWithAssigneeId = await getMongoRepository(PermissionDto).find({assigneeId: userId});
+            const permissionsWithAssignerId = await getMongoRepository(PermissionDto).find({assignerId: userId})
             if (permissionsWithAssigneeId.length === 0 && permissionsWithAssignerId.length === 0) {
                 throw new NotFoundException(`Permission with assigneeId/ assignerId "${userId}" does not exist.`);
             }

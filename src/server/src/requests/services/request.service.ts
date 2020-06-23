@@ -14,7 +14,8 @@ export class RequestService {
     constructor(
         private readonly commandBus: CommandBus,
         private readonly queryBus: QueryBus,
-    ) { }
+    ) {
+    }
 
     async createRequest(streamId: string, requestDto: RequestDto, tokenDto: TokenDto) {
         return await this.commandBus.execute(new CallAsrCommand(streamId, requestDto, tokenDto));

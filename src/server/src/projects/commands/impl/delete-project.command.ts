@@ -1,5 +1,5 @@
-import {ICommand} from '@nestjs/cqrs';
-import {ProjectIdRequestParamsDto} from '../../dtos/projects.dto';
+import { ICommand } from '@nestjs/cqrs';
+import { ProjectIdRequestParamsDto } from '../../dtos/projects.dto';
 
 export class DeleteProjectCommand implements ICommand {
     constructor(

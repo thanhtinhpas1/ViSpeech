@@ -22,7 +22,11 @@ import { ReportRepository } from 'reports/repository/report.repository';
 import { OrderDto } from 'orders/dtos/orders.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { AsrCalledEvent } from './events/impl/asr-called.event';
-import { RequestTranscriptFileUrlUpdatedEvent, RequestTranscriptFileUrlUpdatedFailedEvent, RequestTranscriptFileUrlUpdatedSuccessEvent } from './events/impl/request-transcript-file-url-updated.event';
+import {
+    RequestTranscriptFileUrlUpdatedEvent,
+    RequestTranscriptFileUrlUpdatedFailedEvent,
+    RequestTranscriptFileUrlUpdatedSuccessEvent
+} from './events/impl/request-transcript-file-url-updated.event';
 import { ClientsModule } from '@nestjs/microservices';
 import { config } from "../../config";
 import { kafkaClientOptions } from "common/kafka-client.options";

@@ -16,15 +16,15 @@ export class GetTokensByUserIdHandler
 
     async execute(query: GetTokensByUserIdQuery): Promise<any> {
         Logger.log('Async GetTokensByUserIdQuery...', 'GetTokensByUserIdQuery');
-        const { userId, offset, limit } = query;
+        const {userId, offset, limit} = query;
         let tokens = [];
         try {
-            const findOptions = { where: { userId } }
+            const findOptions = {where: {userId}}
             tokens = limit != null && offset != null ?
-                await this.repository.find({ skip: offset, take: limit, ...findOptions }) :
+                await this.repository.find({skip: offset, take: limit, ...findOptions}) :
                 await this.repository.find(findOptions);
             const count = await this.repository.count(findOptions.where);
-            return { data: tokens, count };
+            return {data: tokens, count};
         } catch (error) {
             Logger.error(error, '', 'GetTokensByUserIdQuery');
         }

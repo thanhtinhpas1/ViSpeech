@@ -8,7 +8,8 @@ import { CONSTANTS } from "common/constant";
 
 @Injectable()
 export class CallAsrSagas {
-    constructor() { }
+    constructor() {
+    }
 
     @Saga()
     callAsrServiceSaga = (events$: Observable<any>): Observable<ICommand> => {
@@ -16,7 +17,7 @@ export class CallAsrSagas {
             ofType(AsrCalledEvent),
             map((event: AsrCalledEvent) => {
                 Logger.log('Inside [RequestSagas] callAsrService Saga', 'RequestSagas');
-                const { streamId, requestDto, tokenDto } = event;
+                const {streamId, requestDto, tokenDto} = event;
                 // if (tokenDto.usedMinutes - requestDto.duration > 0) { // not first time call
                 //     return [new UpdateTokenCommand(streamId, tokenDto)];
                 // }

@@ -7,5 +7,6 @@ export class CallAsrCommand implements ICommand {
         public readonly streamId: string,
         public readonly requestDto: RequestDto,
         public readonly tokenDto: TokenDto,
-    ) { }
+    ) {
+    }
 }

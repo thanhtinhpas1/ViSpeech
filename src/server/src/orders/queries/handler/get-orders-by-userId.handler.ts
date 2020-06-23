@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetOrdersByUserIdQuery } from '../impl/get-orders-by-userId';
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, getMongoRepository } from 'typeorm';
+import { getMongoRepository, Repository } from 'typeorm';
 import { OrderDto } from 'orders/dtos/orders.dto';
 import { Utils } from 'utils';
 
@@ -40,7 +40,7 @@ export class GetOrdersByUserIdHandler
             const count = await getMongoRepository(OrderDto).count(findOptions.where);
             return { data: orders, count };
         } catch (error) {
-            Logger.error(error, '', 'GetOrdersByUserIdQuery');
+            Logger.error(error.message, '', 'GetOrdersByUserIdQuery');
         }
     }
 }
