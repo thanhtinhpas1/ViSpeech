@@ -11,44 +11,44 @@ import { GetAcceptedProjectsByUserIdQuery } from "projects/queries/impl/get-acce
 
 @Injectable()
 export class ProjectsService {
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
-  ) {
-  }
+    constructor(
+        private readonly commandBus: CommandBus,
+        private readonly queryBus: QueryBus
+    ) {
+    }
 
-  async createProject(streamId: string, projectDto: ProjectDto) {
-    return await this.commandBus.execute(new CreateProjectCommand(streamId, projectDto));
-  }
+    async createProject(streamId: string, projectDto: ProjectDto) {
+        return await this.commandBus.execute(new CreateProjectCommand(streamId, projectDto));
+    }
 
-  async updateProject(streamId: string, projectDto: ProjectDto) {
-    return await this.commandBus.execute(new UpdateProjectCommand(streamId, projectDto));
-  }
+    async updateProject(streamId: string, projectDto: ProjectDto) {
+        return await this.commandBus.execute(new UpdateProjectCommand(streamId, projectDto));
+    }
 
-  async deleteProject(streamId: string, projectIdDto: ProjectIdRequestParamsDto) {
-    return await this.commandBus.execute(new DeleteProjectCommand(streamId, projectIdDto));
-  }
+    async deleteProject(streamId: string, projectIdDto: ProjectIdRequestParamsDto) {
+        return await this.commandBus.execute(new DeleteProjectCommand(streamId, projectIdDto));
+    }
 
-  async getProjects(getProjectsQuery: GetProjectsQuery) {
-    const query = new GetProjectsQuery();
-    Object.assign(query, getProjectsQuery);
-    return await this.queryBus.execute(query);
-  }
+    async getProjects(getProjectsQuery: GetProjectsQuery) {
+        const query = new GetProjectsQuery();
+        Object.assign(query, getProjectsQuery);
+        return await this.queryBus.execute(query);
+    }
 
-  async findOne(findProjectQuery: FindProjectQuery): Promise<ProjectDto> {
-    const query = new FindProjectQuery(findProjectQuery.id);
-    return await this.queryBus.execute(query);
-  }
+    async findOne(findProjectQuery: FindProjectQuery): Promise<ProjectDto> {
+        const query = new FindProjectQuery(findProjectQuery.id);
+        return await this.queryBus.execute(query);
+    }
 
-  async getProjectsByUserId(getProjectsByUserIdQuery: GetProjectsByUserIdQuery) {
-    const query = new GetProjectsByUserIdQuery(getProjectsByUserIdQuery.userId);
-    Object.assign(query, getProjectsByUserIdQuery);
-    return await this.queryBus.execute(query);
-  }
+    async getProjectsByUserId(getProjectsByUserIdQuery: GetProjectsByUserIdQuery) {
+        const query = new GetProjectsByUserIdQuery(getProjectsByUserIdQuery.userId);
+        Object.assign(query, getProjectsByUserIdQuery);
+        return await this.queryBus.execute(query);
+    }
 
-  async getAcceptedProjectsByUserId(getAcceptedProjectsByUserIdQuery: GetAcceptedProjectsByUserIdQuery) {
-    const query = new GetAcceptedProjectsByUserIdQuery(getAcceptedProjectsByUserIdQuery.userId);
-    Object.assign(query, getAcceptedProjectsByUserIdQuery);
-    return await this.queryBus.execute(query);
-  }
+    async getAcceptedProjectsByUserId(getAcceptedProjectsByUserIdQuery: GetAcceptedProjectsByUserIdQuery) {
+        const query = new GetAcceptedProjectsByUserIdQuery(getAcceptedProjectsByUserIdQuery.userId);
+        Object.assign(query, getAcceptedProjectsByUserIdQuery);
+        return await this.queryBus.execute(query);
+    }
 }

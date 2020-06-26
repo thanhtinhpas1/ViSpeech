@@ -1,5 +1,5 @@
-import {IsNumber, IsOptional, IsPositive, Min, IsObject, ValidateNested} from 'class-validator';
-import {Type} from 'class-transformer';
+import { IsNumber, IsObject, IsOptional, IsPositive, Min, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { BaseSortClass } from 'base/base-sort.class';
 
 export class GetProjectsQuery {

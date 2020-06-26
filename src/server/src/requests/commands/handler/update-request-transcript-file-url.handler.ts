@@ -1,4 +1,4 @@
-import { CommandHandler, EventPublisher, ICommandHandler, EventBus } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { RequestRepository } from 'requests/repository/request.repository';
@@ -17,10 +17,10 @@ export class UpdateRequestTranscriptFileUrlHandler implements ICommandHandler<Up
 
     async execute(command: UpdateRequestTranscriptFileUrlCommand) {
         Logger.log('Async UpdateRequestHandler...', 'UpdateRequestTranscriptFileUrlCommand');
-        const { streamId, requestId, url } = command;
+        const {streamId, requestId, url} = command;
 
         try {
-            const request = await getMongoRepository(RequestDto).findOne({ _id: requestId });
+            const request = await getMongoRepository(RequestDto).findOne({_id: requestId});
             if (!request) {
                 throw new NotFoundException(`Request with _id ${requestId} does not exist.`);
             }

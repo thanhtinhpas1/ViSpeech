@@ -1,7 +1,7 @@
-import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
-import {DeleteOrderCommand} from '../impl/delete-order.command';
-import {OrderRepository} from '../../repository/order.repository';
-import {Logger, NotFoundException} from '@nestjs/common';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { DeleteOrderCommand } from '../impl/delete-order.command';
+import { OrderRepository } from '../../repository/order.repository';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { OrderDto } from 'orders/dtos/orders.dto';
 import { OrderDeletedFailedEvent } from 'orders/events/impl/order-deleted.event';
@@ -21,7 +21,7 @@ export class DeleteOrderHandler implements ICommandHandler<DeleteOrderCommand> {
         const orderId = orderIdDto._id;
 
         try {
-            const order = await getMongoRepository(OrderDto).findOne({ _id: orderId });
+            const order = await getMongoRepository(OrderDto).findOne({_id: orderId});
             if (!order) {
                 throw new NotFoundException(`Order with _id ${orderId} does not exist.`);
             }

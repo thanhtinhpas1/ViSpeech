@@ -1,31 +1,31 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID, IsIn } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { Column, Entity } from 'typeorm';
-import { ErrUtil } from "../../utils/err.util";
+import { ErrorUtils } from "../../utils/errorUtils";
 import { ERR } from "../../common/error";
 import { CONSTANTS } from 'common/constant';
 
 export class FindRequestsParam {
     @IsOptional()
-    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
-    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
+    @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))
     projectId: string;
 
     @IsOptional()
-    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
-    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('userId', ERR.IsUUID))
+    @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
     userId: string;
 }
 
 export class RequestIdParamsDto {
-    @IsNotEmpty(ErrUtil.getMessage('_id', ERR.IsNotEmpty))
-    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
+    @IsNotEmpty(ErrorUtils.getMessage('_id', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('_id', ERR.IsString))
     _id: string;
 }
 
 export class RequestBody {
     @IsOptional()
-    @IsString(ErrUtil.getMessage('audioFileUrl', ERR.IsString))
+    @IsString(ErrorUtils.getMessage('audioFileUrl', ERR.IsString))
     audioFileUrl: string;
 }
 
@@ -48,53 +48,53 @@ export class RequestDto extends BaseEntityDto {
         this.transcriptFileUrl = transcriptFileUrl;
     }
 
-    @IsNotEmpty(ErrUtil.getMessage('tokenId', ERR.IsNotEmpty))
-    @IsString(ErrUtil.getMessage('tokenId', ERR.IsString))
+    @IsNotEmpty(ErrorUtils.getMessage('tokenId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('tokenId', ERR.IsString))
     @Column()
     tokenId: string;
 
-    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
-    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
-    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
+    @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
     @Column()
     projectId: string;
 
-    @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
-    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
-    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
+    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('userId', ERR.IsUUID))
     @Column()
     userId: string;
 
-    @IsString(ErrUtil.getMessage('fileName', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('fileName', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('fileName', ERR.IsString))
+    @IsNotEmpty(ErrorUtils.getMessage('fileName', ERR.IsNotEmpty))
     @Column()
     fileName: string;
 
-    @IsString(ErrUtil.getMessage('encoding', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('encoding', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('encoding', ERR.IsString))
+    @IsNotEmpty(ErrorUtils.getMessage('encoding', ERR.IsNotEmpty))
     @Column()
     encoding: string;
 
-    @IsString(ErrUtil.getMessage('size', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('size', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('size', ERR.IsString))
+    @IsNotEmpty(ErrorUtils.getMessage('size', ERR.IsNotEmpty))
     @Column()
     size: string;
 
-    @IsNumber({}, ErrUtil.getMessage('duration', ERR.IsNumber))
-    @IsPositive(ErrUtil.getMessage('duration', ERR.IsPositive))
+    @IsNumber({}, ErrorUtils.getMessage('duration', ERR.IsNumber))
+    @IsPositive(ErrorUtils.getMessage('duration', ERR.IsPositive))
     @Column({
         comment: 'length of voice - minute',
         type: 'double'
     })
     duration: number;
 
-    @IsString(ErrUtil.getMessage('mimeType', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('mimeType', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('mimeType', ERR.IsString))
+    @IsNotEmpty(ErrorUtils.getMessage('mimeType', ERR.IsNotEmpty))
     @Column()
     mimeType;
 
-    @IsString(ErrUtil.getMessage('status', ERR.IsString))
-    @IsNotEmpty(ErrUtil.getMessage('status', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('status', ERR.IsString))
+    @IsNotEmpty(ErrorUtils.getMessage('status', ERR.IsNotEmpty))
     @IsIn([
         CONSTANTS.STATUS.PENDING,
         CONSTANTS.STATUS.SUCCESS,
@@ -104,12 +104,12 @@ export class RequestDto extends BaseEntityDto {
     status: string;
 
     @IsOptional()
-    @IsString(ErrUtil.getMessage('audioFileUrl', ERR.IsString))
+    @IsString(ErrorUtils.getMessage('audioFileUrl', ERR.IsString))
     @Column()
     audioFileUrl: string;
 
     @IsOptional()
-    @IsString(ErrUtil.getMessage('transcriptFileUrl', ERR.IsString))
+    @IsString(ErrorUtils.getMessage('transcriptFileUrl', ERR.IsString))
     @Column()
     transcriptFileUrl: string;
 }

@@ -1,9 +1,9 @@
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {ReportUpdatedEvent, ReportUpdatedSuccessEvent, ReportUpdatedFailedEvent} from '../impl/report-updated.event';
-import {Logger, Inject} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {ReportDto} from 'reports/dtos/reports.dto';
-import {Repository} from 'typeorm';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ReportUpdatedEvent, ReportUpdatedFailedEvent, ReportUpdatedSuccessEvent } from '../impl/report-updated.event';
+import { Inject, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ReportDto } from 'reports/dtos/reports.dto';
+import { Repository } from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
@@ -41,6 +41,7 @@ export class ReportUpdatedSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: ReportUpdatedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.reportDto._id, 'ReportUpdatedSuccessEvent');
@@ -56,6 +57,7 @@ export class ReportUpdatedFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: ReportUpdatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

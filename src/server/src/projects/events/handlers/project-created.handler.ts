@@ -6,7 +6,11 @@ import { CONSTANTS } from 'common/constant';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { Repository } from 'typeorm';
 import { config } from '../../../../config';
-import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from '../impl/project-created.event';
+import {
+    ProjectCreatedEvent,
+    ProjectCreatedFailedEvent,
+    ProjectCreatedSuccessEvent
+} from '../impl/project-created.event';
 import { Utils } from 'utils';
 
 @EventsHandler(ProjectCreatedEvent)
@@ -20,7 +24,7 @@ export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent>
 
     async handle(event: ProjectCreatedEvent) {
         Logger.log(event.projectDto._id, "ProjectCreatedEvent");
-        const { streamId, projectDto } = event;
+        const {streamId, projectDto} = event;
 
         try {
             projectDto.isValid = Utils.convertToBoolean(projectDto.isValid);
@@ -41,6 +45,7 @@ export class ProjectCreatedSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: ProjectCreatedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.projectDto._id, 'ProjectCreatedSuccessEvent');
@@ -56,6 +61,7 @@ export class ProjectCreatedFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: ProjectCreatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

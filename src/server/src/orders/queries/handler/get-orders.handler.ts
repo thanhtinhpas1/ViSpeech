@@ -3,7 +3,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDto } from 'orders/dtos/orders.dto';
-import { Repository, getMongoRepository } from 'typeorm';
+import { getMongoRepository, Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { UserDto } from 'users/dtos/users.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
@@ -70,7 +70,7 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
             const count = await getMongoRepository(OrderDto).count(findOptions.where);
             return { data: result, count };
         } catch (error) {
-            Logger.error(error, '', 'GetOrdersQuery');
+            Logger.error(error.message, '', 'GetOrdersQuery');
         }
     }
 }

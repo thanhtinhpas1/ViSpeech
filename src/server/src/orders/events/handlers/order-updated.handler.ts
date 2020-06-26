@@ -1,10 +1,10 @@
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {OrderUpdatedEvent, OrderUpdatedSuccessEvent, OrderUpdatedFailedEvent} from '../impl/order-updated.event';
-import {Logger, Inject} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {OrderDto} from 'orders/dtos/orders.dto';
-import {Repository} from 'typeorm';
-import {Utils} from 'utils';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { OrderUpdatedEvent, OrderUpdatedFailedEvent, OrderUpdatedSuccessEvent } from '../impl/order-updated.event';
+import { Inject, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrderDto } from 'orders/dtos/orders.dto';
+import { Repository } from 'typeorm';
+import { Utils } from 'utils';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
 import { CONSTANTS } from 'common/constant';
@@ -42,6 +42,7 @@ export class OrderUpdatedSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: OrderUpdatedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.orderDto._id, 'OrderUpdatedSuccessEvent');
@@ -57,6 +58,7 @@ export class OrderUpdatedFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: OrderUpdatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

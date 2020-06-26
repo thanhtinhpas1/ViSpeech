@@ -1,13 +1,17 @@
-import {Logger, Inject} from '@nestjs/common';
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {InjectRepository} from '@nestjs/typeorm';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {Repository, getMongoRepository} from 'typeorm';
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { getMongoRepository, Repository } from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
 import { Utils } from 'utils';
-import { TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdSuccessEvent, TokenDeletedByProjectIdFailedEvent } from '../impl/token-deleted-by-projectId.event';
+import {
+    TokenDeletedByProjectIdEvent,
+    TokenDeletedByProjectIdFailedEvent,
+    TokenDeletedByProjectIdSuccessEvent
+} from '../impl/token-deleted-by-projectId.event';
 
 @EventsHandler(TokenDeletedByProjectIdEvent)
 export class TokenDeletedByProjectIdHandler implements IEventHandler<TokenDeletedByProjectIdEvent> {
@@ -23,7 +27,7 @@ export class TokenDeletedByProjectIdHandler implements IEventHandler<TokenDelete
         const {streamId, projectId} = event;
 
         try {
-            await getMongoRepository(TokenDto).updateMany({ projectId }, { $set: { isValid: false }});
+            await getMongoRepository(TokenDto).updateMany({projectId}, {$set: {isValid: false}});
             this.eventBus.publish(new TokenDeletedByProjectIdSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedByProjectIdFailedEvent(streamId, projectId, error));
@@ -56,6 +60,7 @@ export class TokenDeletedByProjectIdFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: TokenDeletedByProjectIdFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

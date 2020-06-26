@@ -1,4 +1,7 @@
-import { Controller, UseGuards, Get, Query, Param, Req, ForbiddenException, Put, Body, Post, Res } from "@nestjs/common"; import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"; import { AuthGuard } from "@nestjs/passport"; import { CONSTANTS } from "common/constant";
+import { Body, Controller, Get, Param, Post, Put, Query, Req, Res, UseGuards } from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "@nestjs/passport";
+import { CONSTANTS } from "common/constant";
 import { Response } from 'express'
 import { RequestService } from "requests/services/request.service";
 import { FindRequestsQuery } from "requests/queries/impl/find-requests.query";
@@ -20,12 +23,13 @@ export class HistoriesController {
     }
 
     /* List Requests by projectId*/
+
     /*--------------------------------------------*/
-    @ApiOperation({ tags: ['List Request by projectId'] })
-    @ApiResponse({ status: 200, description: 'List Request by projectId.' })
+    @ApiOperation({tags: ['List Request by projectId']})
+    @ApiResponse({status: 200, description: 'List Request by projectId.'})
     @Get('/projectId/:projectId')
     async findRequestsByProjectId(@Query() findRequestsQuery: FindRequestsQuery,
-        @Param() requestsParam: FindRequestsParam, @Req() req) {
+                                  @Param() requestsParam: FindRequestsParam, @Req() req) {
         const payload = this.authService.decode(req);
         findRequestsQuery.tokenId = payload['id'];
         findRequestsQuery.projectId = requestsParam.projectId;
@@ -33,9 +37,10 @@ export class HistoriesController {
     }
 
     /* List Requests */
+
     /*--------------------------------------------*/
-    @ApiOperation({ tags: ['List Request'] })
-    @ApiResponse({ status: 200, description: 'List Request.' })
+    @ApiOperation({tags: ['List Request']})
+    @ApiResponse({status: 200, description: 'List Request.'})
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async findRequests(@Query() findRequestsQuery: FindRequestsQuery) {
@@ -43,9 +48,10 @@ export class HistoriesController {
     }
 
     /* List Requests By UserId */
+
     /*--------------------------------------------*/
-    @ApiOperation({ tags: ['List Request By UserId'] })
-    @ApiResponse({ status: 200, description: 'List Request By UserId.' })
+    @ApiOperation({tags: ['List Request By UserId']})
+    @ApiResponse({status: 200, description: 'List Request By UserId.'})
     @Get('/userId/:userId')
     async findRequestsByUserId(@Param() requestsParam: FindRequestsParam, @Query() query: FindRequestsByUserIdQuery) {
         query.userId = requestsParam.userId;
@@ -53,9 +59,10 @@ export class HistoriesController {
     }
 
     /* Update Request TranscriptFileUrl */
+
     /*--------------------------------------------*/
-    @ApiOperation({ tags: ['Update Request TranscriptFileUrl'] })
-    @ApiResponse({ status: 200, description: 'Update Request TranscriptFileUrl.' })
+    @ApiOperation({tags: ['Update Request TranscriptFileUrl']})
+    @ApiResponse({status: 200, description: 'Update Request TranscriptFileUrl.'})
     @Put('/transcriptFileUrl/:_id')
     async updateRequest(
         @Param() requestIdDto: RequestIdParamsDto,
@@ -66,18 +73,20 @@ export class HistoriesController {
     }
 
     /* Find Request */
+
     /*--------------------------------------------*/
-    @ApiOperation({ tags: ['Find Request'] })
-    @ApiResponse({ status: 200, description: 'Find Request.' })
+    @ApiOperation({tags: ['Find Request']})
+    @ApiResponse({status: 200, description: 'Find Request.'})
     @Get(':id')
     async findOne(@Param() findRequestQuery: FindRequestQuery) {
         return this.requestService.findOne(findRequestQuery);
     }
 
     /* Download Transcript */
+
     /*--------------------------------------------*/
-    @ApiOperation({ tags: ['Download Transcript'] })
-    @ApiResponse({ status: 200, description: 'Download Transcript.' })
+    @ApiOperation({tags: ['Download Transcript']})
+    @ApiResponse({status: 200, description: 'Download Transcript.'})
     @Post('/download-transcript/:id')
     async downloadTranscript(@Body() body, @Param() findRequestQuery: FindRequestQuery, @Res() response: Response) {
         try {

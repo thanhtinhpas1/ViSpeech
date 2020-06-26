@@ -2,10 +2,10 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect} from 'react'
-import {Alert, Button} from 'antd'
+import React, { useEffect } from 'react'
+import { Alert, Button } from 'antd'
 import Utils from 'utils'
-import {JWT_TOKEN} from 'utils/constant'
+import { JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -150,7 +150,8 @@ const LoginPage = ({
               <li>
                 <a href="#">Terms</a>
               </li>
-              <li>© 2019 Softia.</li>
+              <li>© 2020 Softia.</li>
+              <li>Sponsored by SendGrid</li>
             </ul>
           </div>
         </div>

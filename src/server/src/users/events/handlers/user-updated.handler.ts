@@ -20,18 +20,18 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
 
     async handle(event: UserUpdatedEvent) {
         Logger.log(event.userDto.username, 'UserUpdatedEvent');
-        const { streamId, userDto } = event;
-        const { _id, ...userInfo } = userDto;
+        const {streamId, userDto} = event;
+        const {_id, ...userInfo} = userDto;
 
         try {
-            const user = await this.repository.findOne({ _id: userDto._id });
+            const user = await this.repository.findOne({_id: userDto._id});
 
             let formattedInfo = Utils.removePropertiesFromObject(userInfo, ['password', 'roles', 'isActive']);
             if (Utils.isEmailVerified(user.roles)) {
                 formattedInfo = Utils.removePropertyFromObject(formattedInfo, 'email');
             }
 
-            await this.repository.update({ _id }, formattedInfo);
+            await this.repository.update({_id}, formattedInfo);
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
         } catch (error) {
             this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));

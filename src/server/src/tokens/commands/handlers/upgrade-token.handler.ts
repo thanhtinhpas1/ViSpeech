@@ -1,4 +1,4 @@
-import { CommandHandler, EventPublisher, ICommandHandler, EventBus } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { TokenRepository } from '../../repository/token.repository';
 import { Logger, NotFoundException } from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
@@ -18,15 +18,15 @@ export class UpgradeTokenHandler implements ICommandHandler<UpgradeTokenCommand>
 
     async execute(command: UpgradeTokenCommand) {
         Logger.log('Async UpgradeTokenHandler...', 'UpgradeTokenCommand');
-        const { streamId, tokenDto, tokenTypeDto } = command;
+        const {streamId, tokenDto, tokenTypeDto} = command;
 
         try {
-            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenDto._id });
+            const token = await getMongoRepository(TokenDto).findOne({_id: tokenDto._id});
             if (!token) {
                 throw new NotFoundException(`Token with _id ${tokenDto._id} does not exist.`);
             }
 
-            const tokenType = await getMongoRepository(TokenTypeDto).findOne({ _id: tokenTypeDto._id });
+            const tokenType = await getMongoRepository(TokenTypeDto).findOne({_id: tokenTypeDto._id});
             if (!tokenType) {
                 throw new NotFoundException(`Token type with _id ${tokenTypeDto._id} does not exist.`);
             }

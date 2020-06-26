@@ -1,5 +1,5 @@
-import {ICommand} from '@nestjs/cqrs';
-import {PermissionAssignDto} from '../../dtos/permissions.dto';
+import { ICommand } from '@nestjs/cqrs';
+import { PermissionAssignDto } from '../../dtos/permissions.dto';
 
 export class SendAssignPermissionEmailCommand implements ICommand {
     constructor(

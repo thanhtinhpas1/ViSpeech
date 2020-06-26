@@ -1,5 +1,5 @@
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger, Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { Repository } from 'typeorm';
@@ -27,15 +27,15 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
 
     async handle(event: OrderedTokenCreatedEvent) {
         Logger.log(event.tokenDto._id, 'OrderedTokenCreatedEvent');
-        const { streamId, tokenDto } = event;
+        const {streamId, tokenDto} = event;
         let token = JSON.parse(JSON.stringify(tokenDto));
         let tokenTypeDto = null;
 
         try {
             if (token.tokenTypeId) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
+                tokenTypeDto = await this.repositoryTokenType.findOne({_id: token.tokenTypeId});
             } else if (token.tokenType) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
+                tokenTypeDto = await this.repositoryTokenType.findOne({name: token.tokenType});
             }
             token.tokenTypeId = tokenTypeDto._id;
             token.tokenType = tokenTypeDto.name;
@@ -60,6 +60,7 @@ export class OrderedTokenCreatedSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: OrderedTokenCreatedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.ORDERED_TOKEN_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.tokenDto._id, 'OrderedTokenCreatedSuccessEvent');
@@ -75,6 +76,7 @@ export class OrderedTokenCreatedFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: OrderedTokenCreatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

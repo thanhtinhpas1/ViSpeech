@@ -1,9 +1,10 @@
-import { IsOptional, IsNumber, Min, IsObject, ValidateNested } from "class-validator";
+import { IsNumber, IsObject, IsOptional, Min, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { BaseSortClass } from "base/base-sort.class";
 
 export class GetUsersQuery {
-    constructor() { }
+    constructor() {
+    }
 
     @IsOptional()
     @Type(() => Number)

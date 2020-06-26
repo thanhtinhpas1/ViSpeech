@@ -10,41 +10,77 @@ import { TokensController } from './controllers/tokens.controller';
 import { TokenTypeDto } from './dtos/token-types.dto';
 import { TokenDto } from './dtos/tokens.dto';
 import { EventHandlers } from './events/handlers';
-import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
-import { TokenDeletedEvent, TokenDeletedFailedEvent, TokenDeletedSuccessEvent } from './events/impl/token-deleted.event';
-import { TokenUpdatedEvent, TokenUpdatedFailedEvent, TokenUpdatedSuccessEvent } from './events/impl/token-updated.event';
+import {
+    TokenCreatedEvent,
+    TokenCreatedFailedEvent,
+    TokenCreatedSuccessEvent
+} from './events/impl/token-created.event';
+import {
+    TokenDeletedEvent,
+    TokenDeletedFailedEvent,
+    TokenDeletedSuccessEvent
+} from './events/impl/token-deleted.event';
+import {
+    TokenUpdatedEvent,
+    TokenUpdatedFailedEvent,
+    TokenUpdatedSuccessEvent
+} from './events/impl/token-updated.event';
 import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { TokenRepository } from './repository/token.repository';
 import { TokensSagas } from './sagas/tokens.sagas';
 import { TokensService } from './services/tokens.service';
-import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from './events/impl/free-token-created.event';
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from './events/impl/ordered-token-created.event';
+import {
+    FreeTokenCreatedEvent,
+    FreeTokenCreatedFailedEvent,
+    FreeTokenCreatedSuccessEvent
+} from './events/impl/free-token-created.event';
+import {
+    OrderedTokenCreatedEvent,
+    OrderedTokenCreatedFailedEvent,
+    OrderedTokenCreatedSuccessEvent
+} from './events/impl/ordered-token-created.event';
 import { AuthModule } from '../auth/auth.module';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import {
-    TokenDeletedByUserIdEvent, TokenDeletedByUserIdFailedEvent, TokenDeletedByUserIdSuccessEvent
+    TokenDeletedByUserIdEvent,
+    TokenDeletedByUserIdFailedEvent,
+    TokenDeletedByUserIdSuccessEvent
 } from './events/impl/token-deleted-by-userId.event';
 import {
-    TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdFailedEvent, TokenDeletedByProjectIdSuccessEvent
+    TokenDeletedByProjectIdEvent,
+    TokenDeletedByProjectIdFailedEvent,
+    TokenDeletedByProjectIdSuccessEvent
 } from './events/impl/token-deleted-by-projectId.event';
 import { UserDto } from 'users/dtos/users.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
-import { TokenUpgradedEvent, TokenUpgradedSuccessEvent, TokenUpgradedFailedEvent } from './events/impl/token-upgraded.event';
+import {
+    TokenUpgradedEvent,
+    TokenUpgradedFailedEvent,
+    TokenUpgradedSuccessEvent
+} from './events/impl/token-upgraded.event';
 
 @Module({
-    imports: [ClientsModule.register([{
-        name: config.KAFKA.NAME, ...kafkaClientOptions,
-    }]), TypeOrmModule.forFeature([TokenDto, TokenTypeDto, PermissionDto, UserDto, ProjectDto]), forwardRef(() => AuthModule), EventStoreModule.forFeature(),],
+    imports: [
+        ClientsModule.register([{
+            name: config.KAFKA.NAME, ...kafkaClientOptions,
+        }]),
+        TypeOrmModule.forFeature([TokenDto, TokenTypeDto, PermissionDto, UserDto, ProjectDto]),
+        forwardRef(() => AuthModule), EventStoreModule.forFeature(),
+    ],
     controllers: [TokensController],
-    providers: [TokensService, TokensSagas, ...CommandHandlers, ...EventHandlers, ...QueryHandlers, TokenRepository, QueryBus, EventBus, EventStore, CommandBus, EventPublisher,],
+    providers: [
+        TokensService, TokensSagas, ...CommandHandlers, ...EventHandlers, ...QueryHandlers,
+        TokenRepository, QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+    ],
     exports: [TokensService],
 })
 export class TokensModule implements OnModuleInit {
-    constructor(private readonly command$: CommandBus, private readonly query$: QueryBus, private readonly event$: EventBus, private readonly eventStore: EventStore,) {
+    constructor(private readonly command$: CommandBus, private readonly query$: QueryBus,
+                private readonly event$: EventBus, private readonly eventStore: EventStore,) {
     }
 
     async onModuleInit() {

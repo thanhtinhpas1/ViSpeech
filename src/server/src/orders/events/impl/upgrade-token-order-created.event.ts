@@ -1,5 +1,5 @@
-import {IEvent} from '@nestjs/cqrs';
-import {OrderDto} from 'orders/dtos/orders.dto';
+import { IEvent } from '@nestjs/cqrs';
+import { OrderDto } from 'orders/dtos/orders.dto';
 
 export class UpgradeTokenOrderCreatedEvent implements IEvent {
     constructor(

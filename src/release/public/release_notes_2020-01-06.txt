@@ -1,0 +1,4 @@
+- Combine Mongodb & Create model sample
+- Research Micro service design
+- Research AWS set up EC2
+- Host page EC2

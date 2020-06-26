@@ -1,13 +1,13 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect } from 'react'
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import { Alert, Button, Select, Form, Checkbox, Input } from 'antd'
+import React, {useEffect, useState} from 'react'
+import {CardElement, useElements, useStripe} from '@stripe/react-stripe-js'
+import {Alert, Button, Checkbox, Form, Input, Select} from 'antd'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
 import SocketUtils from 'utils/socket.util'
-import { DEFAULT_PAGINATION } from 'utils/constant'
+import {DEFAULT_PAGINATION} from 'utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -186,7 +186,7 @@ const CheckoutForm = ({
           })}
         </Select>
       </Form.Item>
-      <h5 className="font-mid">Tên token</h5>
+      <h5 className="font-mid">Tên Api Key</h5>
       <Form.Item
         name="tokenName"
         dependencies={['projectId']}

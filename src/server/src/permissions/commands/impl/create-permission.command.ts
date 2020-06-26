@@ -1,5 +1,5 @@
-import {ICommand} from '@nestjs/cqrs';
-import {PermissionDto} from '../../dtos/permissions.dto';
+import { ICommand } from '@nestjs/cqrs';
+import { PermissionDto } from '../../dtos/permissions.dto';
 
 export class CreatePermissionCommand implements ICommand {
     constructor(

@@ -16,14 +16,14 @@ const Home = () => {
             </div>
             <div className="card-content">
               <p className="category">
-                <strong>Visits</strong>
+                <strong>Đăng ký mới</strong>
               </p>
               <h3 className="card-title">70,340</h3>
             </div>
             <div className="card-footer">
               <div className="stats">
                 <i className="material-icons text-info">info</i>
-                <a href="#pablo">See detailed report</a>
+                <a href="#pablo">Xem báo cáo chi tiết</a>
               </div>
             </div>
           </div>
@@ -37,13 +37,13 @@ const Home = () => {
             </div>
             <div className="card-content">
               <p className="category">
-                <strong>Orders</strong>
+                <strong>Đơn hàng</strong>
               </p>
               <h3 className="card-title">102</h3>
             </div>
             <div className="card-footer">
               <div className="stats">
-                <i className="material-icons">local_offer</i> Product-wise sales
+                <i className="material-icons">local_offer</i> Xem chi tiết
               </div>
             </div>
           </div>
@@ -57,13 +57,13 @@ const Home = () => {
             </div>
             <div className="card-content">
               <p className="category">
-                <strong>Revenue</strong>
+                <strong>Lãi suất</strong>
               </p>
               <h3 className="card-title">$23,100</h3>
             </div>
             <div className="card-footer">
               <div className="stats">
-                <i className="material-icons">date_range</i> Weekly sales
+                <i className="material-icons">date_range</i> Xem chi tiết
               </div>
             </div>
           </div>
@@ -77,13 +77,13 @@ const Home = () => {
             </div>
             <div className="card-content">
               <p className="category">
-                <strong>Followers</strong>
+                <strong>Theo dõi</strong>
               </p>
               <h3 className="card-title">+245</h3>
             </div>
             <div className="card-footer">
               <div className="stats">
-                <i className="material-icons">update</i> Just Updated
+                <i className="material-icons">update</i> Xem chi tiết
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@ const Home = () => {
               <i className="material-icons">timeline</i>
             </div>
             <div className="card-content">
-              <h4 className="card-title">Sales Trend</h4>
+              <h4 className="card-title">Biểu đồ giao dịch</h4>
               <div className="chart-edge">
                 <div id="line-chart" className="demo-placeholder" />
               </div>
@@ -107,7 +107,7 @@ const Home = () => {
           <div className="card" style={{ minHeight: '350px' }}>
             <div className="card-header" />
             <div className="card-content">
-              <h4 className="card-title">Region-wise Sales</h4>
+              <h4 className="card-title">Vùng đăng ký</h4>
               <div id="dash1-sales-chart" className="chart">
                 <canvas
                   id="doughnutChart"
@@ -124,8 +124,8 @@ const Home = () => {
         <div className="col-lg-4 col-md-12">
           <div className="card" style={{ minHeight: '485px' }}>
             <div className="card-header card-header-text">
-              <h4 className="card-title">Employees Stats</h4>
-              <p className="category">New employees on 15th December, 2016</p>
+              <h4 className="card-title">Tình trạng người dùng</h4>
+              <p className="category">New users on 15th December, 2016</p>
             </div>
             <div className="card-content table-responsive">
               <table className="table table-hover">
@@ -188,7 +188,7 @@ const Home = () => {
         <div className="col-lg-4 col-md-12">
           <div className="card" style={{ minHeight: '485px' }}>
             <div className="card-header">
-              <h4 className="card-title">Task List</h4>
+              <h4 className="card-title">Danh sách cần thực thi</h4>
             </div>
             <div className="card-content">
               <div className="dropdown pull-right">
@@ -314,7 +314,7 @@ const Home = () => {
         <div className="col-lg-4 col-md-12">
           <div className="card" style={{ minHeight: '485px' }}>
             <div className="card-header">
-              <h4 className="card-title">Activities</h4>
+              <h4 className="card-title">Hành động</h4>
             </div>
             <div className="card-content">
               <div className="streamline">

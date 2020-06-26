@@ -1,0 +1,6 @@
+- Edit thesis Unit 2
+- Finish sucess & integrate with socket & kafka
+- Prepare finish UI mobile
+- Prepare finish mockup UI mobile
+- Implemented call api recoginize speech in mobile
+- Implement database Realm on mobile

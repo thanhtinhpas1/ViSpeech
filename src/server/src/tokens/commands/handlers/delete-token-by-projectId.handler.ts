@@ -1,6 +1,6 @@
-import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
-import {TokenRepository} from '../../repository/token.repository';
-import {Logger, NotFoundException} from '@nestjs/common';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { TokenRepository } from '../../repository/token.repository';
+import { Logger, NotFoundException } from '@nestjs/common';
 import { DeleteTokenByProjectIdCommand } from '../impl/delete-token-by-projectId.command';
 import { getMongoRepository } from 'typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
@@ -20,7 +20,7 @@ export class DeleteTokenByProjectIdHandler implements ICommandHandler<DeleteToke
         const {streamId, projectId} = command;
 
         try {
-            const tokens = await getMongoRepository(TokenDto).find({ projectId });
+            const tokens = await getMongoRepository(TokenDto).find({projectId});
             if (tokens.length === 0) {
                 throw new NotFoundException(`Token with projectId ${projectId} does not exist.`);
             }

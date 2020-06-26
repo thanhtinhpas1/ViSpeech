@@ -22,15 +22,32 @@ import { RoleDto } from 'roles/dtos/roles.dto';
 import { Utils } from 'utils';
 import { CommandHandlers } from './commands/handlers';
 import { UsersController } from './controllers/users.controller';
-import { UserDto, USER_TYPE } from './dtos/users.dto';
+import { USER_TYPE, UserDto } from './dtos/users.dto';
 import { EventHandlers } from './events/handlers';
-import { EmailVerifiedEvent, EmailVerifiedFailedEvent, EmailVerifiedSuccessEvent } from './events/impl/email-verified.event';
-import { PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent, } from './events/impl/password-changed.event';
-import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent, } from './events/impl/user-created.event';
+import {
+    EmailVerifiedEvent,
+    EmailVerifiedFailedEvent,
+    EmailVerifiedSuccessEvent
+} from './events/impl/email-verified.event';
+import {
+    PasswordChangedEvent,
+    PasswordChangedFailedEvent,
+    PasswordChangedSuccessEvent,
+} from './events/impl/password-changed.event';
+import {
+    UserCreatedEvent,
+    UserCreatedFailedEvent,
+    UserCreatedSuccessEvent,
+    UserCreationStartedEvent,
+} from './events/impl/user-created.event';
 import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from './events/impl/user-deleted.event';
 import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from './events/impl/user-updated.event';
 import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
-import { VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent, } from './events/impl/verify-email-sent.event';
+import {
+    VerifyEmailSentEvent,
+    VerifyEmailSentFailedEvent,
+    VerifyEmailSentSuccessEvent,
+} from './events/impl/verify-email-sent.event';
 import { QueryHandlers } from './queries/handler';
 import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
@@ -39,12 +56,21 @@ import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-    imports: [ClientsModule.register([{
-        name: config.KAFKA.NAME, ...kafkaClientOptions,
-    }]), TypeOrmModule.forFeature([UserDto, PermissionDto]), forwardRef(() => AuthModule), EventStoreModule.forFeature(),],
+    imports: [
+        ClientsModule.register(
+            [{
+                name: config.KAFKA.NAME, ...kafkaClientOptions,
+            }]),
+        TypeOrmModule.forFeature([UserDto, PermissionDto]),
+        forwardRef(() => AuthModule),
+        EventStoreModule.forFeature(),
+    ],
     controllers: [UsersController],
-    providers: [UsersService, UsersSagas, ...CommandHandlers, ...EventHandlers, ...QueryHandlers, CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler, /*** REPOSITORY */
-        UserRepository, TokenRepository, ProjectRepository, PermissionRepository, QueryBus, EventBus, EventStore, CommandBus, EventPublisher, ClientKafka,],
+    providers: [UsersService, UsersSagas, ...CommandHandlers, ...EventHandlers, ...QueryHandlers,
+        CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler,
+        DeletePermissionByUserIdHandler, UserRepository, TokenRepository, ProjectRepository,
+        PermissionRepository, QueryBus, EventBus, EventStore, CommandBus, EventPublisher, ClientKafka,
+    ],
     exports: [UsersService],
 })
 export class UsersModule implements OnModuleInit {
@@ -53,12 +79,15 @@ export class UsersModule implements OnModuleInit {
 
     async onModuleInit() {
         this.eventStore.setEventHandlers({
-            ...UsersModule.eventHandlers, ...TokensModule.eventHandlers, ...ProjectsModule.eventHandlers, ...PermissionsModule.eventHandlers,
+            ...UsersModule.eventHandlers, ...TokensModule.eventHandlers, ...ProjectsModule.eventHandlers,
+            ...PermissionsModule.eventHandlers,
         });
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler]);
+        this.command$.register([
+            ...CommandHandlers, CreateFreeTokenHandler, DeleteTokenByUserIdHandler,
+            DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
         // seed data

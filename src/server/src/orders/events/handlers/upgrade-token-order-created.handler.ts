@@ -8,7 +8,11 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { Repository } from 'typeorm';
 import { config } from '../../../../config';
 import { Utils } from 'utils';
-import { UpgradeTokenOrderCreatedEvent, UpgradeTokenOrderCreatedFailedEvent, UpgradeTokenOrderCreatedSuccessEvent } from '../impl/upgrade-token-order-created.event';
+import {
+    UpgradeTokenOrderCreatedEvent,
+    UpgradeTokenOrderCreatedFailedEvent,
+    UpgradeTokenOrderCreatedSuccessEvent
+} from '../impl/upgrade-token-order-created.event';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 @EventsHandler(UpgradeTokenOrderCreatedEvent)
@@ -30,10 +34,8 @@ export class UpgradeTokenOrderCreatedHandler implements IEventHandler<UpgradeTok
         const order = { ...orderDto };
 
         try {
-            const tokenTypeDto = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
-            order.tokenType = tokenTypeDto;
-            const tokenDto = await this.tokenRepository.findOne({ _id: order.token._id });
-            order.token = tokenDto;
+            order.tokenType = await this.tokenTypeRepository.findOne({_id: order.tokenType._id});
+            order.token = await this.tokenRepository.findOne({_id: order.token._id});
             order.upgradeToken = true;
             await this.repository.save(order);
             this.eventBus.publish(new UpgradeTokenOrderCreatedSuccessEvent(streamId, orderDto));

@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsString, IsUUID} from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class FindUserQuery {
     constructor(id: string) {

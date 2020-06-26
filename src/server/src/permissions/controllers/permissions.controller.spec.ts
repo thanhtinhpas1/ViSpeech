@@ -1,6 +1,6 @@
-import {Test, TestingModule} from '@nestjs/testing';
-import {PermissionsController} from './permissions.controller';
-import {PermissionsService} from '../services/permissions.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { PermissionsController } from './permissions.controller';
+import { PermissionsService } from '../services/permissions.service';
 
 describe('Permissions Controller', () => {
     let module: TestingModule;

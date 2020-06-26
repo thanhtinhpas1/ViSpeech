@@ -30,7 +30,7 @@ import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
 import { AsrServiceGuard } from 'auth/guards/asr.service.guard';
 
-const { getAudioDurationInSeconds } = require('get-audio-duration');
+const {getAudioDurationInSeconds} = require('get-audio-duration');
 
 @Controller('speech')
 @ApiTags('speech')
@@ -44,8 +44,8 @@ export class AsrController {
     ) {
     }
 
-    @ApiOperation({ tags: ['Request ASR ViSpeech'] })
-    @ApiResponse({ status: HttpStatus.OK, description: 'Request ASR ViSpeech' })
+    @ApiOperation({tags: ['Request ASR ViSpeech']})
+    @ApiResponse({status: HttpStatus.OK, description: 'Request ASR ViSpeech'})
     @Post()
     @ApiConsumes('multipart/form-data')
     @ApiFile('voice')
@@ -63,17 +63,15 @@ export class AsrController {
     )
     async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
         // invalid file
-        if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'File is required' });
-        // if (!['audio/wav', 'audio/wave'].includes(file.mimetype))
-        //     return res.status(HttpStatus.BAD_REQUEST).send({ message: 'Only support wav mimetype' });
+        if (!file) return res.status(HttpStatus.BAD_REQUEST).send({message: 'File is required'});
 
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
-        const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
+        const tokenDto = await this.tokenRepository.findOne({where: {userId: payload['id'], value: token}});
 
         // invalid token
         if (!tokenDto || !tokenDto.isValid || tokenDto.usedMinutes >= tokenDto.minutes)
-            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Invalid token.' });
+            return res.status(HttpStatus.FORBIDDEN).json({message: 'Invalid token.'});
 
         // not enough token minutes to request
         // const duration = Utils.calculateDuration(file.size);
@@ -82,7 +80,7 @@ export class AsrController {
         const minutes = Number(tokenDto.minutes);
         const usedMinutes = Number(tokenDto.usedMinutes || 0);
         if (duration > (minutes - usedMinutes)) {
-            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Not enough token\' minutes to request.' });
+            return res.status(HttpStatus.FORBIDDEN).json({message: 'Not enough token\' minutes to request.'});
         }
 
         // call asr
@@ -92,7 +90,7 @@ export class AsrController {
         const formData = new FormData();
         formData.append('voice', stream);
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
-        axios.post(url, formData, { headers: formData.getHeaders() }).then(result => {
+        axios.post(url, formData, {headers: formData.getHeaders()}).then(result => {
             requestStatus = CONSTANTS.STATUS.SUCCESS;
             // send back requestId
             result.data.requestId = requestId;

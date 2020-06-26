@@ -1,13 +1,17 @@
-import {Logger, Inject} from '@nestjs/common';
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {InjectRepository} from '@nestjs/typeorm';
-import {ProjectDto} from 'projects/dtos/projects.dto';
-import {Repository, getMongoRepository} from 'typeorm';
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { getMongoRepository, Repository } from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
 import { Utils } from 'utils';
-import { ProjectDeletedByUserIdEvent, ProjectDeletedByUserIdSuccessEvent, ProjectDeletedByUserIdFailedEvent } from '../impl/project-deleted-by-userId.event';
+import {
+    ProjectDeletedByUserIdEvent,
+    ProjectDeletedByUserIdFailedEvent,
+    ProjectDeletedByUserIdSuccessEvent
+} from '../impl/project-deleted-by-userId.event';
 
 @EventsHandler(ProjectDeletedByUserIdEvent)
 export class ProjectDeletedByUserIdHandler implements IEventHandler<ProjectDeletedByUserIdEvent> {
@@ -23,7 +27,7 @@ export class ProjectDeletedByUserIdHandler implements IEventHandler<ProjectDelet
         const {streamId, userId} = event;
 
         try {
-            await getMongoRepository(ProjectDto).updateMany({ userId }, { $set: { isValid: false }});
+            await getMongoRepository(ProjectDto).updateMany({userId}, {$set: {isValid: false}});
             this.eventBus.publish(new ProjectDeletedByUserIdSuccessEvent(streamId, userId));
         } catch (error) {
             this.eventBus.publish(new ProjectDeletedByUserIdFailedEvent(streamId, userId, error));
@@ -40,6 +44,7 @@ export class ProjectDeletedByUserIdSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: ProjectDeletedByUserIdSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_BY_USERID_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.userId, 'ProjectDeletedByUserIdSuccessEvent');
@@ -55,6 +60,7 @@ export class ProjectDeletedByUserIdFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: ProjectDeletedByUserIdFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

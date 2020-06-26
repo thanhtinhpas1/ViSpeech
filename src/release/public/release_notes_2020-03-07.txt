@@ -1,0 +1,3 @@
+- build kafka
+- build server distribution
+- implement kafka for payment

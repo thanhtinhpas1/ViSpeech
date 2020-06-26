@@ -1,10 +1,9 @@
-import {Logger, Inject} from '@nestjs/common';
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {InjectRepository} from '@nestjs/typeorm';
-import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
-import {Repository} from 'typeorm';
-import {TokenUpdatedEvent, TokenUpdatedSuccessEvent, TokenUpdatedFailedEvent} from '../impl/token-updated.event';
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { Repository } from 'typeorm';
+import { TokenUpdatedEvent, TokenUpdatedFailedEvent, TokenUpdatedSuccessEvent } from '../impl/token-updated.event';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
@@ -23,21 +22,10 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
         Logger.log(event.tokenDto._id, 'TokenUpdatedEvent'); // write here
         const {streamId, tokenDto} = event;
         const {_id, ...tokenInfo} = tokenDto;
-        // let tokenTypeDto = null;
 
         try {
-            // if (tokenInfo.tokenTypeId) {
-            //     tokenTypeDto = await this.repositoryTokenType.findOne({_id: tokenInfo.tokenTypeId});
-            //     if (!tokenTypeDto) {
-            //         throw new NotFoundException(`Token type with _id ${tokenInfo.tokenTypeId} does not exist.`);
-            //     }
-            // } else if (tokenInfo.tokenType) {
-            //     tokenTypeDto = await this.repositoryTokenType.findOne({name: tokenInfo.tokenType});
-            // }
-            // tokenInfo.minutes = tokenTypeDto.minutes;
-
             // Can only update usedMinutes
-            await this.repository.update({_id}, { usedMinutes: Number(tokenInfo.usedMinutes) });
+            await this.repository.update({_id}, {usedMinutes: Number(tokenInfo.usedMinutes)});
             this.eventBus.publish(new TokenUpdatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
             this.eventBus.publish(new TokenUpdatedFailedEvent(streamId, tokenDto, error));
@@ -53,6 +41,7 @@ export class TokenUpdatedSuccessHandler implements IEventHandler<TokenUpdatedSuc
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: TokenUpdatedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.tokenDto._id, 'TokenUpdatedSuccessEvent');
@@ -67,6 +56,7 @@ export class TokenUpdatedFailedHandler implements IEventHandler<TokenUpdatedFail
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: TokenUpdatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj
