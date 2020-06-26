@@ -17,10 +17,11 @@ import { GoogleStrategy } from './google.strategy';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { EventStoreModule } from 'core/event-store/event-store.module';
 import { UserRepository } from 'users/repository/user.repository';
-import { CreateUserHandler, CreateUserStartHandler } from 'users/commands/handlers/create-user.handler';
+import { CreateUserStartHandler, CreateUserHandler } from 'users/commands/handlers/create-user.handler';
 import { CreateFreeTokenHandler } from 'tokens/commands/handlers/create-token.handler';
 import { TokenRepository } from 'tokens/repository/token.repository';
 import { EventStore } from 'core/event-store/event-store';
+import { TokensModule } from 'tokens/tokens.module';
 
 @Module({
     imports: [
@@ -51,4 +52,18 @@ import { EventStore } from 'core/event-store/event-store';
     exports: [JwtModule, AuthService]
 })
 export class AuthModule {
+    constructor(
+        private readonly command$: CommandBus,
+        private readonly event$: EventBus,
+        private readonly eventStore: EventStore
+    ) {
+    }
+
+    onModuleInit() {
+        this.eventStore.setEventHandlers({ ...UsersModule.eventHandlers, ...TokensModule.eventHandlers });
+        this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
+        this.event$.publisher = this.eventStore;
+        /** ------------ */
+        this.command$.register([CreateUserStartHandler, CreateUserHandler, CreateFreeTokenHandler]);
+    }
 }

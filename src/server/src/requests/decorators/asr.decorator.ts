@@ -1,4 +1,4 @@
-import { ApiBody } from '@nestjs/swagger';
+import {ApiBody} from '@nestjs/swagger';
 
 export const ApiFile = (fileName: string = 'voice'): MethodDecorator => (
     target: any,

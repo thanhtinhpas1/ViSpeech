@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { PermissionRepository } from '../../repository/permission.repository';
-import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
-import { SendAssignPermissionEmailCommand } from '../impl/send-assign-permission-email.command';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {PermissionRepository} from '../../repository/permission.repository';
+import { Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import {SendAssignPermissionEmailCommand} from '../impl/send-assign-permission-email.command';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
@@ -19,30 +19,26 @@ export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAss
 
     async execute(command: SendAssignPermissionEmailCommand) {
         Logger.log('Async SendAssignPermissionEmailHandler...', 'SendAssignPermissionEmailCommand');
-        const {streamId, permissionAssignDto} = command;
-        const {assigneeUsername, assignerId, projectId} = permissionAssignDto;
+        const { streamId, permissionAssignDto } = command;
+        const { assigneeUsername, assignerId, projectId } = permissionAssignDto;
 
         try {
-            const assignee = await getMongoRepository(UserDto).findOne({username: assigneeUsername});
+            const assignee = await getMongoRepository(UserDto).findOne({ username: assigneeUsername });
             if (!assignee) {
                 throw new NotFoundException(`Assignee with username ${assigneeUsername} does not exist.`)
             }
 
-            const project = await getMongoRepository(ProjectDto).findOne({_id: projectId});
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: projectId });
             if (!project) {
                 throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
             }
 
-            const assigner = await getMongoRepository(UserDto).findOne({_id: assignerId});
+            const assigner = await getMongoRepository(UserDto).findOne({ _id: assignerId });
             if (!assigner) {
                 throw new NotFoundException(`Assigner with _id ${assignerId} does not exist.`);
             }
 
-            const permission = await getMongoRepository(PermissionDto).findOne({
-                assignerId,
-                assigneeId: assignee._id,
-                projectId
-            });
+            const permission = await getMongoRepository(PermissionDto).findOne({ assignerId, assigneeId: assignee._id, projectId });
             if (permission || assignee._id === assignerId) {
                 throw new BadRequestException(`Permission with assignerId "${assignerId}", assigneeUsername "${assigneeUsername}", 
                 projectId "${projectId}" is existed or assignerId is not valid.`)

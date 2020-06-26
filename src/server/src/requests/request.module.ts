@@ -22,15 +22,10 @@ import { ReportRepository } from 'reports/repository/report.repository';
 import { OrderDto } from 'orders/dtos/orders.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { AsrCalledEvent } from './events/impl/asr-called.event';
-import {
-    RequestTranscriptFileUrlUpdatedEvent,
-    RequestTranscriptFileUrlUpdatedFailedEvent,
-    RequestTranscriptFileUrlUpdatedSuccessEvent
-} from './events/impl/request-transcript-file-url-updated.event';
+import { RequestTranscriptFileUrlUpdatedEvent, RequestTranscriptFileUrlUpdatedFailedEvent, RequestTranscriptFileUrlUpdatedSuccessEvent } from './events/impl/request-transcript-file-url-updated.event';
 import { ClientsModule } from '@nestjs/microservices';
 import { config } from "../../config";
 import { kafkaClientOptions } from "common/kafka-client.options";
-import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 
 @Module({
     imports: [
@@ -38,7 +33,7 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([RequestDto, TokenDto, TokenTypeDto, OrderDto, ProjectDto]),
+        TypeOrmModule.forFeature([RequestDto, TokenDto, OrderDto, ProjectDto]),
         EventStoreModule.forFeature(),
         MulterModule.register({}),
         forwardRef(() => AuthModule),

@@ -1,4 +1,4 @@
-import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, Injectable, UnauthorizedException, NotFoundException, Logger } from "@nestjs/common";
 import { CONSTANTS } from "../../common/constant";
 import { AuthService } from "../auth.service";
 import { getMongoRepository } from "typeorm";
@@ -7,7 +7,6 @@ import { ProjectDto } from "projects/dtos/projects.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { TokenTypeDto } from "tokens/dtos/token-types.dto";
 import { UserDto } from "users/dtos/users.dto";
-import { UserUtils } from "../../utils/user.util";
 
 @Injectable()
 export class ReportQueryGuard implements CanActivate {
@@ -18,12 +17,17 @@ export class ReportQueryGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
+
         const { id, userId, statisticsType, timeType } = request.params;
+
         if (userId) {
             const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
@@ -43,6 +47,7 @@ export class ReportQueryGuard implements CanActivate {
                 return true;
             }
         }
+
         if (id && statisticsType && timeType) { // get statistics by id
             if (statisticsType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
                 const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
@@ -67,12 +72,14 @@ export class ReportQueryGuard implements CanActivate {
                 }
             }
         }
+
         if (id && userId && timeType) { // get statistics by token type id and user id
             const tokenType = await getMongoRepository(TokenTypeDto).findOne({ _id: id });
             if (!tokenType) {
                 throw new NotFoundException(`Token type with _id ${id} does not exist.`);
             }
         }
+
         Logger.warn('User does not have permission to query reports.', 'ReportGuard');
         return false;
     }

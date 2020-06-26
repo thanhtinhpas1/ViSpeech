@@ -1,5 +1,5 @@
-import { IEvent } from '@nestjs/cqrs';
-import { PermissionDto } from '../../dtos/permissions.dto';
+import {IEvent} from '@nestjs/cqrs';
+import {PermissionDto} from '../../dtos/permissions.dto';
 
 export class PermissionUpdatedEvent implements IEvent {
     constructor(

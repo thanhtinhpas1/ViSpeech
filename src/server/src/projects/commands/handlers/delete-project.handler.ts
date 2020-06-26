@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteProjectCommand } from '../impl/delete-project.command';
-import { ProjectRepository } from '../../repository/project.repository';
-import { Logger, NotFoundException } from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {DeleteProjectCommand} from '../impl/delete-project.command';
+import {ProjectRepository} from '../../repository/project.repository';
+import {Logger, NotFoundException} from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { ProjectDeletedFailedEvent } from 'projects/events/impl/project-deleted.event';
@@ -21,7 +21,7 @@ export class DeleteProjectHandler implements ICommandHandler<DeleteProjectComman
         const projectId = projectIdDto._id;
 
         try {
-            const project = await getMongoRepository(ProjectDto).findOne({_id: projectId});
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: projectId });
             if (!project) {
                 throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
             }

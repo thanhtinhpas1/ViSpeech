@@ -4,8 +4,8 @@ import { OrderDto } from "orders/dtos/orders.dto";
 import { PermissionDto } from "permissions/dtos/permissions.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { getMongoRepository, Repository } from "typeorm";
+import { CONSTANTS } from "../../common/constant";
 import { AuthService } from "../auth.service";
-import { UserUtils } from "../../utils/user.util";
 
 @Injectable()
 export class OrderGuard implements CanActivate {
@@ -16,13 +16,17 @@ export class OrderGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
+
         const id = request.params['_id'] || request.params['id'];
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const order = await getMongoRepository(OrderDto).findOne({ _id: id });
         if (order && order.userId === payload['id']) {
@@ -50,7 +54,9 @@ export class OrderQueryGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {

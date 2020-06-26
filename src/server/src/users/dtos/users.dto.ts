@@ -1,31 +1,31 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsArray, IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsEmail, IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Column, Entity } from 'typeorm';
 import { ERR } from "../../common/error";
-import { ErrorUtils } from "../../utils/errorUtils";
+import { ErrUtil } from "../../utils/err.util";
 
 export class UserIdRequestParamsDto {
     constructor(userId) {
         this._id = userId;
     }
 
-    @IsString(ErrorUtils.getMessage('_id', ERR.IsString))
+    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
     @IsOptional()
     _id: string;
 }
 
 export class ChangePasswordBody {
-    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
     readonly userId;
 
-    @IsNotEmpty(ErrorUtils.getMessage('oldPassword', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('oldPassword', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('oldPassword', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('oldPassword', ERR.IsString))
     readonly oldPassword;
 
-    @IsNotEmpty(ErrorUtils.getMessage('newPassword', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('newPassword', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('newPassword', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('newPassword', ERR.IsString))
     readonly newPassword;
 }
 
@@ -39,7 +39,7 @@ export enum USER_TYPE {
 @Entity('users')
 export class UserDto extends BaseEntityDto {
     constructor(firstName: string, lastName: string, username: string, password: string, email: string, roles: RoleDto[],
-                userType: USER_TYPE = USER_TYPE.NORMAL, socialId?: string) {
+        userType: USER_TYPE = USER_TYPE.NORMAL, socialId?: string) {
         super();
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,37 +52,45 @@ export class UserDto extends BaseEntityDto {
         this.userType = userType;
     }
 
-    @IsString(ErrorUtils.getMessage('firstName', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('firstName', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('firstName', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('firstName', ERR.IsNotEmpty))
     @Column()
     firstName: string;
 
-    @IsString(ErrorUtils.getMessage('lastName', ERR.IsString))
+    @IsString(ErrUtil.getMessage('lastName', ERR.IsString))
     @IsOptional()
     @Column()
     lastName: string;
 
-    @IsString(ErrorUtils.getMessage('username', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('username', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('username', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('username', ERR.IsNotEmpty))
     @Column({nullable: false, update: false, unique: true})
     username: string;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('password', ERR.IsString))
+    @IsString(ErrUtil.getMessage('password', ERR.IsString))
     @Column({
         select: false, nullable: false,
     })
     password: string;
 
-    @IsEmail({}, ErrorUtils.getMessage('email', ERR.IsEmail))
-    @IsNotEmpty(ErrorUtils.getMessage('email', ERR.IsNotEmpty))
+    @IsEmail({}, ErrUtil.getMessage('email', ERR.IsEmail))
+    @IsNotEmpty(ErrUtil.getMessage('email', ERR.IsNotEmpty))
     @Column({
         unique: true, update: false,
     })
     email: string;
 
-    @IsNotEmpty(ErrorUtils.getMessage('isActive', ERR.IsNotEmpty))
-    @IsBoolean(ErrorUtils.getMessage('isActive', ERR.IsBoolean))
+    @IsEmpty(ErrUtil.getMessage('firstTimeLoginRemaining', ERR.IsEmpty))
+    @Column({
+        default: true,
+        nullable: true,
+        insert: false,
+    })
+    firstTimeLoginRemaining: boolean;
+
+    @IsNotEmpty(ErrUtil.getMessage('isActive', ERR.IsNotEmpty))
+    @IsBoolean(ErrUtil.getMessage('isActive', ERR.IsBoolean))
     @Column({
         default: true,
         nullable: false,
@@ -90,7 +98,7 @@ export class UserDto extends BaseEntityDto {
     isActive: boolean;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('socialId', ERR.IsString))
+    @IsString(ErrUtil.getMessage('socialId', ERR.IsString))
     @Column()
     socialId: string;
 
@@ -100,7 +108,7 @@ export class UserDto extends BaseEntityDto {
     @Column({default: USER_TYPE.NORMAL})
     userType: USER_TYPE;
 
-    @IsArray(ErrorUtils.getMessage('roles', ERR.IsArray))
+    @IsArray(ErrUtil.getMessage('roles', ERR.IsArray))
     @IsOptional()
     @Column()
     roles: RoleDto[];

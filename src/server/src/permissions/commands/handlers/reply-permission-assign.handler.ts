@@ -1,7 +1,7 @@
-import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { PermissionRepository } from '../../repository/permission.repository';
-import { Logger } from '@nestjs/common';
-import { ReplyPermissionAssignCommand } from '../impl/reply-permission-assign.command';
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {PermissionRepository} from '../../repository/permission.repository';
+import {Logger} from '@nestjs/common';
+import {ReplyPermissionAssignCommand} from '../impl/reply-permission-assign.command';
 
 @CommandHandler(ReplyPermissionAssignCommand)
 export class ReplyPermissionAssignHandler implements ICommandHandler<ReplyPermissionAssignCommand> {

@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { UpdateTokenCommand } from '../impl/update-token.command';
-import { TokenRepository } from '../../repository/token.repository';
-import { Logger, NotFoundException } from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {UpdateTokenCommand} from '../impl/update-token.command';
+import {TokenRepository} from '../../repository/token.repository';
+import {Logger, NotFoundException} from '@nestjs/common';
 import { TokenUpdatedFailedEvent } from 'tokens/events/impl/token-updated.event';
 import { getMongoRepository } from 'typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
@@ -20,7 +20,7 @@ export class UpdateTokenHandler implements ICommandHandler<UpdateTokenCommand> {
         const {streamId, tokenDto} = command;
 
         try {
-            const token = await getMongoRepository(TokenDto).findOne({_id: tokenDto._id});
+            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenDto._id });
             if (!token) {
                 throw new NotFoundException(`Token with _id ${tokenDto._id} does not exist.`);
             }

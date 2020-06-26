@@ -4,7 +4,6 @@ import { CONSTANTS } from 'common/constant';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { getMongoRepository } from 'typeorm';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { UserUtils } from "../../utils/user.util";
 
 @Injectable()
 export class TokenGuard implements CanActivate {
@@ -15,18 +14,23 @@ export class TokenGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
+
         const id = request.params._id || request.params.id || request.params.tokenId;
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const token = await getMongoRepository(TokenDto).findOne({ _id: id });
         if (token && token.userId === payload['id']) {
             return true;
         }
+
         Logger.warn('User does not have permission to modify this token.', 'TokenGuard');
         return false;
     }
@@ -41,11 +45,14 @@ export class TokenQueryGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+        
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {
@@ -62,13 +69,16 @@ export class TokenQueryGuard implements CanActivate {
                 return true;
             }
         }
+
         if (request.params['userId'] && request.params['userId'] === payload['id']) {
             return true;
         }
+
         const { userId, projectId } = request.query;
         if (userId && userId === payload['id']) {
             return true;
         }
+
         // verify assignee
         if (userId && projectId) {
             const permission = await getMongoRepository(PermissionDto)
@@ -77,6 +87,7 @@ export class TokenQueryGuard implements CanActivate {
                 return true;
             }
         }
+
         Logger.warn('User does not have permission to query tokens.', 'TokenQueryGuard');
         return false;
     }

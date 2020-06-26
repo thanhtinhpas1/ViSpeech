@@ -1,24 +1,8 @@
-import {
-    ProjectCreatedFailedHandler,
-    ProjectCreatedHandler,
-    ProjectCreatedSuccessHandler
-} from './project-created.handler';
-import {
-    ProjectUpdatedFailedHandler,
-    ProjectUpdatedHandler,
-    ProjectUpdatedSuccessHandler
-} from './project-updated.handler';
-import {
-    ProjectDeletedFailedHandler,
-    ProjectDeletedHandler,
-    ProjectDeletedSuccessHandler
-} from './project-deleted.handler';
-import { ProjectWelcomedHandler } from './project-welcomed.handler';
-import {
-    ProjectDeletedByUserIdFailedHandler,
-    ProjectDeletedByUserIdHandler,
-    ProjectDeletedByUserIdSuccessHandler
-} from './project-deleted-by-userId.handler';
+import {ProjectCreatedFailedHandler, ProjectCreatedHandler, ProjectCreatedSuccessHandler} from './project-created.handler';
+import {ProjectUpdatedHandler, ProjectUpdatedSuccessHandler, ProjectUpdatedFailedHandler} from './project-updated.handler';
+import {ProjectDeletedHandler, ProjectDeletedSuccessHandler, ProjectDeletedFailedHandler} from './project-deleted.handler';
+import {ProjectWelcomedHandler} from './project-welcomed.handler';
+import { ProjectDeletedByUserIdHandler, ProjectDeletedByUserIdSuccessHandler, ProjectDeletedByUserIdFailedHandler } from './project-deleted-by-userId.handler';
 
 export const EventHandlers = [
     // create

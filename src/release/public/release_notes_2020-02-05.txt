@@ -1,4 +1,0 @@
-- JWT for login API
-- Sagas basic flow for welcome user
-- Subcribe and Write event 
-- Control missing event

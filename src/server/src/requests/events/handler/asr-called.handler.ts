@@ -15,12 +15,12 @@ export class AsrCalledHandler implements IEventHandler<AsrCalledEvent> {
 
     async handle(event: AsrCalledEvent) {
         Logger.log(event.tokenDto._id, 'AsrCalledEvent');
-        const {requestDto} = event;
+        const { streamId, requestDto, tokenDto } = event;
         try {
             requestDto.duration = Number(requestDto.duration);
             await this.requestRepository.save(requestDto);
         } catch (error) {
-            Logger.error(error.message, '', 'AsrCalledEvent');
+            Logger.error(error, '', 'AsrCalledEvent');
         }
     }
 }

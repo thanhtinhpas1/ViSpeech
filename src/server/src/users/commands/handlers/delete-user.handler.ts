@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteUserCommand } from '../impl/delete-user.command';
-import { UserRepository } from '../../repository/user.repository';
-import { Logger, NotFoundException } from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {DeleteUserCommand} from '../impl/delete-user.command';
+import {UserRepository} from '../../repository/user.repository';
+import {Logger, NotFoundException} from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { UserDeletedFailedEvent } from 'users/events/impl/user-deleted.event';
@@ -21,7 +21,7 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
         const userId = userIdDto._id;
 
         try {
-            const user = await getMongoRepository(UserDto).findOne({_id: userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }

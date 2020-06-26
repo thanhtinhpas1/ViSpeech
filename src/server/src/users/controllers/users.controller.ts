@@ -4,7 +4,9 @@ import {
     Controller,
     Delete,
     Get,
+    Inject,
     NotAcceptableException,
+    OnModuleInit,
     Param,
     Post,
     Put,
@@ -24,16 +26,24 @@ import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/use
 import { UsersService } from '../services/users.service';
 import { UserGuard, VerifyEmailGuard } from 'auth/guards/user.guard';
 import { Utils } from 'utils';
+import { ClientKafka } from '@nestjs/microservices';
+import { config } from '../../../config';
 import { GetAssigneeQuery } from "../queries/impl/get-assignee.query";
 import { ProjectGuard } from "../../auth/guards/project.guard";
 
 @Controller('users')
 @ApiTags('Users')
-export class UsersController {
+export class UsersController implements OnModuleInit {
     constructor(
         private readonly authService: AuthService,
         private readonly usersService: UsersService,
+        @Inject(config.KAFKA.NAME)
+        private readonly clientKafka: ClientKafka,
     ) {
+    }
+
+    onModuleInit() {
+        this.clientKafka.subscribeToResponseOf('vispeech-user');
     }
 
     /* Create user
@@ -73,8 +83,6 @@ export class UsersController {
         const streamId = changePasswordBody.userId;
         return this.usersService.changePassword(streamId, changePasswordBody);
     }
-
-    local
 
     /* Update User */
 
@@ -134,7 +142,7 @@ export class UsersController {
     @Post('verify-email')
     async verifyEmail(@Body() body) {
         const streamId = Utils.getUuid();
-        const emailToken = body.emailToken;
+        const emailToken = body['emailToken'];
         return this.usersService.verifyEmail(streamId, emailToken);
     }
 

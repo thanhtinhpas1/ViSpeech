@@ -29,20 +29,11 @@ services:
     network_mode: bridge
     healthcheck:
       test: ['CMD', 'pgrep', 'mongo']
-  core:
-    build:
-      context: : "./src/core"
-    restart: always
-    ports:
-      - 5000:5000
-    expose:
-      - 5000
-    network_mode: bridge
   # API - VISPEECH
   vispeech:
     build:
       context: "./src/server"
-    command: "npm start:prod"
+    command: ${CONTAINER_COMMAND}
     restart: always
     depends_on:
       - eventstore
@@ -50,9 +41,9 @@ services:
     environment:
       - EVENT_STORE_HOSTNAME=eventstore
     ports:
-      - 7070:7070
+      - ${VISPEECH_PORT}:${VISPEECH_PORT}
     expose:
-      - 7070
+      - ${VISPEECH_PORT}
     links:
       - eventstore
       - mongodb
@@ -67,9 +58,9 @@ services:
       - mongodb
       - vispeech
     ports:
-      - 3200:3200
+      - ${VISPEECH_PORT_CLIENT}:${VISPEECH_PORT_CLIENT}
     expose:
-      - 3200
+      - ${VISPEECH_PORT_CLIENT}
     network_mode: bridge
   vispeechdemo:
     build:
@@ -81,9 +72,9 @@ services:
       - mongodb
       - vispeech
     ports:
-      - 3000:3000
+      - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
     expose:
-      - 3000
+      - ${VISPEECH_PORT_DEMO}
     links:
       - eventstore
       - mongodb
@@ -99,9 +90,9 @@ services:
       - mongodb
       - vispeech
     ports:
-      - 80:80
+      - ${VISPEECH_PORT_DEMO}:${VISPEECH_PORT_DEMO}
     expose:
-      - 80
+      - ${VISPEECH_PORT_DEMO}
     links:
       - eventstore
       - mongodb

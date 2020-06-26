@@ -1,8 +1,8 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { OrderDto } from 'orders/dtos/orders.dto';
-import { Repository } from 'typeorm';
+import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {OrderDto} from 'orders/dtos/orders.dto';
+import {Repository, getMongoRepository} from 'typeorm';
 import { FindOrderByTokenIdQuery } from '../impl/find-order-by-tokenId.query';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 
@@ -18,19 +18,18 @@ export class FindOrderByTokenIdHandler implements IQueryHandler<FindOrderByToken
 
     async execute(query: FindOrderByTokenIdQuery): Promise<any> {
         Logger.log('Async FindOrderByTokenIdQuery...', 'FindOrderByTokenIdQuery');
-        const {tokenId} = query;
+        const { tokenId } = query;
         let project = null;
 
         try {
-            const order = await this.repository.findOne({where: {"token._id": tokenId}});
+            const order = await this.repository.findOne({ where: { "token._id" : tokenId } });
             if (order) {
-                project = await this.projectDtoRepository.findOne({_id: order.token.projectId});
-                // TODO: verify why we need create new field here
+                project  = await this.projectDtoRepository.findOne({ _id: order.token.projectId });
                 order.token['projectName'] = project.name
             }
             return order
         } catch (error) {
-            Logger.error(error.message, '', 'FindOrderByTokenIdQuery');
+            Logger.error(error, '', 'FindOrderByTokenIdQuery');
         }
     }
 }

@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { DeleteReportCommand } from '../impl/delete-report.command';
-import { ReportRepository } from '../../repository/report.repository';
-import { Logger, NotFoundException } from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {DeleteReportCommand} from '../impl/delete-report.command';
+import {ReportRepository} from '../../repository/report.repository';
+import {Logger, NotFoundException} from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { ReportDto } from 'reports/dtos/reports.dto';
 import { ReportDeletedFailedEvent } from 'reports/events/impl/report-deleted.event';
@@ -22,7 +22,7 @@ export class DeleteReportHandler
         const reportId = reportIdDto._id;
 
         try {
-            const report = await getMongoRepository(ReportDto).findOne({_id: reportId});
+            const report = await getMongoRepository(ReportDto).findOne({ _id: reportId });
             if (!report) {
                 throw new NotFoundException(`Report with _id ${reportId} does not exist.`);
             }

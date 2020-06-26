@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { UserRepository } from '../../repository/user.repository';
-import { ChangePasswordCommand } from '../impl/change-password.command';
-import { BadRequestException, Logger } from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {UserRepository} from '../../repository/user.repository';
+import {ChangePasswordCommand} from '../impl/change-password.command';
+import {Logger, NotFoundException} from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { PasswordChangedFailedEvent } from 'users/events/impl/password-changed.event';
@@ -20,9 +20,9 @@ export class ChangePasswordHandler implements ICommandHandler<ChangePasswordComm
         const {streamId, changePasswordBody} = command;
 
         try {
-            const user = await getMongoRepository(UserDto).findOne({_id: changePasswordBody.userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: changePasswordBody.userId });
             if (!user) {
-                throw new BadRequestException(`User with _id ${changePasswordBody.userId} does not exist.`);
+                throw new NotFoundException(`User with _id ${changePasswordBody.userId} does not exist.`);
             }
 
             // use mergeObjectContext for dto dispatch events

@@ -1,13 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { flatMap, map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { UserCreatedSuccessEvent, UserCreationStartedEvent } from 'users/events/impl/user-created.event';
+import { UserCreationStartedEvent, UserCreatedSuccessEvent } from 'users/events/impl/user-created.event';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { AuthService } from 'auth/auth.service';
 import { CreateUserCommand } from 'users/commands/impl/create-user.command';
 import { WelcomeUserCommand } from 'users/commands/impl/welcome-user.command';
-import { FreeTokenCreatedSuccessEvent } from 'tokens/events/impl/free-token-created.event';
+import { FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from 'tokens/events/impl/free-token-created.event';
+import { DeleteUserCommand } from 'users/commands/impl/delete-user.command';
+import { UserIdRequestParamsDto } from 'users/dtos/users.dto';
 import { UserDeletedSuccessEvent } from 'users/events/impl/user-deleted.event';
 import { CreateFreeTokenCommand } from 'tokens/commands/impl/create-token.command';
 import { DeleteProjectByUserIdCommand } from 'projects/commands/impl/delete-project-by-userId.command';
@@ -26,19 +28,19 @@ export class UsersSagas {
             ofType(UserCreationStartedEvent),
             map((event: UserCreationStartedEvent) => {
                 Logger.log('Inside [UsersSagas] startCreatingUser Saga', 'UsersSagas');
-                const {streamId, userDto} = event;
+                const { streamId, userDto } = event;
                 return new CreateUserCommand(streamId, userDto);
             })
         );
     };
 
     @Saga()
-    userCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
+    userCreatedSucess = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(UserCreatedSuccessEvent),
             map((event: UserCreatedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
-                const {streamId, userDto} = event;
+                const { streamId, userDto } = event;
                 const userId = userDto._id;
                 const tokenValue = this.authService.generateTokenWithUserId(userId);
                 const tokenDto = new TokenDto(tokenValue, userId, "", CONSTANTS.TOKEN_TYPE.FREE); // free token
@@ -53,11 +55,24 @@ export class UsersSagas {
             ofType(FreeTokenCreatedSuccessEvent),
             map((event: FreeTokenCreatedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] freeTokenCreatedSuccess Saga', 'UsersSagas');
-                const {streamId, tokenDto} = event;
+                const { streamId, tokenDto } = event;
                 return new WelcomeUserCommand(streamId, tokenDto.userId);
             })
         );
     };
+
+    // @Saga()
+    // freeTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
+    //     return events$.pipe(
+    //         ofType(FreeTokenCreatedFailedEvent),
+    //         map((event: FreeTokenCreatedFailedEvent) => {
+    //             Logger.log('Inside [UsersSagas] freeTokenCreatedFailed Saga', 'UsersSagas');
+    //             const { streamId, tokenDto } = event;
+    //             const { userId } = tokenDto;
+    //             return new DeleteUserCommand(streamId, new UserIdRequestParamsDto(userId), true);
+    //         })
+    //     );
+    // };
 
     @Saga()
     userDeletedSuccess = (events$: Observable<any>): Observable<ICommand> => {
@@ -65,7 +80,7 @@ export class UsersSagas {
             ofType(UserDeletedSuccessEvent),
             flatMap((event: UserDeletedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] userDeletedSuccess Saga', 'UsersSagas');
-                const {streamId, userId} = event;
+                const { streamId, userId } = event;
                 return [
                     new DeleteTokenByUserIdCommand(streamId, userId),
                     new DeleteProjectByUserIdCommand(streamId, userId),

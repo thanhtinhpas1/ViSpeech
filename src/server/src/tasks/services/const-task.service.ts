@@ -8,6 +8,7 @@ import { PreviousRunStatus, TaskDto } from "tasks/dto/task.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository } from "typeorm";
 import { Utils } from "utils";
+import { config } from "../../../config";
 
 @Injectable()
 export class ConstTaskService {
@@ -38,7 +39,7 @@ export class ConstTaskService {
                     token.usedMinutes = 0;
                 }
                 // this.tokenRepository.save(token);
-                this.tokenRepository.update({_id: token._id}, {usedMinutes: Number(token.usedMinutes)});
+                this.tokenRepository.update({ _id: token._id }, { usedMinutes: Number(token.usedMinutes) });
                 this.logger.debug(`Refresh token usedMinutes ${token._id}`);
             }
         } catch (error) {
@@ -145,7 +146,7 @@ export class ConstTaskService {
                 });
                 const requests = result[0];
                 const total = result[1];
-                let totalDuration = 0;
+                var totalDuration = 0;
                 for (const request of requests) {
                     totalDuration += Number(request.duration);
                 }
@@ -183,7 +184,7 @@ export class ConstTaskService {
                 });
                 const requests = result[0];
                 const total = result[1];
-                let totalDuration = 0;
+                var totalDuration = 0;
                 for (const request of requests) {
                     totalDuration += Number(request.duration);
                 }

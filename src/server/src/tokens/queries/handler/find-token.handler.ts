@@ -1,9 +1,9 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { FindTokenQuery } from '../impl/find-token.query';
-import { Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { Repository } from 'typeorm';
+import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
+import {FindTokenQuery} from '../impl/find-token.query';
+import {Logger} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
+import {Repository} from 'typeorm';
 
 @QueryHandler(FindTokenQuery)
 export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
@@ -16,9 +16,9 @@ export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
     async execute(query: FindTokenQuery): Promise<any> {
         Logger.log('Async FindTokenQuery...', 'FindTokenQuery');
         try {
-            return await this.repository.findOne({_id: query.id});
+            return await this.repository.findOne({ _id: query.id });
         } catch (error) {
-            Logger.error(error.message, '', 'FindTokenQuery');
+            Logger.error(error, '', 'FindTokenQuery');
         }
     }
 }

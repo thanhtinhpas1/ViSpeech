@@ -1,13 +1,9 @@
-import { Inject, Logger } from '@nestjs/common';
-import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { Repository } from 'typeorm';
-import {
-    PermissionAssignRepliedEvent,
-    PermissionAssignRepliedFailedEvent,
-    PermissionAssignRepliedSuccessEvent
-} from '../impl/permission-assign-replied.event';
+import {Logger, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
+import {InjectRepository} from '@nestjs/typeorm';
+import {PermissionDto} from 'permissions/dtos/permissions.dto';
+import {Repository} from 'typeorm';
+import {PermissionAssignRepliedEvent, PermissionAssignRepliedSuccessEvent, PermissionAssignRepliedFailedEvent} from '../impl/permission-assign-replied.event';
 import { JwtService } from '@nestjs/jwt';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
@@ -51,7 +47,6 @@ export class PermissionAssignRepliedSuccessHandler
     ) {
         this.clientKafka.connect();
     }
-
     handle(event: PermissionAssignRepliedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_REPLIED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.streamId, 'PermissionAssignRepliedSuccessEvent');
@@ -67,7 +62,6 @@ export class PermissionAssignRepliedFailedHandler
     ) {
         this.clientKafka.connect();
     }
-
     handle(event: PermissionAssignRepliedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

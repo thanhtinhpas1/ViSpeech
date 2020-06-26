@@ -1,10 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { PermissionAssignEmailSentSuccessEvent } from 'permissions/events/impl/permission-assign-email-sent.event';
-import { CreatePermissionCommand } from 'permissions/commands/impl/create-permission.command';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import {Injectable, Logger} from '@nestjs/common';
+import {ICommand, ofType, Saga} from '@nestjs/cqrs';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {PermissionAssignEmailSentSuccessEvent} from 'permissions/events/impl/permission-assign-email-sent.event';
+import {CreatePermissionCommand} from 'permissions/commands/impl/create-permission.command';
+import {PermissionDto} from 'permissions/dtos/permissions.dto';
 
 @Injectable()
 export class PermissionsSagas {

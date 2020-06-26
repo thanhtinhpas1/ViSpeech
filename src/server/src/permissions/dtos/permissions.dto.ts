@@ -1,9 +1,9 @@
-import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsArray, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { CONSTANTS } from 'common/constant';
-import { ObjectID } from 'mongodb';
-import { Column, Entity } from 'typeorm';
-import { ErrorUtils } from "../../utils/errorUtils";
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {IsArray, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID} from 'class-validator';
+import {CONSTANTS} from 'common/constant';
+import {ObjectID} from 'mongodb';
+import {Column, Entity} from 'typeorm';
+import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
 
 export class PermissionAssignDto {
@@ -14,25 +14,25 @@ export class PermissionAssignDto {
         this.assignerId = assignerId;
     }
 
-    @IsString(ErrorUtils.getMessage('assigneeUsername', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('assigneeUsername', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('assigneeUsername', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('assigneeUsername', ERR.IsNotEmpty))
     assigneeUsername: string;
 
-    @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
-    @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
+    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
+    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     projectId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
-    @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
+    @IsNotEmpty(ErrUtil.getMessage('permissions', ERR.IsNotEmpty))
+    @IsArray(ErrUtil.getMessage('permissions', ERR.IsArray))
     @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
     permissions: string[];
 
-    @IsNotEmpty(ErrorUtils.getMessage('assignerId', ERR.IsNotEmpty))
-    @IsUUID('all', ErrorUtils.getMessage('assignerId', ERR.IsUUID))
+    @IsNotEmpty(ErrUtil.getMessage('assignerId', ERR.IsNotEmpty))
+    @IsUUID('all', ErrUtil.getMessage('assignerId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -40,7 +40,7 @@ export class PermissionAssignDto {
     assignerId: ObjectID;
 
     @IsOptional()
-    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
+    @IsUUID('all', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -54,11 +54,11 @@ export class PermissionResponseDto {
         this.status = status;
     }
 
-    @IsString(ErrorUtils.getMessage('emailToken', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('emailToken', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('emailToken', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('emailToken', ERR.IsNotEmpty))
     emailToken: string;
 
-    @IsString(ErrorUtils.getMessage('status', ERR.IsString))
+    @IsString(ErrUtil.getMessage('status', ERR.IsString))
     @IsIn([
         CONSTANTS.STATUS.ACCEPTED,
         CONSTANTS.STATUS.REJECTED
@@ -72,8 +72,8 @@ export class PermissionIdRequestParamsDto {
         this._id = permissionId;
     }
 
-    @IsString(ErrorUtils.getMessage('_id', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('_id', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('_id', ERR.IsNotEmpty))
     _id: string;
 }
 
@@ -82,8 +82,8 @@ export class EmailTokenParamsDto {
         this.emailToken = emailToken;
     }
 
-    @IsString(ErrorUtils.getMessage('emailToken', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('emailToken', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('emailToken', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('emailToken', ERR.IsNotEmpty))
     emailToken: string;
 }
 
@@ -98,31 +98,31 @@ export class PermissionDto extends BaseEntityDto {
         this.status = status;
     }
 
-    @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
-    @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
+    @IsNotEmpty(ErrUtil.getMessage('permissions', ERR.IsNotEmpty))
+    @IsArray(ErrUtil.getMessage('permissions', ERR.IsArray))
     @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
     @Column()
     permissions: string[];
 
-    @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
+    @IsString(ErrUtil.getMessage('assigneeId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('assigneeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     assigneeId: ObjectID;
 
-    @IsString(ErrorUtils.getMessage('assignerId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('assignerId', ERR.IsUUID))
+    @IsString(ErrUtil.getMessage('assignerId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('assignerId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     assignerId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
+    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('projectId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -130,7 +130,7 @@ export class PermissionDto extends BaseEntityDto {
     projectId: ObjectID;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('status', ERR.IsString))
+    @IsString(ErrUtil.getMessage('status', ERR.IsString))
     @IsIn([
         CONSTANTS.STATUS.PENDING,
         CONSTANTS.STATUS.ACCEPTED,

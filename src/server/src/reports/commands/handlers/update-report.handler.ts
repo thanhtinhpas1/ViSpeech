@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { UpdateReportCommand } from '../impl/update-report.command';
-import { ReportRepository } from '../../repository/report.repository';
-import { Logger, NotFoundException } from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {UpdateReportCommand} from '../impl/update-report.command';
+import {ReportRepository} from '../../repository/report.repository';
+import {Logger, NotFoundException} from '@nestjs/common';
 import { getMongoRepository } from 'typeorm';
 import { ReportDto } from 'reports/dtos/reports.dto';
 import { ReportUpdatedFailedEvent } from 'reports/events/impl/report-updated.event';
@@ -21,7 +21,7 @@ export class UpdateReportHandler
         const {streamId, reportDto} = command;
 
         try {
-            const report = await getMongoRepository(ReportDto).findOne({_id: reportDto._id});
+            const report = await getMongoRepository(ReportDto).findOne({ _id: reportDto._id });
             if (!report) {
                 throw new NotFoundException(`Report with _id ${reportDto._id} does not exist.`);
             }

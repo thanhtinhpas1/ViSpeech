@@ -7,21 +7,9 @@ import { CommandHandlers } from './commands/handlers';
 import { PermissionsController } from './controllers/permissions.controller';
 import { PermissionDto } from './dtos/permissions.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    PermissionCreatedEvent,
-    PermissionCreatedFailedEvent,
-    PermissionCreatedSuccessEvent
-} from './events/impl/permission-created.event';
-import {
-    PermissionDeletedEvent,
-    PermissionDeletedFailedEvent,
-    PermissionDeletedSuccessEvent
-} from './events/impl/permission-deleted.event';
-import {
-    PermissionUpdatedEvent,
-    PermissionUpdatedFailedEvent,
-    PermissionUpdatedSuccessEvent
-} from './events/impl/permission-updated.event';
+import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from './events/impl/permission-created.event';
+import { PermissionDeletedEvent, PermissionDeletedSuccessEvent, PermissionDeletedFailedEvent } from './events/impl/permission-deleted.event';
+import { PermissionUpdatedEvent, PermissionUpdatedSuccessEvent, PermissionUpdatedFailedEvent } from './events/impl/permission-updated.event';
 import { PermissionWelcomedEvent } from './events/impl/permission-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { PermissionRepository } from './repository/permission.repository';
@@ -35,24 +23,12 @@ import {
     PermissionAssignEmailSentFailedEvent,
     PermissionAssignEmailSentSuccessEvent
 } from './events/impl/permission-assign-email-sent.event';
-import {
-    PermissionAssignRepliedEvent,
-    PermissionAssignRepliedFailedEvent,
-    PermissionAssignRepliedSuccessEvent
-} from './events/impl/permission-assign-replied.event';
+import { PermissionAssignRepliedEvent, PermissionAssignRepliedSuccessEvent, PermissionAssignRepliedFailedEvent } from './events/impl/permission-assign-replied.event';
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
-import {
-    PermissionDeletedByUserIdEvent,
-    PermissionDeletedByUserIdFailedEvent,
-    PermissionDeletedByUserIdSuccessEvent
-} from './events/impl/permission-deleted-by-userId.event';
-import {
-    PermissionDeletedByProjectIdEvent,
-    PermissionDeletedByProjectIdFailedEvent,
-    PermissionDeletedByProjectIdSuccessEvent
-} from './events/impl/permission-deleted-by-projectId.event';
+import { PermissionDeletedByUserIdEvent, PermissionDeletedByUserIdSuccessEvent, PermissionDeletedByUserIdFailedEvent } from './events/impl/permission-deleted-by-userId.event';
+import { PermissionDeletedByProjectIdEvent, PermissionDeletedByProjectIdSuccessEvent, PermissionDeletedByProjectIdFailedEvent } from './events/impl/permission-deleted-by-projectId.event';
 
 @Module({
     imports: [

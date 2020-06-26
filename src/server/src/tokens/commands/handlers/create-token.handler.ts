@@ -1,5 +1,5 @@
-import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { Logger, BadRequestException, NotFoundException } from '@nestjs/common';
+import { CommandHandler, EventPublisher, ICommandHandler, EventBus } from '@nestjs/cqrs';
 import { CreateFreeTokenCommand, CreateOrderedTokenCommand, CreateTokenCommand } from '../impl/create-token.command';
 import { TokenRepository } from '../../repository/token.repository';
 import { AuthService } from 'auth/auth.service';
@@ -21,7 +21,7 @@ export class CreateTokenHandler
 
     async execute(command: CreateTokenCommand) {
         Logger.log('Async CreateTokenHandler...', 'CreateTokenCommand');
-        const {streamId, tokenDto} = command;
+        const { streamId, tokenDto } = command;
 
         try {
             if (!tokenDto.tokenType && !tokenDto.tokenTypeId) {
@@ -29,7 +29,7 @@ export class CreateTokenHandler
             }
 
             if (tokenDto.tokenTypeId) {
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({_id: tokenDto.tokenTypeId});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ _id: tokenDto.tokenTypeId });
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with _id ${tokenDto.tokenTypeId} does not exist.`);
                 }
@@ -60,7 +60,7 @@ export class CreateFreeTokenHandler
     async execute(command: CreateFreeTokenCommand) {
         Logger.log('Async CreateFreeTokenHandler...', 'CreateFreeTokenCommand');
 
-        const {streamId, tokenDto} = command;
+        const { streamId, tokenDto } = command;
         // use mergeObjectContext for dto dispatch events
         const token = this.publisher.mergeObjectContext(
             await this.repository.createFreeToken(streamId, tokenDto)
@@ -81,11 +81,11 @@ export class CreateOrderedTokenHandler
 
     async execute(command: CreateOrderedTokenCommand) {
         Logger.log('Async CreateOrderedTokenHandler...', 'CreateOrderedTokenCommand');
-        const {streamId, tokenDto} = command;
+        const { streamId, tokenDto } = command;
 
         try {
             if (tokenDto.tokenTypeId) {
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({_id: tokenDto.tokenTypeId});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ _id: tokenDto.tokenTypeId });
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with _id ${tokenDto.tokenTypeId} does not exist.`);
                 }

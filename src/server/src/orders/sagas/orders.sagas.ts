@@ -9,14 +9,11 @@ import { CreateOrderedTokenCommand } from 'tokens/commands/impl/create-token.com
 import { UpdateOrderCommand } from 'orders/commands/impl/update-order.command';
 import { OrderDto } from 'orders/dtos/orders.dto';
 import { CONSTANTS } from 'common/constant';
-import {
-    OrderedTokenCreatedFailedEvent,
-    OrderedTokenCreatedSuccessEvent
-} from 'tokens/events/impl/ordered-token-created.event';
+import { OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from 'tokens/events/impl/ordered-token-created.event';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { UpgradeTokenOrderCreatedSuccessEvent } from 'orders/events/impl/upgrade-token-order-created.event';
 import { UpgradeTokenCommand } from 'tokens/commands/impl/upgrade-token.command';
-import { TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from 'tokens/events/impl/token-upgraded.event';
+import { TokenUpgradedSuccessEvent, TokenUpgradedFailedEvent } from 'tokens/events/impl/token-upgraded.event';
 
 @Injectable()
 export class OrdersSagas {
@@ -29,8 +26,8 @@ export class OrdersSagas {
             ofType(OrderCreatedSuccessEvent),
             map((event: OrderCreatedSuccessEvent) => {
                 Logger.log("Inside [OrdersSagas] orderCreatedSuccess Saga", "OrdersSagas");
-                const {streamId, orderDto} = event;
-                const {userId, tokenType, _id, token} = orderDto;
+                const { streamId, orderDto } = event;
+                const { userId, tokenType, _id, token } = orderDto;
                 const tokenValue = this.authService.generateTokenWithUserId(userId);
                 const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
                 return new CreateOrderedTokenCommand(streamId, tokenDto);
@@ -44,8 +41,8 @@ export class OrdersSagas {
             ofType(OrderedTokenCreatedSuccessEvent),
             map((event: OrderedTokenCreatedSuccessEvent) => {
                 Logger.log('Inside [OrdersSagas] orderedTokenCreatedSuccess Saga', 'OrdersSagas');
-                const {streamId, tokenDto} = event;
-                const {userId, orderId} = tokenDto;
+                const { streamId, tokenDto } = event;
+                const { userId, orderId } = tokenDto;
                 const tempTokenTypeDto = TokenTypeDto.createTempInstance();
                 const orderDto = new OrderDto(userId, tempTokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS);
                 orderDto._id = orderId;
@@ -60,8 +57,8 @@ export class OrdersSagas {
             ofType(OrderedTokenCreatedFailedEvent),
             map((event: OrderedTokenCreatedFailedEvent) => {
                 Logger.log('Inside [OrdersSagas] orderedTokenCreatedFailed Saga', 'OrdersSagas');
-                const {streamId, tokenDto} = event;
-                const {userId, orderId} = tokenDto;
+                const { streamId, tokenDto } = event;
+                const { userId, orderId } = tokenDto;
                 const tempTokenTypeDto = TokenTypeDto.createTempInstance();
                 const orderDto = new OrderDto(userId, tempTokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
                 orderDto._id = orderId;
@@ -76,8 +73,8 @@ export class OrdersSagas {
             ofType(UpgradeTokenOrderCreatedSuccessEvent),
             map((event: UpgradeTokenOrderCreatedSuccessEvent) => {
                 Logger.log("Inside [OrdersSagas] upgradeTokenOrderCreatedSuccess Saga", "OrdersSagas");
-                const {streamId, orderDto} = event;
-                const {tokenType, token} = orderDto;
+                const { streamId, orderDto } = event;
+                const { tokenType, token } = orderDto;
                 token.orderId = orderDto._id
                 return new UpgradeTokenCommand(streamId, token, tokenType);
             })
@@ -90,8 +87,8 @@ export class OrdersSagas {
             ofType(TokenUpgradedSuccessEvent),
             map((event: TokenUpgradedSuccessEvent) => {
                 Logger.log("Inside [OrdersSagas] tokenUpgradedSuccessEvent Saga", "OrdersSagas");
-                const {streamId, tokenDto, tokenTypeDto} = event;
-                const {userId, orderId} = tokenDto;
+                const { streamId, tokenDto, tokenTypeDto } = event;
+                const { userId, orderId } = tokenDto;
                 const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS);
                 orderDto._id = orderId;
                 return new UpdateOrderCommand(streamId, orderDto);
@@ -105,8 +102,8 @@ export class OrdersSagas {
             ofType(TokenUpgradedFailedEvent),
             map((event: TokenUpgradedFailedEvent) => {
                 Logger.log("Inside [OrdersSagas] tokenUpgradedFailedEvent Saga", "OrdersSagas");
-                const {streamId, tokenDto, tokenTypeDto} = event;
-                const {userId, orderId} = tokenDto;
+                const { streamId, tokenDto, tokenTypeDto } = event;
+                const { userId, orderId } = tokenDto;
                 const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
                 orderDto._id = orderId;
                 return new UpdateOrderCommand(streamId, orderDto);

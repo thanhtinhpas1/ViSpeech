@@ -1,9 +1,9 @@
-import { Logger } from '@nestjs/common';
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserDto } from '../../dtos/users.dto';
-import { FindUserByUsernameQuery } from '../impl/find-user.query';
+import {Logger} from '@nestjs/common';
+import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {UserDto} from '../../dtos/users.dto';
+import {FindUserByUsernameQuery} from '../impl/find-user.query';
 
 @QueryHandler(FindUserByUsernameQuery)
 export class FindUserUsernameHandler
@@ -19,7 +19,7 @@ export class FindUserUsernameHandler
         try {
             return await this.userRepository.findOne({username: query.username});
         } catch (error) {
-            Logger.error(error.message, '', 'FindUserByUsernameQuery');
+            Logger.error(error, '', 'FindUserByUsernameQuery');
         }
 
     }

@@ -1,7 +1,7 @@
 import { Logger } from "@nestjs/common";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
-import { getMongoRepository, Repository } from "typeorm";
+import { Repository, getMongoRepository } from "typeorm";
 import { UserDto } from "users/dtos/users.dto";
 import { GetUsersQuery } from "../impl/get-users.query";
 import { Utils } from "utils";
@@ -15,7 +15,7 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
 
     async execute(query: GetUsersQuery) {
         Logger.log("Async GetUsersQuery...", "GetUsersQuery");
-        const {limit, offset, filters, sort} = query;
+        const { limit, offset, filters, sort } = query;
         let users = [];
         try {
             // Admin no need to find active users
@@ -25,30 +25,30 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
             }
             if (filters) {
                 if (filters['firstName']) {
-                    findOptions.where['firstName'] = new RegExp(filters['firstName'], 'i')
+                    findOptions.where['firstName'] = new RegExp(filters['firstName'], 'i') 
                 }
                 if (filters['lastName']) {
-                    findOptions.where['lastName'] = new RegExp(filters['lastName'], 'i')
+                    findOptions.where['lastName'] = new RegExp(filters['lastName'], 'i') 
                 }
                 if (filters['username']) {
-                    findOptions.where['username'] = new RegExp(filters['username'], 'i')
+                    findOptions.where['username'] = new RegExp(filters['username'], 'i') 
                 }
                 if (filters['email']) {
-                    findOptions.where['email'] = new RegExp(filters['email'], 'i')
+                    findOptions.where['email'] = new RegExp(filters['email'], 'i') 
                 }
                 if (filters['roles']) {
                     findOptions.where['roles.name'] = filters['roles']
                 }
-            }
+            }   
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)
                 findOptions.order[sortField] = sort.order
             }
 
-            users = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
+            users = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             users = Utils.removeObjPropertiesFromObjArr(users, ['password']);
             const count = await getMongoRepository(UserDto).count(findOptions.where);
-            return {data: users, count};
+            return { data: users, count };
         } catch (error) {
             Logger.error(error, '', 'GetUsersQuery');
         }

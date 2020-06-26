@@ -1,18 +1,32 @@
 pipeline {
-    agent any
+    agent {
+        dockerfile {
+            filename 'Dockerfile.build'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v /etc/timezone:/etc/timezone -v $HOME/.cache:/root/.cache -v $HOME/.ivy2:/root/.ivy2 -v $HOME/.npm:/root/.npm'
+        }
+    }   
     environment {
         CI = 'true'
     }
     stages {
-        stage('Build') {
+        stage('clean') {
+            when {
+                isRestartedRun()
+            }
             steps {
-                sh 'docker build -t release ./src/release'
+                sh 'rm -rf dist node_module'
+                sh 'docker system prune -af --volumes'
             }
         }
-        stage('Delivery') {
+        stage('docker') {
             steps {
-                sh 'docker rm -f release || true'
-                sh 'docker run --name=release -d --restart=always -p 80:80 release'
+                sh 'docker build -t vispeech ./src/server'
+            }
+        }
+        stage('delivery') {
+            steps {
+                sh 'docker rm -f vispeech || true'
+                sh 'docker run --name=vispeech -d --restart=always -p 7070:7070 vispeech'
             }
         }
     }

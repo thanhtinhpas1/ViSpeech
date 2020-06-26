@@ -1,7 +1,7 @@
-import { Logger } from '@nestjs/common';
-import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { CreateProjectCommand } from '../impl/create-project.command';
-import { ProjectRepository } from '../../repository/project.repository';
+import {Logger} from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {CreateProjectCommand} from '../impl/create-project.command';
+import {ProjectRepository} from '../../repository/project.repository';
 
 @CommandHandler(CreateProjectCommand)
 export class CreateProjectHandler

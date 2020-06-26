@@ -39,7 +39,7 @@ export class AuthService {
         let socialUser = await this.userRepository.findOne({socialId});
         if (!socialUser) {
             const streamId = Utils.getUuid()
-            await this.commandBus.execute(new CreateUserStartCommand(streamId, userDto));
+            this.commandBus.execute(new CreateUserStartCommand(streamId, userDto));
             return {};
         }
         socialUser = Utils.removePropertyFromObject(socialUser, 'password');

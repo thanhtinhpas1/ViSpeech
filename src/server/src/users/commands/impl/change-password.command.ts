@@ -1,4 +1,4 @@
-import { ICommand } from '@nestjs/cqrs';
+import {ICommand} from '@nestjs/cqrs';
 import { ChangePasswordBody } from 'users/dtos/users.dto';
 
 export class ChangePasswordCommand implements ICommand {

@@ -1,6 +1,5 @@
 import { BaseEntityDto } from './base-entity.dto';
 import { RoleDto } from './role.dto';
-
 export class UserDto extends BaseEntityDto {
     constructor(firstName: string, lastName: string, username: string, password: string,
         email: string, roles: RoleDto[]) {
@@ -18,6 +17,7 @@ export class UserDto extends BaseEntityDto {
     username: string;
     password: string;
     email: string;
+    firstTimeLoginRemaining: boolean;
     isActive: boolean;
     roles: RoleDto[];
 }

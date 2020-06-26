@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { Project } from '../models/project.model';
-import { ProjectDto } from 'projects/dtos/projects.dto';
+import {Injectable} from '@nestjs/common';
+import {Project} from '../models/project.model';
+import {ProjectDto} from 'projects/dtos/projects.dto';
 
 @Injectable()
 export class ProjectRepository {

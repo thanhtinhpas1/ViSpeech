@@ -1,17 +1,13 @@
-import { Inject, Logger } from '@nestjs/common';
-import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { getMongoRepository, Repository } from 'typeorm';
+import {Logger, NotFoundException, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
+import {InjectRepository} from '@nestjs/typeorm';
+import {PermissionDto} from 'permissions/dtos/permissions.dto';
+import {Repository, getMongoRepository} from 'typeorm';
 import { CONSTANTS } from 'common/constant';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
 import { Utils } from 'utils';
-import {
-    PermissionDeletedByUserIdEvent,
-    PermissionDeletedByUserIdFailedEvent,
-    PermissionDeletedByUserIdSuccessEvent
-} from '../impl/permission-deleted-by-userId.event';
+import { PermissionDeletedByUserIdEvent, PermissionDeletedByUserIdSuccessEvent, PermissionDeletedByUserIdFailedEvent } from '../impl/permission-deleted-by-userId.event';
 
 @EventsHandler(PermissionDeletedByUserIdEvent)
 export class PermissionDeletedByUserIdHandler implements IEventHandler<PermissionDeletedByUserIdEvent> {
@@ -27,8 +23,8 @@ export class PermissionDeletedByUserIdHandler implements IEventHandler<Permissio
         const {streamId, userId} = event;
 
         try {
-            await getMongoRepository(PermissionDto).updateMany({assigneeId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID}});
-            await getMongoRepository(PermissionDto).updateMany({assignerId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID}});
+            await getMongoRepository(PermissionDto).updateMany({ assigneeId: userId }, { $set: { status: CONSTANTS.STATUS.INVALID }});
+            await getMongoRepository(PermissionDto).updateMany({ assignerId: userId }, { $set: { status: CONSTANTS.STATUS.INVALID }});
             this.eventBus.publish(new PermissionDeletedByUserIdSuccessEvent(streamId, userId));
         } catch (error) {
             this.eventBus.publish(new PermissionDeletedByUserIdFailedEvent(streamId, userId, error));
@@ -61,7 +57,6 @@ export class PermissionDeletedByUserIdFailedHandler
     ) {
         this.clientKafka.connect();
     }
-
     handle(event: PermissionDeletedByUserIdFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

@@ -1,6 +1,6 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { TokensController } from './tokens.controller';
-import { TokensService } from '../services/tokens.service';
+import {Test, TestingModule} from '@nestjs/testing';
+import {TokensController} from './tokens.controller';
+import {TokensService} from '../services/tokens.service';
 
 describe('Tokens Controller', () => {
     let module: TestingModule;

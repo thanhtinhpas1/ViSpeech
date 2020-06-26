@@ -6,7 +6,7 @@ const TokenCalculator = ({ keyQuantity }) => {
   return (
     <div className="card-innr">
       <div className="card-head">
-        <h4 className="card-title">Tổng số token đã giao dịch</h4>
+        <h4 className="card-title">Tổng số key đã giao dịch</h4>
       </div>
       <h1 className="token-info-head text-light">
         <em className="pay-icon">

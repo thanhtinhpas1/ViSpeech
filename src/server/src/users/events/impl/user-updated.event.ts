@@ -1,5 +1,5 @@
-import { IEvent } from '@nestjs/cqrs';
-import { UserDto } from '../../dtos/users.dto';
+import {IEvent} from '@nestjs/cqrs';
+import {UserDto} from '../../dtos/users.dto';
 
 export class UserUpdatedEvent implements IEvent {
     constructor(

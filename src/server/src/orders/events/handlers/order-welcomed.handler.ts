@@ -1,6 +1,6 @@
-import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { OrderWelcomedEvent } from '../impl/order-welcomed.event';
-import { Logger } from '@nestjs/common';
+import {EventsHandler, IEventHandler} from '@nestjs/cqrs';
+import {OrderWelcomedEvent} from '../impl/order-welcomed.event';
+import {Logger} from '@nestjs/common';
 
 @EventsHandler(OrderWelcomedEvent)
 export class OrderWelcomedHandler implements IEventHandler<OrderWelcomedEvent> {

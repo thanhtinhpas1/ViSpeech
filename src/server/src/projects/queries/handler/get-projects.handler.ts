@@ -3,7 +3,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectDto } from 'projects/dtos/projects.dto';
-import { getMongoRepository, Repository } from 'typeorm';
+import { Repository, getMongoRepository } from 'typeorm';
 import { Utils } from 'utils';
 import { UserDto } from 'users/dtos/users.dto';
 
@@ -19,7 +19,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
 
     async execute(query: GetProjectsQuery) {
         Logger.log('Async GetProjectsHandler...', 'GetProjectsQuery');
-        const {offset, limit, filters, sort} = query;
+        const { offset, limit, filters, sort } = query;
         let projects = [];
         let result = [];
         try {
@@ -35,10 +35,10 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
                     findOptions.where['name'] = new RegExp(filters['name'], 'i')
                 }
                 if (filters['ownerName']) {
-                    const users = await this.userDtoRepository.find({where: {username: new RegExp(filters['ownerName'], 'i')}});
+                    const users = await this.userDtoRepository.find({ where: { username: new RegExp(filters['ownerName'], 'i') } });
                     if (users.length > 0) {
                         const userIds = users.map(user => user._id)
-                        findOptions.where['userId'] = {$in: [...userIds]}
+                        findOptions.where['userId'] = { $in: [...userIds] }
                     }
                 }
                 if (filters['isValid']) {
@@ -50,16 +50,16 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
                 findOptions.order[sortField] = sort.order
             }
 
-            projects = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
+            projects = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             for (const project of projects) {
-                const user = await this.userDtoRepository.findOne({_id: project.userId.toString()});
-                result.push({...project, ownerName: user.username});
+                const user = await this.userDtoRepository.findOne({ _id: project.userId.toString() });
+                result.push({ ...project, ownerName: user.username });
             }
 
             const count = await getMongoRepository(ProjectDto).count(findOptions.where);
-            return {data: result, count};
+            return { data: result, count };
         } catch (error) {
-            Logger.error(error.message, '', 'GetProjectsQuery');
+            Logger.error(error, '', 'GetProjectsQuery');
         }
     }
 }

@@ -1,12 +1,8 @@
-import { OrderCreatedFailedHandler, OrderCreatedHandler, OrderCreatedSuccessHandler } from './order-created.handler';
-import { OrderUpdatedFailedHandler, OrderUpdatedHandler, OrderUpdatedSuccessHandler } from './order-updated.handler';
-import { OrderDeletedFailedHandler, OrderDeletedHandler, OrderDeletedSuccessHandler } from './order-deleted.handler';
-import { OrderWelcomedHandler } from './order-welcomed.handler';
-import {
-    UpgradeTokenOrderCreatedFailedHandler,
-    UpgradeTokenOrderCreatedHandler,
-    UpgradeTokenOrderCreatedSuccessHandler
-} from './upgrade-token-order-created.handler';
+import {OrderCreatedFailedHandler, OrderCreatedHandler, OrderCreatedSuccessHandler} from './order-created.handler';
+import {OrderUpdatedHandler, OrderUpdatedSuccessHandler, OrderUpdatedFailedHandler} from './order-updated.handler';
+import {OrderDeletedHandler, OrderDeletedSuccessHandler, OrderDeletedFailedHandler} from './order-deleted.handler';
+import {OrderWelcomedHandler} from './order-welcomed.handler';
+import { UpgradeTokenOrderCreatedHandler, UpgradeTokenOrderCreatedSuccessHandler, UpgradeTokenOrderCreatedFailedHandler } from './upgrade-token-order-created.handler';
 
 export const EventHandlers = [
     // create
@@ -28,5 +24,6 @@ export const EventHandlers = [
     OrderDeletedHandler,
     OrderDeletedSuccessHandler,
     OrderDeletedFailedHandler,
+    
     OrderWelcomedHandler
 ];

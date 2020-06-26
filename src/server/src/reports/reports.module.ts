@@ -8,21 +8,9 @@ import { CommandHandlers } from './commands/handlers';
 import { ReportsController } from './controllers/reports.controller';
 import { ReportDto } from './dtos/reports.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    ReportCreatedEvent,
-    ReportCreatedFailedEvent,
-    ReportCreatedSuccessEvent
-} from './events/impl/report-created.event';
-import {
-    ReportDeletedEvent,
-    ReportDeletedFailedEvent,
-    ReportDeletedSuccessEvent
-} from './events/impl/report-deleted.event';
-import {
-    ReportUpdatedEvent,
-    ReportUpdatedFailedEvent,
-    ReportUpdatedSuccessEvent
-} from './events/impl/report-updated.event';
+import { ReportCreatedEvent, ReportCreatedSuccessEvent, ReportCreatedFailedEvent } from './events/impl/report-created.event';
+import { ReportDeletedEvent, ReportDeletedSuccessEvent, ReportDeletedFailedEvent } from './events/impl/report-deleted.event';
+import { ReportUpdatedEvent, ReportUpdatedSuccessEvent, ReportUpdatedFailedEvent } from './events/impl/report-updated.event';
 import { ReportWelcomedEvent } from './events/impl/report-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';

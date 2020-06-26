@@ -1,11 +1,11 @@
-import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsBoolean, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-import { CONSTANTS } from 'common/constant';
-import { Column, Entity, ObjectID } from 'typeorm';
-import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested, IsBoolean} from 'class-validator';
+import {CONSTANTS} from 'common/constant';
+import {Column, Entity, ObjectID} from 'typeorm';
+import {TokenTypeDto} from 'tokens/dtos/token-types.dto';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
 import { Type } from 'class-transformer';
-import { ErrorUtils } from "../../utils/errorUtils";
+import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
 
 export class OrderIdRequestParamsDto {
@@ -13,8 +13,8 @@ export class OrderIdRequestParamsDto {
         this._id = orderId;
     }
 
-    @IsString(ErrorUtils.getMessage('_id', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('_id', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('_id', ERR.IsNotEmpty))
     _id: string;
 }
 
@@ -23,8 +23,8 @@ export class PaymentIntent {
         this.id = id;
     }
 
-    @IsString(ErrorUtils.getMessage('payment intent id', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('payment intent id', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('payment intent id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('payment intent id', ERR.IsNotEmpty))
     id: string;
 }
 
@@ -45,15 +45,15 @@ export class OrderDto extends BaseEntityDto {
     @Column()
     token: TokenDto;
 
-    @IsNotEmpty(ErrorUtils.getMessage('tokenType', ERR.IsNotEmpty))
+    @IsNotEmpty(ErrUtil.getMessage('tokenType', ERR.IsNotEmpty))
     @ValidateNested()
     @Type(() => TokenTypeDto)
     @Column()
     tokenType: TokenTypeDto;
 
-    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('userId', ERR.IsUUID))
+    @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
@@ -61,7 +61,7 @@ export class OrderDto extends BaseEntityDto {
     userId: ObjectID;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('status', ERR.IsString))
+    @IsString(ErrUtil.getMessage('status', ERR.IsString))
     @IsIn([
         CONSTANTS.STATUS.PENDING,
         CONSTANTS.STATUS.SUCCESS,
@@ -70,8 +70,8 @@ export class OrderDto extends BaseEntityDto {
     @Column()
     status: string;
 
-    @IsNotEmpty(ErrorUtils.getMessage('upgradeToken', ERR.IsNotEmpty))
-    @IsBoolean(ErrorUtils.getMessage('upgradeToken', ERR.IsBoolean))
+    @IsNotEmpty(ErrUtil.getMessage('upgradeToken', ERR.IsNotEmpty))
+    @IsBoolean(ErrUtil.getMessage('upgradeToken', ERR.IsBoolean))
     @Column({
         default: true,
         nullable: false,

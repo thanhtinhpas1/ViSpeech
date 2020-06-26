@@ -5,15 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Repository } from 'typeorm';
-import { USER_TYPE, UserDto } from 'users/dtos/users.dto';
+import { UserDto, USER_TYPE } from 'users/dtos/users.dto';
 import { Utils } from 'utils';
 import { config } from "../../../../config";
-import {
-    UserCreatedEvent,
-    UserCreatedFailedEvent,
-    UserCreatedSuccessEvent,
-    UserCreationStartedEvent
-} from '../impl/user-created.event';
+import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent } from '../impl/user-created.event';
 import { AuthService } from 'auth/auth.service';
 
 @EventsHandler(UserCreationStartedEvent)
@@ -34,7 +29,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 
     async handle(event: UserCreatedEvent) {
         Logger.log(event.userDto.username, 'UserCreatedEvent');
-        const {streamId, userDto} = event;
+        const { streamId, userDto } = event;
         const user = JSON.parse(JSON.stringify(userDto));
         try {
             user.password = Utils.hashPassword(user.password);
@@ -63,7 +58,6 @@ export class UserCreatedSuccessHandler implements IEventHandler<UserCreatedSucce
     ) {
         this.clientKafka.connect();
     }
-
     handle(event: UserCreatedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.userDto.username, 'UserCreatedSuccessEvent');

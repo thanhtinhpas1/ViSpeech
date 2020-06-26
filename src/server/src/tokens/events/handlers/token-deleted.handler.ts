@@ -1,8 +1,8 @@
-import { Inject, Logger } from '@nestjs/common';
-import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { Logger, Inject } from '@nestjs/common';
+import { EventsHandler, IEventHandler, EventBus } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { TokenDeletedEvent, TokenDeletedFailedEvent, TokenDeletedSuccessEvent } from '../impl/token-deleted.event';
+import { TokenDeletedEvent, TokenDeletedSuccessEvent, TokenDeletedFailedEvent } from '../impl/token-deleted.event';
 import { Repository } from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
@@ -20,10 +20,10 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
 
     async handle(event: TokenDeletedEvent) {
         Logger.log(event.tokenId, 'TokenDeletedEvent');
-        const {streamId, tokenId} = event;
+        const { streamId, tokenId } = event;
 
         try {
-            await this.repository.update({_id: tokenId}, {isValid: false});
+            await this.repository.update({ _id: tokenId }, { isValid: false });
             this.eventBus.publish(new TokenDeletedSuccessEvent(streamId, tokenId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedFailedEvent(streamId, tokenId, error));
@@ -56,7 +56,6 @@ export class TokenDeletedFailedHandler
     ) {
         this.clientKafka.connect();
     }
-
     handle(event: TokenDeletedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

@@ -1,4 +1,4 @@
-import { ICommand } from '@nestjs/cqrs';
+import {ICommand} from '@nestjs/cqrs';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 

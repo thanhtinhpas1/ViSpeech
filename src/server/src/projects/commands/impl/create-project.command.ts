@@ -1,5 +1,5 @@
-import { ICommand } from '@nestjs/cqrs';
-import { ProjectDto } from '../../dtos/projects.dto';
+import {ICommand} from '@nestjs/cqrs';
+import {ProjectDto} from '../../dtos/projects.dto';
 
 export class CreateProjectCommand implements ICommand {
     constructor(

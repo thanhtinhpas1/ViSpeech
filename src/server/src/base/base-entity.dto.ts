@@ -1,7 +1,7 @@
-import { IsEmpty } from 'class-validator';
-import { CreateDateColumn, ObjectIdColumn, UpdateDateColumn, } from 'typeorm';
-import { Utils } from '../utils';
-import { ErrorUtils } from "../utils/errorUtils";
+import {IsEmpty} from 'class-validator';
+import {CreateDateColumn, ObjectIdColumn, UpdateDateColumn,} from 'typeorm';
+import {Utils} from '../utils';
+import { ErrUtil } from "../utils/err.util";
 import { ERR } from "../common/error";
 
 export class BaseEntityDto {
@@ -12,13 +12,13 @@ export class BaseEntityDto {
     @ObjectIdColumn()
     _id: string;
 
-    @IsEmpty(ErrorUtils.getMessage('createdDate', ERR.IsEmpty))
+    @IsEmpty(ErrUtil.getMessage('createdDate', ERR.IsEmpty))
     @CreateDateColumn({
         name: 'created_date',
     })
     createdDate: Date;
 
-    @IsEmpty(ErrorUtils.getMessage('updatedDate', ERR.IsEmpty))
+    @IsEmpty(ErrUtil.getMessage('updatedDate', ERR.IsEmpty))
     @UpdateDateColumn({
         name: 'updated_date',
     })

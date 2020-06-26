@@ -1,4 +1,4 @@
-import { IEvent } from '@nestjs/cqrs';
+import {IEvent} from '@nestjs/cqrs';
 import { ChangePasswordBody } from 'users/dtos/users.dto';
 
 export class PasswordChangedEvent implements IEvent {

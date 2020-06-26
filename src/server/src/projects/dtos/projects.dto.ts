@@ -1,7 +1,7 @@
-import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { Column, Entity } from 'typeorm';
-import { ErrorUtils } from "../../utils/errorUtils";
+import {BaseEntityDto} from 'base/base-entity.dto';
+import {IsNotEmpty, IsOptional, IsString, IsUUID, IsBoolean} from 'class-validator';
+import {Column, Entity, ObjectID} from 'typeorm';
+import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
 
 export class ProjectIdRequestParamsDto {
@@ -9,8 +9,8 @@ export class ProjectIdRequestParamsDto {
         this._id = projectId;
     }
 
-    @IsString(ErrorUtils.getMessage('_id', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('_id', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('_id', ERR.IsNotEmpty))
     _id: string;
 }
 
@@ -24,23 +24,23 @@ export class ProjectDto extends BaseEntityDto {
         this.isValid = true;
     }
 
-    @IsString(ErrorUtils.getMessage('name', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('name', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('name', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('name', ERR.IsNotEmpty))
     @Column({
         unique: true,
     })
     name: string;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('description', ERR.IsString))
+    @IsString(ErrUtil.getMessage('description', ERR.IsString))
     @Column({
         default: '',
     })
     description: string;
 
-    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('userId', ERR.IsUUID))
+    @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         update: false,
@@ -48,8 +48,8 @@ export class ProjectDto extends BaseEntityDto {
     })
     userId: string;
 
-    @IsNotEmpty(ErrorUtils.getMessage('isValid', ERR.IsNotEmpty))
-    @IsBoolean(ErrorUtils.getMessage('isValid', ERR.IsBoolean))
+    @IsNotEmpty(ErrUtil.getMessage('isValid', ERR.IsNotEmpty))
+    @IsBoolean(ErrUtil.getMessage('isValid', ERR.IsBoolean))
     @Column({
         default: true,
         nullable: false,

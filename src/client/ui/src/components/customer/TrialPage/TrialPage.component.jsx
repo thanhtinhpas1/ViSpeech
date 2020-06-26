@@ -39,16 +39,6 @@ const TrialPage = ({
     SocketService.socketOnListeningEvent(REQUEST_UPDATED_FAILED_EVENT)
   }, [])
 
-  const refreshRequestList = () => {
-    setUploading(false)
-    setNewRequest({})
-    getRequestListByUserId(currentUser._id, {
-      pagination: DEFAULT_PAGINATION,
-      sortField: 'createdDate',
-      sortOrder: SORT_ORDER.DESC,
-    })
-  }
-
   const updateRequest = async (requestId, transcriptFileUrl) => {
     if (!requestId) return
 
@@ -61,10 +51,22 @@ const TrialPage = ({
         } else {
           updateRequestInfoSuccess(transcriptFileUrl)
         }
-        refreshRequestList()
+        setUploading(false)
+        setNewRequest({})
+        getRequestListByUserId(currentUser._id, {
+          pagination: DEFAULT_PAGINATION,
+          sortField: 'createdDate',
+          sortOrder: SORT_ORDER.DESC,
+        })
       })
     } catch (err) {
-      refreshRequestList()
+      setUploading(false)
+      setNewRequest({})
+      getRequestListByUserId(currentUser._id, {
+        pagination: DEFAULT_PAGINATION,
+        sortField: 'createdDate',
+        sortOrder: SORT_ORDER.DESC,
+      })
       updateRequestInfoFailure({ message: err.message })
     }
   }
@@ -72,8 +74,8 @@ const TrialPage = ({
   const callAsr = async (file, folder, url) => {
     try {
       const data = await SpeechService.callAsr(file, url, tokenValue)
-      if (!data || data.text == null) {
-        refreshRequestList()
+      if (!data || !data.text) {
+        setUploading(false)
         return
       }
 
@@ -90,7 +92,7 @@ const TrialPage = ({
           // setProgress(progressValue)
         },
         error => {
-          refreshRequestList()
+          setUploading(false)
           console.log(`Error uploading text file: ${error.message}`)
         },
         () => {
@@ -105,7 +107,6 @@ const TrialPage = ({
         }
       )
     } catch (err) {
-      refreshRequestList()
       console.log(`Error uploading text file: ${err.message}`)
     }
   }
@@ -175,7 +176,7 @@ const TrialPage = ({
       if (status === 'done') {
         message.success(`Tải file "${info.file.name}" thành công.`)
       } else if (status === 'error') {
-        refreshRequestList()
+        setUploading(false)
         message.error(`Tải file "${info.file.name}" thất bại.`)
       }
     },
@@ -204,7 +205,7 @@ const TrialPage = ({
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
-              <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin âm thanh vào khu vực này để tải</p>
+              <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
             <RequestTable newRequest={newRequest} uploading={uploading} />

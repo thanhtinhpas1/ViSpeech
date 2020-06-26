@@ -1,7 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { UserRepository } from '../../repository/user.repository';
-import { Logger, NotFoundException } from '@nestjs/common';
-import { VerifyEmailCommand } from '../impl/verify-email.command';
+import {CommandHandler, EventPublisher, ICommandHandler, EventBus} from '@nestjs/cqrs';
+import {UserRepository} from '../../repository/user.repository';
+import {Logger, NotFoundException} from '@nestjs/common';
+import {VerifyEmailCommand} from '../impl/verify-email.command';
 import { JwtService } from '@nestjs/jwt';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
@@ -24,7 +24,7 @@ export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
         try {
             const decodedToken = this.jwtService.decode(emailToken);
             const userId = decodedToken['id'];
-            const user = await getMongoRepository(UserDto).findOne({_id: userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }

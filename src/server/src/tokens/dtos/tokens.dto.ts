@@ -4,7 +4,7 @@ import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
 import { Column, Entity } from 'typeorm';
-import { ErrorUtils } from "../../utils/errorUtils";
+import { ErrUtil } from "../../utils/err.util";
 import { ERR } from "../../common/error";
 
 export class TokenIdRequestParamsDto {
@@ -12,8 +12,8 @@ export class TokenIdRequestParamsDto {
         this._id = tokenId;
     }
 
-    @IsString(ErrorUtils.getMessage('_id', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('_id', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('_id', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('_id', ERR.IsNotEmpty))
     _id: string;
 }
 
@@ -33,20 +33,20 @@ export class TokenDto extends BaseEntityDto {
     }
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('name', ERR.IsString))
+    @IsString(ErrUtil.getMessage('name', ERR.IsString))
     @Column({nullable: false, default: 'DEFAULT'})
     name: string;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('value', ERR.IsString))
+    @IsString(ErrUtil.getMessage('value', ERR.IsString))
     @Column({
         unique: true,
     })
     value: string;
 
-    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('userId', ERR.IsUUID))
+    @IsNotEmpty(ErrUtil.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('userId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('userId', ERR.IsUUID))
     @Column({
         nullable: false,
         update: false,
@@ -55,8 +55,8 @@ export class TokenDto extends BaseEntityDto {
     userId: ObjectID;
 
     // free token does not have projectId, set projectId = ""
-    @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))
+    @IsNotEmpty(ErrUtil.getMessage('projectId', ERR.IsNotEmpty))
+    @IsString(ErrUtil.getMessage('projectId', ERR.IsString))
     @Column({
         nullable: false,
     })
@@ -64,17 +64,17 @@ export class TokenDto extends BaseEntityDto {
 
     @IsOptional()
     @Type(() => Number)
-    @IsNumber({allowInfinity: false, allowNaN: false}, ErrorUtils.getMessage('minutes', ERR.IsNumber))
-    @IsPositive(ErrorUtils.getMessage('minutes', ERR.IsPositive))
+    @IsNumber({allowInfinity: false, allowNaN: false}, ErrUtil.getMessage('minutes', ERR.IsNumber))
+    @IsPositive(ErrUtil.getMessage('minutes', ERR.IsPositive))
     @Column({
         default: 0,
         type: 'double'
     })
     minutes: number;
 
-    @IsNotEmpty(ErrorUtils.getMessage('minutes', ERR.IsNotEmpty))
+    @IsNotEmpty(ErrUtil.getMessage('minutes', ERR.IsNotEmpty))
     @Type(() => Number)
-    @IsNumber({allowNaN: false, allowInfinity: false}, ErrorUtils.getMessage('usedMinutes', ERR.IsNumber))
+    @IsNumber({allowNaN: false, allowInfinity: false}, ErrUtil.getMessage('usedMinutes', ERR.IsNumber))
     @Min(0)
     @Column({
         default: 0,
@@ -84,16 +84,16 @@ export class TokenDto extends BaseEntityDto {
     usedMinutes: number;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('tokenTypeId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('tokenTypeId', ERR.IsUUID))
+    @IsString(ErrUtil.getMessage('tokenTypeId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('tokenTypeId', ERR.IsUUID))
     @Column({
         nullable: false,
         type: 'uuid',
     })
     tokenTypeId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('isValid', ERR.IsNotEmpty))
-    @IsBoolean(ErrorUtils.getMessage('isValid', ERR.IsBoolean))
+    @IsNotEmpty(ErrUtil.getMessage('isValid', ERR.IsNotEmpty))
+    @IsBoolean(ErrUtil.getMessage('isValid', ERR.IsBoolean))
     @Column({
         default: true,
         nullable: false,
@@ -110,7 +110,7 @@ export class TokenDto extends BaseEntityDto {
     tokenType: string;
 
     @IsOptional()
-    @IsString(ErrorUtils.getMessage('orderId', ERR.IsString))
-    @IsUUID('all', ErrorUtils.getMessage('orderId', ERR.IsUUID))
+    @IsString(ErrUtil.getMessage('orderId', ERR.IsString))
+    @IsUUID('all', ErrUtil.getMessage('orderId', ERR.IsUUID))
     orderId: ObjectID;
 }

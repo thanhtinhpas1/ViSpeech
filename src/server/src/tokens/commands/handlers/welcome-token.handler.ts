@@ -1,7 +1,7 @@
-import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { WelcomeTokenCommand } from '../impl/welcome-token.command';
-import { TokenRepository } from '../../repository/token.repository';
-import { Logger } from '@nestjs/common';
+import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
+import {WelcomeTokenCommand} from '../impl/welcome-token.command';
+import {TokenRepository} from '../../repository/token.repository';
+import {Logger} from '@nestjs/common';
 
 @CommandHandler(WelcomeTokenCommand)
 export class WelcomeTokenHandler

@@ -1,10 +1,10 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, {useEffect, useState} from 'react'
-import {CardElement, useElements, useStripe} from '@stripe/react-stripe-js'
-import {Alert, Button, Checkbox, Col, Form, Input, Radio, Row, Select} from 'antd'
+import React, { useState, useEffect } from 'react'
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import { Alert, Button, Select, Form, Checkbox, Input, Col, Row, Radio } from 'antd'
 import Utils from 'utils'
-import {DEFAULT_PAGINATION, TOKEN_TYPE} from 'utils/constant'
+import { DEFAULT_PAGINATION, TOKEN_TYPE } from 'utils/constant'
 import TokenType from 'components/customer/HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
@@ -239,7 +239,7 @@ const UpgradeForm = ({
           </Form.Item>
         </Col>
         <Col span={8}>
-          <h5 className="font-mid">Tên Api Key</h5>
+          <h5 className="font-mid">Tên token</h5>
           <Form.Item
             name="tokenId"
             dependencies={['projectId']}

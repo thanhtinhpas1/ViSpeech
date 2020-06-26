@@ -1,25 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CONSTANTS } from 'common/constant';
-import { FindPermissionQuery } from 'permissions/queries/impl/find-permission.query';
-import { GetPermissionsQuery } from 'permissions/queries/impl/get-permissions.query';
-import {
-    EmailTokenParamsDto,
-    PermissionAssignDto,
-    PermissionDto,
-    PermissionIdRequestParamsDto,
-    PermissionResponseDto
-} from '../dtos/permissions.dto';
-import { PermissionsService } from '../services/permissions.service';
-import { Roles } from 'auth/roles.decorator';
-import {
-    AssignPermissionGuard,
-    PermissionGuard,
-    PermissionQueryGuard,
-    ReplyPermissionAssignGuard
-} from 'auth/guards/permission.guard';
-import { Utils } from 'utils';
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
+import {AuthGuard} from '@nestjs/passport';
+import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import {CONSTANTS} from 'common/constant';
+import {FindPermissionQuery} from 'permissions/queries/impl/find-permission.query';
+import {GetPermissionsQuery} from 'permissions/queries/impl/get-permissions.query';
+import {PermissionAssignDto, PermissionDto, PermissionIdRequestParamsDto, PermissionResponseDto, EmailTokenParamsDto} from '../dtos/permissions.dto';
+import {PermissionsService} from '../services/permissions.service';
+import {Roles} from 'auth/roles.decorator';
+import {AssignPermissionGuard, PermissionGuard, ReplyPermissionAssignGuard, PermissionQueryGuard} from 'auth/guards/permission.guard';
+import {Utils} from 'utils';
 import { FindPermissionsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
 import { JwtService } from '@nestjs/jwt';
 
@@ -28,8 +17,7 @@ import { JwtService } from '@nestjs/jwt';
 export class PermissionsController {
     constructor(
         private readonly permissionsService: PermissionsService,
-        private readonly jwtService: JwtService) {
-    }
+        private readonly jwtService: JwtService) {}
 
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Create Permission']})

@@ -27,7 +27,8 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
         const order = { ...orderDto };
 
         try {
-            order.tokenType = await this.tokenTypeRepository.findOne({_id: order.tokenType._id});
+            const tokenTypeDto = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
+            order.tokenType = tokenTypeDto;
             order.upgradeToken = false;
             await this.repository.save(order);
             this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, orderDto));

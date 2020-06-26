@@ -1,17 +1,10 @@
-import {
-    BadRequestException,
-    CanActivate,
-    Injectable,
-    Logger,
-    NotFoundException,
-    UnauthorizedException
-} from '@nestjs/common';
+import { BadRequestException, CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from 'auth/auth.service';
 import { CONSTANTS } from 'common/constant';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { getMongoRepository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
 import { JwtService } from '@nestjs/jwt';
-import { UserUtils } from "../../utils/user.util";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -22,6 +15,7 @@ export class PermissionGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
@@ -29,12 +23,15 @@ export class PermissionGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
         if (permission && permission.assignerId === payload['id']) {
             return true;
         }
+
         Logger.warn('User does not have permission to modify this permission.', 'PermissionGuard');
         return false;
     }
@@ -49,16 +46,19 @@ export class AssignPermissionGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
 
         const { assignerId } = request.body;
-        const isAdmin = UserUtils.isAdmin(payload);
-        const isManagerUser = UserUtils.isManagerUser(payload);
-        return isAdmin || (isManagerUser && assignerId === payload['id']);
-
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        const isManagerUser = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.MANAGER_USER) !== -1;
+        if (isAdmin || (isManagerUser && assignerId === payload['id'])) {
+            return true;
+        }
+        return false;
     }
 }
 
@@ -73,6 +73,7 @@ export class ReplyPermissionAssignGuard implements CanActivate {
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const { emailToken } = request.body;
+
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
             throw new UnauthorizedException();
@@ -83,12 +84,17 @@ export class ReplyPermissionAssignGuard implements CanActivate {
         const assigneeId = decodedEmailToken['assigneeId'];
         const projectId = decodedEmailToken['projectId'];
         const permissions = decodedEmailToken['permissions'];
+
         if (!decodedEmailToken || !assignerId || !assigneeId || !projectId || !permissions) {
             throw new BadRequestException("Token is invalid.");
         }
 
         const permission = await getMongoRepository(PermissionDto).findOne({ assignerId, assigneeId, projectId, status: CONSTANTS.STATUS.PENDING });
-        return permission && assigneeId === requestJwt['id'];
+        if (permission && assigneeId === requestJwt['id']) {
+            return true;
+        }
+
+        return false;
     }
 }
 
@@ -102,11 +108,14 @@ export class PermissionQueryGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const { id, emailToken } = request.params;
         if (id) {

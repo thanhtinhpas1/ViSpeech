@@ -1,5 +1,5 @@
-import { ICommand } from '@nestjs/cqrs';
-import { PermissionIdRequestParamsDto } from '../../dtos/permissions.dto';
+import {ICommand} from '@nestjs/cqrs';
+import {PermissionIdRequestParamsDto} from '../../dtos/permissions.dto';
 
 export class DeletePermissionCommand implements ICommand {
     constructor(

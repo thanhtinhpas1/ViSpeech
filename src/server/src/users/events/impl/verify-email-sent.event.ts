@@ -1,9 +1,10 @@
-import { IEvent } from '@nestjs/cqrs';
+import {IEvent} from '@nestjs/cqrs';
 
 export class VerifyEmailSentEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly userId: string
+
     ) {
     }
 }

@@ -4,7 +4,6 @@ import { CONSTANTS } from 'common/constant';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { getMongoRepository } from 'typeorm';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { UserUtils } from "../../utils/user.util";
 
 @Injectable()
 export class ProjectGuard implements CanActivate {
@@ -15,18 +14,23 @@ export class ProjectGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
+
         const id = request.params._id || request.params.id;
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
         if (project && project.userId === payload['id']) {
             return true;
         }
+
         Logger.warn('User does not have permission to modify this project.', 'ProjectGuard');
         return false;
     }
@@ -41,11 +45,14 @@ export class ProjectQueryGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
+
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+
+        const isAdmin = payload['roles'].findIndex(role => role.name === CONSTANTS.ROLE.ADMIN) !== -1;
+        if (isAdmin) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {
@@ -63,6 +70,7 @@ export class ProjectQueryGuard implements CanActivate {
                 return true;
             }
         }
+
         const userId = request.query.userId;
         if (userId && userId === payload['id']) {
             return true;

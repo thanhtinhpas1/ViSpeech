@@ -16,7 +16,7 @@ export class GetStatisticsByIdHandler implements IQueryHandler<GetStatisticsById
 
     async execute(query: GetStatisticsByIdQuery): Promise<any> {
         Logger.log('Async GetStatisticsByIdQuery...', 'GetStatisticsByIdQuery');
-        const {id, statisticsType, timeType} = query;
+        const { id, statisticsType, timeType } = query;
 
         try {
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
@@ -38,7 +38,7 @@ export class GetStatisticsByIdHandler implements IQueryHandler<GetStatisticsById
             data = ReportUtils.getStatisticalData(timeType, data, reports);
             return data;
         } catch (error) {
-            Logger.error(error.message, '', 'GetStatisticsByIdQuery');
+            Logger.error(error, '', 'GetStatisticsByIdQuery');
         }
     }
 }

@@ -1,6 +1,7 @@
-import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+
+import { CommandHandler, EventPublisher, ICommandHandler, EventBus } from '@nestjs/cqrs';
 import { OrderRepository } from '../../repository/order.repository';
-import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
+import { Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { config } from '../../../../config';
 import { getMongoRepository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';

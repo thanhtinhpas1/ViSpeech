@@ -1,3 +1,0 @@
-- Implement Mobile: learning, topic, history
-- Thesis Unit 3
-- EventStore message queue event

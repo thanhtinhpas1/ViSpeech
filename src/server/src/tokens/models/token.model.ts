@@ -1,10 +1,10 @@
-import { AggregateRoot } from '@nestjs/cqrs';
-import { TokenCreatedEvent } from '../events/impl/token-created.event';
-import { TokenUpdatedEvent } from '../events/impl/token-updated.event';
-import { TokenDeletedEvent } from '../events/impl/token-deleted.event';
-import { TokenWelcomedEvent } from '../events/impl/token-welcomed.event';
-import { FreeTokenCreatedEvent } from 'tokens/events/impl/free-token-created.event';
-import { OrderedTokenCreatedEvent } from 'tokens/events/impl/ordered-token-created.event';
+import {AggregateRoot} from '@nestjs/cqrs';
+import {TokenCreatedEvent} from '../events/impl/token-created.event';
+import {TokenUpdatedEvent} from '../events/impl/token-updated.event';
+import {TokenDeletedEvent} from '../events/impl/token-deleted.event';
+import {TokenWelcomedEvent} from '../events/impl/token-welcomed.event';
+import {FreeTokenCreatedEvent} from 'tokens/events/impl/free-token-created.event';
+import {OrderedTokenCreatedEvent} from 'tokens/events/impl/ordered-token-created.event';
 import { TokenDeletedByProjectIdEvent } from 'tokens/events/impl/token-deleted-by-projectId.event';
 import { TokenDeletedByUserIdEvent } from 'tokens/events/impl/token-deleted-by-userId.event';
 import { TokenUpgradedEvent } from 'tokens/events/impl/token-upgraded.event';

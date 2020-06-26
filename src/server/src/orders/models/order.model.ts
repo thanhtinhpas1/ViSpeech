@@ -1,8 +1,8 @@
-import { AggregateRoot } from '@nestjs/cqrs';
-import { OrderCreatedEvent } from '../events/impl/order-created.event';
-import { OrderUpdatedEvent } from '../events/impl/order-updated.event';
-import { OrderDeletedEvent } from '../events/impl/order-deleted.event';
-import { OrderWelcomedEvent } from '../events/impl/order-welcomed.event';
+import {AggregateRoot} from '@nestjs/cqrs';
+import {OrderCreatedEvent} from '../events/impl/order-created.event';
+import {OrderUpdatedEvent} from '../events/impl/order-updated.event';
+import {OrderDeletedEvent} from '../events/impl/order-deleted.event';
+import {OrderWelcomedEvent} from '../events/impl/order-welcomed.event';
 import { UpgradeTokenOrderCreatedEvent } from 'orders/events/impl/upgrade-token-order-created.event';
 
 export class Order extends AggregateRoot {

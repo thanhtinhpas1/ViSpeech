@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, BadRequestException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CONSTANTS } from 'common/constant';
@@ -17,12 +17,11 @@ import { FindFreeTokenQuery } from 'tokens/queries/impl/find-free-token.query';
 export class TokensController {
     constructor(
         private readonly tokensService: TokensService
-    ) {
-    }
+    ) {}
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Token']})
-    @ApiResponse({status: 200, description: 'Create Token.'})
+    @ApiOperation({ tags: ['Create Token'] })
+    @ApiResponse({ status: 200, description: 'Create Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
@@ -32,10 +31,11 @@ export class TokensController {
     }
 
     /* Update Token */
-
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Update Token']})
-    @ApiResponse({status: 200, description: 'Update Token.'})
+    // TODO: check business flow update -> upgrade type token instead change value
+    // TODO: make flow to regenerate token value
+    @ApiOperation({ tags: ['Update Token'] })
+    @ApiResponse({ status: 200, description: 'Update Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
@@ -53,8 +53,8 @@ export class TokensController {
     /* Delete Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Delete Token']})
-    @ApiResponse({status: 200, description: 'Delete Token.'})
+    @ApiOperation({ tags: ['Delete Token'] })
+    @ApiResponse({ status: 200, description: 'Delete Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Delete(':_id')
@@ -66,8 +66,8 @@ export class TokensController {
     /* List Tokens */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Tokens']})
-    @ApiResponse({status: 200, description: 'List Tokens.'})
+    @ApiOperation({ tags: ['List Tokens'] })
+    @ApiResponse({ status: 200, description: 'List Tokens.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
@@ -78,8 +78,8 @@ export class TokensController {
     /* List Tokens By UserId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Tokens By UserId']})
-    @ApiResponse({status: 200, description: 'List Tokens By UserId.'})
+    @ApiOperation({ tags: ['List Tokens By UserId'] })
+    @ApiResponse({ status: 200, description: 'List Tokens By UserId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get('/user-tokens')
     async getTokensByUserId(
@@ -91,8 +91,8 @@ export class TokensController {
     /* List Tokens By UserId And ProjectId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Tokens By UserId And ProjectId']})
-    @ApiResponse({status: 200, description: 'List Tokens By UserId And ProjectId.'})
+    @ApiOperation({ tags: ['List Tokens By UserId And ProjectId'] })
+    @ApiResponse({ status: 200, description: 'List Tokens By UserId And ProjectId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get('/project-tokens')
     async getTokensByUserIdAndProjectId(
@@ -104,8 +104,8 @@ export class TokensController {
     /* List Token Types */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Token Types']})
-    @ApiResponse({status: 200, description: 'List Token Types.'})
+    @ApiOperation({ tags: ['List Token Types'] })
+    @ApiResponse({ status: 200, description: 'List Token Types.' })
     @Get('/token-types')
     async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
         return this.tokensService.findTokenTypes(getTokenTypesQuery);
@@ -114,8 +114,8 @@ export class TokensController {
     /* Find Free Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Find Free Token']})
-    @ApiResponse({status: 200, description: 'Find Free Token.'})
+    @ApiOperation({ tags: ['Find Free Token'] })
+    @ApiResponse({ status: 200, description: 'Find Free Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get('/free-token/:userId')
     async findFreeToken(@Param() findFreeTokenQuery: FindFreeTokenQuery) {
@@ -125,8 +125,8 @@ export class TokensController {
     /* Find Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Find Token']})
-    @ApiResponse({status: 200, description: 'Find Token.'})
+    @ApiOperation({ tags: ['Find Token'] })
+    @ApiResponse({ status: 200, description: 'Find Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get(':id')
     async findOneToken(@Param() findTokenQuery: FindTokenQuery) {

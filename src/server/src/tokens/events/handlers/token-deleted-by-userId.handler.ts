@@ -1,17 +1,13 @@
-import { Inject, Logger } from '@nestjs/common';
-import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { getMongoRepository, Repository } from 'typeorm';
+import {Logger, Inject} from '@nestjs/common';
+import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
+import {InjectRepository} from '@nestjs/typeorm';
+import {TokenDto} from 'tokens/dtos/tokens.dto';
+import {Repository, getMongoRepository} from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
 import { CONSTANTS } from 'common/constant';
 import { Utils } from 'utils';
-import {
-    TokenDeletedByUserIdEvent,
-    TokenDeletedByUserIdFailedEvent,
-    TokenDeletedByUserIdSuccessEvent
-} from '../impl/token-deleted-by-userId.event';
+import { TokenDeletedByUserIdEvent, TokenDeletedByUserIdSuccessEvent, TokenDeletedByUserIdFailedEvent } from '../impl/token-deleted-by-userId.event';
 
 @EventsHandler(TokenDeletedByUserIdEvent)
 export class TokenDeletedByUserIdHandler implements IEventHandler<TokenDeletedByUserIdEvent> {
@@ -27,7 +23,7 @@ export class TokenDeletedByUserIdHandler implements IEventHandler<TokenDeletedBy
         const {streamId, userId} = event;
 
         try {
-            await getMongoRepository(TokenDto).updateMany({userId}, {$set: {isValid: false}});
+            await getMongoRepository(TokenDto).updateMany({ userId }, { $set: { isValid: false }});
             this.eventBus.publish(new TokenDeletedByUserIdSuccessEvent(streamId, userId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedByUserIdFailedEvent(streamId, userId, error));
@@ -60,7 +56,6 @@ export class TokenDeletedByUserIdFailedHandler
     ) {
         this.clientKafka.connect();
     }
-
     handle(event: TokenDeletedByUserIdFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj
