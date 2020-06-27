@@ -31,6 +31,7 @@ import { ClientsModule } from '@nestjs/microservices';
 import { config } from "../../config";
 import { kafkaClientOptions } from "common/kafka-client.options";
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { RequestCreatedEvent, RequestCreatedSuccessEvent, RequestCreatedFailedEvent } from './events/impl/request-created.event';
 
 @Module({
     imports: [
@@ -81,9 +82,14 @@ export class RequestModule implements OnModuleInit {
 
     eventHandlers = {
         AsrCalledEvent: (streamId, requestDto, tokenDto) => new AsrCalledEvent(streamId, requestDto, tokenDto),
+        // create
+        RequestCreatedEvent: (streamId, requestDto, tokenDto) => new RequestCreatedEvent(streamId, requestDto, tokenDto),
+        RequestCreatedSuccessEvent: (streamId, requestDto, tokenDto) => new RequestCreatedSuccessEvent(streamId, requestDto, tokenDto),
+        RequestCreatedFailedEvent: (streamId, requestDto, tokenDto, error) => new RequestCreatedFailedEvent(streamId, requestDto, tokenDto, error),
         // update
         RequestTranscriptFileUrlUpdatedEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedEvent(streamId, id, url),
         RequestTranscriptFileUrlUpdatedSuccessEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, id, url),
-        RequestTranscriptFileUrlUpdatedFailedEvent: (streamId, id, url, error) => new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, id, url, error),
+        RequestTranscriptFileUrlUpdatedFailedEvent: (streamId, id, url, error) =>
+        new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, id, url, error),
     };
 }

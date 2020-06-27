@@ -44,6 +44,9 @@ export class AsrController {
     ) {
     }
 
+    /* Call Asr */
+
+    /*--------------------------------------------*/
     @ApiOperation({tags: ['Request ASR ViSpeech']})
     @ApiResponse({status: HttpStatus.OK, description: 'Request ASR ViSpeech'})
     @Post()
@@ -83,9 +86,15 @@ export class AsrController {
             return res.status(HttpStatus.FORBIDDEN).json({message: 'Not enough token\' minutes to request.'});
         }
 
-        // call asr
+        // create pending request
         let requestStatus = CONSTANTS.STATUS.PENDING;
         const requestId = Utils.getUuid();
+        const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding, file.size,
+            duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
+        requestDto._id = requestId;
+        await this.requestService.createRequest(requestId, requestDto, tokenDto);
+
+        // call asr
         const stream = fs.createReadStream(file.path);
         const formData = new FormData();
         formData.append('voice', stream);
@@ -106,10 +115,8 @@ export class AsrController {
                 tokenDto.usedMinutes = usedMinutes + duration;
             }
 
-            const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding, file.size,
-                duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
-            requestDto._id = requestId;
-            this.requestService.createRequest(requestId, requestDto, tokenDto);
+            requestDto.status = requestStatus;
+            this.requestService.callAsr(requestId, requestDto, tokenDto);
             fs.unlinkSync(file.path);
         });
     }
