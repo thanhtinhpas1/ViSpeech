@@ -1,9 +1,13 @@
-import {Logger, Inject} from '@nestjs/common';
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {InjectRepository} from '@nestjs/typeorm';
-import {PermissionDto} from 'permissions/dtos/permissions.dto';
-import {Repository} from 'typeorm';
-import {PermissionUpdatedEvent, PermissionUpdatedSuccessEvent, PermissionUpdatedFailedEvent} from '../impl/permission-updated.event';
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { Repository } from 'typeorm';
+import {
+    PermissionUpdatedEvent,
+    PermissionUpdatedFailedEvent,
+    PermissionUpdatedSuccessEvent
+} from '../impl/permission-updated.event';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
 import { CONSTANTS } from 'common/constant';
@@ -57,6 +61,7 @@ export class PermissionUpdatedFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: PermissionUpdatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

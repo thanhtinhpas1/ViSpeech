@@ -1,7 +1,7 @@
-import {CreateFreeTokenHandler, CreateOrderedTokenHandler, CreateTokenHandler} from './create-token.handler';
-import {DeleteTokenHandler} from './delete-token.handler';
-import {UpdateTokenHandler} from './update-token.handler';
-import {WelcomeTokenHandler} from './welcome-token.handler';
+import { CreateFreeTokenHandler, CreateOrderedTokenHandler, CreateTokenHandler } from './create-token.handler';
+import { DeleteTokenHandler } from './delete-token.handler';
+import { UpdateTokenHandler } from './update-token.handler';
+import { WelcomeTokenHandler } from './welcome-token.handler';
 import { DeleteTokenByProjectIdHandler } from './delete-token-by-projectId.handler';
 import { DeleteTokenByUserIdHandler } from './delete-token-by-userId.handler';
 import { UpgradeTokenHandler } from './upgrade-token.handler';

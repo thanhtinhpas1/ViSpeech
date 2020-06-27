@@ -1,12 +1,13 @@
 import nodemailer from 'nodemailer'
-import { config } from "../../config";
 import { CONSTANTS } from 'common/constant';
+import { config } from "../../config";
 
-const hostUrl = `http://asr.vietspeech.com:3200/customer`;
+const hostUrl = `http://${config.HOST}:3200/customer`;
 const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // upgrade later with STARTTLS
+    port: 465,
+    secure: true, // upgrade later with STARTTLS
+    // ignoreTLS: false,
     auth: {
         user: "vispeech2020@gmail.com",
         pass: "vispeech"

@@ -1,8 +1,8 @@
-import {IQueryHandler, QueryHandler} from '@nestjs/cqrs';
-import {Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {PermissionDto} from 'permissions/dtos/permissions.dto';
-import {Repository} from 'typeorm';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { Repository } from 'typeorm';
 import { FindPermissionsByIdsQuery } from '../impl/find-permissions-by-ids.query';
 
 @QueryHandler(FindPermissionsByIdsQuery)
@@ -15,7 +15,7 @@ export class FindPermissionsByIdsHandler implements IQueryHandler<FindPermission
 
     async execute(query: FindPermissionsByIdsQuery): Promise<any> {
         Logger.log('Async FindPermissionsByIdsQuery...', 'FindPermissionsByIdsQuery');
-        const { assigneeId, assignerId, projectId } = query;
+        const {assigneeId, assignerId, projectId} = query;
         try {
             if (!assigneeId && !assignerId && !projectId) return [];
 
@@ -26,7 +26,7 @@ export class FindPermissionsByIdsHandler implements IQueryHandler<FindPermission
 
             return await this.repository.find(findOptions);
         } catch (error) {
-            Logger.error(error, '', 'FindPermissionsByIdsQuery');
+            Logger.error(error.message, '', 'FindPermissionsByIdsQuery');
         }
     }
 }

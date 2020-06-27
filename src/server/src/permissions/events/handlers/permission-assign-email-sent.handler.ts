@@ -1,5 +1,5 @@
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { Logger, Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -30,13 +30,13 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 
     async handle(event: PermissionAssignEmailSentEvent) {
         Logger.log(event.streamId, 'PermissionAssignEmailSentEvent');
-        const { streamId, permissionAssignDto } = event;
-        const { assigneeUsername, projectId, permissions, assignerId } = permissionAssignDto;
+        const {streamId, permissionAssignDto} = event;
+        const {assigneeUsername, projectId, permissions, assignerId} = permissionAssignDto;
 
         try {
-            const project = await this.projectRepository.findOne({ _id: projectId });
-            const assigner = await this.userRepository.findOne({ _id: assignerId });
-            const assignee = await this.userRepository.findOne({ username: assigneeUsername });
+            const project = await this.projectRepository.findOne({_id: projectId});
+            const assigner = await this.userRepository.findOne({_id: assignerId});
+            const assignee = await this.userRepository.findOne({username: assigneeUsername});
             permissionAssignDto.assigneeId = assignee._id;
 
             const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions, `${CONSTANTS.TOKEN_EXPIRATION.REPLY_PERMISSION_ASSIGN} days`);
@@ -57,6 +57,7 @@ export class PermissionAssignEmailSentSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: PermissionAssignEmailSentSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.streamId, 'PermissionAssignEmailSentSuccessEvent');
@@ -72,6 +73,7 @@ export class PermissionAssignEmailSentFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: PermissionAssignEmailSentFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

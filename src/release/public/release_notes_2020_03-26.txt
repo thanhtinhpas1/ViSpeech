@@ -1,0 +1,5 @@
+- implement flow call api authorize with token
+- calculate duration of file uploaded to speech 
+- pagination admin page
+- project implement for user
+- role permission for user with project

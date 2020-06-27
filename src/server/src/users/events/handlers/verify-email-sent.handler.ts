@@ -8,7 +8,11 @@ import { Repository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { EmailUtils } from 'utils/email.util';
 import { config } from '../../../../config';
-import { VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent } from '../impl/verify-email-sent.event';
+import {
+    VerifyEmailSentEvent,
+    VerifyEmailSentFailedEvent,
+    VerifyEmailSentSuccessEvent
+} from '../impl/verify-email-sent.event';
 import { Utils } from 'utils';
 
 @EventsHandler(VerifyEmailSentEvent)
@@ -22,10 +26,10 @@ export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEven
 
     async handle(event: VerifyEmailSentEvent) {
         Logger.log(event.userId, 'VerifyEmailSentEvent');
-        const { streamId, userId } = event;
+        const {streamId, userId} = event;
 
         try {
-            const user = await this.repository.findOne({ _id: userId });
+            const user = await this.repository.findOne({_id: userId});
             const verifyEmailToken = this.authService.generateTokenWithUserId(userId, `${CONSTANTS.TOKEN_EXPIRATION.VERIFY_EMAIL} days`);
             await EmailUtils.sendVerifyEmail(user.username, user.email, verifyEmailToken);
             this.eventBus.publish(new VerifyEmailSentSuccessEvent(streamId, userId));
@@ -44,6 +48,7 @@ export class VerifyEmailSentSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: VerifyEmailSentSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.VERIFY_EMAIL_SENT_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.userId, 'VerifyEmailSentSuccessEvent');
@@ -59,6 +64,7 @@ export class VerifyEmailSentFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: VerifyEmailSentFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

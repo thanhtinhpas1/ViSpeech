@@ -1,7 +1,7 @@
-import {CommandHandler, EventPublisher, ICommandHandler} from '@nestjs/cqrs';
-import {WelcomePermissionCommand} from '../impl/welcome-permission.command';
-import {PermissionRepository} from '../../repository/permission.repository';
-import {Logger} from '@nestjs/common';
+import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { WelcomePermissionCommand } from '../impl/welcome-permission.command';
+import { PermissionRepository } from '../../repository/permission.repository';
+import { Logger } from '@nestjs/common';
 
 @CommandHandler(WelcomePermissionCommand)
 export class WelcomePermissionHandler

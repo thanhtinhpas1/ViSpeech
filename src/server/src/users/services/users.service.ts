@@ -1,15 +1,15 @@
-import {Injectable} from '@nestjs/common';
-import {CommandBus, QueryBus} from '@nestjs/cqrs';
-import {UserDto, UserIdRequestParamsDto, ChangePasswordBody} from '../dtos/users.dto';
-import {UpdateUserCommand} from '../commands/impl/update-user.command';
-import {DeleteUserCommand} from '../commands/impl/delete-user.command';
-import {GetUsersQuery} from 'users/queries/impl/get-users.query';
-import {FindUserQuery} from 'users/queries/impl/find-user.query';
-import {CreateUserStartCommand} from 'users/commands/impl/create-user.command';
-import {ChangePasswordCommand} from '../commands/impl/change-password.command';
-import {VerifyEmailCommand} from 'users/commands/impl/verify-email.command';
-import {SendVerifyEmailCommand} from 'users/commands/impl/send-verify-email.command';
-import {GetAssigneeQuery} from "../queries/impl/get-assignee.query";
+import { Injectable } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
+import { UpdateUserCommand } from '../commands/impl/update-user.command';
+import { DeleteUserCommand } from '../commands/impl/delete-user.command';
+import { GetUsersQuery } from 'users/queries/impl/get-users.query';
+import { FindUserQuery } from 'users/queries/impl/find-user.query';
+import { CreateUserStartCommand } from 'users/commands/impl/create-user.command';
+import { ChangePasswordCommand } from '../commands/impl/change-password.command';
+import { VerifyEmailCommand } from 'users/commands/impl/verify-email.command';
+import { SendVerifyEmailCommand } from 'users/commands/impl/send-verify-email.command';
+import { GetAssigneeQuery } from "../queries/impl/get-assignee.query";
 
 @Injectable()
 export class UsersService {

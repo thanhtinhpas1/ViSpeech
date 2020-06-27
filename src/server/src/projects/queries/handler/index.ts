@@ -4,8 +4,8 @@ import { FindProjectHandler } from "./find-project.handler";
 import { GetAcceptedProjectsByUserIdHandler } from "./get-accepted-projects-by-userId.handler";
 
 export const QueryHandlers = [
-  GetProjectsHandler,
-  GetProjectsByUserIdHandler,
-  GetAcceptedProjectsByUserIdHandler,
-  FindProjectHandler,
+    GetProjectsHandler,
+    GetProjectsByUserIdHandler,
+    GetAcceptedProjectsByUserIdHandler,
+    FindProjectHandler,
 ];

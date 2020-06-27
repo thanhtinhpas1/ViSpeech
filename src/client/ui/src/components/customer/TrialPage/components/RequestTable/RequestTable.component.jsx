@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useCallback, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Row } from 'antd'
+import React, {useCallback, useEffect, useState} from 'react'
+import {Link} from 'react-router-dom'
+import {Row} from 'antd'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { STATUS, CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER } from 'utils/constant'
+import {CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS} from 'utils/constant'
 import * as moment from 'moment'
 
 const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUserIdObj, getRequestListByUserId }) => {
@@ -20,7 +20,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
       width: 180,
     },
     {
-      title: 'Tên token',
+      title: 'Tên Api Key',
       dataIndex: 'tokenName',
       canSearch: true,
       render: tokenName => <span className="lead tnx-id">{tokenName}</span>,

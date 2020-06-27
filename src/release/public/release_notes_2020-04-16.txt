@@ -1,0 +1,4 @@
+- Finish prepare kafka & socket
+- Finish prepare mobile app
+- Implement integrate kafka & socket
+- Edit thesis 3

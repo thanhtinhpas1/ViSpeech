@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportDto } from 'reports/dtos/reports.dto';
-import { Repository, getMongoRepository } from 'typeorm';
+import { getMongoRepository, Repository } from 'typeorm';
 import { ReportUtils } from 'utils/report.util';
 import { GetAdminTotalStatisticsQuery } from '../impl/get-admin-total-statistics.query';
 import { CONSTANTS } from 'common/constant';
@@ -21,7 +21,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
 
     async execute(query: GetAdminTotalStatisticsQuery): Promise<any> {
         Logger.log('Async GetAdminTotalStatisticsQuery...', 'GetAdminTotalStatisticsQuery');
-        const { statisticsType, timeType } = query;
+        const {statisticsType, timeType} = query;
         let data = [];
 
         try {
@@ -32,7 +32,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
             let aggregateGroup = {
                 $group: {
                     _id: {},
-                    usedMinutes: { $sum: '$usedMinutes' }
+                    usedMinutes: {$sum: '$usedMinutes'}
                 }
             }
             aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
@@ -44,19 +44,19 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
             if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
                 const tokenTypes = await this.tokenTypeRepository.find();
                 for (const tokenType of tokenTypes) {
-                    data.push({ data: tokenType, usedMinutes: 0 });
+                    data.push({data: tokenType, usedMinutes: 0});
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.USER) {
                 const users = await this.userRepository.find();
                 for (const user of users) {
-                    data.push({ data: user, usedMinutes: 0 });
+                    data.push({data: user, usedMinutes: 0});
                 }
             }
 
             data = ReportUtils.getTotalStatisticalData(groupedReports, data, `${statisticsType}Id`);
             return data;
         } catch (error) {
-            Logger.error(error, '', 'GetAdminTotalStatisticsQuery');
+            Logger.error(error.message, '', 'GetAdminTotalStatisticsQuery');
         }
     }
 }

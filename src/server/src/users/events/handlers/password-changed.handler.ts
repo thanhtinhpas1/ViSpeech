@@ -1,4 +1,4 @@
-import { Inject, Logger, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Inject, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,7 +7,11 @@ import { Repository } from 'typeorm';
 import { config } from '../../../../config';
 import { Utils } from '../../../utils';
 import { UserDto } from '../../dtos/users.dto';
-import { PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent } from '../impl/password-changed.event';
+import {
+    PasswordChangedEvent,
+    PasswordChangedFailedEvent,
+    PasswordChangedSuccessEvent
+} from '../impl/password-changed.event';
 
 @EventsHandler(PasswordChangedEvent)
 export class PasswordChangedHandler implements IEventHandler<PasswordChangedEvent> {
@@ -19,16 +23,16 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
 
     async handle(event: PasswordChangedEvent) {
         Logger.log(event.streamId, 'PasswordChangedEvent');
-        const { streamId, changePasswordBody } = event;
-        const { userId, oldPassword, newPassword } = changePasswordBody;
+        const {streamId, changePasswordBody} = event;
+        const {userId, oldPassword, newPassword} = changePasswordBody;
 
         try {
-            const user = await this.repository.findOne({ _id: userId });
+            const user = await this.repository.findOne({_id: userId});
             const isValid = await Utils.comparePassword(oldPassword, user.password);
             if (isValid) {
                 if (oldPassword === newPassword) throw new BadRequestException('New password must be different from old password.');
                 const newHashedPassword = Utils.hashPassword(newPassword);
-                await this.repository.update({ _id: userId }, { password: newHashedPassword });
+                await this.repository.update({_id: userId}, {password: newHashedPassword});
                 this.eventBus.publish(new PasswordChangedSuccessEvent(streamId, changePasswordBody));
                 return;
             }
@@ -60,7 +64,7 @@ export class PasswordChangedFailedHandler implements IEventHandler<PasswordChang
         private readonly clientKafka: ClientKafka,
     ) {
     }
-    
+
     handle(event: PasswordChangedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

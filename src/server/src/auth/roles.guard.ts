@@ -1,7 +1,9 @@
-import {CanActivate, Injectable, Logger} from '@nestjs/common';
-import {Reflector} from '@nestjs/core';
-import {JwtService} from '@nestjs/jwt';
+import { CanActivate, Injectable, Logger } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import { Utils } from 'utils';
+import { getMongoRepository } from "typeorm";
+import { UserDto } from "../users/dtos/users.dto";
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -28,11 +30,12 @@ export class RolesGuard implements CanActivate {
             if (!jwt) return false;
             const payload = this.jwtService.decode(jwt);
             if (!payload) return false;
-            const userRoles = payload['roles'];
+            const user = await getMongoRepository(UserDto).findOne({_id: payload['id']});
+            const userRoles = user['roles'];
             const match = userRoles.filter(x => roles.includes(x.name));
             return match.length > 0;
-        } catch (e) {
-            Logger.warn('Authorize Roles by Guard failed', 'RolesGuard');
+        } catch (ex) {
+            Logger.warn(ex.message, '[RolesGuard] Authorize Roles by Guard failed');
             return false;
         }
     }

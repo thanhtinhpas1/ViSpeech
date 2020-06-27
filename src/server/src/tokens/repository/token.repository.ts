@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common';
-import {Token} from '../models/token.model';
-import {TokenDto} from 'tokens/dtos/tokens.dto';
+import { Injectable } from '@nestjs/common';
+import { Token } from '../models/token.model';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 
 @Injectable()

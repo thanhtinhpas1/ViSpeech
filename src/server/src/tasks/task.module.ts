@@ -25,7 +25,9 @@ import { TaskService } from "./services/task.service";
 export class TaskModule implements OnModuleInit {
     constructor(
         private readonly query$: QueryBus,
-    ) { }
+    ) {
+    }
+
     onModuleInit() {
         this.query$.register(QueryHandlers);
     }

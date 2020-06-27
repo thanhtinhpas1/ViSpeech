@@ -1,13 +1,13 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
-import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
-import {Roles} from 'auth/roles.decorator';
-import {CONSTANTS} from 'common/constant';
-import {FindReportQuery} from 'reports/queries/impl/find-report.query';
-import {GetReportsQuery} from 'reports/queries/impl/get-reports.query';
-import {ReportDto, ReportIdRequestParamsDto} from '../dtos/reports.dto';
-import {ReportsService} from '../services/reports.service';
-import {AuthGuard} from '@nestjs/passport';
-import {ReportQueryGuard} from 'auth/guards/report.guard';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'auth/roles.decorator';
+import { CONSTANTS } from 'common/constant';
+import { FindReportQuery } from 'reports/queries/impl/find-report.query';
+import { GetReportsQuery } from 'reports/queries/impl/get-reports.query';
+import { ReportDto, ReportIdRequestParamsDto } from '../dtos/reports.dto';
+import { ReportsService } from '../services/reports.service';
+import { AuthGuard } from '@nestjs/passport';
+import { ReportQueryGuard } from 'auth/guards/report.guard';
 import { GetStatisticsByIdQuery } from 'reports/queries/impl/get-statistics-by-id.query';
 import { GetStatisticsParam } from 'reports/dtos/statistics.dto';
 import { GetStatisticsByTokenTypeIdAndUserIdQuery } from 'reports/queries/impl/get-statistics-by-tokenTypeId-userId.query';
@@ -93,8 +93,8 @@ export class ReportsController {
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('statistics-by-id/:id/:statisticsType/:timeType')
     async getStatisticsById(@Query() query: GetStatisticsByIdQuery,
-    @Param() param: GetStatisticsParam) {
-        const { id, statisticsType, timeType } = param;
+                            @Param() param: GetStatisticsParam) {
+        const {id, statisticsType, timeType} = param;
         query.id = id;
         query.statisticsType = statisticsType;
         query.timeType = timeType;
@@ -109,8 +109,8 @@ export class ReportsController {
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('user-token-type-statistics/:id/:userId/:timeType')
     async getStatisticalDataByTokenTypeIdAndUserId(@Query() query: GetStatisticsByTokenTypeIdAndUserIdQuery,
-    @Param() param: GetStatisticsParam) {
-        const { id, userId, timeType } = param;
+                                                   @Param() param: GetStatisticsParam) {
+        const {id, userId, timeType} = param;
         query.id = id;
         query.userId = userId;
         query.timeType = timeType;
@@ -125,8 +125,8 @@ export class ReportsController {
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get('admin-total-statistics/:statisticsType/:timeType')
     async getAdminTotalStatistics(@Query() query: GetAdminTotalStatisticsQuery,
-    @Param() param: GetStatisticsParam) {
-        const { statisticsType, timeType } = param;
+                                  @Param() param: GetStatisticsParam) {
+        const {statisticsType, timeType} = param;
         query.statisticsType = statisticsType;
         query.timeType = timeType;
         return this.reportsService.getAdminTotalStatistics(query);
@@ -140,8 +140,8 @@ export class ReportsController {
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('user-total-statistics/:userId/:statisticsType/:timeType')
     async getUserTotalStatistics(@Query() query: GetUserTotalStatisticsQuery,
-    @Param() param: GetStatisticsParam) {
-        const { userId, statisticsType, timeType } = param;
+                                 @Param() param: GetStatisticsParam) {
+        const {userId, statisticsType, timeType} = param;
         query.userId = userId;
         query.statisticsType = statisticsType;
         query.timeType = timeType;

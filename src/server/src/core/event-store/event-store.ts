@@ -100,15 +100,17 @@ export class EventStore implements IEventPublisher, IMessageSource {
         };
 
         const onDropped = (subscription, reason, error) => {
+            this.client.closeAllPools();
+            console.trace(subscription, reason, error);
+            Logger.warn('Event store disconnected', reason);
+            this.client.subscribeToStream(streamName, onEvent, onDropped, false);
         };
 
         try {
             Logger.log('Subscribe stream ...', streamName);
             await this.client.subscribeToStream(streamName, onEvent, onDropped, false);
         } catch (err) {
-            Logger.warn('Event store disconnected', err.message);
-            await this.client.closeAllPools();
-            await this.client.subscribeToStream(streamName, onEvent, onDropped, false);
+            console.trace(err);
         }
     }
 

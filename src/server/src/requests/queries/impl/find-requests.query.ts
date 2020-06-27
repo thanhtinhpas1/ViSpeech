@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, IsUUID, Min, IsObject, ValidateNested } from "class-validator";
+import { IsNumber, IsObject, IsOptional, IsString, IsUUID, Min, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { BaseSortClass } from "base/base-sort.class";
 

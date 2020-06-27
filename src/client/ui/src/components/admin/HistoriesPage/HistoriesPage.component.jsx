@@ -3,14 +3,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
+import React, {useEffect} from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 
 const HistoriesPage = ({ requestListObj, getRequestList }) => {
   const columns = [
     {
-      title: 'Mã token',
+      title: 'Mã API Key',
       dataIndex: 'tokenId',
       canSearch: true,
       render: tokenId => <span>{tokenId}</span>,

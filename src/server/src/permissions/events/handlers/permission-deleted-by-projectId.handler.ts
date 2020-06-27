@@ -1,13 +1,17 @@
-import {Logger, NotFoundException, Inject} from '@nestjs/common';
-import {EventsHandler, IEventHandler, EventBus} from '@nestjs/cqrs';
-import {InjectRepository} from '@nestjs/typeorm';
-import {PermissionDto} from 'permissions/dtos/permissions.dto';
-import {Repository, getMongoRepository} from 'typeorm';
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { getMongoRepository, Repository } from 'typeorm';
 import { CONSTANTS } from 'common/constant';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
 import { Utils } from 'utils';
-import { PermissionDeletedByProjectIdEvent, PermissionDeletedByProjectIdSuccessEvent, PermissionDeletedByProjectIdFailedEvent } from '../impl/permission-deleted-by-projectId.event';
+import {
+    PermissionDeletedByProjectIdEvent,
+    PermissionDeletedByProjectIdFailedEvent,
+    PermissionDeletedByProjectIdSuccessEvent
+} from '../impl/permission-deleted-by-projectId.event';
 
 @EventsHandler(PermissionDeletedByProjectIdEvent)
 export class PermissionDeletedByProjectIdHandler implements IEventHandler<PermissionDeletedByProjectIdEvent> {
@@ -23,7 +27,7 @@ export class PermissionDeletedByProjectIdHandler implements IEventHandler<Permis
         const {streamId, projectId} = event;
 
         try {
-            await getMongoRepository(PermissionDto).updateMany({ projectId }, { $set: { status: CONSTANTS.STATUS.INVALID }});
+            await getMongoRepository(PermissionDto).updateMany({projectId}, {$set: {status: CONSTANTS.STATUS.INVALID}});
             this.eventBus.publish(new PermissionDeletedByProjectIdSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new PermissionDeletedByProjectIdFailedEvent(streamId, projectId, error));
@@ -56,6 +60,7 @@ export class PermissionDeletedByProjectIdFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: PermissionDeletedByProjectIdFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

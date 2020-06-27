@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common"
 import { CommandBus, QueryBus } from "@nestjs/cqrs"
-import { RequestDto, FindRequestsParam } from "requests/dtos/requests.dto"
+import { RequestDto } from "requests/dtos/requests.dto"
 import { TokenDto } from "tokens/dtos/tokens.dto"
 import { FindRequestsQuery } from "requests/queries/impl/find-requests.query"
 import { FindRequestsByUserIdQuery } from "requests/queries/impl/find-requests-by-userId.query"
@@ -14,7 +14,8 @@ export class RequestService {
     constructor(
         private readonly commandBus: CommandBus,
         private readonly queryBus: QueryBus,
-    ) { }
+    ) {
+    }
 
     async createRequest(streamId: string, requestDto: RequestDto, tokenDto: TokenDto) {
         return await this.commandBus.execute(new CallAsrCommand(streamId, requestDto, tokenDto));
@@ -30,7 +31,8 @@ export class RequestService {
     }
 
     async findRequests(findRequestsQuery: FindRequestsQuery) {
-        var query = Object.assign(findRequestsQuery);
+        const query = new FindRequestsQuery()
+        Object.assign(query, findRequestsQuery);
         return await this.queryBus.execute(query);
     }
 

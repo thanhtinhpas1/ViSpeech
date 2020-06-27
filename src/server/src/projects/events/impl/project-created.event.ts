@@ -1,5 +1,5 @@
-import {IEvent} from '@nestjs/cqrs';
-import {ProjectDto} from 'projects/dtos/projects.dto';
+import { IEvent } from '@nestjs/cqrs';
+import { ProjectDto } from 'projects/dtos/projects.dto';
 
 export class ProjectCreatedEvent implements IEvent {
     constructor(

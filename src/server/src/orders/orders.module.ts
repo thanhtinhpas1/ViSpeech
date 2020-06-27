@@ -15,9 +15,21 @@ import { CommandHandlers } from './commands/handlers';
 import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
 import { EventHandlers } from './events/handlers';
-import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent } from './events/impl/order-created.event';
-import { OrderDeletedEvent, OrderDeletedSuccessEvent, OrderDeletedFailedEvent } from './events/impl/order-deleted.event';
-import { OrderUpdatedEvent, OrderUpdatedSuccessEvent, OrderUpdatedFailedEvent } from './events/impl/order-updated.event';
+import {
+    OrderCreatedEvent,
+    OrderCreatedFailedEvent,
+    OrderCreatedSuccessEvent
+} from './events/impl/order-created.event';
+import {
+    OrderDeletedEvent,
+    OrderDeletedFailedEvent,
+    OrderDeletedSuccessEvent
+} from './events/impl/order-deleted.event';
+import {
+    OrderUpdatedEvent,
+    OrderUpdatedFailedEvent,
+    OrderUpdatedSuccessEvent
+} from './events/impl/order-updated.event';
 import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { OrderRepository } from './repository/order.repository';
@@ -27,7 +39,11 @@ import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { UserDto } from 'users/dtos/users.dto';
-import { UpgradeTokenOrderCreatedSuccessEvent, UpgradeTokenOrderCreatedEvent, UpgradeTokenOrderCreatedFailedEvent } from './events/impl/upgrade-token-order-created.event';
+import {
+    UpgradeTokenOrderCreatedEvent,
+    UpgradeTokenOrderCreatedFailedEvent,
+    UpgradeTokenOrderCreatedSuccessEvent
+} from './events/impl/upgrade-token-order-created.event';
 import { UpgradeTokenHandler } from 'tokens/commands/handlers/upgrade-token.handler';
 
 @Module({
@@ -96,7 +112,6 @@ export class OrdersModule implements OnModuleInit {
         OrderDeletedEvent: (streamId, data) => new OrderDeletedEvent(streamId, data),
         OrderDeletedSuccessEvent: (streamId, data) => new OrderDeletedSuccessEvent(streamId, data),
         OrderDeletedFailedEvent: (streamId, data, error) => new OrderDeletedFailedEvent(streamId, data, error),
-
         OrderWelcomedEvent: (streamId, data) => new OrderWelcomedEvent(streamId, data)
     };
 }

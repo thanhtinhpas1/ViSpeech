@@ -1,0 +1,3 @@
+- create proxy for python api
+- implement projects - permission user
+- implement dashboard - pagination admin

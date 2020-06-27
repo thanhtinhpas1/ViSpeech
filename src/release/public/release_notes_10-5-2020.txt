@@ -1,0 +1,5 @@
+- Edit thesis unit 3
+- Implement mobile categories
+- Implement mobile histories lesson
+- Update eventStore receive event from other tenant
+- Update kafka connect timeout

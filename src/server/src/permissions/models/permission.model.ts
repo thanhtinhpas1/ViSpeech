@@ -1,10 +1,10 @@
-import {AggregateRoot} from '@nestjs/cqrs';
-import {PermissionCreatedEvent} from '../events/impl/permission-created.event';
-import {PermissionUpdatedEvent} from '../events/impl/permission-updated.event';
-import {PermissionDeletedEvent} from '../events/impl/permission-deleted.event';
-import {PermissionWelcomedEvent} from '../events/impl/permission-welcomed.event';
-import {PermissionAssignEmailSentEvent} from 'permissions/events/impl/permission-assign-email-sent.event';
-import {PermissionAssignRepliedEvent} from 'permissions/events/impl/permission-assign-replied.event';
+import { AggregateRoot } from '@nestjs/cqrs';
+import { PermissionCreatedEvent } from '../events/impl/permission-created.event';
+import { PermissionUpdatedEvent } from '../events/impl/permission-updated.event';
+import { PermissionDeletedEvent } from '../events/impl/permission-deleted.event';
+import { PermissionWelcomedEvent } from '../events/impl/permission-welcomed.event';
+import { PermissionAssignEmailSentEvent } from 'permissions/events/impl/permission-assign-email-sent.event';
+import { PermissionAssignRepliedEvent } from 'permissions/events/impl/permission-assign-replied.event';
 import { PermissionDeletedByUserIdEvent } from 'permissions/events/impl/permission-deleted-by-userId.event';
 import { PermissionDeletedByProjectIdEvent } from 'permissions/events/impl/permission-deleted-by-projectId.event';
 

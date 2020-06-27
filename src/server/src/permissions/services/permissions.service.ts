@@ -1,13 +1,18 @@
-import {Injectable} from '@nestjs/common';
-import {CommandBus, QueryBus} from '@nestjs/cqrs';
-import {PermissionAssignDto, PermissionDto, PermissionIdRequestParamsDto, PermissionResponseDto} from '../dtos/permissions.dto';
-import {CreatePermissionCommand} from '../commands/impl/create-permission.command';
-import {UpdatePermissionCommand} from '../commands/impl/update-permission.command';
-import {DeletePermissionCommand} from '../commands/impl/delete-permission.command';
-import {GetPermissionsQuery} from 'permissions/queries/impl/get-permissions.query';
-import {FindPermissionQuery} from 'permissions/queries/impl/find-permission.query';
-import {SendAssignPermissionEmailCommand} from 'permissions/commands/impl/send-assign-permission-email.command';
-import {ReplyPermissionAssignCommand} from 'permissions/commands/impl/reply-permission-assign.command';
+import { Injectable } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import {
+    PermissionAssignDto,
+    PermissionDto,
+    PermissionIdRequestParamsDto,
+    PermissionResponseDto
+} from '../dtos/permissions.dto';
+import { CreatePermissionCommand } from '../commands/impl/create-permission.command';
+import { UpdatePermissionCommand } from '../commands/impl/update-permission.command';
+import { DeletePermissionCommand } from '../commands/impl/delete-permission.command';
+import { GetPermissionsQuery } from 'permissions/queries/impl/get-permissions.query';
+import { FindPermissionQuery } from 'permissions/queries/impl/find-permission.query';
+import { SendAssignPermissionEmailCommand } from 'permissions/commands/impl/send-assign-permission-email.command';
+import { ReplyPermissionAssignCommand } from 'permissions/commands/impl/reply-permission-assign.command';
 import { FindPermissionsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
 
 @Injectable()

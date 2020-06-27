@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import { apiUrl } from './api-url'
+// import { DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import {apiUrl} from './api-url'
 
 export default class SpeechService {
   static callAsr = (file, fileUrl, token) => {
@@ -15,15 +15,15 @@ export default class SpeechService {
       data: formData,
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data; boundary=<calculated when request is sent>',
+        'Content-Type': 'multipart/form-data;',
       },
     })
       .then(response => {
         return response.data || null
       })
       .catch(error => {
-        console.debug(error.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
+        console.log(error.message)
+        throw new Error(error.message)
       })
   }
 }
