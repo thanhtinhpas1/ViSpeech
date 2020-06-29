@@ -17,7 +17,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(accessToken: any, refreshToken: any, profile: any) {
-        console.log(`profile ${JSON.stringify(profile)}`)
         const { id, name, emails } = profile
         const userDto = new UserDto(name.givenName, name.familyName, id, '', emails[0].value, [new RoleDto(CONSTANTS.ROLE.USER)], USER_TYPE.GOOGLE, id);
         return await this.authService.validateUserSocialId(id, userDto);

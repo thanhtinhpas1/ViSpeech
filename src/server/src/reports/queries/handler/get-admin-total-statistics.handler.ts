@@ -22,14 +22,24 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
     async execute(query: GetAdminTotalStatisticsQuery): Promise<any> {
         Logger.log('Async GetAdminTotalStatisticsQuery...', 'GetAdminTotalStatisticsQuery');
         const {statisticsType, timeType} = query;
-        let data = [];
+        const data = [];
 
         try {
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
             const startDate = ReportUtils.getStartDate(timeType, queryParams);
             const endDate = ReportUtils.getEndDate(timeType, queryParams);
 
-            let aggregateGroup = {
+            const aggregateMatch = {
+                $match: {
+                    timeType,
+                    reportType: statisticsType,
+                    dateReport: {
+                        $gte: new Date(startDate),
+                        $lte: new Date(endDate)
+                    }
+                }
+            }
+            const aggregateGroup = {
                 $group: {
                     _id: {},
                     usedMinutes: {$sum: '$usedMinutes'}
@@ -37,7 +47,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
             }
             aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
             const groupedReports = await getMongoRepository(ReportDto).aggregate([
-                ReportUtils.aggregateMatchDates(startDate, endDate),
+                aggregateMatch,
                 aggregateGroup
             ]).toArray();
 
@@ -53,8 +63,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
                 }
             }
 
-            data = ReportUtils.getTotalStatisticalData(groupedReports, data, `${statisticsType}Id`);
-            return data;
+            return ReportUtils.getTotalStatisticalData(groupedReports, data, `${statisticsType}Id`);
         } catch (error) {
             Logger.error(error.message, '', 'GetAdminTotalStatisticsQuery');
         }

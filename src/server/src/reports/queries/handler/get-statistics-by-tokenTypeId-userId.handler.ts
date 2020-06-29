@@ -5,6 +5,7 @@ import { ReportDto } from 'reports/dtos/reports.dto';
 import { Repository } from 'typeorm';
 import { ReportUtils } from 'utils/report.util';
 import { GetStatisticsByTokenTypeIdAndUserIdQuery } from '../impl/get-statistics-by-tokenTypeId-userId.query';
+import { CONSTANTS } from 'common/constant';
 
 @QueryHandler(GetStatisticsByTokenTypeIdAndUserIdQuery)
 export class GetStatisticsByTokenTypeIdAndUserIdHandler implements IQueryHandler<GetStatisticsByTokenTypeIdAndUserIdQuery> {
@@ -22,10 +23,12 @@ export class GetStatisticsByTokenTypeIdAndUserIdHandler implements IQueryHandler
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
             const startDate = ReportUtils.getStartDate(timeType, queryParams);
             const endDate = ReportUtils.getEndDate(timeType, queryParams);
-            let data = ReportUtils.prepareStatisticalData(timeType, queryParams);
+            const data = ReportUtils.prepareStatisticalData(timeType, queryParams);
 
             const reports = await this.repository.find({
                 where: {
+                    timeType,
+                    reportType: CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE,
                     userId,
                     tokenTypeId: id,
                     dateReport: {
@@ -35,8 +38,7 @@ export class GetStatisticsByTokenTypeIdAndUserIdHandler implements IQueryHandler
                 }
             });
 
-            data = ReportUtils.getStatisticalData(timeType, data, reports);
-            return data;
+            return ReportUtils.getStatisticalData(timeType, data, reports);
         } catch (error) {
             Logger.error(error.message, '', 'GetStatisticsByTokenTypeIdAndUserIdQuery');
         }

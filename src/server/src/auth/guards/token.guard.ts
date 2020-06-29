@@ -21,7 +21,7 @@ export class TokenGuard implements CanActivate {
         }
         const id = request.params._id || request.params.id || request.params.tokenId;
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
 
         const token = await getMongoRepository(TokenDto).findOne({ _id: id });
         if (token && token.userId === payload['id']) {
@@ -45,7 +45,7 @@ export class TokenQueryGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {

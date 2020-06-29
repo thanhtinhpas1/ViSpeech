@@ -22,7 +22,8 @@ export class ReportQueryGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
+
         const { id, userId, statisticsType, timeType } = request.params;
         if (userId) {
             const user = await getMongoRepository(UserDto).findOne({ _id: userId });
@@ -33,7 +34,6 @@ export class ReportQueryGuard implements CanActivate {
                 return true;
             }
         }
-
         if (id && !userId && !statisticsType && !timeType) { // find report
             const report = await getMongoRepository(ReportDto).findOne({ _id: id });
             if (!report) {

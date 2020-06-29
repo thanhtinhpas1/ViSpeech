@@ -29,7 +29,7 @@ export class PermissionGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
 
         const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
         if (permission && permission.assignerId === payload['id']) {
@@ -55,8 +55,8 @@ export class AssignPermissionGuard implements CanActivate {
         }
 
         const { assignerId } = request.body;
-        const isAdmin = UserUtils.isAdmin(payload);
-        const isManagerUser = UserUtils.isManagerUser(payload);
+        const isAdmin = UserUtils.isAdmin(payload['roles']);
+        const isManagerUser = UserUtils.isManagerUser(payload['roles']);
         return isAdmin || (isManagerUser && assignerId === payload['id']);
 
     }
@@ -106,7 +106,7 @@ export class PermissionQueryGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
 
         const { id, emailToken } = request.params;
         if (id) {

@@ -8,12 +8,12 @@ import { AppModule } from './app.module';
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
     app.enableCors();
+    app.setGlobalPrefix(config.PREFIX)
     const documentOptions = new DocumentBuilder()
         .setTitle(config.TITLE)
         .setDescription(config.DESCRIPTION)
         .setVersion(config.VERSION)
         .addTag(config.NAME)
-        .setBasePath(config.PREFIX)
         .addBearerAuth()
         .build();
     const document = SwaggerModule.createDocument(app, documentOptions);
