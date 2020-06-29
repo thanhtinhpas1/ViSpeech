@@ -72,9 +72,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {
-                ...ReportsModule.eventHandlers,
-            },
+            eventHandlers: {},
         }),
         forwardRef(() => AuthModule),
     ],
@@ -101,6 +99,10 @@ export class ReportsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
+        this.eventStore.addEventHandlers({
+            ...ReportsModule.eventHandlers,
+        })
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);

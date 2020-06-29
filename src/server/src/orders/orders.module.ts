@@ -74,9 +74,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {
-                ...this.eventHandlers, ...OrdersModule.eventHandlers
-            },
+            eventHandlers: {},
         }),
         forwardRef(() => AuthModule),
     ],
@@ -107,6 +105,10 @@ export class OrdersModule implements OnModuleInit {
     }
 
     async onModuleInit() {
+        this.eventStore.addEventHandlers({
+            ...this.eventHandlers,
+        })
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register([...CommandHandlers, CreateOrderedTokenHandler, UpgradeTokenHandler]);
@@ -114,7 +116,7 @@ export class OrdersModule implements OnModuleInit {
         this.event$.registerSagas([OrdersSagas]);
     }
 
-    public static eventHandlers = {
+    public eventHandlers = {
         // create
         OrderCreatedEvent: (streamId, data) => new OrderCreatedEvent(streamId, data),
         OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),

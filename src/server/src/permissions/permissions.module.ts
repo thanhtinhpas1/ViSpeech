@@ -89,9 +89,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {
-                ...PermissionsModule.eventHandlers,
-            },
+            eventHandlers: {},
         }),
     ],
     controllers: [PermissionsController],
@@ -117,6 +115,10 @@ export class PermissionsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
+        this.eventStore.addEventHandlers({
+            ...PermissionsModule.eventHandlers,
+        })
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);

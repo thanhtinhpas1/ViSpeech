@@ -71,9 +71,7 @@ import {
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {
-                ...RequestModule.eventHandlers,
-            },
+            eventHandlers: {},
         }),
         MulterModule.register({}),
         forwardRef(() => AuthModule),
@@ -106,6 +104,10 @@ export class RequestModule implements OnModuleInit {
     }
 
     async onModuleInit() {
+        this.eventStore.addEventHandlers({
+            ...RequestModule.eventHandlers,
+        })
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register([...CommandHandlers, UpdateTokenHandler, CreateReportHandler]);

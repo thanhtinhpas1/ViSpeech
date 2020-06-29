@@ -23,26 +23,10 @@ const configs = {
         HOST: process.env.APP_HOST || 'asr.vietspeech.com',
         PORT: process.env.APP_PORT || 7070,
         // Event Store
-        EVENT_STORE_SETTINGS: {
-            protocol: process.env.EVENT_STORE_PROTOCOL || 'http',
-            hostname: process.env.EVENT_STORE_HOSTNAME || '0.0.0.0',
-            tcpPort: process.env.EVENT_STORE_TCP_PORT || 1113,
-            httpPort: process.env.EVENT_STORE_HTTP_PORT || 2113,
-            credentials: {
-                username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
-                password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
-            },
-            poolOptions: {
-                min: process.env.EVENT_STORE_POOLOPTIONS_MIN || 1,
-                max: process.env.EVENT_STORE_POOLOPTIONS_MAX || 10,
-            },
-            category: process.env.EVENT_STORE_CATEGORY || 'vispeech'
-        },
-
         EVENTSTORE: {
             tcpEndpoint: {
-                host: '0.0.0.0',
-                port: 1113,
+                host: process.env.EVENT_STORE_HOSTNAME || '0.0.0.0',
+                port: process.env.EVENT_STORE_PORT || 1113,
             },
             options: {
                 maxRetries: 1000, // Optional

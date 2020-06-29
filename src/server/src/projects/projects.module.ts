@@ -74,9 +74,7 @@ import { ProjectDto } from './dtos/projects.dto';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {
-                ...ProjectsModule.eventHandlers, ...TokensModule.eventHandlers,
-            },
+            eventHandlers: {},
         }),
     ],
     controllers: [ProjectsController],
@@ -103,6 +101,10 @@ export class ProjectsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
+        this.eventStore.addEventHandlers({
+            ...ProjectsModule.eventHandlers, ...TokensModule.eventHandlers,
+        })
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register([...CommandHandlers, DeleteTokenByProjectIdHandler]);
