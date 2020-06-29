@@ -7,7 +7,11 @@ import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
-import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from '../impl/permission-created.event';
+import {
+    PermissionCreatedEvent,
+    PermissionCreatedFailedEvent,
+    PermissionCreatedSuccessEvent
+} from '../impl/permission-created.event';
 
 @EventsHandler(PermissionCreatedEvent)
 export class PermissionCreatedHandler implements IEventHandler<PermissionCreatedEvent> {
@@ -20,7 +24,7 @@ export class PermissionCreatedHandler implements IEventHandler<PermissionCreated
 
     async handle(event: PermissionCreatedEvent) {
         Logger.log(event.permissionDto._id, 'PermissionCreatedEvent');
-        const { streamId, permissionDto } = event;
+        const {streamId, permissionDto} = event;
         const permission = JSON.parse(JSON.stringify(permissionDto));
 
         try {
@@ -58,6 +62,7 @@ export class PermissionCreatedFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: PermissionCreatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

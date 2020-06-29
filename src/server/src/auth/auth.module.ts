@@ -5,7 +5,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'auth/roles.guard';
 import { AuthController } from './auth.controllers';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CommandBus, EventBus, EventPublisher } from '@nestjs/cqrs';
 import { UsersModule } from '../users/users.module';
 import { config } from '../../config';
 import { AuthService } from './auth.service';
@@ -15,12 +14,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { RoleDto } from 'roles/dtos/roles.dto';
-import { EventStoreModule } from 'core/event-store/event-store.module';
-import { UserRepository } from 'users/repository/user.repository';
-import { CreateUserHandler, CreateUserStartHandler } from 'users/commands/handlers/create-user.handler';
-import { CreateFreeTokenHandler } from 'tokens/commands/handlers/create-token.handler';
-import { TokenRepository } from 'tokens/repository/token.repository';
-import { EventStore } from 'core/event-store/event-store';
+import { CommandBus } from "@nestjs/cqrs";
 
 @Module({
     imports: [
@@ -28,7 +22,6 @@ import { EventStore } from 'core/event-store/event-store';
         TypeOrmModule.forFeature([UserDto, RoleDto]),
         forwardRef(() => UsersModule),
         PassportModule,
-        EventStoreModule.forFeature(),
     ],
     controllers: [AuthController],
     providers: [
@@ -41,12 +34,7 @@ import { EventStore } from 'core/event-store/event-store';
         FacebookStrategy,
         GoogleStrategy,
         AuthService,
-        UserRepository,
-        TokenRepository,
-        CreateUserStartHandler,
-        CreateUserHandler,
-        CreateFreeTokenHandler,
-        EventBus, EventStore, CommandBus, EventPublisher,
+        CommandBus,
     ],
     exports: [JwtModule, AuthService]
 })

@@ -39,6 +39,24 @@ const configs = {
             category: process.env.EVENT_STORE_CATEGORY || 'vispeech'
         },
 
+        EVENTSTORE: {
+            tcpEndpoint: {
+                host: '0.0.0.0',
+                port: 1113,
+            },
+            options: {
+                maxRetries: 1000, // Optional
+                maxReconnections: 1000,  // Optional
+                reconnectionDelay: 1000,  // Optional
+                heartbeatInterval: 1000,  // Optional
+                heartbeatTimeout: 1000,  // Optional
+                defaultUserCredentials: {
+                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
+                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+                },
+            },
+        },
+
         DATABASE: {
             type: process.env.TYPEORM_CONNECTION || 'mongodb',
             host: process.env.TYPEORM_HOST || '127.0.0.1',
@@ -101,4 +119,4 @@ const configs = {
 };
 const config = {...configs.base, ...configs[env]};
 
-export {config};
+export { config };

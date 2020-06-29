@@ -1,4 +1,4 @@
-export interface EventStoreMessage {
+export interface IEventStoreMessage {
     streamId: string;
     eventId: string;
     eventNumber: number;

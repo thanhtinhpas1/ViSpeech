@@ -23,27 +23,31 @@ export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpg
 
     async execute(command: CreateUpgradeTokenOrderCommand) {
         Logger.log('Async CreateOrderHandler...', 'CreateUpgradeTokenOrderCommand');
-        const { streamId, orderDto, paymentIntent } = command;
+        const {streamId, orderDto, paymentIntent} = command;
 
         try {
             const paymentIntentObj = await stripe.paymentIntents.retrieve(paymentIntent.id);
             if (paymentIntentObj && paymentIntentObj.status === 'succeeded') {
-                const user = await getMongoRepository(UserDto).findOne({ _id: orderDto.userId.toString() });
+                const user = await getMongoRepository(UserDto).findOne({_id: orderDto.userId.toString()});
                 if (!user) {
                     throw new NotFoundException(`User with _id ${orderDto.userId} does not exist.`);
                 }
 
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ _id: orderDto.tokenType._id });
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({_id: orderDto.tokenType._id});
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with _id ${orderDto.tokenType._id} does not exist.`);
                 }
 
-                const validToken = await getMongoRepository(TokenDto).findOne({ _id: orderDto.token._id, isValid: true, userId: orderDto.userId });
+                const validToken = await getMongoRepository(TokenDto).findOne({
+                    _id: orderDto.token._id,
+                    isValid: true,
+                    userId: orderDto.userId
+                });
                 if (!validToken) {
                     throw new BadRequestException(`Token with _id ${orderDto.token._id} is not valid.`);
                 }
 
-                const freeTokenType = await getMongoRepository(TokenTypeDto).findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
+                const freeTokenType = await getMongoRepository(TokenTypeDto).findOne({name: CONSTANTS.TOKEN_TYPE.FREE});
                 if (validToken.tokenTypeId === freeTokenType._id) {
                     throw new BadRequestException(`Cannot upgrade free token. Token id: ${orderDto.token._id}.`);
                 }
@@ -62,7 +66,7 @@ export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpg
             if (error.raw && error.raw.message) {
                 errorMessage = error.raw.message;
             }
-            this.eventBus.publish(new UpgradeTokenOrderCreatedFailedEvent(streamId, orderDto, { message: errorMessage }));
+            this.eventBus.publish(new UpgradeTokenOrderCreatedFailedEvent(streamId, orderDto, {message: errorMessage}));
         }
     }
 }

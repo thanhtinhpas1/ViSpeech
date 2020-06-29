@@ -12,15 +12,16 @@ export class GetOrdersByUserIdHandler
     constructor(
         @InjectRepository(OrderDto)
         private readonly repository: Repository<OrderDto>
-    ) {}
+    ) {
+    }
 
     async execute(query: GetOrdersByUserIdQuery): Promise<any> {
         Logger.log('Async GetOrdersByUserIdQuery...', 'GetOrdersByUserIdQuery');
-        const { userId, offset, limit, filters, sort } = query;
+        const {userId, offset, limit, filters, sort} = query;
         let orders = [];
         try {
             const findOptions = {
-                where: { userId },
+                where: {userId},
                 order: {}
             }
             if (filters) {
@@ -30,15 +31,15 @@ export class GetOrdersByUserIdHandler
                 if (filters['tokenType']) {
                     findOptions.where['tokenType.name'] = filters['tokenType']
                 }
-            }   
+            }
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)
                 findOptions.order[sortField] = sort.order
             }
 
-            orders = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
+            orders = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
             const count = await getMongoRepository(OrderDto).count(findOptions.where);
-            return { data: orders, count };
+            return {data: orders, count};
         } catch (error) {
             Logger.error(error.message, '', 'GetOrdersByUserIdQuery');
         }

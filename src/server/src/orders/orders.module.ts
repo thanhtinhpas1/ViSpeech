@@ -1,16 +1,13 @@
 import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
-import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'auth/auth.module';
 import { kafkaClientOptions } from 'common/kafka-client.options';
-import { EventStore } from 'core/event-store/event-store';
 import { CreateOrderedTokenHandler } from 'tokens/commands/handlers/create-token.handler';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenRepository } from 'tokens/repository/token.repository';
-import { TokensModule } from 'tokens/tokens.module';
 import { config } from '../../config';
-import { EventStoreModule } from '../core/event-store/event-store.module';
 import { CommandHandlers } from './commands/handlers';
 import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
@@ -45,6 +42,9 @@ import {
     UpgradeTokenOrderCreatedSuccessEvent
 } from './events/impl/upgrade-token-order-created.event';
 import { UpgradeTokenHandler } from 'tokens/commands/handlers/upgrade-token.handler';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
+import { EventStore, EventStoreModule } from '../core/event-store/lib';
 
 @Module({
     imports: [
@@ -52,9 +52,33 @@ import { UpgradeTokenHandler } from 'tokens/commands/handlers/upgrade-token.hand
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([OrderDto, TokenTypeDto, ProjectDto, TokenDto, PermissionDto, UserDto]),
+        TypeOrmModule.forFeature([OrderDto, TokenTypeDto, ProjectDto, TokenDto, PermissionDto, UserDto, ProjectionDto]),
+        CqrsModule,
+        EventStoreModule.registerFeature({
+            featureStreamName: '$ce-order',
+            subscriptions: [
+                {
+                    type: EventStoreSubscriptionType.CatchUp,
+                    stream: '$ce-order',
+                    resolveLinkTos: true, // Default is true (Optional)
+                    lastCheckpoint: 13, // Default is 0 (Optional)
+                },
+                {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: '$ce-order',
+                },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: '$ce-order',
+                    persistentSubscriptionName: 'steamName',
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
+            ],
+            eventHandlers: {
+                ...this.eventHandlers, ...OrdersModule.eventHandlers
+            },
+        }),
         forwardRef(() => AuthModule),
-        EventStoreModule.forFeature(),
     ],
     controllers: [OrdersController],
     providers: [
@@ -67,7 +91,8 @@ import { UpgradeTokenHandler } from 'tokens/commands/handlers/upgrade-token.hand
         TokenRepository,
         CreateOrderedTokenHandler,
         UpgradeTokenHandler,
-        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+        QueryBus, EventBus,
+        CommandBus, EventPublisher,
     ],
     exports: [OrdersService]
 })
@@ -81,33 +106,27 @@ export class OrdersModule implements OnModuleInit {
     ) {
     }
 
-    onModuleInit() {
-        this.eventStore.setEventHandlers({ ...this.eventHandlers, ...TokensModule.eventHandlers });
-        this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
+    async onModuleInit() {
         this.event$.publisher = this.eventStore;
-        /** ------------ */
         this.event$.register(EventHandlers);
         this.command$.register([...CommandHandlers, CreateOrderedTokenHandler, UpgradeTokenHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([OrdersSagas]);
     }
 
-    eventHandlers = {
+    public static eventHandlers = {
         // create
         OrderCreatedEvent: (streamId, data) => new OrderCreatedEvent(streamId, data),
         OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),
         OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),
-
         // create upgrade token order
         UpgradeTokenOrderCreatedEvent: (streamId, data) => new UpgradeTokenOrderCreatedEvent(streamId, data),
         UpgradeTokenOrderCreatedSuccessEvent: (streamId, data) => new UpgradeTokenOrderCreatedSuccessEvent(streamId, data),
         UpgradeTokenOrderCreatedFailedEvent: (streamId, data, error) => new UpgradeTokenOrderCreatedFailedEvent(streamId, data, error),
-
         // update
         OrderUpdatedEvent: (streamId, data) => new OrderUpdatedEvent(streamId, data),
         OrderUpdatedSuccessEvent: (streamId, data) => new OrderUpdatedSuccessEvent(streamId, data),
         OrderUpdatedFailedEvent: (streamId, data, error) => new OrderUpdatedFailedEvent(streamId, data, error),
-
         // delete
         OrderDeletedEvent: (streamId, data) => new OrderDeletedEvent(streamId, data),
         OrderDeletedSuccessEvent: (streamId, data) => new OrderDeletedSuccessEvent(streamId, data),

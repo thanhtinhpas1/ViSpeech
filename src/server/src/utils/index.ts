@@ -82,7 +82,7 @@ export const Utils = {
             return null;
         }
     },
-    nextDateOfCron(cron: string, currentDate?: Date, ): Date {
+    nextDateOfCron(cron: string, currentDate?: Date,): Date {
         if (!currentDate) currentDate = new Date();
         const options = {
             currentDate,

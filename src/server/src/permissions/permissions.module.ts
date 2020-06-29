@@ -1,8 +1,6 @@
 import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
-import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventStore } from 'core/event-store/event-store';
-import { EventStoreModule } from 'core/event-store/event-store.module';
 import { CommandHandlers } from './commands/handlers';
 import { PermissionsController } from './controllers/permissions.controller';
 import { PermissionDto } from './dtos/permissions.dto';
@@ -53,6 +51,9 @@ import {
     PermissionDeletedByProjectIdFailedEvent,
     PermissionDeletedByProjectIdSuccessEvent
 } from './events/impl/permission-deleted-by-projectId.event';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
+import { EventStore, EventStoreModule } from '../core/event-store/lib';
 
 @Module({
     imports: [
@@ -60,9 +61,38 @@ import {
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([PermissionDto, UserDto, ProjectDto]),
+        TypeOrmModule.forFeature([
+            PermissionDto,
+            UserDto,
+            ProjectDto,
+            ProjectionDto
+        ]),
         forwardRef(() => AuthModule),
-        EventStoreModule.forFeature(),
+        CqrsModule,
+        EventStoreModule.registerFeature({
+            featureStreamName: '$ce-permission',
+            subscriptions: [
+                {
+                    type: EventStoreSubscriptionType.CatchUp,
+                    stream: '$ce-permission',
+                    resolveLinkTos: true, // Default is true (Optional)
+                    lastCheckpoint: 13, // Default is 0 (Optional)
+                },
+                {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: '$ce-permission',
+                },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: '$ce-permission',
+                    persistentSubscriptionName: 'steamName',
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
+            ],
+            eventHandlers: {
+                ...PermissionsModule.eventHandlers,
+            },
+        }),
     ],
     controllers: [PermissionsController],
     providers: [
@@ -72,7 +102,8 @@ import {
         ...EventHandlers,
         ...QueryHandlers,
         PermissionRepository,
-        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+        QueryBus, EventBus,
+        CommandBus, EventPublisher,
     ],
     exports: [PermissionsService],
 })
@@ -86,10 +117,7 @@ export class PermissionsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        this.eventStore.setEventHandlers(PermissionsModule.eventHandlers);
-        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
-        /** ------------ */
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
@@ -101,35 +129,27 @@ export class PermissionsModule implements OnModuleInit {
         PermissionCreatedEvent: (streamId, data) => new PermissionCreatedEvent(streamId, data),
         PermissionCreatedSuccessEvent: (streamId, data) => new PermissionCreatedSuccessEvent(streamId, data),
         PermissionCreatedFailedEvent: (streamId, data, error) => new PermissionCreatedFailedEvent(streamId, data, error),
-
         // delete
         PermissionDeletedEvent: (streamId, data) => new PermissionDeletedEvent(streamId, data),
         PermissionDeletedSuccessEvent: (streamId, data) => new PermissionDeletedSuccessEvent(streamId, data),
         PermissionDeletedFailedEvent: (streamId, data, error) => new PermissionDeletedFailedEvent(streamId, data, error),
-
         // delete by userId
         PermissionDeletedByUserIdEvent: (streamId, data) => new PermissionDeletedByUserIdEvent(streamId, data),
         PermissionDeletedByUserIdSuccessEvent: (streamId, data) => new PermissionDeletedByUserIdSuccessEvent(streamId, data),
         PermissionDeletedByUserIdFailedEvent: (streamId, data, error) => new PermissionDeletedByUserIdFailedEvent(streamId, data, error),
-
         // delete by projectId
         PermissionDeletedByProjectIdEvent: (streamId, data) => new PermissionDeletedByProjectIdEvent(streamId, data),
         PermissionDeletedByProjectIdSuccessEvent: (streamId, data) => new PermissionDeletedByProjectIdSuccessEvent(streamId, data),
         PermissionDeletedByProjectIdFailedEvent: (streamId, data, error) => new PermissionDeletedByProjectIdFailedEvent(streamId, data, error),
-
         // update
         PermissionUpdatedEvent: (streamId, data) => new PermissionUpdatedEvent(streamId, data),
         PermissionUpdatedSuccessEvent: (streamId, data) => new PermissionUpdatedSuccessEvent(streamId, data),
         PermissionUpdatedFailedEvent: (streamId, data, error) => new PermissionUpdatedFailedEvent(streamId, data, error),
-
         PermissionWelcomedEvent: (streamId, data) => new PermissionWelcomedEvent(streamId, data),
-
-        // send email assign permisison
+        // send email assign permission
         PermissionAssignEmailSentEvent: (streamId, data) => new PermissionAssignEmailSentEvent(streamId, data),
         PermissionAssignEmailSentSuccessEvent: (streamId, data) => new PermissionAssignEmailSentSuccessEvent(streamId, data),
         PermissionAssignEmailSentFailedEvent: (streamId, data, error) => new PermissionAssignEmailSentFailedEvent(streamId, data, error),
-
-        // reply permission assign
         PermissionAssignRepliedEvent: (streamId, data) => new PermissionAssignRepliedEvent(streamId, data),
         PermissionAssignRepliedSuccessEvent: (streamId, data) => new PermissionAssignRepliedSuccessEvent(streamId, data),
         PermissionAssignRepliedFailedEvent: (streamId, data, error) => new PermissionAssignRepliedFailedEvent(streamId, data, error),

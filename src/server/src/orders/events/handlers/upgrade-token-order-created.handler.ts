@@ -30,8 +30,8 @@ export class UpgradeTokenOrderCreatedHandler implements IEventHandler<UpgradeTok
 
     async handle(event: UpgradeTokenOrderCreatedEvent) {
         Logger.log(event.orderDto._id, 'UpgradeTokenOrderCreatedEvent');
-        const { streamId, orderDto } = event;
-        const order = { ...orderDto };
+        const {streamId, orderDto} = event;
+        const order = {...orderDto};
 
         try {
             order.tokenType = await this.tokenTypeRepository.findOne({_id: order.tokenType._id});
@@ -54,6 +54,7 @@ export class UpgradeTokenOrderCreatedSuccessHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: UpgradeTokenOrderCreatedSuccessEvent) {
         this.clientKafka.emit(CONSTANTS.TOPICS.UPGRADE_TOKEN_ORDER_CREATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.orderDto._id, 'UpgradeTokenOrderCreatedSuccessEvent');
@@ -69,6 +70,7 @@ export class UpgradeTokenOrderCreatedFailedHandler
     ) {
         this.clientKafka.connect();
     }
+
     handle(event: UpgradeTokenOrderCreatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj

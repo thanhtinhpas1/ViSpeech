@@ -22,7 +22,7 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
 
     async execute(query: GetOrdersQuery) {
         Logger.log('Async GetOrdersQuery...', 'GetOrdersQuery');
-        const { offset, limit, filters, sort } = query;
+        const {offset, limit, filters, sort} = query;
         let orders = [];
         let result = [];
         try {
@@ -41,17 +41,17 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
                     findOptions.where['tokenType.name'] = filters['tokenType']
                 }
                 if (filters['username']) {
-                    const users = await this.userDtoRepository.find({ where: { username: new RegExp(filters['username'], 'i') } });
+                    const users = await this.userDtoRepository.find({where: {username: new RegExp(filters['username'], 'i')}});
                     if (users.length > 0) {
                         const userIds = users.map(user => user._id)
-                        findOptions.where['userId'] = { $in: [...userIds] }
+                        findOptions.where['userId'] = {$in: [...userIds]}
                     }
                 }
                 if (filters['projectName']) {
-                    const projects = await this.projectDtoRepository.find({ where: { name: new RegExp(filters['projectName'], 'i') } });
+                    const projects = await this.projectDtoRepository.find({where: {name: new RegExp(filters['projectName'], 'i')}});
                     if (projects.length > 0) {
                         const projectIds = projects.map(project => project._id)
-                        findOptions.where['token.projectId'] = { $in: [...projectIds] }
+                        findOptions.where['token.projectId'] = {$in: [...projectIds]}
                     }
                 }
             }
@@ -60,15 +60,15 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
                 findOptions.order[sortField] = sort.order
             }
 
-            orders = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
+            orders = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
             for (const order of orders) {
-                const user = await this.userDtoRepository.findOne({ _id: order.userId.toString() });
-                const project = await this.projectDtoRepository.findOne({ _id: order.token.projectId.toString() });
-                result.push({ ...order, username: user.username, projectName: project.name, });
+                const user = await this.userDtoRepository.findOne({_id: order.userId.toString()});
+                const project = await this.projectDtoRepository.findOne({_id: order.token.projectId.toString()});
+                result.push({...order, username: user.username, projectName: project.name,});
             }
 
             const count = await getMongoRepository(OrderDto).count(findOptions.where);
-            return { data: result, count };
+            return {data: result, count};
         } catch (error) {
             Logger.error(error.message, '', 'GetOrdersQuery');
         }

@@ -1,13 +1,11 @@
 import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
-import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UpdateTokenHandler } from 'tokens/commands/handlers/update-token.handler';
 import { CreateReportHandler } from 'reports/commands/handlers/create-report.handler';
 import { TokenRepository } from 'tokens/repository/token.repository';
 import { AuthModule } from '../auth/auth.module';
-import { EventStore } from '../core/event-store/event-store';
-import { EventStoreModule } from '../core/event-store/event-store.module';
 import { TokenDto } from '../tokens/dtos/tokens.dto';
 import { CommandHandlers } from './commands/handler';
 import { AsrController } from './controllers/requests.controller';
@@ -28,9 +26,11 @@ import {
     RequestTranscriptFileUrlUpdatedSuccessEvent
 } from './events/impl/request-transcript-file-url-updated.event';
 import { ClientsModule } from '@nestjs/microservices';
-import { config } from "../../config";
-import { kafkaClientOptions } from "common/kafka-client.options";
+import { config } from '../../config';
+import { kafkaClientOptions } from 'common/kafka-client.options';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
 
 @Module({
     imports: [
@@ -38,8 +38,38 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([RequestDto, TokenDto, TokenTypeDto, OrderDto, ProjectDto]),
-        EventStoreModule.forFeature(),
+        TypeOrmModule.forFeature([
+            RequestDto,
+            TokenDto,
+            TokenTypeDto,
+            OrderDto,
+            ProjectDto,
+            ProjectionDto]),
+        CqrsModule,
+        EventStoreModule.registerFeature({
+            featureStreamName: '$ce-request',
+            subscriptions: [
+                {
+                    type: EventStoreSubscriptionType.CatchUp,
+                    stream: '$ce-request',
+                    resolveLinkTos: true, // Default is true (Optional)
+                    lastCheckpoint: 13, // Default is 0 (Optional)
+                },
+                {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: '$ce-request',
+                },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: '$ce-request',
+                    persistentSubscriptionName: 'steamName',
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
+            ],
+            eventHandlers: {
+                ...RequestModule.eventHandlers,
+            },
+        }),
         MulterModule.register({}),
         forwardRef(() => AuthModule),
     ],
@@ -49,16 +79,18 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
     providers: [
         RequestService,
         CallAsrSagas,
-        ...CommandHandlers, ...EventHandlers, ...QueryHandlers,
         TokenRepository,
         RequestRepository,
         ReportRepository,
         UpdateTokenHandler,
         CreateReportHandler,
-        QueryBus, EventBus, EventStore, CommandBus, EventPublisher,
+        QueryBus, EventBus,
+        CommandBus, EventPublisher,
+        ...CommandHandlers,
+        ...EventHandlers,
+        ...QueryHandlers,
     ],
 })
-
 export class RequestModule implements OnModuleInit {
     constructor(
         private readonly command$: CommandBus,
@@ -68,20 +100,16 @@ export class RequestModule implements OnModuleInit {
     ) {
     }
 
-    onModuleInit(): any {
-        this.eventStore.setEventHandlers(this.eventHandlers);
-        this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
+    async onModuleInit() {
         this.event$.publisher = this.eventStore;
-        /** ------------ */
         this.event$.register(EventHandlers);
         this.command$.register([...CommandHandlers, UpdateTokenHandler, CreateReportHandler]);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([CallAsrSagas]);
     }
 
-    eventHandlers = {
+    public static eventHandlers = {
         AsrCalledEvent: (streamId, requestDto, tokenDto) => new AsrCalledEvent(streamId, requestDto, tokenDto),
-        // update
         RequestTranscriptFileUrlUpdatedEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedEvent(streamId, id, url),
         RequestTranscriptFileUrlUpdatedSuccessEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, id, url),
         RequestTranscriptFileUrlUpdatedFailedEvent: (streamId, id, url, error) => new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, id, url, error),

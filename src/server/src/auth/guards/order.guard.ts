@@ -24,7 +24,7 @@ export class OrderGuard implements CanActivate {
         if (!id) return true;
         if (UserUtils.isAdmin(payload)) return true;
 
-        const order = await getMongoRepository(OrderDto).findOne({ _id: id });
+        const order = await getMongoRepository(OrderDto).findOne({_id: id});
         if (order && order.userId === payload['id']) {
             return true;
         }
@@ -54,27 +54,37 @@ export class OrderQueryGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (id) {
-            const order = await getMongoRepository(OrderDto).findOne({ _id: id });
+            const order = await getMongoRepository(OrderDto).findOne({_id: id});
             if (!order) {
                 throw new NotFoundException(`Order with _id ${id} does not exist.`);
             }
             if (order.userId === payload['id']) {
                 return true;
             }
-            const permission = await this.permissionRepo.findOne({ where: { projectId: order.token.projectId, assigneeId: payload['id'] } });
+            const permission = await this.permissionRepo.findOne({
+                where: {
+                    projectId: order.token.projectId,
+                    assigneeId: payload['id']
+                }
+            });
             if (permission) return true;
         }
 
         const tokenId = request.params.tokenId;
         if (tokenId) {
-            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenId });
+            const token = await getMongoRepository(TokenDto).findOne({_id: tokenId});
             if (!token) {
                 throw new NotFoundException(`Token with _id ${id} does not exist.`);
             }
             if (token.userId === payload['id']) {
                 return true;
             }
-            const permission = await this.permissionRepo.findOne({ where: { projectId: token.projectId, assigneeId: payload['id'] } });
+            const permission = await this.permissionRepo.findOne({
+                where: {
+                    projectId: token.projectId,
+                    assigneeId: payload['id']
+                }
+            });
             if (permission) return true;
         }
 

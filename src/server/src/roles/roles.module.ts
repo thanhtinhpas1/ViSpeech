@@ -17,7 +17,7 @@ export class RolesModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        this.persistRolesToDB();
+        await this.persistRolesToDB();
     }
 
     async persistRolesToDB() {
