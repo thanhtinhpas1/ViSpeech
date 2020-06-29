@@ -1,4 +1,4 @@
-import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
@@ -77,7 +77,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
             ProjectDto,
             ProjectionDto
         ]),
-        forwardRef(() => AuthModule),
+        AuthModule,
         CqrsModule,
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-token',
@@ -99,9 +99,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {
-                ...TokensModule.eventHandlers,
-            },
+            eventHandlers: {},
         }),
     ],
     controllers: [TokensController],
@@ -129,6 +127,10 @@ export class TokensModule implements OnModuleInit {
     }
 
     async onModuleInit() {
+        this.eventStore.addEventHandlers({
+            ...TokensModule.eventHandlers,
+        })
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);
@@ -189,7 +191,7 @@ export class TokensModule implements OnModuleInit {
             await getMongoRepository(TokenTypeDto).insert(tokenType200);
             await getMongoRepository(TokenTypeDto).insert(tokenType500);
         } catch (e) {
-            if ('duplicate key error'.includes(e.message)) {
+            if ('duplicate'.includes(e.message)) {
                 Logger.log('Token types existed.');
             }
             Logger.warn('Something went wrong when seed token types.');

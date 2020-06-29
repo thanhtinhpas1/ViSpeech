@@ -1,5 +1,5 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { UserCreatedEvent, UserCreationStartedEvent } from '../events/impl/user-created.event';
+import { UserCreatedEvent } from '../events/impl/user-created.event';
 import { UserDeletedEvent } from '../events/impl/user-deleted.event';
 import { UserUpdatedEvent } from '../events/impl/user-updated.event';
 import { PasswordChangedEvent } from '../events/impl/password-changed.event';
@@ -16,10 +16,6 @@ export class User extends AggregateRoot {
 
     setData(data) {
         this.data = data;
-    }
-
-    createUserStart(streamId: string) {
-        this.apply(new UserCreationStartedEvent(streamId, this.data));
     }
 
     createUser(streamId: string) {

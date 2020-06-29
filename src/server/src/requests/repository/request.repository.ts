@@ -8,7 +8,14 @@ export class RequestRepository {
     async createRequest(streamId: string, requestDto: RequestDto, tokenDto: TokenDto) {
         const request = new RequestModel(requestDto._id);
         request.setData(requestDto);
-        request.createReport(streamId, tokenDto);
+        request.createRequest(streamId, tokenDto);
+        return request;
+    }
+
+    async callAsr(streamId: string, requestDto: RequestDto, tokenDto: TokenDto) {
+        const request = new RequestModel(requestDto._id);
+        request.setData(requestDto);
+        request.callAsr(streamId, tokenDto);
         return request;
     }
 

@@ -51,7 +51,7 @@ export class UsersController {
             }
         });
         const streamId = userDto._id;
-        return await this.usersService.createUserStart(streamId, userDto);
+        return await this.usersService.createUser(streamId, userDto);
     }
 
     /* Change password */

@@ -2,10 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
 import { flatMap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { UserCreatedSuccessEvent, UserCreationStartedEvent } from 'users/events/impl/user-created.event';
+import { UserCreatedSuccessEvent } from 'users/events/impl/user-created.event';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { AuthService } from 'auth/auth.service';
-import { CreateUserCommand } from 'users/commands/impl/create-user.command';
 import { WelcomeUserCommand } from 'users/commands/impl/welcome-user.command';
 import { FreeTokenCreatedSuccessEvent } from 'tokens/events/impl/free-token-created.event';
 import { UserDeletedSuccessEvent } from 'users/events/impl/user-deleted.event';
@@ -19,18 +18,6 @@ import { CONSTANTS } from 'common/constant';
 export class UsersSagas {
     constructor(private readonly authService: AuthService) {
     }
-
-    @Saga()
-    startCreatingUser = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(UserCreationStartedEvent),
-            map((event: UserCreationStartedEvent) => {
-                Logger.log('Inside [UsersSagas] startCreatingUser Saga', 'UsersSagas');
-                const {streamId, userDto} = event;
-                return new CreateUserCommand(streamId, userDto);
-            })
-        );
-    };
 
     @Saga()
     userCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {

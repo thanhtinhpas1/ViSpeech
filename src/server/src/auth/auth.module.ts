@@ -5,7 +5,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from 'auth/roles.guard';
 import { AuthController } from './auth.controllers';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from '../users/users.module';
 import { config } from '../../config';
 import { AuthService } from './auth.service';
 import { UserDto } from '../users/dtos/users.dto';
@@ -15,13 +14,14 @@ import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { CommandBus } from "@nestjs/cqrs";
+import { UsersModule } from "../users/users.module";
 
 @Module({
     imports: [
         JwtModule.register(config.JWT),
         TypeOrmModule.forFeature([UserDto, RoleDto]),
-        forwardRef(() => UsersModule),
         PassportModule,
+        forwardRef(() => UsersModule),
     ],
     controllers: [AuthController],
     providers: [

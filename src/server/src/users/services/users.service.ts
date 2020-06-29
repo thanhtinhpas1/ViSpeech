@@ -5,11 +5,11 @@ import { UpdateUserCommand } from '../commands/impl/update-user.command';
 import { DeleteUserCommand } from '../commands/impl/delete-user.command';
 import { GetUsersQuery } from 'users/queries/impl/get-users.query';
 import { FindUserQuery } from 'users/queries/impl/find-user.query';
-import { CreateUserStartCommand } from 'users/commands/impl/create-user.command';
 import { ChangePasswordCommand } from '../commands/impl/change-password.command';
 import { VerifyEmailCommand } from 'users/commands/impl/verify-email.command';
 import { SendVerifyEmailCommand } from 'users/commands/impl/send-verify-email.command';
 import { GetAssigneeQuery } from "../queries/impl/get-assignee.query";
+import { CreateUserCommand } from "../commands/impl/create-user.command";
 
 @Injectable()
 export class UsersService {
@@ -19,8 +19,8 @@ export class UsersService {
     ) {
     }
 
-    async createUserStart(streamId: string, userDto: UserDto) {
-        return await this.commandBus.execute(new CreateUserStartCommand(streamId, userDto));
+    async createUser(streamId: string, userDto: UserDto) {
+        return await this.commandBus.execute(new CreateUserCommand(streamId, userDto));
     }
 
     async updateUser(streamId: string, userDto: UserDto) {

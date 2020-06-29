@@ -32,6 +32,13 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
       }
+    case RequestTypes.CLEAR_REQUEST_INFO:
+      return {
+        ...state,
+        getInfo: {
+          ...INITIAL_STATE.getInfo,
+        },
+      }
     // GET INFO
     case RequestTypes.GET_REQUEST_INFO:
       return {

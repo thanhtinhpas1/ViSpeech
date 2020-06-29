@@ -8,6 +8,7 @@ import { CallAsrCommand } from "requests/commands/impl/call-asr.command"
 import { UpdateRequestTranscriptFileUrlCommand } from "requests/commands/impl/update-request-transcript-file-url.command"
 import { FindRequestQuery } from "requests/queries/impl/find-request.query"
 import HtmlDocx from 'html-docx-js'
+import { CreateRequestCommand } from "requests/commands/impl/create-request.command"
 
 @Injectable()
 export class RequestService {
@@ -18,6 +19,10 @@ export class RequestService {
     }
 
     async createRequest(streamId: string, requestDto: RequestDto, tokenDto: TokenDto) {
+        return await this.commandBus.execute(new CreateRequestCommand(streamId, requestDto, tokenDto));
+    }
+
+    async callAsr(streamId: string, requestDto: RequestDto, tokenDto: TokenDto) {
         return await this.commandBus.execute(new CallAsrCommand(streamId, requestDto, tokenDto));
     }
 

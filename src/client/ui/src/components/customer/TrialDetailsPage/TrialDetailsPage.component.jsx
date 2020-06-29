@@ -2,11 +2,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, {useEffect, useState} from 'react'
-import {Button, Row} from 'antd'
-import {useHistory, useParams} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Button, Row } from 'antd'
+import { useHistory, useParams } from 'react-router-dom'
 import ReactQuill from 'react-quill'
-import {saveAs} from 'file-saver'
+import { saveAs } from 'file-saver'
 import './TrialDetailsPage.style.css'
 import * as moment from 'moment'
 import RequestService from 'services/request.service'
@@ -14,17 +14,18 @@ import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
 
 const juice = require('juice')
 
-const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
+const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo }) => {
   const { id } = useParams()
   const history = useHistory()
   const [editorValue, setEditorValue] = useState(null)
   const [editorHtml, setEditorHml] = useState('')
 
   useEffect(() => {
+    clearRequestInfo()
     if (id) {
       getRequestInfo(id)
     }
-  }, [id, getRequestInfo])
+  }, [id, getRequestInfo, clearRequestInfo])
 
   useEffect(() => {
     async function getTranscriptData() {
@@ -40,12 +41,14 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
         })
       setEditorValue(data)
     }
-    if (getRequestInfoObj.request.transcriptFileUrl) {
-      getTranscriptData()
-    } else {
-      setEditorValue('')
+    if (getRequestInfoObj.isLoading === false && getRequestInfoObj.isSuccess != null) {
+      if (getRequestInfoObj.request.transcriptFileUrl) {
+        getTranscriptData()
+      } else {
+        setEditorValue('')
+      }
     }
-  }, [getRequestInfoObj.request.transcriptFileUrl])
+  }, [getRequestInfoObj])
 
   const modules = {
     toolbar: [
@@ -174,7 +177,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo }) => {
             </Row>
             <Row style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               {editorValue == null && <LoadingIcon size={30} />}
-              {editorValue != null && (
+              {getRequestInfoObj.isLoading === false && getRequestInfoObj.isSuccess != null && editorValue != null && (
                 <>
                   <ReactQuill
                     style={{ width: '100%' }}

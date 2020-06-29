@@ -3,12 +3,9 @@ import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientKafka, ClientsModule } from '@nestjs/microservices';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/delete-permission-by-userId.handler';
-import { PermissionRepository } from 'permissions/repository/permission.repository';
 import { DeleteProjectByUserIdHandler } from 'projects/commands/handlers/delete-project-by-userId.handler';
-import { ProjectRepository } from 'projects/repository/project.repository';
 import { CreateFreeTokenHandler } from 'tokens/commands/handlers/create-token.handler';
 import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token-by-userId.handler';
-import { TokenRepository } from 'tokens/repository/token.repository';
 import { getMongoRepository, Repository } from 'typeorm';
 import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
@@ -44,15 +41,18 @@ import {
     VerifyEmailSentSuccessEvent,
 } from './events/impl/verify-email-sent.event';
 import { QueryHandlers } from './queries/handler';
-import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersService } from './services/users.service';
 import { config } from '../../config';
-import { AuthModule } from '../auth/auth.module';
 import { EventStore, EventStoreModule, EventStoreSubscriptionType } from "../core/event-store/lib";
 import { TokensModule } from "../tokens/tokens.module";
 import { ProjectsModule } from "../projects/projects.module";
 import { PermissionsModule } from "../permissions/permissions.module";
+import { AuthModule } from "../auth/auth.module";
+import { UserRepository } from "./repository/user.repository";
+import { TokenRepository } from "../tokens/repository/token.repository";
+import { ProjectRepository } from "../projects/repository/project.repository";
+import { PermissionRepository } from "../permissions/repository/permission.repository";
 
 @Module({
     imports: [
@@ -61,7 +61,6 @@ import { PermissionsModule } from "../permissions/permissions.module";
                 name: config.KAFKA.NAME, ...kafkaClientOptions,
             }]),
         TypeOrmModule.forFeature([UserDto, PermissionDto]),
-        AuthModule,
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-user',
             subscriptions: [
@@ -82,20 +81,16 @@ import { PermissionsModule } from "../permissions/permissions.module";
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {
-                ...UsersModule.eventHandlers,
-                ...TokensModule.eventHandlers,
-                ...ProjectsModule.eventHandlers,
-                ...PermissionsModule.eventHandlers,
-            }
+            eventHandlers: {}
         }),
+        AuthModule,
     ],
     controllers: [UsersController],
     providers: [
-        UsersService, UsersSagas, ...CommandHandlers, ...EventHandlers, ...QueryHandlers,
-        CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler,
-        DeletePermissionByUserIdHandler, UserRepository, TokenRepository, ProjectRepository,
-        PermissionRepository, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka,
+        UsersService, UsersSagas, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka,
+        UserRepository, CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler,
+        DeletePermissionByUserIdHandler, UserRepository, TokenRepository, ProjectRepository, PermissionRepository,
+        ...EventHandlers, ...CommandHandlers, ...QueryHandlers
     ],
     exports: [UsersService],
 })
@@ -110,6 +105,13 @@ export class UsersModule implements OnModuleInit {
     }
 
     async onModuleInit() {
+        this.eventStore.addEventHandlers({
+            ...UsersModule.eventHandlers,
+            ...TokensModule.eventHandlers,
+            ...ProjectsModule.eventHandlers,
+            ...PermissionsModule.eventHandlers,
+        });
+        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register([

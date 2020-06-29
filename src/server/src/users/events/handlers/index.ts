@@ -1,11 +1,6 @@
 import { UserDeletedFailedHandler, UserDeletedHandler, UserDeletedSuccessHandler } from './user-deleted.handler';
 import { UserUpdatedFailedHandler, UserUpdatedHandler, UserUpdatedSuccessHandler } from './user-updated.handler';
-import {
-    UserCreatedFailedHandler,
-    UserCreatedHandler,
-    UserCreatedSuccessHandler,
-    UserCreationStartedHandler
-} from './user-created.handler';
+import { UserCreatedFailedHandler, UserCreatedHandler, UserCreatedSuccessHandler, } from './user-created.handler';
 import { UserWelcomedHandler } from './user-welcomed.handler';
 import {
     PasswordChangedFailedHandler,
@@ -25,7 +20,6 @@ import {
 
 export const EventHandlers = [
     // create
-    UserCreationStartedHandler,
     UserCreatedHandler,
     UserCreatedSuccessHandler,
     UserCreatedFailedHandler,

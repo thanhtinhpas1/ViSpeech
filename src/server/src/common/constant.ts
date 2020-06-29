@@ -114,6 +114,8 @@ export const CONSTANTS = {
         ORDER_UPDATED_SUCCESS_EVENT: 'OrderUpdatedSuccessEvent',
         ORDER_UPDATED_FAILED_EVENT: 'OrderUpdatedFailedEvent',
         // REQUEST
+        REQUEST_CREATED_SUCCESS_EVENT: 'RequestCreatedSuccessEvent',
+        REQUEST_CREATED_FAILED_EVENT: 'RequestCreatedFailedEvent',
         REQUEST_UPDATED_SUCCESS_EVENT: 'RequestUpdatedSuccessEvent',
         REQUEST_UPDATED_FAILED_EVENT: 'RequestUpdatedFailedEvent',
     },
