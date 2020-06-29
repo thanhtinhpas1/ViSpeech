@@ -4,6 +4,10 @@ export const onClearRequestState = () => ({
   type: RequestTypes.CLEAR_REQUEST_STATE,
 })
 
+export const onClearRequestInfo = () => ({
+  type: RequestTypes.CLEAR_REQUEST_INFO,
+})
+
 // get request info
 export const getRequestInfo = id => ({
   type: RequestTypes.GET_REQUEST_INFO,

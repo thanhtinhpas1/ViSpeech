@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, {useCallback, useEffect, useState} from 'react'
-import {Link} from 'react-router-dom'
-import {Row} from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Row } from 'antd'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import {CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS} from 'utils/constant'
+import { CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
 import * as moment from 'moment'
 
 const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUserIdObj, getRequestListByUserId }) => {
@@ -79,11 +79,11 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
       title: '',
       dataIndex: '_id',
       render: (_id, record) => {
-        const isRequestSuccess = record.status.value === STATUS.SUCCESS.name
+        const isRequestCompleted = [STATUS.SUCCESS.name, STATUS.FAILURE.name].includes(record.status.value)
         return (
           <Link
-            to={isRequestSuccess ? `${CUSTOMER_PATH}/request-details/${_id}` : '#!'}
-            className={`btn btn-light-alt btn-xs btn-icon ${isRequestSuccess ? '' : 'disabled'}`}
+            to={isRequestCompleted ? `${CUSTOMER_PATH}/request-details/${_id}` : '#!'}
+            className={`btn btn-light-alt btn-xs btn-icon ${isRequestCompleted ? '' : 'disabled'}`}
           >
             <em className="ti ti-eye" />
           </Link>
