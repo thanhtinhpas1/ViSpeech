@@ -24,7 +24,7 @@ export class RequestGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (id) {
-            const request = await this.repository.findOne({ _id: id });
+            const request = await this.repository.findOne({_id: id});
             if (request && request.userId === payload['id']) {
                 return true;
             }
@@ -35,7 +35,7 @@ export class RequestGuard implements CanActivate {
         }
         const projectId = request.params.projectId;
         if (projectId) {
-            const request = await this.repository.findOne({ projectId });
+            const request = await this.repository.findOne({projectId});
             if (request.userId === payload['id']) {
                 return true;
             }

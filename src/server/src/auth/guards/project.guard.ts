@@ -23,7 +23,7 @@ export class ProjectGuard implements CanActivate {
         if (!id) return true;
         if (UserUtils.isAdmin(payload['roles'])) return true;
 
-        const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
+        const project = await getMongoRepository(ProjectDto).findOne({_id: id});
         if (project && project.userId === payload['id']) {
             return true;
         }
@@ -49,7 +49,7 @@ export class ProjectQueryGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (id) {
-            const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
+            const project = await getMongoRepository(ProjectDto).findOne({_id: id});
             if (!project) {
                 throw new NotFoundException(`Project with _id ${id} does not exist.`);
             }
@@ -58,7 +58,7 @@ export class ProjectQueryGuard implements CanActivate {
             }
             // verify assignee
             const permission = await getMongoRepository(PermissionDto)
-                .findOne({ assigneeId: payload['id'], projectId: id, status: CONSTANTS.STATUS.ACCEPTED });
+                .findOne({assigneeId: payload['id'], projectId: id, status: CONSTANTS.STATUS.ACCEPTED});
             if (permission && project.isValid) {
                 return true;
             }

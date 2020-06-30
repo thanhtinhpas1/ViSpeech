@@ -12,7 +12,7 @@ import {
     UserCreatedEvent,
     UserCreatedFailedEvent,
     UserCreatedSuccessEvent,
-    UserCreationStartedEvent
+    UserCreationStartedEvent,
 } from '../impl/user-created.event';
 import { AuthService } from 'auth/auth.service';
 

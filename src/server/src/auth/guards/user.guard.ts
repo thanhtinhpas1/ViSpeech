@@ -40,7 +40,7 @@ export class VerifyEmailGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const { emailToken } = request.body;
+        const {emailToken} = request.body;
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
             throw new UnauthorizedException();
@@ -50,7 +50,7 @@ export class VerifyEmailGuard implements CanActivate {
             throw new BadRequestException("Token is invalid.");
         }
 
-        const user = await getMongoRepository(UserDto).findOne({ _id: decodedEmailToken['id'] });
+        const user = await getMongoRepository(UserDto).findOne({_id: decodedEmailToken['id']});
         return user && !Utils.isEmailVerified(user.roles) && decodedEmailToken['id'] === requestJwt['id'];
     }
 }

@@ -1,4 +1,4 @@
-import { CommandHandler, EventPublisher, ICommandHandler, EventBus } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateOrderCommand } from '../impl/update-order.command';
 import { OrderRepository } from '../../repository/order.repository';
 import { Logger, NotFoundException } from '@nestjs/common';
@@ -17,10 +17,10 @@ export class UpdateOrderHandler implements ICommandHandler<UpdateOrderCommand> {
 
     async execute(command: UpdateOrderCommand) {
         Logger.log('Async UpdateOrderHandler...', 'UpdateOrderCommand');
-        const { streamId, orderDto } = command;
+        const {streamId, orderDto} = command;
 
         try {
-            const order = await getMongoRepository(OrderDto).findOne({ _id: orderDto._id });
+            const order = await getMongoRepository(OrderDto).findOne({_id: orderDto._id});
             if (!order) {
                 throw new NotFoundException(`Order with _id ${orderDto._id} does not exist.`);
             }

@@ -20,23 +20,25 @@ const configs = {
         VERSION: process.env.APP_VERSION || '1.0',
         API_EXPLORER_PATH: process.env.APP_API_EXPLORER_PATH || '/api',
         // Server
-        HOST: process.env.APP_HOST || 'asr.vietspeech.com',
+        HOST: process.env.APP_HOST || '0.0.0.0',
         PORT: process.env.APP_PORT || 7070,
         // Event Store
-        EVENT_STORE_SETTINGS: {
-            protocol: process.env.EVENT_STORE_PROTOCOL || 'http',
-            hostname: process.env.EVENT_STORE_HOSTNAME || '0.0.0.0',
-            tcpPort: process.env.EVENT_STORE_TCP_PORT || 1113,
-            httpPort: process.env.EVENT_STORE_HTTP_PORT || 2113,
-            credentials: {
-                username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
-                password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+        EVENTSTORE: {
+            tcpEndpoint: {
+                host: process.env.EVENT_STORE_HOSTNAME || '0.0.0.0',
+                port: process.env.EVENT_STORE_PORT || 1113,
             },
-            poolOptions: {
-                min: process.env.EVENT_STORE_POOLOPTIONS_MIN || 1,
-                max: process.env.EVENT_STORE_POOLOPTIONS_MAX || 10,
+            options: {
+                maxRetries: 1000, // Optional
+                maxReconnections: 1000,  // Optional
+                reconnectionDelay: 1000,  // Optional
+                heartbeatInterval: 1000,  // Optional
+                heartbeatTimeout: 1000,  // Optional
+                defaultUserCredentials: {
+                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
+                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+                },
             },
-            category: process.env.EVENT_STORE_CATEGORY || 'vispeech'
         },
 
         DATABASE: {
@@ -101,4 +103,4 @@ const configs = {
 };
 const config = {...configs.base, ...configs[env]};
 
-export {config};
+export { config };

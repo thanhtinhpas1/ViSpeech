@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "build:docker": "docker build --force-rm -t vispeech .",
-    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "start": "ts-node -r src/main.ts",
     "start:dev": "env-cmd -f .env.development nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "start:staging": "env-cmd -f .env.staging nodemon",
@@ -51,7 +51,7 @@
     "logform": "^2.1.2",
     "mongodb": "^3.5.3",
     "multer": "^1.4.2",
-    "nodemailer": "^6.4.8",
+    "nodemailer": "^6.4.10",
     "passport": "^0.4.1",
     "passport-facebook-token": "^3.3.0",
     "passport-google-token": "^0.1.2",

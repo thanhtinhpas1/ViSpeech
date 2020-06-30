@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import { CONSTANTS } from 'common/constant';
 import { config } from "../../config";
 
-const hostUrl = `http://${config.HOST}:3200/customer`;
+const hostUrl = `${config.ASR.PROTOCOL}${config.ASR.HOST}:3200/customer`;
 const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -12,9 +12,9 @@ const transport = nodemailer.createTransport({
         user: "vispeech2020@gmail.com",
         pass: "vispeech"
     }
-  });
+});
 
-  const getHtmlEmailContent = (user, content, expireText, expiresIn) => {
+const getHtmlEmailContent = (user, content, expireText, expiresIn) => {
     const greeting = `Xin chào <strong>${user}</strong>,`
     const tokenExpire = `Lưu ý, ${expireText} sẽ hết hiệu lực trong vòng ${expiresIn} ngày kể từ lúc nhận được mail này.`
     const closing = `Trân trọng,<br>ViSpeech.`
@@ -35,7 +35,6 @@ const sendEmail = (to, subject, contentEmail) => {
         console.log('Message sent: %s', info.messageId);
     });
 };
-
 
 
 export const EmailUtils = {

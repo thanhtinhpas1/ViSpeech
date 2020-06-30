@@ -1,7 +1,7 @@
-import { CommandHandler, EventPublisher, ICommandHandler, EventBus } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { CreateOrderCommand } from '../impl/create-order.command';
 import { OrderRepository } from '../../repository/order.repository';
-import { Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { config } from '../../../../config';
 import { OrderCreatedFailedEvent } from 'orders/events/impl/order-created.event';
 import { getMongoRepository } from 'typeorm';
@@ -23,22 +23,25 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
 
     async execute(command: CreateOrderCommand) {
         Logger.log('Async CreateOrderHandler...', 'CreateOrderCommand');
-        const { streamId, orderDto, paymentIntent } = command;
+        const {streamId, orderDto, paymentIntent} = command;
 
         try {
             const paymentIntentObj = await stripe.paymentIntents.retrieve(paymentIntent.id);
             if (paymentIntentObj && paymentIntentObj.status === 'succeeded') {
-                const user = await getMongoRepository(UserDto).findOne({ _id: orderDto.userId.toString() });
+                const user = await getMongoRepository(UserDto).findOne({_id: orderDto.userId.toString()});
                 if (!user) {
                     throw new NotFoundException(`User with _id ${orderDto.userId} does not exist.`);
                 }
 
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ _id: orderDto.tokenType._id });
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({_id: orderDto.tokenType._id});
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with _id ${orderDto.tokenType._id} does not exist.`);
                 }
 
-                const validProject = await getMongoRepository(ProjectDto).findOne({ _id: orderDto.token.projectId, isValid: true });
+                const validProject = await getMongoRepository(ProjectDto).findOne({
+                    _id: orderDto.token.projectId,
+                    isValid: true
+                });
                 if (!validProject) {
                     throw new BadRequestException(`Project with _id ${orderDto.token.projectId} is not valid.`);
                 }
@@ -46,7 +49,12 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                 if (!orderDto.token.name) {
                     throw new BadRequestException('Token name is required.');
                 }
-                const projectTokens = await getMongoRepository(TokenDto).find({ where: { userId: orderDto.userId, projectId: orderDto.token.projectId } });
+                const projectTokens = await getMongoRepository(TokenDto).find({
+                    where: {
+                        userId: orderDto.userId,
+                        projectId: orderDto.token.projectId
+                    }
+                });
                 const isTokenNameExisted = projectTokens.findIndex(token => token.name === orderDto.token.name) > -1
                 if (isTokenNameExisted) {
                     throw new BadRequestException('Token name is existed.')
@@ -66,7 +74,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
             if (error.raw && error.raw.message) {
                 errorMessage = error.raw.message;
             }
-            this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, { message: errorMessage }));
+            this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, {message: errorMessage}));
         }
     }
 }

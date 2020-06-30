@@ -11,13 +11,6 @@ export class UserRepository {
         return user;
     }
 
-    async createUserStart(streamId: string, userDto: UserDto) {
-        const user = new User(undefined);
-        user.setData(userDto);
-        user.createUserStart(streamId);
-        return user;
-    }
-
     async updateUser(streamId: string, userDto: UserDto) {
         const user = new User(undefined);
         user.setData(userDto);
