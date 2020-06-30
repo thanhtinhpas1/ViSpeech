@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer'
 import { CONSTANTS } from 'common/constant';
 import { config } from "../../config";
 
-const hostUrl = `http://${config.HOST}:3200/customer`;
+const hostUrl = `${config.ASR.PROTOCOL}${config.ASR.HOST}:3200/customer`;
 const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
