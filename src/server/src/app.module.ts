@@ -13,6 +13,7 @@ import { ProjectsModule } from "./projects/projects.module";
 import { PermissionsModule } from "./permissions/permissions.module";
 import { RequestModule } from "./requests/request.module";
 import { TaskModule } from "./tasks/task.module";
+import { CqrsModule } from "@nestjs/cqrs";
 
 @Module({
     imports: [
@@ -33,7 +34,10 @@ import { TaskModule } from "./tasks/task.module";
         PermissionsModule,
         RequestModule,
         TaskModule,
+        CqrsModule,
     ],
+    providers: [
+    ]
 })
 export class AppModule {
 }

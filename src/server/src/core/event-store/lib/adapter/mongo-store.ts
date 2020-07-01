@@ -21,7 +21,7 @@ export class MongoStore implements IAdapterStore {
     read(key: string): Promise<number> {
         return getMongoRepository(ProjectionDto).findOne({streamName: key})
             .then(state => {
-                return state.eventNumber;
+                return state?.eventNumber ?? 0;
             })
     }
 
@@ -29,13 +29,19 @@ export class MongoStore implements IAdapterStore {
         this.storeKey = key;
         return getMongoRepository(ProjectionDto).findOne({streamName: key})
             .then((projection) => {
-                Logger.log(`Store wrote storeKey ${this.storeKey}`)
                 if (projection) {
                     return getMongoRepository(ProjectionDto)
-                        .save({...projection, eventNumber: value}).then(() => value);
+                        .save({...projection, eventNumber: value})
+                        .then(() => {
+                            Logger.log(`Store wrote storeKey ${key} ${value}`)
+                            return value
+                        });
                 } else {
                     return getMongoRepository(ProjectionDto).save({streamName: key, eventNumber: value})
-                        .then(() => value);
+                        .then(() => {
+                            Logger.log(`Store wrote storeKey ${key} ${value}`)
+                            return value
+                        });
                 }
             })
     }

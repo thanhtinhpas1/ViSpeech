@@ -9,10 +9,11 @@ import { QueryBus } from "@nestjs/cqrs";
 import { QueryHandlers } from "tasks/queries/handler";
 import { TaskController } from "./controllers/task.controller";
 import { TaskService } from "./services/task.service";
+import { ProjectionDto } from "../core/event-store/lib/adapter/projection.dto";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([ReportDto, TaskDto, TokenDto, RequestDto])
+        TypeOrmModule.forFeature([ReportDto, TaskDto, TokenDto, RequestDto, ProjectionDto])
     ],
     controllers: [
         TaskController,

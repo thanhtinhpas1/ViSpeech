@@ -29,7 +29,6 @@ import {
 } from './contract';
 import { NestjsEventStore } from './nestjs-event-store.class';
 import { MongoStore } from './adapter/mongo-store';
-import { IAdapterStore } from "./adapter";
 
 /**
  * @class EventStore
@@ -41,7 +40,7 @@ import { IAdapterStore } from "./adapter";
 export class EventStore implements IEventPublisher, IMessageSource, OnModuleDestroy, OnModuleInit {
     private logger = new Logger(this.constructor.name);
     private eventStore: NestjsEventStore;
-    private store: IAdapterStore;
+    private store: MongoStore;
     private eventHandlers: IEventConstructors;
     private subject$: Subject<IEvent>;
     private readonly featureStream?: string;
@@ -53,6 +52,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
 
     private volatileSubscriptions: ExtendedVolatileSubscription[] = [];
     private volatileSubscriptionsCount: number;
+    private esStreamConfig: EventStoreOptionConfig;
 
     constructor(
         @Inject(ProvidersConstants.EVENT_STORE_PROVIDER) eventStore: any,
@@ -62,6 +62,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         private readonly eventsBus: EventBus,
     ) {
         this.eventStore = eventStore;
+        this.esStreamConfig = esStreamConfig;
         this.featureStream = esStreamConfig.featureStreamName;
         this.store = esStreamConfig.store;
         this.addEventHandlers(esStreamConfig.eventHandlers);
@@ -133,15 +134,14 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     async subscribeToCatchUpSubscriptions(subscriptions: ESCatchUpSubscription[]) {
         this.catchupSubscriptionsCount = subscriptions.length;
         this.catchupSubscriptions = subscriptions.map(async (subscription) => {
-            let lcp = subscription.lastCheckpoint;
             if (this.store) {
-                lcp = await this.store.read(this.store.storeKey);
+                let lcp = await this.store.read(this.store.storeKey);
+                return this.subscribeToCatchupSubscription(
+                    subscription.stream,
+                    subscription.resolveLinkTos,
+                    lcp,
+                );
             }
-            return this.subscribeToCatchupSubscription(
-                subscription.stream,
-                subscription.resolveLinkTos,
-                lcp,
-            );
         });
     }
 
@@ -283,7 +283,10 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         if (this.eventHandlers && this.eventHandlers[eventType]) {
             this.subject$.next(this.eventHandlers[event.eventType](...data));
             if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
-                await this.store.write(this.store.storeKey, payload.event.eventNumber.toInt());
+                let lcp = await this.store.read(this.store.storeKey);
+                if (lcp < payload.event.eventNumber.toInt()) {
+                    await this.store.write(this.store.storeKey, payload.event.eventNumber.toInt());
+                }
             }
         } else {
             Logger.warn(`Event of type ${eventType} not handled`, this.constructor.name)
@@ -324,6 +327,10 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         this.eventStore.close();
     }
 
+    close(): any {
+        this.eventStore.close();
+    }
+
     async bridgeEventsTo<T extends IEvent>(subject: Subject<T>): Promise<any> {
         this.subject$ = subject;
     }
@@ -331,6 +338,12 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     addEventStore(mongoStore: MongoStore) {
         this.store = mongoStore;
         this.store.storeKey = this.featureStream;
+        const catchupSubscriptions = this.esStreamConfig.subscriptions.filter((sub) => {
+            return sub.type === EventStoreSubscriptionType.CatchUp;
+        });
+        this.subscribeToCatchUpSubscriptions(
+            catchupSubscriptions as ESCatchUpSubscription[],
+        );
     }
 
 }
