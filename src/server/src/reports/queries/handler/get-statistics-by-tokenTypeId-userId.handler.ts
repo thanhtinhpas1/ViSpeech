@@ -33,7 +33,7 @@ export class GetStatisticsByTokenTypeIdAndUserIdHandler implements IQueryHandler
                     tokenTypeId: id,
                     dateReport: {
                         $gte: new Date(startDate),
-                        $lte: new Date(endDate)
+                        $lt: ReportUtils.nextDate(endDate)
                     },
                 }
             });
