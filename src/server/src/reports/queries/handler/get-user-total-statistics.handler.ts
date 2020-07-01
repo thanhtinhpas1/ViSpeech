@@ -25,14 +25,28 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
     async execute(query: GetUserTotalStatisticsQuery): Promise<any> {
         Logger.log('Async GetUserTotalStatisticsQuery...', 'GetUserTotalStatisticsQuery');
         const {userId, statisticsType, timeType} = query;
-        let data = [];
+        const data = [];
 
         try {
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
             const startDate = ReportUtils.getStartDate(timeType, queryParams);
             const endDate = ReportUtils.getEndDate(timeType, queryParams);
-
-            let aggregateGroup = {
+            let reportType = statisticsType;
+            if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
+                reportType = CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE;
+            }
+            const aggregateMatch = {
+                $match: {
+                    userId,
+                    timeType,
+                    reportType,
+                    dateReport: {
+                        $gte: new Date(startDate),
+                        $lte: new Date(endDate)
+                    }
+                }
+            }
+            const aggregateGroup = {
                 $group: {
                     _id: {
                         userId: '$userId'
@@ -42,7 +56,7 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
             }
             aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
             const groupedReports = await getMongoRepository(ReportDto).aggregate([
-                ReportUtils.aggregateMatchDates(startDate, endDate),
+                aggregateMatch,
                 aggregateGroup
             ]).toArray();
 
@@ -63,8 +77,7 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
                 }
             }
 
-            data = ReportUtils.getTotalStatisticalData(groupedReports, data, `${statisticsType}Id`);
-            return data;
+            return ReportUtils.getTotalStatisticalData(groupedReports, data, `${statisticsType}Id`);
         } catch (error) {
             Logger.error(error.message, '', 'GetUserTotalStatisticsQuery');
         }

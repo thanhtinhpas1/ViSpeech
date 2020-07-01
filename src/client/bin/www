@@ -10,7 +10,7 @@ var http = require('http');
 var { Kafka, logLevel } = require('kafkajs');
 
 const host = process.env.KAFKA_HOST;
-console.log(host)
+console.log(`Kafka host: ${host}`);
 const kafka = new Kafka({
   logLevel: logLevel.INFO,
   brokers: [`${host}:9092`],

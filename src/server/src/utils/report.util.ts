@@ -236,7 +236,7 @@ export const ReportUtils = {
         return data;
     },
     getStatisticalData: (type, data, reports) => {
-        const result = JSON.parse(JSON.stringify(data));
+        const result = [...data];
 
         for (const report of reports) {
             let dateReport = new Date(report.dateReport);
@@ -248,32 +248,32 @@ export const ReportUtils = {
                     return date.valueOf() === dateReport.valueOf()
                 });
                 if (index > -1) {
-                    result[index].value += report.usedMinutes;
+                    result[index].value = report.usedMinutes;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
-                const lastDatesOfYear = ReportUtils.getLastDatesOfYear(dateReport.getFullYear());
                 let index = result.findIndex(el => el.week === ReportUtils.getWeek(dateReport) && el.year === dateReport.getFullYear());
-                if (lastDatesOfYear.findIndex(date => date === dateReport.getDate()) > -1) {
+                const lastDatesOfYear = ReportUtils.getLastDatesOfYear(dateReport.getFullYear());
+                if (lastDatesOfYear.findIndex(date => date === dateReport.getDate() && dateReport.getMonth() === 11) > -1) {
                     index = result.findIndex(el => el.week === 1 && el.year === dateReport.getFullYear() + 1);
                 }
                 if (index > -1) {
-                    result[index].value += report.usedMinutes;
+                    result[index].value = report.usedMinutes;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
                 const index = result.findIndex(el => el.month === dateReport.getMonth() && el.year === dateReport.getFullYear());
                 if (index > -1) {
-                    result[index].value += report.usedMinutes;
+                    result[index].value = report.usedMinutes;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
                 const index = result.findIndex(el => el.quarter === ReportUtils.getQuarter(dateReport.getMonth())
                     && el.year === dateReport.getFullYear());
                 if (index > -1) {
-                    result[index].value += report.usedMinutes;
+                    result[index].value = report.usedMinutes;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
                 const index = result.findIndex(el => el.year === dateReport.getFullYear());
                 if (index > -1) {
-                    result[index].value += report.usedMinutes;
+                    result[index].value = report.usedMinutes;
                 }
             }
         }
@@ -281,7 +281,7 @@ export const ReportUtils = {
         return result;
     },
     getTotalStatisticalData: (groupedReports, data, groupKey: string) => {
-        const result = JSON.parse(JSON.stringify(data));
+        const result = [...data];
 
         for (const report of groupedReports) {
             const index = data.findIndex(el => el.data._id === report._id[groupKey]);
@@ -292,14 +292,4 @@ export const ReportUtils = {
 
         return result;
     },
-    aggregateMatchDates: (startDate, endDate) => {
-        return {
-            $match: {
-                dateReport: {
-                    $gte: new Date(startDate),
-                    $lte: new Date(endDate)
-                }
-            }
-        }
-    }
 };

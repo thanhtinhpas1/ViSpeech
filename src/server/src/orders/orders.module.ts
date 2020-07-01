@@ -52,7 +52,10 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         }]),
-        TypeOrmModule.forFeature([OrderDto, TokenTypeDto, ProjectDto, TokenDto, PermissionDto, UserDto, ProjectionDto]),
+        TypeOrmModule.forFeature([
+            OrderDto, TokenTypeDto, ProjectDto,
+            TokenDto, PermissionDto, UserDto, ProjectionDto
+        ]),
         CqrsModule,
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-order',

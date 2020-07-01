@@ -89,8 +89,8 @@ export class AsrController {
         // create pending request
         let requestStatus = CONSTANTS.STATUS.PENDING;
         const requestId = Utils.getUuid();
-        const requestDto = new RequestDto(tokenDto._id, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding, file.size,
-            duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
+        const requestDto = new RequestDto(tokenDto._id, tokenDto.tokenTypeId, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding,
+            file.size, duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
         requestDto._id = requestId;
         await this.requestService.createRequest(requestId, requestDto, tokenDto);
 

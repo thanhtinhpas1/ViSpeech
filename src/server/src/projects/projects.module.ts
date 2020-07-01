@@ -40,6 +40,7 @@ import { DeleteTokenByProjectIdHandler } from 'tokens/commands/handlers/delete-t
 import { TokensModule } from 'tokens/tokens.module';
 import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
 import { ProjectDto } from './dtos/projects.dto';
+import { ProjectionDto } from "../core/event-store/lib/adapter/projection.dto";
 
 @Module({
     imports: [
@@ -51,6 +52,7 @@ import { ProjectDto } from './dtos/projects.dto';
             PermissionDto,
             UserDto,
             ProjectDto,
+            ProjectionDto,
         ]),
         forwardRef(() => AuthModule),
         CqrsModule,

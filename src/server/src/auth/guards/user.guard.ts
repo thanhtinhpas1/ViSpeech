@@ -21,7 +21,7 @@ export class UserGuard implements CanActivate {
         }
         const id = request.params['_id'] || request.params['id'] || request.params['userId'];
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
         if (payload['id'] === id) {
             return true;
         }

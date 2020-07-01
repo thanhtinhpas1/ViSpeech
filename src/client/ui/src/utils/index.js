@@ -1,6 +1,6 @@
-import { useLocation } from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
-import { ROLES, SORT_ORDER } from './constant'
+import {ROLES, SORT_ORDER} from './constant'
 
 const Utils = {
   isUser: roleList => {
@@ -85,7 +85,7 @@ const Utils = {
     let errMessage = ''
     if (message) {
       errMessage = message
-      if (code === '11000') {
+      if (code === 11000) {
         errMessage = 'Dữ liệu này đã tồn tại.'
 
         const dupKey = 'dup key: '

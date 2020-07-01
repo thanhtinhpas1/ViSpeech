@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, DEFAULT_PAGINATION } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import Utils from 'utils'
 import { apiUrl } from './api-url'
@@ -76,7 +76,7 @@ export default class ProjectService {
 
   static getMyProjectList = filterConditions => {
     const { userId, pagination, sortField, sortOrder, filters } = filterConditions
-    const { current, pageSize } = pagination
+    const { current, pageSize } = pagination || DEFAULT_PAGINATION
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 

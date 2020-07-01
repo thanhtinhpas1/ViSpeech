@@ -7,11 +7,14 @@ import {
 } from './contract';
 import { EventStoreCoreModule } from './event-store-core.module';
 import { CqrsModule } from '@nestjs/cqrs';
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ProjectionDto } from "./adapter/projection.dto";
 
 @Global()
 @Module({
     imports: [
         CqrsModule,
+        TypeOrmModule.forFeature([ProjectionDto])
     ],
 })
 export class EventStoreModule {
