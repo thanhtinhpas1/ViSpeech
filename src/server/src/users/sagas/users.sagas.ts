@@ -24,7 +24,7 @@ export class UsersSagas {
         return events$.pipe(
             ofType(UserCreatedSuccessEvent),
             map((event: UserCreatedSuccessEvent) => {
-                Logger.log('Inside [UsersSagas] userCreatedSucess Saga', 'UsersSagas');
+                Logger.log('Inside [UsersSagas] userCreatedSuccess Saga', 'UsersSagas');
                 const {streamId, userDto} = event;
                 const userId = userDto._id;
                 const tokenValue = this.authService.generateTokenWithUserId(userId);

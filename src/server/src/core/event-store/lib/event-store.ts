@@ -29,6 +29,7 @@ import {
 } from './contract';
 import { NestjsEventStore } from './nestjs-event-store.class';
 import { MongoStore } from './adapter/mongo-store';
+import { IAdapterStore } from "./adapter";
 
 /**
  * @class EventStore
@@ -40,7 +41,7 @@ import { MongoStore } from './adapter/mongo-store';
 export class EventStore implements IEventPublisher, IMessageSource, OnModuleDestroy, OnModuleInit {
     private logger = new Logger(this.constructor.name);
     private eventStore: NestjsEventStore;
-    private readonly store: MongoStore;
+    private store: IAdapterStore;
     private eventHandlers: IEventConstructors;
     private subject$: Subject<IEvent>;
     private readonly featureStream?: string;
@@ -271,7 +272,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
 
         const handler = this.eventHandlers[event.eventType];
         if (!handler) {
-            this.logger.error('Received event that could not be handled!');
+            this.logger.error(`Received event that could not be handled! ${event.eventType}`);
             return;
         }
 
@@ -325,6 +326,11 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
 
     async bridgeEventsTo<T extends IEvent>(subject: Subject<T>): Promise<any> {
         this.subject$ = subject;
+    }
+
+    addEventStore(mongoStore: MongoStore) {
+        this.store = mongoStore;
+        this.store.storeKey = this.featureStream;
     }
 
 }

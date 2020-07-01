@@ -1,10 +1,10 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Button, Alert } from 'antd'
-import { ROLES, USER_TYPE } from 'utils/constant'
+import React, {useEffect} from 'react'
+import {useHistory} from 'react-router-dom'
+import {Alert, Button} from 'antd'
+import {ROLES, USER_TYPE} from 'utils/constant'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
@@ -76,7 +76,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
         <div className="page-ath-content">
           <div className="page-ath-header">
             <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold' }}>
-              SOFTIA.
+              ASR VIETSPEECH
             </a>
           </div>
           <div className="page-ath-form">
@@ -109,9 +109,9 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
               <div className="input-item text-left">
                 <input className="input-checkbox input-checkbox-md" id="term-condition" type="checkbox" required />
                 <label htmlFor="term-condition">
-                  I agree to Softia&apos;s
-                  <a href="#"> Privacy Policy</a> &amp;
-                  <a href="#"> Terms.</a>
+                  Tôi đồng ý với
+                  <a href="#"> Điều khoản và</a> &amp;
+                  <a href="#"> Quy định.</a>
                 </label>
               </div>
               <Button
@@ -137,10 +137,10 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
           <div className="page-ath-footer">
             <ul className="footer-links">
               <li>
-                <a href="#">Privacy Policy</a>
+                <a href="#">Điều khoản</a>
               </li>
               <li>
-                <a href="#">Terms</a>
+                <a href="#">Tài liệu</a>
               </li>
               <li>© 2019 Softia.</li>
             </ul>

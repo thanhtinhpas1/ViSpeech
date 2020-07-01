@@ -53,6 +53,7 @@ import { UserRepository } from "./repository/user.repository";
 import { TokenRepository } from "../tokens/repository/token.repository";
 import { ProjectRepository } from "../projects/repository/project.repository";
 import { PermissionRepository } from "../permissions/repository/permission.repository";
+import { MongoStore } from "../core/event-store/lib/adapter/mongo-store";
 
 @Module({
     imports: [
@@ -81,7 +82,12 @@ import { PermissionRepository } from "../permissions/repository/permission.repos
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {}
+            eventHandlers: {
+                ...UsersModule.eventHandlers,
+                ...TokensModule.eventHandlers,
+                ...ProjectsModule.eventHandlers,
+                ...PermissionsModule.eventHandlers,
+            }
         }),
         AuthModule,
     ],
@@ -90,7 +96,7 @@ import { PermissionRepository } from "../permissions/repository/permission.repos
         UsersService, UsersSagas, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka,
         UserRepository, CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler,
         DeletePermissionByUserIdHandler, UserRepository, TokenRepository, ProjectRepository, PermissionRepository,
-        ...EventHandlers, ...CommandHandlers, ...QueryHandlers
+        MongoStore, ...EventHandlers, ...CommandHandlers, ...QueryHandlers
     ],
     exports: [UsersService],
 })
@@ -100,6 +106,7 @@ export class UsersModule implements OnModuleInit {
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
+        private readonly mongoStore: MongoStore,
         @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
     ) {
     }
@@ -111,6 +118,7 @@ export class UsersModule implements OnModuleInit {
             ...ProjectsModule.eventHandlers,
             ...PermissionsModule.eventHandlers,
         });
+        this.eventStore.addEventStore(this.mongoStore);
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
