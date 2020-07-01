@@ -68,34 +68,6 @@ export const Utils = {
     convertToBoolean: value => {
         return typeof value === 'boolean' ? value : value === 'true'
     },
-    previousDateOfCron(cron: string, currentDate?: Date): Date {
-        if (!currentDate) currentDate = new Date();
-        const options = {
-            currentDate,
-            tz: 'Asia/Ho_Chi_Minh'
-        }
-        try {
-            const interval = parser.parseExpression(cron, options);
-            return new Date(interval.prev().toString());
-        } catch (err) {
-            Logger.error('Something went wrong when parse cron', err);
-            return null;
-        }
-    },
-    nextDateOfCron(cron: string, currentDate?: Date,): Date {
-        if (!currentDate) currentDate = new Date();
-        const options = {
-            currentDate,
-            tz: 'Asia/Ho_Chi_Minh'
-        }
-        try {
-            const interval = parser.parseExpression(cron, options);
-            return new Date(interval.next().toString());
-        } catch (err) {
-            Logger.error('Something went wrong when parse cron', err);
-            return null;
-        }
-    },
     getErrorObj: error => {
         const errorObj = {
             code: '',

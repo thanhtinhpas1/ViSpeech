@@ -1,6 +1,6 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { Type } from 'class-transformer';
-import { IsDate, IsIn, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID } from 'class-validator';
+import { IsDate, IsIn, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, IsOptional } from 'class-validator';
 import { Column, Entity, ObjectID } from 'typeorm';
 import { CONSTANTS } from 'common/constant';
 import { ErrorUtils } from "../../utils/errorUtils";
@@ -18,17 +18,13 @@ export class ReportIdRequestParamsDto {
 
 @Entity('reports')
 export class ReportDto extends BaseEntityDto {
-    constructor(usedMinutes: number, dateReport: Date, tokenId: any, tokenTypeId: any, projectId: any, userId: any, totalRequests: number,
-                typeReport: string) {
+    constructor(usedMinutes: number, dateReport: Date, totalRequests: number, reportType: string, timeType: string) {
         super();
         this.usedMinutes = usedMinutes;
         this.dateReport = dateReport;
-        this.tokenId = tokenId;
-        this.tokenTypeId = tokenTypeId;
-        this.projectId = projectId;
-        this.userId = userId;
         this.totalRequests = totalRequests;
-        this.typeReport = typeReport;
+        this.reportType = reportType;
+        this.timeType = timeType;
     }
 
     @IsNotEmpty(ErrorUtils.getMessage('usedMinutes', ERR.IsNotEmpty))
@@ -55,7 +51,7 @@ export class ReportDto extends BaseEntityDto {
     @Column()
     dateReport: Date;
 
-    @IsNotEmpty(ErrorUtils.getMessage('tokenId', ERR.IsNotEmpty))
+    @IsOptional()
     @IsString(ErrorUtils.getMessage('tokenId', ERR.IsString))
     @IsUUID('all', ErrorUtils.getMessage('tokenId', ERR.IsUUID))
     @Column({
@@ -64,7 +60,7 @@ export class ReportDto extends BaseEntityDto {
     })
     tokenId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
+    @IsOptional()
     @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))
     @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
     @Column({
@@ -73,7 +69,7 @@ export class ReportDto extends BaseEntityDto {
     })
     projectId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
+    @IsOptional()
     @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
     @IsUUID('all', ErrorUtils.getMessage('userId', ERR.IsUUID))
     @Column({
@@ -82,7 +78,7 @@ export class ReportDto extends BaseEntityDto {
     })
     userId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('tokenTypeId', ERR.IsNotEmpty))
+    @IsOptional()
     @IsString(ErrorUtils.getMessage('tokenTypeId', ERR.IsString))
     @IsUUID('all', ErrorUtils.getMessage('tokenTypeId', ERR.IsUUID))
     @Column({
@@ -91,11 +87,19 @@ export class ReportDto extends BaseEntityDto {
     })
     tokenTypeId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('typeReport', ERR.IsNotEmpty))
-    @IsString(ErrorUtils.getMessage('typeReport', ERR.IsString))
-    @IsIn([CONSTANTS.TASK.REPORT_DATE, CONSTANTS.TASK.REPORT_WEEK, CONSTANTS.TASK.REPORT_MONTH, CONSTANTS.TASK.REPORT_QUARTER, CONSTANTS.TASK.REPORT_YEAR])
+    @IsNotEmpty(ErrorUtils.getMessage('reportType', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('reportType', ERR.IsString))
+    @IsIn([CONSTANTS.STATISTICS_TYPE.PROJECT, CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE])
     @Column({
         nullable: false,
     })
-    typeReport: string;
+    reportType: string;
+
+    @IsNotEmpty(ErrorUtils.getMessage('timeType', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('timeType', ERR.IsString))
+    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH, CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+    @Column({
+        nullable: false,
+    })
+    timeType: string;
 }

@@ -22,10 +22,12 @@ export class GetStatisticsByIdHandler implements IQueryHandler<GetStatisticsById
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
             const startDate = ReportUtils.getStartDate(timeType, queryParams);
             const endDate = ReportUtils.getEndDate(timeType, queryParams);
-            let data = ReportUtils.prepareStatisticalData(timeType, queryParams);
+            const data = ReportUtils.prepareStatisticalData(timeType, queryParams);
 
-            let findOptions = {
+            const findOptions = {
                 where: {
+                    timeType,
+                    reportType: statisticsType,
                     dateReport: {
                         $gte: new Date(startDate),
                         $lte: new Date(endDate)
@@ -34,9 +36,7 @@ export class GetStatisticsByIdHandler implements IQueryHandler<GetStatisticsById
             }
             findOptions.where[`${statisticsType}Id`] = id
             const reports = await this.repository.find(findOptions);
-
-            data = ReportUtils.getStatisticalData(timeType, data, reports);
-            return data;
+            return ReportUtils.getStatisticalData(timeType, data, reports);
         } catch (error) {
             Logger.error(error.message, '', 'GetStatisticsByIdQuery');
         }

@@ -20,7 +20,7 @@ export class RequestGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {

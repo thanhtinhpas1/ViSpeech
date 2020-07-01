@@ -22,7 +22,7 @@ export class OrderGuard implements CanActivate {
         }
         const id = request.params['_id'] || request.params['id'];
         if (!id) return true;
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
 
         const order = await getMongoRepository(OrderDto).findOne({_id: id});
         if (order && order.userId === payload['id']) {
@@ -50,7 +50,7 @@ export class OrderQueryGuard implements CanActivate {
         if (!payload || !payload['id'] || !payload['roles']) {
             throw new UnauthorizedException();
         }
-        if (UserUtils.isAdmin(payload)) return true;
+        if (UserUtils.isAdmin(payload['roles'])) return true;
 
         const id = request.params._id || request.params.id;
         if (id) {

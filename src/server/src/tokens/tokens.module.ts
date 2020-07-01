@@ -99,7 +99,9 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {},
+            eventHandlers: {
+                ...TokensModule.eventHandlers,
+            },
         }),
     ],
     controllers: [TokensController],
@@ -115,7 +117,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
         ...EventHandlers,
         ...QueryHandlers,
     ],
-    exports: [TokensService],
+    exports: [TokensService, CqrsModule, ...CommandHandlers, ...EventHandlers,],
 })
 export class TokensModule implements OnModuleInit {
     constructor(

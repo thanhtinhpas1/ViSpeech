@@ -6,7 +6,7 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 @Injectable()
 export class TokenRepository {
     async createToken(streamId: string, tokenDto: TokenDto) {
-        const token = new Token(undefined);
+        const token = new Token(streamId);
         token.setData(tokenDto);
         token.createToken(streamId);
         return token;

@@ -2,10 +2,10 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect } from 'react'
-import { Alert, Button } from 'antd'
+import React, {useEffect} from 'react'
+import {Alert, Button} from 'antd'
 import Utils from 'utils'
-import { JWT_TOKEN } from 'utils/constant'
+import {JWT_TOKEN} from 'utils/constant'
 import STORAGE from 'utils/storage'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -77,7 +77,7 @@ const LoginPage = ({
         <div className="page-ath-content">
           <div className="page-ath-header">
             <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold' }}>
-              SOFTIA.
+              ASR VIETSPEECH
             </a>
           </div>
           <div className="page-ath-form">
@@ -145,10 +145,10 @@ const LoginPage = ({
           <div className="page-ath-footer">
             <ul className="footer-links">
               <li>
-                <a href="#">Privacy Policy</a>
+                <a href="#">Điều khoản</a>
               </li>
               <li>
-                <a href="#">Terms</a>
+                <a href="#">Tài liệu</a>
               </li>
               <li>© 2020 Softia.</li>
               <li>Sponsored by SendGrid</li>

@@ -31,7 +31,7 @@ const StatisticsToken = ({
       const tokens = getUserTokenListObj.userTokenList.data.map(token => {
         return {
           ...token,
-          display: token._id,
+          display: token.name,
         }
       })
       setTokenList(tokens)

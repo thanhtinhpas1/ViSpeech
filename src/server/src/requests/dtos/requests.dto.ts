@@ -32,10 +32,11 @@ export class RequestBody {
 @Entity('requests')
 export class RequestDto extends BaseEntityDto {
 
-    constructor(tokenId: string, projectId: string, userId: string, fileName: string, encoding: string, size: string,
+    constructor(tokenId: string, tokenTypeId: string, projectId: string, userId: string, fileName: string, encoding: string, size: string,
                 duration: number, mimeType: string, status: string, audioFileUrl?: string, transcriptFileUrl?: string) {
         super();
         this.tokenId = tokenId;
+        this.tokenTypeId = tokenTypeId;
         this.projectId = projectId;
         this.userId = userId;
         this.fileName = fileName;
@@ -52,6 +53,11 @@ export class RequestDto extends BaseEntityDto {
     @IsString(ErrorUtils.getMessage('tokenId', ERR.IsString))
     @Column()
     tokenId: string;
+
+    @IsNotEmpty(ErrorUtils.getMessage('tokenTypeId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('tokenTypeId', ERR.IsString))
+    @Column()
+    tokenTypeId: string;
 
     @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
     @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))

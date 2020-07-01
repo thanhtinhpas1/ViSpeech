@@ -21,7 +21,7 @@ const TotalStatisticsToken = ({
           ...item,
           data: {
             ...item.data,
-            display: item.data._id,
+            display: item.data.name,
           },
         }
       })

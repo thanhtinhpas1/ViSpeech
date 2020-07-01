@@ -1,5 +1,5 @@
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
-import { CommandBus, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientKafka, ClientsModule } from '@nestjs/microservices';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/delete-permission-by-userId.handler';
@@ -53,6 +53,9 @@ import { UserRepository } from "./repository/user.repository";
 import { TokenRepository } from "../tokens/repository/token.repository";
 import { ProjectRepository } from "../projects/repository/project.repository";
 import { PermissionRepository } from "../permissions/repository/permission.repository";
+import { MongoStore } from "../core/event-store/lib/adapter/mongo-store";
+import { ProjectionDto } from "../core/event-store/lib/adapter/projection.dto";
+import { TokenDto } from "../tokens/dtos/tokens.dto";
 
 @Module({
     imports: [
@@ -60,7 +63,7 @@ import { PermissionRepository } from "../permissions/repository/permission.repos
             [{
                 name: config.KAFKA.NAME, ...kafkaClientOptions,
             }]),
-        TypeOrmModule.forFeature([UserDto, PermissionDto]),
+        TypeOrmModule.forFeature([UserDto, TokenDto, PermissionDto, ProjectionDto]),
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-user',
             subscriptions: [
@@ -81,27 +84,38 @@ import { PermissionRepository } from "../permissions/repository/permission.repos
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {}
+            eventHandlers: {
+                ...UsersModule.eventHandlers,
+                ...TokensModule.eventHandlers,
+                ...ProjectsModule.eventHandlers,
+                ...PermissionsModule.eventHandlers,
+            }
         }),
+        CqrsModule,
         AuthModule,
     ],
     controllers: [UsersController],
     providers: [
-        UsersService, UsersSagas, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka,
-        UserRepository, CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler,
-        DeletePermissionByUserIdHandler, UserRepository, TokenRepository, ProjectRepository, PermissionRepository,
+        UsersService, UsersSagas, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka, UserRepository,
+        CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler,
+        UserRepository, TokenRepository, ProjectRepository, PermissionRepository, MongoStore,
         ...EventHandlers, ...CommandHandlers, ...QueryHandlers
     ],
-    exports: [UsersService],
+    exports: [UsersService, CqrsModule, ...EventHandlers, ...CommandHandlers],
 })
-export class UsersModule implements OnModuleInit {
+export class UsersModule implements OnModuleInit, OnModuleDestroy {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
+        private readonly mongoStore: MongoStore,
         @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
     ) {
+    }
+
+    onModuleDestroy() {
+        this.eventStore.close();
     }
 
     async onModuleInit() {
@@ -111,6 +125,7 @@ export class UsersModule implements OnModuleInit {
             ...ProjectsModule.eventHandlers,
             ...PermissionsModule.eventHandlers,
         });
+        this.eventStore.addEventStore(this.mongoStore);
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
