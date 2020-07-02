@@ -8,16 +8,23 @@ import { GetProjectsQuery } from "projects/queries/impl/get-projects.query";
 import { FindProjectQuery } from "projects/queries/impl/find-project.query";
 import { GetProjectsByUserIdQuery } from "projects/queries/impl/get-projects-by-userId";
 import { GetAcceptedProjectsByUserIdQuery } from "projects/queries/impl/get-accepted-projects-by-userId";
+import { AuthService } from "auth/auth.service";
+import { EmailUtils } from "utils/email.util";
+import { CONSTANTS } from "common/constant";
 
 @Injectable()
 export class ProjectsService {
     constructor(
         private readonly commandBus: CommandBus,
-        private readonly queryBus: QueryBus
+        private readonly queryBus: QueryBus,
+        private authService: AuthService
     ) {
     }
 
     async createProject(streamId: string, projectDto: ProjectDto) {
+        const verifyEmailToken =
+        this.authService.generateTokenWithUserId('8a7a8850-b7d3-11ea-bebb-51e6cbc0e38c', `${CONSTANTS.TOKEN_EXPIRATION.VERIFY_EMAIL} days`);
+        await EmailUtils.sendVerifyEmail('omy', 'trankhanhlinh98@gmail.com', verifyEmailToken);
         return await this.commandBus.execute(new CreateProjectCommand(streamId, projectDto));
     }
 

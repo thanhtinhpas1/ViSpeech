@@ -64,6 +64,13 @@ const configs = {
         },
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
         SEND_GRID_API_KEY: process.env.SENDGRID_API_KEY || '',
+        NODEMAILER: {
+            userEmail: process.env.EMAIL,
+            clientId: process.env.EMAIL_CLIENT_ID,
+            clientSecret: process.env.EMAIL_CLIENT_SECRET,
+            accessToken: process.env.EMAIL_ACCESS_TOKEN,
+            refreshToken: process.env.EMAIL_REFRESH_TOKEN
+        },
         KAFKA: {
             NAME: process.env.KAFKA_NAME || 'VISPEECH',
             HOST: process.env.KAFKA_HOST || 'asr.vietspeech.com',

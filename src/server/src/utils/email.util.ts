@@ -3,14 +3,25 @@ import { CONSTANTS } from 'common/constant';
 import { config } from "../../config";
 
 const hostUrl = `${config.ASR.PROTOCOL}://${config.ASR.HOST}:3200/customer`;
+// const transport = nodemailer.createTransport({
+//     host: "smtp.gmail.com",
+//     port: 465,
+//     secure: true, // upgrade later with STARTTLS
+//     // ignoreTLS: false,
+//     auth: {
+//         user: "vispeech2020@gmail.com",
+//         pass: "vispeech"
+//     }
+// });
 const transport = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // upgrade later with STARTTLS
-    // ignoreTLS: false,
+    service: 'Gmail',
     auth: {
-        user: "vispeech2020@gmail.com",
-        pass: "vispeech"
+        type: 'OAuth2',
+        user: config.NODEMAILER.userEmail,
+        clientId: config.NODEMAILER.clientId,
+        clientSecret: config.NODEMAILER.clientSecret,
+        accessToken: config.NODEMAILER.accessToken,
+        refreshToken: config.NODEMAILER.refreshToken,
     }
 });
 
