@@ -76,7 +76,8 @@ export const Utils = {
         errorObj.code = error.code || error.status
         errorObj.message = error.errmsg || error.message
         if (errorObj.message == null || errorObj.message === '') {
-            errorObj.message = error?.writeErrors?.errmsg || ''
+            errorObj.message = error?.writeErrors?.errmsg ||
+                (Array.isArray(error?.writeErrors) && error?.writeErrors.length > 0 && error?.writeErrors[0].errmsg) || ''
         }
         return errorObj
     },

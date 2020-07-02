@@ -36,7 +36,6 @@ const sendEmail = (to, subject, contentEmail) => {
     });
 };
 
-
 export const EmailUtils = {
     sendVerifyEmail: (name, to, token) => {
         const subject = 'Kích hoạt tài khoản';
@@ -55,16 +54,10 @@ export const EmailUtils = {
     },
 };
 
-
 // // using Twilio SendGrid's v3 Node.js Library
-
-// import { config } from "../../config";
-// import {Logger} from "@nestjs/common";
-
 // // https://github.com/sendgrid/sendgrid-nodejs
 // const sgMail = require('@sendgrid/mail');
 // sgMail.setApiKey(config.SEND_GRID_API_KEY);
-// Logger.log(config.SEND_GRID_API_KEY, "SEND_GRID_API_KEY")
 
 // const sendEmail = (to, subject, contentEmail) => {
 //     const msg = {
@@ -74,10 +67,6 @@ export const EmailUtils = {
 //         text: contentEmail,
 //         html: contentEmail,
 //     };
-//     console.log('msg ', msg);
+//     console.log('Message sent: %s', msg);
 //     return sgMail.send(msg);
 // };
-
-
-
-
