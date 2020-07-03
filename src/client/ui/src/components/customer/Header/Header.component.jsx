@@ -59,6 +59,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
         emClass: 'ikon-distribution',
         name: 'Nâng cấp token',
       },
+      {
+        href: `${CUSTOMER_PATH}/documents`,
+        emclass: 'ikon-distribution',
+        name: 'Tài liệu',
+      },
     ]
     setUserLinks(userLinksArr)
     setNavbarMenu(navbarMenuArr)
@@ -105,7 +110,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
                 </li>
               </ul>
               <a className="topbar-logo" href="/">
-                <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo-light.svg`} alt="" />
+                <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo1.png`} alt="" />
               </a>
               <ul className="topbar-nav">
                 <li className="topbar-nav-item relative">

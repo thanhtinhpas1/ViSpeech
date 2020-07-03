@@ -21,6 +21,7 @@ import TrialPage from 'components/customer/TrialPage/TrialPage.container'
 import TrialDetailsPage from 'components/customer/TrialDetailsPage/TrialDetailsPage.container'
 import UpgradeTokenPage from 'components/customer/UpgradeTokenPage/UpgradeTokenPage.container'
 import Utils from 'utils'
+import DocumentsPage from '../components/customer/DocumentsPage/DocumentsPage.component'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -64,6 +65,9 @@ const RouteCustomer = ({ currentUser }) => {
             </Route>
             <Route path={`${CUSTOMER_PATH}/reports`}>
               <StatisticsPage />
+            </Route>
+            <Route path={`${CUSTOMER_PATH}/documents`}>
+              <DocumentsPage />
             </Route>
             <Route path={`${CUSTOMER_PATH}/trial`}>
               <TrialPage />
