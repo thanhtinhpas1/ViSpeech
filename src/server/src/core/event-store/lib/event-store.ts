@@ -135,7 +135,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         this.catchupSubscriptionsCount = subscriptions.length;
         this.catchupSubscriptions = subscriptions.map(async (subscription) => {
             if (this.store) {
-                let lcp = await this.store.read(this.store.storeKey);
+                const lcp = await this.store.read(this.store.storeKey);
                 return this.subscribeToCatchupSubscription(
                     subscription.stream,
                     subscription.resolveLinkTos,
@@ -270,20 +270,20 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             return;
         }
 
-        const handler = this.eventHandlers[event.eventType];
+        const rawData = JSON.parse(event.data.toString());
+        const data = Object.values(rawData);
+        let eventType;
+        let handler = this.eventHandlers[eventType = rawData.eventType] || this.eventHandlers[eventType = event.eventType];
         if (!handler) {
-            this.logger.error(`Received event that could not be handled! ${event.eventType}`);
+            this.logger.error(`Received event that could not be handled! ${eventType}`);
             return;
         }
 
-        const rawData = JSON.parse(event.data.toString());
-        const data = Object.values(rawData);
-
-        const eventType = event.eventType || rawData.content.eventType;
         if (this.eventHandlers && this.eventHandlers[eventType]) {
-            this.subject$.next(this.eventHandlers[event.eventType](...data));
+            Logger.log(`EventStore write event ${eventType}`)
+            this.subject$.next(this.eventHandlers[eventType](...data));
             if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
-                let lcp = await this.store.read(this.store.storeKey);
+                const lcp = await this.store.read(this.store.storeKey);
                 if (lcp < payload.event.eventNumber.toInt()) {
                     await this.store.write(this.store.storeKey, payload.event.eventNumber.toInt());
                 }

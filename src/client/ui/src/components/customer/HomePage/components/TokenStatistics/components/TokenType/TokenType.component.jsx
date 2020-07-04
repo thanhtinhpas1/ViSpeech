@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react'
-import { Radio } from 'antd'
+import {Radio} from 'antd'
 
 const TokenType = ({ tokenType }) => (
   <div className="pay-option h-100">
@@ -24,11 +24,11 @@ const TokenType = ({ tokenType }) => (
               : null
           }
         >
-          {tokenType.price}$/ {tokenType.minutes} phút
+          {tokenType.price} vnđ/ {tokenType.minutes} phút
         </span>
         {tokenType.salePercent > 0 ? (
           <span className="pay-amount" style={{ marginBottom: '0.5em', color: 'red' }}>
-            {tokenType.saleOffPrice}$/ {tokenType.minutes} phút
+            {tokenType.saleOffPrice} vnđ/ {tokenType.minutes} phút
           </span>
         ) : null}
       </div>

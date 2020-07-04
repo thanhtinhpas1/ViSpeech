@@ -1,5 +1,4 @@
 import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { OrderRepository } from '../../repository/order.repository';
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { config } from '../../../../config';
 import { getMongoRepository } from 'typeorm';
@@ -7,15 +6,16 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { CreateUpgradeTokenOrderCommand } from '../impl/create-upgrade-token-order.command';
 import { UserDto } from 'users/dtos/users.dto';
-import { UpgradeTokenOrderCreatedFailedEvent } from 'orders/events/impl/upgrade-token-order-created.event';
+import { UpgradeTokenOrderCreatedFailedEvent } from 'tokens/events/impl/upgrade-token-order-created.event';
 import { CONSTANTS } from 'common/constant';
+import { TokenRepository } from '../../repository/token.repository';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
 @CommandHandler(CreateUpgradeTokenOrderCommand)
 export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpgradeTokenOrderCommand> {
     constructor(
-        private readonly repository: OrderRepository,
+        private readonly repository: TokenRepository,
         private readonly publisher: EventPublisher,
         private readonly eventBus: EventBus
     ) {

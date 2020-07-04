@@ -1,61 +1,33 @@
-import { Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientKafka, ClientsModule } from '@nestjs/microservices';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { DeletePermissionByUserIdHandler } from 'permissions/commands/handlers/delete-permission-by-userId.handler';
-import { DeleteProjectByUserIdHandler } from 'projects/commands/handlers/delete-project-by-userId.handler';
-import { CreateFreeTokenHandler } from 'tokens/commands/handlers/create-token.handler';
-import { DeleteTokenByUserIdHandler } from 'tokens/commands/handlers/delete-token-by-userId.handler';
 import { getMongoRepository, Repository } from 'typeorm';
 import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Utils } from 'utils';
 import { CommandHandlers } from './commands/handlers';
 import { UsersController } from './controllers/users.controller';
 import { USER_TYPE, UserDto } from './dtos/users.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    EmailVerifiedEvent,
-    EmailVerifiedFailedEvent,
-    EmailVerifiedSuccessEvent
-} from './events/impl/email-verified.event';
-import {
-    PasswordChangedEvent,
-    PasswordChangedFailedEvent,
-    PasswordChangedSuccessEvent,
-} from './events/impl/password-changed.event';
-import {
-    UserCreatedEvent,
-    UserCreatedFailedEvent,
-    UserCreatedSuccessEvent,
-    UserCreationStartedEvent,
-} from './events/impl/user-created.event';
+import { EmailVerifiedEvent, EmailVerifiedFailedEvent, EmailVerifiedSuccessEvent } from './events/impl/email-verified.event';
+import { PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent, } from './events/impl/password-changed.event';
+import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent, } from './events/impl/user-created.event';
 import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from './events/impl/user-deleted.event';
 import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from './events/impl/user-updated.event';
 import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
-import {
-    VerifyEmailSentEvent,
-    VerifyEmailSentFailedEvent,
-    VerifyEmailSentSuccessEvent,
-} from './events/impl/verify-email-sent.event';
+import { VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent, } from './events/impl/verify-email-sent.event';
 import { QueryHandlers } from './queries/handler';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersService } from './services/users.service';
 import { config } from '../../config';
-import { EventStore, EventStoreModule, EventStoreSubscriptionType } from "../core/event-store/lib";
-import { TokensModule } from "../tokens/tokens.module";
-import { ProjectsModule } from "../projects/projects.module";
-import { PermissionsModule } from "../permissions/permissions.module";
-import { AuthModule } from "../auth/auth.module";
-import { UserRepository } from "./repository/user.repository";
-import { TokenRepository } from "../tokens/repository/token.repository";
-import { ProjectRepository } from "../projects/repository/project.repository";
-import { PermissionRepository } from "../permissions/repository/permission.repository";
-import { MongoStore } from "../core/event-store/lib/adapter/mongo-store";
-import { ProjectionDto } from "../core/event-store/lib/adapter/projection.dto";
-import { TokenDto } from "../tokens/dtos/tokens.dto";
+import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
+import { AuthModule } from '../auth/auth.module';
+import { UserRepository } from './repository/user.repository';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { PermissionDto } from '../permissions/dtos/permissions.dto';
 
 @Module({
     imports: [
@@ -63,7 +35,7 @@ import { TokenDto } from "../tokens/dtos/tokens.dto";
             [{
                 name: config.KAFKA.NAME, ...kafkaClientOptions,
             }]),
-        TypeOrmModule.forFeature([UserDto, TokenDto, PermissionDto, ProjectionDto]),
+        TypeOrmModule.forFeature([UserDto, PermissionDto, ProjectionDto]),
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-user',
             subscriptions: [
@@ -85,23 +57,20 @@ import { TokenDto } from "../tokens/dtos/tokens.dto";
                 },
             ],
             eventHandlers: {
+                // Warning: add event handles of token or another module can make duplicate write event
                 ...UsersModule.eventHandlers,
-                ...TokensModule.eventHandlers,
-                ...ProjectsModule.eventHandlers,
-                ...PermissionsModule.eventHandlers,
             }
         }),
         CqrsModule,
-        AuthModule,
+        forwardRef(() => AuthModule),
     ],
     controllers: [UsersController],
     providers: [
-        UsersService, UsersSagas, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka, UserRepository,
-        CreateFreeTokenHandler, DeleteTokenByUserIdHandler, DeleteProjectByUserIdHandler, DeletePermissionByUserIdHandler,
-        UserRepository, TokenRepository, ProjectRepository, PermissionRepository, MongoStore,
+        UsersService, UsersSagas, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka,
+        UserRepository, MongoStore,
         ...EventHandlers, ...CommandHandlers, ...QueryHandlers
     ],
-    exports: [UsersService, CqrsModule, ...EventHandlers, ...CommandHandlers],
+    exports: [UsersService],
 })
 export class UsersModule implements OnModuleInit, OnModuleDestroy {
     constructor(
@@ -119,23 +88,12 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleInit() {
-        this.eventStore.addEventHandlers({
-            ...UsersModule.eventHandlers,
-            ...TokensModule.eventHandlers,
-            ...ProjectsModule.eventHandlers,
-            ...PermissionsModule.eventHandlers,
-        });
         this.eventStore.addEventStore(this.mongoStore);
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        this.command$.register([
-            ...CommandHandlers,
-            CreateFreeTokenHandler,
-            DeleteTokenByUserIdHandler,
-            DeleteProjectByUserIdHandler,
-            DeletePermissionByUserIdHandler
-        ]);
+        // Warning: add commandHandles of another module make duplicate event.
+        this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([UsersSagas]);
         // seed data

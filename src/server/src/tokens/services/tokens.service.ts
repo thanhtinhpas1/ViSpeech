@@ -9,6 +9,8 @@ import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId
 import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
 import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
 import { FindFreeTokenQuery } from 'tokens/queries/impl/find-free-token.query';
+import { OrderDto, PaymentIntent } from '../../orders/dtos/orders.dto';
+import { CreateUpgradeTokenOrderCommand } from '../commands/impl/create-upgrade-token-order.command';
 
 @Injectable()
 export class TokensService {
@@ -65,5 +67,9 @@ export class TokensService {
         const query = new FindFreeTokenQuery(findFreeTokenQuery.userId);
         Object.assign(query, findFreeTokenQuery);
         return await this.queryBus.execute(query);
+    }
+
+    async createUpgradeTokenOrder(streamId: string, orderDto: OrderDto, paymentIntent: PaymentIntent) {
+        return await this.commandBus.execute(new CreateUpgradeTokenOrderCommand(streamId, orderDto, paymentIntent));
     }
 }

@@ -1,4 +1,4 @@
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
@@ -8,61 +8,37 @@ import { TokensController } from './controllers/tokens.controller';
 import { TokenTypeDto } from './dtos/token-types.dto';
 import { TokenDto } from './dtos/tokens.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    TokenCreatedEvent,
-    TokenCreatedFailedEvent,
-    TokenCreatedSuccessEvent
-} from './events/impl/token-created.event';
-import {
-    TokenDeletedEvent,
-    TokenDeletedFailedEvent,
-    TokenDeletedSuccessEvent
-} from './events/impl/token-deleted.event';
-import {
-    TokenUpdatedEvent,
-    TokenUpdatedFailedEvent,
-    TokenUpdatedSuccessEvent
-} from './events/impl/token-updated.event';
+import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
+import { TokenDeletedEvent, TokenDeletedFailedEvent, TokenDeletedSuccessEvent } from './events/impl/token-deleted.event';
+import { TokenUpdatedEvent, TokenUpdatedFailedEvent, TokenUpdatedSuccessEvent } from './events/impl/token-updated.event';
 import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { TokenRepository } from './repository/token.repository';
 import { TokensSagas } from './sagas/tokens.sagas';
 import { TokensService } from './services/tokens.service';
-import {
-    FreeTokenCreatedEvent,
-    FreeTokenCreatedFailedEvent,
-    FreeTokenCreatedSuccessEvent
-} from './events/impl/free-token-created.event';
-import {
-    OrderedTokenCreatedEvent,
-    OrderedTokenCreatedFailedEvent,
-    OrderedTokenCreatedSuccessEvent
-} from './events/impl/ordered-token-created.event';
+import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from './events/impl/free-token-created.event';
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from './events/impl/ordered-token-created.event';
 import { AuthModule } from '../auth/auth.module';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import {
-    TokenDeletedByUserIdEvent,
-    TokenDeletedByUserIdFailedEvent,
-    TokenDeletedByUserIdSuccessEvent
+    TokenDeletedByUserIdEvent, TokenDeletedByUserIdFailedEvent, TokenDeletedByUserIdSuccessEvent
 } from './events/impl/token-deleted-by-userId.event';
 import {
-    TokenDeletedByProjectIdEvent,
-    TokenDeletedByProjectIdFailedEvent,
-    TokenDeletedByProjectIdSuccessEvent
+    TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdFailedEvent, TokenDeletedByProjectIdSuccessEvent
 } from './events/impl/token-deleted-by-projectId.event';
-import { UserDto } from 'users/dtos/users.dto';
-import { ProjectDto } from 'projects/dtos/projects.dto';
-import {
-    TokenUpgradedEvent,
-    TokenUpgradedFailedEvent,
-    TokenUpgradedSuccessEvent
-} from './events/impl/token-upgraded.event';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { TokenUpgradedEvent, TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from './events/impl/token-upgraded.event';
 import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
 import { EventStore, EventStoreModule } from '../core/event-store/lib';
+import { PermissionDto } from '../permissions/dtos/permissions.dto';
+import { UserDto } from '../users/dtos/users.dto';
+import { ProjectDto } from '../projects/dtos/projects.dto';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import {
+    UpgradeTokenOrderCreatedEvent, UpgradeTokenOrderCreatedFailedEvent, UpgradeTokenOrderCreatedSuccessEvent
+} from './events/impl/upgrade-token-order-created.event';
+import { OrderDto } from '../orders/dtos/orders.dto';
 
 @Module({
     imports: [
@@ -73,11 +49,12 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
             TokenDto,
             TokenTypeDto,
             PermissionDto,
+            OrderDto,
             UserDto,
             ProjectDto,
             ProjectionDto
         ]),
-        AuthModule,
+        forwardRef(() => AuthModule),
         CqrsModule,
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-token',
@@ -119,7 +96,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
     ],
     exports: [TokensService, CqrsModule, ...CommandHandlers, ...EventHandlers,],
 })
-export class TokensModule implements OnModuleInit {
+export class TokensModule implements OnModuleInit, OnModuleDestroy {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
@@ -128,10 +105,11 @@ export class TokensModule implements OnModuleInit {
     ) {
     }
 
+    onModuleDestroy() {
+        this.eventStore.close();
+    }
+
     async onModuleInit() {
-        this.eventStore.addEventHandlers({
-            ...TokensModule.eventHandlers,
-        })
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
@@ -176,6 +154,11 @@ export class TokensModule implements OnModuleInit {
         TokenUpgradedEvent: (streamId, token, tokenType) => new TokenUpgradedEvent(streamId, token, tokenType),
         TokenUpgradedSuccessEvent: (streamId, token, tokenType) => new TokenUpgradedSuccessEvent(streamId, token, tokenType),
         TokenUpgradedFailedEvent: (streamId, token, tokenType, error) => new TokenUpgradedFailedEvent(streamId, token, tokenType, error),
+        // create upgrade token order
+        UpgradeTokenOrderCreatedEvent: (streamId, data) => new UpgradeTokenOrderCreatedEvent(streamId, data),
+        UpgradeTokenOrderCreatedSuccessEvent: (streamId, data) => new UpgradeTokenOrderCreatedSuccessEvent(streamId, data),
+        UpgradeTokenOrderCreatedFailedEvent: (streamId, data, error) => new UpgradeTokenOrderCreatedFailedEvent(streamId, data, error),
+
     };
 
     async persistTokenTypesToDB() {

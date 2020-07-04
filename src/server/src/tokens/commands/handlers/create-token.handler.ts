@@ -9,8 +9,7 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { OrderedTokenCreatedFailedEvent } from 'tokens/events/impl/ordered-token-created.event';
 
 @CommandHandler(CreateTokenCommand)
-export class CreateTokenHandler
-    implements ICommandHandler<CreateTokenCommand> {
+export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
     constructor(
         private readonly repository: TokenRepository,
         private readonly authService: AuthService,
@@ -49,8 +48,7 @@ export class CreateTokenHandler
 }
 
 @CommandHandler(CreateFreeTokenCommand)
-export class CreateFreeTokenHandler
-    implements ICommandHandler<CreateFreeTokenCommand> {
+export class CreateFreeTokenHandler implements ICommandHandler<CreateFreeTokenCommand> {
     constructor(
         private readonly repository: TokenRepository,
         private readonly publisher: EventPublisher

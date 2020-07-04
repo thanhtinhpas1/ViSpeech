@@ -46,7 +46,7 @@ const configs = {
             host: process.env.TYPEORM_HOST || '127.0.0.1',
             username: process.env.TYPEORM_USERNAME,
             password: process.env.TYPEORM_PASSWORD,
-            database: process.env.TYPEORM_DATABASE || 'vispeech',
+            database: process.env.TYPEORM_DATABASE || 'admin',
             port: process.env.TYPEORM_PORT || 27017,
             synchronize: process.env.TYPEORM_SYNCHRONIZE || true,
             logger: process.env.TYPEORM_LOGGING || 'debug',
@@ -92,6 +92,15 @@ const configs = {
             ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || 'admin',
             ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@gmail.com',
         },
+        SMTP: {
+            SMTP_HOST: process.env.SMTP_HOST || 'smtp.gmail.com',
+            SMTP_PORT: process.env.SMTP_PORT || 465,
+            SMTP_SECURE: process.env.SMT_SECURE || true,
+            SMTP_AUTH: {
+                SMTP_USERNAME: process.env.SMTP_USERNAME || 'vispeech2020@gmail.com',
+                SMTP_PASSWORD: process.env.SMTP_PASSWORD || 'vispeech',
+            }
+        }
     },
     development: {},
     production: {

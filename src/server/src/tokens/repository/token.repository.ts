@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Token } from '../models/token.model';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { OrderDto } from '../../orders/dtos/orders.dto';
+import { Order } from '../../orders/models/order.model';
 
 @Injectable()
 export class TokenRepository {
@@ -51,6 +53,13 @@ export class TokenRepository {
         token.setData(projectId);
         token.deleteTokenByProjectId(streamId);
         return token;
+    }
+
+    async createUpgradeTokenOrder(streamId: string, orderDto: OrderDto) {
+        const order = new Order(undefined);
+        order.setData(orderDto);
+        order.createUpgradeTokenOrder(streamId);
+        return order;
     }
 
     async upgradeToken(streamId: string, tokenDto: TokenDto, tokenTypeDto: TokenTypeDto) {

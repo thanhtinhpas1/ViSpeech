@@ -9,7 +9,6 @@ import { FindOrderQuery } from 'orders/queries/impl/find-order.query';
 import { config } from '../../../config';
 import { GetOrdersByUserIdQuery } from 'orders/queries/impl/get-orders-by-userId';
 import { FindOrderByTokenIdQuery } from 'orders/queries/impl/find-order-by-tokenId.query';
-import { CreateUpgradeTokenOrderCommand } from 'orders/commands/impl/create-upgrade-token-order.command';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
@@ -23,10 +22,6 @@ export class OrdersService {
 
     async createOrder(streamId: string, orderDto: OrderDto, paymentIntent: PaymentIntent) {
         return await this.commandBus.execute(new CreateOrderCommand(streamId, orderDto, paymentIntent));
-    }
-
-    async createUpgradeTokenOrder(streamId: string, orderDto: OrderDto, paymentIntent: PaymentIntent) {
-        return await this.commandBus.execute(new CreateUpgradeTokenOrderCommand(streamId, orderDto, paymentIntent));
     }
 
     async updateOrder(streamId: string, orderDto: OrderDto) {

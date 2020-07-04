@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 
 const Main = () => {
@@ -10,19 +9,19 @@ const Main = () => {
             <div className="col-md-12 col-lg-10 text-center">
               <span>Speech to text</span>
               <h1>
-                Hệ thống nhận dạng âm thanh <br/> Tiếng Việt.
+                Hệ thống nhận dạng âm thanh <br /> Tiếng Việt.
               </h1>
               <p>
-                Chúng tôi là hệ thống hàng đầu trong cung cấp và tích hợp <br/>
+                Chúng tôi là hệ thống hàng đầu trong cung cấp và tích hợp <br />
                 dịch vụ nhận dạng âm thanh Tiếng Việt.
               </p>
-              <a className="m-btn btn-white" href="#">
+              <a className="m-btn btn-white" href="/login">
                 Dùng thử dịch vụ
               </a>
             </div>
             <div className="col-md-8">
               <div className="hb-img">
-                <img src={`${process.env.PUBLIC_URL}/images/customer/macbook.png`} alt=""/>
+                <img src={`${process.env.PUBLIC_URL}/images/customer/macbook.png`} alt="" />
               </div>
             </div>
           </div>
@@ -33,8 +32,8 @@ const Main = () => {
           <div className="row">
             <div className="col-md-12 text-center m-40px-b sm-m-30px-b">
               <div className="section-title">
-                <span className="theme-g-bg"/>
-                <h2 id="advanced-home">Asr VietSpeech giúp gì cho bạn?</h2>
+                <span className="theme-g-bg" />
+                <h2 id="introduce">Asr VietSpeech giúp gì cho bạn?</h2>
                 <p>
                   Asr VietSpeech là sản phẩm hỗ trợ chuyển đổi file âm thanh thành văn bản một cách hiệu quả và nhanh
                   chóng. Thay vì mất hàng giờ ngồi nghe và gõ lại văn bản, giờ đây với Asr VietSpeech chỉ cần một vài
@@ -48,7 +47,7 @@ const Main = () => {
             <div className="col-md-4">
               <div className="feature-box sm-m-30px-b">
                 <div className="f-icon theme-bg">
-                  <i className="icon-genius"/>
+                  <i className="icon-genius" />
                 </div>
                 <h4 className="m-25px-t">Tốc độ cao</h4>
                 <p>
@@ -59,7 +58,7 @@ const Main = () => {
             <div className="col-md-4">
               <div className="feature-box sm-m-30px-b">
                 <div className="f-icon theme-bg">
-                  <i className="icon-documents"/>
+                  <i className="icon-documents" />
                 </div>
                 <h4>Tự động hóa</h4>
                 <p>
@@ -71,12 +70,12 @@ const Main = () => {
             <div className="col-md-4">
               <div className="feature-box sm-m-30px-b">
                 <div className="f-icon theme-bg">
-                  <i className="icon-recycle"/>
+                  <i className="icon-recycle" />
                 </div>
                 <h4>Mô hình linh hoạt.</h4>
                 <p>
-                  Asr VietSpeech triển khai các sản phẩm, dịch vụ cũng như hỗ trợ một cách linh hoạt từ cloud đến on-premise để
-                  đáp ứng nhu cầu của doanh nghiệp.
+                  Asr VietSpeech triển khai các sản phẩm, dịch vụ cũng như hỗ trợ một cách linh hoạt từ cloud đến
+                  on-premise để đáp ứng nhu cầu của doanh nghiệp.
                 </p>
               </div>
             </div>
@@ -87,12 +86,12 @@ const Main = () => {
         <div className="container">
           <div className="row align-items-center m-60px-b">
             <div className="col-md-6">
-              <img src={`${process.env.PUBLIC_URL}/images/customer/flow1.png`} alt=""/>
+              <img src={`${process.env.PUBLIC_URL}/images/customer/flow1.png`} alt="" />
             </div>
             <div className="col-md-6 sm-m-30px-t">
               <h6 className="sub-title theme-color">Gắn kết với khách hàng.</h6>
               <h4 className="sub-section-title m-0px m-15px-b">
-                Hỗ trợ khách hàng <br/>
+                Hỗ trợ khách hàng <br />
                 24/7
               </h4>
               <p>Asr VietSpeech giúp mối quan hệ giữa doanh nghiệp và khách hàng ngày càng bền chặt</p>
@@ -107,7 +106,7 @@ const Main = () => {
             <div className="col-md-6 order-2 sm-m-30px-t order-md-first">
               <h6 className="sub-title theme-color">Tích hợp và cập nhật liên tục.</h6>
               <h4 className="sub-section-title m-0px m-15px-b">
-                Đảm bảo khách hàng <br/>
+                Đảm bảo khách hàng <br />
                 có dịch vụ tốt nhất.
               </h4>
               <p>Asr VietSpeech luôn liên tục cập nhật và nâng cao chất lượng sản phẩm.</p>
@@ -118,17 +117,17 @@ const Main = () => {
               </ul>
             </div>
             <div className="col-md-6">
-              <img src={`${process.env.PUBLIC_URL}/images/customer/flow2.png`} alt=""/>
+              <img src={`${process.env.PUBLIC_URL}/images/customer/flow2.png`} alt="" />
             </div>
           </div>
           <div className="row align-items-center m-90px-b">
             <div className="col-md-6">
-              <img src={`${process.env.PUBLIC_URL}/images/customer/flow3.png`} alt=""/>
+              <img src={`${process.env.PUBLIC_URL}/images/customer/flow3.png`} alt="" />
             </div>
             <div className="col-md-6 sm-m-30px-t">
               <h6 className="sub-title theme-color">Báo cáo và thống kê </h6>
               <h4 className="sub-section-title m-0px m-15px-b">
-                Theo dõi chi tiết <br/>
+                Theo dõi chi tiết <br />
                 lượng truy cập
               </h4>
               <p>Đảm bảo khách hàng theo dõi được số lượng truy vấn hàng tuần, hàng tháng.</p>
@@ -157,14 +156,11 @@ const Main = () => {
                   <div className="d-flex">
                     <div className="img">
                       <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark"/>
+                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
                       </span>
                     </div>
                     <div className="speac">
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-                        the industry&apos;s standard dummy text ever since the 1500s.
-                      </p>
+                      <p />
                       <h6>
                         <strong>
                           Maria - <span className="theme-color">Owner</span>
@@ -177,14 +173,11 @@ const Main = () => {
                   <div className="d-flex">
                     <div className="img">
                       <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark"/>
+                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
                       </span>
                     </div>
                     <div className="speac">
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-                        the industry&apos;s standard dummy text ever since the 1500s.
-                      </p>
+                      <p />
                       <h6>
                         <strong>
                           Maria - <span className="theme-color">Owner</span>
@@ -197,14 +190,11 @@ const Main = () => {
                   <div className="d-flex">
                     <div className="img">
                       <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark"/>
+                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
                       </span>
                     </div>
                     <div className="speac">
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-                        the industry&apos;s standard dummy text ever since the 1500s.
-                      </p>
+                      <p />
                       <h6>
                         <strong>
                           Maria - <span className="theme-color">Owner</span>
@@ -217,14 +207,11 @@ const Main = () => {
                   <div className="d-flex">
                     <div className="img">
                       <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark"/>
+                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
                       </span>
                     </div>
                     <div className="speac">
-                      <p>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been
-                        the industry&apos;s standard dummy text ever since the 1500s.
-                      </p>
+                      <p />
                       <h6>
                         <strong>
                           Maria - <span className="theme-color">Owner</span>
@@ -245,14 +232,10 @@ const Main = () => {
               <div className="tc-left sm-m-30px-b">
                 <span className="theme-color">Đối tác</span>
                 <h2>
-                 Những đối tác chiến lược của chúng tôi.
-                  <br/>
-                  Clients
+                  Những đối tác chiến lược của chúng tôi.
+                  <br />
                 </h2>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                  et dolore magna aliqua. Ut enim ad minim veniam
-                </p>
+                <p />
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
                 <a className="m-btn btn-theme" href="/register">
                   Đăng ký dùng thử
@@ -263,22 +246,22 @@ const Main = () => {
               <div className="clients-list clients-border clients-col-3">
                 <ul>
                   <li>
-                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-1.png`} alt=""/>
+                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-1.png`} alt="" />
                   </li>
                   <li>
-                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-2.png`} alt=""/>
+                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-2.png`} alt="" />
                   </li>
                   <li>
-                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-3.png`} alt=""/>
+                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-3.png`} alt="" />
                   </li>
                   <li>
-                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-4.png`} alt=""/>
+                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-4.png`} alt="" />
                   </li>
                   <li>
-                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-5.png`} alt=""/>
+                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-5.png`} alt="" />
                   </li>
                   <li>
-                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-6.png`} alt=""/>
+                    <img src={`${process.env.PUBLIC_URL}/images/customer/logo-6.png`} alt="" />
                   </li>
                 </ul>
               </div>

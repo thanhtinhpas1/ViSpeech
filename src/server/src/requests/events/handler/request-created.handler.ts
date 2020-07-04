@@ -1,9 +1,9 @@
-import { Logger, Inject } from '@nestjs/common';
-import { EventsHandler, IEventHandler, EventBus } from '@nestjs/cqrs';
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RequestDto } from 'requests/dtos/requests.dto';
 import { Repository } from 'typeorm';
-import { RequestCreatedEvent, RequestCreatedSuccessEvent, RequestCreatedFailedEvent } from '../impl/request-created.event';
+import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from '../impl/request-created.event';
 import { CONSTANTS } from 'common/constant';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';

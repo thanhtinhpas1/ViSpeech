@@ -4,7 +4,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { config } from '../config';
 import { AppModule } from './app.module';
-import { kafkaClientOptions } from "./common/kafka-client.options";
+import { kafkaClientOptions } from './common/kafka-client.options';
 
 async function bootstrap() {
     const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -26,7 +26,6 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe(validationOptions));
     app.setGlobalPrefix(config.PREFIX);
     SwaggerModule.setup(config.API_EXPLORER_PATH, app, document);
-
     app.connectMicroservice(kafkaClientOptions);
     await app.listen(config.PORT, config.HOST, () => {
         Logger.log(`Application is running PORT: ${config.PORT}`, 'Bootstrap');

@@ -1,4 +1,4 @@
-import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,9 +21,7 @@ import { OrderDto } from 'orders/dtos/orders.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { AsrCalledEvent } from './events/impl/asr-called.event';
 import {
-    RequestTranscriptFileUrlUpdatedEvent,
-    RequestTranscriptFileUrlUpdatedFailedEvent,
-    RequestTranscriptFileUrlUpdatedSuccessEvent
+    RequestTranscriptFileUrlUpdatedEvent, RequestTranscriptFileUrlUpdatedFailedEvent, RequestTranscriptFileUrlUpdatedSuccessEvent
 } from './events/impl/request-transcript-file-url-updated.event';
 import { ClientsModule } from '@nestjs/microservices';
 import { config } from '../../config';
@@ -31,11 +29,7 @@ import { kafkaClientOptions } from 'common/kafka-client.options';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
-import {
-    RequestCreatedEvent,
-    RequestCreatedFailedEvent,
-    RequestCreatedSuccessEvent
-} from "./events/impl/request-created.event";
+import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from './events/impl/request-created.event';
 
 @Module({
     imports: [
@@ -49,7 +43,8 @@ import {
             TokenTypeDto,
             OrderDto,
             ProjectDto,
-            ProjectionDto]),
+            ProjectionDto
+        ]),
         CqrsModule,
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-request',
@@ -71,7 +66,9 @@ import {
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {},
+            eventHandlers: {
+                ...RequestModule.eventHandlers
+            },
         }),
         MulterModule.register({}),
         forwardRef(() => AuthModule),
@@ -94,7 +91,7 @@ import {
         ...QueryHandlers,
     ],
 })
-export class RequestModule implements OnModuleInit {
+export class RequestModule implements OnModuleInit, OnModuleDestroy {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
@@ -103,14 +100,15 @@ export class RequestModule implements OnModuleInit {
     ) {
     }
 
+    onModuleDestroy() {
+        this.eventStore.close();
+    }
+
     async onModuleInit() {
-        this.eventStore.addEventHandlers({
-            ...RequestModule.eventHandlers,
-        })
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        this.command$.register([...CommandHandlers, UpdateTokenHandler, CreateReportHandler]);
+        this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([CallAsrSagas]);
     }

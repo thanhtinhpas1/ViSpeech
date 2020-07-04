@@ -1,17 +1,10 @@
-import {
-    BadRequestException,
-    CanActivate,
-    Injectable,
-    Logger,
-    NotFoundException,
-    UnauthorizedException
-} from '@nestjs/common';
+import { BadRequestException, CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from 'auth/auth.service';
 import { CONSTANTS } from 'common/constant';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { getMongoRepository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { UserUtils } from "../../utils/user.util";
+import { UserUtils } from '../../utils/user.util';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -31,7 +24,7 @@ export class PermissionGuard implements CanActivate {
         if (!id) return true;
         if (UserUtils.isAdmin(payload['roles'])) return true;
 
-        const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
+        const permission = await getMongoRepository(PermissionDto).findOne({_id: id});
         if (permission && permission.assignerId === payload['id']) {
             return true;
         }
@@ -54,7 +47,7 @@ export class AssignPermissionGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const { assignerId } = request.body;
+        const {assignerId} = request.body;
         const isAdmin = UserUtils.isAdmin(payload['roles']);
         const isManagerUser = UserUtils.isManagerUser(payload['roles']);
         return isAdmin || (isManagerUser && assignerId === payload['id']);
@@ -72,7 +65,7 @@ export class ReplyPermissionAssignGuard implements CanActivate {
 
     async canActivate(context: import('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const { emailToken } = request.body;
+        const {emailToken} = request.body;
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
             throw new UnauthorizedException();
@@ -87,7 +80,12 @@ export class ReplyPermissionAssignGuard implements CanActivate {
             throw new BadRequestException("Token is invalid.");
         }
 
-        const permission = await getMongoRepository(PermissionDto).findOne({ assignerId, assigneeId, projectId, status: CONSTANTS.STATUS.PENDING });
+        const permission = await getMongoRepository(PermissionDto).findOne({
+            assignerId,
+            assigneeId,
+            projectId,
+            status: CONSTANTS.STATUS.PENDING
+        });
         return permission && assigneeId === requestJwt['id'];
     }
 }
@@ -108,9 +106,9 @@ export class PermissionQueryGuard implements CanActivate {
         }
         if (UserUtils.isAdmin(payload['roles'])) return true;
 
-        const { id, emailToken } = request.params;
+        const {id, emailToken} = request.params;
         if (id) {
-            const permission = await getMongoRepository(PermissionDto).findOne({ _id: id });
+            const permission = await getMongoRepository(PermissionDto).findOne({_id: id});
             if (!permission) {
                 throw new NotFoundException(`Permission with _id ${id} does not exist.`);
             }
@@ -125,7 +123,7 @@ export class PermissionQueryGuard implements CanActivate {
             const assignerId = decodedToken['assignerId'];
             const projectId = decodedToken['projectId'];
             if (assigneeId && assignerId && projectId) {
-                const permissions = await getMongoRepository(PermissionDto).find({ assigneeId, assignerId, projectId });
+                const permissions = await getMongoRepository(PermissionDto).find({assigneeId, assignerId, projectId});
                 if (permissions.length === 0) {
                     throw new NotFoundException(`Permissions with assigneeId ${assigneeId} and 
                         assignerId ${assignerId} and projectId ${projectId} does not exist.`);

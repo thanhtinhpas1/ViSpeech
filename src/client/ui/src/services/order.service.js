@@ -1,7 +1,7 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import {DEFAULT_ERR_MESSAGE, JWT_TOKEN} from 'utils/constant'
 import Utils from 'utils'
-import { apiUrl } from './api-url'
+import {apiUrl} from './api-url'
 
 export default class OrderService {
   static createOrder = (order, paymentIntent) => {
@@ -35,7 +35,7 @@ export default class OrderService {
   }
 
   static createUpgradeTokenOrder = (order, paymentIntent) => {
-    const api = `${apiUrl}/orders/upgrade-token`
+    const api = `${apiUrl}/tokens/upgrade-token`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400

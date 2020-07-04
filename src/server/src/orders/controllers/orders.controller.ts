@@ -29,18 +29,6 @@ export class OrdersController {
         return this.ordersService.createOrder(streamId, orderDto, paymentIntent);
     }
 
-    /* Create Upgrade Token Order */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Upgrade Token Order']})
-    @ApiResponse({status: 200, description: 'Create Upgrade Token Order.'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
-    @Post('/upgrade-token')
-    async createUpgradeTokenOrder(@Body("order") orderDto: OrderDto, @Body("paymentIntent") paymentIntent: PaymentIntent): Promise<OrderDto> {
-        const streamId = orderDto._id;
-        return this.ordersService.createUpgradeTokenOrder(streamId, orderDto, paymentIntent);
-    }
-
     /* Update Order */
 
     /*--------------------------------------------*/

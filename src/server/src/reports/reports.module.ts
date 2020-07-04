@@ -1,4 +1,4 @@
-import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../auth/auth.module';
@@ -6,21 +6,9 @@ import { CommandHandlers } from './commands/handlers';
 import { ReportsController } from './controllers/reports.controller';
 import { ReportDto } from './dtos/reports.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    ReportCreatedEvent,
-    ReportCreatedFailedEvent,
-    ReportCreatedSuccessEvent
-} from './events/impl/report-created.event';
-import {
-    ReportDeletedEvent,
-    ReportDeletedFailedEvent,
-    ReportDeletedSuccessEvent
-} from './events/impl/report-deleted.event';
-import {
-    ReportUpdatedEvent,
-    ReportUpdatedFailedEvent,
-    ReportUpdatedSuccessEvent
-} from './events/impl/report-updated.event';
+import { ReportCreatedEvent, ReportCreatedFailedEvent, ReportCreatedSuccessEvent } from './events/impl/report-created.event';
+import { ReportDeletedEvent, ReportDeletedFailedEvent, ReportDeletedSuccessEvent } from './events/impl/report-deleted.event';
+import { ReportUpdatedEvent, ReportUpdatedFailedEvent, ReportUpdatedSuccessEvent } from './events/impl/report-updated.event';
 import { ReportWelcomedEvent } from './events/impl/report-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';
@@ -72,7 +60,9 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {},
+            eventHandlers: {
+                ...ReportsModule.eventHandlers,
+            },
         }),
         forwardRef(() => AuthModule),
     ],
@@ -80,16 +70,16 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
     providers: [
         ReportsService,
         ReportsSagas,
-        ...CommandHandlers,
-        ...EventHandlers,
-        ...QueryHandlers,
         ReportRepository,
         QueryBus, EventBus,
         CommandBus, EventPublisher,
+        ...CommandHandlers,
+        ...EventHandlers,
+        ...QueryHandlers,
     ],
     exports: [ReportsService]
 })
-export class ReportsModule implements OnModuleInit {
+export class ReportsModule implements OnModuleInit, OnModuleDestroy {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
@@ -98,10 +88,11 @@ export class ReportsModule implements OnModuleInit {
     ) {
     }
 
+    onModuleDestroy() {
+        this.eventStore.close();
+    }
+
     async onModuleInit() {
-        this.eventStore.addEventHandlers({
-            ...ReportsModule.eventHandlers,
-        })
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);

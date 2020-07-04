@@ -9,9 +9,7 @@ import { Repository } from 'typeorm';
 import { config } from '../../../../config';
 import { Utils } from 'utils';
 import {
-    UpgradeTokenOrderCreatedEvent,
-    UpgradeTokenOrderCreatedFailedEvent,
-    UpgradeTokenOrderCreatedSuccessEvent
+    UpgradeTokenOrderCreatedEvent, UpgradeTokenOrderCreatedFailedEvent, UpgradeTokenOrderCreatedSuccessEvent
 } from '../impl/upgrade-token-order-created.event';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import PayOption from './components/PayOption/PayOption.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.component'
 
@@ -36,7 +36,7 @@ const TokenStatistics = () => {
           </div>
           <div className="token-balance-text">
             <h3 className="card-sub-title" style={{ fontSize: '16px', color: '#fff' }}>
-              Các gói key
+              Các gói API Key
             </h3>
           </div>
         </div>

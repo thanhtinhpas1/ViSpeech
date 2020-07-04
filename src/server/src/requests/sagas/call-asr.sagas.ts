@@ -1,18 +1,21 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ICommand, ofType, Saga } from "@nestjs/cqrs";
-import { Observable } from "rxjs";
-import { UpdateTokenCommand } from "tokens/commands/impl/update-token.command";
-import { AsrCalledEvent } from "requests/events/impl/asr-called.event";
-import { map } from "rxjs/operators";
-import { CONSTANTS } from "common/constant";
+import { Injectable, Logger } from '@nestjs/common';
+import { ofType, Saga } from '@nestjs/cqrs';
+import { Observable } from 'rxjs';
+import { AsrCalledEvent } from 'requests/events/impl/asr-called.event';
+import { map } from 'rxjs/operators';
+import { CONSTANTS } from 'common/constant';
+import { EventStore } from '../../core/event-store/lib';
+import { TokenUpdatedEvent } from '../../tokens/events/impl/token-updated.event';
 
 @Injectable()
 export class CallAsrSagas {
-    constructor() {
+    constructor(
+        private readonly eventStore: EventStore,
+    ) {
     }
 
     @Saga()
-    callAsrServiceSaga = (events$: Observable<any>): Observable<ICommand> => {
+    callAsrServiceSaga = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
             ofType(AsrCalledEvent),
             map((event: AsrCalledEvent) => {
@@ -22,9 +25,12 @@ export class CallAsrSagas {
                 //     return [new UpdateTokenCommand(streamId, tokenDto)];
                 // }
                 if (requestDto.status === CONSTANTS.STATUS.SUCCESS) {
-                    return new UpdateTokenCommand(streamId, tokenDto);
+                    const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
+                    updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
+                    this.eventStore.publish(updateTokenEvent, '$ce-token')
+                        .then(() => Logger.log('Sent TokenUpdatedEvent.'));
                 }
-                return null;
+                // else do nothing
             })
         );
     };

@@ -1,8 +1,6 @@
 import { v1 as uuidv1 } from 'uuid';
 import { CONSTANTS } from '../common/constant';
-import { Logger } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
-import parser from 'cron-parser';
 
 export const Utils = {
     hashPassword: (password: string) => {

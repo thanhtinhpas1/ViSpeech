@@ -9,22 +9,22 @@ const Footer = () => {
           <div className="col-md-8">
             <ul className="footer-links">
               <li>
-                <a href="#">Whitepaper</a>
+                <a href="#">Điều khoản</a>
               </li>
               <li>
-                <a href="#">FAQs</a>
+                <a href="/customer/documents">Tài liệu</a>
               </li>
               <li>
-                <a href="#">Privacy Policy</a>
+                <a href="#">Về chúng tôi</a>
               </li>
               <li>
-                <a href="#">Terms of Condition</a>
+                <a href="#">Điều khoản và quy định</a>
               </li>
             </ul>
           </div>
           <div className="col-md-4 mt-2 mt-sm-0">
             <div className="d-flex justify-content-between justify-content-md-end align-items-center guttar-25px pdt-0-5x pdb-0-5x">
-              <div className="copyright-text">&copy; 2019 Softia.</div>
+              <div className="copyright-text">&copy; 2020 ASR VietSpeech.</div>
               <div className="lang-switch relative">
                 <a href="#" className="lang-switch-btn toggle-tigger">
                   En <em className="ti ti-angle-up" />
@@ -32,13 +32,13 @@ const Footer = () => {
                 <div className="toggle-class dropdown-content dropdown-content-up">
                   <ul className="lang-list">
                     <li>
-                      <a href="#">Fr</a>
+                      <a href="#">VI</a>
                     </li>
                     <li>
-                      <a href="#">Bn</a>
+                      <a href="#">EN</a>
                     </li>
                     <li>
-                      <a href="#">Lt</a>
+                      <a href="#">FR</a>
                     </li>
                   </ul>
                 </div>

@@ -1,5 +1,5 @@
 import { ICommand } from '@nestjs/cqrs';
-import { OrderDto, PaymentIntent, } from '../../dtos/orders.dto';
+import { OrderDto, PaymentIntent, } from '../../../orders/dtos/orders.dto';
 
 export class CreateUpgradeTokenOrderCommand implements ICommand {
     constructor(

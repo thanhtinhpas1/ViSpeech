@@ -138,7 +138,7 @@ const LoginPage = ({
               Chưa có tài khoản?
               <a href="/register">
                 {' '}
-                <strong>Đăng kí ở đây</strong>
+                <strong>Đăng ký ở đây</strong>
               </a>
             </div>
           </div>

@@ -4,15 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { Repository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import {
-    FreeTokenCreatedEvent,
-    FreeTokenCreatedFailedEvent,
-    FreeTokenCreatedSuccessEvent
-} from '../impl/free-token-created.event';
+import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from '../impl/free-token-created.event';
 import { CONSTANTS } from 'common/constant';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
+import { AuthService } from '../../../auth/auth.service';
 
 @EventsHandler(FreeTokenCreatedEvent)
 export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEvent> {
@@ -21,16 +18,19 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
         private readonly repository: Repository<TokenDto>,
         @InjectRepository(TokenTypeDto)
         private readonly repositoryTokenType: Repository<TokenTypeDto>,
-        private readonly eventBus: EventBus
+        private readonly eventBus: EventBus,
+        private readonly authService: AuthService,
     ) {
     }
 
     async handle(event: FreeTokenCreatedEvent) {
-        Logger.log(event.tokenDto._id, 'FreeTokenCreatedEvent');
-        const {streamId, tokenDto} = event;
-        let token = JSON.parse(JSON.stringify(tokenDto)); // deep clone
-
+        Logger.log(event.userDto.username, 'FreeTokenCreatedEvent');
+        let {streamId, userDto} = event;
+        userDto = JSON.parse(JSON.stringify(userDto)); // deep clone
+        let token = new TokenDto(this.authService.generateTokenWithUserId(userDto._id), userDto._id,
+            '', CONSTANTS.TOKEN_TYPE.FREE);
         try {
+            token._id = Utils.getUuid();
             const tokenTypeDto = await this.repositoryTokenType.findOne({name: CONSTANTS.TOKEN_TYPE.FREE});
             token.tokenTypeId = tokenTypeDto._id;
             token.tokenType = tokenTypeDto.name;
@@ -40,9 +40,9 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
             token.name = 'Token miễn phí';
             token = Utils.removePropertiesFromObject(token, ['orderId']);
             await this.repository.save(token);
-            this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, tokenDto));
+            this.eventBus.publish(new FreeTokenCreatedSuccessEvent(token._id, token));
         } catch (error) {
-            this.eventBus.publish(new FreeTokenCreatedFailedEvent(streamId, tokenDto, error));
+            this.eventBus.publish(new FreeTokenCreatedFailedEvent(token._id, token, error));
         }
     }
 }

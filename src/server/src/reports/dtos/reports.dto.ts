@@ -1,10 +1,10 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { Type } from 'class-transformer';
-import { IsDate, IsIn, IsNotEmpty, IsNumber, IsPositive, IsString, IsUUID, IsOptional } from 'class-validator';
+import { IsDate, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { Column, Entity, ObjectID } from 'typeorm';
 import { CONSTANTS } from 'common/constant';
-import { ErrorUtils } from "../../utils/errorUtils";
-import { ERR } from "../../common/error";
+import { ErrorUtils } from '../../utils/errorUtils';
+import { ERR } from '../../common/error';
 
 export class ReportIdRequestParamsDto {
     constructor(reportId) {

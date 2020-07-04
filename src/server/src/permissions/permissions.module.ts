@@ -5,21 +5,9 @@ import { CommandHandlers } from './commands/handlers';
 import { PermissionsController } from './controllers/permissions.controller';
 import { PermissionDto } from './dtos/permissions.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    PermissionCreatedEvent,
-    PermissionCreatedFailedEvent,
-    PermissionCreatedSuccessEvent
-} from './events/impl/permission-created.event';
-import {
-    PermissionDeletedEvent,
-    PermissionDeletedFailedEvent,
-    PermissionDeletedSuccessEvent
-} from './events/impl/permission-deleted.event';
-import {
-    PermissionUpdatedEvent,
-    PermissionUpdatedFailedEvent,
-    PermissionUpdatedSuccessEvent
-} from './events/impl/permission-updated.event';
+import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from './events/impl/permission-created.event';
+import { PermissionDeletedEvent, PermissionDeletedFailedEvent, PermissionDeletedSuccessEvent } from './events/impl/permission-deleted.event';
+import { PermissionUpdatedEvent, PermissionUpdatedFailedEvent, PermissionUpdatedSuccessEvent } from './events/impl/permission-updated.event';
 import { PermissionWelcomedEvent } from './events/impl/permission-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { PermissionRepository } from './repository/permission.repository';
@@ -29,27 +17,19 @@ import { AuthModule } from '../auth/auth.module';
 import { UserDto } from 'users/dtos/users.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import {
-    PermissionAssignEmailSentEvent,
-    PermissionAssignEmailSentFailedEvent,
-    PermissionAssignEmailSentSuccessEvent
+    PermissionAssignEmailSentEvent, PermissionAssignEmailSentFailedEvent, PermissionAssignEmailSentSuccessEvent
 } from './events/impl/permission-assign-email-sent.event';
 import {
-    PermissionAssignRepliedEvent,
-    PermissionAssignRepliedFailedEvent,
-    PermissionAssignRepliedSuccessEvent
+    PermissionAssignRepliedEvent, PermissionAssignRepliedFailedEvent, PermissionAssignRepliedSuccessEvent
 } from './events/impl/permission-assign-replied.event';
 import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import {
-    PermissionDeletedByUserIdEvent,
-    PermissionDeletedByUserIdFailedEvent,
-    PermissionDeletedByUserIdSuccessEvent
+    PermissionDeletedByUserIdEvent, PermissionDeletedByUserIdFailedEvent, PermissionDeletedByUserIdSuccessEvent
 } from './events/impl/permission-deleted-by-userId.event';
 import {
-    PermissionDeletedByProjectIdEvent,
-    PermissionDeletedByProjectIdFailedEvent,
-    PermissionDeletedByProjectIdSuccessEvent
+    PermissionDeletedByProjectIdEvent, PermissionDeletedByProjectIdFailedEvent, PermissionDeletedByProjectIdSuccessEvent
 } from './events/impl/permission-deleted-by-projectId.event';
 import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
@@ -89,19 +69,21 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
-            eventHandlers: {},
+            eventHandlers: {
+                ...PermissionsModule.eventHandlers,
+            },
         }),
     ],
     controllers: [PermissionsController],
     providers: [
         PermissionsService,
         PermissionsSagas,
-        ...CommandHandlers,
-        ...EventHandlers,
-        ...QueryHandlers,
         PermissionRepository,
         QueryBus, EventBus,
         CommandBus, EventPublisher,
+        ...CommandHandlers,
+        ...EventHandlers,
+        ...QueryHandlers,
     ],
     exports: [PermissionsService],
 })
@@ -115,9 +97,6 @@ export class PermissionsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        this.eventStore.addEventHandlers({
-            ...PermissionsModule.eventHandlers,
-        })
         await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);

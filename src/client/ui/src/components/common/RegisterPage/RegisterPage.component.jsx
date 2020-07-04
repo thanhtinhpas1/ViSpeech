@@ -19,8 +19,6 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_CREATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(USER_CREATED_FAILED_EVENT)
-    // SocketService.socketOnListeningEvent(FREE_TOKEN_CREATED_SUCCESS_EVENT)
-    // SocketService.socketOnListeningEvent(FREE_TOKEN_CREATED_FAILED_EVENT)
   }, [])
 
   useEffect(() => {
@@ -57,13 +55,6 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
           registerSuccess(user)
         }
       })
-      // invokeCheckSubject.FreeTokenCreated.subscribe(data => {
-      //   if (data.error != null) {
-      //     registerFailure(data.errorObj)
-      //   } else {
-      //     registerSuccess(user)
-      //   }
-      // })
     } catch (err) {
       const msg = 'Đã có lỗi xảy ra, vui lòng kiểm tra lại thông tin đã nhập.'
       registerFailure({ message: msg })

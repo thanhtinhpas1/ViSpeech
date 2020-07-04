@@ -3,10 +3,10 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import Utils from 'utils'
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN } from 'utils/constant'
+import {JWT_TOKEN} from 'utils/constant'
 import SocketUtils from 'utils/socket.util'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -131,33 +131,6 @@ const ProfilePage = ({
                     )}
                   </li>
                 </ul>
-              </div>
-            </div>
-            <div className="referral-info card">
-              <div className="card-innr">
-                <h6 className="card-title card-title-sm">Giới thiệu nhận ưu đãi</h6>
-                <p className=" pdb-0-5x">
-                  Mời bạn bè &amp; người thân và nhận{' '}
-                  <strong>
-                    <span className="text-primary">ưu đãi - 15%</span> cho lần giao dịch tiếp theo
-                  </strong>
-                </p>
-                <div className="copy-wrap mgb-0-5x">
-                  <span className="copy-feedback" />
-                  <em className="fas fa-link" />
-                  <input
-                    type="text"
-                    className="copy-address"
-                    defaultValue="https://demo.themenio.com/ico?ref=7d264f90653733592"
-                    disabled
-                  />
-                  <button
-                    className="copy-trigger copy-clipboard"
-                    data-clipboard-text="https://demo.themenio.com/ico?ref=7d264f90653733592"
-                  >
-                    <em className="ti ti-files" />
-                  </button>
-                </div>
               </div>
             </div>
           </div>

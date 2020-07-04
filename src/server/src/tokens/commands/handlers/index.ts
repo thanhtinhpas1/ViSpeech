@@ -5,6 +5,7 @@ import { WelcomeTokenHandler } from './welcome-token.handler';
 import { DeleteTokenByProjectIdHandler } from './delete-token-by-projectId.handler';
 import { DeleteTokenByUserIdHandler } from './delete-token-by-userId.handler';
 import { UpgradeTokenHandler } from './upgrade-token.handler';
+import { CreateUpgradeTokenOrderHandler } from './create-upgrade-token-order.handler';
 
 export const CommandHandlers = [
     CreateTokenHandler,
@@ -16,4 +17,5 @@ export const CommandHandlers = [
     UpdateTokenHandler,
     UpgradeTokenHandler,
     WelcomeTokenHandler,
+    CreateUpgradeTokenOrderHandler,
 ];
