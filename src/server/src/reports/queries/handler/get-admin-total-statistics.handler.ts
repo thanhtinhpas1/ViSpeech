@@ -35,7 +35,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
                     reportType: statisticsType,
                     dateReport: {
                         $gte: new Date(startDate),
-                        $lte: new Date(endDate)
+                        $lt: ReportUtils.nextDate(endDate)
                     }
                 }
             }

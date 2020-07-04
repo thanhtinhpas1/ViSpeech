@@ -23,16 +23,34 @@ export const ReportUtils = {
         date.setDate(date.getDate() + days);
         return date;
     },
+    nextDate: (currentDate: Date) => {
+        return ReportUtils.addDays(new Date(currentDate), 1);
+    },
     getDates: (fromDate: Date, toDate: Date) => {
         const dateArray = [];
-        let currentDate = fromDate;
-        while (currentDate <= toDate) {
+        let currentDate = ReportUtils.getOnlyDate(fromDate);
+        const endDate = ReportUtils.getOnlyDate(toDate);
+        while (currentDate <= endDate) {
             dateArray.push({date: new Date(currentDate), value: 0});
-            currentDate = ReportUtils.getOnlyDate(ReportUtils.addDays(currentDate, 1));
+            currentDate = ReportUtils.nextDate(currentDate);
         }
         return dateArray;
     },
-    getLastDatesOfYear: year => {
+    firstDateOfWeek: (week: number, year: number) => {
+        const firstDateOfYear = new Date(year, 0, 1);
+        return ReportUtils.addDays(firstDateOfYear, (week - 1) * 7 - firstDateOfYear.getDay());
+    },
+    firstDateOfMonth: (month: number, year: number) => {
+        return new Date(year, month, 1);
+    },
+    firstDateOfQuarter: (quarter: number, year: number) => {
+        const month = ReportUtils.getMonthOfQuarter(quarter, true);
+        return new Date(year, month, 1);
+    },
+    firstDateOfYear: (year: number) => {
+        return new Date(year, 0, 1);
+    },
+    getLastDatesOfYear: (year: number) => {
         const lastDateOfYear = new Date(year, 11, 31);
         if (lastDateOfYear.getDay() === 6) {
             return [];
@@ -53,7 +71,7 @@ export const ReportUtils = {
             CONSTANTS.ONE_DAY_IN_MILLISECONDS) / CONSTANTS.ONE_DAY_IN_MILLISECONDS;
         return Math.ceil((dayNumberOfYear + firstDateOfYear.getDay()) / 7);
     },
-    getTotalWeeksOfYear: year => {
+    getTotalWeeksOfYear: (year: number) => {
         const lastDateOfYear = new Date(year, 11, 31)
         let lastWeekOfYear = ReportUtils.getWeek(lastDateOfYear)
         if (lastDateOfYear.getDay() !== 6) {
@@ -105,17 +123,15 @@ export const ReportUtils = {
             result = ReportUtils.getOnlyDate(fromDate);
         } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const {data, year} = weekObj.from;
-            const firstDateOfYear = new Date(year, 0, 1);
-            result = ReportUtils.addDays(firstDateOfYear, (data - 1) * 7 - firstDateOfYear.getDay());
+            result = ReportUtils.firstDateOfWeek(data, year);
         } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
             const {data, year} = monthObj.from;
-            result = new Date(year, data, 1);
+            result = ReportUtils.firstDateOfMonth(data, year);
         } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
             const {data, year} = quarterObj.from;
-            const month = ReportUtils.getMonthOfQuarter(data, true);
-            result = new Date(year, month, 1);
+            result = ReportUtils.firstDateOfQuarter(data, year);
         } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
-            result = new Date(fromYear, 0, 1);
+            result = ReportUtils.firstDateOfYear(fromYear);
         }
         return result;
     },
@@ -127,8 +143,7 @@ export const ReportUtils = {
             result = ReportUtils.getOnlyDate(toDate);
         } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const {data, year} = weekObj.to;
-            const firstDateOfYear = new Date(year, 0, 1);
-            const firstDateOfWeek = ReportUtils.addDays(firstDateOfYear, (data - 1) * 7 - firstDateOfYear.getDay());
+            const firstDateOfWeek = ReportUtils.firstDateOfWeek(data, year);
             result = ReportUtils.addDays(firstDateOfWeek, 6);
         } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
             const {data, year} = monthObj.to;
@@ -144,7 +159,7 @@ export const ReportUtils = {
     },
     getValidStatisticalQueryParams: query => {
         const fromDate = ReportUtils.isValidDate(query.fromDate) ? new Date(query.fromDate) : new Date();
-        const toDate = ReportUtils.isValidDate(query.toDate) ? new Date(query.toDate) : ReportUtils.addDays(fromDate, 1);
+        const toDate = ReportUtils.isValidDate(query.toDate) ? new Date(query.toDate) : ReportUtils.nextDate(fromDate);
         const weekObj = query.weekObj || new StatisticalObject(new StatisticalDto(1, 2020), new StatisticalDto(10, 2020));
         const monthObj = query.monthObj || new StatisticalObject(new StatisticalDto(0, 2020), new StatisticalDto(11, 2020));
         const quarterObj = query.quarterObj || new StatisticalObject(new StatisticalDto(1, 2020), new StatisticalDto(10, 2020));
@@ -157,9 +172,7 @@ export const ReportUtils = {
         const {fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear} = queryParams;
 
         if (type === CONSTANTS.TIME_TYPE.DATE) {
-            const from = ReportUtils.getOnlyDate(fromDate);
-            const to = ReportUtils.getOnlyDate(toDate)
-            data = ReportUtils.getDates(from, to);
+            data = ReportUtils.getDates(fromDate, toDate);
         } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const fromWeek = weekObj.from.data;
             const toWeek = weekObj.to.data;

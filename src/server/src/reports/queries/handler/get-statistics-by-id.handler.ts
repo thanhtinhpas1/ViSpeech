@@ -30,7 +30,7 @@ export class GetStatisticsByIdHandler implements IQueryHandler<GetStatisticsById
                     reportType: statisticsType,
                     dateReport: {
                         $gte: new Date(startDate),
-                        $lte: new Date(endDate)
+                        $lt: ReportUtils.nextDate(endDate)
                     },
                 }
             }

@@ -1,15 +1,27 @@
-import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer'
 import { CONSTANTS } from 'common/constant';
-import { config } from '../../config';
+import { config } from "../../config";
 
 const hostUrl = `${config.ASR.PROTOCOL}://${config.ASR.HOST}:3200/customer`;
+// const transport = nodemailer.createTransport({
+//     host: "smtp.gmail.com",
+//     port: 465,
+//     secure: true, // upgrade later with STARTTLS
+//     // ignoreTLS: false,
+//     auth: {
+//         user: "vispeech2020@gmail.com",
+//         pass: "vispeech"
+//     }
+// });
 const transport = nodemailer.createTransport({
-    host: config.SMTP_HOST,
-    port: config.SMTP_PORT,
-    secure: true,
+    service: 'Gmail',
     auth: {
-        user: config.SMTP_USERNAME,
-        pass: config.SMTP_PASS,
+        type: 'OAuth2',
+        user: config.NODEMAILER.userEmail,
+        clientId: config.NODEMAILER.clientId,
+        clientSecret: config.NODEMAILER.clientSecret,
+        accessToken: config.NODEMAILER.accessToken,
+        refreshToken: config.NODEMAILER.refreshToken,
     }
 });
 
@@ -54,16 +66,10 @@ export const EmailUtils = {
     },
 };
 
-
 // // using Twilio SendGrid's v3 Node.js Library
-
-// import { config } from "../../config";
-// import {Logger} from "@nestjs/common";
-
 // // https://github.com/sendgrid/sendgrid-nodejs
 // const sgMail = require('@sendgrid/mail');
 // sgMail.setApiKey(config.SEND_GRID_API_KEY);
-// Logger.log(config.SEND_GRID_API_KEY, "SEND_GRID_API_KEY")
 
 // const sendEmail = (to, subject, contentEmail) => {
 //     const msg = {
@@ -73,10 +79,6 @@ export const EmailUtils = {
 //         text: contentEmail,
 //         html: contentEmail,
 //     };
-//     console.log('msg ', msg);
+//     console.log('Message sent: %s', msg);
 //     return sgMail.send(msg);
 // };
-
-
-
-

@@ -14,6 +14,7 @@
     "trailing-comma": false,
     "eofline": false,
     "no-angle-bracket-type-assertion": true,
+    "max-classes-per-file": [true, 5, "exclude-class-expressions"],
     "quotemark": [
       true,
       "single"
