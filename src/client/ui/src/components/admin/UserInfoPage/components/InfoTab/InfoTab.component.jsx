@@ -6,7 +6,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
-import { Form, Input, Button, Alert, Radio, Empty } from 'antd'
+import { Alert, Button, Empty, Form, Input, Radio } from 'antd'
 import { ROLES } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
@@ -46,10 +46,11 @@ const InfoTab = ({ userInfoObj, updateInfoObj, updateUserInfo, updateUserInfoSuc
     const { firstName, lastName, email, role } = values
 
     const user = {
+      username: userInfoObj.user.username,
       firstName,
       lastName,
       email,
-      roles: [{ name: role }],
+      roles: [ { name: role } ],
     }
 
     updateUserInfo(userId, user)
