@@ -4,6 +4,8 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import ReportUtils from 'utils/report.util'
+import { MONETARY_UNIT } from 'utils/constant'
+import Utils from 'utils'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
 
 const StatisticsTokenType = ({
@@ -16,8 +18,8 @@ const StatisticsTokenType = ({
 }) => {
   const [tokenTypeList, setTokenTypeList] = useState([])
   const placeHolderSelectId = {
-    found: 'Chọn loại token',
-    notFound: 'Không tìm thấy loại token',
+    found: 'Chọn loại API key',
+    notFound: 'Không tìm thấy loại API key',
   }
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const StatisticsTokenType = ({
       const tokens = getTokenTypeListObj.tokenTypeList.map(tokenType => {
         return {
           ...tokenType,
-          display: `${tokenType.price}$ / ${tokenType.minutes} phút`,
+          display: `${Utils.formatPrice(tokenType.price)} ${MONETARY_UNIT} / ${tokenType.minutes} phút`,
         }
       })
       setTokenTypeList(tokens)

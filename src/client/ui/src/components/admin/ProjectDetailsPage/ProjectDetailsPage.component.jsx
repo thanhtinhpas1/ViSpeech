@@ -2,12 +2,12 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useCallback, useEffect} from 'react'
-import {useHistory, useParams} from 'react-router-dom'
+import React, { useCallback, useEffect } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import {ADMIN_PATH, STATUS, TOKEN_TYPE} from 'utils/constant'
-import {confirmAlert} from 'react-confirm-alert'
+import { ADMIN_PATH, STATUS, TOKEN_TYPE } from 'utils/constant'
+import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import './ProjectDetailsPage.style.scss'
 
@@ -34,7 +34,7 @@ const ProjectDetailsPage = ({
 
   const columns = [
     {
-      title: 'Token',
+      title: 'API key',
       dataIndex: 'value',
       headerClassName: 'dt-type',
       className: 'dt-type',
@@ -54,7 +54,7 @@ const ProjectDetailsPage = ({
       width: 250,
     },
     {
-      title: 'Loại token',
+      title: 'Loại API key',
       dataIndex: 'tokenType',
       headerClassName: 'dt-type',
       className: 'dt-type',

@@ -12,13 +12,11 @@ import { TokenGuard, TokenQueryGuard } from 'auth/guards/token.guard';
 import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
 import { FindFreeTokenQuery } from 'tokens/queries/impl/find-free-token.query';
 import { AuthService } from '../../auth/auth.service';
-import { WebSocketGateway } from '@nestjs/websockets';
 import { OrderGuard } from '../../auth/guards/order.guard';
 import { OrderDto, PaymentIntent } from '../../orders/dtos/orders.dto';
 
 @Controller('tokens')
 @ApiTags('Tokens')
-@WebSocketGateway()
 export class TokensController {
     constructor(
         private readonly tokensService: TokensService,

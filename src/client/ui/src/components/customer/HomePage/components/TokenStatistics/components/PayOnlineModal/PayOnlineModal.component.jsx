@@ -4,7 +4,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
-import { STRIPE_PUBLIC_KEY } from 'utils/constant'
+import { STRIPE_PUBLIC_KEY, MONETARY_UNIT } from 'utils/constant'
+import Utils from 'utils'
 import PayReviewModal from './components/PayReviewModal/PayReviewModal.component'
 import CheckoutForm from './components/CheckoutForm/CheckoutForm.container'
 
@@ -29,13 +30,16 @@ const PayOnlineModal = ({ payOnlineModal, myProjectList }) => {
         <div className="modal-dialog modal-dialog-md modal-dialog-centered">
           <div className="modal-content pb-0">
             <div className="popup-body">
-              <h4 className="popup-title">Thanh toán mua token</h4>
+              <h4 className="popup-title">Thanh toán mua API key</h4>
               <p className="lead" style={{ color: '#495463' }}>
-                Mua token và sử dụng trong vòng{' '}
+                Mua API key và sử dụng trong vòng{' '}
                 {payOnlineModal.tokenType && (
                   <>
                     <strong>{payOnlineModal.tokenType.minutes} phút</strong> với số tiền{' '}
-                    <strong>{payOnlineModal.tokenType.saleOffPrice} $</strong>.
+                    <strong>
+                      {Utils.formatPrice(payOnlineModal.tokenType.saleOffPrice)} {MONETARY_UNIT}
+                    </strong>
+                    .
                   </>
                 )}
               </p>

@@ -14,7 +14,7 @@ const PayReviewModal = ({ payReviewModal }) => {
             </div>
             <div className="gaps-2x" />
             <h3 style={{ color: '#495463' }}>Giao dịch thành công.</h3>
-            <p style={{ color: '#495463' }}>Thời hạn sử dụng token là {payReviewModal.minutes} phút. Xin cảm ơn.</p>
+            <p style={{ color: '#495463' }}>Thời hạn sử dụng API key là {payReviewModal.minutes} phút. Xin cảm ơn.</p>
             <div className="copy-wrap mgb-1-5x mgt-1-5x">
               <span className="copy-feedback" />
               <em className="fas fa-key" />

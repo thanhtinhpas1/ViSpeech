@@ -8,6 +8,7 @@ import { PreviousRunStatus, TaskDto } from "tasks/dto/task.dto";
 import { TokenDto } from "tokens/dtos/tokens.dto";
 import { Repository, getMongoRepository } from "typeorm";
 import { CronUtils } from "utils/cron.util";
+import { ReportUtils } from "utils/report.util";
 
 @Injectable()
 export class ConstTaskService {
