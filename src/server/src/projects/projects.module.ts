@@ -19,12 +19,15 @@ import { ProjectRepository } from './repository/project.repository';
 import { ProjectsSagas } from './sagas/projects.sagas';
 import { ProjectsService } from './services/projects.service';
 import {
-    ProjectDeletedByUserIdEvent, ProjectDeletedByUserIdFailedEvent, ProjectDeletedByUserIdSuccessEvent
+    ProjectDeletedByUserIdEvent,
+    ProjectDeletedByUserIdFailedEvent,
+    ProjectDeletedByUserIdSuccessEvent
 } from './events/impl/project-deleted-by-userId.event';
 import { TokenRepository } from 'tokens/repository/token.repository';
 import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
 import { ProjectDto } from './dtos/projects.dto';
 import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
 
 @Module({
     imports: [
@@ -47,7 +50,7 @@ import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: '$ce-project',
                     resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 13, // Default is 0 (Optional)
+                    lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
                     type: EventStoreSubscriptionType.Volatile,
@@ -61,7 +64,7 @@ import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
                 },
             ],
             eventHandlers: {
-                ...ProjectsModule.eventHandlers
+                ...ProjectsModule.eventHandlers,
             },
         }),
     ],
@@ -73,6 +76,7 @@ import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
         TokenRepository,
         QueryBus, EventBus,
         CommandBus, EventPublisher,
+        MongoStore,
         ...CommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
@@ -93,7 +97,6 @@ export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleInit() {
-        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);

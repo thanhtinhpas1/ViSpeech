@@ -24,8 +24,8 @@ import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/use
 import { UsersService } from '../services/users.service';
 import { UserGuard, VerifyEmailGuard } from 'auth/guards/user.guard';
 import { Utils } from 'utils';
-import { GetAssigneeQuery } from "../queries/impl/get-assignee.query";
-import { ProjectGuard } from "../../auth/guards/project.guard";
+import { GetAssigneeQuery } from '../queries/impl/get-assignee.query';
+import { ProjectGuard } from '../../auth/guards/project.guard';
 
 @Controller('users')
 @ApiTags('Users')
@@ -43,11 +43,11 @@ export class UsersController {
     @Post()
     async createUser(@Body() userDto: UserDto, @Req() request): Promise<UserDto> {
         if (!request.body.roles || !Array.isArray(request.body.roles)) {
-            throw new BadRequestException("Missing user roles or user roles must be an array.");
+            throw new BadRequestException('Missing user roles or user roles must be an array.');
         }
         request.body.roles.forEach(role => {
-            if (typeof role !== "object" || !Utils.isValidRole(role.name)) {
-                throw new BadRequestException("User role is not a valid role.");
+            if (typeof role !== 'object' || !Utils.isValidRole(role.name)) {
+                throw new BadRequestException('User role is not a valid role.');
             }
         });
         const streamId = userDto._id;
@@ -67,7 +67,7 @@ export class UsersController {
             throw new UnauthorizedException();
         }
         if (!request.body.userId || request.body.userId !== payload['id']) {
-            throw new BadRequestException("Missing user id or user does not have permission to change password.");
+            throw new BadRequestException('Missing user id or user does not have permission to change password.');
         }
 
         const streamId = changePasswordBody.userId;

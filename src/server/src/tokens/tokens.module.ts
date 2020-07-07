@@ -23,10 +23,14 @@ import { config } from '../../config';
 import { ClientsModule } from '@nestjs/microservices';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import {
-    TokenDeletedByUserIdEvent, TokenDeletedByUserIdFailedEvent, TokenDeletedByUserIdSuccessEvent
+    TokenDeletedByUserIdEvent,
+    TokenDeletedByUserIdFailedEvent,
+    TokenDeletedByUserIdSuccessEvent
 } from './events/impl/token-deleted-by-userId.event';
 import {
-    TokenDeletedByProjectIdEvent, TokenDeletedByProjectIdFailedEvent, TokenDeletedByProjectIdSuccessEvent
+    TokenDeletedByProjectIdEvent,
+    TokenDeletedByProjectIdFailedEvent,
+    TokenDeletedByProjectIdSuccessEvent
 } from './events/impl/token-deleted-by-projectId.event';
 import { TokenUpgradedEvent, TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from './events/impl/token-upgraded.event';
 import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
@@ -36,9 +40,12 @@ import { UserDto } from '../users/dtos/users.dto';
 import { ProjectDto } from '../projects/dtos/projects.dto';
 import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import {
-    UpgradeTokenOrderCreatedEvent, UpgradeTokenOrderCreatedFailedEvent, UpgradeTokenOrderCreatedSuccessEvent
+    UpgradeTokenOrderCreatedEvent,
+    UpgradeTokenOrderCreatedFailedEvent,
+    UpgradeTokenOrderCreatedSuccessEvent
 } from './events/impl/upgrade-token-order-created.event';
 import { OrderDto } from '../orders/dtos/orders.dto';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
 
 @Module({
     imports: [
@@ -63,7 +70,7 @@ import { OrderDto } from '../orders/dtos/orders.dto';
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: '$ce-token',
                     resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 13, // Default is 0 (Optional)
+                    lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
                     type: EventStoreSubscriptionType.Volatile,
@@ -90,6 +97,7 @@ import { OrderDto } from '../orders/dtos/orders.dto';
         EventBus,
         CommandBus,
         EventPublisher,
+        MongoStore,
         ...CommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
@@ -110,7 +118,6 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleInit() {
-        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);

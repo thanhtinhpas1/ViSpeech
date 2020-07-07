@@ -21,7 +21,9 @@ import { OrderDto } from 'orders/dtos/orders.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { AsrCalledEvent } from './events/impl/asr-called.event';
 import {
-    RequestTranscriptFileUrlUpdatedEvent, RequestTranscriptFileUrlUpdatedFailedEvent, RequestTranscriptFileUrlUpdatedSuccessEvent
+    RequestTranscriptFileUrlUpdatedEvent,
+    RequestTranscriptFileUrlUpdatedFailedEvent,
+    RequestTranscriptFileUrlUpdatedSuccessEvent
 } from './events/impl/request-transcript-file-url-updated.event';
 import { ClientsModule } from '@nestjs/microservices';
 import { config } from '../../config';
@@ -30,6 +32,7 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
 import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from './events/impl/request-created.event';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
 
 @Module({
     imports: [
@@ -53,7 +56,7 @@ import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEv
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: '$ce-request',
                     resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 13, // Default is 0 (Optional)
+                    lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
                     type: EventStoreSubscriptionType.Volatile,
@@ -86,6 +89,7 @@ import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEv
         CreateReportHandler,
         QueryBus, EventBus,
         CommandBus, EventPublisher,
+        MongoStore,
         ...CommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
@@ -105,7 +109,6 @@ export class RequestModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleInit() {
-        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);

@@ -36,6 +36,7 @@ import { PermissionDto } from '../permissions/dtos/permissions.dto';
                 name: config.KAFKA.NAME, ...kafkaClientOptions,
             }]),
         TypeOrmModule.forFeature([UserDto, PermissionDto, ProjectionDto]),
+        CqrsModule,
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-user',
             subscriptions: [
@@ -43,7 +44,7 @@ import { PermissionDto } from '../permissions/dtos/permissions.dto';
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: '$ce-user',
                     resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 13, // Default is 0 (Optional)
+                    lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
                     type: EventStoreSubscriptionType.Volatile,
@@ -88,8 +89,6 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleInit() {
-        this.eventStore.addEventStore(this.mongoStore);
-        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         // Warning: add commandHandles of another module make duplicate event.

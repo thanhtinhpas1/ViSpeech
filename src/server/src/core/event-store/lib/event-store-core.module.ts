@@ -16,10 +16,12 @@ import { NestjsEventStore } from './nestjs-event-store.class';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectionDto } from './adapter/projection.dto';
+import { MongoStore } from './adapter/mongo-store';
 
 @Global()
 @Module({
     imports: [CqrsModule, TypeOrmModule.forFeature([ProjectionDto])],
+    providers: [MongoStore],
 })
 export class EventStoreCoreModule {
 
@@ -41,7 +43,8 @@ export class EventStoreCoreModule {
 
         return {
             module: EventStoreCoreModule,
-            providers: [eventStoreProviders, configProv],
+            imports: [TypeOrmModule.forFeature([ProjectionDto])],
+            providers: [eventStoreProviders, configProv, MongoStore],
             exports: [eventStoreProviders, configProv],
         };
     }
@@ -69,11 +72,12 @@ export class EventStoreCoreModule {
 
         return {
             module: EventStoreCoreModule,
-            imports: options.imports,
+            imports: [...options.imports, TypeOrmModule.forFeature([ProjectionDto])],
             providers: [
                 ...asyncProviders,
                 eventStoreProviders,
-                configProv
+                configProv,
+                MongoStore
             ],
             exports: [eventStoreProviders, configProv],
         };
@@ -87,6 +91,7 @@ export class EventStoreCoreModule {
 
         return {
             module: EventStoreCoreModule,
+            imports: [TypeOrmModule.forFeature([ProjectionDto])],
             providers: [
                 ExplorerService,
                 {
@@ -96,6 +101,7 @@ export class EventStoreCoreModule {
                     },
                 },
                 EventStore,
+                MongoStore,
             ],
             exports: [
                 EventStore,
@@ -119,11 +125,13 @@ export class EventStoreCoreModule {
 
         return {
             module: EventStoreCoreModule,
+            imports: [TypeOrmModule.forFeature([ProjectionDto])],
             providers: [
                 ...asyncProviders,
                 ExplorerService,
                 configProv,
                 EventStore,
+                MongoStore,
             ],
             exports: [
                 EventStore,
