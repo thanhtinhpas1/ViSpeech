@@ -71,7 +71,7 @@ const StatisticsPage = () => {
                 <Row gutter={16}>
                   <Col>
                     <div className="card-head">
-                      <h4 className="card-title">Thống kê theo token</h4>
+                      <h4 className="card-title">Thống kê theo API key</h4>
                     </div>
                     <div className="gaps-1x" />
                     <StatisticsToken chartOptions={options} />
@@ -81,7 +81,7 @@ const StatisticsPage = () => {
                 <Row gutter={16}>
                   <Col>
                     <div className="card-head">
-                      <h4 className="card-title">Thống kê theo loại token</h4>
+                      <h4 className="card-title">Thống kê theo loại API key</h4>
                     </div>
                     <div className="gaps-1x" />
                     <StatisticsTokenType chartOptions={options} />
@@ -103,7 +103,7 @@ const StatisticsPage = () => {
                 <Row gutter={16}>
                   <Col>
                     <div className="card-head">
-                      <h4 className="card-title">Thống kê theo token</h4>
+                      <h4 className="card-title">Thống kê theo API key</h4>
                     </div>
                     <div className="gaps-1x" />
                     <TotalStatisticsToken chartOptions={options} />
@@ -113,7 +113,7 @@ const StatisticsPage = () => {
                 <Row gutter={16}>
                   <Col>
                     <div className="card-head">
-                      <h4 className="card-title">Thống kê theo loại token</h4>
+                      <h4 className="card-title">Thống kê theo loại API key</h4>
                     </div>
                     <div className="gaps-1x" />
                     <TotalStatisticsTokenType chartOptions={options} />

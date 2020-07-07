@@ -39,7 +39,7 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       width: 160,
     },
     {
-      title: 'Token',
+      title: 'API key',
       dataIndex: 'token',
       headerClassName: 'dt-type',
       className: 'dt-type',
@@ -58,7 +58,7 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       width: 250,
     },
     {
-      title: () => <div className="dt-type-text">Loại token</div>,
+      title: () => <div className="dt-type-text">Loại API key</div>,
       dataIndex: 'tokenType',
       headerClassName: 'dt-type',
       className: 'dt-type',

@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react'
-import {Radio} from 'antd'
+import { Radio } from 'antd'
+import Utils from 'utils'
+import { MONETARY_UNIT } from 'utils/constant'
 
 const TokenType = ({ tokenType }) => (
   <div className="pay-option h-100">
@@ -24,11 +26,11 @@ const TokenType = ({ tokenType }) => (
               : null
           }
         >
-          {tokenType.price} vnđ/ {tokenType.minutes} phút
+          {Utils.formatPrice(tokenType.price)} {MONETARY_UNIT}/ {tokenType.minutes} phút
         </span>
         {tokenType.salePercent > 0 ? (
           <span className="pay-amount" style={{ marginBottom: '0.5em', color: 'red' }}>
-            {tokenType.saleOffPrice} vnđ/ {tokenType.minutes} phút
+            {Utils.formatPrice(tokenType.saleOffPrice)} {MONETARY_UNIT}/ {tokenType.minutes} phút
           </span>
         ) : null}
       </div>

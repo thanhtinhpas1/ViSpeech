@@ -69,10 +69,10 @@ const SelectTokenForm = ({
         </Form.Item>
         <Form.Item
           name="tokenValue"
-          label="Token"
+          label="API key"
           dependencies={['projectId']}
           rules={[
-            { required: true, message: 'Vui lòng chọn một token.' },
+            { required: true, message: 'Vui lòng chọn một API key.' },
             ({ getFieldValue }) => ({
               async validator() {
                 const projectId = getFieldValue('projectId')
@@ -88,8 +88,8 @@ const SelectTokenForm = ({
             style={{ minWidth: 180 }}
             placeholder={
               (getProjectTokenListObj.projectTokenList.data || []).length > 0
-                ? 'Chọn một token'
-                : 'Không tìm thấy token'
+                ? 'Chọn một API key'
+                : 'Không tìm thấy API key'
             }
             disabled={uploading}
           >

@@ -142,7 +142,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
                   </span>
                 </div>
                 <div className="fake-class">
-                  <span className="data-details-title">Tên Api Key</span>
+                  <span className="data-details-title">Tên API key</span>
                   <span className="data-details-info">
                     <strong>{getRequestInfoObj.request.tokenName}</strong>
                   </span>

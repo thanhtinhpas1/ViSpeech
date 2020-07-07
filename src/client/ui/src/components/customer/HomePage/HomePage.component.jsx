@@ -34,7 +34,7 @@ const Home = ({ currentUser, getUserOrderListObj, getFreeTokenObj, getFreeToken,
               <div className="card-innr">
                 <div className="card-head has-aside">
                   <h4 className="card-title" style={{ fontSize: '16px', color: '#fff', textTransform: 'uppercase' }}>
-                    Token miễn phí
+                    API key miễn phí
                   </h4>
                   <div>Miễn phí {TOKEN_TYPE.FREE.minutes} phút sử dụng</div>
                 </div>
@@ -46,7 +46,7 @@ const Home = ({ currentUser, getUserOrderListObj, getFreeTokenObj, getFreeToken,
                       </div>
                     )}
                     {getFreeTokenObj.isLoading === false && getFreeTokenObj.isSuccess === false && (
-                      <div>Lấy token miễn phí thất bại</div>
+                      <div>Lấy API key miễn phí thất bại</div>
                     )}
                     {getFreeTokenObj.freeToken && (
                       <div className="copy-wrap w-100">

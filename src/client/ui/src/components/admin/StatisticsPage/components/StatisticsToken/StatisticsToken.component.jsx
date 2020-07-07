@@ -16,8 +16,8 @@ const StatisticsToken = ({
 }) => {
   const [tokenList, setTokenList] = useState([])
   const placeHolderSelectId = {
-    found: 'Chọn token',
-    notFound: 'Không tìm thấy token',
+    found: 'Chọn API key',
+    notFound: 'Không tìm thấy API key',
   }
 
   useEffect(() => {

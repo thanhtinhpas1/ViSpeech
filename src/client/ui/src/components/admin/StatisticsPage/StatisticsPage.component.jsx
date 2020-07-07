@@ -7,8 +7,8 @@ import { Row, Col, Divider } from 'antd'
 import './StatisticsPage.style.scss'
 // import StatisticsProject from './components/StatisticsProject/StatisticsProject.container'
 // import StatisticsToken from './components/StatisticsToken/StatisticsToken.container'
-// import StatisticsTokenType from './components/StatisticsTokenType/StatisticsTokenType.container'
-// import TotalStatisticsProject from './components/TotalStatisticsProject/TotalStatisticsProject.container'
+import StatisticsTokenType from './components/StatisticsTokenType/StatisticsTokenType.container'
+import StatisticsUser from './components/StatisticsUser/StatisticsUser.container'
 import TotalStatisticsUser from './components/TotalStatisticsUser/TotalStatisticsUser.container'
 import TotalStatisticsTokenType from './components/TotalStatisticsTokenType/TotalStatisticsTokenType.container'
 
@@ -59,11 +59,13 @@ const StatisticsPage = () => {
               </ul>
               <div className="tab-content">
                 <div role="tabpanel" className="tab-pane active" id="total-statistics">
+                  <div className="gaps-1x" />
                   <Row gutter={16}>
                     <Col>
                       <h4 className="card-title">
                         <span>Thống kê theo người dùng</span>
                       </h4>
+                      <div className="gaps-1x" />
                       <TotalStatisticsUser chartOptions={options} />
                     </Col>
                   </Row>
@@ -71,13 +73,35 @@ const StatisticsPage = () => {
                   <Row gutter={16}>
                     <Col>
                       <h4 className="card-title">
-                        <span>Thống kê theo loại token</span>
+                        <span>Thống kê theo loại API key</span>
                       </h4>
+                      <div className="gaps-1x" />
                       <TotalStatisticsTokenType chartOptions={options} />
                     </Col>
                   </Row>
                 </div>
-                <div role="tabpanel" className="tab-pane" id="statistics-by-id" />
+                <div role="tabpanel" className="tab-pane" id="statistics-by-id">
+                  <div className="gaps-1x" />
+                  <Row gutter={16}>
+                    <Col>
+                      <h4 className="card-title">
+                        <span>Thống kê theo người dùng</span>
+                      </h4>
+                      <div className="gaps-1x" />
+                      <StatisticsUser chartOptions={options} />
+                    </Col>
+                  </Row>
+                  <Divider />
+                  <Row gutter={16}>
+                    <Col>
+                      <h4 className="card-title">
+                        <span>Thống kê theo loại API key</span>
+                      </h4>
+                      <div className="gaps-1x" />
+                      <StatisticsTokenType chartOptions={options} />
+                    </Col>
+                  </Row>
+                </div>
               </div>
             </div>
           </div>

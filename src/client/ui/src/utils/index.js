@@ -1,6 +1,8 @@
-import {useLocation} from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
-import {ROLES, SORT_ORDER} from './constant'
+import { ROLES, SORT_ORDER } from './constant'
+
+const numeral = require('numeral')
 
 const Utils = {
   isUser: roleList => {
@@ -141,6 +143,9 @@ const Utils = {
   },
   decodeJwtToken: token => {
     return jwtDecode(token)
+  },
+  formatPrice: value => {
+    return numeral(Number(value || 0) * 1000).format('0,0')
   },
 }
 

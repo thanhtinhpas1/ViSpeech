@@ -6,6 +6,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import moment from 'moment'
+import { MONETARY_UNIT } from 'utils/constant'
+import Utils from 'utils'
 
 const TokenSaleGraph = ({ userOrderListObj }) => {
   useEffect(() => {
@@ -47,7 +49,7 @@ const TokenSaleGraph = ({ userOrderListObj }) => {
               return `Ngày: ${t.labels[e[0].index]}`
             },
             label(e, t) {
-              return `Giá ${t.datasets[0].data[e.index]}$`
+              return `Giá ${Utils.formatPrice(t.datasets[0].data[e.index])} ${MONETARY_UNIT}`
             },
           },
           backgroundColor: '#eff6ff',

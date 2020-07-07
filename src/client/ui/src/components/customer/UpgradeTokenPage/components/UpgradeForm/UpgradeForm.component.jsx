@@ -1,10 +1,10 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, {useEffect, useState} from 'react'
-import {CardElement, useElements, useStripe} from '@stripe/react-stripe-js'
-import {Alert, Button, Checkbox, Col, Form, Input, Radio, Row, Select} from 'antd'
+import React, { useEffect, useState } from 'react'
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { Alert, Button, Checkbox, Col, Form, Input, Radio, Row, Select } from 'antd'
 import Utils from 'utils'
-import {DEFAULT_PAGINATION, TOKEN_TYPE} from 'utils/constant'
+import { DEFAULT_PAGINATION, TOKEN_TYPE } from 'utils/constant'
 import TokenType from 'components/customer/HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
@@ -184,7 +184,7 @@ const UpgradeForm = ({
       if (createUpgradeTokenOrderObj.isSuccess === true) {
         form.resetFields()
       } else {
-        setErrorMessage(Utils.buildFailedMessage(createUpgradeTokenOrderObj.message, 'Nâng cấp token thất bại'))
+        setErrorMessage(Utils.buildFailedMessage(createUpgradeTokenOrderObj.message, 'Nâng cấp API key thất bại'))
       }
     }
   }, [createUpgradeTokenOrderObj, form])
@@ -239,12 +239,12 @@ const UpgradeForm = ({
           </Form.Item>
         </Col>
         <Col span={8}>
-          <h5 className="font-mid">Tên Api Key</h5>
+          <h5 className="font-mid">Tên API key</h5>
           <Form.Item
             name="tokenId"
             dependencies={['projectId']}
             rules={[
-              { required: true, message: 'Vui lòng chọn một token.' },
+              { required: true, message: 'Vui lòng chọn một API key.' },
               ({ getFieldValue }) => ({
                 async validator() {
                   const projectId = getFieldValue('projectId')
@@ -260,8 +260,8 @@ const UpgradeForm = ({
               style={{ minWidth: 180 }}
               placeholder={
                 (getProjectTokenListObj.projectTokenList.data || []).length > 0
-                  ? 'Chọn một token'
-                  : 'Không tìm thấy token'
+                  ? 'Chọn một API key'
+                  : 'Không tìm thấy API key'
               }
               onChange={onTokenIdChange}
             >
@@ -276,7 +276,7 @@ const UpgradeForm = ({
           </Form.Item>
         </Col>
         <Col span={8}>
-          <h5 className="font-mid">Gói token hiện tại</h5>
+          <h5 className="font-mid">Gói API key hiện tại</h5>
           <Form.Item name="currentTokenType">
             <Input disabled />
           </Form.Item>
@@ -295,7 +295,7 @@ const UpgradeForm = ({
                   true,
                   currentTokenTypeMinutes
                 ).length === 0 ? (
-                  <p>Token đã được nâng cấp lên gói cao nhất</p>
+                  <p>API key đã được nâng cấp lên gói cao nhất</p>
                 ) : (
                   (getTokenTypeListObj.tokenTypeList || []).length > 0 && (
                     <Radio.Group
@@ -351,7 +351,7 @@ const UpgradeForm = ({
         <li>
           {createUpgradeTokenOrderObj.isLoading === false && createUpgradeTokenOrderObj.isSuccess === true && (
             <Alert
-              message="Nâng cấp token thành công"
+              message="Nâng cấp API key thành công"
               type="success"
               showIcon
               closable

@@ -1,6 +1,12 @@
 import ReportTypes from './report.types'
 
 const INITIAL_STATE = {
+  getStatisticsByuserId: {
+    data: [],
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   getStatisticsByprojectId: {
     data: [],
     isLoading: false,

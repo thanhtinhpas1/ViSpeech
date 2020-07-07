@@ -54,3 +54,4 @@ export const USER_TYPE = {
   GOOGLE: 'GOOGLE',
   TWITTER: 'TWITTER',
 }
+export const MONETARY_UNIT = 'vnđ'
