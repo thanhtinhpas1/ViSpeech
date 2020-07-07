@@ -57,7 +57,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
       {
         href: `${CUSTOMER_PATH}/upgrade-token`,
         emClass: 'ikon-distribution',
-        name: 'Nâng cấp token',
+        name: 'Nâng cấp API key',
       },
       {
         href: `${CUSTOMER_PATH}/documents`,

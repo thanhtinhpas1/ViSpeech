@@ -35,7 +35,7 @@ const TokensPage = ({
     if (deleteTokenObj.isLoading === false && deleteTokenObj.isSuccess != null) {
       if (deleteTokenObj.isSuccess === true) {
         setInfoModal({
-          title: 'Xoá token',
+          title: 'Xoá API key',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
@@ -48,7 +48,7 @@ const TokensPage = ({
         })
       } else {
         setInfoModal({
-          title: 'Xoá token',
+          title: 'Xoá API key',
           message: Utils.buildFailedMessage(deleteTokenObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
@@ -66,7 +66,7 @@ const TokensPage = ({
     if (!tokenId) return
 
     setInfoModal({
-      title: 'Xoá token',
+      title: 'Xoá API key',
       message: 'Vui lòng chờ giây lát...',
       icon: {
         isLoading: true,
@@ -91,14 +91,14 @@ const TokensPage = ({
 
   const columns = [
     {
-      title: 'Mã token',
+      title: 'Mã API key',
       dataIndex: '_id',
       canSearch: true,
       render: _id => <span>{_id}</span>,
       width: 150,
     },
     {
-      title: 'Token',
+      title: 'API key',
       dataIndex: 'value',
       headerClassName: 'dt-type',
       className: 'dt-type',
@@ -118,7 +118,7 @@ const TokensPage = ({
       width: 250,
     },
     {
-      title: 'Loại token',
+      title: 'Loại API key',
       dataIndex: 'tokenType',
       headerClassName: 'dt-type',
       className: 'dt-type',
@@ -243,7 +243,7 @@ const TokensPage = ({
       <div className="col-md-12">
         <div className="card">
           <div className="card-header">
-            <h4 className="card-title">Danh sách token</h4>
+            <h4 className="card-title">Danh sách API key</h4>
           </div>
           <div className="card-content">
             <div className="material-datatables">

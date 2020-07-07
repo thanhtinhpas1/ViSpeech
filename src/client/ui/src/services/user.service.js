@@ -1,7 +1,7 @@
 import STORAGE from 'utils/storage'
-import {DEFAULT_ERR_MESSAGE, JWT_TOKEN, USER_TYPE} from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, USER_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 import Utils from 'utils'
-import {apiUrl} from './api-url'
+import { apiUrl } from './api-url'
 
 export default class UserService {
   static login = ({ username, password }) => {
@@ -139,7 +139,7 @@ export default class UserService {
 
   static getUserList = filterConditions => {
     const { pagination, sortField, sortOrder, filters } = filterConditions
-    const { current, pageSize } = pagination
+    const { current, pageSize } = pagination || DEFAULT_PAGINATION
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 

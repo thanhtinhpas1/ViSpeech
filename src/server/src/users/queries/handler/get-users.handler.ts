@@ -39,6 +39,9 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
                 if (filters['roles']) {
                     findOptions.where['roles.name'] = filters['roles']
                 }
+                if (filters['isActive']) {
+                    findOptions.where['isActive'] = Utils.convertToBoolean(filters['isActive'])
+                }
             }
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)
@@ -47,7 +50,8 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
 
             users = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
             users = Utils.removeObjPropertiesFromObjArr(users, ['password']);
-            const count = await getMongoRepository(UserDto).count(findOptions.where);
+            users = users.filter(user => user.username !== 'admin');
+            const count = await getMongoRepository(UserDto).count(findOptions.where) - 1;
             return {data: users, count};
         } catch (error) {
             Logger.error(error, '', 'GetUsersQuery');

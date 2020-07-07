@@ -8,9 +8,9 @@ import { AuthModule } from './auth/auth.module';
 import { TokensModule } from './tokens/tokens.module';
 import { OrdersModule } from './orders/orders.module';
 import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
 import { ReportsModule } from './reports/reports.module';
 import { ProjectsModule } from './projects/projects.module';
-import { PermissionsModule } from './permissions/permissions.module';
 import { RequestModule } from './requests/request.module';
 import { TaskModule } from './tasks/task.module';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -26,15 +26,14 @@ import { CqrsModule } from '@nestjs/cqrs';
         EventStoreModule.register(config.EVENTSTORE),
         UsersModule,
         AuthModule,
+        ProjectsModule,
         TokensModule,
         OrdersModule,
         RolesModule,
         ReportsModule,
-        ProjectsModule,
         PermissionsModule,
         RequestModule,
         TaskModule,
-        CqrsModule,
     ],
     providers: []
 })

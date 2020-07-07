@@ -24,7 +24,7 @@ const ProjectDetailsPage = ({
 
   const columns = [
     {
-      title: 'Token',
+      title: 'API key',
       dataIndex: 'value',
       style: { paddingRight: '30px' },
       render: value => (
@@ -42,7 +42,7 @@ const ProjectDetailsPage = ({
       width: 250,
     },
     {
-      title: 'Loại token',
+      title: 'Loại API key',
       dataIndex: 'tokenType',
       headerClassName: 'dt-type',
       className: 'dt-type',

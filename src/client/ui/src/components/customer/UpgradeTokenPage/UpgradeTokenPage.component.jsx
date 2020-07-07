@@ -37,7 +37,7 @@ const UpgradeTokenPage = ({ currentUser, getMyProjects, getTokenTypes }) => {
         <div className="card content-area">
           <div className="card-innr" style={{ minHeight: '500px' }}>
             <div className="card-head d-flex justify-content-between align-items-center">
-              <h4 className="card-title mb-0">Nâng cấp token</h4>
+              <h4 className="card-title mb-0">Nâng cấp API key</h4>
             </div>
             <div className="gaps-1x" />
             {stripePromise ? (

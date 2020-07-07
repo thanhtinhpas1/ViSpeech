@@ -1,23 +1,14 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable no-script-url */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable react/button-has-type */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import moment from 'moment'
-import { MONETARY_UNIT } from 'utils/constant'
-import Utils from 'utils'
 
-const TokenSaleGraph = ({ userOrderListObj }) => {
+const TokenSaleGraph = ({ orderListObj }) => {
   useEffect(() => {
-    const labels = userOrderListObj.userOrderList.data.map(order => moment(order.createdDate).format('YYYY-MM-DD'))
-    const data = userOrderListObj.userOrderList.data.map(order => {
+    const labels = orderListObj?.orderList?.data.map(order => moment(order.createdDate).format('YYYY-MM-DD'))
+    const data = orderListObj?.orderList?.data.map(order => {
       const tokenType = order.tokenType ? order.tokenType : null
       return tokenType ? tokenType.price : 0
     })
     const chart = document.getElementById('tknSale').getContext('2d')
-    // eslint-disable-next-line no-new
     new window.Chart(chart, {
       type: 'line',
       data: {
@@ -46,10 +37,10 @@ const TokenSaleGraph = ({ userOrderListObj }) => {
         tooltips: {
           callbacks: {
             title(e, t) {
-              return `Ngày: ${t.labels[e[0].index]}`
+              return `Ngày: ${ t.labels[e[0].index] }`
             },
             label(e, t) {
-              return `Giá ${Utils.formatPrice(t.datasets[0].data[e.index])} ${MONETARY_UNIT}`
+              return `Giá ${ t.datasets[0].data[e.index] }$`
             },
           },
           backgroundColor: '#eff6ff',
@@ -88,7 +79,7 @@ const TokenSaleGraph = ({ userOrderListObj }) => {
         },
       },
     })
-  }, [userOrderListObj])
+  }, [ orderListObj ])
 
   return (
     <div className="card-innr">
@@ -96,7 +87,7 @@ const TokenSaleGraph = ({ userOrderListObj }) => {
         <h4 className="card-title">Biểu đồ giao dịch</h4>
       </div>
       <div className="chart-tokensale">
-        <canvas id="tknSale" />
+        <canvas id="tknSale"/>
       </div>
     </div>
   )

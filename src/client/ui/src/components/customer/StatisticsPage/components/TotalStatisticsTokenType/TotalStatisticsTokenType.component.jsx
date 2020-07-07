@@ -4,6 +4,8 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import ReportUtils from 'utils/report.util'
+import { MONETARY_UNIT } from 'utils/constant'
+import Utils from 'utils'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsTokenType = ({
@@ -21,7 +23,7 @@ const TotalStatisticsTokenType = ({
           ...item,
           data: {
             ...item.data,
-            display: `${item.data.price}$ / ${item.data.minutes} phút`,
+            display: `${Utils.formatPrice(item.data.price)} ${MONETARY_UNIT} / ${item.data.minutes} phút`,
           },
         }
       })

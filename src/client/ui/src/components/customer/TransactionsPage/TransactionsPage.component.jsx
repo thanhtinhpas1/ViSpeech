@@ -55,7 +55,7 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       align: 'center',
     },
     {
-      title: 'Token',
+      title: 'API key',
       dataIndex: 'token',
       headerClassName: 'dt-account',
       className: 'dt-account',
@@ -74,7 +74,7 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       width: 250,
     },
     {
-      title: () => <div className="dt-type-text">Loại token</div>,
+      title: () => <div className="dt-type-text">Loại API key</div>,
       dataIndex: 'tokenType',
       filters: [
         { text: TOKEN_TYPE['50-MINUTES'].viText, value: TOKEN_TYPE['50-MINUTES'].name },

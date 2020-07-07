@@ -20,7 +20,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
       width: 180,
     },
     {
-      title: 'Tên Api Key',
+      title: 'Tên API key',
       dataIndex: 'tokenName',
       canSearch: true,
       render: tokenName => <span className="lead tnx-id">{tokenName}</span>,

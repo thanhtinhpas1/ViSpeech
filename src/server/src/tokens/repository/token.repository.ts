@@ -3,7 +3,6 @@ import { Token } from '../models/token.model';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { OrderDto } from '../../orders/dtos/orders.dto';
-import { Order } from '../../orders/models/order.model';
 
 @Injectable()
 export class TokenRepository {
@@ -56,10 +55,10 @@ export class TokenRepository {
     }
 
     async createUpgradeTokenOrder(streamId: string, orderDto: OrderDto) {
-        const order = new Order(undefined);
-        order.setData(orderDto);
-        order.createUpgradeTokenOrder(streamId);
-        return order;
+        const token = new Token(undefined);
+        token.setData(orderDto);
+        token.createUpgradeTokenOrder(streamId);
+        return token;
     }
 
     async upgradeToken(streamId: string, tokenDto: TokenDto, tokenTypeDto: TokenTypeDto) {

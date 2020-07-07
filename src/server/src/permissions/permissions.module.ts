@@ -34,6 +34,7 @@ import {
 import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
 import { EventStore, EventStoreModule } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
 
 @Module({
     imports: [
@@ -56,7 +57,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: '$ce-permission',
                     resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 13, // Default is 0 (Optional)
+                    lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
                     type: EventStoreSubscriptionType.Volatile,
@@ -81,6 +82,7 @@ import { EventStore, EventStoreModule } from '../core/event-store/lib';
         PermissionRepository,
         QueryBus, EventBus,
         CommandBus, EventPublisher,
+        MongoStore,
         ...CommandHandlers,
         ...EventHandlers,
         ...QueryHandlers,
@@ -97,7 +99,6 @@ export class PermissionsModule implements OnModuleInit {
     }
 
     async onModuleInit() {
-        await this.eventStore.bridgeEventsTo((this.event$ as any).subject$);
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);

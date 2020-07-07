@@ -1,17 +1,21 @@
-import { getMongoRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Injectable, Logger } from '@nestjs/common';
 import { ProjectionDto } from './projection.dto';
 import { IAdapterStore } from './adapter.interface';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class MongoStore implements IAdapterStore {
+    constructor(
+        @InjectRepository(ProjectionDto)
+        private readonly projectionRepo: Repository<ProjectionDto>,
+    ) {
+    }
+
     storeKey: string;
 
     clear(): number {
-        getMongoRepository(ProjectionDto).updateOne({streamName: this.storeKey}, {
-            streamName: this.storeKey,
-            eventNumber: 0
-        })
+        this.projectionRepo.save({streamName: this.storeKey, eventNumber: 0})
             .then(() => {
                 Logger.log(`MongoStore cleared eventNumber ${this.storeKey}`);
             })
@@ -19,7 +23,7 @@ export class MongoStore implements IAdapterStore {
     }
 
     read(key: string): Promise<number> {
-        return getMongoRepository(ProjectionDto).findOne({streamName: key})
+        return this.projectionRepo.findOne({streamName: key})
             .then(state => {
                 return state?.eventNumber ?? 0;
             })
@@ -27,17 +31,17 @@ export class MongoStore implements IAdapterStore {
 
     write(key: string, value: number): Promise<number> {
         this.storeKey = key;
-        return getMongoRepository(ProjectionDto).findOne({streamName: key})
+        return this.projectionRepo.findOne({streamName: key})
             .then((projection) => {
                 if (projection) {
-                    return getMongoRepository(ProjectionDto)
+                    return this.projectionRepo
                         .save({...projection, eventNumber: value})
                         .then(() => {
                             Logger.log(`Store wrote storeKey ${key} ${value}`)
                             return value
                         });
                 } else {
-                    return getMongoRepository(ProjectionDto).save({streamName: key, eventNumber: value})
+                    return this.projectionRepo.save({streamName: key, eventNumber: value})
                         .then(() => {
                             Logger.log(`Store wrote storeKey ${key} ${value}`)
                             return value

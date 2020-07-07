@@ -1,15 +1,15 @@
-import { Module, OnModuleInit } from "@nestjs/common";
-import { ConstTaskService } from "./services/const-task.service";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ReportDto } from "reports/dtos/reports.dto";
-import { TaskDto } from "./dto/task.dto";
-import { RequestDto } from "requests/dtos/requests.dto";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { QueryBus } from "@nestjs/cqrs";
-import { QueryHandlers } from "tasks/queries/handler";
-import { TaskController } from "./controllers/task.controller";
-import { TaskService } from "./services/task.service";
-import { ProjectionDto } from "../core/event-store/lib/adapter/projection.dto";
+import { Module, OnModuleInit } from '@nestjs/common';
+import { ConstTaskService } from './services/const-task.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ReportDto } from 'reports/dtos/reports.dto';
+import { TaskDto } from './dto/task.dto';
+import { RequestDto } from 'requests/dtos/requests.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { QueryBus } from '@nestjs/cqrs';
+import { QueryHandlers } from 'tasks/queries/handler';
+import { TaskController } from './controllers/task.controller';
+import { TaskService } from './services/task.service';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 
 @Module({
     imports: [
