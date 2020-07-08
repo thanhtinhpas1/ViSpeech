@@ -4,11 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { Repository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import {
-    OrderedTokenCreatedEvent,
-    OrderedTokenCreatedFailedEvent,
-    OrderedTokenCreatedSuccessEvent
-} from '../impl/ordered-token-created.event';
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from '../impl/ordered-token-created.event';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
@@ -37,15 +33,16 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
             } else if (token.tokenType) {
                 tokenTypeDto = await this.repositoryTokenType.findOne({name: token.tokenType});
             }
-            token.tokenTypeId = tokenTypeDto._id;
-            token.tokenType = tokenTypeDto.name;
-            token.minutes = Number(tokenTypeDto.minutes);
+            token.tokenTypeId = tokenTypeDto?._id;
+            token.tokenType = tokenTypeDto?.name;
+            token.minutes = Number(tokenTypeDto?.minutes);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
             token = Utils.removePropertiesFromObject(token, ['orderId']);
             await this.repository.save(token);
             this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, token));
         } catch (error) {
+            Logger.error('Ordered create token failed', error.message);
             this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));
         }
     }

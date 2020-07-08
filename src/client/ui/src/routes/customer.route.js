@@ -30,9 +30,6 @@ const RouteCustomer = ({ currentUser }) => {
       {currentUser && Utils.isUser(currentUser.roles) && (
         <CustomerLayout>
           <Switch>
-            <Route exact path={CUSTOMER_PATH}>
-              <CustomerHomePage />
-            </Route>
             <Route path={`${CUSTOMER_PATH}/transactions`}>
               <TransactionsPage />
             </Route>
@@ -77,6 +74,9 @@ const RouteCustomer = ({ currentUser }) => {
             </Route>
             <Route path={`${CUSTOMER_PATH}/upgrade-token`}>
               <UpgradeTokenPage />
+            </Route>
+            <Route exact path={CUSTOMER_PATH}>
+              <CustomerHomePage />
             </Route>
             <Route path={`${CUSTOMER_PATH}/*`}>
               <Redirect to="/404" />

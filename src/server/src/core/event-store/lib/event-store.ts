@@ -112,17 +112,21 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             event['eventType'] || stream,
         );
         // it's hack for find out streamId by include stream
-        const streams = [ 'Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task' ];
+        const streams = ['Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task'];
         const streamName = streams.map(stream => eventPayload.type.includes(stream) ? stream : null)
             .filter(event => event != null)[0];
         const streamId = stream ? stream : `$ce-${streamName?.toLowerCase() ?? 'user'}`;
 
         try {
-            const version = (await this.store.readExpectedVersion(streamId)) ?? expectedVersion.any;
+            let version = (await this.store.readExpectedVersion(streamId)) ?? expectedVersion.any;
+            const lcp = (await this.store.read(streamId)) ?? 0;
+            if (version < lcp) {
+                version = lcp;
+            }
             if (version !== expectedVersion.any) {
                 await this.store.writeExpectedVersion(streamId, version + 1);
             }
-            await this.eventStore.getConnection().appendToStream(streamId, version, [ eventPayload ]);
+            await this.eventStore.getConnection().appendToStream(streamId, version, [eventPayload]);
         } catch (err) {
             this.logger.error(err);
         }
@@ -174,7 +178,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         lastCheckpoint: number | Long | null = 0,
         isLive: boolean,
     ): ExtendedCatchUpSubscription {
-        this.logger.log(`Catching up and subscribing to stream ${ stream }!`);
+        this.logger.log(`Catching up and subscribing to stream ${stream}!`);
         try {
             return this.eventStore.getConnection().subscribeToStreamFrom(
                 stream,
@@ -197,7 +201,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     }
 
     async subscribeToVolatileSubscription(stream: string, resolveLinkTos: boolean = true): Promise<ExtendedVolatileSubscription> {
-        this.logger.log(`Volatile and subscribing to stream ${ stream }!`);
+        this.logger.log(`Volatile and subscribing to stream ${stream}!`);
         try {
             const resolved = await this.eventStore.getConnection().subscribeToStream(
                 stream,
@@ -255,7 +259,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     ): Promise<ExtendedPersistentSubscription> {
         try {
             this.logger.log(`
-       Connecting to persistent subscription ${ subscriptionName } on stream ${ stream }!`);
+       Connecting to persistent subscription ${subscriptionName} on stream ${stream}!`);
 
             const resolved = await this.eventStore.getConnection().connectToPersistentSubscription(
                 stream,
@@ -280,7 +284,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             | EventStoreVolatileSubscription,
         payload: ResolvedEvent,
     ) {
-        const { event } = payload;
+        const {event} = payload;
 
         if (!event || !event.isJson) {
             this.logger.error('Received event that could not be resolved!');
@@ -292,17 +296,17 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         let eventType;
         const handler = this.eventHandlers[eventType = rawData.eventType] || this.eventHandlers[eventType = event.eventType];
         if (!handler) {
-            this.logger.warn(`Received event that could not be handled! ${ eventType }`);
+            this.logger.warn(`Received event that could not be handled! ${eventType}`);
             return;
         }
 
         if (this.eventHandlers && this.eventHandlers[eventType]) {
-            Logger.log(`EventStore write event ${ eventType }`);
+            Logger.log(`EventStore write event ${eventType}`);
             this.subject$.next(this.eventHandlers[eventType](...data));
             if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
                 const lcp = (await this.store.read(event.eventStreamId)) || 0;
                 const version = (await this.store.readExpectedVersion(event.eventStreamId));
-                if (version < lcp){
+                if (version < lcp) {
                     await this.store.writeExpectedVersion(event.eventStreamId, payload.event.eventNumber.toInt());
                 }
                 await this.store.write(event.eventStreamId, payload.event.eventNumber.toInt());
@@ -315,7 +319,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 }
             }
         } else {
-            Logger.warn(`Event of type ${ eventType } not handled`, this.constructor.name);
+            Logger.warn(`Event of type ${eventType} not handled`, this.constructor.name);
         }
     }
 
@@ -340,7 +344,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     }
 
     addEventHandlers(eventHandlers: IEventConstructors) {
-        this.eventHandlers = { ...this.eventHandlers, ...eventHandlers };
+        this.eventHandlers = {...this.eventHandlers, ...eventHandlers};
     }
 
     onModuleInit(): any {
