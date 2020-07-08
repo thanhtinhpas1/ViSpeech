@@ -158,7 +158,6 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
         TokenUpdatedEvent: (streamId, data) => new TokenUpdatedEvent(streamId, data),
         TokenUpdatedSuccessEvent: (streamId, data) => new TokenUpdatedSuccessEvent(streamId, data),
         TokenUpdatedFailedEvent: (streamId, data, error) => new TokenUpdatedFailedEvent(streamId, data, error),
-        TokenWelcomedEvent: (streamId, data) => new TokenWelcomedEvent(streamId, data),
         // free token
         FreeTokenCreatedEvent: (streamId, data) => new FreeTokenCreatedEvent(streamId, data),
         FreeTokenCreatedSuccessEvent: (streamId, data) => new FreeTokenCreatedSuccessEvent(streamId, data),
@@ -177,6 +176,7 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
         UpgradeTokenOrderCreatedSuccessEvent: (streamId, data) => new UpgradeTokenOrderCreatedSuccessEvent(streamId, data),
         UpgradeTokenOrderCreatedFailedEvent: (streamId, data, error) => new UpgradeTokenOrderCreatedFailedEvent(streamId, data, error),
 
+        TokenWelcomedEvent: (streamId, data) => new TokenWelcomedEvent(streamId, data),
     };
 
     async persistTokenTypesToDB() {

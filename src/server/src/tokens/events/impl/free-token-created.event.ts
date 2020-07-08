@@ -1,11 +1,10 @@
 import { IEvent } from '@nestjs/cqrs';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { UserDto } from '../../../users/dtos/users.dto';
 
 export class FreeTokenCreatedEvent implements IEvent {
     constructor(
         public readonly streamId: string,
-        public readonly userDto: UserDto,
+        public readonly tokenDto: TokenDto,
     ) {
     }
 }
