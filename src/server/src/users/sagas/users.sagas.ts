@@ -1,15 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { UserCreatedSuccessEvent } from 'users/events/impl/user-created.event';
-import { WelcomeUserCommand } from '../commands/impl/welcome-user.command';
 import { EventStore } from '../../core/event-store/lib';
-import { FreeTokenCreatedEvent } from '../../tokens/events/impl/free-token-created.event';
-import { UserDeletedSuccessEvent } from '../events/impl/user-deleted.event';
-import { TokenDeletedByUserIdEvent } from '../../tokens/events/impl/token-deleted-by-userId.event';
 import { ProjectDeletedByUserIdEvent } from '../../projects/events/impl/project-deleted-by-userId.event';
+import { TokenDeletedByUserIdEvent } from '../../tokens/events/impl/token-deleted-by-userId.event';
+import { UserDeletedSuccessEvent } from '../events/impl/user-deleted.event';
+import { ICommand, ofType, Saga } from '@nestjs/cqrs';
+import { UserCreatedSuccessEvent } from '../events/impl/user-created.event';
+import { Observable } from 'rxjs';
 import { PermissionDeletedByUserIdEvent } from '../../permissions/events/impl/permission-deleted-by-userId.event';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class UsersSagas {
@@ -19,7 +17,7 @@ export class UsersSagas {
     }
 
     @Saga()
-    userCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
+    userCreatedSuccess = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
             ofType(UserCreatedSuccessEvent),
             map((event: UserCreatedSuccessEvent) => {
@@ -27,7 +25,6 @@ export class UsersSagas {
                 const {streamId, userDto} = event;
                 event['eventType'] = 'FreeTokenCreatedEvent';
                 this.eventStore.publish(event, '$ce-token');
-                return new WelcomeUserCommand(streamId, userDto._id);
             })
         );
     };

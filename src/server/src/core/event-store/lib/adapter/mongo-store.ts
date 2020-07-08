@@ -22,10 +22,38 @@ export class MongoStore implements IAdapterStore {
         return 0;
     }
 
+    readExpectedVersion(key: string): Promise<number> {
+        return this.projectionRepo.findOne({streamName: key})
+            .then(state => {
+                return state?.expectedVersion ?? 0;
+            })
+    }
+
     read(key: string): Promise<number> {
         return this.projectionRepo.findOne({streamName: key})
             .then(state => {
                 return state?.eventNumber ?? 0;
+            })
+    }
+
+    writeExpectedVersion(key: string, expectedVersion: number): Promise<number> {
+        this.storeKey = key;
+        return this.projectionRepo.findOne({streamName: key})
+            .then((projection) => {
+                if (projection) {
+                    return this.projectionRepo
+                        .save({...projection, expectedVersion})
+                        .then(() => {
+                            Logger.log(`Store wrote expectedVersion ${key} ${expectedVersion}`)
+                            return expectedVersion
+                        });
+                } else {
+                    return this.projectionRepo.save({streamName: key, eventNumber: expectedVersion})
+                        .then(() => {
+                            Logger.log(`Store wrote expectedVersion ${key} ${expectedVersion}`)
+                            return expectedVersion
+                        });
+                }
             })
     }
 

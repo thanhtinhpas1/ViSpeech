@@ -49,11 +49,12 @@ export class AsrController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Request ASR ViSpeech']})
     @ApiResponse({status: HttpStatus.OK, description: 'Request ASR ViSpeech'})
-    @Post()
     @ApiConsumes('multipart/form-data')
     @ApiFile('voice')
+    @Post()
     @UseInterceptors(
-        FileInterceptor('voice', {
+        FileInterceptor(
+            'voice', {
             storage: diskStorage({
                 destination: __dirname + '/../../uploads',
                 filename: (req, file, cb) => {

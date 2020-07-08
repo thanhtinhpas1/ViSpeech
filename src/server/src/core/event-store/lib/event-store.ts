@@ -118,7 +118,11 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         const streamId = stream ? stream : `$ce-${streamName?.toLowerCase() ?? 'user'}`;
 
         try {
-            await this.eventStore.getConnection().appendToStream(streamId, expectedVersion.any, [ eventPayload ]);
+            const version = (await this.store.readExpectedVersion(streamId)) ?? expectedVersion.any;
+            if (version !== expectedVersion.any) {
+                await this.store.writeExpectedVersion(streamId, version + 1);
+            }
+            await this.eventStore.getConnection().appendToStream(streamId, version, [ eventPayload ]);
         } catch (err) {
             this.logger.error(err);
         }
@@ -297,6 +301,10 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             this.subject$.next(this.eventHandlers[eventType](...data));
             if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
                 const lcp = (await this.store.read(event.eventStreamId)) || 0;
+                const version = (await this.store.readExpectedVersion(event.eventStreamId));
+                if (version < lcp){
+                    await this.store.writeExpectedVersion(event.eventStreamId, payload.event.eventNumber.toInt());
+                }
                 await this.store.write(event.eventStreamId, payload.event.eventNumber.toInt());
                 if (lcp === (payload.event.eventNumber.toInt() - 1) && this.isReplayed) {
                     this.isReplayed = true;

@@ -97,6 +97,18 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
         this.event$.registerSagas([UsersSagas]);
         // seed data
         await this.seedAdminAccount();
+        // seed projection
+        await this.seedProjection();
+    }
+
+    async seedProjection() {
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-user'});
+        if (userProjection) {
+            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+        } else {
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-user', eventNumber: 0, expectedVersion: 0});
+        }
+        Logger.log('Seed projection user success')
     }
 
     private async seedAdminAccount() {

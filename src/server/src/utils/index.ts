@@ -81,10 +81,10 @@ export const Utils = {
     },
     getCorrectSortField: sortField => {
         if (sortField === 'createdDate') {
-            return 'created_date'
+            return 'createdDate'
         }
         if (sortField === 'updatedDate') {
-            return 'updated_date'
+            return 'updatedDate'
         }
         return sortField
     }

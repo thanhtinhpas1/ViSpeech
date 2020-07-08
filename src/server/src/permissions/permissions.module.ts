@@ -1,4 +1,4 @@
-import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommandHandlers } from './commands/handlers';
@@ -35,6 +35,7 @@ import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
 import { EventStore, EventStoreModule } from '../core/event-store/lib';
 import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { getMongoRepository } from 'typeorm';
 
 @Module({
     imports: [
@@ -104,6 +105,17 @@ export class PermissionsModule implements OnModuleInit {
         this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([PermissionsSagas]);
+        await this.seedProjection();
+    }
+
+    async seedProjection() {
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-permission'});
+        if (userProjection) {
+            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+        } else {
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-permission', eventNumber: 0, expectedVersion: 0});
+        }
+        Logger.log('Seed projection permission success')
     }
 
     public static eventHandlers = {

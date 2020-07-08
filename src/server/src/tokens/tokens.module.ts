@@ -102,7 +102,7 @@ import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
         ...EventHandlers,
         ...QueryHandlers,
     ],
-    exports: [TokensService, CqrsModule, ...CommandHandlers, ...EventHandlers,],
+    exports: [TokensService, CqrsModule, ...CommandHandlers, ...EventHandlers],
 })
 export class TokensModule implements OnModuleInit, OnModuleDestroy {
     constructor(
@@ -124,6 +124,17 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([TokensSagas]);
         await this.persistTokenTypesToDB();
+        await this.seedProjection();
+    }
+
+    async seedProjection() {
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-token'});
+        if (userProjection) {
+            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+        } else {
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-token', eventNumber: 0, expectedVersion: 0});
+        }
+        Logger.log('Seed projection token success')
     }
 
     public static eventHandlers = {
