@@ -24,7 +24,7 @@ export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
 
         try {
             if (!tokenDto.tokenType && !tokenDto.tokenTypeId) {
-                throw new BadRequestException("Token type or token type id must not be empty.")
+                throw new BadRequestException('Token type or token type id must not be empty.')
             }
 
             if (tokenDto.tokenTypeId) {

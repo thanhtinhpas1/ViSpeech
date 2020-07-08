@@ -13,7 +13,6 @@ import { ReportsModule } from './reports/reports.module';
 import { ProjectsModule } from './projects/projects.module';
 import { RequestModule } from './requests/request.module';
 import { TaskModule } from './tasks/task.module';
-import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
     imports: [

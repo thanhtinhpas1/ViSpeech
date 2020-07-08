@@ -301,7 +301,7 @@ export class ConstTaskService {
     }
 
     async deleteRelatedReports(aggregateMatchDates, timeType, reportType) {
-        await this.reportRepository.delete({ createdDate: aggregateMatchDates.$match.created_date, timeType, reportType });
+        await this.reportRepository.delete({ createdDate: aggregateMatchDates.$match.createdDate, timeType, reportType });
     }
 
     // report for users and tokenTypes

@@ -1,4 +1,4 @@
-import { forwardRef, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -26,6 +26,7 @@ import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
 import { EventStore, EventStoreModule } from '../core/event-store/lib';
 import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { getMongoRepository } from 'typeorm';
 
 @Module({
     imports: [
@@ -98,6 +99,17 @@ export class OrdersModule implements OnModuleInit, OnModuleDestroy {
         this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([OrdersSagas]);
+        await this.seedProjection();
+    }
+
+    async seedProjection() {
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-order'});
+        if (userProjection) {
+            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+        } else {
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-order', eventNumber: 0, expectedVersion: 0});
+        }
+        Logger.log('Seed projection order success')
     }
 
     public static eventHandlers = {

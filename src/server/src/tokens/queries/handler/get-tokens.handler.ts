@@ -69,8 +69,8 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
             for (const token of tokens) {
                 const user = await this.userDtoRepository.findOne({_id: token.userId.toString()});
                 const project = await this.projectDtoRepository.findOne({_id: token.projectId.toString()});
-                const projectName = project ? project.name : "";
-                result.push({...token, ownerName: user.username, projectName,});
+                const projectName = project ? project.name : '';
+                result.push({...token, ownerName: user?.username, projectName});
             }
 
             const count = await getMongoRepository(TokenDto).count(findOptions.where);

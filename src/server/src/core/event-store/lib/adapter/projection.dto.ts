@@ -3,7 +3,7 @@ import { BaseEntityDto } from '../../../../base/base-entity.dto';
 
 @Entity('projections')
 export class ProjectionDto extends BaseEntityDto {
-    constructor(streamName: string, eventNumber: number) {
+    constructor(streamName: string, eventNumber: number, expectedVersion?: number) {
         super();
         this.streamName = streamName;
         this.eventNumber = eventNumber;
@@ -13,4 +13,6 @@ export class ProjectionDto extends BaseEntityDto {
     streamName: string;
     @Column()
     eventNumber: number;
+    @Column()
+    expectedVersion: number;
 }

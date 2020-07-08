@@ -12,7 +12,7 @@ export class OrderCreatedEvent implements IEvent {
 export class OrderCreatedSuccessEvent implements IEvent {
     constructor(
         public readonly streamId: string,
-        public readonly orderDto: any
+        public readonly orderDto: OrderDto,
     ) {
     }
 }

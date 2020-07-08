@@ -1,6 +1,5 @@
-import { forwardRef, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
-import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UpdateTokenHandler } from 'tokens/commands/handlers/update-token.handler';
 import { CreateReportHandler } from 'reports/commands/handlers/create-report.handler';
@@ -33,6 +32,7 @@ import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
 import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from './events/impl/request-created.event';
 import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { getMongoRepository } from 'typeorm';
 
 @Module({
     imports: [
@@ -73,7 +73,6 @@ import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
                 ...RequestModule.eventHandlers
             },
         }),
-        MulterModule.register({}),
         forwardRef(() => AuthModule),
     ],
     controllers: [
@@ -114,6 +113,17 @@ export class RequestModule implements OnModuleInit, OnModuleDestroy {
         this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([CallAsrSagas]);
+        await this.seedProjection();
+    }
+
+    async seedProjection() {
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-request'});
+        if (userProjection) {
+            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+        } else {
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-request', eventNumber: 0, expectedVersion: 0});
+        }
+        Logger.log('Seed projection request success')
     }
 
     public static eventHandlers = {

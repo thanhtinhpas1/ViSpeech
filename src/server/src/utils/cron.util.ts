@@ -42,7 +42,7 @@ export const CronUtils = {
     aggregateMatchDates: (startDate, endDate) => {
         return {
             $match: {
-                created_date: {
+                createdDate: {
                     $gte: startDate,
                     $lt: endDate
                 }

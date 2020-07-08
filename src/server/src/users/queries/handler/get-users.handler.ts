@@ -1,10 +1,10 @@
-import { Logger } from "@nestjs/common";
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { InjectRepository } from "@nestjs/typeorm";
-import { getMongoRepository, Repository } from "typeorm";
-import { UserDto } from "users/dtos/users.dto";
-import { GetUsersQuery } from "../impl/get-users.query";
-import { Utils } from "utils";
+import { Logger } from '@nestjs/common';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { getMongoRepository, Repository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { GetUsersQuery } from '../impl/get-users.query';
+import { Utils } from 'utils';
 
 @QueryHandler(GetUsersQuery)
 export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
@@ -14,7 +14,7 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
     }
 
     async execute(query: GetUsersQuery) {
-        Logger.log("Async GetUsersQuery...", "GetUsersQuery");
+        Logger.log('Async GetUsersQuery...', 'GetUsersQuery');
         const {limit, offset, filters, sort} = query;
         let users = [];
         try {
