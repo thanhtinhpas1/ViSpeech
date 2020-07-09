@@ -145,7 +145,7 @@ const Utils = {
     return jwtDecode(token)
   },
   formatPrice: value => {
-    return numeral(Number(value || 0) * 1000).format('0,0')
+    return numeral(Number(value || 0)).format('0,0')
   },
 }
 
