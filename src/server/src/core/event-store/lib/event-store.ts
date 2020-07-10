@@ -98,10 +98,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     }
 
     async publish(event: IEvent, stream?: string) {
-        if (event === undefined) {
-            return;
-        }
-        if (event === null) {
+        if ([null, undefined].includes(event)) {
             return;
         }
 

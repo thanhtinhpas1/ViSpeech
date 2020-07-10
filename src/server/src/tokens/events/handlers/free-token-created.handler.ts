@@ -9,7 +9,6 @@ import { CONSTANTS } from 'common/constant';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
 import { ClientKafka } from '@nestjs/microservices';
-import { AuthService } from '../../../auth/auth.service';
 
 @EventsHandler(FreeTokenCreatedEvent)
 export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEvent> {
@@ -19,19 +18,16 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
         @InjectRepository(TokenTypeDto)
         private readonly repositoryTokenType: Repository<TokenTypeDto>,
         private readonly eventBus: EventBus,
-        private readonly authService: AuthService,
     ) {
     }
 
     async handle(event: FreeTokenCreatedEvent) {
-        Logger.log(event.userDto.username, 'FreeTokenCreatedEvent');
-        let {streamId, userDto} = event;
-        userDto = JSON.parse(JSON.stringify(userDto)); // deep clone
-        let token = new TokenDto(this.authService.generateTokenWithUserId(userDto._id), userDto._id,
-            '', CONSTANTS.TOKEN_TYPE.FREE);
+        Logger.log(event.tokenDto._id, 'FreeTokenCreatedEvent');
+        const { streamId, tokenDto } = event;
+        let token = { ...tokenDto }; // deep clone
+
         try {
-            token._id = Utils.getUuid();
-            const tokenTypeDto = await this.repositoryTokenType.findOne({name: CONSTANTS.TOKEN_TYPE.FREE});
+            const tokenTypeDto = await this.repositoryTokenType.findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
             token.tokenTypeId = tokenTypeDto._id;
             token.tokenType = tokenTypeDto.name;
             token.minutes = Number(tokenTypeDto.minutes);
@@ -40,9 +36,9 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
             token.name = 'Token miễn phí';
             token = Utils.removePropertiesFromObject(token, ['orderId']);
             await this.repository.save(token);
-            this.eventBus.publish(new FreeTokenCreatedSuccessEvent(token._id, token));
+            this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
-            this.eventBus.publish(new FreeTokenCreatedFailedEvent(token._id, token, error));
+            this.eventBus.publish(new FreeTokenCreatedFailedEvent(streamId, tokenDto, error));
         }
     }
 }

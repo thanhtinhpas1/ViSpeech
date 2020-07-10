@@ -1,12 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect, useState} from 'react'
-import {useHistory} from 'react-router-dom'
-import {Radio} from 'antd'
+import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { Radio } from 'antd'
 import Utils from 'utils'
 import InfoModal from 'components/customer/InfoModal/InfoModal.component'
-import {CUSTOMER_PATH, DEFAULT_PAGINATION, TOKEN_TYPE} from 'utils/constant'
+import { CUSTOMER_PATH, DEFAULT_PAGINATION, TOKEN_TYPE } from 'utils/constant'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
@@ -139,7 +139,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
             {getTokenTypeListObj.tokenTypeList.length > 0 && (
               <Radio.Group
                 name="radiogroup"
-                style={{ width: '100%' }}
+                style={{ width: '100%', fontSize: 'inherit' }}
                 onChange={onChangeTokenType}
                 defaultValue={defaultTokenTypeId}
               >
