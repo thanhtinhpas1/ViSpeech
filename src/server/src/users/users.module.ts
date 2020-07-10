@@ -2,11 +2,17 @@ import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nest
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientKafka, ClientsModule } from '@nestjs/microservices';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
-import { getMongoRepository, Repository } from 'typeorm';
 import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { RoleDto } from 'roles/dtos/roles.dto';
+import { getMongoRepository, Repository } from 'typeorm';
 import { Utils } from 'utils';
+import { config } from '../../config';
+import { AuthModule } from '../auth/auth.module';
+import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { PermissionDto } from '../permissions/dtos/permissions.dto';
 import { CommandHandlers } from './commands/handlers';
 import { UsersController } from './controllers/users.controller';
 import { USER_TYPE, UserDto } from './dtos/users.dto';
@@ -19,23 +25,21 @@ import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } fro
 import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
 import { VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent, } from './events/impl/verify-email-sent.event';
 import { QueryHandlers } from './queries/handler';
+import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
 import { UsersService } from './services/users.service';
-import { config } from '../../config';
-import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
-import { AuthModule } from '../auth/auth.module';
-import { UserRepository } from './repository/user.repository';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import { PermissionDto } from '../permissions/dtos/permissions.dto';
 
 @Module({
     imports: [
         ClientsModule.register(
-            [{
+            [ {
                 name: config.KAFKA.NAME, ...kafkaClientOptions,
-            }]),
-        TypeOrmModule.forFeature([UserDto, PermissionDto, ProjectionDto]),
+            } ]),
+        TypeOrmModule.forFeature([
+            UserDto,
+            PermissionDto,
+            ProjectionDto
+        ]),
         CqrsModule,
         EventStoreModule.registerFeature({
             featureStreamName: '$ce-user',
@@ -62,14 +66,22 @@ import { PermissionDto } from '../permissions/dtos/permissions.dto';
                 ...UsersModule.eventHandlers,
             }
         }),
-        CqrsModule,
         forwardRef(() => AuthModule),
     ],
     controllers: [UsersController],
     providers: [
-        UsersService, UsersSagas, QueryBus, EventBus, CommandBus, EventPublisher, ClientKafka,
-        UserRepository, MongoStore,
-        ...EventHandlers, ...CommandHandlers, ...QueryHandlers
+        UsersService,
+        UsersSagas,
+        QueryBus,
+        EventBus,
+        CommandBus,
+        EventPublisher,
+        ClientKafka,
+        UserRepository,
+        MongoStore,
+        ...EventHandlers,
+        ...CommandHandlers,
+        ...QueryHandlers
     ],
     exports: [UsersService],
 })

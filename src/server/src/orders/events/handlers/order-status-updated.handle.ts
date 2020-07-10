@@ -9,7 +9,7 @@
 // import { ClientKafka } from '@nestjs/microservices';
 // import { CONSTANTS } from '../../../common/constant';
 // import { Utils } from '../../../utils';
-
+//
 // @EventsHandler(OrderStatusUpdatedEvent)
 // export class OrderStatusUpdatedHandler implements IEventHandler<OrderStatusUpdatedEvent> {
 //     constructor(
@@ -18,11 +18,11 @@
 //         private readonly eventBus: EventBus
 //     ) {
 //     }
-
+//
 //     async handle(event: OrderStatusUpdatedEvent) {
 //         Logger.log(event.orderId, 'OrderStatusUpdatedEvent'); // write here
 //         const {streamId, orderId, status} = event;
-
+//
 //         try {
 //             const order = await this.repository.findOne({_id: orderId});
 //             if (order) {
@@ -36,7 +36,7 @@
 //         }
 //     }
 // }
-
+//
 // @EventsHandler(OrderStatusUpdatedSuccessEvent)
 // export class OrderStatusUpdatedSuccessHandler
 //     implements IEventHandler<OrderStatusUpdatedSuccessEvent> {
@@ -46,13 +46,13 @@
 //     ) {
 //         this.clientKafka.connect();
 //     }
-
+//
 //     handle(event: OrderStatusUpdatedSuccessEvent) {
 //         // this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_STATUS_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
 //         Logger.log(event.orderDto._id, 'OrderStatusUpdatedSuccessEvent');
 //     }
 // }
-
+//
 // @EventsHandler(OrderStatusUpdatedFailedEvent)
 // export class OrderStatusUpdatedFailedHandler
 //     implements IEventHandler<OrderStatusUpdatedFailedEvent> {
@@ -62,7 +62,7 @@
 //     ) {
 //         this.clientKafka.connect();
 //     }
-
+//
 //     handle(event: OrderStatusUpdatedFailedEvent) {
 //         const errorObj = Utils.getErrorObj(event.error)
 //         event['errorObj'] = errorObj

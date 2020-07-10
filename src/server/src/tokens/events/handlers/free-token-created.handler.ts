@@ -1,14 +1,15 @@
-import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { Repository } from 'typeorm';
-import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from '../impl/free-token-created.event';
-import { CONSTANTS } from 'common/constant';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
-import { ClientKafka } from '@nestjs/microservices';
+import { AuthService } from '../../../auth/auth.service';
+import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from '../impl/free-token-created.event';
 
 @EventsHandler(FreeTokenCreatedEvent)
 export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEvent> {
@@ -18,6 +19,7 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
         @InjectRepository(TokenTypeDto)
         private readonly repositoryTokenType: Repository<TokenTypeDto>,
         private readonly eventBus: EventBus,
+        private readonly authService: AuthService,
     ) {
     }
 
@@ -34,7 +36,7 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
             token.name = 'Token miễn phí';
-            token = Utils.removePropertiesFromObject(token, ['orderId']);
+            token = Utils.removePropertiesFromObject(token, [ 'orderId' ]);
             await this.repository.save(token);
             this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
@@ -70,8 +72,8 @@ export class FreeTokenCreatedFailedHandler
     }
 
     handle(event: FreeTokenCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.FREE_TOKEN_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'FreeTokenCreatedFailedEvent');
     }

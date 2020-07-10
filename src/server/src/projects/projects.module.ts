@@ -5,12 +5,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'auth/auth.module';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { TokenRepository } from 'tokens/repository/token.repository';
+import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { config } from '../../config';
+import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { CommandHandlers } from './commands/handlers';
 import { ProjectsController } from './controllers/projects.controller';
+import { ProjectDto } from './dtos/projects.dto';
 import { EventHandlers } from './events/handlers';
 import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from './events/impl/project-created.event';
+import {
+    ProjectDeletedByUserIdEvent,
+    ProjectDeletedByUserIdFailedEvent,
+    ProjectDeletedByUserIdSuccessEvent
+} from './events/impl/project-deleted-by-userId.event';
 import { ProjectDeletedEvent, ProjectDeletedFailedEvent, ProjectDeletedSuccessEvent } from './events/impl/project-deleted.event';
 import { ProjectUpdatedEvent, ProjectUpdatedFailedEvent, ProjectUpdatedSuccessEvent } from './events/impl/project-updated.event';
 import { ProjectWelcomedEvent } from './events/impl/project-welcomed.event';
@@ -18,24 +29,13 @@ import { QueryHandlers } from './queries/handler';
 import { ProjectRepository } from './repository/project.repository';
 import { ProjectsSagas } from './sagas/projects.sagas';
 import { ProjectsService } from './services/projects.service';
-import {
-    ProjectDeletedByUserIdEvent,
-    ProjectDeletedByUserIdFailedEvent,
-    ProjectDeletedByUserIdSuccessEvent
-} from './events/impl/project-deleted-by-userId.event';
-import { TokenRepository } from 'tokens/repository/token.repository';
-import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
-import { ProjectDto } from './dtos/projects.dto';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
-import { getMongoRepository } from 'typeorm';
 
 @Module({
     imports: [
-        ClientsModule.register([{
+        ClientsModule.register([ {
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
-        }]),
+        } ]),
         TypeOrmModule.forFeature([
             PermissionDto,
             UserDto,
@@ -69,7 +69,7 @@ import { getMongoRepository } from 'typeorm';
             },
         }),
     ],
-    controllers: [ProjectsController],
+    controllers: [ ProjectsController ],
     providers: [
         ProjectsService,
         ProjectsSagas,
@@ -82,7 +82,7 @@ import { getMongoRepository } from 'typeorm';
         ...EventHandlers,
         ...QueryHandlers,
     ],
-    exports: [ProjectsService],
+    exports: [ ProjectsService ],
 })
 export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
     constructor(
@@ -102,18 +102,18 @@ export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
-        this.event$.registerSagas([ProjectsSagas]);
+        this.event$.registerSagas([ ProjectsSagas ]);
         await this.seedProjection();
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-project'});
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName: '$ce-project' });
         if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({ ...userProjection, expectedVersion: userProjection.eventNumber });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-project', eventNumber: 0, expectedVersion: 0});
+            await getMongoRepository(ProjectionDto).save({ streamName: '$ce-project', eventNumber: 0, expectedVersion: 0 });
         }
-        Logger.log('Seed projection project success')
+        Logger.log('Seed projection project success');
     }
 
     public static eventHandlers = {

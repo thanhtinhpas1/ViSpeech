@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { AuthService } from 'auth/auth.service';
 import { CONSTANTS } from 'common/constant';
 import { UpdateOrderCommand } from 'orders/commands/impl/update-order.command';
 import { OrderDto } from 'orders/dtos/orders.dto';
@@ -14,8 +13,6 @@ import { UpgradeTokenOrderCreatedSuccessEvent } from '../../tokens/events/impl/u
 
 @Injectable()
 export class OrdersSagas {
-    constructor(private readonly authService: AuthService) {
-    }
 
     @Saga()
     orderedTokenCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {

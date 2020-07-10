@@ -15,30 +15,30 @@ export class MongoStore implements IAdapterStore {
     storeKey: string;
 
     clear(): number {
-        this.projectionRepo.save({streamName: this.storeKey, eventNumber: 0})
-            .then(() => {
-                Logger.log(`MongoStore cleared eventNumber ${this.storeKey}`);
-            })
+        this.projectionRepo.save({ streamName: this.storeKey, eventNumber: 0 })
+        .then(() => {
+            Logger.log(`MongoStore cleared eventNumber ${ this.storeKey }`);
+        });
         return 0;
     }
 
     readExpectedVersion(key: string): Promise<number> {
-        return this.projectionRepo.findOne({ streamName: key }, { lock: { mode: 'pessimistic_write' } })
+        return this.projectionRepo.findOne({ streamName: key }, { lock: { mode: 'optimistic', version: new Date() } })
         .then(state => {
-            return state.expectedVersion;
+            return state.expectedVersion || 0;
         });
     }
 
     read(key: string): Promise<number> {
-        return this.projectionRepo.findOne({streamName: key})
-            .then(state => {
-                return state?.eventNumber ?? 0;
-            })
+        return this.projectionRepo.findOne({ streamName: key })
+        .then(state => {
+            return state.eventNumber || 0;
+        });
     }
 
     writeExpectedVersion(key: string, expectedVersion: number): Promise<number> {
         this.storeKey = key;
-        return this.projectionRepo.findOne({ streamName: key }, { lock: { mode: 'pessimistic_read' } })
+        return this.projectionRepo.findOne({ streamName: key }, { lock: { mode: 'optimistic', version: new Date() } })
         .then((projection) => {
             if (projection) {
                 return this.projectionRepo
@@ -49,12 +49,12 @@ export class MongoStore implements IAdapterStore {
                 });
             } else {
                 return this.projectionRepo.save({ streamName: key, eventNumber: expectedVersion })
-                        .then(() => {
-                            Logger.log(`Store wrote expectedVersion ${key} ${expectedVersion}`)
-                            return expectedVersion
-                        });
-                }
-            })
+                .then(() => {
+                    Logger.log(`Store wrote expectedVersion ${ key } ${ expectedVersion }`);
+                    return expectedVersion;
+                });
+            }
+        });
     }
 
     write(key: string, value: number): Promise<any> {
@@ -68,14 +68,14 @@ export class MongoStore implements IAdapterStore {
                     Logger.log(`Store wrote storeKey ${ key } ${ value }`);
                     return value;
                 });
-                } else {
-                    return this.projectionRepo.save({streamName: key, eventNumber: value})
-                        .then(() => {
-                            Logger.log(`Store wrote storeKey ${key} ${value}`)
-                            return value
-                        });
-                }
-            })
+            } else {
+                return this.projectionRepo.save({ streamName: key, eventNumber: value })
+                .then(() => {
+                    Logger.log(`Store wrote storeKey ${ key } ${ value }`);
+                    return value;
+                });
+            }
+        });
     }
 
 }
