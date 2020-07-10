@@ -228,7 +228,7 @@ const CheckoutForm = ({
       >
         <Checkbox>
           Tôi đồng ý với
-          <strong> điều khoản giao dịch mua bán key</strong> của Softia.
+          <strong> điều khoản giao dịch mua bán key</strong> của ASR VietSpeech.
         </Checkbox>
       </Form.Item>
       <ul className="d-flex flex-wrap align-items-center guttar-30px">

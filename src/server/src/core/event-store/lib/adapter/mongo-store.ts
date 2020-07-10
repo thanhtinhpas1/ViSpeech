@@ -1,8 +1,8 @@
-import { Repository } from 'typeorm';
 import { Injectable, Logger } from '@nestjs/common';
-import { ProjectionDto } from './projection.dto';
-import { IAdapterStore } from './adapter.interface';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { IAdapterStore } from './adapter.interface';
+import { ProjectionDto } from './projection.dto';
 
 @Injectable()
 export class MongoStore implements IAdapterStore {
@@ -23,10 +23,10 @@ export class MongoStore implements IAdapterStore {
     }
 
     readExpectedVersion(key: string): Promise<number> {
-        return this.projectionRepo.findOne({streamName: key})
-            .then(state => {
-                return state?.expectedVersion ?? 0;
-            })
+        return this.projectionRepo.findOne({ streamName: key }, { lock: { mode: 'pessimistic_write' } })
+        .then(state => {
+            return state.expectedVersion;
+        });
     }
 
     read(key: string): Promise<number> {
@@ -38,17 +38,17 @@ export class MongoStore implements IAdapterStore {
 
     writeExpectedVersion(key: string, expectedVersion: number): Promise<number> {
         this.storeKey = key;
-        return this.projectionRepo.findOne({streamName: key})
-            .then((projection) => {
-                if (projection) {
-                    return this.projectionRepo
-                        .save({...projection, expectedVersion})
-                        .then(() => {
-                            Logger.log(`Store wrote expectedVersion ${key} ${expectedVersion}`)
-                            return expectedVersion
-                        });
-                } else {
-                    return this.projectionRepo.save({streamName: key, eventNumber: expectedVersion})
+        return this.projectionRepo.findOne({ streamName: key }, { lock: { mode: 'pessimistic_read' } })
+        .then((projection) => {
+            if (projection) {
+                return this.projectionRepo
+                .save({ ...projection, expectedVersion })
+                .then(() => {
+                    Logger.log(`Store wrote expectedVersion ${ key } ${ expectedVersion }`);
+                    return expectedVersion;
+                });
+            } else {
+                return this.projectionRepo.save({ streamName: key, eventNumber: expectedVersion })
                         .then(() => {
                             Logger.log(`Store wrote expectedVersion ${key} ${expectedVersion}`)
                             return expectedVersion
@@ -57,17 +57,17 @@ export class MongoStore implements IAdapterStore {
             })
     }
 
-    write(key: string, value: number): Promise<number> {
+    write(key: string, value: number): Promise<any> {
         this.storeKey = key;
-        return this.projectionRepo.findOne({streamName: key})
-            .then((projection) => {
-                if (projection) {
-                    return this.projectionRepo
-                        .save({...projection, eventNumber: value})
-                        .then(() => {
-                            Logger.log(`Store wrote storeKey ${key} ${value}`)
-                            return value
-                        });
+        return this.projectionRepo.findOne({ streamName: key })
+        .then((projection) => {
+            if (projection) {
+                return this.projectionRepo
+                .save({ ...projection, eventNumber: value })
+                .then(() => {
+                    Logger.log(`Store wrote storeKey ${ key } ${ value }`);
+                    return value;
+                });
                 } else {
                     return this.projectionRepo.save({streamName: key, eventNumber: value})
                         .then(() => {

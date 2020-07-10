@@ -8,13 +8,18 @@
     "radix": false
   },
   "rules": {
+    "no-string-literal": false,
     "radix": false,
     "no-shadowed-variable": false,
     "semicolon": false,
     "trailing-comma": false,
     "eofline": false,
     "no-angle-bracket-type-assertion": true,
-    "max-classes-per-file": [true, 5, "exclude-class-expressions"],
+    "max-classes-per-file": [
+      true,
+      5,
+      "exclude-class-expressions"
+    ],
     "quotemark": [
       true,
       "single"

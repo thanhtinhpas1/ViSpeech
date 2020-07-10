@@ -118,17 +118,24 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         const streamId = stream ? stream : `$ce-${streamName?.toLowerCase() ?? 'user'}`;
 
         try {
-            let version = (await this.store.readExpectedVersion(streamId)) ?? expectedVersion.any;
-            const lcp = (await this.store.read(streamId)) ?? 0;
-            if (version < lcp) {
+            let version = await this.store.readExpectedVersion(streamId);
+            const lcp = await this.store.read(streamId);
+            // case when does not exist stream => expected version will be overlap with case start event  = 0
+            // so in this case we accept for all event have event number less than 1
+            if (version === 0) {
+                version = expectedVersion.any;
+                await this.store.writeExpectedVersion(streamId, 1);
+            } else if (version < lcp) {
                 version = lcp;
-            }
-            if (version !== expectedVersion.any) {
+                await this.store.writeExpectedVersion(streamId, version + 1);
+            } else {
                 await this.store.writeExpectedVersion(streamId, version + 1);
             }
-            await this.eventStore.getConnection().appendToStream(streamId, version, [eventPayload]);
+            await this.eventStore.getConnection().appendToStream(streamId, version, [ eventPayload ]);
         } catch (err) {
-            this.logger.error(err);
+            if (err.name === 'WrongExpectedVersionError') {
+                this.logger.warn('Detect duplicate event ' + eventPayload.type + ' ' + err.message);
+            } else this.logger.error(err);
         }
     }
 
@@ -290,7 +297,6 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             this.logger.error('Received event that could not be resolved!');
             return;
         }
-
         const rawData = JSON.parse(event.data.toString());
         const data = Object.values(rawData);
         let eventType;
@@ -304,11 +310,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             Logger.log(`EventStore write event ${eventType}`);
             this.subject$.next(this.eventHandlers[eventType](...data));
             if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
-                const lcp = (await this.store.read(event.eventStreamId)) || 0;
-                const version = (await this.store.readExpectedVersion(event.eventStreamId));
-                if (version < lcp) {
-                    await this.store.writeExpectedVersion(event.eventStreamId, payload.event.eventNumber.toInt());
-                }
+                const lcp = (await this.store.read(event.eventStreamId));
                 await this.store.write(event.eventStreamId, payload.event.eventNumber.toInt());
                 if (lcp === (payload.event.eventNumber.toInt() - 1) && this.isReplayed) {
                     this.isReplayed = true;

@@ -1,12 +1,12 @@
 import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { CommandHandler, EventBus, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { CreateFreeTokenCommand, CreateOrderedTokenCommand, CreateTokenCommand } from '../impl/create-token.command';
-import { TokenRepository } from '../../repository/token.repository';
 import { AuthService } from 'auth/auth.service';
-import { TokenCreatedFailedEvent } from 'tokens/events/impl/token-created.event';
-import { getMongoRepository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { OrderedTokenCreatedFailedEvent } from 'tokens/events/impl/ordered-token-created.event';
+import { TokenCreatedFailedEvent } from 'tokens/events/impl/token-created.event';
+import { getMongoRepository } from 'typeorm';
+import { TokenRepository } from '../../repository/token.repository';
+import { CreateFreeTokenCommand, CreateOrderedTokenCommand, CreateTokenCommand } from '../impl/create-token.command';
 
 @CommandHandler(CreateTokenCommand)
 export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
@@ -42,6 +42,7 @@ export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
             );
             token.commit();
         } catch (error) {
+            Logger.error(error);
             this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error));
         }
     }

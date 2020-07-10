@@ -1,14 +1,16 @@
-import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { Repository } from 'typeorm';
+import { CONSTANTS } from 'common/constant';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from '../impl/ordered-token-created.event';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { getMongoRepository, Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
-import { ClientKafka } from '@nestjs/microservices';
-import { CONSTANTS } from 'common/constant';
+import { AuthService } from '../../../auth/auth.service';
+import { UserDto } from '../../../users/dtos/users.dto';
+import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from '../impl/ordered-token-created.event';
 
 @EventsHandler(OrderedTokenCreatedEvent)
 export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCreatedEvent> {
@@ -18,6 +20,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
         @InjectRepository(TokenTypeDto)
         private readonly repositoryTokenType: Repository<TokenTypeDto>,
         private readonly eventBus: EventBus,
+        private readonly authService: AuthService,
     ) {
     }
 
@@ -29,16 +32,18 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
 
         try {
             if (token.tokenTypeId) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({_id: token.tokenTypeId});
+                tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
             } else if (token.tokenType) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({name: token.tokenType});
+                tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
             }
             token.tokenTypeId = tokenTypeDto?._id;
             token.tokenType = tokenTypeDto?.name;
             token.minutes = Number(tokenTypeDto?.minutes);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
-            token = Utils.removePropertiesFromObject(token, ['orderId']);
+            token = Utils.removePropertiesFromObject(token, [ 'orderId' ]);
+            const user = await getMongoRepository(UserDto).findOne({ _id: tokenDto.userId });
+            token.value = this.authService.generateToken(user._id, user.username, user.roles);
             await this.repository.save(token);
             this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, token));
         } catch (error) {

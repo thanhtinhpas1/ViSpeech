@@ -1,16 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EventStore } from '../../core/event-store/lib';
-import { Observable } from 'rxjs';
-import { CreateOrderedTokenCommand } from '../commands/impl/create-token.command';
-import { OrderCreatedSuccessEvent } from '../../orders/events/impl/order-created.event';
-import { map } from 'rxjs/operators';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { OrderedTokenCreatedFailedEvent } from '../events/impl/ordered-token-created.event';
-import { OrderUpdatedStatusEvent } from '../../orders/events/impl/order-updated-status..event';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CONSTANTS } from '../../common/constant';
-import { UpgradeTokenOrderCreatedSuccessEvent } from '../events/impl/upgrade-token-order-created.event';
+import { EventStore } from '../../core/event-store/lib';
+import { OrderCreatedSuccessEvent } from '../../orders/events/impl/order-created.event';
+import { OrderUpdatedStatusEvent } from '../../orders/events/impl/order-updated-status..event';
+import { CreateOrderedTokenCommand } from '../commands/impl/create-token.command';
 import { UpgradeTokenCommand } from '../commands/impl/upgrade-token.command';
+import { OrderedTokenCreatedFailedEvent } from '../events/impl/ordered-token-created.event';
 import { TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from '../events/impl/token-upgraded.event';
+import { UpgradeTokenOrderCreatedSuccessEvent } from '../events/impl/upgrade-token-order-created.event';
 
 @Injectable()
 export class TokensSagas {
@@ -25,8 +25,11 @@ export class TokensSagas {
             ofType(OrderCreatedSuccessEvent),
             map((event: OrderCreatedSuccessEvent) => {
                 Logger.log('Inside [TokensSagas] OrderCreatedSuccessEvent Saga', 'TokensSagas');
-                const {streamId, orderDto} = event;
-                return new CreateOrderedTokenCommand(streamId, orderDto.token);
+                const { streamId, orderDto } = event;
+                const token = orderDto.token;
+                token.orderId = orderDto._id;
+                token.tokenTypeId = orderDto.tokenType._id;
+                return new CreateOrderedTokenCommand(streamId, token);
             })
         );
     }

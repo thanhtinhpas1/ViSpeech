@@ -5,13 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { Repository } from 'typeorm';
-import { config } from '../../../../config';
-import {
-    ProjectCreatedEvent,
-    ProjectCreatedFailedEvent,
-    ProjectCreatedSuccessEvent
-} from '../impl/project-created.event';
 import { Utils } from 'utils';
+import { config } from '../../../../config';
+import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from '../impl/project-created.event';
 
 @EventsHandler(ProjectCreatedEvent)
 export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent> {
@@ -23,7 +19,7 @@ export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent>
     }
 
     async handle(event: ProjectCreatedEvent) {
-        Logger.log(event.projectDto._id, "ProjectCreatedEvent");
+        Logger.log(event.projectDto._id, 'ProjectCreatedEvent');
         const {streamId, projectDto} = event;
 
         try {
@@ -37,8 +33,7 @@ export class ProjectCreatedHandler implements IEventHandler<ProjectCreatedEvent>
 }
 
 @EventsHandler(ProjectCreatedSuccessEvent)
-export class ProjectCreatedSuccessHandler
-    implements IEventHandler<ProjectCreatedSuccessEvent> {
+export class ProjectCreatedSuccessHandler implements IEventHandler<ProjectCreatedSuccessEvent> {
     constructor(
         @Inject(config.KAFKA.NAME)
         private readonly clientKafka: ClientKafka,

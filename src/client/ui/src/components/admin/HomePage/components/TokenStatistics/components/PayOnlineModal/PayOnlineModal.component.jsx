@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PayItem from './components/PayItem/PayItem.component'
 import PayReviewModal from './components/PayReviewModal/PayReviewModal.component'
 
@@ -29,10 +29,10 @@ const PayOnlineModal = ({ payOnlineModal }) => {
         <div className="modal-dialog modal-dialog-md modal-dialog-centered">
           <div className="modal-content pb-0">
             <div className="popup-body">
-              <h4 className="popup-title">Thanh toán mua key</h4>
-              <p className="lead" style={{ color: '#495463' }}>
-                Mua key và sử dụng trong vòng <strong>{payOnlineModal.time}</strong> với số tiền{' '}
-                <strong>{payOnlineModal.price} VNĐ</strong>.
+              <h4 className="popup-title">Thanh toán mua API Key</h4>
+              <p className="lead" style={ { color: '#495463' } }>
+                Mua API Key và sử dụng trong vòng <strong>{ payOnlineModal.time }</strong> với số tiền{ ' ' }
+                <strong>{ payOnlineModal.price } VNĐ</strong>.
               </p>
               <h5 className="mgt-1-5x font-mid">Chọn phương thức thanh toán</h5>
               <ul className="pay-list guttar-20px">
@@ -41,10 +41,10 @@ const PayOnlineModal = ({ payOnlineModal }) => {
                 })}
               </ul>
               <div className="pdb-2-5x pdt-1-5x">
-                <input type="checkbox" className="input-checkbox input-checkbox-md" id="agree-term-3" />
+                <input type="checkbox" className="input-checkbox input-checkbox-md" id="agree-term-3"/>
                 <label htmlFor="agree-term-3">
                   Tôi đồng ý với
-                  <strong>điều khoản giao dịch mua bán key</strong> của Softia.
+                  <strong>điều khoản giao dịch mua bán key</strong> của ASR.
                 </label>
               </div>
               <ul className="d-flex flex-wrap align-items-center guttar-30px">
@@ -63,8 +63,8 @@ const PayOnlineModal = ({ payOnlineModal }) => {
               <div className="gaps-2x" />
               <div className="gaps-1x d-none d-sm-block" />
               <div className="note note-plane note-light mgb-1x">
-                <em className="fas fa-info-circle" />
-                <p className="text-light">Sau khi giao dịch thành công, trang web sẽ hiển thị key cho bạn.</p>
+                <em className="fas fa-info-circle"/>
+                <p className="text-light">Sau khi giao dịch thành công, trang web sẽ hiển thị api key cho bạn.</p>
               </div>
             </div>
           </div>
