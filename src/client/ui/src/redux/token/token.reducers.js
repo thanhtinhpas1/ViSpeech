@@ -19,12 +19,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     errorMessage: null,
   },
-  getTotalTokens: {
-    tokenList: { data: [], count: 0 },
-    isLoading: false,
-    isSuccess: null,
-    errorMessage: null,
-  },
+  // getTotalTokens: {
+  //   tokenList: { data: [], count: 0 },
+  //   isLoading: false,
+  //   isSuccess: null,
+  //   errorMessage: null,
+  // },
   getProjectTokenList: {
     projectTokenList: { data: [], count: 0 },
     isLoading: false,
@@ -87,14 +87,14 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
           isLoading: true,
         },
       }
-    case TokenTypes.GET_TOTAL_TOKENS:
-      return {
-        ...state,
-        getTotalTokens: {
-          ...state.getTotalTokens,
-          isLoading: true,
-        }
-      }
+    // case TokenTypes.GET_TOTAL_TOKENS:
+    //   return {
+    //     ...state,
+    //     getTotalTokens: {
+    //       ...state.getTotalTokens,
+    //       isLoading: true,
+    //     },
+    //   }
     case TokenTypes.GET_TOKENS_SUCCESS:
       return {
         ...state,

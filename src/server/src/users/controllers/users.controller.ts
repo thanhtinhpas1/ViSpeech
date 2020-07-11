@@ -26,6 +26,7 @@ import { ProjectGuard } from '../../auth/guards/project.guard';
 import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
 import { GetAssigneeQuery } from '../queries/impl/get-assignee.query';
 import { UsersService } from '../services/users.service';
+import { UserUtils } from 'utils/user.util';
 
 @Controller('users')
 @ApiTags('Users')
@@ -90,9 +91,9 @@ export class UsersController {
     ): Promise<UserDto> {
         const streamId = userIdDto._id;
         const payload = this.authService.decode(request);
-        const match = payload['roles'].filter(role => role.name === CONSTANTS.ROLE.ADMIN);
-        if (match.length === 0) {
-            userDto = Utils.removePropertiesFromObject(userDto, [ 'roles' ]);
+        const isAdmin = UserUtils.isAdmin(payload['roles']);
+        if (!isAdmin) {
+            userDto = Utils.removePropertyFromObject(userDto, 'roles');
         }
         return this.usersService.updateUser(streamId, { ...userDto, _id: userIdDto._id });
     }

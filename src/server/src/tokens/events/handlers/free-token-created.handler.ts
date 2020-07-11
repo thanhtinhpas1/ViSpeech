@@ -35,7 +35,7 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
             token.minutes = Number(tokenTypeDto.minutes);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
-            token.name = 'Token miễn phí';
+            token.name = 'API key miễn phí';
             token = Utils.removePropertiesFromObject(token, [ 'orderId' ]);
             await this.repository.save(token);
             this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, tokenDto));

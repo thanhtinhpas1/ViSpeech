@@ -20,10 +20,10 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       width: 150,
     },
     {
-      title: 'Tên',
+      title: 'Tên API key',
       dataIndex: 'tokenName',
       canSearch: true,
-      render: _id => <span className="lead tnx-id">{_id}</span>,
+      render: tokenName => <span className="lead tnx-id">{tokenName}</span>,
       width: 150,
     },
     {

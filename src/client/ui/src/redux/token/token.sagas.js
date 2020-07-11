@@ -73,19 +73,19 @@ export function* getTokensSaga() {
   yield takeLatest(TokenTypes.GET_TOKENS, getTokens)
 }
 
-// get total tokens
-export function* getTotalTokens({ payload: filterConditions }) {
-  try {
-    const tokenList = yield TokenService.getTotalTokens(filterConditions)
-    yield put(getTokenListSuccess(tokenList))
-  } catch (err) {
-    yield put(getTokenListFailure(err.message))
-  }
-}
+// // get total tokens
+// export function* getTotalTokens({ payload: filterConditions }) {
+//   try {
+//     const tokenList = yield TokenService.getTotalTokens(filterConditions)
+//     yield put(getTokenListSuccess(tokenList))
+//   } catch (err) {
+//     yield put(getTokenListFailure(err.message))
+//   }
+// }
 
-export function* getTotalTokensSaga() {
-  yield takeLatest(TokenTypes.GET_TOTAL_TOKENS, getTotalTokens)
-}
+// export function* getTotalTokensSaga() {
+//   yield takeLatest(TokenTypes.GET_TOTAL_TOKENS, getTotalTokens)
+// }
 
 // ==== get project tokens
 export function* getProjectTokens({ payload: filterConditions }) {
@@ -146,7 +146,7 @@ export function* tokenSaga() {
   yield all([
     call(getUserTokensSaga),
     call(getTokensSaga),
-    call(getTotalTokensSaga),
+    // call(getTotalTokensSaga),
     call(getProjectTokensSaga),
     call(getTokenTypesSaga),
     call(getFreeTokenSaga),

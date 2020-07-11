@@ -1,22 +1,25 @@
 import React, { useEffect } from 'react'
-import TokenSaleGraph from "../TokenSaleGraph/TokenSaleGraph.component";
+import TokenSaleGraph from '../TokenSaleGraph/TokenSaleGraph.component'
 
-const MAX_INT = 2147483647;
+const MAX_INT = 2147483647
 const Home = ({
-                getOrderListObj, getOrderList, getUserList, userListObj, getTokenListObj, getTokenList,
-                getProjectListObj, getProjectList,
-              }) => {
-
+  getOrderListObj,
+  getOrderList,
+  getUserList,
+  userListObj,
+  getTokenListObj,
+  getTokenList,
+  getProjectListObj,
+  getProjectList,
+}) => {
   useEffect(() => {
     getUserList({ pagination: { current: 1, pageSize: MAX_INT } })
     getTokenList({ pagination: { current: 1, pageSize: MAX_INT } })
     getOrderList({ pagination: { current: 1, pageSize: MAX_INT } })
     getProjectList({ pagination: { current: 1, pageSize: MAX_INT } })
-  }, [ getUserList, getTokenList, getOrderList, getProjectList ])
+  }, [getUserList, getTokenList, getOrderList, getProjectList])
 
-  useEffect(() => {
-
-  }, [ getOrderList ])
+  useEffect(() => {}, [getOrderList])
 
   return (
     <>
@@ -25,14 +28,14 @@ const Home = ({
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-warning">
-                <i className="zmdi zmdi-account"/>
+                <i className="zmdi zmdi-account" />
               </div>
             </div>
             <div className="card-content">
               <p className="category">
                 <strong>Tổng số Users</strong>
               </p>
-              <h3 className="card-title">{ userListObj?.userList.count ?? 0 }</h3>
+              <h3 className="card-title">{userListObj?.userList.count ?? 0}</h3>
             </div>
             <div className="card-footer">
               <div className="stats">
@@ -46,14 +49,14 @@ const Home = ({
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-rose">
-                <i className="zmdi zmdi-key"/>
+                <i className="zmdi zmdi-key" />
               </div>
             </div>
             <div className="card-content">
               <p className="category">
                 <strong>Tổng số Key</strong>
               </p>
-              <h3 className="card-title">{ getTokenListObj?.tokenList?.count ?? 0 }</h3>
+              <h3 className="card-title">{getTokenListObj?.tokenList?.count ?? 0}</h3>
             </div>
             <div className="card-footer">
               <div className="stats">
@@ -67,14 +70,14 @@ const Home = ({
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-info">
-                <i className="zmdi zmdi-badge-check"/>
+                <i className="zmdi zmdi-badge-check" />
               </div>
             </div>
             <div className="card-content">
               <p className="category">
                 <strong>Tổng số dự án</strong>
               </p>
-              <h3 className="card-title">{ getProjectListObj?.projectList?.count ?? 0 }</h3>
+              <h3 className="card-title">{getProjectListObj?.projectList?.count ?? 0}</h3>
             </div>
             <div className="card-footer">
               <div className="stats">
@@ -85,7 +88,7 @@ const Home = ({
           </div>
         </div>
       </div>
-      <TokenSaleGraph orderListObj={ getOrderListObj }/>
+      <TokenSaleGraph orderListObj={getOrderListObj} />
     </>
   )
 }
