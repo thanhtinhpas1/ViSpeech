@@ -554,6 +554,11 @@ img {
   font-weight: 600;
   color: #fff;
 }
+
+.navbar-brand img {
+  height: 40px;
+}
+
 .header .navbar {
   padding: 0;
 }

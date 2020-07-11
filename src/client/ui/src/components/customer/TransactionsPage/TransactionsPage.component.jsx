@@ -20,6 +20,13 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       width: 150,
     },
     {
+      title: 'Tên',
+      dataIndex: 'tokenName',
+      canSearch: true,
+      render: _id => <span className="lead tnx-id">{_id}</span>,
+      width: 150,
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'status',
       headerClassName: 'dt-token',

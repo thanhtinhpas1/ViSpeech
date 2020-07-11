@@ -14,7 +14,7 @@ const TokenTransaction = ({ userOrderListObj }) => {
   useEffect(() => {
     const transactionsArray = userOrderListObj.userOrderList.data.map(item => {
       return {
-        id: item._id,
+        name: item.tokenName || 'Free API Key',
         state: item.status,
         date: moment(item.createdDate).format('YYYY-MM-DD HH:mm'),
         type: { name: item.tokenType.name, class: 'badge-success' },
@@ -36,7 +36,7 @@ const TokenTransaction = ({ userOrderListObj }) => {
       <table className="table tnx-table">
         <thead>
           <tr>
-            <th>Mã</th>
+            <th>Tên Key</th>
             <th>Trạng thái</th>
             <th className="d-none d-sm-table-cell tnx-date">Thời gian</th>
             <th className="tnx-type">
@@ -47,9 +47,9 @@ const TokenTransaction = ({ userOrderListObj }) => {
         <tbody>
           {tableData.map(rowData => {
             return (
-              <tr key={rowData.id}>
+              <tr key={rowData.name}>
                 <td style={{ maxWidth: '280px', display: 'inline-block', whiteSpace: 'break-spaces' }}>
-                  <span className="lead tnx-id">{rowData.id}</span>
+                  <span className="lead tnx-id">{rowData.name}</span>
                 </td>
                 <td>
                   <div className="d-flex align-items-center">
