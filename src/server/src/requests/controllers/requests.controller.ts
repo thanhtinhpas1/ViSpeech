@@ -1,15 +1,4 @@
-import {
-    Body,
-    Controller,
-    HttpStatus,
-    Logger,
-    Post,
-    Req,
-    Res,
-    UploadedFile,
-    UseGuards,
-    UseInterceptors
-} from '@nestjs/common';
+import { Body, Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -18,9 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { CONSTANTS } from 'common/constant';
 import FormData from 'form-data';
-import fs from 'fs';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 import { RequestBody, RequestDto } from 'requests/dtos/requests.dto';
 import { RequestService } from 'requests/services/request.service';
 import { Repository } from 'typeorm';
@@ -29,8 +15,6 @@ import { config } from '../../../config';
 import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
 import { AsrServiceGuard } from 'auth/guards/asr.service.guard';
-
-const {getAudioDurationInSeconds} = require('get-audio-duration');
 
 @Controller('speech')
 @ApiTags('speech')
@@ -53,17 +37,7 @@ export class AsrController {
     @ApiFile('voice')
     @Post()
     @UseInterceptors(
-        FileInterceptor(
-            'voice', {
-            storage: diskStorage({
-                destination: __dirname + '/../../uploads',
-                filename: (req, file, cb) => {
-                    const randomName = Array(32).fill(null).map(() =>
-                        (Math.round(Math.random() * 16)).toString(16)).join('');
-                    return cb(null, `${randomName}${extname(file.originalname)}`);
-                },
-            }),
-        }),
+        FileInterceptor('voice')
     )
     async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
         // invalid file
@@ -78,9 +52,7 @@ export class AsrController {
             return res.status(HttpStatus.FORBIDDEN).json({message: 'Invalid token.'});
 
         // not enough token minutes to request
-        // const duration = Utils.calculateDuration(file.size);
-        const seconds = await getAudioDurationInSeconds(file.path);
-        const duration = parseFloat((seconds / 60.0).toFixed(4));
+        const duration = Utils.calculateDuration(file.size);
         const minutes = Number(tokenDto.minutes);
         const usedMinutes = Number(tokenDto.usedMinutes || 0);
         if (duration > (minutes - usedMinutes)) {
@@ -96,9 +68,8 @@ export class AsrController {
         await this.requestService.createRequest(requestId, requestDto, tokenDto);
 
         // call asr
-        const stream = fs.createReadStream(file.path);
         const formData = new FormData();
-        formData.append('voice', stream);
+        formData.append('voice', file.buffer, {filename: file.originalname});
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
         axios.post(url, formData, {headers: formData.getHeaders()}).then(result => {
             requestStatus = CONSTANTS.STATUS.SUCCESS;
@@ -110,15 +81,12 @@ export class AsrController {
             requestStatus = CONSTANTS.STATUS.FAILURE;
             return res.status(HttpStatus.BAD_REQUEST).send();
         }).finally(async () => {
-            stream.close();
-
             if (requestStatus === CONSTANTS.STATUS.SUCCESS) {
                 tokenDto.usedMinutes = usedMinutes + duration;
             }
 
             requestDto.status = requestStatus;
             this.requestService.callAsr(requestId, requestDto, tokenDto);
-            fs.unlinkSync(file.path);
         });
     }
 }
