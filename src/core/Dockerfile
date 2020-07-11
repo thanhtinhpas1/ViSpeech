@@ -9,6 +9,8 @@ COPY ./requirements.txt ./
 
 RUN pip3 install flask && pip3 install gunicorn
 
+RUN apt-get update && apt-get install -y sox libsox-fmt-mp3
+
 RUN pip install -r requirements.txt
 
 # Bundle app source

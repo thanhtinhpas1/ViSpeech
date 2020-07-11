@@ -1,21 +1,16 @@
 import axios from 'axios'
-// import { DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import {apiUrl} from './api-url'
 
 export default class SpeechService {
   static callAsr = (file, fileUrl, token) => {
     const formData = new FormData()
     formData.append('voice', file)
     formData.append('audioFileUrl', fileUrl)
-    const api = `${apiUrl}/speech`
+    const api = `http://asr.vietspeech.com:7070/v1/speech`
 
-    return axios({
-      method: 'post',
-      url: api,
-      data: formData,
+    return axios.post(api, formData, {
       headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data;',
+        Authorization: `Bearer ${ token }`,
+        ...formData.headers
       },
     })
       .then(response => {
