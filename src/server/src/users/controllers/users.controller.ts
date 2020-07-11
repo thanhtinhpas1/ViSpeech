@@ -16,16 +16,16 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'auth/auth.service';
+import { UserGuard, VerifyEmailGuard } from 'auth/guards/user.guard';
 import { Roles } from 'auth/roles.decorator';
 import { CONSTANTS } from 'common/constant';
 import { FindUserQuery } from 'users/queries/impl/find-user.query';
 import { GetUsersQuery } from 'users/queries/impl/get-users.query';
-import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
-import { UsersService } from '../services/users.service';
-import { UserGuard, VerifyEmailGuard } from 'auth/guards/user.guard';
 import { Utils } from 'utils';
-import { GetAssigneeQuery } from '../queries/impl/get-assignee.query';
 import { ProjectGuard } from '../../auth/guards/project.guard';
+import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
+import { GetAssigneeQuery } from '../queries/impl/get-assignee.query';
+import { UsersService } from '../services/users.service';
 
 @Controller('users')
 @ApiTags('Users')
@@ -86,9 +86,15 @@ export class UsersController {
     async updateUser(
         @Param() userIdDto: UserIdRequestParamsDto,
         @Body() userDto: UserDto,
+        @Req() request,
     ): Promise<UserDto> {
         const streamId = userIdDto._id;
-        return this.usersService.updateUser(streamId, {...userDto, _id: userIdDto._id});
+        const payload = this.authService.decode(request);
+        const match = payload['roles'].filter(role => role.name === CONSTANTS.ROLE.ADMIN);
+        if (match.length === 0) {
+            userDto = Utils.removePropertiesFromObject(userDto, [ 'roles' ]);
+        }
+        return this.usersService.updateUser(streamId, { ...userDto, _id: userIdDto._id });
     }
 
     /* Delete User */

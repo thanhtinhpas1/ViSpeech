@@ -1,21 +1,21 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
-import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
 import TokenService from 'services/token.service'
-import { TOKEN_TYPE, STATUS } from 'utils/constant'
+import { STATUS, TOKEN_TYPE } from 'utils/constant'
 import Utils from 'utils'
 import TokenTypes from './token.types'
 import {
-  getUserTokenListSuccess,
-  getUserTokenListFailure,
-  getProjectTokenListSuccess,
-  getProjectTokenListFailure,
-  getTokenTypesSuccess,
-  getTokenTypesFailure,
-  getFreeTokenSuccess,
   getFreeTokenFailure,
-  getTokenListSuccess,
+  getFreeTokenSuccess,
+  getProjectTokenListFailure,
+  getProjectTokenListSuccess,
   getTokenListFailure,
+  getTokenListSuccess,
+  getTokenTypesFailure,
+  getTokenTypesSuccess,
+  getUserTokenListFailure,
+  getUserTokenListSuccess,
 } from './token.actions'
 
 // ==== get user token list
@@ -71,6 +71,20 @@ export function* getTokens({ payload: filterConditions }) {
 
 export function* getTokensSaga() {
   yield takeLatest(TokenTypes.GET_TOKENS, getTokens)
+}
+
+// get total tokens
+export function* getTotalTokens({ payload: filterConditions }) {
+  try {
+    const tokenList = yield TokenService.getTotalTokens(filterConditions)
+    yield put(getTokenListSuccess(tokenList))
+  } catch (err) {
+    yield put(getTokenListFailure(err.message))
+  }
+}
+
+export function* getTotalTokensSaga() {
+  yield takeLatest(TokenTypes.GET_TOTAL_TOKENS, getTotalTokens)
 }
 
 // ==== get project tokens
@@ -132,6 +146,7 @@ export function* tokenSaga() {
   yield all([
     call(getUserTokensSaga),
     call(getTokensSaga),
+    call(getTotalTokensSaga),
     call(getProjectTokensSaga),
     call(getTokenTypesSaga),
     call(getFreeTokenSaga),

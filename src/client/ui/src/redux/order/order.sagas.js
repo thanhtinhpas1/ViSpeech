@@ -1,15 +1,15 @@
 /* eslint-disable no-restricted-globals */
-import { call, all, takeLatest, put } from 'redux-saga/effects'
-import { TOKEN_TYPE, STATUS, ORDER_STATUS } from 'utils/constant'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
+import { ORDER_STATUS, STATUS, TOKEN_TYPE } from 'utils/constant'
 import OrderService from 'services/order.service'
 import OrderTypes from './order.types'
 import {
-  getUserOrderListSuccess,
-  getUserOrderListFailure,
-  getOrderInfoSuccess,
   getOrderInfoFailure,
-  getOrderListSuccess,
+  getOrderInfoSuccess,
   getOrderListFailure,
+  getOrderListSuccess,
+  getUserOrderListFailure,
+  getUserOrderListSuccess,
 } from './order.actions'
 
 const formatOrderList = orderList => {
@@ -18,13 +18,13 @@ const formatOrderList = orderList => {
       ...order,
       status: {
         value: order.status,
-        name: STATUS[order.status].viText,
-        class: STATUS[order.status].cssClass,
+        name: STATUS[order.status]?.viText,
+        class: STATUS[order.status]?.cssClass,
       },
       tokenType: {
         ...order.tokenType,
-        name: TOKEN_TYPE[order.tokenType.name].viText,
-        class: TOKEN_TYPE[order.tokenType.name].cssClass,
+        name: TOKEN_TYPE[order.tokenType?.name]?.viText,
+        class: TOKEN_TYPE[order.tokenType?.name]?.cssClass,
       },
       token: order.token.value,
     }

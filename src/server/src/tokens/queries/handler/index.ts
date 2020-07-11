@@ -1,8 +1,9 @@
-import { GetTokensHandler, GetTokenTypesHandler } from './get-tokens.handler';
-import { GetTokensByUserIdHandler } from './get-tokens-by-userId.handler';
+import { GetTotalTokensHandler } from 'tokens/queries/handler/get-total-tokens.handler';
+import { FindFreeTokenHandler } from './find-free-token.handler';
 import { FindTokenHandler } from './find-token.handler';
 import { GetTokensByUserIdAndProjectIdHandler } from './get-tokens-by-userId-projectId.handler';
-import { FindFreeTokenHandler } from './find-free-token.handler';
+import { GetTokensByUserIdHandler } from './get-tokens-by-userId.handler';
+import { GetTokensHandler, GetTokenTypesHandler } from './get-tokens.handler';
 
 export const QueryHandlers = [
     GetTokensHandler,
@@ -11,4 +12,5 @@ export const QueryHandlers = [
     GetTokensByUserIdAndProjectIdHandler,
     FindTokenHandler,
     FindFreeTokenHandler,
+    GetTotalTokensHandler,
 ];

@@ -79,7 +79,7 @@ const Home = ({
             <div className="card-footer">
               <div className="stats">
                 <i className="material-icons">update</i>
-                <a href="Xem chi tiết">Xem chi tiết</a>
+                <a href="/admin/projects">Xem chi tiết</a>
               </div>
             </div>
           </div>

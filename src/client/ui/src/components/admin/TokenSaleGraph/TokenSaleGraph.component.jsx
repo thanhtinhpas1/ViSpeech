@@ -40,7 +40,7 @@ const TokenSaleGraph = ({ orderListObj }) => {
               return `Ngày: ${ t.labels[e[0].index] }`
             },
             label(e, t) {
-              return `Giá ${ t.datasets[0].data[e.index] }$`
+              return `Giá ${ t.datasets[0].data[e.index] } vnđ`
             },
           },
           backgroundColor: '#eff6ff',

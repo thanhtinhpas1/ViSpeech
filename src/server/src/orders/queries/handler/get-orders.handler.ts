@@ -1,12 +1,12 @@
-import { GetOrdersQuery } from '../impl/get-orders.query';
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Logger } from '@nestjs/common';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDto } from 'orders/dtos/orders.dto';
-import { getMongoRepository, Repository } from 'typeorm';
-import { Utils } from 'utils';
-import { UserDto } from 'users/dtos/users.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
+import { getMongoRepository, Repository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { Utils } from 'utils';
+import { GetOrdersQuery } from '../impl/get-orders.query';
 
 @QueryHandler(GetOrdersQuery)
 export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
@@ -62,9 +62,9 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
 
             orders = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
             for (const order of orders) {
-                const user = await this.userDtoRepository.findOne({_id: order.userId.toString()});
-                const project = await this.projectDtoRepository.findOne({_id: order.token.projectId.toString()});
-                result.push({...order, username: user.username, projectName: project.name,});
+                const user = await this.userDtoRepository.findOne({ _id: order.userId?.toString() });
+                const project = await this.projectDtoRepository.findOne({ _id: order.token.projectId?.toString() });
+                result.push({ ...order, username: user?.username, projectName: project?.name, });
             }
 
             const count = await getMongoRepository(OrderDto).count(findOptions.where);

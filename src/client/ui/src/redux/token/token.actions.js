@@ -10,6 +10,12 @@ export const getTokenList = filterConditions => ({
   payload: filterConditions,
 })
 
+// Get total tokens
+export const getTotalTokens = filterConditions => ({
+  type: TokenTypes.GET_TOTAL_TOKENS,
+  payload: filterConditions,
+})
+
 export const getTokenListSuccess = data => ({
   type: TokenTypes.GET_TOKENS_SUCCESS,
   payload: { data },

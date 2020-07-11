@@ -21,7 +21,7 @@ async function bootstrap() {
     const validationOptions = {
         transform: false,
         skipMissingProperties: false,
-        validationError: {target: true},
+        validationError: { target: false },
     };
     app.useGlobalPipes(new ValidationPipe(validationOptions));
     app.setGlobalPrefix(config.PREFIX);

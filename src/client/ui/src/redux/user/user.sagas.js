@@ -1,40 +1,32 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
-import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
 import UserService from 'services/user.service'
 import { JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import UserTypes from './user.types'
 import {
-  loginSuccess,
-  loginFailure,
-  // registerSuccess,
-  // registerFailure,
-  getUserListSuccess,
-  getUserListFailure,
-  getUserInfoSuccess,
-  getUserInfoFailure,
-  updateUserInfoSuccess,
-  updateUserInfoFailure,
-  createUserSuccess,
-  createUserFailure,
-  // deleteUserSuccess,
-  // deleteUserFailure,
-  // sendVerifyEmailSuccess,
-  // sendVerifyEmailFailure,
-  // verifyEmailSuccess,
-  // verifyEmailFailure,
-  sendEmailResetPasswordSuccess,
-  sendEmailResetPasswordFailure,
-  verifyTokenResetPasswordSuccess,
-  verifyTokenResetPasswordFailure,
-  resetPasswordSuccess,
-  resetPasswordFailure,
-  onClearUserState,
-  // changePasswordSuccess,
-  // changePasswordFailure,
-  authenticateSuccess,
   authenticateFailure,
+  authenticateSuccess,
+  createUserFailure,
+  createUserSuccess,
+  deleteUserFailure,
+  deleteUserSuccess,
+  getUserInfoFailure,
+  getUserInfoSuccess,
+  getUserListFailure,
+  getUserListSuccess,
+  loginFailure,
+  loginSuccess,
+  onClearUserState,
+  resetPasswordFailure,
+  resetPasswordSuccess,
+  sendEmailResetPasswordFailure,
+  sendEmailResetPasswordSuccess,
+  updateUserInfoFailure,
+  updateUserInfoSuccess,
+  verifyTokenResetPasswordFailure,
+  verifyTokenResetPasswordSuccess,
 } from './user.actions'
 
 // ==== login
@@ -139,22 +131,24 @@ function* createUser({ payload: data }) {
     yield put(createUserFailure(err.message))
   }
 }
+
 function* createUserSaga() {
   yield takeLatest(UserTypes.CREATE_USER, createUser)
 }
 
 // ==== delete user
-// function* deleteUser({ payload: id }) {
-//   try {
-//     yield UserService.deleteUser(id)
-//     yield put(deleteUserSuccess(id))
-//   } catch (err) {
-//     yield put(deleteUserFailure(err.message))
-//   }
-// }
-// function* deleteUserSaga() {
-//   yield takeLatest(UserTypes.DELETE_USER, deleteUser)
-// }
+function* deleteUser({ payload: id }) {
+  try {
+    yield UserService.deleteUser(id)
+    yield put(deleteUserSuccess(id))
+  } catch (err) {
+    yield put(deleteUserFailure(err.message))
+  }
+}
+
+function* deleteUserSaga() {
+  yield takeLatest(UserTypes.DELETE_USER, deleteUser)
+}
 
 // send verify email
 // function* sendVerifyEmail({ payload }) {
@@ -251,7 +245,7 @@ export function* userSaga() {
     call(getUserInfoSaga),
     call(updateUserInfoSaga),
     call(createUserSaga),
-    // call(deleteUserSaga),
+    call(deleteUserSaga),
     // call(sendVerifyEmailSaga),
     // call(verifyEmailSaga),
     call(sendEmailResetPasswordSaga),

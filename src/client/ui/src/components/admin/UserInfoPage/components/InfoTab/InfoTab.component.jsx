@@ -134,14 +134,14 @@ const InfoTab = ({ userInfoObj, updateInfoObj, updateUserInfo, updateUserInfoSuc
             hasFeedback
             rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
           >
-            <Radio.Group disabled>
-              {Object.values(ROLES).map(role => {
+            <Radio.Group>
+              { Object.values(ROLES).map(role => {
                 return (
-                  <Radio value={role} key={role}>
-                    {role}
-                  </Radio>
+                    <Radio value={ role } key={ role }>
+                      { role }
+                    </Radio>
                 )
-              })}
+              }) }
             </Radio.Group>
           </Form.Item>
           {!updateInfoObj.isLoading && updateInfoObj.isSuccess === false && (

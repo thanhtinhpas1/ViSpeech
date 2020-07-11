@@ -1,16 +1,16 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
-import { Table, Input, Button, Space } from 'antd'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Button, Input, Space, Table } from 'antd'
 import Highlighter from 'react-highlight-words'
 import { SearchOutlined } from '@ant-design/icons'
 import ResizableTitle from './components/ResizableTitle/ResizableTitle.component'
 import './AntdTable.style.scss'
 
 const AntdTable = ({ dataObj, columns, fetchData, isLoading, pageSize, scrollY }) => {
-  const [pagination, setPagination] = useState({ pageSize, current: 1, total: dataObj.count })
-  const [searchText, setSearchText] = useState('')
-  const [searchedColumn, setSearchedColumn] = useState('')
-  const [tempColumns, setTempColumns] = useState([...columns])
+  const [ pagination, setPagination ] = useState({ pageSize, current: 1, total: dataObj.count })
+  const [ searchText, setSearchText ] = useState('')
+  const [ searchedColumn, setSearchedColumn ] = useState('')
+  const [ tempColumns, setTempColumns ] = useState([ ...columns ])
   const [tableColumns, setTableColumns] = useState([])
   const [components] = useState({
     header: {

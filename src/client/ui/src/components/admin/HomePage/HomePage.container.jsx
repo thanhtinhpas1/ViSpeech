@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import HomePage from './HomePage.component'
 import { getOrderList } from "../../../redux/order/order.actions";
 import { getUserList } from "../../../redux/user/user.actions";
-import { getTokenList } from "../../../redux/token/token.actions";
+import { getTotalTokens } from "../../../redux/token/token.actions";
 import { getProjectList } from "../../../redux/project/project.actions";
 
 const mapStateToProps = state => ({
@@ -19,7 +19,7 @@ const mapDispatchToProps = dispatch => ({
   getUserList: ({ pagination, sortField, sortOrder, filters }) =>
     dispatch(getUserList({ pagination, sortField, sortOrder, filters })),
   getTokenList: ({ pagination, sortField, sortOrder, filters }) =>
-    dispatch(getTokenList({ pagination, sortField, sortOrder, filters })),
+    dispatch(getTotalTokens({ pagination, sortField, sortOrder, filters })),
   getProjectList: ({ pagination, sortField, sortOrder, filters }) =>
     dispatch(getProjectList({ pagination, sortField, sortOrder, filters })),
 })

@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { TokenDto, TokenIdRequestParamsDto } from '../dtos/tokens.dto';
-import { CreateTokenCommand } from '../commands/impl/create-token.command';
-import { UpdateTokenCommand } from '../commands/impl/update-token.command';
-import { DeleteTokenCommand } from '../commands/impl/delete-token.command';
-import { GetTokensQuery, GetTokenTypesQuery } from 'tokens/queries/impl/get-tokens.query';
-import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
-import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
-import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
 import { FindFreeTokenQuery } from 'tokens/queries/impl/find-free-token.query';
+import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
+import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
+import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
+import { GetTokensQuery, GetTokenTypesQuery } from 'tokens/queries/impl/get-tokens.query';
+import { GetTotalTokensQuery } from 'tokens/queries/impl/get-total-tokens.query';
 import { OrderDto, PaymentIntent } from '../../orders/dtos/orders.dto';
+import { CreateTokenCommand } from '../commands/impl/create-token.command';
 import { CreateUpgradeTokenOrderCommand } from '../commands/impl/create-upgrade-token-order.command';
+import { DeleteTokenCommand } from '../commands/impl/delete-token.command';
+import { UpdateTokenCommand } from '../commands/impl/update-token.command';
+import { TokenDto, TokenIdRequestParamsDto } from '../dtos/tokens.dto';
 
 @Injectable()
 export class TokensService {
@@ -71,5 +72,11 @@ export class TokensService {
 
     async createUpgradeTokenOrder(streamId: string, orderDto: OrderDto, paymentIntent: PaymentIntent) {
         return await this.commandBus.execute(new CreateUpgradeTokenOrderCommand(streamId, orderDto, paymentIntent));
+    }
+
+    async getTotalTokens(getTotalTokensQuery: GetTotalTokensQuery): Promise<number> {
+        const query = new GetTotalTokensQuery();
+        Object.assign(query, getTotalTokensQuery);
+        return await this.queryBus.execute(query);
     }
 }
