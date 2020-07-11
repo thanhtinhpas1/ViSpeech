@@ -7,6 +7,8 @@ WORKDIR /app
 # Install app dependencies
 COPY ./requirements.txt ./
 
+RUN pip3 install flask && pip3 install gunicorn
+
 RUN pip install -r requirements.txt
 
 # Bundle app source
