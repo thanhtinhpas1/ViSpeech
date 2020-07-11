@@ -28,7 +28,7 @@ export class RequestTranscriptFileUrlUpdatedHandler implements IEventHandler<Req
         const {streamId, requestId, url} = event;
 
         try {
-            await this.repository.update({_id: requestId}, {transcriptFileUrl: url});
+            await this.repository.update({_id: requestId}, {transcriptFileUrl: url, updatedDate: new Date()});
             this.eventBus.publish(new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, requestId, url));
         } catch (error) {
             this.eventBus.publish(new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, requestId, url, error));

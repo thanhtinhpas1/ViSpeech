@@ -13739,7 +13739,7 @@ fieldset[disabled] .navbar .btn-link:focus {
     position: absolute;
     width: 100%;
     padding-top: 10px;
-    z-index: 1029;
+    z-index: 1000;
 }
 
 /*

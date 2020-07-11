@@ -25,7 +25,7 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
 
         try {
             const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenType', 'upgradeToken']);
-            await this.repository.update({_id}, formattedOrderInfo);
+            await this.repository.update({ _id }, { ...formattedOrderInfo, updatedDate: new Date() });
             this.eventBus.publish(new OrderUpdatedSuccessEvent(streamId, orderDto));
         } catch (error) {
             this.eventBus.publish(new OrderUpdatedFailedEvent(streamId, orderDto, error));

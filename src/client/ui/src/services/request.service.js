@@ -38,7 +38,7 @@ export default class RequestService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -77,7 +77,7 @@ export default class RequestService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -105,7 +105,7 @@ export default class RequestService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -135,7 +135,7 @@ export default class RequestService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -164,7 +164,7 @@ export default class RequestService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }

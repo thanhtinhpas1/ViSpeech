@@ -1,3 +1,7 @@
+.ant-modal-body {
+    font-size: 16px;
+}
+
 .pagination {
     display: flex !important;
 }
@@ -33,6 +37,19 @@ input {
     overflow: visible;
 }
 
+.btn-customer {
+    position: relative;
+    color: #fff;
+    font-weight: 500;
+    padding: 8px 20px;
+    font-size: 13px;
+    line-height: 24px;
+    letter-spacing: 0.01em;
+    border-radius: 4px;
+    min-width: 160px;
+    border: 1px solid;
+    transition: all 0.4s ease;
+}
 .btn-sm {
     padding: 7px 8px;
     line-height: 18px;
@@ -43,6 +60,11 @@ input {
 }
 .btn-sm.btn-icon {
     padding: 7px 10px;
+}
+.btn-lighter {
+    color: #495463;
+    background-color: #e6effb !important;
+    border-color: #e6effb;
 }
 
 a:link,
@@ -63,7 +85,8 @@ a:visited {
     height: 50px;
 }
 
-ul, ol {
+ul,
+ol {
     padding: 0px;
     margin: 0px;
 }
@@ -552,19 +575,23 @@ textarea {
     border: 2px solid;
     border-radius: 50%;
     font-size: 36px;
-  }
-  .pay-status-success .ti {
+}
+.pay-status-success .ti {
     border-color: #00d285;
     color: #00d285;
-  }
-  .pay-status-warning .ti {
+}
+.pay-status-warning .ti {
     border-color: #ffc100;
     color: #ffc100;
-  }
-  .pay-status-error .ti {
+}
+.pay-status-error .ti {
     border-color: #ff6868;
     color: #ff6868;
-  }
+}
+
+.popup-body {
+    padding: 10px 20px 12px;
+}
 
 @media (min-width: 576px) {
     .d-sm-block {
@@ -600,6 +627,9 @@ textarea {
 }
 
 @media (min-width: 768px) {
+    body {
+        font-size: 15px !important;
+    }
     .d-md-flex {
         display: -ms-flexbox !important;
         display: flex !important;

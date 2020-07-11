@@ -27,7 +27,7 @@ export class TokenDeletedByProjectIdHandler implements IEventHandler<TokenDelete
         const {streamId, projectId} = event;
 
         try {
-            await getMongoRepository(TokenDto).updateMany({projectId}, {$set: {isValid: false}});
+            await getMongoRepository(TokenDto).updateMany({projectId}, {$set: {isValid: false, updatedDate: new Date()}});
             this.eventBus.publish(new TokenDeletedByProjectIdSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedByProjectIdFailedEvent(streamId, projectId, error));

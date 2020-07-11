@@ -23,7 +23,7 @@ const SelectTokenForm = ({
       const filters = {
         isValid: ['true'],
       }
-      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION, filters })
+      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
     }
   }, [currentUser._id, currentUser.roles, getMyProjects])
 
@@ -41,7 +41,12 @@ const SelectTokenForm = ({
       const filters = {
         isValid: ['true'],
       }
-      getProjectTokenList({ userId: currentUser._id, projectId: value, pagination: DEFAULT_PAGINATION, filters })
+      getProjectTokenList({
+        userId: currentUser._id,
+        projectId: value,
+        pagination: DEFAULT_PAGINATION.SIZE_100,
+        filters,
+      })
       form.resetFields(['tokenValue'])
     }
   }

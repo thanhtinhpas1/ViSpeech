@@ -27,7 +27,7 @@ export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent>
         const {streamId, projectId} = event;
 
         try {
-            await this.repository.update({_id: projectId}, {isValid: false});
+            await this.repository.update({_id: projectId}, {isValid: false, updatedDate: new Date()});
             this.eventBus.publish(new ProjectDeletedSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new ProjectDeletedFailedEvent(streamId, projectId, error));

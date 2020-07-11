@@ -3,13 +3,13 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { CUSTOMER_PATH } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import ProjectService from 'services/project.service'
 import SocketUtils from 'utils/socket.util'
-import InfoModal from 'components/customer/InfoModal/InfoModal.component'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import Utils from 'utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
@@ -29,6 +29,12 @@ const CreateProjectPage = ({
     SocketService.socketOnListeningEvent(PROJECT_CREATED_FAILED_EVENT)
   }, [])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   const emptyAllInputField = () => {
     window.$('#create-project-form')[0].reset()
   }
@@ -38,31 +44,35 @@ const CreateProjectPage = ({
       if (createProjectObj.isSuccess === true) {
         emptyAllInputField()
         setInfoModal({
+          visible: true,
           title: 'Tạo dự án',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#createProject-modal').modal('hide')
+              closeInfoModal()
             },
           },
+          onCancel: () => closeInfoModal(),
         })
       } else {
         setInfoModal({
+          visible: true,
           title: 'Tạo dự án',
           message: Utils.buildFailedMessage(createProjectObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#createProject-modal').modal('hide')
+              closeInfoModal()
             },
           },
+          onCancel: () => closeInfoModal(),
         })
       }
     }
-  }, [createProjectObj])
+  }, [createProjectObj, closeInfoModal])
 
   const onSubmit = async event => {
     event.preventDefault()
@@ -76,13 +86,14 @@ const CreateProjectPage = ({
     }
 
     setInfoModal({
+      visible: true,
       title: 'Tạo dự án',
       message: 'Vui lòng chờ giây lát...',
       icon: {
         isLoading: true,
       },
+      onCancel: () => closeInfoModal(),
     })
-    window.$('#createProject-modal').modal('show')
 
     createProject(project)
     try {
@@ -132,7 +143,7 @@ const CreateProjectPage = ({
           </div>
         </div>
       </div>
-      <InfoModal id="createProject-modal" infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
     </div>
   )
 }

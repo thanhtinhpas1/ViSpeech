@@ -28,7 +28,7 @@ export class PermissionUpdatedHandler implements IEventHandler<PermissionUpdated
         const {_id, ...permissionInfo} = permissionDto;
 
         try {
-            await this.repository.update({_id}, permissionInfo);
+            await this.repository.update({_id}, {...permissionInfo, updatedDate: new Date()});
             this.eventBus.publish(new PermissionUpdatedSuccessEvent(streamId, permissionDto));
         } catch (error) {
             this.eventBus.publish(new PermissionUpdatedFailedEvent(streamId, permissionDto, error));

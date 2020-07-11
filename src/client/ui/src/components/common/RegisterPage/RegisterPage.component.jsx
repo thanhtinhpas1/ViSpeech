@@ -1,10 +1,10 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useEffect} from 'react'
-import {useHistory} from 'react-router-dom'
-import {Alert, Button} from 'antd'
-import {ROLES, USER_TYPE} from 'utils/constant'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { Alert, Button } from 'antd'
+import { ROLES, USER_TYPE } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
@@ -66,8 +66,8 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
       <div className="page-ath-wrap">
         <div className="page-ath-content">
           <div className="page-ath-header">
-            <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold' }}>
-              ASR VIETSPEECH
+            <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold', letterSpacing: '1px' }}>
+              VIET SPEECH
             </a>
           </div>
           <div className="page-ath-form">
@@ -133,7 +133,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
               <li>
                 <a href="#">Tài liệu</a>
               </li>
-              <li>© 2019 Softia.</li>
+              <li>© 2020 ASR VietSpeech.</li>
             </ul>
           </div>
         </div>

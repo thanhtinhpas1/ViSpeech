@@ -24,7 +24,7 @@ import { GetUsersQuery } from 'users/queries/impl/get-users.query';
 import { Utils } from 'utils';
 import { ProjectGuard } from '../../auth/guards/project.guard';
 import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
-import { GetAssigneeQuery } from '../queries/impl/get-assignee.query';
+import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { UsersService } from '../services/users.service';
 import { UserUtils } from 'utils/user.util';
 
@@ -162,7 +162,7 @@ export class UsersController {
     @ApiOperation({tags: ['List Users']})
     @ApiResponse({status: 200, description: 'List Users.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-    @Roles([CONSTANTS.ROLE.ADMIN])
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Get()
     async getUsers(@Query() getUsersQuery: GetUsersQuery) {
         return this.usersService.getUsers(getUsersQuery);
@@ -174,7 +174,7 @@ export class UsersController {
     @ApiResponse({status: 200, description: 'List Users in project'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
     @Get('assignees/:projectId')
-    async getUsersAssignee(@Param() getAssigneeQuery: GetAssigneeQuery) {
-        return await this.usersService.getUserAssignee(getAssigneeQuery);
+    async getProjectAssignees(@Param() query: GetProjectAssigneesQuery) {
+        return await this.usersService.getProjectAssignees(query);
     }
 }

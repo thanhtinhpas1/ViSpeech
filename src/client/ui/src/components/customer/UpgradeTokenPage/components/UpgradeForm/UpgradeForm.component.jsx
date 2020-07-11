@@ -105,37 +105,48 @@ const UpgradeForm = ({
     async function upgradeToken(projectId, tokenId, tokenTypeToUpgrade) {
       const cardElement = elements.getElement(CardElement)
       let result = null
+      // const paymentMethodReq = null
+      let confirmedCardPayment = null
 
       try {
-        result = await OrderService.createPaymentIntent(tokenTypeToUpgrade.saleOffPrice * 100)
+        let usd = 0.000043 * tokenTypeToUpgrade.saleOffPrice
+        usd = usd < 0.5 ? 0.5 : usd // Amount must be at least $0.50 usd
+        result = await OrderService.createPaymentIntent(usd * 100)
+
+        // paymentMethodReq = await stripe.createPaymentMethod({
+        //   type: 'card',
+        //   card: cardElement,
+        //   billing_details: {
+        //     name: `${user.firstName} ${user.lastName}`,
+        //     email: user.email,
+        //   },
+        // })
+        // if (paymentMethodReq.error) {
+        //   setErrorMessage(paymentMethodReq.error.message)
+        //   setIsLoading(false)
+        //   return
+        // }
+
+        confirmedCardPayment = await stripe.confirmCardPayment(result.clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: `${currentUser.firstName} ${currentUser.lastName}`,
+              email: currentUser.email,
+            },
+          },
+        })
+        if (confirmedCardPayment.error) {
+          setErrorMessage(confirmedCardPayment.error.message)
+          setIsLoading(false)
+          return
+        }
       } catch (err) {
         setErrorMessage(err.message || err)
         setIsLoading(false)
         return
       }
 
-      const paymentMethodReq = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: {
-          name: `${currentUser.firstName} ${currentUser.lastName}`,
-          email: currentUser.email,
-        },
-      })
-      if (paymentMethodReq.error) {
-        setErrorMessage(paymentMethodReq.error.message)
-        setIsLoading(false)
-        return
-      }
-
-      const confirmedCardPayment = await stripe.confirmCardPayment(result.clientSecret, {
-        payment_method: paymentMethodReq.paymentMethod.id,
-      })
-      if (confirmedCardPayment.error) {
-        setErrorMessage(confirmedCardPayment.error.message)
-        setIsLoading(false)
-        return
-      }
       if (confirmedCardPayment.paymentIntent && confirmedCardPayment.paymentIntent.status === 'succeeded') {
         // The payment has been processed!
         const paymentIntent = {
@@ -195,7 +206,7 @@ const UpgradeForm = ({
       const filters = {
         isValid: ['true'],
       }
-      getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION, filters })
+      getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
       form.resetFields(['tokenId'])
       form.resetFields(['currentTokenType'])
       setCurrentTokenTypeMinutes(0)
@@ -344,7 +355,7 @@ const UpgradeForm = ({
       >
         <Checkbox>
           Tôi đồng ý với
-          <strong> điều khoản giao dịch mua bán key</strong> của Softia.
+          <strong> điều khoản giao dịch mua bán key</strong> của ASR VietSpeech.
         </Checkbox>
       </Form.Item>
       <ul className="d-flex flex-wrap align-items-center guttar-30px">

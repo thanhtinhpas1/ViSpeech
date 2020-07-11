@@ -1,8 +1,8 @@
 /* eslint-disable react/no-danger */
 import React from 'react'
-import InfoModal from 'components/customer/InfoModal/InfoModal.component'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
 
-const InfoTemplatePage = ({ infoModalId, infoTemplate, infoModal }) => {
+const InfoTemplatePage = ({ infoTemplate, infoModal }) => {
   return (
     <div className="page-content">
       <div className="container">
@@ -10,25 +10,11 @@ const InfoTemplatePage = ({ infoModalId, infoTemplate, infoModal }) => {
           <div className="col-xl-9 col-lg-10">
             <div className="content-area card">
               <div className="card-innr">
-                {/* <div className="card-head">
-                  <h6 className="card-title text-center">Email Confirm Template</h6>
-                </div> */}
                 <div className="gaps-1x" />
                 <table className="email-wraper">
                   <tbody>
                     <tr>
                       <td className="pdt-4x pdb-4x">
-                        {/* <table className="email-header">
-                          <tbody>
-                            <tr>
-                              <td className="text-center pdb-2-5x">
-                                <p className="email-title">
-                                  The Best Selling Premium HTML Template
-                                </p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table> */}
                         <table className="email-body">
                           <tbody>
                             <tr>
@@ -91,7 +77,7 @@ const InfoTemplatePage = ({ infoModalId, infoTemplate, infoModal }) => {
           </div>
         </div>
       </div>
-      <InfoModal id={infoModalId} infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
     </div>
   )
 }

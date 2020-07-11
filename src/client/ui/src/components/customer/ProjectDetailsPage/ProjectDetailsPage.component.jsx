@@ -6,7 +6,7 @@ import React, { useCallback, useEffect } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { CUSTOMER_PATH, TOKEN_TYPE, STATUS } from 'utils/constant'
+import { CUSTOMER_PATH, TOKEN_TYPE, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
 
 const ProjectDetailsPage = ({
   currentUser,
@@ -111,15 +111,11 @@ const ProjectDetailsPage = ({
 
   useEffect(() => {
     const projectOwnerId = getProjectInfoObj.project.userId
-    const pagination = {
-      pageSize: 5,
-      current: 1,
-    }
     if (pathname.includes('accepted-project') && projectOwnerId) {
-      getProjectTokens({ userId: projectOwnerId, projectId: id, pagination })
+      getProjectTokens({ userId: projectOwnerId, projectId: id, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
     if (pathname.includes('my-project')) {
-      getProjectTokens({ userId: currentUser._id, projectId: id, pagination })
+      getProjectTokens({ userId: currentUser._id, projectId: id, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
   }, [getProjectInfoObj.project.userId, currentUser._id, id, pathname, getProjectTokens])
 
@@ -148,14 +144,14 @@ const ProjectDetailsPage = ({
                   {currentUser && getProjectInfoObj.project.userId === currentUser._id && (
                     <>
                       <Link
-                        to={`${CUSTOMER_PATH}/assign-permission?projectName=${getProjectInfoObj.project.name}`}
+                        to={`${CUSTOMER_PATH}/assign-permission?projectId=${getProjectInfoObj.project._id}`}
                         className="btn btn-sm btn-auto btn-primary d-sm-block d-none"
                       >
                         Mời tham gia
                         <em className="fas fa-user-plus ml-3" />
                       </Link>
                       <Link
-                        to={`${CUSTOMER_PATH}/assign-permission?projectName=${getProjectInfoObj.project.name}`}
+                        to={`${CUSTOMER_PATH}/assign-permission?projectId=${getProjectInfoObj.project._id}`}
                         className="btn btn-icon btn-sm btn-primary d-sm-none"
                       >
                         <em className="fas fa-user-plus" />
@@ -179,14 +175,12 @@ const ProjectDetailsPage = ({
                   <strong>{getProjectInfoObj.project.description}</strong>
                 </span>
               </div>
-              {}
               <div className="fake-class">
                 <span className="data-details-title">Thành viên</span>
                 <span className="data-details-info">
                   {getProjectInfoObj.project &&
-                    getProjectInfoObj.project.assignees &&
-                    getProjectInfoObj.project.assignees.map(assignee => (
-                      <h5 key={assignee.username}>{assignee.username}</h5>
+                    (getProjectInfoObj.project.assignees || []).map(assignee => (
+                      <h5 key={assignee._id}>{assignee.username}</h5>
                     ))}
                 </span>
               </div>
@@ -209,7 +203,7 @@ const ProjectDetailsPage = ({
               columns={columns}
               fetchData={getProjectTokensList}
               isLoading={getProjectTokenListObj.isLoading}
-              pageSize={5}
+              pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
               scrollY={500}
             />
           </div>

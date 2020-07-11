@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
@@ -11,7 +11,7 @@ import SpeechService from 'services/speech.service'
 import SocketService from 'services/socket.service'
 import RequestService from 'services/request.service'
 import SocketUtils from 'utils/socket.util'
-import InfoModal from 'components/customer/InfoModal/InfoModal.component'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
 import RequestTable from './components/RequestTable/RequestTable.container'
 
@@ -41,11 +41,17 @@ const TrialPage = ({
     SocketService.socketOnListeningEvent(REQUEST_UPDATED_FAILED_EVENT)
   }, [])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   const refreshRequestList = () => {
     setUploading(false)
     setNewRequest({})
     getRequestListByUserId(currentUser._id, {
-      pagination: DEFAULT_PAGINATION,
+      pagination: DEFAULT_PAGINATION.SIZE_5,
       sortField: 'createdDate',
       sortOrder: SORT_ORDER.DESC,
     })
@@ -64,7 +70,7 @@ const TrialPage = ({
           updateRequestInfoSuccess(transcriptFileUrl)
         }
         refreshRequestList()
-        window.$('#uploadAudioFile-modal').modal('hide')
+        closeInfoModal()
         history.push(`${CUSTOMER_PATH}/request-details/${requestId}`)
       })
     } catch (err) {
@@ -116,23 +122,26 @@ const TrialPage = ({
 
   const handleUpload = async ({ file, onProgress, onSuccess, onError }) => {
     setInfoModal({
+      visible: true,
       title: 'Tải tập tin âm thanh',
-      message: 'Đang tải',
+      message: 'Đang tải...',
       icon: { isLoading: true },
+      onCancel: () => closeInfoModal(),
     })
-    window.$('#uploadAudioFile-modal').modal('show')
 
     if (!file) {
       setInfoModal({
+        visible: true,
         title: 'Tải tập tin âm thanh',
         message: 'Tập tin không tồn tại. Vui lòng chọn lại!',
         icon: { isSuccess: false },
         button: {
           content: 'Đóng',
           clickFunc: () => {
-            window.$('#uploadAudioFile-modal').modal('hide')
+            closeInfoModal()
           },
         },
+        onCancel: () => closeInfoModal(),
       })
       return
     }
@@ -170,15 +179,17 @@ const TrialPage = ({
         setUploading(false)
         onError(error)
         setInfoModal({
+          visible: true,
           title: 'Tải tập tin âm thanh',
           message: 'Đã có lỗi xảy ra khi tải tập tin. Vui lòng thử lại sau!',
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#uploadAudioFile-modal').modal('hide')
+              closeInfoModal()
             },
           },
+          onCancel: () => closeInfoModal(),
         })
       },
       () => {
@@ -189,15 +200,17 @@ const TrialPage = ({
           .then(async url => {
             onSuccess()
             setInfoModal({
+              visible: true,
               title: 'Tải tập tin âm thanh',
               message: 'Tải lên tập tin thành công!',
               icon: { isSuccess: true },
               button: {
                 content: 'Đóng',
                 clickFunc: () => {
-                  window.$('#uploadAudioFile-modal').modal('hide')
+                  closeInfoModal()
                 },
               },
+              onCancel: () => closeInfoModal(),
             })
             callAsr(file, folder, url)
           })
@@ -253,7 +266,7 @@ const TrialPage = ({
           </div>
         </div>
       </div>
-      <InfoModal id="uploadAudioFile-modal" infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
     </div>
   )
 }

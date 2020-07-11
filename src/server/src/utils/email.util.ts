@@ -45,7 +45,7 @@ const sendEmail = (to, subject, contentEmail) => {
         if (error) {
             return Logger.log(error);
         }
-        Logger.log('Message sent: %s', info.messageId);
+        Logger.log(`Message sent: ${info.messageId}`);
     });
 };
 

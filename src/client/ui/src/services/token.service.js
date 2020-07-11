@@ -37,7 +37,7 @@ export default class TokenService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -110,7 +110,7 @@ export default class TokenService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -138,7 +138,7 @@ export default class TokenService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -176,7 +176,7 @@ export default class TokenService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -204,7 +204,7 @@ export default class TokenService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -233,7 +233,7 @@ export default class TokenService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }

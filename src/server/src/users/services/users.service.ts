@@ -8,8 +8,8 @@ import { FindUserQuery } from 'users/queries/impl/find-user.query';
 import { ChangePasswordCommand } from '../commands/impl/change-password.command';
 import { VerifyEmailCommand } from 'users/commands/impl/verify-email.command';
 import { SendVerifyEmailCommand } from 'users/commands/impl/send-verify-email.command';
-import { GetAssigneeQuery } from "../queries/impl/get-assignee.query";
 import { CreateUserCommand } from "../commands/impl/create-user.command";
+import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 
 @Injectable()
 export class UsersService {
@@ -54,8 +54,8 @@ export class UsersService {
         return await this.queryBus.execute(query);
     }
 
-    async getUserAssignee(findAssigneeQuery: GetAssigneeQuery) {
-        const query = new GetAssigneeQuery(findAssigneeQuery.projectId);
+    async getProjectAssignees(getProjectAssigneesQuery: GetProjectAssigneesQuery) {
+        const query = new GetProjectAssigneesQuery(getProjectAssigneesQuery.projectId);
         return await this.queryBus.execute(query);
     }
 }

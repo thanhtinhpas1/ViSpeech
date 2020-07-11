@@ -14,17 +14,17 @@ const Header = ({ currentUser, authenticate, logout }) => {
     const userLinksArr = [
       {
         href: `${CUSTOMER_PATH}/profile`,
-        iconClass: 'ti-id-badge',
+        iconClass: 'ti-user',
         name: 'Trang cá nhân',
       },
       {
         href: `${CUSTOMER_PATH}/transactions`,
-        iconClass: 'ti-eye',
+        iconClass: 'ti-book',
         name: 'Lịch sử giao dịch',
       },
       {
         href: `${CUSTOMER_PATH}/reports`,
-        iconClass: 'ti-bar-chart-alt',
+        iconClass: 'ti-bar-chart',
         name: 'Thống kê',
       },
     ]
@@ -36,7 +36,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
       },
       {
         href: `${CUSTOMER_PATH}/projects`,
-        emClass: 'ikon-coins',
+        emClass: 'ikon-exchange',
         name: 'Dự án',
       },
       {
@@ -46,7 +46,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
       },
       {
         href: `${CUSTOMER_PATH}/reports`,
-        emClass: 'ikon-transactions',
+        emClass: 'ikon-coins',
         name: 'Thống kê',
       },
       {
@@ -56,12 +56,12 @@ const Header = ({ currentUser, authenticate, logout }) => {
       },
       {
         href: `${CUSTOMER_PATH}/upgrade-token`,
-        emClass: 'ikon-distribution',
+        emClass: 'ikon-wallet',
         name: 'Nâng cấp API key',
       },
       {
         href: `${CUSTOMER_PATH}/documents`,
-        emclass: 'ikon-distribution',
+        emClass: 'ikon-settings',
         name: 'Tài liệu',
       },
     ]
@@ -109,8 +109,13 @@ const Header = ({ currentUser, authenticate, logout }) => {
                   </a>
                 </li>
               </ul>
-              <a className="topbar-logo" href="/">
-                <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo1.png`} alt="" />
+              <a
+                className="topbar-logo"
+                href="/"
+                style={{ fontSize: '1.5em', fontWeight: 'bold', color: '#FFF', letterSpacing: '2px' }}
+              >
+                {/* <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo1.png`} alt="" /> */}
+                VIET SPEECH
               </a>
               <ul className="topbar-nav">
                 <li className="topbar-nav-item relative">

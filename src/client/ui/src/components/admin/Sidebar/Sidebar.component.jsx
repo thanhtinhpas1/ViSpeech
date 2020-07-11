@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useEffect} from 'react'
-import {useLocation} from 'react-router-dom'
-import {ADMIN_PATH, JWT_TOKEN} from 'utils/constant'
+import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { ADMIN_PATH, JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 
 const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
@@ -16,12 +16,12 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
     <div className="sidebar">
       <div className="logo">
         <a href={`${ADMIN_PATH}`} className="simple-text">
-          ViSpeech Admin
+          VIET SPEECH ADMIN
         </a>
       </div>
       <div className="logo logo-mini">
         <a href={`${ADMIN_PATH}`} className="simple-text">
-          T
+          VS
         </a>
       </div>
       <div className="sidebar-wrapper">
@@ -72,7 +72,7 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
             } `}
           >
             <a data-toggle="collapse" href="#layouts" className="collapsed" aria-expanded="false">
-              <i className="zmdi zmdi-accounts" />
+              <i className="fas fa-users" />
               <p>
                 Khách hàng
                 <b className="caret" />

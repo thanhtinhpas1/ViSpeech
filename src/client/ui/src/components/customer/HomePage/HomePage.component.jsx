@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
-import { SORT_ORDER, TOKEN_TYPE } from 'utils/constant'
+import { SORT_ORDER, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 import TokenStatistics from './components/TokenStatistics/TokenStatistics.container'
 import TokenTransaction from './components/TokenTransaction/TokenTransaction.container'
 import TokenCalculator from './components/TokenCalculator/TokenCalculator.component'
@@ -11,12 +11,13 @@ import TokenSaleGraph from './components/TokenSaleGraph/TokenSaleGraph.component
 const Home = ({ currentUser, getUserOrderListObj, getFreeTokenObj, getFreeToken, getUserOrderList }) => {
   useEffect(() => {
     if (currentUser._id) {
-      const pagination = {
-        current: 1,
-        pageSize: 5,
-      }
       getFreeToken(currentUser._id)
-      getUserOrderList({ userId: currentUser._id, pagination, sortField: 'createdDate', sortOrder: SORT_ORDER.DESC })
+      getUserOrderList({
+        userId: currentUser._id,
+        pagination: DEFAULT_PAGINATION.SIZE_5,
+        sortField: 'createdDate',
+        sortOrder: SORT_ORDER.DESC,
+      })
     }
   }, [currentUser._id, getFreeToken, getUserOrderList])
 

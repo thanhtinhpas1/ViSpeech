@@ -30,7 +30,8 @@ export class TokenUpgradedHandler implements IEventHandler<TokenUpgradedEvent> {
             await this.repository.update({_id: upgradedToken._id}, {
                 minutes: upgradedToken.minutes,
                 tokenTypeId: upgradedToken.tokenTypeId,
-                tokenType: upgradedToken.tokenType
+                tokenType: upgradedToken.tokenType,
+                updatedDate: new Date()
             });
             this.eventBus.publish(new TokenUpgradedSuccessEvent(streamId, upgradedToken, tokenTypeDto));
         } catch (error) {

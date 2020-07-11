@@ -50,7 +50,7 @@ const InfoTab = ({ userInfoObj, updateInfoObj, updateUserInfo, updateUserInfoSuc
       firstName,
       lastName,
       email,
-      roles: [ { name: role } ],
+      roles: [{ name: role }],
     }
 
     updateUserInfo(userId, user)
@@ -135,13 +135,13 @@ const InfoTab = ({ userInfoObj, updateInfoObj, updateUserInfo, updateUserInfoSuc
             rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
           >
             <Radio.Group>
-              { Object.values(ROLES).map(role => {
+              {Object.values(ROLES).map(role => {
                 return (
-                    <Radio value={ role } key={ role }>
-                      { role }
-                    </Radio>
+                  <Radio value={role} key={role}>
+                    {role}
+                  </Radio>
                 )
-              }) }
+              })}
             </Radio.Group>
           </Form.Item>
           {!updateInfoObj.isLoading && updateInfoObj.isSuccess === false && (

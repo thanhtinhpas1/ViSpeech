@@ -1,22 +1,49 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Radio } from 'antd'
 import Utils from 'utils'
-import InfoModal from 'components/customer/InfoModal/InfoModal.component'
-import { CUSTOMER_PATH, DEFAULT_PAGINATION, TOKEN_TYPE } from 'utils/constant'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import { loadStripe } from '@stripe/stripe-js'
+import { CUSTOMER_PATH, DEFAULT_PAGINATION, TOKEN_TYPE, STRIPE_PUBLIC_KEY } from 'utils/constant'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
 import TokenType from './components/TokenType/TokenType.component'
 import PayOnlineModal from './components/PayOnlineModal/PayOnlineModal.container'
+import PayReviewModal from './components/PayReviewModal/PayReviewModal.component'
 
 const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj, getTokenTypes, getMyProjects }) => {
   const [payOnlineModal, setPayOnlineModal] = useState({})
+  const [payReviewModal, setPayReviewModal] = useState({})
   const [infoModal, setInfoModal] = useState({})
   const [selectedTokenTypeId, setSelectedTokenTypeId] = useState(null)
   const [defaultTokenTypeId, setDefaultTokenTypeId] = useState(null)
   const history = useHistory()
+
+  const [stripePromise, setStripePromise] = useState(null)
+
+  useEffect(() => {
+    setStripePromise(loadStripe(STRIPE_PUBLIC_KEY))
+  }, [])
+
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
+  const closePayOnlineModal = useCallback(() => {
+    setPayOnlineModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
+  const closePayReviewModal = useCallback(() => {
+    setPayReviewModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
 
   useEffect(() => {
     getTokenTypes()
@@ -54,13 +81,14 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
       const filters = {
         isValid: ['true'],
       }
-      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION, filters })
+      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
     }
   }, [currentUser._id, currentUser.roles, getMyProjects])
 
   const openPayOnlineModal = () => {
     if (!Utils.isEmailVerified(currentUser.roles)) {
       const infoObj = {
+        visible: true,
         title: 'Không thể thực hiện tác vụ',
         message:
           'Tài khoản của bạn chưa được kích hoạt. Vui lòng thực hiện xác thực email tại trang cá nhân để kích hoạt tài khoản.',
@@ -70,18 +98,19 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
         button: {
           content: 'Đến trang cá nhân',
           clickFunc: () => {
-            window.$('#buyToken-modal').modal('hide')
+            closeInfoModal()
             history.push(`${CUSTOMER_PATH}/profile`)
           },
         },
+        onCancel: () => closeInfoModal(),
       }
       setInfoModal(infoObj)
-      window.$('#buyToken-modal').modal('show')
       return
     }
 
     if (getMyProjectListObj.myProjectList.data.length === 0) {
       const infoObj = {
+        visible: true,
         title: 'Không thể thực hiện tác vụ',
         message: 'Bạn chưa có dự án nào. Tạo dự án để thực hiện tác vụ này.',
         icon: {
@@ -90,13 +119,13 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
         button: {
           content: 'Tạo dự án',
           clickFunc: () => {
-            window.$('#buyToken-modal').modal('hide')
+            closeInfoModal()
             history.push(`${CUSTOMER_PATH}/create-project`)
           },
         },
+        onCancel: () => closeInfoModal(),
       }
       setInfoModal(infoObj)
-      window.$('#buyToken-modal').modal('show')
       return
     }
 
@@ -104,12 +133,30 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
     let selectedType = getTokenTypeListObj.tokenTypeList[index]
     selectedType = Utils.removePropertiesFromObject(selectedType, ['createdDate', 'updatedDate'])
     const payOnlineObj = {
-      user: currentUser,
-      tokenType: selectedType,
+      visible: true,
+      data: {
+        user: currentUser,
+        tokenType: selectedType,
+      },
+      onCancel: () => closePayOnlineModal(),
     }
     setPayOnlineModal(payOnlineObj)
-    window.$('#pay-online').modal('show')
   }
+
+  const onOrderSuccess = useCallback(
+    orderData => {
+      closePayOnlineModal()
+      setPayReviewModal({
+        visible: true,
+        data: {
+          minutes: orderData.minutes,
+          token: orderData.tokenValue,
+        },
+        onCancel: () => closePayReviewModal(),
+      })
+    },
+    [closePayOnlineModal, closePayReviewModal]
+  )
 
   const onChangeTokenType = e => {
     setSelectedTokenTypeId(e.target.value)
@@ -166,15 +213,23 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
             className="btn btn-warning"
             onClick={openPayOnlineModal}
             style={{ display: 'flex', justifyContent: 'center' }}
-            disabled={getTokenTypeListObj.tokenTypeList.length === 0}
+            disabled={getTokenTypeListObj.tokenTypeList.length === 0 || stripePromise == null}
           >
             <em className="pay-icon fas fa-dollar-sign" />
             Mua ngay
           </button>
         </div>
       </div>
-      <PayOnlineModal payOnlineModal={payOnlineModal} myProjectList={getMyProjectListObj.myProjectList} />
-      <InfoModal id="buyToken-modal" infoModal={infoModal} />
+      {payOnlineModal.visible && (
+        <PayOnlineModal
+          payOnlineModal={payOnlineModal}
+          myProjectList={getMyProjectListObj.myProjectList}
+          onOrderSuccess={onOrderSuccess}
+          stripePromise={stripePromise}
+        />
+      )}
+      {payReviewModal.visible && <PayReviewModal payReviewModal={payReviewModal} />}
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
     </>
   )
 }

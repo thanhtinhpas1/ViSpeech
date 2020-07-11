@@ -27,3 +27,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.ant-modal-body {
+  padding: 0;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.ant-modal-close-x:focus {
+  outline: none;
+}

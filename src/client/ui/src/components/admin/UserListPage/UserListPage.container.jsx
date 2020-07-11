@@ -1,10 +1,5 @@
 import { connect } from 'react-redux'
-import {
-  getUserList,
-  deleteUser,
-  deleteUserSuccess,
-  deleteUserFailure,
-} from 'redux/user/user.actions'
+import { getUserList, deleteUser, deleteUserSuccess, deleteUserFailure } from 'redux/user/user.actions'
 import UserListPage from './UserListPage.component'
 
 const mapStateToProps = state => ({

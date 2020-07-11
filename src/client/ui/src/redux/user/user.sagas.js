@@ -2,16 +2,16 @@
 /* eslint-disable no-underscore-dangle */
 import { all, call, put, takeLatest } from 'redux-saga/effects'
 import UserService from 'services/user.service'
-import { JWT_TOKEN } from 'utils/constant'
+import { JWT_TOKEN, STATUS } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import UserTypes from './user.types'
 import {
   authenticateFailure,
   authenticateSuccess,
-  createUserFailure,
-  createUserSuccess,
-  deleteUserFailure,
-  deleteUserSuccess,
+  // createUserFailure,
+  // createUserSuccess,
+  // deleteUserFailure,
+  // deleteUserSuccess,
   getUserInfoFailure,
   getUserInfoSuccess,
   getUserListFailure,
@@ -23,8 +23,8 @@ import {
   resetPasswordSuccess,
   sendEmailResetPasswordFailure,
   sendEmailResetPasswordSuccess,
-  updateUserInfoFailure,
-  updateUserInfoSuccess,
+  // updateUserInfoFailure,
+  // updateUserInfoSuccess,
   verifyTokenResetPasswordFailure,
   verifyTokenResetPasswordSuccess,
 } from './user.actions'
@@ -82,9 +82,20 @@ export function* authenticateSaga() {
 }
 
 // ==== get user list
+const formatUserList = userList => {
+  const mapFunc = user => {
+    return {
+      ...user,
+      isActive: user.isActive ? STATUS.ACTIVE : STATUS.INACTIVE,
+    }
+  }
+  return userList.map(mapFunc)
+}
+
 export function* getUserList({ payload: filterConditions }) {
   try {
     const userList = yield UserService.getUserList(filterConditions)
+    userList.data = formatUserList(userList.data)
     yield put(getUserListSuccess(userList))
   } catch (err) {
     yield put(getUserListFailure(err.message))
@@ -110,45 +121,45 @@ export function* getUserInfoSaga() {
 }
 
 // ==== update user info
-function* updateUserInfo({ payload: { id, userInfo } }) {
-  try {
-    yield UserService.updateUserInfo(id, userInfo)
-    yield put(updateUserInfoSuccess({ ...userInfo, _id: id }))
-  } catch (err) {
-    yield put(updateUserInfoFailure(err.message))
-  }
-}
-function* updateUserInfoSaga() {
-  yield takeLatest(UserTypes.UPDATE_USER_INFO, updateUserInfo)
-}
+// function* updateUserInfo({ payload: { id, userInfo } }) {
+//   try {
+//     yield UserService.updateUserInfo(id, userInfo)
+//     yield put(updateUserInfoSuccess({ ...userInfo, _id: id }))
+//   } catch (err) {
+//     yield put(updateUserInfoFailure(err.message))
+//   }
+// }
+// function* updateUserInfoSaga() {
+//   yield takeLatest(UserTypes.UPDATE_USER_INFO, updateUserInfo)
+// }
 
 // ==== create user
-function* createUser({ payload: data }) {
-  try {
-    yield UserService.createUser(data)
-    yield put(createUserSuccess(data))
-  } catch (err) {
-    yield put(createUserFailure(err.message))
-  }
-}
+// function* createUser({ payload: data }) {
+//   try {
+//     yield UserService.createUser(data)
+//     yield put(createUserSuccess(data))
+//   } catch (err) {
+//     yield put(createUserFailure(err.message))
+//   }
+// }
 
-function* createUserSaga() {
-  yield takeLatest(UserTypes.CREATE_USER, createUser)
-}
+// function* createUserSaga() {
+//   yield takeLatest(UserTypes.CREATE_USER, createUser)
+// }
 
 // ==== delete user
-function* deleteUser({ payload: id }) {
-  try {
-    yield UserService.deleteUser(id)
-    yield put(deleteUserSuccess(id))
-  } catch (err) {
-    yield put(deleteUserFailure(err.message))
-  }
-}
+// function* deleteUser({ payload: id }) {
+//   try {
+//     yield UserService.deleteUser(id)
+//     yield put(deleteUserSuccess(id))
+//   } catch (err) {
+//     yield put(deleteUserFailure(err.message))
+//   }
+// }
 
-function* deleteUserSaga() {
-  yield takeLatest(UserTypes.DELETE_USER, deleteUser)
-}
+// function* deleteUserSaga() {
+//   yield takeLatest(UserTypes.DELETE_USER, deleteUser)
+// }
 
 // send verify email
 // function* sendVerifyEmail({ payload }) {
@@ -243,9 +254,9 @@ export function* userSaga() {
     call(loginStartSaga),
     call(getUserListSaga),
     call(getUserInfoSaga),
-    call(updateUserInfoSaga),
-    call(createUserSaga),
-    call(deleteUserSaga),
+    // call(updateUserInfoSaga),
+    // call(createUserSaga),
+    // call(deleteUserSaga),
     // call(sendVerifyEmailSaga),
     // call(verifyEmailSaga),
     call(sendEmailResetPasswordSaga),

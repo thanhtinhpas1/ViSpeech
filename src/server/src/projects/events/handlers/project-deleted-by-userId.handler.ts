@@ -27,7 +27,7 @@ export class ProjectDeletedByUserIdHandler implements IEventHandler<ProjectDelet
         const {streamId, userId} = event;
 
         try {
-            await getMongoRepository(ProjectDto).updateMany({userId}, {$set: {isValid: false}});
+            await getMongoRepository(ProjectDto).updateMany({userId}, {$set: {isValid: false, updatedDate: new Date()}});
             this.eventBus.publish(new ProjectDeletedByUserIdSuccessEvent(streamId, userId));
         } catch (error) {
             this.eventBus.publish(new ProjectDeletedByUserIdFailedEvent(streamId, userId, error));

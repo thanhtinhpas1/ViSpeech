@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class GetAssigneeQuery {
+export class GetProjectAssigneesQuery {
     constructor(projectId: string,) {
         this.projectId = projectId;
     }

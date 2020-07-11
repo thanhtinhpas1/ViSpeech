@@ -8,7 +8,7 @@ import React, { useCallback, useEffect } from 'react'
 import { Tabs } from 'antd'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, STATUS } from 'utils/constant'
+import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
 
 const { TabPane } = Tabs
 
@@ -80,7 +80,7 @@ const ProjectsTab = ({
       dataIndex: '_id',
       render: _id => (
         <a href={`${ADMIN_PATH}/user-project/${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="zmdi zmdi-eye" />
+          <i className="far fa-eye" />
         </a>
       ),
       width: 60,
@@ -179,7 +179,7 @@ const ProjectsTab = ({
       dataIndex: '_id',
       render: _id => (
         <a href={`${ADMIN_PATH}/user-accepted-project/${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="zmdi zmdi-eye" />
+          <i className="far fa-eye" />
         </a>
       ),
       width: 60,
@@ -190,12 +190,8 @@ const ProjectsTab = ({
   useEffect(() => {
     const userId = userInfoObj.user._id
     if (userId) {
-      const pagination = {
-        pageSize: 5,
-        current: 1,
-      }
-      getMyProjects({ userId, pagination })
-      getAcceptedProjects({ userId, pagination })
+      getMyProjects({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
+      getAcceptedProjects({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
   }, [userInfoObj.user._id, getMyProjects, getAcceptedProjects])
 
@@ -228,7 +224,7 @@ const ProjectsTab = ({
             columns={userProjectTableColumns}
             fetchData={getUserProjectList}
             isLoading={getMyProjectListObj.isLoading}
-            pageSize={5}
+            pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
             scrollY={500}
           />
         </TabPane>
@@ -238,7 +234,7 @@ const ProjectsTab = ({
             columns={userAcceptedProjectTableColumns}
             fetchData={getUserAcceptedProjectList}
             isLoading={getAcceptedProjectListObj.isLoading}
-            pageSize={5}
+            pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
             scrollY={500}
           />
         </TabPane>

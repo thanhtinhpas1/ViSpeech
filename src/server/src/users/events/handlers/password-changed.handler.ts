@@ -32,7 +32,7 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
             if (isValid) {
                 if (oldPassword === newPassword) throw new BadRequestException('New password must be different from old password.');
                 const newHashedPassword = Utils.hashPassword(newPassword);
-                await this.repository.update({_id: userId}, {password: newHashedPassword});
+                await this.repository.update({_id: userId}, {password: newHashedPassword, updatedDate: new Date()});
                 this.eventBus.publish(new PasswordChangedSuccessEvent(streamId, changePasswordBody));
                 return;
             }

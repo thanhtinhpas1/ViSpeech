@@ -3,13 +3,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import InfoModal from 'components/admin/InfoModal/InfoModal.component'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
 import SocketService from 'services/socket.service'
 import SocketUtils from 'utils/socket.util'
-import { ADMIN_PATH, STATUS, TOKEN_TYPE } from 'utils/constant'
+import { ADMIN_PATH, STATUS, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 import Utils from 'utils'
 import TokenService from 'services/token.service'
 
@@ -25,68 +26,99 @@ const TokensPage = ({
   deleteTokenFailure,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+  const [confirmModal, setConfirmModal] = useState({})
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(TOKEN_DELETED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(TOKEN_DELETED_FAILED_EVENT)
   }, [])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
+  const closeConfirmModal = useCallback(() => {
+    setConfirmModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   useEffect(() => {
     if (deleteTokenObj.isLoading === false && deleteTokenObj.isSuccess != null) {
       if (deleteTokenObj.isSuccess === true) {
         setInfoModal({
+          visible: true,
           title: 'Xoá API key',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#deleteToken-modal').modal('hide')
-              getTokenList({ pagination: { current: 1, pageSize: 10 } })
+              closeInfoModal()
+              getTokenList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
             },
+          },
+          onCancel: () => {
+            closeInfoModal()
+            getTokenList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
           },
         })
       } else {
         setInfoModal({
+          visible: true,
           title: 'Xoá API key',
           message: Utils.buildFailedMessage(deleteTokenObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#deleteToken-modal').modal('hide')
+              closeInfoModal()
             },
+          },
+          onCancel: () => {
+            closeInfoModal()
           },
         })
       }
     }
-  }, [deleteTokenObj, getTokenList])
+  }, [deleteTokenObj, getTokenList, closeInfoModal])
 
   const onDeleteToken = async tokenId => {
     if (!tokenId) return
 
-    setInfoModal({
-      title: 'Xoá API key',
-      message: 'Vui lòng chờ giây lát...',
-      icon: {
-        isLoading: true,
+    setConfirmModal({
+      visible: true,
+      message: 'Bạn có chắc muốn xoá API key?',
+      onCancel: () => closeConfirmModal(),
+      onOk: async () => {
+        closeConfirmModal()
+        setInfoModal({
+          visible: true,
+          title: 'Xoá API key',
+          message: 'Vui lòng chờ giây lát...',
+          icon: {
+            isLoading: true,
+          },
+          onCancel: () => closeInfoModal(),
+        })
+
+        deleteToken(tokenId)
+        try {
+          await TokenService.deleteToken(tokenId)
+          invokeCheckSubject.TokenDeleted.subscribe(data => {
+            if (data.error != null) {
+              deleteTokenFailure(data.errorObj)
+            } else {
+              deleteTokenSuccess()
+            }
+          })
+        } catch (err) {
+          deleteTokenFailure({ message: err.message })
+        }
       },
     })
-    window.$('#deleteToken-modal').modal('show')
-
-    deleteToken(tokenId)
-    try {
-      await TokenService.deleteToken(tokenId)
-      invokeCheckSubject.TokenDeleted.subscribe(data => {
-        if (data.error != null) {
-          deleteTokenFailure(data.errorObj)
-        } else {
-          deleteTokenSuccess()
-        }
-      })
-    } catch (err) {
-      deleteTokenFailure({ message: err.message })
-    }
   }
 
   const columns = [
@@ -209,21 +241,25 @@ const TokensPage = ({
       render: (_id, record) => {
         const isFreeToken = record.tokenType.name === TOKEN_TYPE.FREE.viText
         const isValid = record.isValid.name === STATUS.VALID.name
-        return !isFreeToken ? (
-          <>
-            <a
-              href={`${ADMIN_PATH}/transaction-details?tokenId=${_id}`}
-              className="btn btn-just-icon btn-secondary btn-simple"
-            >
-              <i className="zmdi zmdi-eye" />
-            </a>
-            {isValid ? (
-              <a href="#" className="btn btn-simple btn-danger btn-just-icon" onClick={() => onDeleteToken(_id)}>
-                <i className="zmdi zmdi-close-circle-o" />
+        return (
+          !isFreeToken && (
+            <>
+              <a
+                href={`${ADMIN_PATH}/transaction-details?tokenId=${_id}`}
+                className="btn btn-just-icon btn-secondary btn-simple"
+              >
+                <i className="far fa-eye" />
               </a>
-            ) : null}
-          </>
-        ) : null
+              <button
+                disabled={!isValid}
+                className="btn btn-simple btn-danger btn-just-icon"
+                onClick={() => onDeleteToken(_id)}
+              >
+                <i className="fas fa-times" />
+              </button>
+            </>
+          )
+        )
       },
       width: 120,
       align: 'right',
@@ -231,11 +267,7 @@ const TokensPage = ({
   ]
 
   useEffect(() => {
-    const pagination = {
-      pageSize: 10,
-      current: 1,
-    }
-    getTokenList({ pagination })
+    getTokenList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
   }, [getTokenList])
 
   return (
@@ -252,14 +284,15 @@ const TokensPage = ({
                 columns={columns}
                 fetchData={getTokenList}
                 isLoading={getTokenListObj.isLoading}
-                pageSize={10}
+                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
                 scrollY={700}
               />
             </div>
           </div>
         </div>
       </div>
-      <InfoModal id="deleteToken-modal" infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
     </div>
   )
 }

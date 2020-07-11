@@ -33,7 +33,7 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
 
             const userRoles = user.roles.filter(role => role.name !== CONSTANTS.ROLE.USER);
             const updatedRoles = [...userRoles, new RoleDto(CONSTANTS.ROLE.MANAGER_USER)];
-            await this.repository.update({_id: userId}, {roles: updatedRoles});
+            await this.repository.update({_id: userId}, {roles: updatedRoles, updatedDate: new Date()});
 
             const newToken = this.authService.generateToken(userId, user.username, updatedRoles);
             this.eventBus.publish(new EmailVerifiedSuccessEvent(streamId, emailToken, newToken));

@@ -8,7 +8,7 @@ import HomePage from './HomePage.component'
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
   getOrderListObj: state.order.getOrderList,
-  userListObj: state.user.getList,
+  getUserListObj: state.user.getList,
   getTokenListObj: state.token.getTokenList,
   getProjectListObj: state.project.getProjectList,
 })

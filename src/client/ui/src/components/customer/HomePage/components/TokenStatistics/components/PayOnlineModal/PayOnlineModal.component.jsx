@@ -1,64 +1,44 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect, useCallback } from 'react'
-import { loadStripe } from '@stripe/stripe-js'
+import React from 'react'
 import { Elements } from '@stripe/react-stripe-js'
-import { STRIPE_PUBLIC_KEY, MONETARY_UNIT } from 'utils/constant'
+import { Modal } from 'antd'
+import { MONETARY_UNIT } from 'utils/constant'
 import Utils from 'utils'
-import PayReviewModal from './components/PayReviewModal/PayReviewModal.component'
 import CheckoutForm from './components/CheckoutForm/CheckoutForm.container'
 
-const PayOnlineModal = ({ payOnlineModal, myProjectList }) => {
-  const [payReview, setPayReview] = useState({})
-  const [stripePromise, setStripePromise] = useState(null)
-
-  useEffect(() => {
-    setStripePromise(loadStripe(STRIPE_PUBLIC_KEY))
-  }, [])
-
-  const onOrderSuccess = useCallback(orderData => {
-    setPayReview({
-      minutes: orderData.minutes,
-      token: orderData.tokenValue,
-    })
-  }, [])
-
+const PayOnlineModal = ({ stripePromise, payOnlineModal, myProjectList, onOrderSuccess }) => {
   return (
     <>
-      <div className="modal fade" id="pay-online" tabIndex={-1}>
-        <div className="modal-dialog modal-dialog-md modal-dialog-centered">
-          <div className="modal-content pb-0">
-            <div className="popup-body">
-              <h4 className="popup-title">Thanh toán mua API key</h4>
-              <p className="lead" style={{ color: '#495463' }}>
-                Mua API key và sử dụng trong vòng{' '}
-                {payOnlineModal.tokenType && (
-                  <>
-                    <strong>{payOnlineModal.tokenType.minutes} phút</strong> với số tiền{' '}
-                    <strong>
-                      {Utils.formatPrice(payOnlineModal.tokenType.saleOffPrice)} {MONETARY_UNIT}
-                    </strong>
-                    .
-                  </>
-                )}
-              </p>
-              <div className="mgt-1-5x">
-                {stripePromise && (
-                  <Elements stripe={stripePromise}>
-                    <CheckoutForm
-                      checkoutInfo={payOnlineModal}
-                      onOrderSuccess={onOrderSuccess}
-                      myProjectList={myProjectList.data}
-                    />
-                  </Elements>
-                )}
-              </div>
-            </div>
+      <Modal visible={payOnlineModal.visible} footer={null} centered width={600} onCancel={payOnlineModal.onCancel}>
+        <div className="popup-body">
+          <h4 className="popup-title">Thanh toán mua API key</h4>
+          <p className="lead" style={{ color: '#495463' }}>
+            Mua API key và sử dụng trong vòng{' '}
+            {payOnlineModal.data.tokenType && (
+              <>
+                <strong>{payOnlineModal.data.tokenType.minutes} phút</strong> với số tiền{' '}
+                <strong>
+                  {Utils.formatPrice(payOnlineModal.data.tokenType.saleOffPrice)} {MONETARY_UNIT}
+                </strong>
+                .
+              </>
+            )}
+          </p>
+          <div className="mgt-1-5x">
+            {stripePromise && (
+              <Elements stripe={stripePromise}>
+                <CheckoutForm
+                  checkoutInfo={payOnlineModal}
+                  onOrderSuccess={onOrderSuccess}
+                  myProjectList={myProjectList.data}
+                />
+              </Elements>
+            )}
           </div>
         </div>
-      </div>
-      <PayReviewModal payReviewModal={payReview} />
+      </Modal>
     </>
   )
 }

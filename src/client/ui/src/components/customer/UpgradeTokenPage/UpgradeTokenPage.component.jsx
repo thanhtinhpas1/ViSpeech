@@ -27,7 +27,7 @@ const UpgradeTokenPage = ({ currentUser, getMyProjects, getTokenTypes }) => {
       const filters = {
         isValid: ['true'],
       }
-      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION, filters })
+      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
     }
   }, [currentUser._id, currentUser.roles, getMyProjects])
 
