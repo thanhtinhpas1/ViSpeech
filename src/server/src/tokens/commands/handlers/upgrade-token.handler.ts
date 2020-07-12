@@ -28,7 +28,7 @@ export class UpgradeTokenHandler implements ICommandHandler<UpgradeTokenCommand>
 
             const tokenType = await getMongoRepository(TokenTypeDto).findOne({name: tokenTypeDto.name});
             if (!tokenType) {
-                throw new NotFoundException(`Token type with _id ${tokenTypeDto.name} does not exist.`);
+                throw new NotFoundException(`Token type with name ${tokenTypeDto.name} does not exist.`);
             }
 
             // use mergeObjectContext for dto dispatch events

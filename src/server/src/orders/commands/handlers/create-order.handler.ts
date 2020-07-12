@@ -35,7 +35,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
 
                 const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: orderDto.tokenType.name});
                 if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with _id ${orderDto.tokenType.name} does not exist.`);
+                    throw new NotFoundException(`Token type with name ${orderDto.tokenType.name} does not exist.`);
                 }
 
                 const validProject = await getMongoRepository(ProjectDto).findOne({

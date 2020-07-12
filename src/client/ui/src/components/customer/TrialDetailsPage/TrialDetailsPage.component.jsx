@@ -90,7 +90,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
   }
 
   const getIndex = new Promise((resolve, reject) => {
-    fetch('./TrialDetailsPage.style.css', {
+    fetch(`${process.env.PUBLIC_URL}/assets/css/customer/quill-editor.css`, {
       method: 'GET',
     })
       .then(data =>
@@ -104,8 +104,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
   const saveAsDocx = () => {
     getIndex
       .then(async css => {
-        let html = `${'<!DOCTYPE html><html><head lang="en"><style></style>' +
-          '<meta charset="UTF-8"><title>Report</title></head><body>'}${editorHtml}</body></html>`
+        let html = `<html><head lang="en"><style></style></head><body><div class="ql-editor">${editorHtml}</div></body></html>`
         html = juice.inlineContent(html, css)
         const result = await RequestService.downloadTranscript(html, id)
         saveAs(result, 'vietspeech-transcript.docx')
