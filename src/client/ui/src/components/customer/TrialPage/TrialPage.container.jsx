@@ -4,6 +4,7 @@ import {
   updateRequestInfo,
   updateRequestInfoSuccess,
   updateRequestInfoFailure,
+  onClearUpdateRequestInfo,
 } from 'redux/request/request.actions'
 import TrialPage from './TrialPage.component'
 
@@ -13,6 +14,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearUpdateRequestInfo: () => dispatch(onClearUpdateRequestInfo()),
   updateRequestInfo: (requestId, transcriptFileUrl) => dispatch(updateRequestInfo(requestId, transcriptFileUrl)),
   updateRequestInfoSuccess: info => dispatch(updateRequestInfoSuccess(info)),
   updateRequestInfoFailure: message => dispatch(updateRequestInfoFailure(message)),

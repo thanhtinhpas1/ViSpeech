@@ -6,7 +6,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, STATUS, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
+import {
+  ADMIN_PATH,
+  STATUS,
+  TOKEN_TYPE,
+  DEFAULT_PAGINATION,
+  TIMEOUT_MILLISECONDS,
+  DEFAULT_ERR_MESSAGE,
+} from 'utils/constant'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
 import ProjectService from 'services/project.service'
@@ -54,6 +61,13 @@ const ProjectDetailsPage = ({
   }, [id, getProjectInfo])
 
   useEffect(() => {
+    if (updateInfoObj.isLoading === true) {
+      setTimeout(() => {
+        if (updateInfoObj.isLoading === true) {
+          updateProjectInfoFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (updateInfoObj.isLoading === false && updateInfoObj.isSuccess != null) {
       if (updateInfoObj.isSuccess === true) {
         setInfoModal({
@@ -93,7 +107,7 @@ const ProjectDetailsPage = ({
         })
       }
     }
-  }, [id, updateInfoObj, getProjectInfo, closeInfoModal])
+  }, [id, updateInfoObj, getProjectInfo, closeInfoModal, updateProjectInfoFailure])
 
   const columns = [
     {

@@ -7,7 +7,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import { Alert, Button, Empty, Form, Input, Radio } from 'antd'
-import { ROLES } from 'utils/constant'
+import { ROLES, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -36,6 +36,16 @@ const InfoTab = ({ userInfoObj, updateInfoObj, updateUserInfo, updateUserInfoSuc
     SocketService.socketOnListeningEvent(USER_UPDATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(USER_UPDATED_FAILED_EVENT)
   }, [])
+
+  useEffect(() => {
+    if (updateInfoObj.isLoading === true) {
+      setTimeout(() => {
+        if (updateInfoObj.isLoading === true) {
+          updateUserInfoFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
+  }, [updateInfoObj, updateUserInfoFailure])
 
   const onSubmit = async values => {
     const userId = userInfoObj.user._id

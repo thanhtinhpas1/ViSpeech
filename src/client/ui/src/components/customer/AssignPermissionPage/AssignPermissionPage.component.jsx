@@ -6,7 +6,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback } from 'react'
 import { Form, Select, Button } from 'antd'
-import { PERMISSIONS, DEFAULT_PAGINATION } from 'utils/constant'
+import { PERMISSIONS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import PermissionService from 'services/permission.service'
@@ -57,6 +57,13 @@ const AssignPermissionPage = ({
   }, [])
 
   useEffect(() => {
+    if (assignPermissionObj.isLoading === true) {
+      setTimeout(() => {
+        if (assignPermissionObj.isLoading === true) {
+          assignPermissionFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (assignPermissionObj.isLoading === false && assignPermissionObj.isSuccess != null) {
       if (assignPermissionObj.isSuccess === true) {
         setInfoModal({
@@ -88,7 +95,7 @@ const AssignPermissionPage = ({
         })
       }
     }
-  }, [assignPermissionObj, closeInfoModal])
+  }, [assignPermissionObj, closeInfoModal, assignPermissionFailure])
 
   useEffect(() => {
     if (currentUser._id) {

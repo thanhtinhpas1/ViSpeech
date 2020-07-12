@@ -4,7 +4,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button } from 'antd'
-import { ROLES, USER_TYPE } from 'utils/constant'
+import { ROLES, USER_TYPE, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
@@ -31,6 +31,16 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
     }
   }, [registerObj.data, history])
 
+  useEffect(() => {
+    if (registerObj.isLoading === true) {
+      setTimeout(() => {
+        if (registerObj.isLoading === true) {
+          registerFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
+  }, [registerObj, registerFailure])
+
   const handleOnSubmit = async e => {
     e.preventDefault()
 
@@ -56,8 +66,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
         }
       })
     } catch (err) {
-      const msg = 'Đã có lỗi xảy ra, vui lòng kiểm tra lại thông tin đã nhập.'
-      registerFailure({ message: msg })
+      registerFailure({ message: DEFAULT_ERR_MESSAGE })
     }
   }
 

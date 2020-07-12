@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, JWT_TOKEN, STATUS } from 'utils/constant'
+import { CUSTOMER_PATH, JWT_TOKEN, STATUS, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
 import SocketUtils from 'utils/socket.util'
@@ -80,7 +80,7 @@ const ReplyPermissionAssignPage = ({
         onCancel: () => closeInfoModal(),
       }
 
-      // 2 cases: refresh page or click verify button again
+      // click reply button again
       if (replyPermissionAssignObj.isLoading === false && replyPermissionAssignObj.isSuccess === true) {
         setInfoModal(infoObj)
         return
@@ -123,6 +123,7 @@ const ReplyPermissionAssignPage = ({
   )
 
   useEffect(() => {
+    // refresh page
     const { isLoading, isSuccess, data } = findPermissionByEmailTokenObj
     if (isLoading === false && isSuccess === true && data.length !== 0 && data[0].status) {
       if (data[0].status !== STATUS.PENDING.name) {
@@ -154,6 +155,13 @@ const ReplyPermissionAssignPage = ({
   }, [currentUser, findPermissionByEmailTokenObj, history, onReplyPermissionAssign])
 
   useEffect(() => {
+    if (replyPermissionAssignObj.isLoading === true) {
+      setTimeout(() => {
+        if (replyPermissionAssignObj.isLoading === true) {
+          replyPermissionAssignFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (replyPermissionAssignObj.isLoading === false && replyPermissionAssignObj.isSuccess != null) {
       if (replyPermissionAssignObj.isSuccess === true) {
         setInfoModal({
@@ -189,7 +197,7 @@ const ReplyPermissionAssignPage = ({
         })
       }
     }
-  }, [replyPermissionAssignObj, history, closeInfoModal])
+  }, [replyPermissionAssignObj, history, closeInfoModal, replyPermissionAssignFailure])
 
   return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />
 }

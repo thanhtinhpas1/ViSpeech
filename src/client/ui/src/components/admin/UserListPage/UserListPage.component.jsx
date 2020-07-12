@@ -4,7 +4,14 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback } from 'react'
-import { ADMIN_PATH, ROLES, DEFAULT_PAGINATION, STATUS } from 'utils/constant'
+import {
+  ADMIN_PATH,
+  ROLES,
+  DEFAULT_PAGINATION,
+  STATUS,
+  DEFAULT_ERR_MESSAGE,
+  TIMEOUT_MILLISECONDS,
+} from 'utils/constant'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import SocketService from 'services/socket.service'
@@ -59,6 +66,13 @@ const UserListPage = ({
   }, [])
 
   useEffect(() => {
+    if (deleteUserObj.isLoading === true) {
+      setTimeout(() => {
+        if (deleteUserObj.isLoading === true) {
+          deleteUserFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (deleteUserObj.isLoading === false && deleteUserObj.isSuccess != null) {
       if (deleteUserObj.isSuccess === true) {
         setInfoModal({
@@ -96,7 +110,7 @@ const UserListPage = ({
         })
       }
     }
-  }, [deleteUserObj, getUserList, closeInfoModal])
+  }, [deleteUserObj, getUserList, closeInfoModal, deleteUserFailure])
 
   const onDeleteUser = async userId => {
     if (!userId) return

@@ -6,7 +6,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import Utils from 'utils'
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN } from 'utils/constant'
+import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import SocketUtils from 'utils/socket.util'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -46,6 +46,13 @@ const ProfilePage = ({
   }, [onAuthenticate])
 
   useEffect(() => {
+    if (sendVerifyEmailObj.isLoading === true) {
+      setTimeout(() => {
+        if (sendVerifyEmailObj.isLoading === true) {
+          sendVerifyEmailFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (sendVerifyEmailObj.isLoading === false && sendVerifyEmailObj.isSuccess != null) {
       if (sendVerifyEmailObj.isSuccess === true) {
         setInfoModal({
@@ -77,7 +84,7 @@ const ProfilePage = ({
         })
       }
     }
-  }, [sendVerifyEmailObj, closeInfoModal])
+  }, [sendVerifyEmailObj, closeInfoModal, sendVerifyEmailFailure])
 
   const onSendVerifyEmail = async () => {
     const infoObj = {

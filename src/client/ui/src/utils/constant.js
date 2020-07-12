@@ -58,7 +58,7 @@ export const DEFAULT_PAGINATION = {
   },
   SIZE_5: {
     current: 1,
-    pageSize: 100,
+    pageSize: 5,
   },
   SIZE_MAX_INT: {
     current: 1,
@@ -76,3 +76,4 @@ export const USER_TYPE = {
   TWITTER: 'TWITTER',
 }
 export const MONETARY_UNIT = 'vnđ'
+export const TIMEOUT_MILLISECONDS = 5000

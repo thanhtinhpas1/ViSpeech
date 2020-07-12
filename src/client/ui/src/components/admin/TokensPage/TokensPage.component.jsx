@@ -10,7 +10,14 @@ import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
 import SocketService from 'services/socket.service'
 import SocketUtils from 'utils/socket.util'
-import { ADMIN_PATH, STATUS, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
+import {
+  ADMIN_PATH,
+  STATUS,
+  TOKEN_TYPE,
+  DEFAULT_PAGINATION,
+  TIMEOUT_MILLISECONDS,
+  DEFAULT_ERR_MESSAGE,
+} from 'utils/constant'
 import Utils from 'utils'
 import TokenService from 'services/token.service'
 
@@ -46,6 +53,13 @@ const TokensPage = ({
   }, [])
 
   useEffect(() => {
+    if (deleteTokenObj.isLoading === true) {
+      setTimeout(() => {
+        if (deleteTokenObj.isLoading === true) {
+          deleteTokenFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (deleteTokenObj.isLoading === false && deleteTokenObj.isSuccess != null) {
       if (deleteTokenObj.isSuccess === true) {
         setInfoModal({
@@ -83,7 +97,7 @@ const TokensPage = ({
         })
       }
     }
-  }, [deleteTokenObj, getTokenList, closeInfoModal])
+  }, [deleteTokenObj, getTokenList, closeInfoModal, deleteTokenFailure])
 
   const onDeleteToken = async tokenId => {
     if (!tokenId) return
