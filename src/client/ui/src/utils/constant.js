@@ -76,4 +76,4 @@ export const USER_TYPE = {
   TWITTER: 'TWITTER',
 }
 export const MONETARY_UNIT = 'vnđ'
-export const TIMEOUT_MILLISECONDS = 5000
+export const TIMEOUT_MILLISECONDS = 30000
