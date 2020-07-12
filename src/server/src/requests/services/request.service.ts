@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common"
-import { CommandBus, QueryBus } from "@nestjs/cqrs"
-import { RequestDto } from "requests/dtos/requests.dto"
-import { TokenDto } from "tokens/dtos/tokens.dto"
-import { FindRequestsQuery } from "requests/queries/impl/find-requests.query"
-import { FindRequestsByUserIdQuery } from "requests/queries/impl/find-requests-by-userId.query"
-import { CallAsrCommand } from "requests/commands/impl/call-asr.command"
-import { UpdateRequestTranscriptFileUrlCommand } from "requests/commands/impl/update-request-transcript-file-url.command"
-import { FindRequestQuery } from "requests/queries/impl/find-request.query"
+import { Injectable } from '@nestjs/common'
+import { CommandBus, QueryBus } from '@nestjs/cqrs'
+import { RequestDto } from 'requests/dtos/requests.dto'
+import { TokenDto } from 'tokens/dtos/tokens.dto'
+import { FindRequestsQuery } from 'requests/queries/impl/find-requests.query'
+import { FindRequestsByUserIdQuery } from 'requests/queries/impl/find-requests-by-userId.query'
+import { CallAsrRequestCommand } from 'requests/commands/impl/call-asr-request.command'
+import { UpdateRequestTranscriptFileUrlCommand } from 'requests/commands/impl/update-request-transcript-file-url.command'
+import { FindRequestQuery } from 'requests/queries/impl/find-request.query'
 import HtmlDocx from 'html-docx-js'
-import { CreateRequestCommand } from "requests/commands/impl/create-request.command"
+import { CreateRequestCommand } from 'requests/commands/impl/create-request.command'
 
 @Injectable()
 export class RequestService {
@@ -23,7 +23,7 @@ export class RequestService {
     }
 
     async callAsr(streamId: string, requestDto: RequestDto, tokenDto: TokenDto) {
-        return await this.commandBus.execute(new CallAsrCommand(streamId, requestDto, tokenDto));
+        return await this.commandBus.execute(new CallAsrRequestCommand(streamId, requestDto, tokenDto));
     }
 
     async updateRequestTranscriptFileUrl(streamId: string, requestId: string, url: string) {
