@@ -3,14 +3,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from 'react'
-import { ADMIN_PATH, ROLES } from 'utils/constant'
+import React, { useEffect, useState, useCallback } from 'react'
+import { ADMIN_PATH, ROLES, DEFAULT_PAGINATION, STATUS } from 'utils/constant'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
-import InfoModal from 'components/admin/InfoModal/InfoModal.component'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
 import Utils from 'utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
@@ -33,6 +34,7 @@ const UserListPage = ({
   deleteUserFailure,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+  const [confirmModal, setConfirmModal] = useState({})
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_DELETED_FAILED_EVENT)
@@ -44,77 +46,107 @@ const UserListPage = ({
     SocketService.socketOnListeningEvent(PERMISSION_DELETED_BY_USERID_FAILED_EVENT)
   }, [])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
+  const closeConfirmModal = useCallback(() => {
+    setConfirmModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   useEffect(() => {
     if (deleteUserObj.isLoading === false && deleteUserObj.isSuccess != null) {
       if (deleteUserObj.isSuccess === true) {
         setInfoModal({
+          visible: true,
           title: 'Xoá khách hàng',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#deleteUser-modal').modal('hide')
-              getUserList({ pagination: { current: 1, pageSize: 5 } })
+              closeInfoModal()
+              getUserList({ pagination: DEFAULT_PAGINATION.SIZE_5 })
             },
+          },
+          onCancel: () => {
+            closeInfoModal()
+            getUserList({ pagination: DEFAULT_PAGINATION.SIZE_5 })
           },
         })
       } else {
         setInfoModal({
+          visible: true,
           title: 'Xoá khách hàng',
           message: Utils.buildFailedMessage(deleteUserObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#deleteUser-modal').modal('hide')
+              closeInfoModal()
             },
+          },
+          onCancel: () => {
+            closeInfoModal()
           },
         })
       }
     }
-  }, [deleteUserObj, getUserList])
+  }, [deleteUserObj, getUserList, closeInfoModal])
 
   const onDeleteUser = async userId => {
     if (!userId) return
 
-    setInfoModal({
-      title: 'Xoá khách hàng',
-      message: 'Vui lòng chờ giây lát...',
-      icon: {
-        isLoading: true,
+    setConfirmModal({
+      visible: true,
+      message: 'Bạn có chắc muốn xoá khách hàng?',
+      onCancel: () => closeConfirmModal(),
+      onOk: async () => {
+        closeConfirmModal()
+        setInfoModal({
+          visible: true,
+          title: 'Xoá khách hàng',
+          message: 'Vui lòng chờ giây lát...',
+          icon: {
+            isLoading: true,
+          },
+          onCancel: () => closeInfoModal(),
+        })
+
+        deleteUser(userId)
+        try {
+          await UserService.deleteUser(userId)
+          invokeCheckSubject.UserDeleted.subscribe(data => {
+            if (data.error != null) {
+              deleteUserFailure(data.errorObj)
+            }
+          })
+          invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
+            if (data.error != null) {
+              deleteUserFailure(data.errorObj)
+            }
+          })
+          invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
+            if (data.error != null) {
+              deleteUserFailure(data.errorObj)
+            }
+          })
+          invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
+            if (data.error != null) {
+              deleteUserFailure(data.errorObj)
+            } else {
+              deleteUserSuccess()
+            }
+          })
+        } catch (err) {
+          deleteUserFailure({ message: err.message })
+        }
       },
     })
-    window.$('#deleteUser-modal').modal('show')
-
-    deleteUser(userId)
-    try {
-      await UserService.deleteUser(userId)
-      invokeCheckSubject.UserDeleted.subscribe(data => {
-        if (data.error != null) {
-          deleteUserFailure(data.errorObj)
-        }
-      })
-      invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
-        if (data.error != null) {
-          deleteUserFailure(data.errorObj)
-        }
-      })
-      invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
-        if (data.error != null) {
-          deleteUserFailure(data.errorObj)
-        }
-      })
-      invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
-        if (data.error != null) {
-          deleteUserFailure(data.errorObj)
-        } else {
-          deleteUserSuccess()
-        }
-      })
-    } catch (err) {
-      deleteUserFailure({ message: err.message })
-    }
   }
 
   const columns = [
@@ -161,6 +193,26 @@ const UserListPage = ({
       width: 180,
     },
     {
+      title: 'Trạng thái',
+      dataIndex: 'isActive',
+      headerClassName: 'dt-token',
+      className: 'dt-amount',
+      filters: [
+        { text: STATUS.ACTIVE.viText, value: STATUS.ACTIVE.name },
+        { text: STATUS.INACTIVE.viText, value: STATUS.INACTIVE.name },
+      ],
+      filterMultiple: false,
+      render: isActive => (
+        <div className="d-flex align-items-center">
+          <div className={`data-state ${isActive.cssClass}`} />
+          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
+            {isActive.viText}
+          </span>
+        </div>
+      ),
+      width: 180,
+    },
+    {
       title: 'Tạo ngày',
       dataIndex: 'createdDate',
       sorter: true,
@@ -172,27 +224,30 @@ const UserListPage = ({
       title: '',
       dataIndex: '_id',
       headerClassName: 'text-right',
-      render: _id => (
-        <>
-          <a href={`${ADMIN_PATH}/user-info/${_id}`} className="btn btn-simple btn-secondary btn-just-icon">
-            <i className="zmdi zmdi-eye" />
-          </a>
-          <a href="#" className="btn btn-simple btn-danger btn-just-icon" onClick={() => onDeleteUser(_id)}>
-            <i className="zmdi zmdi-close-circle-o" />
-          </a>
-        </>
-      ),
+      render: (_id, record) => {
+        const isActive = record.isActive.name === STATUS.ACTIVE.name
+        return (
+          <>
+            <a href={`${ADMIN_PATH}/user-info/${_id}`} className="btn btn-simple btn-secondary btn-just-icon">
+              <i className="far fa-eye" />
+            </a>
+            <button
+              disabled={!isActive}
+              className="btn btn-simple btn-danger btn-just-icon"
+              onClick={() => onDeleteUser(_id)}
+            >
+              <i className="fas fa-times" />
+            </button>
+          </>
+        )
+      },
       width: 120,
       align: 'right',
     },
   ]
 
   useEffect(() => {
-    const pagination = {
-      pageSize: 10,
-      current: 1,
-    }
-    getUserList({ pagination })
+    getUserList({ pagination: DEFAULT_PAGINATION.SIZE_5 })
   }, [getUserList])
 
   return (
@@ -208,7 +263,7 @@ const UserListPage = ({
                 rel="tooltip"
                 title="Thêm mới"
               >
-                <i className="zmdi zmdi-plus-circle-o" />
+                <i className="fas fa-plus" />
               </a>
             </h4>
           </div>
@@ -219,14 +274,15 @@ const UserListPage = ({
                 columns={columns}
                 fetchData={getUserList}
                 isLoading={userListObj.isLoading}
-                pageSize={5}
+                pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
                 scrollY={500}
               />
             </div>
           </div>
         </div>
       </div>
-      <InfoModal id="deleteUser-modal" infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
     </div>
   )
 }

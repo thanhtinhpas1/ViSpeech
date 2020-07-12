@@ -15,8 +15,9 @@ export class FindProjectHandler implements IQueryHandler<FindProjectQuery> {
 
     async execute(query: FindProjectQuery): Promise<any> {
         Logger.log('Async FindProjectQuery...', 'FindProjectQuery');
+        const { id } = query
         try {
-            return await this.repository.findOne({_id: query.id});
+            return await this.repository.findOne({ _id: id });
         } catch (error) {
             Logger.error(error.message, '', 'FindProjectQuery');
         }

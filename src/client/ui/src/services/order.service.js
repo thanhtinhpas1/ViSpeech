@@ -1,7 +1,7 @@
 import STORAGE from 'utils/storage'
-import {DEFAULT_ERR_MESSAGE, JWT_TOKEN} from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
 import Utils from 'utils'
-import {apiUrl} from './api-url'
+import { apiUrl } from './api-url'
 
 export default class OrderService {
   static createOrder = (order, paymentIntent) => {
@@ -29,7 +29,7 @@ export default class OrderService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -59,7 +59,7 @@ export default class OrderService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -88,7 +88,7 @@ export default class OrderService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -127,7 +127,7 @@ export default class OrderService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -166,7 +166,7 @@ export default class OrderService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -198,7 +198,7 @@ export default class OrderService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }

@@ -24,7 +24,7 @@ export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
         const {_id, ...reportInfo} = reportDto;
 
         try {
-            await this.repository.update({_id}, reportInfo);
+            await this.repository.update({_id}, {...reportInfo, updatedDate: new Date()});
             this.eventBus.publish(new ReportUpdatedSuccessEvent(streamId, reportDto));
         } catch (error) {
             this.eventBus.publish(new ReportUpdatedFailedEvent(streamId, reportDto, error));

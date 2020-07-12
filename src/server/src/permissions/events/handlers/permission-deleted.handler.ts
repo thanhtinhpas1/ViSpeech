@@ -27,7 +27,7 @@ export class PermissionDeletedHandler implements IEventHandler<PermissionDeleted
         const {streamId, permissionId} = event;
 
         try {
-            await this.repository.update({_id: permissionId}, {status: CONSTANTS.STATUS.INVALID});
+            await this.repository.update({_id: permissionId}, {status: CONSTANTS.STATUS.INVALID, updatedDate: new Date()});
             this.eventBus.publish(new PermissionDeletedSuccessEvent(streamId, permissionId));
         } catch (error) {
             this.eventBus.publish(new PermissionDeletedFailedEvent(streamId, permissionId, error));

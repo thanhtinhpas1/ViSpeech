@@ -35,7 +35,7 @@ export default class UserService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(err.message || DEFAULT_ERR_MESSAGE)
       })
   }
@@ -67,7 +67,7 @@ export default class UserService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -102,7 +102,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         const msg = 'Thông tin đăng ký chưa chính xác, vui lòng thử lại.'
         throw new Error(msg)
       })
@@ -132,14 +132,14 @@ export default class UserService {
       })
       .catch(err => {
         STORAGE.removePreferences(JWT_TOKEN)
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
   static getUserList = filterConditions => {
     const { pagination, sortField, sortOrder, filters } = filterConditions
-    const { current, pageSize } = pagination || DEFAULT_PAGINATION
+    const { current, pageSize } = pagination || DEFAULT_PAGINATION.SIZE_100
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
@@ -170,7 +170,7 @@ export default class UserService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -198,7 +198,7 @@ export default class UserService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -230,7 +230,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         const msg = 'Thông tin cập nhật không hợp lệ.'
         throw new Error(msg)
       })
@@ -262,7 +262,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         const msg = 'Thông tin người dùng chưa hợp lệ, vui lòng thử lại.'
         throw new Error(msg)
       })
@@ -292,7 +292,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -325,7 +325,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -356,7 +356,35 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
+
+  static getProjectAssignees = projectId => {
+    const api = `${apiUrl}/users/assignees/${projectId}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(DEFAULT_ERR_MESSAGE)
+        }
+        return result
+      })
+      .catch(err => {
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -386,7 +414,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -417,7 +445,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -451,7 +479,7 @@ export default class UserService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }

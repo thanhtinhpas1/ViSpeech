@@ -31,7 +31,7 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
                 formattedInfo = Utils.removePropertyFromObject(formattedInfo, 'email');
             }
 
-            await this.repository.update({_id}, formattedInfo);
+            await this.repository.update({_id}, {...formattedInfo, updatedDate: new Date()});
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
         } catch (error) {
             this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));

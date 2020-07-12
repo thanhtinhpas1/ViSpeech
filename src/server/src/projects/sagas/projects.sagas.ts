@@ -21,6 +21,7 @@ export class ProjectsSagas {
                 Logger.log("Inside [ProjectsSagas] ProjectDeletedSuccessEvent Saga", "ProjectsSagas");
                 const {streamId, projectId} = event;
                 const deleteTokenEvent = new TokenDeletedByProjectIdEvent(streamId, projectId);
+                deleteTokenEvent['eventType'] = 'TokenDeletedByProjectIdEvent';
                 this.eventStore.publish(deleteTokenEvent, '$ce-token')
                     .then(() => Logger.log('Sent TokenDeletedByProjectIdEvent.'));
             })

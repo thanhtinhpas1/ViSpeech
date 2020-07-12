@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from 'react'
-import InfoModal from 'components/customer/InfoModal/InfoModal.component'
+import React, { useEffect, useState, useCallback } from 'react'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import { ROLES } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
@@ -25,6 +25,12 @@ const PersonalDataTab = ({
     SocketService.socketOnListeningEvent(USER_UPDATED_FAILED_EVENT)
   }, [])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   useEffect(() => {
     const roleInputs = window.$('.role-inputs')
     if (
@@ -45,31 +51,35 @@ const PersonalDataTab = ({
     if (updateCurrentUserObj.isLoading === false && updateCurrentUserObj.isSuccess != null) {
       if (updateCurrentUserObj.isSuccess === true) {
         setInfoModal({
+          visible: true,
           title: 'Cập nhật thông tin',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#updateUserInfo-modal').modal('hide')
+              closeInfoModal()
             },
           },
+          onCancel: () => closeInfoModal(),
         })
       } else {
         setInfoModal({
+          visible: true,
           title: 'Cập nhật thông tin',
           message: Utils.buildFailedMessage(updateCurrentUserObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#updateUserInfo-modal').modal('hide')
+              closeInfoModal()
             },
           },
+          onCancel: () => closeInfoModal(),
         })
       }
     }
-  }, [updateCurrentUserObj])
+  }, [updateCurrentUserObj, closeInfoModal])
 
   const onSubmit = async event => {
     event.preventDefault()
@@ -86,13 +96,14 @@ const PersonalDataTab = ({
     }
 
     setInfoModal({
+      visible: true,
       title: 'Cập nhật thông tin',
       message: 'Vui lòng chờ giây lát...',
       icon: {
         isLoading: true,
       },
+      onCancel: () => closeInfoModal(),
     })
-    window.$('#updateUserInfo-modal').modal('show')
 
     updateCurrentUser(currentUser._id, user)
     try {
@@ -200,7 +211,7 @@ const PersonalDataTab = ({
           </button>
         </div>
       </form>
-      <InfoModal id="updateUserInfo-modal" infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
     </div>
   )
 }

@@ -14,7 +14,8 @@ const TokenTransaction = ({ userOrderListObj }) => {
   useEffect(() => {
     const transactionsArray = userOrderListObj.userOrderList.data.map(item => {
       return {
-        name: item.tokenName || 'Free API Key',
+        id: item._id,
+        name: item.tokenName || 'API key miễn phí',
         state: item.status,
         date: moment(item.createdDate).format('YYYY-MM-DD HH:mm'),
         type: { name: item.tokenType.name, class: 'badge-success' },
@@ -36,7 +37,7 @@ const TokenTransaction = ({ userOrderListObj }) => {
       <table className="table tnx-table">
         <thead>
           <tr>
-            <th>Tên Key</th>
+            <th>Tên API key</th>
             <th>Trạng thái</th>
             <th className="d-none d-sm-table-cell tnx-date">Thời gian</th>
             <th className="tnx-type">
@@ -47,7 +48,7 @@ const TokenTransaction = ({ userOrderListObj }) => {
         <tbody>
           {tableData.map(rowData => {
             return (
-              <tr key={rowData.name}>
+              <tr key={rowData.id}>
                 <td style={{ maxWidth: '280px', display: 'inline-block', whiteSpace: 'break-spaces' }}>
                   <span className="lead tnx-id">{rowData.name}</span>
                 </td>
@@ -64,7 +65,7 @@ const TokenTransaction = ({ userOrderListObj }) => {
                   <span className={`tnx-type-md badge badge-outline ${rowData.type.class} badge-md`}>
                     {rowData.type.name}
                   </span>
-                  <span className="tnx-type-sm badge badge-sq badge-outline badge-success badge-md">
+                  <span className={`tnx-type-sm badge badge-sq badge-outline ${rowData.type.class} badge-md`}>
                     {rowData.type.name}
                   </span>
                 </td>

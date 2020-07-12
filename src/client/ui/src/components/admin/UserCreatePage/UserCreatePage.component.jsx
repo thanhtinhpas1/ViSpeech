@@ -4,9 +4,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useEffect} from 'react'
-import {Alert, Button, Form, Input, Radio, Row} from 'antd'
-import {ROLES} from 'utils/constant'
+import React, { useEffect } from 'react'
+import { Alert, Button, Form, Input, Radio, Row } from 'antd'
+import { ROLES } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -46,6 +46,7 @@ const UserCreatePage = ({ createUserObj, createUser, createUserSuccess, createUs
       roles: [{ name: role }],
     }
 
+    createUser(user)
     try {
       await UserService.createUser(user)
       invokeCheckSubject.UserCreated.subscribe(data => {

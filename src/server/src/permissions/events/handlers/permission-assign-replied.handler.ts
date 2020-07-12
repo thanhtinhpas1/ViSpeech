@@ -34,7 +34,7 @@ export class PermissionAssignRepliedHandler implements IEventHandler<PermissionA
             const assignerId = decodedToken['assignerId'];
             const assigneeId = decodedToken['assigneeId'];
             const projectId = decodedToken['projectId'];
-            await this.repository.update({assigneeId, assignerId, projectId}, {status});
+            await this.repository.update({assigneeId, assignerId, projectId}, {status, updatedDate: new Date()});
             this.eventBus.publish(new PermissionAssignRepliedSuccessEvent(streamId, permissionResponseDto));
         } catch (error) {
             this.eventBus.publish(new PermissionAssignRepliedFailedEvent(streamId, permissionResponseDto, error));

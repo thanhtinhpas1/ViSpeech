@@ -3,11 +3,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import InfoModal from 'components/admin/InfoModal/InfoModal.component'
-import { ADMIN_PATH, STATUS } from 'utils/constant'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
+import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import ProjectService from 'services/project.service'
 import SocketUtils from 'utils/socket.util'
@@ -30,6 +31,7 @@ const ProjectsPage = ({
   deleteProjectFailure,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+  const [confirmModal, setConfirmModal] = useState({})
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_DELETED_SUCCESS_EVENT)
@@ -38,67 +40,97 @@ const ProjectsPage = ({
     SocketService.socketOnListeningEvent(TOKEN_DELETED_BY_PROJECTID_FAILED_EVENT)
   }, [])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
+  const closeConfirmModal = useCallback(() => {
+    setConfirmModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   useEffect(() => {
     if (deleteProjectObj.isLoading === false && deleteProjectObj.isSuccess != null) {
       if (deleteProjectObj.isSuccess === true) {
         setInfoModal({
+          visible: true,
           title: 'Xoá dự án',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#deleteProject-modal').modal('hide')
-              getProjectList({ pagination: { current: 1, pageSize: 10 } })
+              closeInfoModal()
+              getProjectList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
             },
+          },
+          onCancel: () => {
+            closeInfoModal()
+            getProjectList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
           },
         })
       } else {
         setInfoModal({
+          visible: true,
           title: 'Xoá dự án',
           message: Utils.buildFailedMessage(deleteProjectObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#deleteProject-modal').modal('hide')
+              closeInfoModal()
             },
+          },
+          onCancel: () => {
+            closeInfoModal()
           },
         })
       }
     }
-  }, [deleteProjectObj, getProjectList])
+  }, [deleteProjectObj, getProjectList, closeInfoModal])
 
   const onDeleteProject = async projectId => {
     if (!projectId) return
 
-    setInfoModal({
-      title: 'Xoá dự án',
-      message: 'Vui lòng chờ giây lát...',
-      icon: {
-        isLoading: true,
+    setConfirmModal({
+      visible: true,
+      message: 'Bạn có chắc muốn xoá dự án?',
+      onCancel: () => closeConfirmModal(),
+      onOk: async () => {
+        closeConfirmModal()
+        setInfoModal({
+          visible: true,
+          title: 'Xoá dự án',
+          message: 'Vui lòng chờ giây lát...',
+          icon: {
+            isLoading: true,
+          },
+          onCancel: () => closeInfoModal(),
+        })
+
+        deleteProject(projectId)
+        try {
+          await ProjectService.deleteProject(projectId)
+          invokeCheckSubject.ProjectDeleted.subscribe(data => {
+            if (data.error != null) {
+              deleteProjectFailure(data.errorObj)
+            }
+          })
+          invokeCheckSubject.TokenDeletedByProjectId.subscribe(data => {
+            if (data.error != null) {
+              deleteProjectFailure(data.errorObj)
+            } else {
+              deleteProjectSuccess()
+            }
+          })
+        } catch (err) {
+          deleteProjectFailure({ message: err.message })
+        }
       },
     })
-    window.$('#deleteProject-modal').modal('show')
-
-    deleteProject(projectId)
-    try {
-      await ProjectService.deleteProject(projectId)
-      invokeCheckSubject.ProjectDeleted.subscribe(data => {
-        if (data.error != null) {
-          deleteProjectFailure(data.errorObj)
-        }
-      })
-      invokeCheckSubject.TokenDeletedByProjectId.subscribe(data => {
-        if (data.error != null) {
-          deleteProjectFailure(data.errorObj)
-        } else {
-          deleteProjectSuccess()
-        }
-      })
-    } catch (err) {
-      deleteProjectFailure({ message: err.message })
-    }
   }
 
   const columns = [
@@ -171,13 +203,15 @@ const ProjectsPage = ({
         return (
           <>
             <a href={`${ADMIN_PATH}/user-project/${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-              <i className="zmdi zmdi-eye" />
+              <i className="far fa-eye" />
             </a>
-            {isValid ? (
-              <a href="#" className="btn btn-simple btn-danger btn-just-icon" onClick={() => onDeleteProject(_id)}>
-                <i className="zmdi zmdi-close-circle-o" />
-              </a>
-            ) : null}
+            <button
+              disabled={!isValid}
+              className="btn btn-simple btn-danger btn-just-icon"
+              onClick={() => onDeleteProject(_id)}
+            >
+              <i className="fas fa-times" />
+            </button>
           </>
         )
       },
@@ -187,11 +221,7 @@ const ProjectsPage = ({
   ]
 
   useEffect(() => {
-    const pagination = {
-      pageSize: 10,
-      current: 1,
-    }
-    getProjectList({ pagination })
+    getProjectList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
   }, [getProjectList])
 
   return (
@@ -208,14 +238,15 @@ const ProjectsPage = ({
                 columns={columns}
                 fetchData={getProjectList}
                 isLoading={getProjectListObj.isLoading}
-                pageSize={10}
+                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
                 scrollY={700}
               />
             </div>
           </div>
         </div>
       </div>
-      <InfoModal id="deleteProject-modal" infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
     </div>
   )
 }

@@ -39,8 +39,9 @@ const Header = () => {
     <header className="header">
       <div className="container">
         <nav className="navbar navbar-expand-lg">
-          <a className="navbar-brand" href="/">
-            <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo1.png`} alt="" />
+          <a className="navbar-brand" href="/" style={{ fontSize: '1.8em', letterSpacing: '3px' }}>
+            VIET SPEECH
+            {/* <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo1.png`} alt="" /> */}
           </a>
           <button
             className="navbar-toggler"

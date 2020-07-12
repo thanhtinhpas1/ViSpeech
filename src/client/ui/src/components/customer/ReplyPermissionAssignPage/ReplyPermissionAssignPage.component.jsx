@@ -32,6 +32,12 @@ const ReplyPermissionAssignPage = ({
     SocketService.socketOnListeningEvent(PERMISSION_ASSIGN_REPLIED_FAILED_EVENT)
   }, [])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
     onAuthenticate(token)
@@ -60,34 +66,36 @@ const ReplyPermissionAssignPage = ({
   const onReplyPermissionAssign = useCallback(
     async status => {
       let infoObj = {
+        visible: true,
         title: 'Phản hồi lời mời',
         message: 'Bạn đã phản hồi lời mời tham gia dự án.',
         icon: { isSuccess: true },
         button: {
           content: 'Về trang dự án',
           clickFunc: () => {
-            window.$('#replyPermissionAssign-modal').modal('hide')
+            closeInfoModal()
             history.push(`${CUSTOMER_PATH}/projects`)
           },
         },
+        onCancel: () => closeInfoModal(),
       }
 
       // 2 cases: refresh page or click verify button again
       if (replyPermissionAssignObj.isLoading === false && replyPermissionAssignObj.isSuccess === true) {
         setInfoModal(infoObj)
-        window.$('#replyPermissionAssign-modal').modal('show')
         return
       }
 
       infoObj = {
+        visible: true,
         title: 'Phản hồi lời mời',
         message: 'Vui lòng chờ giây lát...',
         icon: {
           isLoading: true,
         },
+        onCancel: () => closeInfoModal(),
       }
       setInfoModal(infoObj)
-      window.$('#replyPermissionAssign-modal').modal('show')
 
       replyPermissionAssign({ emailToken, status })
       try {
@@ -110,6 +118,7 @@ const ReplyPermissionAssignPage = ({
       replyPermissionAssign,
       replyPermissionAssignSuccess,
       replyPermissionAssignFailure,
+      closeInfoModal,
     ]
   )
 
@@ -148,39 +157,41 @@ const ReplyPermissionAssignPage = ({
     if (replyPermissionAssignObj.isLoading === false && replyPermissionAssignObj.isSuccess != null) {
       if (replyPermissionAssignObj.isSuccess === true) {
         setInfoModal({
+          visible: true,
           title: 'Phản hồi lời mời',
           message: 'Phản hồi lời mời tham gia dự án thành công.',
           icon: { isSuccess: true },
           button: {
             content: 'Về trang chủ',
             clickFunc: () => {
-              window.$('#replyPermissionAssign-modal').modal('hide')
+              closeInfoModal()
               history.push(`${CUSTOMER_PATH}/`)
             },
           },
+          onCancel: () => closeInfoModal(),
         })
       } else {
         setInfoModal({
+          visible: true,
           title: 'Phản hồi lời mời',
           message: Utils.buildFailedMessage(
             replyPermissionAssignObj.message,
-            'Phản hồi lời mời tham gia dự án thất bại. Vui lòng thử lại sau ít phút.'
+            'Phản hồi lời mời tham gia dự án thất bại.'
           ),
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
             clickFunc: () => {
-              window.$('#replyPermissionAssign-modal').modal('hide')
+              closeInfoModal()
             },
           },
+          onCancel: () => closeInfoModal(),
         })
       }
     }
-  }, [replyPermissionAssignObj, history])
+  }, [replyPermissionAssignObj, history, closeInfoModal])
 
-  return (
-    <InfoTemplatePage infoTemplate={infoTemplate} infoModalId="replyPermissionAssign-modal" infoModal={infoModal} />
-  )
+  return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />
 }
 
 export default ReplyPermissionAssignPage

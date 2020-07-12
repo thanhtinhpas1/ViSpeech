@@ -54,39 +54,50 @@ const CheckoutForm = ({
 
     async function createToken(projectId, tokenName) {
       const cardElement = elements.getElement(CardElement)
-      const { user, tokenType } = checkoutInfo
+      const { user, tokenType } = checkoutInfo.data
       let result = null
+      // const paymentMethodReq = null
+      let confirmedCardPayment = null
 
       try {
-        result = await OrderService.createPaymentIntent(tokenType.saleOffPrice * 100)
+        let usd = 0.000043 * tokenType.saleOffPrice
+        usd = usd < 0.5 ? 0.5 : usd // Amount must be at least $0.50 usd
+        result = await OrderService.createPaymentIntent(usd * 100)
+
+        // paymentMethodReq = await stripe.createPaymentMethod({
+        //   type: 'card',
+        //   card: cardElement,
+        //   billing_details: {
+        //     name: `${user.firstName} ${user.lastName}`,
+        //     email: user.email,
+        //   },
+        // })
+        // if (paymentMethodReq.error) {
+        //   setErrorMessage(paymentMethodReq.error.message)
+        //   setIsLoading(false)
+        //   return
+        // }
+
+        confirmedCardPayment = await stripe.confirmCardPayment(result.clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: `${user.firstName} ${user.lastName}`,
+              email: user.email,
+            },
+          },
+        })
+        if (confirmedCardPayment.error) {
+          setErrorMessage(confirmedCardPayment.error.message)
+          setIsLoading(false)
+          return
+        }
       } catch (err) {
         setErrorMessage(err.message || err)
         setIsLoading(false)
         return
       }
 
-      const paymentMethodReq = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: {
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email,
-        },
-      })
-      if (paymentMethodReq.error) {
-        setErrorMessage(paymentMethodReq.error.message)
-        setIsLoading(false)
-        return
-      }
-
-      const confirmedCardPayment = await stripe.confirmCardPayment(result.clientSecret, {
-        payment_method: paymentMethodReq.paymentMethod.id,
-      })
-      if (confirmedCardPayment.error) {
-        setErrorMessage(confirmedCardPayment.error.message)
-        setIsLoading(false)
-        return
-      }
       if (confirmedCardPayment.paymentIntent && confirmedCardPayment.paymentIntent.status === 'succeeded') {
         // The payment has been processed!
         const paymentIntent = {
@@ -136,8 +147,6 @@ const CheckoutForm = ({
           minutes: token.minutes,
           tokenValue: token.value,
         })
-        window.$('#pay-online').modal('hide')
-        window.$('#pay-review').modal('show')
       } else {
         setErrorMessage(Utils.buildFailedMessage(createOrderObj.message, 'Giao dịch thất bại'))
       }
@@ -168,7 +177,7 @@ const CheckoutForm = ({
       const filters = {
         isValid: ['true'],
       }
-      getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION, filters })
+      getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
     }
   }
 

@@ -23,7 +23,7 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
         const {streamId, tokenId} = event;
 
         try {
-            await this.repository.update({_id: tokenId}, {isValid: false});
+            await this.repository.update({_id: tokenId}, {isValid: false, updatedDate: new Date()});
             this.eventBus.publish(new TokenDeletedSuccessEvent(streamId, tokenId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedFailedEvent(streamId, tokenId, error));

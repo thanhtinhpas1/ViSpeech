@@ -27,8 +27,8 @@ export class PermissionDeletedByUserIdHandler implements IEventHandler<Permissio
         const {streamId, userId} = event;
 
         try {
-            await getMongoRepository(PermissionDto).updateMany({assigneeId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID}});
-            await getMongoRepository(PermissionDto).updateMany({assignerId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID}});
+            await getMongoRepository(PermissionDto).updateMany({assigneeId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID, updatedDate: new Date()}});
+            await getMongoRepository(PermissionDto).updateMany({assignerId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID, updatedDate: new Date()}});
             this.eventBus.publish(new PermissionDeletedByUserIdSuccessEvent(streamId, userId));
         } catch (error) {
             this.eventBus.publish(new PermissionDeletedByUserIdFailedEvent(streamId, userId, error));

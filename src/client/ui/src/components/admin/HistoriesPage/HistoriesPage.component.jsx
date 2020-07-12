@@ -3,9 +3,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
+import { DEFAULT_PAGINATION } from 'utils/constant'
 
 const HistoriesPage = ({ requestListObj, getRequestList }) => {
   const columns = [
@@ -62,11 +63,7 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
   ]
 
   useEffect(() => {
-    const pagination = {
-      pageSize: 10,
-      current: 1,
-    }
-    getRequestList({ pagination })
+    getRequestList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
   }, [getRequestList])
 
   return (
@@ -74,7 +71,7 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
       <div className="col-md-12">
         <div className="card">
           <div className="card-header">
-            <h4 className="card-title">Lịch sử</h4>
+            <h4 className="card-title">Lịch sử sử dụng dịch vụ</h4>
           </div>
           <div className="card-content">
             <div className="material-datatables">
@@ -83,7 +80,7 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
                 columns={columns}
                 fetchData={getRequestList}
                 isLoading={requestListObj.isLoading}
-                pageSize={10}
+                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
                 scrollY={700}
               />
             </div>

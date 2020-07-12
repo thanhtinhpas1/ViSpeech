@@ -29,6 +29,8 @@ export const STATUS = {
   REJECTED: { name: 'REJECTED', viText: 'Từ chối', cssClass: 'data-state-canceled' },
   VALID: { name: true, viText: 'Hợp lệ', cssClass: 'data-state-approved' },
   INVALID: { name: false, viText: 'Có vấn đề', cssClass: 'data-state-canceled' },
+  ACTIVE: { name: true, viText: 'Đang hoạt động', cssClass: 'data-state-approved' },
+  INACTIVE: { name: false, viText: 'Đã bị xoá', cssClass: 'data-state-canceled' },
   // -canceled -missing
 }
 export const ORDER_STATUS = {
@@ -44,9 +46,24 @@ export const SORT_ORDER = {
 }
 export const LOADING_LARGE_SIZE = 60
 export const LOADING_SMALL_SIZE = 25
+export const MAX_INT = 2147483647
 export const DEFAULT_PAGINATION = {
-  current: 1,
-  pageSize: 100,
+  SIZE_100: {
+    current: 1,
+    pageSize: 100,
+  },
+  SIZE_10: {
+    current: 1,
+    pageSize: 10,
+  },
+  SIZE_5: {
+    current: 1,
+    pageSize: 100,
+  },
+  SIZE_MAX_INT: {
+    current: 1,
+    pageSize: MAX_INT,
+  },
 }
 export const USER_TYPE = {
   NORMAL: 'NORMAL',

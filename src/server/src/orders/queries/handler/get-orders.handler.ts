@@ -54,6 +54,9 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
                         findOptions.where['token.projectId'] = {$in: [...projectIds]}
                     }
                 }
+                if (filters['tokenName']) {
+                    findOptions.where['token.name'] = filters['tokenName']
+                }
             }
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)

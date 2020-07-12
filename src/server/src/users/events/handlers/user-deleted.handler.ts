@@ -25,7 +25,7 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
             if (Utils.convertToBoolean(isDeleted)) {
                 await this.repository.delete({_id: userId});
             } else {
-                await this.repository.update({_id: userId}, {isActive: false})
+                await this.repository.update({_id: userId}, {isActive: false, updatedDate: new Date()});
             }
 
             this.eventBus.publish(new UserDeletedSuccessEvent(streamId, userId));

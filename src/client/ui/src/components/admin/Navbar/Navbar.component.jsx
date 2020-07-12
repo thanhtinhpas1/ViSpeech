@@ -19,7 +19,7 @@ const Navbar = ({ currentUser, logout }) => {
             <span className="icon-bar" />
           </button>
           <a className="navbar-brand" href="/">
-            ViSpeech Admin
+            Viet Speech Admin
           </a>
         </div>
         <div className="collapse navbar-collapse">

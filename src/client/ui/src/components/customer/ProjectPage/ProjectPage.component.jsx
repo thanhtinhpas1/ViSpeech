@@ -4,11 +4,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, STATUS } from 'utils/constant'
+import { CUSTOMER_PATH, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import * as moment from 'moment'
 import Utils from 'utils'
-import InfoModal from '../InfoModal/InfoModal.component'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
 
 const ProjectPage = ({
   currentUser,
@@ -19,6 +19,12 @@ const ProjectPage = ({
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const history = useHistory()
+
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
 
   const myProjectTableColumns = [
     {
@@ -157,7 +163,7 @@ const ProjectPage = ({
       align: 'center',
     },
     {
-      title: 'Trạng thái',
+      title: 'Phản hồi lời mời',
       dataIndex: 'status',
       headerClassName: 'dt-token',
       className: 'dt-token',
@@ -201,12 +207,8 @@ const ProjectPage = ({
   useEffect(() => {
     const userId = currentUser._id
     if (userId) {
-      const pagination = {
-        pageSize: 5,
-        current: 1,
-      }
-      getMyProjects({ userId, pagination })
-      getAcceptedProjects({ userId, pagination })
+      getMyProjects({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
+      getAcceptedProjects({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
   }, [currentUser._id, getMyProjects, getAcceptedProjects])
 
@@ -232,6 +234,7 @@ const ProjectPage = ({
 
   const onClickCreateProject = () => {
     const infoObj = {
+      visible: true,
       title: 'Không thể thực hiện tác vụ',
       message:
         'Tài khoản của bạn chưa được kích hoạt. Vui lòng thực hiện xác thực email tại trang cá nhân để kích hoạt tài khoản.',
@@ -241,13 +244,13 @@ const ProjectPage = ({
       button: {
         content: 'Đến trang cá nhân',
         clickFunc: () => {
-          window.$('#createProject-modal').modal('hide')
+          closeInfoModal()
           history.push(`${CUSTOMER_PATH}/profile`)
         },
       },
+      onCancel: () => closeInfoModal(),
     }
     setInfoModal(infoObj)
-    window.$('#createProject-modal').modal('show')
   }
 
   return (
@@ -284,7 +287,7 @@ const ProjectPage = ({
                       Tạo mới
                       <em className="fas fa-plus" />
                     </button>
-                    <InfoModal id="createProject-modal" infoModal={infoModal} />
+                    {infoModal.visible && <InfoModal infoModal={infoModal} />}
                   </>
                 ))}
             </div>
@@ -309,7 +312,7 @@ const ProjectPage = ({
                   columns={myProjectTableColumns}
                   fetchData={getMyProjectList}
                   isLoading={getMyProjectListObj.isLoading}
-                  pageSize={5}
+                  pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
                   scrollY={500}
                 />
               </div>
@@ -320,7 +323,7 @@ const ProjectPage = ({
                   columns={acceptedProjectTableColumns}
                   fetchData={getAcceptedProjectList}
                   isLoading={getAcceptedProjectListObj.isLoading}
-                  pageSize={5}
+                  pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
                   scrollY={500}
                 />
               </div>

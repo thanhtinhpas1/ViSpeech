@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, TOKEN_TYPE, STATUS } from 'utils/constant'
+import { ADMIN_PATH, TOKEN_TYPE, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
 
 const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList }) => {
   const columns = [
@@ -99,7 +99,7 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       dataIndex: '_id',
       render: _id => (
         <a href={`${ADMIN_PATH}/transaction-details?id=${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="zmdi zmdi-eye" />
+          <i className="far fa-eye" />
         </a>
       ),
       align: 'right',
@@ -110,11 +110,7 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
   useEffect(() => {
     const userId = userInfoObj.user._id
     if (userId) {
-      const pagination = {
-        pageSize: 5,
-        current: 1,
-      }
-      getUserOrderList({ userId, pagination })
+      getUserOrderList({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
   }, [userInfoObj.user._id, getUserOrderList])
 
@@ -135,7 +131,7 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
         columns={columns}
         fetchData={getList}
         isLoading={getUserOrderListObj.isLoading}
-        pageSize={5}
+        pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
         scrollY={500}
       />
     </div>

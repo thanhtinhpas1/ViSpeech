@@ -2,14 +2,20 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, STATUS, TOKEN_TYPE } from 'utils/constant'
-import { confirmAlert } from 'react-confirm-alert'
-import 'react-confirm-alert/src/react-confirm-alert.css'
-import './ProjectDetailsPage.style.scss'
+import { ADMIN_PATH, STATUS, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
+import ProjectService from 'services/project.service'
+import SocketUtils from 'utils/socket.util'
+import SocketService from 'services/socket.service'
+import Utils from 'utils'
+
+const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
+const { PROJECT_UPDATED_SUCCESS_EVENT, PROJECT_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const ProjectDetailsPage = ({
   getProjectInfoObj,
@@ -18,19 +24,76 @@ const ProjectDetailsPage = ({
   getProjectInfo,
   getProjectTokens,
   updateProjectInfo,
+  updateProjectInfoSuccess,
+  updateProjectInfoFailure,
 }) => {
   const history = useHistory()
   const { id } = useParams()
+  const [infoModal, setInfoModal] = useState({})
+  const [confirmModal, setConfirmModal] = useState({})
+
+  useEffect(() => {
+    SocketService.socketOnListeningEvent(PROJECT_UPDATED_SUCCESS_EVENT)
+    SocketService.socketOnListeningEvent(PROJECT_UPDATED_FAILED_EVENT)
+  }, [])
+
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
+  const closeConfirmModal = useCallback(() => {
+    setConfirmModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
 
   useEffect(() => {
     getProjectInfo(id)
   }, [id, getProjectInfo])
 
   useEffect(() => {
-    if (updateInfoObj.isLoading === false && updateInfoObj.isSuccess === true) {
-      getProjectInfo(id)
+    if (updateInfoObj.isLoading === false && updateInfoObj.isSuccess != null) {
+      if (updateInfoObj.isSuccess === true) {
+        setInfoModal({
+          visible: true,
+          title: 'Cập nhật thông tin dự án',
+          message: 'Thành công',
+          icon: { isSuccess: true },
+          button: {
+            content: 'Đóng',
+            clickFunc: () => {
+              closeInfoModal()
+              getProjectInfo(id)
+            },
+          },
+          onCancel: () => {
+            closeInfoModal()
+            getProjectInfo(id)
+          },
+        })
+      } else {
+        setInfoModal({
+          visible: true,
+          title: 'Cập nhật thông tin dự án',
+          message: Utils.buildFailedMessage(updateInfoObj.message, 'Thất bại'),
+          icon: { isSuccess: false },
+          button: {
+            content: 'Đóng',
+            clickFunc: () => {
+              closeInfoModal()
+              getProjectInfo(id)
+            },
+          },
+          onCancel: () => {
+            closeInfoModal()
+            getProjectInfo(id)
+          },
+        })
+      }
     }
-  }, [updateInfoObj, id, getProjectInfo])
+  }, [id, updateInfoObj, getProjectInfo, closeInfoModal])
 
   const columns = [
     {
@@ -115,7 +178,7 @@ const ProjectDetailsPage = ({
           href={`${ADMIN_PATH}/transaction-details?tokenId=${_id}`}
           className="btn btn-just-icon btn-secondary btn-simple"
         >
-          <i className="zmdi zmdi-eye" />
+          <i className="far fa-eye" />
         </a>
       ),
       width: 60,
@@ -126,11 +189,7 @@ const ProjectDetailsPage = ({
   useEffect(() => {
     const projectOwnerId = getProjectInfoObj.project.userId
     if (projectOwnerId) {
-      const pagination = {
-        pageSize: 5,
-        current: 1,
-      }
-      getProjectTokens({ userId: projectOwnerId, projectId: id, pagination })
+      getProjectTokens({ userId: projectOwnerId, projectId: id, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
   }, [getProjectInfoObj.project.userId, id, getProjectTokens])
 
@@ -153,31 +212,48 @@ const ProjectDetailsPage = ({
 
   const onSubmit = event => {
     event.preventDefault()
-    confirmAlert({
-      title: 'Xác nhận',
-      message: 'Bạn có chắc muốn cập nhật',
-      buttons: [
-        {
-          label: 'Có',
-          onClick: () => {
-            const projectId = getProjectInfoObj.project._id
-            if (!projectId) {
-              return
-            }
+    const form = event.target
+    const { userId, _id } = getProjectInfoObj.project
+    const projectId = _id
+    if (!projectId || !userId) {
+      return
+    }
 
-            const form = event.target
-            const data = {
-              name: form?.elements.name.value,
-              description: form?.elements.description.value,
-            }
-            updateProjectInfo(projectId, data)
+    setConfirmModal({
+      visible: true,
+      message: 'Bạn có chắc muốn cập nhật thông tin dự án?',
+      onCancel: () => closeConfirmModal(),
+      onOk: async () => {
+        closeConfirmModal()
+        setInfoModal({
+          visible: true,
+          title: 'Cập nhật thông tin dự án',
+          message: 'Vui lòng chờ giây lát...',
+          icon: {
+            isLoading: true,
           },
-        },
-        {
-          label: 'Không',
-          onClick: () => {},
-        },
-      ],
+          onCancel: () => closeInfoModal(),
+        })
+
+        const projectInfo = {
+          name: form?.elements.name.value.trim(),
+          description: form?.elements.description.value.trim(),
+          userId,
+        }
+        updateProjectInfo(projectId, projectInfo)
+        try {
+          await ProjectService.updateProjectInfo(projectId, projectInfo)
+          invokeCheckSubject.ProjectUpdated.subscribe(data => {
+            if (data.error != null) {
+              updateProjectInfoFailure(data.errorObj)
+            } else {
+              updateProjectInfoSuccess()
+            }
+          })
+        } catch (err) {
+          updateProjectInfoFailure({ message: err.message })
+        }
+      },
     })
   }
 
@@ -257,13 +333,15 @@ const ProjectDetailsPage = ({
                 columns={columns}
                 fetchData={getProjectTokensList}
                 isLoading={getProjectTokenListObj.isLoading}
-                pageSize={5}
+                pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
                 scrollY={500}
               />
             </div>
           </div>
         </div>
       </div>
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
     </div>
   )
 }

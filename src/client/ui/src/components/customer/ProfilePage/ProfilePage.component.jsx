@@ -3,16 +3,16 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Utils from 'utils'
 import STORAGE from 'utils/storage'
-import {JWT_TOKEN} from 'utils/constant'
+import { JWT_TOKEN } from 'utils/constant'
 import SocketUtils from 'utils/socket.util'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
+import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import PersonalDataTab from './components/PersonalDataTab/PersonalDataTab.container'
 import PasswordTab from './components/PasswordTab/PasswordTab.container'
-import InfoModal from '../InfoModal/InfoModal.component'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { VERIFY_EMAIL_SENT_SUCCESS_EVENT, VERIFY_EMAIL_SENT_FAILED_EVENT } = KAFKA_TOPIC
@@ -34,38 +34,62 @@ const ProfilePage = ({
     }
   }, [currentUser])
 
+  const closeInfoModal = useCallback(() => {
+    setInfoModal(i => {
+      return { ...i, visible: false }
+    })
+  }, [])
+
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
     onAuthenticate(token)
   }, [onAuthenticate])
 
   useEffect(() => {
-    if (sendVerifyEmailObj.isLoading === false && sendVerifyEmailObj.isSuccess === true) {
-      setInfoModal({
-        title: 'Kích hoạt tài khoản',
-        message: 'Mail kích hoạt tài khoản đã được gửi đến bạn.<br/>Vui lòng kiểm tra mail và làm theo hướng dẫn.',
-        icon: { isSuccess: true },
-      })
+    if (sendVerifyEmailObj.isLoading === false && sendVerifyEmailObj.isSuccess != null) {
+      if (sendVerifyEmailObj.isSuccess === true) {
+        setInfoModal({
+          visible: true,
+          title: 'Kích hoạt tài khoản',
+          message: 'Mail kích hoạt tài khoản đã được gửi đến bạn.<br/>Vui lòng kiểm tra mail và làm theo hướng dẫn.',
+          icon: { isSuccess: true },
+          button: {
+            content: 'Đóng',
+            clickFunc: () => {
+              closeInfoModal()
+            },
+          },
+          onCancel: () => closeInfoModal(),
+        })
+      } else {
+        setInfoModal({
+          visible: true,
+          title: 'Kích hoạt tài khoản',
+          message: Utils.buildFailedMessage(sendVerifyEmailObj.message, 'Thất bại'),
+          icon: { isSuccess: false },
+          button: {
+            content: 'Đóng',
+            clickFunc: () => {
+              closeInfoModal()
+            },
+          },
+          onCancel: () => closeInfoModal(),
+        })
+      }
     }
-    if (sendVerifyEmailObj.isLoading === false && sendVerifyEmailObj.isSuccess === false) {
-      setInfoModal({
-        title: 'Kích hoạt tài khoản',
-        message: Utils.buildFailedMessage(sendVerifyEmailObj.message, 'Thất bại'),
-        icon: { isSuccess: false },
-      })
-    }
-  }, [sendVerifyEmailObj])
+  }, [sendVerifyEmailObj, closeInfoModal])
 
   const onSendVerifyEmail = async () => {
     const infoObj = {
+      visible: true,
       title: 'Kích hoạt tài khoản',
       message: 'Vui lòng chờ giây lát...',
       icon: {
         isLoading: true,
       },
+      onCancel: () => closeInfoModal(),
     }
     setInfoModal(infoObj)
-    window.$('#sendVerifyEmail-modal').modal('show')
 
     sendVerifyEmail(currentUser._id)
     try {
@@ -136,7 +160,7 @@ const ProfilePage = ({
           </div>
         </div>
       </div>
-      <InfoModal id="sendVerifyEmail-modal" infoModal={infoModal} />
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
     </div>
   )
 }

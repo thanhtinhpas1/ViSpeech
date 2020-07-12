@@ -12,8 +12,8 @@ import {
   // createProjectFailure,
   getProjectInfoSuccess,
   getProjectInfoFailure,
-  updateProjectInfoSuccess,
-  updateProjectInfoFailure,
+  // updateProjectInfoSuccess,
+  // updateProjectInfoFailure,
   getProjectListSuccess,
   getProjectListFailure,
 } from './project.actions'
@@ -113,17 +113,17 @@ export function* getProjectInfoSaga() {
 }
 
 // ==== update project info
-function* updateProjectInfo({ payload: { id, data } }) {
-  try {
-    yield ProjectService.updateProjectInfo(id, data)
-    yield put(updateProjectInfoSuccess({ ...data, _id: id }))
-  } catch (err) {
-    yield put(updateProjectInfoFailure(err.message))
-  }
-}
-function* updateProjectInfoSaga() {
-  yield takeLatest(ProjectTypes.UPDATE_PROJECT_INFO, updateProjectInfo)
-}
+// function* updateProjectInfo({ payload: { id, data } }) {
+//   try {
+//     yield ProjectService.updateProjectInfo(id, data)
+//     yield put(updateProjectInfoSuccess({ ...data, _id: id }))
+//   } catch (err) {
+//     yield put(updateProjectInfoFailure(err.message))
+//   }
+// }
+// function* updateProjectInfoSaga() {
+//   yield takeLatest(ProjectTypes.UPDATE_PROJECT_INFO, updateProjectInfo)
+// }
 
 // =================================
 
@@ -134,6 +134,6 @@ export function* projectSaga() {
     call(getAcceptedProjectListSaga),
     // call(createProjectSaga),
     call(getProjectInfoSaga),
-    call(updateProjectInfoSaga),
+    // call(updateProjectInfoSaga),
   ])
 }

@@ -6,7 +6,7 @@
 import React, { useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, STATUS, TOKEN_TYPE } from 'utils/constant'
+import { ADMIN_PATH, STATUS, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 
 const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
   const columns = [
@@ -116,7 +116,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       dataIndex: '_id',
       render: _id => (
         <a href={`${ADMIN_PATH}/transaction-details?id=${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="zmdi zmdi-eye" />
+          <i className="far fa-eye" />
         </a>
       ),
       align: 'right',
@@ -125,11 +125,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
   ]
 
   useEffect(() => {
-    const pagination = {
-      pageSize: 10,
-      current: 1,
-    }
-    getOrderList({ pagination })
+    getOrderList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
   }, [getOrderList])
 
   return (
@@ -146,7 +142,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
                 columns={columns}
                 fetchData={getOrderList}
                 isLoading={getOrderListObj.isLoading}
-                pageSize={10}
+                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
                 scrollY={700}
               />
             </div>

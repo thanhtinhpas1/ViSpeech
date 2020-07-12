@@ -17,7 +17,7 @@ export class AsrCalledRequestHandler implements IEventHandler<AsrCalledRequestEv
         Logger.log(event.streamId, 'AsrCalledEvent');
         const {requestDto} = event;
         try {
-            await this.requestRepository.update({_id: requestDto._id}, {status: requestDto.status});
+            await this.requestRepository.update({_id: requestDto._id}, {status: requestDto.status, updatedDate: new Date()});
         } catch (error) {
             Logger.error(error.message, '', 'AsrCalledRequestEvent');
         }

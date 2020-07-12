@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { CUSTOMER_PATH, STATUS, TOKEN_TYPE } from 'utils/constant'
+import { CUSTOMER_PATH, STATUS, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 import * as moment from 'moment'
 
 const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }) => {
@@ -20,10 +20,10 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       width: 150,
     },
     {
-      title: 'Tên',
+      title: 'Tên API key',
       dataIndex: 'tokenName',
       canSearch: true,
-      render: _id => <span className="lead tnx-id">{_id}</span>,
+      render: tokenName => <span className="lead tnx-id">{tokenName}</span>,
       width: 150,
     },
     {
@@ -116,11 +116,7 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
   useEffect(() => {
     const userId = currentUser._id
     if (userId) {
-      const pagination = {
-        pageSize: 5,
-        current: 1,
-      }
-      getUserOrderList({ userId, pagination })
+      getUserOrderList({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
   }, [currentUser._id, getUserOrderList])
 
@@ -148,7 +144,7 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
               columns={columns}
               fetchData={getList}
               isLoading={getUserOrderListObj.isLoading}
-              pageSize={5}
+              pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
               scrollY={500}
             />
           </div>

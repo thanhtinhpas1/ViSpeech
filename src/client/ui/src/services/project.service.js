@@ -3,6 +3,7 @@ import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, DEFAULT_PAGINATION } from 'utils/consta
 import STORAGE from 'utils/storage'
 import Utils from 'utils'
 import { apiUrl } from './api-url'
+import UserService from './user.service'
 
 export default class ProjectService {
   static createProject = ({ name, description, userId }) => {
@@ -30,7 +31,7 @@ export default class ProjectService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -69,14 +70,14 @@ export default class ProjectService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
 
   static getMyProjectList = filterConditions => {
     const { userId, pagination, sortField, sortOrder, filters } = filterConditions
-    const { current, pageSize } = pagination || DEFAULT_PAGINATION
+    const { current, pageSize } = pagination || DEFAULT_PAGINATION.SIZE_100
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
@@ -108,7 +109,7 @@ export default class ProjectService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -147,7 +148,7 @@ export default class ProjectService {
         return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -155,37 +156,7 @@ export default class ProjectService {
   static getProjectInfo = async id => {
     const api = `${apiUrl}/projects/${id}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
-
-    let status = 400
-    const projectInfo = await fetch(api, {
-      method: 'GET',
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    })
-      .then(response => {
-        status = response.status
-        return response.json()
-      })
-      .then(result => {
-        if (status !== 200) {
-          throw new Error(DEFAULT_ERR_MESSAGE)
-        }
-        return result
-      })
-      .catch(err => {
-        console.debug(err.message)
-        throw new Error(DEFAULT_ERR_MESSAGE)
-      })
-    const assignees = await this.getProjectAssignees(projectInfo._id)
-    projectInfo.assignees = assignees
-    return projectInfo
-  }
-
-  static getProjectAssignees = projectId => {
-    const api = `${apiUrl}/users/assignees/${projectId}`
-    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+    const assignees = await UserService.getProjectAssignees(id)
 
     let status = 400
     return fetch(api, {
@@ -203,10 +174,12 @@ export default class ProjectService {
         if (status !== 200) {
           throw new Error(DEFAULT_ERR_MESSAGE)
         }
-        return result.data
+        // eslint-disable-next-line no-param-reassign
+        result.assignees = assignees || []
+        return result
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -238,7 +211,7 @@ export default class ProjectService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
@@ -267,7 +240,7 @@ export default class ProjectService {
         return resultObj
       })
       .catch(err => {
-        console.debug(err.message)
+        console.log(err.message)
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }

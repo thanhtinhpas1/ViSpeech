@@ -6,7 +6,7 @@
 import React, { useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { STATUS } from 'utils/constant'
+import { STATUS, DEFAULT_PAGINATION } from 'utils/constant'
 
 const TasksPage = ({ taskListObj, getTaskList }) => {
   const columns = [
@@ -59,11 +59,7 @@ const TasksPage = ({ taskListObj, getTaskList }) => {
   ]
 
   useEffect(() => {
-    const pagination = {
-      pageSize: 10,
-      current: 1,
-    }
-    getTaskList({ pagination })
+    getTaskList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
   }, [getTaskList])
 
   return (
@@ -80,7 +76,7 @@ const TasksPage = ({ taskListObj, getTaskList }) => {
                 columns={columns}
                 fetchData={getTaskList}
                 isLoading={taskListObj.isLoading}
-                pageSize={10}
+                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
                 scrollY={700}
               />
             </div>

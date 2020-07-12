@@ -1,6 +1,11 @@
 import { connect } from 'react-redux'
 import { getProjectTokenList } from 'redux/token/token.actions'
-import { getProjectInfo, updateProjectInfo } from 'redux/project/project.actions'
+import {
+  getProjectInfo,
+  updateProjectInfo,
+  updateProjectInfoSuccess,
+  updateProjectInfoFailure,
+} from 'redux/project/project.actions'
 import ProjectDetailsPage from './ProjectDetailsPage.component'
 
 const mapStateToProps = state => ({
@@ -15,6 +20,8 @@ const mapDispatchToProps = dispatch => ({
   getProjectTokens: ({ userId, projectId, pagination, sortField, sortOrder, filters }) =>
     dispatch(getProjectTokenList({ userId, projectId, pagination, sortField, sortOrder, filters })),
   updateProjectInfo: (id, data) => dispatch(updateProjectInfo(id, data)),
+  updateProjectInfoSuccess: () => dispatch(updateProjectInfoSuccess()),
+  updateProjectInfoFailure: message => dispatch(updateProjectInfoFailure(message)),
 })
 
 const ProjectDetailsPageContainer = connect(mapStateToProps, mapDispatchToProps)(ProjectDetailsPage)

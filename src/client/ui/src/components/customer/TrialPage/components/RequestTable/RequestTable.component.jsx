@@ -98,7 +98,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
     const userId = currentUser._id
     if (userId) {
       getRequestListByUserId(userId, {
-        pagination: DEFAULT_PAGINATION,
+        pagination: DEFAULT_PAGINATION.SIZE_5,
         sortField: 'createdDate',
         sortOrder: SORT_ORDER.DESC,
       })
@@ -136,7 +136,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
         columns={columns}
         fetchData={getList}
         isLoading={getRequestListByUserIdObj.isLoading}
-        pageSize={5}
+        pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
         scrollY={500}
       />
     </Row>

@@ -1,4 +1,9 @@
 .dataTables_wrapper {
+    .ant-table {
+        .ant-table-body {
+            overflow-y: auto !important;
+        }
+    }
     table {
         width: 100%;
 

@@ -25,7 +25,7 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
 
         try {
             // Can only update usedMinutes
-            await this.repository.update({_id}, {usedMinutes: Number(tokenInfo.usedMinutes)});
+            await this.repository.update({_id}, {usedMinutes: Number(tokenInfo.usedMinutes), updatedDate: new Date()});
             this.eventBus.publish(new TokenUpdatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
             this.eventBus.publish(new TokenUpdatedFailedEvent(streamId, tokenDto, error));
