@@ -38,8 +38,8 @@ const getTokenTypeByMinutes = minutes => {
   const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === Number(minutes)
   const result = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
   return {
-    name: TOKEN_TYPE[result].viText,
-    class: TOKEN_TYPE[result].cssClass,
+    name: TOKEN_TYPE[result]?.viText || 'badge-success',
+    class: TOKEN_TYPE[result]?.cssClass || '',
   }
 }
 
