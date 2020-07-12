@@ -1,4 +1,4 @@
-import { AsrCalledHandler } from './asr-called.handler';
+import { AsrCalledRequestHandler } from './asr-called-request.handler';
 import {
     RequestTranscriptFileUrlUpdatedFailedHandler, RequestTranscriptFileUrlUpdatedHandler, RequestTranscriptFileUrlUpdatedSuccessHandler
 } from './request-transcript-file-url-updated.handler';
@@ -10,7 +10,7 @@ export const EventHandlers = [
     RequestCreatedSuccessHandler,
     RequestCreatedFailedHandler,
     // call asr
-    AsrCalledHandler,
+    AsrCalledRequestHandler,
     // update
     RequestTranscriptFileUrlUpdatedHandler,
     RequestTranscriptFileUrlUpdatedSuccessHandler,

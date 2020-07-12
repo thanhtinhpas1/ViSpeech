@@ -16,7 +16,7 @@ export class ReportQueryGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {

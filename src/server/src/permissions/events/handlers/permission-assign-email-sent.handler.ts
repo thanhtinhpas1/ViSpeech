@@ -39,7 +39,8 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
             const assignee = await this.userRepository.findOne({username: assigneeUsername});
             permissionAssignDto.assigneeId = assignee._id;
 
-            const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions, `${CONSTANTS.TOKEN_EXPIRATION.REPLY_PERMISSION_ASSIGN} days`);
+            const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions,
+                `${CONSTANTS.TOKEN_EXPIRATION.REPLY_PERMISSION_ASSIGN} days`);
             await EmailUtils.sendInviteToJoinProjectEmail(assigner.username, assignee.username, project.name, assignee.email, joinProjectToken);
             this.eventBus.publish(new PermissionAssignEmailSentSuccessEvent(streamId, permissionAssignDto));
         } catch (error) {

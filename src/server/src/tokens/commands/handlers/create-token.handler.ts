@@ -28,9 +28,9 @@ export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
             }
 
             if (tokenDto.tokenTypeId) {
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({_id: tokenDto.tokenTypeId});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: tokenDto.tokenType});
                 if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with _id ${tokenDto.tokenTypeId} does not exist.`);
+                    throw new NotFoundException(`Token type with name ${tokenDto.tokenType} does not exist.`);
                 }
             }
 
@@ -84,9 +84,9 @@ export class CreateOrderedTokenHandler
 
         try {
             if (tokenDto.tokenTypeId) {
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({_id: tokenDto.tokenTypeId});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: tokenDto.tokenType});
                 if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with _id ${tokenDto.tokenTypeId} does not exist.`);
+                    throw new NotFoundException(`Token type with name ${tokenDto.tokenType} does not exist.`);
                 }
             }
 

@@ -13,7 +13,7 @@ export class PermissionGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -40,7 +40,7 @@ export class AssignPermissionGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -63,7 +63,7 @@ export class ReplyPermissionAssignGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const {emailToken} = request.body;
         const requestJwt = this.authService.decode(request);
@@ -77,7 +77,7 @@ export class ReplyPermissionAssignGuard implements CanActivate {
         const projectId = decodedEmailToken['projectId'];
         const permissions = decodedEmailToken['permissions'];
         if (!decodedEmailToken || !assignerId || !assigneeId || !projectId || !permissions) {
-            throw new BadRequestException("Token is invalid.");
+            throw new BadRequestException('Token is invalid.');
         }
 
         const permission = await getMongoRepository(PermissionDto).findOne({
@@ -98,7 +98,7 @@ export class PermissionQueryGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -125,8 +125,7 @@ export class PermissionQueryGuard implements CanActivate {
             if (assigneeId && assignerId && projectId) {
                 const permissions = await getMongoRepository(PermissionDto).find({assigneeId, assignerId, projectId});
                 if (permissions.length === 0) {
-                    throw new NotFoundException(`Permissions with assigneeId ${assigneeId} and 
-                        assignerId ${assignerId} and projectId ${projectId} does not exist.`);
+                    throw new NotFoundException(`Permissions with assigneeId does not exist.`);
                 }
                 if (assigneeId === payload['id'] || assignerId === payload['id']) {
                     return true;

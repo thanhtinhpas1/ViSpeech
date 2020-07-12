@@ -33,9 +33,9 @@ export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpg
                     throw new NotFoundException(`User with _id ${orderDto.userId} does not exist.`);
                 }
 
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({_id: orderDto.tokenType._id});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: orderDto.tokenType.name});
                 if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with _id ${orderDto.tokenType._id} does not exist.`);
+                    throw new NotFoundException(`Token type with name ${orderDto.tokenType.name} does not exist.`);
                 }
 
                 const validToken = await getMongoRepository(TokenDto).findOne({

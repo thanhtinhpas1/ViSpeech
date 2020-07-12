@@ -18,7 +18,7 @@ import { HistoriesController } from './controllers/histories.controller';
 import { ReportRepository } from 'reports/repository/report.repository';
 import { OrderDto } from 'orders/dtos/orders.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
-import { AsrCalledEvent } from './events/impl/asr-called.event';
+import { AsrCalledRequestEvent } from './events/impl/asr-called-request.event';
 import {
     RequestTranscriptFileUrlUpdatedEvent,
     RequestTranscriptFileUrlUpdatedFailedEvent,
@@ -127,7 +127,7 @@ export class RequestModule implements OnModuleInit, OnModuleDestroy {
     }
 
     public static eventHandlers = {
-        AsrCalledEvent: (streamId, requestDto, tokenDto) => new AsrCalledEvent(streamId, requestDto, tokenDto),
+        AsrCalledRequestEvent: (streamId, requestDto, tokenDto) => new AsrCalledRequestEvent(streamId, requestDto, tokenDto),
         // create
         RequestCreatedEvent: (streamId, requestDto, tokenDto) => new RequestCreatedEvent(streamId, requestDto, tokenDto),
         RequestCreatedSuccessEvent: (streamId, requestDto, tokenDto) => new RequestCreatedSuccessEvent(streamId, requestDto, tokenDto),

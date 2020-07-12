@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ofType, Saga } from '@nestjs/cqrs';
 import { Observable } from 'rxjs';
-import { AsrCalledEvent } from 'requests/events/impl/asr-called.event';
+import { AsrCalledRequestEvent } from 'requests/events/impl/asr-called-request.event';
 import { map } from 'rxjs/operators';
 import { CONSTANTS } from 'common/constant';
 import { EventStore } from '../../core/event-store/lib';
@@ -17,8 +17,8 @@ export class CallAsrSagas {
     @Saga()
     callAsrServiceSaga = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
-            ofType(AsrCalledEvent),
-            map((event: AsrCalledEvent) => {
+            ofType(AsrCalledRequestEvent),
+            map((event: AsrCalledRequestEvent) => {
                 Logger.log('Inside [RequestSagas] callAsrService Saga', 'RequestSagas');
                 const {streamId, requestDto, tokenDto} = event;
                 if (requestDto.status === CONSTANTS.STATUS.SUCCESS) {

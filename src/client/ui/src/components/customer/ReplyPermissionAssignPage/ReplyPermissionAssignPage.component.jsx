@@ -41,19 +41,8 @@ const ReplyPermissionAssignPage = ({
     if (currentUser._id) {
       const decodedToken = Utils.decodeJwtToken(emailToken)
       if (decodedToken.assigneeId === currentUser._id) {
-        if (Number(`${decodedToken.exp}000`) >= Date.now()) {
-          findPermissionByEmailToken(emailToken)
-        } else {
-          setInfoTemplate({
-            title: 'Phản hồi lời mời',
-            user: currentUser,
-            content: 'Xin lỗi! Lời mời tham gia dự án đã hết hiệu lực.',
-            positiveButton: {
-              content: 'Về trang dự án',
-              clickFunc: () => history.push(`${CUSTOMER_PATH}/projects`),
-            },
-          })
-        }
+        // time expire will be server authorize instead of client side
+        findPermissionByEmailToken(emailToken)
       } else {
         setInfoTemplate({
           title: 'Phản hồi lời mời',
