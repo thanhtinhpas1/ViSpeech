@@ -64,6 +64,10 @@ export const DEFAULT_PAGINATION = {
     current: 1,
     pageSize: MAX_INT,
   },
+  SIZE_TOTAL_COUNT: {
+    current: 1,
+    pageSize: 1,
+  }
 }
 export const USER_TYPE = {
   NORMAL: 'NORMAL',

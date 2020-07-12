@@ -6,9 +6,9 @@ import { getMongoRepository } from 'typeorm';
 @QueryHandler(GetTotalTokensQuery)
 export class GetTotalTokensHandler implements IQueryHandler<GetTotalTokensQuery> {
     public execute(query: GetTotalTokensQuery): Promise<any> {
-        return getMongoRepository(TokenDto).findAndCount({})
-        .then(results => {
-            return { data: [], count: results[1] };
+        return getMongoRepository(TokenDto).count({})
+        .then(count => {
+            return { data: [], count };
         });
     }
 }

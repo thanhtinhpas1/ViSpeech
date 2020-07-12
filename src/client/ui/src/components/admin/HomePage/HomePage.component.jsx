@@ -13,10 +13,10 @@ const HomePage = ({
   getProjectList,
 }) => {
   useEffect(() => {
-    getUserList({ pagination: DEFAULT_PAGINATION.SIZE_5 })
-    getTokenList({ pagination: DEFAULT_PAGINATION.SIZE_5 })
-    getOrderList({ pagination: DEFAULT_PAGINATION.SIZE_MAX_INT })
-    getProjectList({ pagination: DEFAULT_PAGINATION.SIZE_5 })
+    getUserList({ pagination: DEFAULT_PAGINATION.SIZE_TOTAL_COUNT })
+    getTokenList({ pagination: DEFAULT_PAGINATION.SIZE_TOTAL_COUNT })
+    getOrderList({ pagination: DEFAULT_PAGINATION.SIZE_TOTAL_COUNT })
+    getProjectList({ pagination: DEFAULT_PAGINATION.SIZE_TOTAL_COUNT })
   }, [getUserList, getTokenList, getOrderList, getProjectList])
 
   useEffect(() => {}, [getOrderList])
@@ -24,7 +24,7 @@ const HomePage = ({
   return (
     <>
       <div className="row">
-        <div className="col-lg-4 col-md-6 col-sm-6">
+        <div className="col-lg-3 col-md-6 col-sm-6">
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-warning">
@@ -33,7 +33,7 @@ const HomePage = ({
             </div>
             <div className="card-content">
               <p className="category">
-                <strong>Tổng số khách hàng</strong>
+                <strong>Tổng tài khoản</strong>
               </p>
               <h3 className="card-title">{getUserListObj?.userList.count ?? 0}</h3>
             </div>
@@ -44,7 +44,7 @@ const HomePage = ({
             </div>
           </div>
         </div>
-        <div className="col-lg-4 col-md-6 col-sm-6">
+        <div className="col-lg-3 col-md-6 col-sm-6">
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-rose">
@@ -53,7 +53,7 @@ const HomePage = ({
             </div>
             <div className="card-content">
               <p className="category">
-                <strong>Tổng số API key</strong>
+                <strong>Tổng API key</strong>
               </p>
               <h3 className="card-title">{getTokenListObj?.tokenList?.count ?? 0}</h3>
             </div>
@@ -64,7 +64,27 @@ const HomePage = ({
             </div>
           </div>
         </div>
-        <div className="col-lg-4 col-md-6 col-sm-6">
+        <div className="col-lg-3 col-md-6 col-sm-6">
+          <div className="card card-stats">
+            <div className="card-header">
+              <div className="icon icon-success">
+                <i className="zmdi zmdi-money" />
+              </div>
+            </div>
+            <div className="card-content">
+              <p className="category">
+                <strong>Tổng giao dịch</strong>
+              </p>
+              <h3 className="card-title">{getOrderListObj.orderList?.count || 0}</h3>
+            </div>
+            <div className="card-footer">
+              <div className="stats">
+                <a href={`${ADMIN_PATH}/orders`}>Xem chi tiết</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-3 col-md-6 col-sm-6">
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-info">

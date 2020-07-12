@@ -9,7 +9,6 @@ export class GetTokensQuery {
     @IsOptional()
     @Type(() => Number)
     @IsNumber()
-    @IsPositive()
     limit: number;
 
     @IsOptional()
@@ -20,7 +19,7 @@ export class GetTokensQuery {
 
     @IsOptional()
     @IsObject()
-    filters: Object;
+    filters: object;
 
     @IsOptional()
     @ValidateNested()

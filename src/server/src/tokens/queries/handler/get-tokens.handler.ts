@@ -27,7 +27,7 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
         Logger.log('Async GetTokensHandler...', 'GetTokensQuery');
         const {offset, limit, filters, sort} = query;
         let tokens = [];
-        let result = [];
+        const result = [];
         try {
             const findOptions = {
                 where: {},
