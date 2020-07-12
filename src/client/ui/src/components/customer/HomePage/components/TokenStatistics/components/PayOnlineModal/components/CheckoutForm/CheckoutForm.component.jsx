@@ -7,7 +7,7 @@ import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
 import SocketUtils from 'utils/socket.util'
-import { DEFAULT_PAGINATION } from 'utils/constant'
+import { DEFAULT_PAGINATION, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -139,6 +139,13 @@ const CheckoutForm = ({
   }
 
   useEffect(() => {
+    if (createOrderObj.isLoading === true) {
+      setTimeout(() => {
+        if (createOrderObj.isLoading === true) {
+          createOrderFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (createOrderObj.isLoading === false && createOrderObj.isSuccess != null) {
       setIsLoading(false)
       if (createOrderObj.isSuccess === true) {
@@ -151,7 +158,7 @@ const CheckoutForm = ({
         setErrorMessage(Utils.buildFailedMessage(createOrderObj.message, 'Giao dịch thất bại'))
       }
     }
-  }, [createOrderObj, onOrderSuccess])
+  }, [createOrderObj, onOrderSuccess, createOrderFailure])
 
   const cardElementOptions = {
     iconStyle: 'solid',

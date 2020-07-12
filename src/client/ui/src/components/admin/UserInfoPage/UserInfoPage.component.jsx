@@ -7,7 +7,7 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Tabs } from 'antd'
-import { ADMIN_PATH } from 'utils/constant'
+import { ADMIN_PATH, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
 import SocketService from 'services/socket.service'
@@ -73,6 +73,13 @@ const UserInfoPage = ({
   }, [id, getUserInfo])
 
   useEffect(() => {
+    if (deleteUserObj.isLoading === true) {
+      setTimeout(() => {
+        if (deleteUserObj.isLoading === true) {
+          deleteUserFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (deleteUserObj.isLoading === false && deleteUserObj.isSuccess != null) {
       if (deleteUserObj.isSuccess === true) {
         setInfoModal({
@@ -110,7 +117,7 @@ const UserInfoPage = ({
         })
       }
     }
-  }, [deleteUserObj, closeInfoModal, history])
+  }, [deleteUserObj, closeInfoModal, history, deleteUserFailure])
 
   const onDeleteUser = (e, userId) => {
     if (!userId) return

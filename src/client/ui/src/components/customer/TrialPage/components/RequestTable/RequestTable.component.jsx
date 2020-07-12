@@ -3,7 +3,6 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Row } from 'antd'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import { CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
 import * as moment from 'moment'
@@ -113,6 +112,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
   }, [newRequest, requestData, uploading])
 
   useEffect(() => {
+    setRequestData({ data: [], count: 0 })
     if (getRequestListByUserIdObj.isLoading === false && getRequestListByUserIdObj.isSuccess != null) {
       setRequestData(getRequestListByUserIdObj.requestList)
     }
@@ -130,7 +130,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
   )
 
   return (
-    <Row style={{ marginTop: 30 }}>
+    <div style={{ marginTop: 30 }}>
       <AntdTable
         dataObj={requestData}
         columns={columns}
@@ -139,7 +139,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
         pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
         scrollY={500}
       />
-    </Row>
+    </div>
   )
 }
 

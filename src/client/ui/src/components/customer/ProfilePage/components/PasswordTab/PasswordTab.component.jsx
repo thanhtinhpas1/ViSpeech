@@ -8,6 +8,7 @@ import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
 import Utils from 'utils'
+import { TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PASSWORD_CHANGED_SUCCESS_EVENT, PASSWORD_CHANGED_FAILED_EVENT } = KAFKA_TOPIC
@@ -34,12 +35,19 @@ const PasswordTab = ({
   }, [history, logout])
 
   useEffect(() => {
+    if (changePasswordObj.isLoading === true) {
+      setTimeout(() => {
+        if (changePasswordObj.isLoading === true) {
+          changePasswordFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (changePasswordObj.isLoading === false && changePasswordObj.isSuccess === true) {
       setTimeout(() => {
         onLogout()
       }, 1500)
     }
-  }, [changePasswordObj, onLogout])
+  }, [changePasswordObj, onLogout, changePasswordFailure])
 
   const onSubmit = async values => {
     if (!currentUser._id) return

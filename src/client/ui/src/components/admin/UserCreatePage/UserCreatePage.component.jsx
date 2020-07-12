@@ -6,7 +6,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import { Alert, Button, Form, Input, Radio, Row } from 'antd'
-import { ROLES } from 'utils/constant'
+import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -33,6 +33,16 @@ const UserCreatePage = ({ createUserObj, createUser, createUserSuccess, createUs
     SocketService.socketOnListeningEvent(USER_CREATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(USER_CREATED_FAILED_EVENT)
   }, [])
+
+  useEffect(() => {
+    if (createUserObj.isLoading === true) {
+      setTimeout(() => {
+        if (createUserObj.isLoading === true) {
+          createUserFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
+  }, [createUserObj, createUserFailure])
 
   const onSubmit = async values => {
     const { firstName, lastName, username, password, email, role } = values

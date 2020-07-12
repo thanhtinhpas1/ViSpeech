@@ -145,7 +145,7 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
               fetchData={getList}
               isLoading={getUserOrderListObj.isLoading}
               pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-              scrollY={500}
+              scrollY={600}
             />
           </div>
         </div>

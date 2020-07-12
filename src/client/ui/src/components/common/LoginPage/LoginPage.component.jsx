@@ -5,7 +5,7 @@
 import React, { useEffect } from 'react'
 import { Alert, Button } from 'antd'
 import Utils from 'utils'
-import { JWT_TOKEN } from 'utils/constant'
+import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -46,14 +46,26 @@ const LoginPage = ({
     login(user)
   }
 
+  useEffect(() => {
+    if (loginWithSocialObj.isLoading === true) {
+      setTimeout(() => {
+        if (loginWithSocialObj.isLoading === true) {
+          loginWithSocialFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
+  }, [loginWithSocialObj, loginWithSocialFailure])
+
   const loginWithFacebookOrGoogle = async (accessToken, userType) => {
     loginWithSocial(accessToken, userType)
     try {
       const socialUser = await UserService.loginWithSocial(accessToken, userType)
       if (socialUser._id) {
+        // already create new user with social account
         loginWithSocialSuccess(socialUser)
         STORAGE.setPreferences(JWT_TOKEN, socialUser.jwtToken)
       } else {
+        // create new user with social account
         invokeCheckSubject.UserCreated.subscribe(data => {
           if (data.error != null) {
             loginWithSocialFailure(data.errorObj)
@@ -66,8 +78,7 @@ const LoginPage = ({
         })
       }
     } catch (err) {
-      const msg = 'Đã có lỗi xảy ra, vui lòng thử lại sau ít phút.'
-      loginWithSocialFailure({ message: msg })
+      loginWithSocialFailure({ message: DEFAULT_ERR_MESSAGE })
     }
   }
 

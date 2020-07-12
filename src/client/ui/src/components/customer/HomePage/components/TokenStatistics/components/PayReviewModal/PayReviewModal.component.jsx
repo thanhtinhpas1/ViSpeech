@@ -1,5 +1,6 @@
 /* eslint-disable react/button-has-type */
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Modal } from 'antd'
 import { CUSTOMER_PATH } from 'utils/constant'
 
@@ -23,9 +24,9 @@ const PayReviewModal = ({ payReviewModal }) => {
           </button>
         </div>
         <div className="gaps-2x" />
-        <a href={`${CUSTOMER_PATH}/transactions`} className="btn btn-primary">
+        <Link to={`${CUSTOMER_PATH}/transactions`} className="btn btn-primary">
           Xem lịch sử giao dịch
-        </a>
+        </Link>
         <div className="gaps-1x" />
       </div>
     </Modal>

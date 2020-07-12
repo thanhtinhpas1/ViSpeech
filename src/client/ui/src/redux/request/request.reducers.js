@@ -20,6 +20,7 @@ const INITIAL_STATE = {
     message: null,
   },
   updateInfo: {
+    requestId: null,
     isLoading: false,
     isSuccess: null,
     message: null,
@@ -37,6 +38,13 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getInfo: {
           ...INITIAL_STATE.getInfo,
+        },
+      }
+    case RequestTypes.CLEAR_UPDATE_REQUEST_INFO:
+      return {
+        ...state,
+        updateInfo: {
+          ...INITIAL_STATE.updateInfo,
         },
       }
     // GET INFO
@@ -129,6 +137,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         ...state,
         updateInfo: {
           ...state.updateInfo,
+          requestId: action.payload.id,
           isLoading: true,
         },
       }
@@ -136,14 +145,17 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
+          ...state.updateInfo,
           isLoading: false,
           isSuccess: true,
+          message: null,
         },
       }
     case RequestTypes.UPDATE_REQUEST_INFO_FAILURE:
       return {
         ...state,
         updateInfo: {
+          ...state.updateInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

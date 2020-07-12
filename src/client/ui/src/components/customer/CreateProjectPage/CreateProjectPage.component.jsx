@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { CUSTOMER_PATH } from 'utils/constant'
+import { CUSTOMER_PATH, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import ProjectService from 'services/project.service'
 import SocketUtils from 'utils/socket.util'
@@ -40,6 +40,13 @@ const CreateProjectPage = ({
   }
 
   useEffect(() => {
+    if (createProjectObj.isLoading === true) {
+      setTimeout(() => {
+        if (createProjectObj.isLoading === true) {
+          createProjectFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (createProjectObj.isLoading === false && createProjectObj.isSuccess != null) {
       if (createProjectObj.isSuccess === true) {
         emptyAllInputField()
@@ -72,7 +79,7 @@ const CreateProjectPage = ({
         })
       }
     }
-  }, [createProjectObj, closeInfoModal])
+  }, [createProjectObj, closeInfoModal, createProjectFailure])
 
   const onSubmit = async event => {
     event.preventDefault()

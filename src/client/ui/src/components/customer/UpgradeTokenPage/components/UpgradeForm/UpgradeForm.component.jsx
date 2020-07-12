@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Alert, Button, Checkbox, Col, Form, Input, Radio, Row, Select } from 'antd'
 import Utils from 'utils'
-import { DEFAULT_PAGINATION, TOKEN_TYPE } from 'utils/constant'
+import { DEFAULT_PAGINATION, TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import TokenType from 'components/customer/HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
@@ -174,6 +174,7 @@ const UpgradeForm = ({
               createUpgradeTokenOrderFailure(data.errorObj)
             } else {
               createUpgradeTokenOrderSuccess({ order })
+              form.resetFields()
             }
           })
         } catch (err) {
@@ -190,15 +191,20 @@ const UpgradeForm = ({
   }
 
   useEffect(() => {
+    if (createUpgradeTokenOrderObj.isLoading === true) {
+      setTimeout(() => {
+        if (createUpgradeTokenOrderObj.isLoading === true) {
+          createUpgradeTokenOrderFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (createUpgradeTokenOrderObj.isLoading === false && createUpgradeTokenOrderObj.isSuccess != null) {
       setIsLoading(false)
-      if (createUpgradeTokenOrderObj.isSuccess === true) {
-        form.resetFields()
-      } else {
+      if (createUpgradeTokenOrderObj.isSuccess === false) {
         setErrorMessage(Utils.buildFailedMessage(createUpgradeTokenOrderObj.message, 'Nâng cấp API key thất bại'))
       }
     }
-  }, [createUpgradeTokenOrderObj, form])
+  }, [createUpgradeTokenOrderObj, createUpgradeTokenOrderFailure])
 
   const onProjectIdChange = async value => {
     const userId = currentUser && currentUser._id

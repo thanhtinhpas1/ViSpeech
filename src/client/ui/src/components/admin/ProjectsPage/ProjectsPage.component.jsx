@@ -8,7 +8,7 @@ import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
-import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
+import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import ProjectService from 'services/project.service'
 import SocketUtils from 'utils/socket.util'
@@ -53,6 +53,13 @@ const ProjectsPage = ({
   }, [])
 
   useEffect(() => {
+    if (deleteProjectObj.isLoading === true) {
+      setTimeout(() => {
+        if (deleteProjectObj.isLoading === true) {
+          deleteProjectFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (deleteProjectObj.isLoading === false && deleteProjectObj.isSuccess != null) {
       if (deleteProjectObj.isSuccess === true) {
         setInfoModal({
@@ -90,7 +97,7 @@ const ProjectsPage = ({
         })
       }
     }
-  }, [deleteProjectObj, getProjectList, closeInfoModal])
+  }, [deleteProjectObj, getProjectList, closeInfoModal, deleteProjectFailure])
 
   const onDeleteProject = async projectId => {
     if (!projectId) return

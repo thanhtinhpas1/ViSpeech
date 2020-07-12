@@ -8,6 +8,10 @@ export const onClearRequestInfo = () => ({
   type: RequestTypes.CLEAR_REQUEST_INFO,
 })
 
+export const onClearUpdateRequestInfo = () => ({
+  type: RequestTypes.CLEAR_UPDATE_REQUEST_INFO,
+})
+
 // get request info
 export const getRequestInfo = id => ({
   type: RequestTypes.GET_REQUEST_INFO,

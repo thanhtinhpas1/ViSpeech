@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
+import { CUSTOMER_PATH, JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import Utils from 'utils'
 import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
@@ -153,6 +153,13 @@ const VerifyEmailPage = ({
   }, [currentUser, emailToken, history, onVerifyEmail])
 
   useEffect(() => {
+    if (verifyEmailObj.isLoading === true) {
+      setTimeout(() => {
+        if (verifyEmailObj.isLoading === true) {
+          verifyEmailFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
     if (verifyEmailObj.isLoading === false && verifyEmailObj.isSuccess != null) {
       if (verifyEmailObj.isSuccess === true) {
         setInfoModal({
@@ -189,7 +196,7 @@ const VerifyEmailPage = ({
         })
       }
     }
-  }, [verifyEmailObj, history, closeInfoModal])
+  }, [verifyEmailObj, history, closeInfoModal, verifyEmailFailure])
 
   return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />
 }

@@ -11,6 +11,7 @@ import './TrialDetailsPage.style.css'
 import * as moment from 'moment'
 import RequestService from 'services/request.service'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import { CUSTOMER_PATH } from 'utils/constant'
 
 const juice = require('juice')
 
@@ -107,7 +108,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
           '<meta charset="UTF-8"><title>Report</title></head><body>'}${editorHtml}</body></html>`
         html = juice.inlineContent(html, css)
         const result = await RequestService.downloadTranscript(html, id)
-        saveAs(result, 'vispeech-transcript.docx')
+        saveAs(result, 'vietspeech-transcript.docx')
       })
       .catch(error => {
         console.log(error)
@@ -123,13 +124,17 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
               <h4 className="card-title mb-0">Chi tiết yêu cầu dùng thử</h4>
               <button
                 type="button"
-                onClick={history.goBack}
+                onClick={() => history.push(`${CUSTOMER_PATH}/trial`)}
                 className="btn btn-sm btn-auto btn-primary d-sm-block d-none"
               >
                 <em className="fas fa-arrow-left mr-3" />
                 Trở lại
               </button>
-              <button type="button" onClick={history.goBack} className="btn btn-icon btn-sm btn-primary d-sm-none">
+              <button
+                type="button"
+                onClick={() => history.push(`${CUSTOMER_PATH}/trial`)}
+                className="btn btn-icon btn-sm btn-primary d-sm-none"
+              >
                 <em className="fas fa-arrow-left" />
               </button>
             </div>
