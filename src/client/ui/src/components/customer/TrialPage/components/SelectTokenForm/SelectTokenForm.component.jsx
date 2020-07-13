@@ -31,19 +31,15 @@ const SelectTokenForm = ({
 
   const onProjectIdChange = useCallback(
     value => {
-      if (currentUser._id) {
+      const userId = currentUser && currentUser._id
+      if (userId) {
         const filters = {
           isValid: ['true'],
         }
-        getProjectTokenList({
-          userId: currentUser._id,
-          projectId: value,
-          pagination: DEFAULT_PAGINATION.SIZE_100,
-          filters,
-        })
+        getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
       }
     },
-    [currentUser._id, getProjectTokenList]
+    [currentUser, getProjectTokenList]
   )
 
   useEffect(() => {
@@ -72,13 +68,12 @@ const SelectTokenForm = ({
   useEffect(() => {
     const fieldsValue = form.getFieldsValue(['projectId', 'tokenValue'])
     const { projectId, tokenValue } = fieldsValue
-    if (projectId && tokenValue) {
-      const project = projectId ? getMyProjectListObj.myProjectList.data.find(item => item._id === projectId) : null
-      const token = tokenValue
-        ? getProjectTokenListObj.projectTokenList.data.find(item => item.value === tokenValue)
-        : null
-      onSelectTokenFormValuesChange(project, token)
-    }
+    if (!projectId || !tokenValue) return
+    const project = projectId ? getMyProjectListObj.myProjectList.data.find(item => item._id === projectId) : null
+    const token = tokenValue
+      ? getProjectTokenListObj.projectTokenList.data.find(item => item.value === tokenValue)
+      : null
+    onSelectTokenFormValuesChange(project, token)
   }, [
     form,
     getMyProjectListObj.myProjectList.data,

@@ -6,30 +6,16 @@ import React, { useState, useEffect } from 'react'
 import { Row } from 'antd'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { STRIPE_PUBLIC_KEY, DEFAULT_PAGINATION } from 'utils/constant'
-import Utils from 'utils'
+import { STRIPE_PUBLIC_KEY } from 'utils/constant'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
 import UpgradeForm from './components/UpgradeForm/UpgradeForm.container'
 
-const UpgradeTokenPage = ({ currentUser, getMyProjects, getTokenTypes }) => {
+const UpgradeTokenPage = () => {
   const [stripePromise, setStripePromise] = useState(null)
 
   useEffect(() => {
     setStripePromise(loadStripe(STRIPE_PUBLIC_KEY))
   }, [])
-
-  useEffect(() => {
-    getTokenTypes()
-  }, [getTokenTypes])
-
-  useEffect(() => {
-    if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {
-      const filters = {
-        isValid: ['true'],
-      }
-      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
-    }
-  }, [currentUser._id, currentUser.roles, getMyProjects])
 
   return (
     <div className="page-content">

@@ -2,26 +2,23 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import { Alert, Button, Checkbox, Col, Form, Input, Radio, Row, Select } from 'antd'
+import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd'
 import Utils from 'utils'
-import { DEFAULT_PAGINATION, TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import TokenType from 'components/customer/HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
 import SocketUtils from 'utils/socket.util'
-
-const { Option } = Select
+import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { TOKEN_UPGRADED_SUCCESS_EVENT, TOKEN_UPGRADED_FAILED_EVENT, ORDER_TO_UPGRADE_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const UpgradeForm = ({
   currentUser,
-  getMyProjectListObj,
   getTokenTypeListObj,
-  getProjectTokenListObj,
   createOrderToUpgradeObj,
-  getProjectTokenList,
+  getTokenTypes,
   createOrderToUpgrade,
   createOrderToUpgradeSuccess,
   createOrderToUpgradeFailure,
@@ -33,7 +30,10 @@ const UpgradeForm = ({
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [currentTokenTypeMinutes, setCurrentTokenTypeMinutes] = useState(0)
-  const [defaultTokenTypeId, setDefaultTokenTypeId] = useState(null)
+  const [tokenTypeToUpgradeList, setTokenTypeToUpgradeList] = useState([])
+  const [selectedProjectId, setSelectedProjectId] = useState(null)
+  const [selectedTokenId, setSelectedTokenId] = useState(null)
+  const [selectedTokenTypeId, setSelectedTokenTypeId] = useState(null)
 
   const cardElementOptions = {
     iconStyle: 'solid',
@@ -52,6 +52,17 @@ const UpgradeForm = ({
     },
     hidePostalCode: true,
   }
+
+  useEffect(() => {
+    clearCreateOrderToUpgradeState()
+    SocketService.socketOnListeningEvent(ORDER_TO_UPGRADE_CREATED_FAILED_EVENT)
+    SocketService.socketOnListeningEvent(TOKEN_UPGRADED_SUCCESS_EVENT)
+    SocketService.socketOnListeningEvent(TOKEN_UPGRADED_FAILED_EVENT)
+  }, [clearCreateOrderToUpgradeState])
+
+  useEffect(() => {
+    getTokenTypes()
+  }, [getTokenTypes])
 
   const changeTokenTypeCss = selectedId => {
     window.$(`.token-currency-choose .pay-option label.pay-option-check-select`).removeClass('pay-option-check-select')
@@ -76,20 +87,15 @@ const UpgradeForm = ({
         true,
         currentTokenTypeMinutes
       )
+      setTokenTypeToUpgradeList(tokenTypeIds)
       if (tokenTypeIds.length > 0) {
+        // setSelectedTokenTypeId(null)
         const id = tokenTypeIds[0]._id
         changeTokenTypeCss(id)
-        setDefaultTokenTypeId(id)
+        setSelectedTokenTypeId(id)
       }
     }
   }, [getTokenTypeListObj, currentTokenTypeMinutes])
-
-  useEffect(() => {
-    clearCreateOrderToUpgradeState()
-    SocketService.socketOnListeningEvent(ORDER_TO_UPGRADE_CREATED_FAILED_EVENT)
-    SocketService.socketOnListeningEvent(TOKEN_UPGRADED_SUCCESS_EVENT)
-    SocketService.socketOnListeningEvent(TOKEN_UPGRADED_FAILED_EVENT)
-  }, [clearCreateOrderToUpgradeState])
 
   const onSubmit = values => {
     if (!stripe || !elements) {
@@ -180,10 +186,23 @@ const UpgradeForm = ({
     }
 
     setIsLoading(true)
-    const { projectId, tokenId, tokenTypeId } = values
-    let selectedType = getTokenTypeListObj.tokenTypeList.find(x => x._id === tokenTypeId)
+
+    // check ids
+    if (!selectedProjectId || !selectedTokenId) {
+      setErrorMessage('Vui lòng chọn dự án và API key!')
+      setIsLoading(false)
+      return
+    }
+    if (!selectedTokenTypeId) {
+      setErrorMessage('Vui lòng chọn loại API key để nâng cấp!')
+      setIsLoading(false)
+      return
+    }
+
+    // start upgrade token process
+    let selectedType = getTokenTypeListObj.tokenTypeList.find(x => x._id === selectedTokenTypeId)
     selectedType = Utils.removePropertiesFromObject(selectedType, ['createdDate', 'updatedDate'])
-    upgradeToken(projectId, tokenId, selectedType)
+    upgradeToken(selectedProjectId, selectedTokenId, selectedType)
   }
 
   useEffect(() => {
@@ -202,209 +221,114 @@ const UpgradeForm = ({
     }
   }, [createOrderToUpgradeObj, createOrderToUpgradeFailure])
 
-  const onProjectIdChange = async value => {
-    const userId = currentUser && currentUser._id
-    if (userId) {
-      const filters = {
-        isValid: ['true'],
-      }
-      getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
-      form.resetFields(['tokenId'])
-      form.resetFields(['currentTokenType'])
-      setCurrentTokenTypeMinutes(0)
+  const onTokenTypeChange = e => {
+    const tokenTypeId = e.target.value
+    changeTokenTypeCss(tokenTypeId)
+    setSelectedTokenTypeId(tokenTypeId)
+  }
+
+  const onSelectTokenFormValuesChange = (projectId, tokenId) => {
+    if (projectId && tokenId) {
+      setSelectedProjectId(projectId)
+      setSelectedTokenId(tokenId)
     }
   }
 
-  const onTokenIdChange = async value => {
-    const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === value)
-    const tokenTypes = Object.keys(TOKEN_TYPE)
-    const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === token.minutes
-    const index = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
-    setCurrentTokenTypeMinutes(TOKEN_TYPE[index].minutes)
-    form.setFieldsValue({ currentTokenType: TOKEN_TYPE[index].viText })
-  }
-
-  const onTokenTypeChange = e => {
-    changeTokenTypeCss(e.target.value)
-  }
-
   return (
-    <Form form={form} onFinish={onSubmit}>
-      <Row gutter={24}>
-        <Col span={8}>
-          <h5 className="font-mid">Dự án</h5>
-          <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
-            <Select
-              style={{ width: '100%' }}
-              placeholder={
-                (getMyProjectListObj.myProjectList.data || []).length > 0 ? 'Chọn một dự án' : 'Không tìm thấy dự án'
-              }
-              onChange={onProjectIdChange}
-            >
-              {(getMyProjectListObj.myProjectList.data || []).map(project => {
-                return (
-                  <Option value={project._id} key={project._id}>
-                    {project.name}
-                  </Option>
-                )
-              })}
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <h5 className="font-mid">Tên API key</h5>
-          <Form.Item
-            name="tokenId"
-            dependencies={['projectId']}
-            rules={[
-              { required: true, message: 'Vui lòng chọn một API key.' },
-              ({ getFieldValue }) => ({
-                async validator() {
-                  const projectId = getFieldValue('projectId')
-                  if (!projectId) {
-                    return Promise.reject('Vui lòng chọn một dự án')
-                  }
-                  return Promise.resolve()
-                },
-              }),
-            ]}
-          >
-            <Select
-              style={{ minWidth: 180 }}
-              placeholder={
-                (getProjectTokenListObj.projectTokenList.data || []).length > 0
-                  ? 'Chọn một API key'
-                  : 'Không tìm thấy API key'
-              }
-              onChange={onTokenIdChange}
-            >
-              {(getProjectTokenListObj.projectTokenList.data || []).map(item => {
-                return (
-                  <Option key={item._id} value={item._id}>
-                    {item.name}
-                  </Option>
-                )
-              })}
-            </Select>
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <h5 className="font-mid">Gói API key hiện tại</h5>
-          <Form.Item name="currentTokenType">
-            <Input disabled />
-          </Form.Item>
-        </Col>
-      </Row>
+    <>
+      <SelectTokenForm
+        onSelectTokenFormValuesChange={onSelectTokenFormValuesChange}
+        setCurrentTokenTypeMinutes={setCurrentTokenTypeMinutes}
+      />
       <Row gutter={24} style={{ marginBottom: 20 }}>
         <Col span={24}>
           <h5 className="font-mid">Nâng cấp lên gói</h5>
-          <Form.Item name="tokenTypeId">
-            <div className="token-balance token-balance-s2">
-              <div className="token-currency-choose" style={{ color: '#495463' }}>
-                {Utils.sortAndFilterTokenTypeList(
-                  getTokenTypeListObj.tokenTypeList,
-                  [TOKEN_TYPE.FREE.name],
-                  'price',
-                  true,
-                  currentTokenTypeMinutes
-                ).length === 0 ? (
-                  <p>API key đã được nâng cấp lên gói cao nhất</p>
-                ) : (
-                  (getTokenTypeListObj.tokenTypeList || []).length > 0 && (
-                    <Radio.Group
-                      name="radiogroup"
-                      style={{ width: '100%' }}
-                      onChange={onTokenTypeChange}
-                      defaultValue={defaultTokenTypeId}
-                    >
-                      <div className="row guttar-15px" style={{ display: 'flex' }}>
-                        {Utils.sortAndFilterTokenTypeList(
-                          getTokenTypeListObj.tokenTypeList,
-                          [TOKEN_TYPE.FREE.name],
-                          'price',
-                          true,
-                          currentTokenTypeMinutes
-                        ).map(tokenType => {
-                          return (
-                            <div className="col-3" key={tokenType._id}>
-                              <TokenType tokenType={tokenType} />
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </Radio.Group>
-                  )
-                )}
-              </div>
+          <div className="token-balance token-balance-s2">
+            <div className="token-currency-choose" style={{ color: '#495463' }}>
+              {tokenTypeToUpgradeList.length === 0 && <p>API key đã được nâng cấp lên gói cao nhất</p>}
+              {(getTokenTypeListObj.tokenTypeList || []).length > 0 && (
+                <Radio.Group
+                  name="radiogroup"
+                  style={{ width: '100%' }}
+                  onChange={onTokenTypeChange}
+                  defaultValue={selectedTokenTypeId}
+                >
+                  <div className="row guttar-15px" style={{ display: 'flex' }}>
+                    {tokenTypeToUpgradeList.map(tokenType => {
+                      return (
+                        <div className="col-3" key={tokenType._id}>
+                          <TokenType tokenType={tokenType} />
+                        </div>
+                      )
+                    })}
+                  </div>
+                </Radio.Group>
+              )}
             </div>
-          </Form.Item>
+          </div>
         </Col>
       </Row>
-      <h5 className="font-mid">Thông tin thẻ</h5>
-      <Form.Item name="cardElement" rules={[{ required: true, message: 'Vui lòng nhập thông tin thẻ.' }]}>
-        <CardElement options={cardElementOptions} />
-      </Form.Item>
-      <Form.Item
-        name="agreement"
-        valuePropName="checked"
-        rules={[
-          {
-            validator: (_, value) =>
-              // eslint-disable-next-line prefer-promise-reject-errors
-              value ? Promise.resolve() : Promise.reject('Vui lòng đồng ý điều khoản giao dịch'),
-          },
-        ]}
-      >
-        <Checkbox>
-          Tôi đồng ý với
-          <strong> điều khoản giao dịch mua bán key</strong> của ASR VietSpeech.
-        </Checkbox>
-      </Form.Item>
-      <ul className="d-flex flex-wrap align-items-center guttar-30px">
-        <li>
-          {createOrderToUpgradeObj.isLoading === false && createOrderToUpgradeObj.isSuccess === true && (
-            <Alert
-              message="Nâng cấp API key thành công"
-              type="success"
-              showIcon
-              closable
-              style={{ marginBottom: '20px' }}
-            />
-          )}
-          {errorMessage != null && (
-            <Alert
-              message={Utils.buildFailedMessage({ message: errorMessage })}
-              type="error"
-              showIcon
-              closable
-              style={{ marginBottom: '20px' }}
-            />
-          )}
-          <Button
-            htmlType="submit"
-            loading={isLoading}
-            type="primary"
-            size="large"
-            disabled={
-              Utils.sortAndFilterTokenTypeList(
-                getTokenTypeListObj.tokenTypeList,
-                [TOKEN_TYPE.FREE.name],
-                'price',
-                true,
-                currentTokenTypeMinutes
-              ).length === 0
-            }
-          >
-            Nâng cấp <i className="ti ti-arrow-up mgl-1x" />
-          </Button>
-        </li>
-      </ul>
-      <div className="gaps-1x d-none d-sm-block" />
-      {/* <div className="note note-plane note-light mgb-1x">
+      <Form form={form} onFinish={onSubmit}>
+        <h5 className="font-mid">Thông tin thẻ</h5>
+        <Form.Item name="cardElement" rules={[{ required: true, message: 'Vui lòng nhập thông tin thẻ.' }]}>
+          <CardElement options={cardElementOptions} />
+        </Form.Item>
+        <Form.Item
+          name="agreement"
+          valuePropName="checked"
+          rules={[
+            {
+              validator: (_, value) =>
+                // eslint-disable-next-line prefer-promise-reject-errors
+                value ? Promise.resolve() : Promise.reject('Vui lòng đồng ý điều khoản giao dịch'),
+            },
+          ]}
+        >
+          <Checkbox>
+            Tôi đồng ý với
+            <strong> điều khoản giao dịch mua bán key</strong> của ASR VietSpeech.
+          </Checkbox>
+        </Form.Item>
+        <ul className="d-flex flex-wrap align-items-center guttar-30px">
+          <li>
+            {createOrderToUpgradeObj.isLoading === false && createOrderToUpgradeObj.isSuccess === true && (
+              <Alert
+                message="Nâng cấp API key thành công"
+                type="success"
+                showIcon
+                closable
+                style={{ marginBottom: '20px' }}
+              />
+            )}
+            {errorMessage != null && (
+              <Alert
+                message={Utils.buildFailedMessage({ message: errorMessage })}
+                type="error"
+                showIcon
+                closable
+                style={{ marginBottom: '20px' }}
+              />
+            )}
+            <Button
+              htmlType="submit"
+              loading={isLoading}
+              type="primary"
+              size="large"
+              disabled={
+                tokenTypeToUpgradeList.length === 0 || !selectedProjectId || !selectedTokenId || !selectedTokenTypeId
+              }
+            >
+              Nâng cấp <i className="ti ti-arrow-up mgl-1x" />
+            </Button>
+          </li>
+        </ul>
+        <div className="gaps-1x d-none d-sm-block" />
+        {/* <div className="note note-plane note-light mgb-1x">
         <em className="fas fa-info-circle" />
         <p className="text-light">Sau khi giao dịch thành công, trang web sẽ hiển thị key cho bạn.</p>
       </div> */}
-    </Form>
+      </Form>
+    </>
   )
 }
 
