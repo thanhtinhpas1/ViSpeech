@@ -1,91 +1,51 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { CONSTANTS } from 'common/constant';
-import { UpdateOrderCommand } from 'orders/commands/impl/update-order.command';
-import { OrderDto } from 'orders/dtos/orders.dto';
+import { ofType, Saga } from '@nestjs/cqrs';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UpgradeTokenCommand } from 'tokens/commands/impl/upgrade-token.command';
-import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from 'tokens/events/impl/ordered-token-created.event';
-import { TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from 'tokens/events/impl/token-upgraded.event';
-import { UpgradeTokenOrderCreatedSuccessEvent } from '../../tokens/events/impl/upgrade-token-order-created.event';
+import { OrderedTokenCreatedEvent } from 'tokens/events/impl/ordered-token-created.event';
+import { TokenUpgradedEvent } from 'tokens/events/impl/token-upgraded.event';
+import { OrderCreatedSuccessEvent } from 'orders/events/impl/order-created.event';
+import { EventStore } from 'core/event-store/lib';
+import { AuthService } from 'auth/auth.service';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { OrderToUpgradeCreatedSuccessEvent } from 'orders/events/impl/order-to-upgrade-created.event';
 
 @Injectable()
 export class OrdersSagas {
+    constructor(
+        private readonly eventStore: EventStore,
+        private readonly authService: AuthService,
+    ) { }
 
     @Saga()
-    orderedTokenCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(OrderedTokenCreatedSuccessEvent),
-            map((event: OrderedTokenCreatedSuccessEvent) => {
-                Logger.log('Inside [OrdersSagas] orderedTokenCreatedSuccess Saga', 'OrdersSagas');
-                const { streamId, tokenDto } = event;
-                const { userId, orderId } = tokenDto;
-                const tempTokenTypeDto = TokenTypeDto.createTempInstance();
-                const orderDto = new OrderDto(userId, tempTokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS);
-                orderDto._id = orderId;
-                return new UpdateOrderCommand(streamId, orderDto);
+    orderCreatedSuccess = (event$: Observable<any>): Observable<void> => {
+        return event$.pipe(
+            ofType(OrderCreatedSuccessEvent),
+            map((event: OrderCreatedSuccessEvent) => {
+                Logger.log('Inside [OrdersSagas] orderCreatedSuccess Saga', 'OrdersSagas');
+                const { streamId, orderDto } = event;
+                const { userId, tokenType, _id, token } = orderDto;
+                const tokenValue = this.authService.generateTokenWithUserId(userId);
+                const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
+                const tokenCreatedEvent = new OrderedTokenCreatedEvent(streamId, tokenDto);
+                tokenCreatedEvent['eventType'] = 'OrderedTokenCreatedEvent';
+                this.eventStore.publish(tokenCreatedEvent, '$ce-token');
             })
         );
     };
 
     @Saga()
-    orderedTokenCreatedFailed = (events$: Observable<any>): Observable<ICommand> => {
+    orderToUpgradeCreatedSuccess = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
-            ofType(OrderedTokenCreatedFailedEvent),
-            map((event: OrderedTokenCreatedFailedEvent) => {
-                Logger.log('Inside [OrdersSagas] orderedTokenCreatedFailed Saga', 'OrdersSagas');
-                const { streamId, tokenDto } = event;
-                const { userId, orderId } = tokenDto;
-                const tempTokenTypeDto = TokenTypeDto.createTempInstance();
-                const orderDto = new OrderDto(userId, tempTokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
-                orderDto._id = orderId;
-                return new UpdateOrderCommand(streamId, orderDto);
-            })
-        );
-    };
-
-    @Saga()
-    upgradeTokenOrderCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(UpgradeTokenOrderCreatedSuccessEvent),
-            map((event: UpgradeTokenOrderCreatedSuccessEvent) => {
-                Logger.log('Inside [OrdersSagas] upgradeTokenOrderCreatedSuccess Saga', 'OrdersSagas');
+            ofType(OrderToUpgradeCreatedSuccessEvent),
+            map((event: OrderToUpgradeCreatedSuccessEvent) => {
+                Logger.log('Inside [OrdersSagas] orderToUpgradeCreatedSuccess Saga', 'OrdersSagas');
                 const { streamId, orderDto } = event;
                 const { tokenType, token } = orderDto;
                 token.orderId = orderDto._id;
-                return new UpgradeTokenCommand(streamId, token, tokenType);
-            })
-        );
-    };
-
-    @Saga()
-    tokenUpgradedSuccess = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(TokenUpgradedSuccessEvent),
-            map((event: TokenUpgradedSuccessEvent) => {
-                Logger.log('Inside [OrdersSagas] tokenUpgradedSuccessEvent Saga', 'OrdersSagas');
-                const { streamId, tokenDto, tokenTypeDto } = event;
-                const { userId, orderId } = tokenDto;
-                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS);
-                orderDto._id = orderId;
-                return new UpdateOrderCommand(streamId, orderDto);
-            })
-        );
-    };
-
-    @Saga()
-    tokenUpgradedFailed = (events$: Observable<any>): Observable<ICommand> => {
-        return events$.pipe(
-            ofType(TokenUpgradedFailedEvent),
-            map((event: TokenUpgradedFailedEvent) => {
-                Logger.log('Inside [OrdersSagas] tokenUpgradedFailedEvent Saga', 'OrdersSagas');
-                const { streamId, tokenDto, tokenTypeDto } = event;
-                const { userId, orderId } = tokenDto;
-                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
-                orderDto._id = orderId;
-                return new UpdateOrderCommand(streamId, orderDto);
+                const tokenUpgradedEvent = new TokenUpgradedEvent(streamId, token, tokenType);
+                tokenUpgradedEvent['eventType'] = 'TokenUpgradedEvent';
+                this.eventStore.publish(tokenUpgradedEvent, '$ce-token');
             })
         );
     };

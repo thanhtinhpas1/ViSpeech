@@ -24,8 +24,7 @@ export class CallAsrSagas {
                 if (requestDto.status === CONSTANTS.STATUS.SUCCESS) {
                     const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
                     updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
-                    this.eventStore.publish(updateTokenEvent, '$ce-token')
-                        .then(() => Logger.log('Sent TokenUpdatedEvent.'));
+                    this.eventStore.publish(updateTokenEvent, '$ce-token');
                 }
                 // else do nothing
             })

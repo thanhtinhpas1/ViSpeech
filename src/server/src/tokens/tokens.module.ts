@@ -39,11 +39,6 @@ import { PermissionDto } from '../permissions/dtos/permissions.dto';
 import { UserDto } from '../users/dtos/users.dto';
 import { ProjectDto } from '../projects/dtos/projects.dto';
 import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import {
-    UpgradeTokenOrderCreatedEvent,
-    UpgradeTokenOrderCreatedFailedEvent,
-    UpgradeTokenOrderCreatedSuccessEvent
-} from './events/impl/upgrade-token-order-created.event';
 import { OrderDto } from '../orders/dtos/orders.dto';
 import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
 
@@ -128,9 +123,9 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-token'});
-        if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+        const tokenProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-token'});
+        if (tokenProjection) {
+            await getMongoRepository(ProjectionDto).save({...tokenProjection, expectedVersion: tokenProjection.eventNumber});
         } else {
             await getMongoRepository(ProjectionDto).save({streamName: '$ce-token', eventNumber: 0, expectedVersion: 0});
         }
@@ -171,10 +166,6 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
         TokenUpgradedEvent: (streamId, token, tokenType) => new TokenUpgradedEvent(streamId, token, tokenType),
         TokenUpgradedSuccessEvent: (streamId, token, tokenType) => new TokenUpgradedSuccessEvent(streamId, token, tokenType),
         TokenUpgradedFailedEvent: (streamId, token, tokenType, error) => new TokenUpgradedFailedEvent(streamId, token, tokenType, error),
-        // create upgrade token order
-        UpgradeTokenOrderCreatedEvent: (streamId, data) => new UpgradeTokenOrderCreatedEvent(streamId, data),
-        UpgradeTokenOrderCreatedSuccessEvent: (streamId, data) => new UpgradeTokenOrderCreatedSuccessEvent(streamId, data),
-        UpgradeTokenOrderCreatedFailedEvent: (streamId, data, error) => new UpgradeTokenOrderCreatedFailedEvent(streamId, data, error),
 
         TokenWelcomedEvent: (streamId, data) => new TokenWelcomedEvent(streamId, data),
     };

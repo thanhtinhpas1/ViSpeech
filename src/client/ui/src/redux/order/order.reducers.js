@@ -25,7 +25,7 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
-  createUpgradeTokenOrder: {
+  createOrderToUpgrade: {
     data: {},
     isLoading: false,
     isSuccess: null,
@@ -46,11 +46,11 @@ const orderReducer = (state = INITIAL_STATE, action) => {
           ...INITIAL_STATE.createOrder,
         },
       }
-    case OrderTypes.CLEAR_CREATE_UPGRADE_TOKEN_ORDER_STATE:
+    case OrderTypes.CLEAR_CREATE_ORDER_TO_UPGRADE_STATE:
       return {
         ...state,
-        createUpgradeTokenOrder: {
-          ...INITIAL_STATE.createUpgradeTokenOrder,
+        createOrderToUpgrade: {
+          ...INITIAL_STATE.createOrderToUpgrade,
         },
       }
     // GET ORDER LIST
@@ -166,28 +166,29 @@ const orderReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // CREATE UPGRADE TOKEN ORDER
-    case OrderTypes.CREATE_UPGRADE_TOKEN_ORDER:
+    case OrderTypes.CREATE_ORDER_TO_UPGRADE:
       return {
         ...state,
-        createUpgradeTokenOrder: {
-          ...state.createUpgradeTokenOrder,
+        createOrderToUpgrade: {
+          ...state.createOrderToUpgrade,
           isLoading: true,
         },
       }
-    case OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_SUCCESS:
+    case OrderTypes.CREATE_ORDER_TO_UPGRADE_SUCCESS:
       return {
         ...state,
-        createUpgradeTokenOrder: {
+        createOrderToUpgrade: {
           isLoading: false,
           isSuccess: true,
           data: action.payload,
+          message: null,
         },
       }
-    case OrderTypes.CREATE_UPGRADE_TOKEN_ORDER_FAILURE:
+    case OrderTypes.CREATE_ORDER_TO_UPGRADE_FAILURE:
       return {
         ...state,
-        createUpgradeTokenOrder: {
-          ...state.createUpgradeTokenOrder,
+        createOrderToUpgrade: {
+          ...state.createOrderToUpgrade,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

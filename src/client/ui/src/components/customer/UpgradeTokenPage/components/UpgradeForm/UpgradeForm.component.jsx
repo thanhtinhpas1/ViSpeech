@@ -13,23 +13,19 @@ import SocketUtils from 'utils/socket.util'
 const { Option } = Select
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
-const {
-  TOKEN_UPGRADED_SUCCESS_EVENT,
-  TOKEN_UPGRADED_FAILED_EVENT,
-  UPGRADE_TOKEN_ORDER_CREATED_FAILED_EVENT,
-} = KAFKA_TOPIC
+const { TOKEN_UPGRADED_SUCCESS_EVENT, TOKEN_UPGRADED_FAILED_EVENT, ORDER_TO_UPGRADE_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const UpgradeForm = ({
   currentUser,
   getMyProjectListObj,
   getTokenTypeListObj,
   getProjectTokenListObj,
-  createUpgradeTokenOrderObj,
+  createOrderToUpgradeObj,
   getProjectTokenList,
-  createUpgradeTokenOrder,
-  createUpgradeTokenOrderSuccess,
-  createUpgradeTokenOrderFailure,
-  clearCreateUpgradeTokenOrderState,
+  createOrderToUpgrade,
+  createOrderToUpgradeSuccess,
+  createOrderToUpgradeFailure,
+  clearCreateOrderToUpgradeState,
 }) => {
   const stripe = useStripe()
   const elements = useElements()
@@ -70,7 +66,7 @@ const UpgradeForm = ({
   useEffect(() => {
     if (
       getTokenTypeListObj.isLoading === false &&
-      getTokenTypeListObj.isSuccess != null &&
+      getTokenTypeListObj.isSuccess === true &&
       getTokenTypeListObj.tokenTypeList.length > 0
     ) {
       const tokenTypeIds = Utils.sortAndFilterTokenTypeList(
@@ -89,11 +85,11 @@ const UpgradeForm = ({
   }, [getTokenTypeListObj, currentTokenTypeMinutes])
 
   useEffect(() => {
-    clearCreateUpgradeTokenOrderState()
-    SocketService.socketOnListeningEvent(UPGRADE_TOKEN_ORDER_CREATED_FAILED_EVENT)
+    clearCreateOrderToUpgradeState()
+    SocketService.socketOnListeningEvent(ORDER_TO_UPGRADE_CREATED_FAILED_EVENT)
     SocketService.socketOnListeningEvent(TOKEN_UPGRADED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(TOKEN_UPGRADED_FAILED_EVENT)
-  }, [clearCreateUpgradeTokenOrderState])
+  }, [clearCreateOrderToUpgradeState])
 
   const onSubmit = values => {
     if (!stripe || !elements) {
@@ -161,24 +157,24 @@ const UpgradeForm = ({
             projectId,
           },
         }
-        createUpgradeTokenOrder(order)
+        createOrderToUpgrade(order)
         try {
-          await OrderService.createUpgradeTokenOrder(order, paymentIntent)
-          invokeCheckSubject.UpgradeTokenOrderCreated.subscribe(data => {
+          await OrderService.createOrderToUpgradeToken(order, paymentIntent)
+          invokeCheckSubject.OrderToUpgradeCreated.subscribe(data => {
             if (data.error != null) {
-              createUpgradeTokenOrderFailure(data.errorObj)
+              createOrderToUpgradeFailure(data.errorObj)
             }
           })
           invokeCheckSubject.TokenUpgraded.subscribe(data => {
             if (data.error != null) {
-              createUpgradeTokenOrderFailure(data.errorObj)
+              createOrderToUpgradeFailure(data.errorObj)
             } else {
-              createUpgradeTokenOrderSuccess({ order })
+              createOrderToUpgradeSuccess({ order })
               form.resetFields()
             }
           })
         } catch (err) {
-          createUpgradeTokenOrderFailure({ message: err.message })
+          createOrderToUpgradeFailure({ message: err.message })
         }
       }
     }
@@ -191,20 +187,20 @@ const UpgradeForm = ({
   }
 
   useEffect(() => {
-    if (createUpgradeTokenOrderObj.isLoading === true) {
+    if (createOrderToUpgradeObj.isLoading === true) {
       setTimeout(() => {
-        if (createUpgradeTokenOrderObj.isLoading === true) {
-          createUpgradeTokenOrderFailure({ message: DEFAULT_ERR_MESSAGE })
+        if (createOrderToUpgradeObj.isLoading === true) {
+          createOrderToUpgradeFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
     }
-    if (createUpgradeTokenOrderObj.isLoading === false && createUpgradeTokenOrderObj.isSuccess != null) {
+    if (createOrderToUpgradeObj.isLoading === false && createOrderToUpgradeObj.isSuccess != null) {
       setIsLoading(false)
-      if (createUpgradeTokenOrderObj.isSuccess === false) {
-        setErrorMessage(Utils.buildFailedMessage(createUpgradeTokenOrderObj.message, 'Nâng cấp API key thất bại'))
+      if (createOrderToUpgradeObj.isSuccess === false) {
+        setErrorMessage(Utils.buildFailedMessage(createOrderToUpgradeObj.message, 'Nâng cấp API key thất bại'))
       }
     }
-  }, [createUpgradeTokenOrderObj, createUpgradeTokenOrderFailure])
+  }, [createOrderToUpgradeObj, createOrderToUpgradeFailure])
 
   const onProjectIdChange = async value => {
     const userId = currentUser && currentUser._id
@@ -366,7 +362,7 @@ const UpgradeForm = ({
       </Form.Item>
       <ul className="d-flex flex-wrap align-items-center guttar-30px">
         <li>
-          {createUpgradeTokenOrderObj.isLoading === false && createUpgradeTokenOrderObj.isSuccess === true && (
+          {createOrderToUpgradeObj.isLoading === false && createOrderToUpgradeObj.isSuccess === true && (
             <Alert
               message="Nâng cấp API key thành công"
               type="success"

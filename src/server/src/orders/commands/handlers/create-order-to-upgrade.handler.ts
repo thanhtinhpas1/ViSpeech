@@ -4,25 +4,25 @@ import { config } from '../../../../config';
 import { getMongoRepository } from 'typeorm';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { CreateUpgradeTokenOrderCommand } from '../impl/create-upgrade-token-order.command';
+import { CreateOrderToUpgradeCommand } from '../impl/create-order-to-upgrade.command';
 import { UserDto } from 'users/dtos/users.dto';
-import { UpgradeTokenOrderCreatedFailedEvent } from 'tokens/events/impl/upgrade-token-order-created.event';
+import { OrderToUpgradeCreatedFailedEvent } from 'orders/events/impl/order-to-upgrade-created.event';
 import { CONSTANTS } from 'common/constant';
-import { TokenRepository } from '../../repository/token.repository';
+import { OrderRepository } from 'orders/repository/order.repository';
 
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
 
-@CommandHandler(CreateUpgradeTokenOrderCommand)
-export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpgradeTokenOrderCommand> {
+@CommandHandler(CreateOrderToUpgradeCommand)
+export class CreateOrderToUpgradeHandler implements ICommandHandler<CreateOrderToUpgradeCommand> {
     constructor(
-        private readonly repository: TokenRepository,
+        private readonly repository: OrderRepository,
         private readonly publisher: EventPublisher,
         private readonly eventBus: EventBus
     ) {
     }
 
-    async execute(command: CreateUpgradeTokenOrderCommand) {
-        Logger.log('Async CreateOrderHandler...', 'CreateUpgradeTokenOrderCommand');
+    async execute(command: CreateOrderToUpgradeCommand) {
+        Logger.log('Async CreateOrderToUpgradeHandler...', 'CreateOrderToUpgradeCommand');
         const {streamId, orderDto, paymentIntent} = command;
 
         try {
@@ -33,9 +33,13 @@ export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpg
                     throw new NotFoundException(`User with _id ${orderDto.userId} does not exist.`);
                 }
 
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: orderDto.tokenType.name});
+                const upgradeToTokenType = orderDto.tokenType.name;
+                if (upgradeToTokenType === CONSTANTS.TOKEN_TYPE.FREE) {
+                    throw new BadRequestException(`Cannot upgrade token to free token.`);
+                }
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: upgradeToTokenType});
                 if (!tokenTypeDto) {
-                    throw new NotFoundException(`Token type with name ${orderDto.tokenType.name} does not exist.`);
+                    throw new NotFoundException(`Token type with name ${upgradeToTokenType} does not exist.`);
                 }
 
                 const validToken = await getMongoRepository(TokenDto).findOne({
@@ -54,7 +58,7 @@ export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpg
 
                 // use mergeObjectContext for dto dispatch events
                 const order = this.publisher.mergeObjectContext(
-                    await this.repository.createUpgradeTokenOrder(streamId, orderDto)
+                    await this.repository.createOrderToUpgrade(streamId, orderDto)
                 );
                 order.commit();
                 return
@@ -66,7 +70,7 @@ export class CreateUpgradeTokenOrderHandler implements ICommandHandler<CreateUpg
             if (error.raw && error.raw.message) {
                 errorMessage = error.raw.message;
             }
-            this.eventBus.publish(new UpgradeTokenOrderCreatedFailedEvent(streamId, orderDto, {message: errorMessage}));
+            this.eventBus.publish(new OrderToUpgradeCreatedFailedEvent(streamId, orderDto, {message: errorMessage}));
         }
     }
 }

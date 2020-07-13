@@ -1,7 +1,7 @@
 import { IEvent } from '@nestjs/cqrs';
 import { OrderDto } from 'orders/dtos/orders.dto';
 
-export class UpgradeTokenOrderCreatedEvent implements IEvent {
+export class OrderToUpgradeCreatedEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly orderDto: OrderDto
@@ -9,7 +9,7 @@ export class UpgradeTokenOrderCreatedEvent implements IEvent {
     }
 }
 
-export class UpgradeTokenOrderCreatedSuccessEvent implements IEvent {
+export class OrderToUpgradeCreatedSuccessEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly orderDto: any
@@ -17,7 +17,7 @@ export class UpgradeTokenOrderCreatedSuccessEvent implements IEvent {
     }
 }
 
-export class UpgradeTokenOrderCreatedFailedEvent implements IEvent {
+export class OrderToUpgradeCreatedFailedEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly orderDto: OrderDto,

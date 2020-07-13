@@ -11,6 +11,13 @@ export class OrderRepository {
         return order;
     }
 
+    async createOrderToUpgrade(streamId: string, orderDto: OrderDto) {
+        const order = new Order(undefined);
+        order.setData(orderDto);
+        order.createOrderToUpgrade(streamId);
+        return order;
+    }
+
     async updateOrder(streamId: string, orderDto: OrderDto) {
         const order = new Order(undefined);
         order.setData(orderDto);

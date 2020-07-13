@@ -8,13 +8,12 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { Repository } from 'typeorm';
 import { config } from '../../../../config';
 import { Utils } from 'utils';
-import {
-    UpgradeTokenOrderCreatedEvent, UpgradeTokenOrderCreatedFailedEvent, UpgradeTokenOrderCreatedSuccessEvent
-} from '../impl/upgrade-token-order-created.event';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { OrderToUpgradeCreatedEvent, OrderToUpgradeCreatedSuccessEvent,
+    OrderToUpgradeCreatedFailedEvent } from '../impl/order-to-upgrade-created.event';
 
-@EventsHandler(UpgradeTokenOrderCreatedEvent)
-export class UpgradeTokenOrderCreatedHandler implements IEventHandler<UpgradeTokenOrderCreatedEvent> {
+@EventsHandler(OrderToUpgradeCreatedEvent)
+export class OrderToUpgradeCreatedHandler implements IEventHandler<OrderToUpgradeCreatedEvent> {
     constructor(
         @InjectRepository(OrderDto)
         private readonly repository: Repository<OrderDto>,
@@ -26,8 +25,8 @@ export class UpgradeTokenOrderCreatedHandler implements IEventHandler<UpgradeTok
     ) {
     }
 
-    async handle(event: UpgradeTokenOrderCreatedEvent) {
-        Logger.log(event.orderDto._id, 'UpgradeTokenOrderCreatedEvent');
+    async handle(event: OrderToUpgradeCreatedEvent) {
+        Logger.log(event.orderDto._id, 'OrderToUpgradeCreatedEvent');
         const {streamId, orderDto} = event;
         const order = {...orderDto};
 
@@ -36,16 +35,16 @@ export class UpgradeTokenOrderCreatedHandler implements IEventHandler<UpgradeTok
             order.token = await this.tokenRepository.findOne({_id: order.token._id});
             order.upgradeToken = true;
             await this.repository.save(order);
-            this.eventBus.publish(new UpgradeTokenOrderCreatedSuccessEvent(streamId, orderDto));
+            this.eventBus.publish(new OrderToUpgradeCreatedSuccessEvent(streamId, orderDto));
         } catch (error) {
-            this.eventBus.publish(new UpgradeTokenOrderCreatedFailedEvent(streamId, orderDto, error));
+            this.eventBus.publish(new OrderToUpgradeCreatedFailedEvent(streamId, orderDto, error));
         }
     }
 }
 
-@EventsHandler(UpgradeTokenOrderCreatedSuccessEvent)
-export class UpgradeTokenOrderCreatedSuccessHandler
-    implements IEventHandler<UpgradeTokenOrderCreatedSuccessEvent> {
+@EventsHandler(OrderToUpgradeCreatedSuccessEvent)
+export class OrderToUpgradeCreatedSuccessHandler
+    implements IEventHandler<OrderToUpgradeCreatedSuccessEvent> {
     constructor(
         @Inject(config.KAFKA.NAME)
         private readonly clientKafka: ClientKafka,
@@ -53,15 +52,15 @@ export class UpgradeTokenOrderCreatedSuccessHandler
         this.clientKafka.connect();
     }
 
-    handle(event: UpgradeTokenOrderCreatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.UPGRADE_TOKEN_ORDER_CREATED_SUCCESS_EVENT, JSON.stringify(event));
-        Logger.log(event.orderDto._id, 'UpgradeTokenOrderCreatedSuccessEvent');
+    handle(event: OrderToUpgradeCreatedSuccessEvent) {
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_TO_UPGRADE_CREATED_SUCCESS_EVENT, JSON.stringify(event));
+        Logger.log(event.orderDto._id, 'OrderToUpgradeCreatedSuccessEvent');
     }
 }
 
-@EventsHandler(UpgradeTokenOrderCreatedFailedEvent)
-export class UpgradeTokenOrderCreatedFailedHandler
-    implements IEventHandler<UpgradeTokenOrderCreatedFailedEvent> {
+@EventsHandler(OrderToUpgradeCreatedFailedEvent)
+export class OrderToUpgradeCreatedFailedHandler
+    implements IEventHandler<OrderToUpgradeCreatedFailedEvent> {
     constructor(
         @Inject(config.KAFKA.NAME)
         private readonly clientKafka: ClientKafka,
@@ -69,10 +68,10 @@ export class UpgradeTokenOrderCreatedFailedHandler
         this.clientKafka.connect();
     }
 
-    handle(event: UpgradeTokenOrderCreatedFailedEvent) {
+    handle(event: OrderToUpgradeCreatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj
-        this.clientKafka.emit(CONSTANTS.TOPICS.UPGRADE_TOKEN_ORDER_CREATED_FAILED_EVENT, JSON.stringify(event));
-        Logger.log(errorObj, 'UpgradeTokenOrderCreatedFailedEvent');
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_TO_UPGRADE_CREATED_FAILED_EVENT, JSON.stringify(event));
+        Logger.log(errorObj, 'OrderToUpgradeCreatedFailedEvent');
     }
 }

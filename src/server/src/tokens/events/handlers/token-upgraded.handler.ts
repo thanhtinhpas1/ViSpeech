@@ -23,7 +23,7 @@ export class TokenUpgradedHandler implements IEventHandler<TokenUpgradedEvent> {
         const {streamId, tokenDto, tokenTypeDto} = event;
 
         try {
-            let upgradedToken = {...tokenDto}
+            const upgradedToken = {...tokenDto}
             upgradedToken.minutes = Number(tokenTypeDto.minutes);
             upgradedToken.tokenTypeId = tokenTypeDto._id;
             upgradedToken.tokenType = tokenTypeDto.name;

@@ -9,8 +9,6 @@ import { FindTokenQuery } from 'tokens/queries/impl/find-token.query';
 import { GetTokensByUserIdQuery } from 'tokens/queries/impl/get-tokens-by-userId';
 import { GetTokensByUserIdAndProjectIdQuery } from 'tokens/queries/impl/get-tokens-by-userId-projectId';
 import { GetTokensQuery, GetTokenTypesQuery } from 'tokens/queries/impl/get-tokens.query';
-import { OrderGuard } from '../../auth/guards/order.guard';
-import { OrderDto, PaymentIntent } from '../../orders/dtos/orders.dto';
 import { TokenDto, TokenIdRequestParamsDto } from '../dtos/tokens.dto';
 import { TokensService } from '../services/tokens.service';
 
@@ -142,17 +140,5 @@ export class TokensController {
     @Get(':id')
     async findOneToken(@Param() findTokenQuery: FindTokenQuery) {
         return this.tokensService.findOne(findTokenQuery);
-    }
-
-    /* Create Upgrade Token Order */
-
-    /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'Create Upgrade Token Order' ] })
-    @ApiResponse({ status: 200, description: 'Create Upgrade Token Order.' })
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
-    @Post('/upgrade-token')
-    async createUpgradeTokenOrder(@Body('order') orderDto: OrderDto, @Body('paymentIntent') paymentIntent: PaymentIntent): Promise<OrderDto> {
-        const streamId = orderDto._id;
-        return this.tokensService.createUpgradeTokenOrder(streamId, orderDto, paymentIntent);
     }
 }

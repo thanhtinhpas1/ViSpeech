@@ -64,8 +64,8 @@ module.exports = {
         // ORDER
         ORDER_CREATED_SUCCESS_EVENT: 'OrderCreatedSuccessEvent',
         ORDER_CREATED_FAILED_EVENT: 'OrderCreatedFailedEvent',
-        UPGRADE_TOKEN_ORDER_CREATED_SUCCESS_EVENT: 'UpgradeTokenOrderCreatedSuccessEvent',
-        UPGRADE_TOKEN_ORDER_CREATED_FAILED_EVENT: 'UpgradeTokenOrderCreatedFailedEvent',
+        ORDER_TO_UPGRADE_CREATED_SUCCESS_EVENT: 'OrderToUpgradeCreatedSuccessEvent',
+        ORDER_TO_UPGRADE_CREATED_FAILED_EVENT: 'OrderToUpgradeCreatedFailedEvent',
         ORDER_DELETED_SUCCESS_EVENT: 'OrderDeletedSuccessEvent',
         ORDER_DELETED_FAILED_EVENT: 'OrderDeletedFailedEvent',
         ORDER_UPDATED_SUCCESS_EVENT: 'OrderUpdatedSuccessEvent',

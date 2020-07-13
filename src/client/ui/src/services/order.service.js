@@ -34,8 +34,8 @@ export default class OrderService {
       })
   }
 
-  static createUpgradeTokenOrder = (order, paymentIntent) => {
-    const api = `${apiUrl}/tokens/upgrade-token`
+  static createOrderToUpgradeToken = (order, paymentIntent) => {
+    const api = `${apiUrl}/orders/upgrade-token`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400

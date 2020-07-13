@@ -4,6 +4,7 @@ import { OrderDto, OrderIdRequestParamsDto, PaymentIntent } from '../dtos/orders
 import { CreateOrderCommand } from '../commands/impl/create-order.command';
 import { UpdateOrderCommand } from '../commands/impl/update-order.command';
 import { DeleteOrderCommand } from '../commands/impl/delete-order.command';
+import { CreateOrderToUpgradeCommand } from '../commands/impl/create-order-to-upgrade.command';
 import { GetOrdersQuery } from 'orders/queries/impl/get-orders.query';
 import { FindOrderQuery } from 'orders/queries/impl/find-order.query';
 import { config } from '../../../config';
@@ -24,6 +25,10 @@ export class OrdersService {
         return await this.commandBus.execute(new CreateOrderCommand(streamId, orderDto, paymentIntent));
     }
 
+    async createOrderToUpgrade(streamId: string, orderDto: OrderDto, paymentIntent: PaymentIntent) {
+        return await this.commandBus.execute(new CreateOrderToUpgradeCommand(streamId, orderDto, paymentIntent));
+    }
+
     async updateOrder(streamId: string, orderDto: OrderDto) {
         return await this.commandBus.execute(new UpdateOrderCommand(streamId, orderDto));
     }
@@ -33,24 +38,24 @@ export class OrdersService {
     }
 
     async getOrders(getOrdersQuery: GetOrdersQuery) {
-        var query = new GetOrdersQuery();
+        const query = new GetOrdersQuery();
         Object.assign(query, getOrdersQuery);
         return await this.queryBus.execute(query);
     }
 
     async getOrdersByUserId(getOrdersByUserIdQuery: GetOrdersByUserIdQuery) {
-        var query = new GetOrdersByUserIdQuery(getOrdersByUserIdQuery.userId);
+        const query = new GetOrdersByUserIdQuery(getOrdersByUserIdQuery.userId);
         Object.assign(query, getOrdersByUserIdQuery);
         return await this.queryBus.execute(query);
     }
 
     async findOne(findOrderQuery: FindOrderQuery): Promise<OrderDto> {
-        var query = new FindOrderQuery(findOrderQuery.id);
+        const query = new FindOrderQuery(findOrderQuery.id);
         return await this.queryBus.execute(query);
     }
 
     async findOneByTokenId(findOrderByTokenIdQuery: FindOrderByTokenIdQuery): Promise<OrderDto> {
-        var query = new FindOrderByTokenIdQuery(findOrderByTokenIdQuery.tokenId);
+        const query = new FindOrderByTokenIdQuery(findOrderByTokenIdQuery.tokenId);
         return await this.queryBus.execute(query);
     }
 

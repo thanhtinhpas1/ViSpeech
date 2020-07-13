@@ -22,8 +22,7 @@ export class ProjectsSagas {
                 const {streamId, projectId} = event;
                 const deleteTokenEvent = new TokenDeletedByProjectIdEvent(streamId, projectId);
                 deleteTokenEvent['eventType'] = 'TokenDeletedByProjectIdEvent';
-                this.eventStore.publish(deleteTokenEvent, '$ce-token')
-                    .then(() => Logger.log('Sent TokenDeletedByProjectIdEvent.'));
+                this.eventStore.publish(deleteTokenEvent, '$ce-token');
             })
         );
     };

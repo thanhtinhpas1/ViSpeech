@@ -11,6 +11,8 @@ import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
 import { EventHandlers } from './events/handlers';
 import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent } from './events/impl/order-created.event';
+import { OrderToUpgradeCreatedEvent, OrderToUpgradeCreatedSuccessEvent,
+    OrderToUpgradeCreatedFailedEvent } from './events/impl/order-to-upgrade-created.event';
 import { OrderDeletedEvent, OrderDeletedFailedEvent, OrderDeletedSuccessEvent } from './events/impl/order-deleted.event';
 import { OrderUpdatedEvent, OrderUpdatedFailedEvent, OrderUpdatedSuccessEvent } from './events/impl/order-updated.event';
 import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
@@ -103,9 +105,9 @@ export class OrdersModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-order'});
-        if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+        const orderProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-order'});
+        if (orderProjection) {
+            await getMongoRepository(ProjectionDto).save({...orderProjection, expectedVersion: orderProjection.eventNumber});
         } else {
             await getMongoRepository(ProjectionDto).save({streamName: '$ce-order', eventNumber: 0, expectedVersion: 0});
         }
@@ -117,6 +119,10 @@ export class OrdersModule implements OnModuleInit, OnModuleDestroy {
         OrderCreatedEvent: (streamId, data) => new OrderCreatedEvent(streamId, data),
         OrderCreatedSuccessEvent: (streamId, data) => new OrderCreatedSuccessEvent(streamId, data),
         OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),
+        // create order to upgrade token
+        OrderToUpgradeCreatedEvent: (streamId, data) => new OrderToUpgradeCreatedEvent(streamId, data),
+        OrderToUpgradeCreatedSuccessEvent: (streamId, data) => new OrderToUpgradeCreatedSuccessEvent(streamId, data),
+        OrderToUpgradeCreatedFailedEvent: (streamId, data, error) => new OrderToUpgradeCreatedFailedEvent(streamId, data, error),
         // update
         OrderUpdatedEvent: (streamId, data) => new OrderUpdatedEvent(streamId, data),
         OrderUpdatedSuccessEvent: (streamId, data) => new OrderUpdatedSuccessEvent(streamId, data),

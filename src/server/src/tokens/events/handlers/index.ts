@@ -11,16 +11,8 @@ import {
     TokenDeletedByProjectIdFailedHandler, TokenDeletedByProjectIdHandler, TokenDeletedByProjectIdSuccessHandler
 } from './token-deleted-by-projectId.handler';
 import { TokenUpgradedFailedHandler, TokenUpgradedHandler, TokenUpgradedSuccessHandler } from './token-upgraded.handler';
-import { UserCreatedSuccessHandler } from '../../../users/events/handlers/user-created.handler';
-import {
-    UpgradeTokenOrderCreatedFailedHandler, UpgradeTokenOrderCreatedHandler, UpgradeTokenOrderCreatedSuccessHandler
-} from './upgrade-token-order-created.handler';
 
 export const EventHandlers = [
-    // create upgrade token order
-    UpgradeTokenOrderCreatedHandler,
-    UpgradeTokenOrderCreatedSuccessHandler,
-    UpgradeTokenOrderCreatedFailedHandler,
     // create free token
     FreeTokenCreatedHandler,
     FreeTokenCreatedSuccessHandler,
@@ -67,6 +59,4 @@ export const EventHandlers = [
     TokenUpgradedHandler,
     TokenUpgradedSuccessHandler,
     TokenUpgradedFailedHandler,
-
-    UserCreatedSuccessHandler,
 ];
