@@ -130,7 +130,10 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 version = lcp;
                 await this.store.writeExpectedVersion(streamId, version + 1);
             } else {
-                await this.store.writeExpectedVersion(streamId, version + 1);
+                if (streamName === 'Monitor') {
+                    await this.store.writeExpectedVersion(streamId, version = version + 1);
+                }
+                else await this.store.writeExpectedVersion(streamId, version + 1);
             }
             await this.eventStore.getConnection().appendToStream(streamId, version, [ eventPayload ]);
         } catch (err) {
