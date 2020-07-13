@@ -25,14 +25,14 @@ export class MongoStore implements IAdapterStore {
     readExpectedVersion(key: string): Promise<number> {
         return this.projectionRepo.findOne({ streamName: key }, { lock: { mode: 'optimistic', version: new Date() } })
         .then(state => {
-            return state.expectedVersion || 0;
+            return state?.expectedVersion || 0;
         });
     }
 
     read(key: string): Promise<number> {
         return this.projectionRepo.findOne({ streamName: key })
         .then(state => {
-            return state.eventNumber || 0;
+            return state?.eventNumber || 0;
         });
     }
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_GUARD } from '@nestjs/core';
@@ -14,16 +14,17 @@ import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
-import { UsersService } from '../users/services/users.service';
+import { UsersModule } from '../users/users.module';
 
 @Module({
     imports: [
         JwtModule.register(config.JWT),
-        TypeOrmModule.forFeature([UserDto, RoleDto]),
+        TypeOrmModule.forFeature([ UserDto, RoleDto ]),
         PassportModule,
         CqrsModule,
+        forwardRef(() => UsersModule),
     ],
-    controllers: [AuthController],
+    controllers: [ AuthController ],
     providers: [
         {
             provide: APP_GUARD,
@@ -34,13 +35,12 @@ import { UsersService } from '../users/services/users.service';
         FacebookStrategy,
         GoogleStrategy,
         AuthService,
-        UsersService,
         CommandBus,
         QueryBus,
         EventBus,
         EventPublisher,
     ],
-    exports: [JwtModule, AuthService, CqrsModule]
+    exports: [ JwtModule, AuthService, CqrsModule ]
 })
 export class AuthModule {
 }

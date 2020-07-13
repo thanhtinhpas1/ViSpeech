@@ -13,6 +13,7 @@ import { RolesModule } from './roles/roles.module';
 import { TaskModule } from './tasks/task.module';
 import { TokensModule } from './tokens/tokens.module';
 import { UsersModule } from './users/users.module';
+import { MonitorsModule } from './monitors/monitors.module';
 
 @Module({
     imports: [
@@ -33,6 +34,7 @@ import { UsersModule } from './users/users.module';
         PermissionsModule,
         RequestModule,
         TaskModule,
+        MonitorsModule,
     ],
     providers: []
 })

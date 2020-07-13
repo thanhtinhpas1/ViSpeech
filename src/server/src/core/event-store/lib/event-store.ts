@@ -109,10 +109,14 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             event['eventType'] || stream,
         );
         // it's hack for find out streamId by include stream
-        const streams = [ 'Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task' ];
+        const streams = [ 'Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task', 'Monitor' ];
         const streamName = streams.map(stream => eventPayload.type.includes(stream) ? stream : null)
-        .filter(event => event != null)[0];
-        const streamId = stream ? stream : `$ce-${ streamName?.toLowerCase() ?? 'user' }`;
+            .filter(event => event != null)[0];
+        let streamId = stream ? stream : `$ce-${ streamName?.toLowerCase() ?? 'user' }`;
+        if (streamName === 'Monitor') {
+            // replace with sheep array when have cluster
+            streamId = '$stats-127.0.0.1:2113';
+        }
 
         try {
             let version = await this.store.readExpectedVersion(streamId);
@@ -305,7 +309,12 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
 
         if (this.eventHandlers && this.eventHandlers[eventType]) {
             Logger.log(`EventStore write event ${ eventType }`);
-            this.subject$.next(this.eventHandlers[eventType](...data));
+            // monitor log case event
+            if (eventType === '$statsCollected') {
+                this.subject$.next(this.eventHandlers[eventType](v4(), rawData));
+            } else {
+                this.subject$.next(this.eventHandlers[eventType](...data));
+            }
             if (this.store) {
                 const lcp = (await this.store.read(event.eventStreamId)) || 0;
                 await this.store.write(event.eventStreamId, payload.event.eventNumber.toInt());
