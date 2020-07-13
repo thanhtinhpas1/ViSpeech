@@ -115,7 +115,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         let streamId = stream ? stream : `$ce-${ streamName?.toLowerCase() ?? 'user' }`;
         if (streamName === 'Monitor') {
             // replace with sheep array when have cluster
-            streamId = '$stats-127.0.0.1:2113';
+            streamId = '$stats-0.0.0.0:2113';
         }
 
         try {
