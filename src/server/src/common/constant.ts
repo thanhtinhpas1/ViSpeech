@@ -118,6 +118,9 @@ export const CONSTANTS = {
         REQUEST_CREATED_FAILED_EVENT: 'RequestCreatedFailedEvent',
         REQUEST_UPDATED_SUCCESS_EVENT: 'RequestUpdatedSuccessEvent',
         REQUEST_UPDATED_FAILED_EVENT: 'RequestUpdatedFailedEvent',
+        // MONITOR
+        MONITOR_BEAT_SUCCESS_EVENT: 'MonitorBeatSuccessEvent',
+        MONITOR_BEAR_FAILED_EVENT: 'MonitorBeatFailedEvent',
     },
     TASK: {
         REFRESH_TOKEN: 'REFRESH_TOKEN',
