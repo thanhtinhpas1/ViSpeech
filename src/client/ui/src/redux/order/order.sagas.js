@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { all, call, put, takeLatest } from 'redux-saga/effects'
-import { ORDER_STATUS, STATUS, TOKEN_TYPE } from 'utils/constant'
+import { ORDER_STATUS, TOKEN_TYPE } from 'utils/constant'
 import OrderService from 'services/order.service'
 import OrderTypes from './order.types'
 import {
@@ -18,8 +18,8 @@ const formatOrderList = orderList => {
       ...order,
       status: {
         value: order.status,
-        name: STATUS[order.status]?.viText,
-        class: STATUS[order.status]?.cssClass,
+        name: ORDER_STATUS[order.status]?.viText,
+        class: ORDER_STATUS[order.status]?.cssClass,
       },
       tokenType: {
         ...order.tokenType,

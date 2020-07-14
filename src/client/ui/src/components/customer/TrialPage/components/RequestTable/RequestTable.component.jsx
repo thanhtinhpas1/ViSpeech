@@ -45,9 +45,10 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
       headerClassName: 'dt-token',
       className: 'dt-token',
       filters: [
-        { text: STATUS.PENDING?.viText, value: STATUS.PENDING.name },
-        { text: STATUS.SUCCESS?.viText, value: STATUS.SUCCESS.name },
-        { text: STATUS.FAILURE?.viText, value: STATUS.FAILURE.name },
+        { text: STATUS.PENDING.viText, value: STATUS.PENDING.name },
+        { text: STATUS.IN_PROGRESS.viText, value: STATUS.IN_PROGRESS.name },
+        { text: STATUS.SUCCESS.viText, value: STATUS.SUCCESS.name },
+        { text: STATUS.FAILURE.viText, value: STATUS.FAILURE.name },
       ],
       filterMultiple: false,
       render: status => (

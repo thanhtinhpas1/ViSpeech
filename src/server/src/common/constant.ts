@@ -15,6 +15,7 @@ export const CONSTANTS = {
     },
     STATUS: {
         PENDING: 'PENDING',
+        IN_PROGRESS: 'IN_PROGRESS',
         SUCCESS: 'SUCCESS',
         FAILURE: 'FAILURE',
         ACCEPTED: 'ACCEPTED',

@@ -22,7 +22,8 @@ export const TOKEN_TYPE = {
   '500-MINUTES': { name: '500-MINUTES', minutes: 500, viText: '500 phút', cssClass: 'badge-warning' },
 }
 export const STATUS = {
-  PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass: 'data-state-progress' },
+  PENDING: { name: 'PENDING', viText: 'Chờ xử lý', cssClass: 'data-state-pending' },
+  IN_PROGRESS: { name: 'IN_PROGRESS', viText: 'Đang xử lý', cssClass: 'data-state-progress' },
   SUCCESS: { name: 'SUCCESS', viText: 'Thành công', cssClass: 'data-state-approved' },
   FAILURE: { name: 'FAILURE', viText: 'Thất bại', cssClass: 'data-state-canceled' },
   ACCEPTED: { name: 'ACCEPTED', viText: 'Chấp nhận', cssClass: 'data-state-approved' },
@@ -34,7 +35,7 @@ export const STATUS = {
   // -canceled -missing
 }
 export const ORDER_STATUS = {
-  PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass: 'badge-primary' },
+  PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass: 'badge-warning' },
   SUCCESS: { name: 'SUCCESS', viText: 'Thành công', cssClass: 'badge-success' },
   FAILURE: { name: 'FAILURE', viText: 'Thất bại', cssClass: 'badge-danger' },
   // -canceled -missing
@@ -67,7 +68,7 @@ export const DEFAULT_PAGINATION = {
   SIZE_TOTAL_COUNT: {
     current: 1,
     pageSize: 1,
-  }
+  },
 }
 export const USER_TYPE = {
   NORMAL: 'NORMAL',

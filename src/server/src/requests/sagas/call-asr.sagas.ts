@@ -15,13 +15,13 @@ export class CallAsrSagas {
     }
 
     @Saga()
-    callAsrServiceSaga = (events$: Observable<any>): Observable<void> => {
+    asrCalledRequest = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
             ofType(AsrCalledRequestEvent),
             map((event: AsrCalledRequestEvent) => {
-                Logger.log('Inside [RequestSagas] callAsrService Saga', 'RequestSagas');
+                Logger.log('Inside [RequestSagas] asrCalledRequest Saga', 'RequestSagas');
                 const {streamId, requestDto, tokenDto} = event;
-                if (requestDto.status === CONSTANTS.STATUS.SUCCESS) {
+                if (requestDto.status === CONSTANTS.STATUS.IN_PROGRESS) {
                     const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
                     updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
                     this.eventStore.publish(updateTokenEvent, '$ce-token');

@@ -61,6 +61,7 @@ export class AsrController {
 
         // create pending request
         let requestStatus = CONSTANTS.STATUS.PENDING;
+        let asrData = ''
         const requestId = Utils.getUuid();
         const requestDto = new RequestDto(tokenDto._id, tokenDto.tokenTypeId, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding,
             file.size, duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
@@ -72,7 +73,8 @@ export class AsrController {
         formData.append('voice', file.buffer, {filename: file.originalname});
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
         axios.post(url, formData, {headers: formData.getHeaders()}).then(result => {
-            requestStatus = CONSTANTS.STATUS.SUCCESS;
+            requestStatus = CONSTANTS.STATUS.IN_PROGRESS;
+            asrData = result.data?.text
             // send back requestId
             result.data.requestId = requestId;
             return res.status(HttpStatus.OK).json(result.data);
@@ -86,6 +88,10 @@ export class AsrController {
             }
 
             requestDto.status = requestStatus;
+            if (requestStatus === CONSTANTS.STATUS.IN_PROGRESS && !asrData) {
+                requestDto.status = CONSTANTS.STATUS.SUCCESS
+            }
+
             this.requestService.callAsr(requestId, requestDto, tokenDto);
         });
     }

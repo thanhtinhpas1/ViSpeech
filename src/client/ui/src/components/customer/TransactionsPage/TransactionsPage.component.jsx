@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { CUSTOMER_PATH, STATUS, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
+import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
 import * as moment from 'moment'
 
 const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }) => {
@@ -32,9 +32,9 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       headerClassName: 'dt-token',
       className: 'dt-token',
       filters: [
-        { text: STATUS.PENDING.viText, value: STATUS.PENDING.name },
-        { text: STATUS.SUCCESS.viText, value: STATUS.SUCCESS.name },
-        { text: STATUS.FAILURE.viText, value: STATUS.FAILURE.name },
+        { text: ORDER_STATUS.PENDING.viText, value: ORDER_STATUS.PENDING.name },
+        { text: ORDER_STATUS.SUCCESS.viText, value: ORDER_STATUS.SUCCESS.name },
+        { text: ORDER_STATUS.FAILURE.viText, value: ORDER_STATUS.FAILURE.name },
       ],
       filterMultiple: false,
       render: status => (

@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, TOKEN_TYPE, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
+import { ADMIN_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from 'utils/constant'
 
 const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList }) => {
   const columns = [
@@ -23,9 +23,9 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       headerClassName: 'dt-token',
       className: 'dt-token',
       filters: [
-        { text: STATUS.PENDING.viText, value: STATUS.PENDING.name },
-        { text: STATUS.SUCCESS.viText, value: STATUS.SUCCESS.name },
-        { text: STATUS.FAILURE.viText, value: STATUS.FAILURE.name },
+        { text: ORDER_STATUS.PENDING.viText, value: ORDER_STATUS.PENDING.name },
+        { text: ORDER_STATUS.SUCCESS.viText, value: ORDER_STATUS.SUCCESS.name },
+        { text: ORDER_STATUS.FAILURE.viText, value: ORDER_STATUS.FAILURE.name },
       ],
       filterMultiple: false,
       render: status => (
