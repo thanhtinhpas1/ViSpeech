@@ -239,6 +239,13 @@ const userReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // UPDATE CURRENT USER
+    case UserTypes.CLEAR_UPDATE_CURRENT_USER_STATE:
+      return {
+        ...state,
+        updateCurrentUser: {
+          ...INITIAL_STATE.updateCurrentUser,
+        },
+      }
     case UserTypes.UPDATE_CURRENT_USER:
       return {
         ...state,
@@ -298,6 +305,13 @@ const userReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // UPDATE INFO
+    case UserTypes.CLEAR_UPDATE_USER_INFO_STATE:
+      return {
+        ...state,
+        updateInfo: {
+          ...INITIAL_STATE.updateInfo,
+        },
+      }
     case UserTypes.UPDATE_USER_INFO:
       return {
         ...state,
@@ -326,6 +340,13 @@ const userReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // CREATE USER
+    case UserTypes.CLEAR_CREATE_USER_STATE:
+      return {
+        ...state,
+        createUser: {
+          ...INITIAL_STATE.createUser,
+        },
+      }
     case UserTypes.CREATE_USER:
       return {
         ...state,
@@ -354,6 +375,13 @@ const userReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // DELETE USER
+    case UserTypes.CLEAR_DELETE_USER_STATE:
+      return {
+        ...state,
+        deleteUser: {
+          ...INITIAL_STATE.deleteUser,
+        },
+      }
     case UserTypes.DELETE_USER:
       return {
         ...state,
@@ -549,7 +577,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
           message: action.payload,
         },
       }
-    case UserTypes.CHANGE_PASSWORD_CLEAR:
+    case UserTypes.CLEAR_CHANGE_PASSWORD_STATE:
       return {
         ...state,
         changePassword: {

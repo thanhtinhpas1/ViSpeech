@@ -4,6 +4,7 @@ import {
   deleteProject,
   deleteProjectSuccess,
   deleteProjectFailure,
+  onClearDeleteProjectState,
 } from 'redux/project/project.actions'
 import ProjectsPage from './ProjectsPage.component'
 
@@ -14,6 +15,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearDeleteProjectState: () => dispatch(onClearDeleteProjectState()),
   getProjectList: ({ pagination, sortField, sortOrder, filters }) =>
     dispatch(getProjectList({ pagination, sortField, sortOrder, filters })),
   deleteProject: id => dispatch(deleteProject(id)),

@@ -83,6 +83,9 @@ export const verifyEmailFailure = message => ({
 })
 
 // update current user
+export const onClearUpdateCurrentUserState = () => ({
+  type: UserTypes.CLEAR_UPDATE_CURRENT_USER_STATE,
+})
 export const updateCurrentUser = (id, info) => ({
   type: UserTypes.UPDATE_CURRENT_USER,
   payload: { id, info },
@@ -180,8 +183,8 @@ export const changePasswordFailure = message => ({
   payload: message,
 })
 
-export const clearChangePassword = () => ({
-  type: UserTypes.CHANGE_PASSWORD_CLEAR,
+export const onClearChangePasswordState = () => ({
+  type: UserTypes.CLEAR_CHANGE_PASSWORD_STATE,
 })
 
 // get user list
@@ -217,6 +220,10 @@ export const getUserInfoFailure = message => ({
 })
 
 // update user info
+export const onClearUpdateUserInfoState = () => ({
+  type: UserTypes.CLEAR_UPDATE_USER_INFO_STATE,
+})
+
 export const updateUserInfo = (id, userInfo) => ({
   type: UserTypes.UPDATE_USER_INFO,
   payload: { id, userInfo },
@@ -233,6 +240,10 @@ export const updateUserInfoFailure = message => ({
 })
 
 // create user
+export const onClearCreateUserState = () => ({
+  type: UserTypes.CLEAR_CREATE_USER_STATE,
+})
+
 export const createUser = data => ({
   type: UserTypes.CREATE_USER,
   payload: data,
@@ -249,6 +260,10 @@ export const createUserFailure = message => ({
 })
 
 // delete user
+export const onClearDeleteUserState = () => ({
+  type: UserTypes.CLEAR_DELETE_USER_STATE,
+})
+
 export const deleteUser = id => ({
   type: UserTypes.DELETE_USER,
   payload: id,

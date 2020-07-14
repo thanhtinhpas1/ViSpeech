@@ -22,11 +22,14 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
   const [editorHtml, setEditorHml] = useState('')
 
   useEffect(() => {
-    clearRequestInfo()
+    return () => clearRequestInfo()
+  }, [clearRequestInfo])
+
+  useEffect(() => {
     if (id) {
       getRequestInfo(id)
     }
-  }, [id, getRequestInfo, clearRequestInfo])
+  }, [id, getRequestInfo])
 
   useEffect(() => {
     async function getTranscriptData() {

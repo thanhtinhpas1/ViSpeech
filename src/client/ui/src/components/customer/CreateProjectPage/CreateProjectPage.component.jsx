@@ -18,11 +18,16 @@ const { PROJECT_CREATED_SUCCESS_EVENT, PROJECT_CREATED_FAILED_EVENT } = KAFKA_TO
 const CreateProjectPage = ({
   currentUser,
   createProjectObj,
+  clearCreateProjectState,
   createProject,
   createProjectSuccess,
   createProjectFailure,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+
+  useEffect(() => {
+    return () => clearCreateProjectState()
+  }, [clearCreateProjectState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_CREATED_SUCCESS_EVENT)

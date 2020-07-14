@@ -53,6 +53,10 @@ export const getAcceptedProjectListFailure = message => ({
 })
 
 // create project
+export const onClearCreateProjectState = () => ({
+  type: ProjectTypes.CLEAR_CREATE_PROJECT_STATE,
+})
+
 export const createProject = data => ({
   type: ProjectTypes.CREATE_PROJECT,
   payload: data,
@@ -85,6 +89,10 @@ export const getProjectInfoFailure = message => ({
 })
 
 // update project info
+export const onClearUpdateProjectInfoState = () => ({
+  type: ProjectTypes.CLEAR_UPDATE_PROJECT_INFO_STATE,
+})
+
 export const updateProjectInfo = (id, data) => ({
   type: ProjectTypes.UPDATE_PROJECT_INFO,
   payload: { id, data },
@@ -101,6 +109,10 @@ export const updateProjectInfoFailure = message => ({
 })
 
 // delete project
+export const onClearDeleteProjectState = () => ({
+  type: ProjectTypes.CLEAR_DELETE_PROJECT_STATE,
+})
+
 export const deleteProject = id => ({
   type: ProjectTypes.DELETE_PROJECT,
   payload: id,

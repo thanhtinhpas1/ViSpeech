@@ -1,5 +1,11 @@
 import { connect } from 'react-redux'
-import { changePassword, changePasswordSuccess, changePasswordFailure, logout } from 'redux/user/user.actions'
+import {
+  changePassword,
+  changePasswordSuccess,
+  changePasswordFailure,
+  logout,
+  onClearChangePasswordState,
+} from 'redux/user/user.actions'
 import PasswordTab from './PasswordTab.component'
 
 const mapStateToProps = state => ({
@@ -8,6 +14,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearChangePasswordState: () => dispatch(onClearChangePasswordState()),
   changePassword: ({ userId, oldPassword, newPassword }) =>
     dispatch(changePassword({ userId, oldPassword, newPassword })),
   changePasswordSuccess: () => dispatch(changePasswordSuccess()),

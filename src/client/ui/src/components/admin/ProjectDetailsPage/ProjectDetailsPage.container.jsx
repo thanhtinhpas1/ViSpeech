@@ -5,6 +5,7 @@ import {
   updateProjectInfo,
   updateProjectInfoSuccess,
   updateProjectInfoFailure,
+  onClearUpdateProjectInfoState,
 } from 'redux/project/project.actions'
 import ProjectDetailsPage from './ProjectDetailsPage.component'
 
@@ -16,6 +17,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearUpdateProjectInfoState: () => dispatch(onClearUpdateProjectInfoState()),
   getProjectInfo: projectId => dispatch(getProjectInfo(projectId)),
   getProjectTokens: ({ userId, projectId, pagination, sortField, sortOrder, filters }) =>
     dispatch(getProjectTokenList({ userId, projectId, pagination, sortField, sortOrder, filters })),

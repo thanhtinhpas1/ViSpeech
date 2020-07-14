@@ -28,6 +28,7 @@ const ProjectDetailsPage = ({
   getProjectInfoObj,
   getProjectTokenListObj,
   updateInfoObj,
+  clearUpdateProjectInfoState,
   getProjectInfo,
   getProjectTokens,
   updateProjectInfo,
@@ -38,6 +39,10 @@ const ProjectDetailsPage = ({
   const { id } = useParams()
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+
+  useEffect(() => {
+    return () => clearUpdateProjectInfoState()
+  }, [clearUpdateProjectInfoState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_UPDATED_SUCCESS_EVENT)

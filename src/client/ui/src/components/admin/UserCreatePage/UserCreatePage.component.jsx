@@ -15,7 +15,7 @@ import SocketUtils from 'utils/socket.util'
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
-const UserCreatePage = ({ createUserObj, createUser, createUserSuccess, createUserFailure }) => {
+const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, createUserSuccess, createUserFailure }) => {
   const [form] = Form.useForm()
   const formItemLayout = {
     labelCol: {
@@ -28,6 +28,10 @@ const UserCreatePage = ({ createUserObj, createUser, createUserSuccess, createUs
   const tailLayout = {
     wrapperCol: { offset: 6, span: 18 },
   }
+
+  useEffect(() => {
+    return () => clearCreateUserState()
+  }, [clearCreateUserState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_CREATED_SUCCESS_EVENT)

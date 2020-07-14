@@ -1,5 +1,11 @@
 import { connect } from 'react-redux'
-import { getUserList, deleteUser, deleteUserSuccess, deleteUserFailure } from 'redux/user/user.actions'
+import {
+  getUserList,
+  deleteUser,
+  deleteUserSuccess,
+  deleteUserFailure,
+  onClearDeleteUserState,
+} from 'redux/user/user.actions'
 import UserListPage from './UserListPage.component'
 
 const mapStateToProps = state => ({
@@ -9,6 +15,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearDeleteUserState: () => dispatch(onClearDeleteUserState()),
   getUserList: ({ pagination, sortField, sortOrder, filters }) =>
     dispatch(getUserList({ pagination, sortField, sortOrder, filters })),
   deleteUser: id => dispatch(deleteUser(id)),

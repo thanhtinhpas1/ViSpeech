@@ -27,6 +27,7 @@ const { TOKEN_DELETED_SUCCESS_EVENT, TOKEN_DELETED_FAILED_EVENT } = KAFKA_TOPIC
 const TokensPage = ({
   getTokenListObj,
   deleteTokenObj,
+  clearDeleteTokenState,
   getTokenList,
   deleteToken,
   deleteTokenSuccess,
@@ -34,6 +35,10 @@ const TokensPage = ({
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+
+  useEffect(() => {
+    return () => clearDeleteTokenState()
+  }, [clearDeleteTokenState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(TOKEN_DELETED_SUCCESS_EVENT)

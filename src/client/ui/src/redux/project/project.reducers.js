@@ -50,6 +50,13 @@ const projectReducer = (state = INITIAL_STATE, action) => {
         ...INITIAL_STATE,
       }
     // CREATE PROJECT
+    case ProjectTypes.CLEAR_CREATE_PROJECT_STATE:
+      return {
+        ...state,
+        createProject: {
+          ...INITIAL_STATE.createProject,
+        },
+      }
     case ProjectTypes.CREATE_PROJECT:
       return {
         ...state,
@@ -195,6 +202,13 @@ const projectReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // UPDATE INFO
+    case ProjectTypes.CLEAR_UPDATE_PROJECT_INFO_STATE:
+      return {
+        ...state,
+        updateInfo: {
+          ...INITIAL_STATE.updateInfo,
+        },
+      }
     case ProjectTypes.UPDATE_PROJECT_INFO:
       return {
         ...state,
@@ -223,6 +237,13 @@ const projectReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // DELETE PROJECT
+    case ProjectTypes.CLEAR_DELETE_PROJECT_STATE:
+      return {
+        ...state,
+        deleteProject: {
+          ...INITIAL_STATE.deleteProject,
+        },
+      }
     case ProjectTypes.DELETE_PROJECT:
       return {
         ...state,

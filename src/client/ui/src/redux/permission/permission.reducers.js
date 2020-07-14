@@ -28,6 +28,13 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
         ...INITIAL_STATE,
       }
     // ASSIGN PERMISSION
+    case PermissionTypes.CLEAR_ASSIGN_PERMISSION_STATE:
+      return {
+        ...state,
+        assignPermission: {
+          ...INITIAL_STATE.assignPermission,
+        },
+      }
     case PermissionTypes.ASSIGN_PERMISSION:
       return {
         ...state,
@@ -57,6 +64,13 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // REPLY PERMISSION
+    case PermissionTypes.CLEAR_REPLY_PERMISSION_ASSIGN_STATE:
+      return {
+        ...state,
+        replyPermissionAssign: {
+          ...INITIAL_STATE.replyPermissionAssign,
+        },
+      }
     case PermissionTypes.REPLY_PERMISSION_ASSIGN:
       return {
         ...state,

@@ -53,12 +53,15 @@ const TrialPage = ({
   const [infoModal, setInfoModal] = useState({})
 
   useEffect(() => {
-    clearUpdateRequestInfo()
+    return () => clearUpdateRequestInfo()
+  }, [clearUpdateRequestInfo])
+
+  useEffect(() => {
     SocketService.socketOnListeningEvent(REQUEST_CREATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(REQUEST_CREATED_FAILED_EVENT)
     SocketService.socketOnListeningEvent(REQUEST_UPDATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(REQUEST_UPDATED_FAILED_EVENT)
-  }, [clearUpdateRequestInfo])
+  }, [])
 
   const closeInfoModal = useCallback(() => {
     setInfoModal(i => {

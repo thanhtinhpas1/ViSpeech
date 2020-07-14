@@ -5,6 +5,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Form, Select, Button } from 'antd'
 import { PERMISSIONS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import Utils from 'utils'
@@ -23,12 +24,14 @@ const AssignPermissionPage = ({
   getMyProjectListObj,
   getUserListObj,
   assignPermissionObj,
+  clearAssignPermissionState,
   getMyProjects,
   getUserList,
   assignPermission,
   assignPermissionSuccess,
   assignPermissionFailure,
 }) => {
+  const history = useHistory()
   const query = Utils.useQuery()
   const [form] = Form.useForm()
   const [infoModal, setInfoModal] = useState({})
@@ -44,6 +47,10 @@ const AssignPermissionPage = ({
   const tailLayout = {
     wrapperCol: { offset: 6, span: 18 },
   }
+
+  useEffect(() => {
+    return () => clearAssignPermissionState()
+  }, [clearAssignPermissionState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT)
@@ -83,7 +90,7 @@ const AssignPermissionPage = ({
         setInfoModal({
           visible: true,
           title: 'Mời tham gia dự án',
-          message: Utils.buildFailedMessage(assignPermissionObj.message, 'Gửi mail thất bại.'),
+          message: Utils.buildFailedMessage(assignPermissionObj.message, 'Gửi mail thất bại'),
           icon: { isSuccess: false },
           button: {
             content: 'Đóng',
@@ -151,8 +158,15 @@ const AssignPermissionPage = ({
       <div className="container">
         <div className="content-area card">
           <div className="card-innr card-innr-fix">
-            <div className="card-head">
+            <div className="card-head d-flex justify-content-between align-items-center">
               <h4 className="card-title mb-0">Mời tham gia dự án</h4>
+              <a href="#!" onClick={history.goBack} className="btn btn-auto btn-primary d-sm-block d-none">
+                <em className="fas fa-arrow-left" style={{ marginRight: '10px' }} />
+                Trở lại
+              </a>
+              <a href="#!" onClick={history.goBack} className="btn btn-icon btn-primary d-sm-none">
+                <em className="fas fa-arrow-left" />
+              </a>
             </div>
             <div className="gaps-2x" />
             <Form

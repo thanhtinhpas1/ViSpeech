@@ -14,11 +14,16 @@ const { USER_UPDATED_SUCCESS_EVENT, USER_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 const PersonalDataTab = ({
   currentUser,
   updateCurrentUserObj,
+  clearUpdateCurrentUserState,
   updateCurrentUser,
   updateCurrentUserSuccess,
   updateCurrentUserFailure,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+
+  useEffect(() => {
+    return () => clearUpdateCurrentUserState()
+  }, [clearUpdateCurrentUserState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_UPDATED_SUCCESS_EVENT)

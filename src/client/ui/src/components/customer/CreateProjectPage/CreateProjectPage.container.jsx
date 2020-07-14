@@ -1,5 +1,10 @@
 import { connect } from 'react-redux'
-import { createProject, createProjectSuccess, createProjectFailure } from 'redux/project/project.actions'
+import {
+  createProject,
+  createProjectSuccess,
+  createProjectFailure,
+  onClearCreateProjectState,
+} from 'redux/project/project.actions'
 import CreateProjectPage from './CreateProjectPage.component'
 
 const mapStateToProps = state => ({
@@ -8,6 +13,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearCreateProjectState: () => dispatch(onClearCreateProjectState()),
   createProject: project => dispatch(createProject(project)),
   createProjectSuccess: project => dispatch(createProjectSuccess(project)),
   createProjectFailure: message => dispatch(createProjectFailure(message)),

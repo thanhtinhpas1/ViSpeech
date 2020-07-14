@@ -1,5 +1,11 @@
 import { connect } from 'react-redux'
-import { getTokenList, deleteToken, deleteTokenSuccess, deleteTokenFailure } from 'redux/token/token.actions'
+import {
+  getTokenList,
+  deleteToken,
+  deleteTokenSuccess,
+  deleteTokenFailure,
+  onClearDeleteTokenState,
+} from 'redux/token/token.actions'
 import TokensPage from './TokensPage.component'
 
 const mapStateToProps = state => ({
@@ -9,6 +15,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearDeleteTokenState: () => dispatch(onClearDeleteTokenState()),
   getTokenList: ({ pagination, sortField, sortOrder, filters }) =>
     dispatch(getTokenList({ pagination, sortField, sortOrder, filters })),
   deleteToken: id => dispatch(deleteToken(id)),

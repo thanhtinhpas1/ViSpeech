@@ -39,11 +39,14 @@ const CheckoutForm = ({
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
-    clearCreateOrderState()
+    return () => clearCreateOrderState()
+  }, [clearCreateOrderState])
+
+  useEffect(() => {
     SocketService.socketOnListeningEvent(ORDER_CREATED_FAILED_EVENT)
     SocketService.socketOnListeningEvent(ORDERED_TOKEN_CREATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(ORDERED_TOKEN_CREATED_FAILED_EVENT)
-  }, [clearCreateOrderState])
+  }, [])
 
   const onSubmit = values => {
     if (!stripe || !elements) {

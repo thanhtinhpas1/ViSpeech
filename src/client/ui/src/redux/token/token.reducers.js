@@ -204,6 +204,13 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // DELETE TOKEN
+    case TokenTypes.CLEAR_DELETE_TOKEN_STATE:
+      return {
+        ...state,
+        deleteToken: {
+          ...INITIAL_STATE.deleteToken,
+        },
+      }
     case TokenTypes.DELETE_TOKEN:
       return {
         ...state,

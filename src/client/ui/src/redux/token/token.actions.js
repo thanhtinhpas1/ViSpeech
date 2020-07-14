@@ -90,6 +90,10 @@ export const getFreeTokenFailure = message => ({
 })
 
 // delete token
+export const onClearDeleteTokenState = () => ({
+  type: TokenTypes.CLEAR_DELETE_TOKEN_STATE,
+})
+
 export const deleteToken = id => ({
   type: TokenTypes.DELETE_TOKEN,
   payload: id,

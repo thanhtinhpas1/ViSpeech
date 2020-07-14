@@ -1,5 +1,10 @@
 import { connect } from 'react-redux'
-import { updateCurrentUser, updateCurrentUserSuccess, updateCurrentUserFailure } from 'redux/user/user.actions'
+import {
+  updateCurrentUser,
+  updateCurrentUserSuccess,
+  updateCurrentUserFailure,
+  onClearUpdateCurrentUserState,
+} from 'redux/user/user.actions'
 import PersonalDataTab from './PersonalDataTab.component'
 
 const mapStateToProps = state => ({
@@ -8,6 +13,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearUpdateCurrentUserState: () => dispatch(onClearUpdateCurrentUserState()),
   updateCurrentUser: (userId, userInfo) => dispatch(updateCurrentUser(userId, userInfo)),
   updateCurrentUserSuccess: user => dispatch(updateCurrentUserSuccess(user)),
   updateCurrentUserFailure: message => dispatch(updateCurrentUserFailure(message)),

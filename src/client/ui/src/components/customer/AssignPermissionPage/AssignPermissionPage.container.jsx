@@ -1,6 +1,11 @@
 import { connect } from 'react-redux'
 import { getMyProjectList } from 'redux/project/project.actions'
-import { assignPermission, assignPermissionSuccess, assignPermissionFailure } from 'redux/permission/permission.actions'
+import {
+  assignPermission,
+  assignPermissionSuccess,
+  assignPermissionFailure,
+  onClearAssignPermissionState,
+} from 'redux/permission/permission.actions'
 import { getUserList } from 'redux/user/user.actions'
 import AssignPermissionPage from './AssignPermissionPage.component'
 
@@ -12,6 +17,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  clearAssignPermissionState: () => dispatch(onClearAssignPermissionState()),
   getUserList: ({ pagination, sortField, sortOrder, filters }) =>
     dispatch(getUserList({ pagination, sortField, sortOrder, filters })),
   getMyProjects: ({ userId }) => dispatch(getMyProjectList({ userId })),

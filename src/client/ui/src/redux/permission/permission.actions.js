@@ -5,6 +5,10 @@ export const onClearPermissionState = () => ({
 })
 
 // assign permission
+export const onClearAssignPermissionState = () => ({
+  type: PermissionTypes.CLEAR_ASSIGN_PERMISSION_STATE,
+})
+
 export const assignPermission = ({ assigneeUsername, projectId, permissions, assignerId }) => ({
   type: PermissionTypes.ASSIGN_PERMISSION,
   payload: { assigneeUsername, projectId, permissions, assignerId },
@@ -21,6 +25,10 @@ export const assignPermissionFailure = message => ({
 })
 
 // reply permission assign
+export const onClearReplyPermissionAssignState = () => ({
+  type: PermissionTypes.CLEAR_REPLY_PERMISSION_ASSIGN_STATE,
+})
+
 export const replyPermissionAssign = ({ emailToken, status }) => ({
   type: PermissionTypes.REPLY_PERMISSION_ASSIGN,
   payload: { emailToken, status },

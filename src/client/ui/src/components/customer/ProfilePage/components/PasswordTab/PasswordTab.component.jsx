@@ -16,6 +16,7 @@ const { PASSWORD_CHANGED_SUCCESS_EVENT, PASSWORD_CHANGED_FAILED_EVENT } = KAFKA_
 const PasswordTab = ({
   currentUser,
   changePasswordObj,
+  clearChangePasswordState,
   changePassword,
   changePasswordSuccess,
   changePasswordFailure,
@@ -23,6 +24,10 @@ const PasswordTab = ({
 }) => {
   const history = useHistory()
   const [form] = Form.useForm()
+
+  useEffect(() => {
+    return () => clearChangePasswordState()
+  }, [clearChangePasswordState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PASSWORD_CHANGED_SUCCESS_EVENT)

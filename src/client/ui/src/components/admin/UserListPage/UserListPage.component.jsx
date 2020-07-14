@@ -35,6 +35,7 @@ const {
 const UserListPage = ({
   userListObj,
   deleteUserObj,
+  clearDeleteUserState,
   getUserList,
   deleteUser,
   deleteUserSuccess,
@@ -42,6 +43,10 @@ const UserListPage = ({
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+
+  useEffect(() => {
+    return () => clearDeleteUserState()
+  }, [clearDeleteUserState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_DELETED_FAILED_EVENT)

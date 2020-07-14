@@ -18,7 +18,14 @@ import './InfoTab.style.scss'
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_UPDATED_SUCCESS_EVENT, USER_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 
-const InfoTab = ({ userInfoObj, updateInfoObj, updateUserInfo, updateUserInfoSuccess, updateUserInfoFailure }) => {
+const InfoTab = ({
+  userInfoObj,
+  updateInfoObj,
+  clearUpdateUserInfoState,
+  updateUserInfo,
+  updateUserInfoSuccess,
+  updateUserInfoFailure,
+}) => {
   const [form] = Form.useForm()
   const formItemLayout = {
     labelCol: {
@@ -31,6 +38,10 @@ const InfoTab = ({ userInfoObj, updateInfoObj, updateUserInfo, updateUserInfoSuc
   const tailLayout = {
     wrapperCol: { offset: 6, span: 18 },
   }
+
+  useEffect(() => {
+    return () => clearUpdateUserInfoState()
+  }, [clearUpdateUserInfoState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_UPDATED_SUCCESS_EVENT)

@@ -56,22 +56,20 @@ const SelectTokenForm = ({
 
   useEffect(() => {
     if (getProjectTokenListObj.isLoading === false && getProjectTokenListObj.isSuccess === true) {
+      // reset tokenId value to new initial value
       form.resetFields(['tokenId'])
     }
   }, [getProjectTokenListObj, form])
 
-  const onFormValuesChange = (changedValue, allValues) => {
-    const { projectId, tokenId } = allValues
-    onSelectTokenFormValuesChange(projectId, tokenId)
-  }
-
   useEffect(() => {
     const fieldsValue = form.getFieldsValue(['projectId', 'tokenId'])
     const { projectId, tokenId } = fieldsValue
-    if (!projectId || !tokenId) return
     onSelectTokenFormValuesChange(projectId, tokenId)
+    if (!projectId || !tokenId) return
 
     const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === tokenId)
+    if (!token) return
+
     const tokenTypes = Object.keys(TOKEN_TYPE)
     const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === token.minutes
     const index = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
@@ -102,7 +100,6 @@ const SelectTokenForm = ({
           <Form
             layout="inline"
             form={form}
-            onValuesChange={onFormValuesChange}
             initialValues={{
               projectId: getMyProjectListObj.myProjectList.data[0] && getMyProjectListObj.myProjectList.data[0]._id,
               tokenId:

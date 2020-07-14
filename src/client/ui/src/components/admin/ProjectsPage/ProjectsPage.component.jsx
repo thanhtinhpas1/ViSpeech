@@ -25,6 +25,7 @@ const {
 const ProjectsPage = ({
   getProjectListObj,
   deleteProjectObj,
+  clearDeleteProjectState,
   getProjectList,
   deleteProject,
   deleteProjectSuccess,
@@ -32,6 +33,10 @@ const ProjectsPage = ({
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+
+  useEffect(() => {
+    return () => clearDeleteProjectState()
+  }, [clearDeleteProjectState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_DELETED_SUCCESS_EVENT)

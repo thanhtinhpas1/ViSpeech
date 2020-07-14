@@ -54,11 +54,14 @@ const UpgradeForm = ({
   }
 
   useEffect(() => {
-    clearCreateOrderToUpgradeState()
+    return () => clearCreateOrderToUpgradeState()
+  }, [clearCreateOrderToUpgradeState])
+
+  useEffect(() => {
     SocketService.socketOnListeningEvent(ORDER_TO_UPGRADE_CREATED_FAILED_EVENT)
     SocketService.socketOnListeningEvent(TOKEN_UPGRADED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(TOKEN_UPGRADED_FAILED_EVENT)
-  }, [clearCreateOrderToUpgradeState])
+  }, [])
 
   useEffect(() => {
     getTokenTypes()
@@ -89,7 +92,6 @@ const UpgradeForm = ({
       )
       setTokenTypeToUpgradeList(tokenTypeIds)
       if (tokenTypeIds.length > 0) {
-        // setSelectedTokenTypeId(null)
         const id = tokenTypeIds[0]._id
         changeTokenTypeCss(id)
         setSelectedTokenTypeId(id)
@@ -97,7 +99,7 @@ const UpgradeForm = ({
     }
   }, [getTokenTypeListObj, currentTokenTypeMinutes])
 
-  const onSubmit = values => {
+  const onSubmit = () => {
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
@@ -228,10 +230,8 @@ const UpgradeForm = ({
   }
 
   const onSelectTokenFormValuesChange = (projectId, tokenId) => {
-    if (projectId && tokenId) {
-      setSelectedProjectId(projectId)
-      setSelectedTokenId(tokenId)
-    }
+    setSelectedProjectId(projectId)
+    setSelectedTokenId(tokenId)
   }
 
   return (
