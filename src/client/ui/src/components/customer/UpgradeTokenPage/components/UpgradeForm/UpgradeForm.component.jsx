@@ -69,15 +69,15 @@ const UpgradeForm = ({
     getTokenTypes()
   }, [getTokenTypes])
 
-  const changeTokenTypeCss = selectedId => {
+  useEffect(() => {
     window.$(`.token-currency-choose .pay-option label.pay-option-check-select`).removeClass('pay-option-check-select')
     window
-      .$(`.token-currency-choose .pay-option input[value=${selectedId}]`)
+      .$(`.token-currency-choose .pay-option input[value=${selectedTokenTypeId}]`)
       .parent()
       .parent()
       .siblings('label')
       .addClass('pay-option-check-select')
-  }
+  }, [selectedTokenTypeId])
 
   useEffect(() => {
     if (
@@ -95,8 +95,9 @@ const UpgradeForm = ({
       setTokenTypeToUpgradeList(tokenTypeIds)
       if (tokenTypeIds.length > 0) {
         const id = tokenTypeIds[0]._id
-        changeTokenTypeCss(id)
         setSelectedTokenTypeId(id)
+      } else {
+        setSelectedTokenTypeId(null)
       }
     }
   }, [getTokenTypeListObj, currentTokenTypeMinutes])
@@ -229,7 +230,6 @@ const UpgradeForm = ({
 
   const onTokenTypeChange = e => {
     const tokenTypeId = e.target.value
-    changeTokenTypeCss(tokenTypeId)
     setSelectedTokenTypeId(tokenTypeId)
   }
 
@@ -251,12 +251,7 @@ const UpgradeForm = ({
             <div className="token-currency-choose" style={{ color: '#495463' }}>
               {tokenTypeToUpgradeList.length === 0 && <p>API key đã được nâng cấp lên gói cao nhất</p>}
               {(getTokenTypeListObj.tokenTypeList || []).length > 0 && (
-                <Radio.Group
-                  name="radiogroup"
-                  style={{ width: '100%' }}
-                  onChange={onTokenTypeChange}
-                  defaultValue={selectedTokenTypeId}
-                >
+                <Radio.Group name="radiogroup" style={{ width: '100%' }} onChange={onTokenTypeChange}>
                   <div className="row guttar-15px" style={{ display: 'flex' }}>
                     {tokenTypeToUpgradeList.map(tokenType => {
                       return (
