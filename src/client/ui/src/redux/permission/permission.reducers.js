@@ -32,7 +32,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         assignPermission: {
-          ...state.assignPermission,
+          ...INITIAL_STATE.assignPermission,
           isLoading: true,
         },
       }
@@ -40,6 +40,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         assignPermission: {
+          ...INITIAL_STATE.assignPermission,
           isLoading: false,
           isSuccess: true,
           permission: action.payload,
@@ -49,7 +50,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         assignPermission: {
-          ...state.assignPermission,
+          ...INITIAL_STATE.assignPermission,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -60,7 +61,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         replyPermissionAssign: {
-          ...state.replyPermissionAssign,
+          ...INITIAL_STATE.replyPermissionAssign,
           isLoading: true,
         },
       }
@@ -68,6 +69,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         replyPermissionAssign: {
+          ...INITIAL_STATE.replyPermissionAssign,
           isLoading: false,
           isSuccess: true,
           reply: action.payload,
@@ -77,7 +79,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         replyPermissionAssign: {
-          ...state.replyPermissionAssign,
+          ...INITIAL_STATE.replyPermissionAssign,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -88,7 +90,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         findPermissionByEmailToken: {
-          ...state.findPermissionByEmailToken,
+          ...INITIAL_STATE.findPermissionByEmailToken,
           isLoading: true,
         },
       }
@@ -96,6 +98,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         findPermissionByEmailToken: {
+          ...INITIAL_STATE.findPermissionByEmailToken,
           isLoading: false,
           isSuccess: true,
           data: action.payload,
@@ -105,7 +108,7 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         findPermissionByEmailToken: {
-          ...state.findPermissionByEmailToken,
+          ...INITIAL_STATE.findPermissionByEmailToken,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

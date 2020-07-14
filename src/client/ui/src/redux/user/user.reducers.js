@@ -98,7 +98,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         login: {
-          ...state.login,
+          ...INITIAL_STATE.login,
           isLoading: true,
         },
       }
@@ -107,6 +107,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         currentUser: action.payload,
         login: {
+          ...INITIAL_STATE.login,
           isLoading: false,
           isSuccess: true,
         },
@@ -115,6 +116,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         login: {
+          ...INITIAL_STATE.login,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -125,7 +127,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loginWithSocial: {
-          ...state.loginWithSocial,
+          ...INITIAL_STATE.loginWithSocial,
           isLoading: true,
         },
       }
@@ -134,6 +136,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         currentUser: action.payload,
         loginWithSocial: {
+          ...INITIAL_STATE.loginWithSocial,
           isLoading: false,
           isSuccess: true,
         },
@@ -142,6 +145,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loginWithSocial: {
+          ...INITIAL_STATE.loginWithSocial,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -152,7 +156,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         register: {
-          ...state.register,
+          ...INITIAL_STATE.register,
           isLoading: true,
         },
       }
@@ -160,6 +164,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         register: {
+          ...INITIAL_STATE.register,
           data: action.payload,
           isLoading: false,
           isSuccess: true,
@@ -169,7 +174,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         register: {
-          ...state.register,
+          ...INITIAL_STATE.register,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -180,7 +185,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
-          ...state.getList,
+          ...INITIAL_STATE.getList,
           isLoading: true,
         },
       }
@@ -188,6 +193,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
+          ...INITIAL_STATE.getList,
           isLoading: false,
           isSuccess: true,
           userList: action.payload.data,
@@ -197,7 +203,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
-          ...state.getList,
+          ...INITIAL_STATE.getList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -208,7 +214,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: true,
         },
       }
@@ -216,6 +222,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
+          ...INITIAL_STATE.getInfo,
           user: action.payload,
           isLoading: false,
           isSuccess: true,
@@ -225,7 +232,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -236,7 +243,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateCurrentUser: {
-          ...state.updateCurrentUser,
+          ...INITIAL_STATE.updateCurrentUser,
           isLoading: true,
         },
       }
@@ -245,6 +252,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         currentUser: action.payload,
         updateCurrentUser: {
+          ...INITIAL_STATE.updateCurrentUser,
           isLoading: false,
           isSuccess: true,
         },
@@ -253,7 +261,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateCurrentUser: {
-          ...state.updateCurrentUser,
+          ...INITIAL_STATE.updateCurrentUser,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -264,7 +272,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateCurrentUserOnAuthenticate: {
-          ...state.updateCurrentUserOnAuthenticate,
+          ...INITIAL_STATE.updateCurrentUserOnAuthenticate,
           isLoading: true,
         },
       }
@@ -273,6 +281,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         currentUser: action.payload,
         updateCurrentUserOnAuthenticate: {
+          ...INITIAL_STATE.updateCurrentUserOnAuthenticate,
           isLoading: false,
           isSuccess: true,
         },
@@ -282,7 +291,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         currentUser: null,
         updateCurrentUserOnAuthenticate: {
-          ...state.updateCurrentUserOnAuthenticate,
+          ...INITIAL_STATE.updateCurrentUserOnAuthenticate,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -293,7 +302,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
-          ...state.updateInfo,
+          ...INITIAL_STATE.updateInfo,
           isLoading: true,
         },
       }
@@ -301,6 +310,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
+          ...INITIAL_STATE.updateInfo,
           isLoading: false,
           isSuccess: true,
         },
@@ -309,6 +319,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
+          ...INITIAL_STATE.updateInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -319,7 +330,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createUser: {
-          ...state.createUser,
+          ...INITIAL_STATE.createUser,
           isLoading: true,
         },
       }
@@ -327,6 +338,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createUser: {
+          ...INITIAL_STATE.createUser,
           isLoading: false,
           isSuccess: true,
         },
@@ -335,6 +347,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createUser: {
+          ...INITIAL_STATE.createUser,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -345,7 +358,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteUser: {
-          ...state.deleteUser,
+          ...INITIAL_STATE.deleteUser,
           isLoading: true,
         },
       }
@@ -353,6 +366,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteUser: {
+          ...INITIAL_STATE.deleteUser,
           isLoading: false,
           isSuccess: true,
         },
@@ -361,6 +375,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteUser: {
+          ...INITIAL_STATE.deleteUser,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -371,7 +386,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sendVerifyEmail: {
-          ...state.sendVerifyEmail,
+          ...INITIAL_STATE.sendVerifyEmail,
           isLoading: true,
         },
       }
@@ -379,6 +394,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sendVerifyEmail: {
+          ...INITIAL_STATE.sendVerifyEmail,
           isLoading: false,
           isSuccess: true,
         },
@@ -387,6 +403,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sendVerifyEmail: {
+          ...INITIAL_STATE.sendVerifyEmail,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -397,7 +414,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         verifyEmail: {
-          ...state.verifyEmail,
+          ...INITIAL_STATE.verifyEmail,
           isLoading: true,
         },
       }
@@ -405,6 +422,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         verifyEmail: {
+          ...INITIAL_STATE.verifyEmail,
           isLoading: false,
           isSuccess: true,
         },
@@ -413,6 +431,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         verifyEmail: {
+          ...INITIAL_STATE.verifyEmail,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -423,23 +442,24 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         resetPassword: {
+          ...INITIAL_STATE.resetPassword,
           isLoading: true,
-          isSuccess: false,
-          message: action.payload,
         },
       }
     case UserTypes.SEND_EMAIL_RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         resetPassword: {
+          ...INITIAL_STATE.resetPassword,
           isLoading: false,
           isSuccess: true,
         },
       }
-    case UserTypes.SEND_EMAIL_RESET_PASSWORD_FAILUE:
+    case UserTypes.SEND_EMAIL_RESET_PASSWORD_FAILURE:
       return {
         ...state,
         resetPassword: {
+          ...INITIAL_STATE.resetPassword,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -450,17 +470,15 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         resetPassword: {
+          ...INITIAL_STATE.resetPassword,
           isLoading: true,
-          isSuccess: null,
-          message: null,
-          isTokenTrue: null,
         },
       }
     case UserTypes.VERIFY_TOKEN_RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         resetPassword: {
-          ...state.resetPassword,
+          ...INITIAL_STATE.resetPassword,
           isLoading: false,
           isTokenTrue: true,
           userId: action.payload,
@@ -470,7 +488,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         resetPassword: {
-          ...state.resetPassword,
+          ...INITIAL_STATE.resetPassword,
           isLoading: false,
           isTokenTrue: false,
         },
@@ -480,7 +498,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         resetPassword: {
-          ...state.resetPassword,
+          ...INITIAL_STATE.resetPassword,
           isLoading: true,
         },
       }
@@ -488,7 +506,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         resetPassword: {
-          ...state.resetPassword,
+          ...INITIAL_STATE.resetPassword,
           isLoading: false,
           isSuccess: true,
         },
@@ -497,87 +515,47 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         resetPassword: {
-          ...state.resetPassword,
+          ...INITIAL_STATE.resetPassword,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
         },
       }
     // Change password
-    case UserTypes.CHANGE_PASSPWORD:
+    case UserTypes.CHANGE_PASSWORD:
       return {
         ...state,
         changePassword: {
-          ...state.changePassword,
+          ...INITIAL_STATE.changePassword,
           isLoading: true,
         },
       }
-    case UserTypes.CHANGE_PASSPWORD_SUCCESS:
+    case UserTypes.CHANGE_PASSWORD_SUCCESS:
       return {
         ...state,
         changePassword: {
+          ...INITIAL_STATE.changePassword,
           isLoading: false,
           isSuccess: true,
         },
       }
-    case UserTypes.CHANGE_PASSPWORD_FAILURE:
+    case UserTypes.CHANGE_PASSWORD_FAILURE:
       return {
         ...state,
         changePassword: {
+          ...INITIAL_STATE.changePassword,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
         },
       }
-    case UserTypes.CHANGE_PASSPWORD_CLEAR:
+    case UserTypes.CHANGE_PASSWORD_CLEAR:
       return {
         ...state,
         changePassword: {
-          isLoading: false,
-          isSuccess: null,
-          message: null,
+          ...INITIAL_STATE.changePassword,
         },
       }
-    // update avatar
-    case UserTypes.UPDATE_AVATAR:
-      return {
-        ...state,
-        updateAvatar: {
-          isLoading: true,
-        },
-      }
-    case UserTypes.UPDATE_AVATAR_SUCCESS:
-      return {
-        ...state,
-        currentUser: {
-          ...state.currentUser,
-          avatar: action.payload, // new avatar
-        },
-        updateAvatar: {
-          isLoading: false,
-          isSuccess: true,
-          message: null,
-        },
-      }
-    case UserTypes.UPDATE_AVATAR_FAIILURE:
-      return {
-        ...state,
-        updateAvatar: {
-          isLoading: false,
-          isSuccess: false,
-          message: action.payload,
-        },
-      }
-    case UserTypes.UPDATE_AVATAR_CLEAR:
-      return {
-        ...state,
-        updateAvatar: {
-          isLoading: false,
-          isSuccess: null,
-          message: null,
-        },
-      }
-
     default:
       return state
   }

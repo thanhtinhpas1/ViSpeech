@@ -20,7 +20,7 @@ const taskReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
-          ...state.getList,
+          ...INITIAL_STATE.getList,
           isLoading: true,
         },
       }
@@ -28,6 +28,7 @@ const taskReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
+          ...INITIAL_STATE.getList,
           isLoading: false,
           isSuccess: true,
           taskList: action.payload.data,
@@ -37,7 +38,7 @@ const taskReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
-          ...state.getList,
+          ...INITIAL_STATE.getList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

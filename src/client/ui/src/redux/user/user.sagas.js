@@ -246,7 +246,7 @@ function* resetPasswordSaga() {
 //   }
 // }
 // function* changePasswordSaga() {
-//   yield takeLatest(UserTypes.CHANGE_PASSPWORD, changePassword)
+//   yield takeLatest(UserTypes.CHANGE_PASSWORD, changePassword)
 // }
 
 export function* userSaga() {

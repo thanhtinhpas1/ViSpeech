@@ -55,7 +55,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserTokenList: {
-          ...state.getUserTokenList,
+          ...INITIAL_STATE.getUserTokenList,
           isLoading: true,
         },
       }
@@ -63,6 +63,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserTokenList: {
+          ...INITIAL_STATE.getUserTokenList,
           isLoading: false,
           isSuccess: true,
           userTokenList: action.payload.data,
@@ -72,7 +73,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserTokenList: {
-          ...state.getUserTokenList,
+          ...INITIAL_STATE.getUserTokenList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -83,7 +84,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getTokenList: {
-          ...state.getTokenList,
+          ...INITIAL_STATE.getTokenList,
           isLoading: true,
         },
       }
@@ -99,6 +100,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getTokenList: {
+          ...INITIAL_STATE.getTokenList,
           isLoading: false,
           isSuccess: true,
           tokenList: action.payload.data,
@@ -108,7 +110,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getTokenList: {
-          ...state.getTokenList,
+          ...INITIAL_STATE.getTokenList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -119,7 +121,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getProjectTokenList: {
-          ...state.getProjectTokenList,
+          ...INITIAL_STATE.getProjectTokenList,
           isLoading: true,
         },
       }
@@ -127,6 +129,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getProjectTokenList: {
+          ...INITIAL_STATE.getProjectTokenList,
           isLoading: false,
           isSuccess: true,
           projectTokenList: action.payload.data,
@@ -136,7 +139,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getProjectTokenList: {
-          ...state.getProjectTokenList,
+          ...INITIAL_STATE.getProjectTokenList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -147,7 +150,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getTokenTypeList: {
-          ...state.getTokenTypeList,
+          ...INITIAL_STATE.getTokenTypeList,
           isLoading: true,
         },
       }
@@ -155,6 +158,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getTokenTypeList: {
+          ...INITIAL_STATE.getTokenTypeList,
           isLoading: false,
           isSuccess: true,
           tokenTypeList: action.payload.data,
@@ -164,7 +168,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getTokenTypeList: {
-          ...state.getTokenTypeList,
+          ...INITIAL_STATE.getTokenTypeList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -175,7 +179,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getFreeToken: {
-          ...state.getFreeToken,
+          ...INITIAL_STATE.getFreeToken,
           isLoading: true,
         },
       }
@@ -183,6 +187,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getFreeToken: {
+          ...INITIAL_STATE.getFreeToken,
           isLoading: false,
           isSuccess: true,
           freeToken: action.payload.data,
@@ -192,7 +197,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getFreeToken: {
-          ...state.getFreeToken,
+          ...INITIAL_STATE.getFreeToken,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -203,7 +208,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteToken: {
-          ...state.deleteToken,
+          ...INITIAL_STATE.deleteToken,
           isLoading: true,
         },
       }
@@ -211,6 +216,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteToken: {
+          ...INITIAL_STATE.deleteToken,
           isLoading: false,
           isSuccess: true,
         },
@@ -219,6 +225,7 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteToken: {
+          ...INITIAL_STATE.deleteToken,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

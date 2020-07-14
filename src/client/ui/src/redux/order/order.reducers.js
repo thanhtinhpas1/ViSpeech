@@ -58,7 +58,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getOrderList: {
-          ...state.getOrderList,
+          ...INITIAL_STATE.getOrderList,
           isLoading: true,
         },
       }
@@ -66,6 +66,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getOrderList: {
+          ...INITIAL_STATE.getOrderList,
           isLoading: false,
           isSuccess: true,
           orderList: action.payload.data,
@@ -75,7 +76,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getOrderList: {
-          ...state.getOrderList,
+          ...INITIAL_STATE.getOrderList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -86,7 +87,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserOrderList: {
-          ...state.getUserOrderList,
+          ...INITIAL_STATE.getUserOrderList,
           isLoading: true,
         },
       }
@@ -94,6 +95,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserOrderList: {
+          ...INITIAL_STATE.getUserOrderList,
           isLoading: false,
           isSuccess: true,
           userOrderList: action.payload.data,
@@ -103,7 +105,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserOrderList: {
-          ...state.getUserOrderList,
+          ...INITIAL_STATE.getUserOrderList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -114,7 +116,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: true,
         },
       }
@@ -122,6 +124,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
+          ...INITIAL_STATE.getInfo,
           isLoading: false,
           isSuccess: true,
           order: action.payload.data,
@@ -131,7 +134,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -142,7 +145,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createOrder: {
-          ...state.createOrder,
+          ...INITIAL_STATE.createOrder,
           isLoading: true,
         },
       }
@@ -150,6 +153,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createOrder: {
+          ...INITIAL_STATE.createOrder,
           isLoading: false,
           isSuccess: true,
           data: action.payload,
@@ -159,7 +163,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createOrder: {
-          ...state.createOrder,
+          ...INITIAL_STATE.createOrder,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -170,7 +174,7 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createOrderToUpgrade: {
-          ...state.createOrderToUpgrade,
+          ...INITIAL_STATE.createOrderToUpgrade,
           isLoading: true,
         },
       }
@@ -178,17 +182,17 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createOrderToUpgrade: {
+          ...INITIAL_STATE.createOrderToUpgrade,
           isLoading: false,
           isSuccess: true,
           data: action.payload,
-          message: null,
         },
       }
     case OrderTypes.CREATE_ORDER_TO_UPGRADE_FAILURE:
       return {
         ...state,
         createOrderToUpgrade: {
-          ...state.createOrderToUpgrade,
+          ...INITIAL_STATE.createOrderToUpgrade,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

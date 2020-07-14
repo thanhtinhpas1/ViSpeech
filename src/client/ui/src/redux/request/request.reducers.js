@@ -52,7 +52,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: true,
         },
       }
@@ -60,6 +60,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
+          ...INITIAL_STATE.getInfo,
           request: action.payload.data,
           isLoading: false,
           isSuccess: true,
@@ -69,7 +70,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -80,7 +81,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
-          ...state.getList,
+          ...INITIAL_STATE.getList,
           isLoading: true,
         },
       }
@@ -88,6 +89,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
+          ...INITIAL_STATE.getList,
           isLoading: false,
           isSuccess: true,
           requestList: action.payload.data,
@@ -97,7 +99,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getList: {
-          ...state.getList,
+          ...INITIAL_STATE.getList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -108,7 +110,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getListByUserId: {
-          ...state.getListByUserId,
+          ...INITIAL_STATE.getListByUserId,
           isLoading: true,
         },
       }
@@ -116,6 +118,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getListByUserId: {
+          ...INITIAL_STATE.getListByUserId,
           isLoading: false,
           isSuccess: true,
           requestList: action.payload.data,
@@ -125,7 +128,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getListByUserId: {
-          ...state.getListByUserId,
+          ...INITIAL_STATE.getListByUserId,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -136,7 +139,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
-          ...state.updateInfo,
+          ...INITIAL_STATE.updateInfo,
           requestId: action.payload.id,
           isLoading: true,
         },
@@ -145,17 +148,16 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
-          ...state.updateInfo,
+          ...INITIAL_STATE.updateInfo,
           isLoading: false,
           isSuccess: true,
-          message: null,
         },
       }
     case RequestTypes.UPDATE_REQUEST_INFO_FAILURE:
       return {
         ...state,
         updateInfo: {
-          ...state.updateInfo,
+          ...INITIAL_STATE.updateInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

@@ -112,16 +112,17 @@ const reportReducer = (state = INITIAL_STATE, action) => {
     action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE
   ) {
     returnObj[getStatistics] = {
-      ...state[getStatistics],
+      ...INITIAL_STATE[getStatistics],
       isLoading: true,
     }
     returnObjSuccess[getStatistics] = {
+      ...INITIAL_STATE[getStatistics],
       isLoading: false,
       isSuccess: true,
       data: action.payload.data,
     }
     returnObjFailure[getStatistics] = {
-      ...state[getStatistics],
+      ...INITIAL_STATE[getStatistics],
       isLoading: false,
       isSuccess: false,
       message: action.payload.message,
@@ -145,7 +146,7 @@ const reportReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserTokenTypeStatistics: {
-          ...state.getUserTokenTypeStatistics,
+          ...INITIAL_STATE.getUserTokenTypeStatistics,
           isLoading: true,
         },
       }
@@ -153,6 +154,7 @@ const reportReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserTokenTypeStatistics: {
+          ...INITIAL_STATE.getUserTokenTypeStatistics,
           isLoading: false,
           isSuccess: true,
           data: action.payload.data,
@@ -162,7 +164,7 @@ const reportReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getUserTokenTypeStatistics: {
-          ...state.getUserTokenTypeStatistics,
+          ...INITIAL_STATE.getUserTokenTypeStatistics,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

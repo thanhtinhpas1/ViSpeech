@@ -54,7 +54,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createProject: {
-          ...state.createProject,
+          ...INITIAL_STATE.createProject,
           isLoading: true,
         },
       }
@@ -62,6 +62,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createProject: {
+          ...INITIAL_STATE.createProject,
           data: action.payload.data,
           isLoading: false,
           isSuccess: true,
@@ -71,6 +72,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createProject: {
+          ...INITIAL_STATE.createProject,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -81,7 +83,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getProjectList: {
-          ...state.getProjectList,
+          ...INITIAL_STATE.getProjectList,
           isLoading: true,
         },
       }
@@ -89,6 +91,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getProjectList: {
+          ...INITIAL_STATE.getProjectList,
           isLoading: false,
           isSuccess: true,
           projectList: action.payload.data,
@@ -98,7 +101,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getProjectList: {
-          ...state.getProjectList,
+          ...INITIAL_STATE.getProjectList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -109,7 +112,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getMyProjectList: {
-          ...state.getMyProjectList,
+          ...INITIAL_STATE.getMyProjectList,
           isLoading: true,
         },
       }
@@ -117,6 +120,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getMyProjectList: {
+          ...INITIAL_STATE.getMyProjectList,
           isLoading: false,
           isSuccess: true,
           myProjectList: action.payload.data,
@@ -126,7 +130,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getMyProjectList: {
-          ...state.getMyProjectList,
+          ...INITIAL_STATE.getMyProjectList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -137,7 +141,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getAcceptedProjectList: {
-          ...state.getAcceptedProjectList,
+          ...INITIAL_STATE.getAcceptedProjectList,
           isLoading: true,
         },
       }
@@ -145,6 +149,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getAcceptedProjectList: {
+          ...INITIAL_STATE.getAcceptedProjectList,
           isLoading: false,
           isSuccess: true,
           acceptedProjectList: action.payload.data,
@@ -154,7 +159,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getAcceptedProjectList: {
-          ...state.getAcceptedProjectList,
+          ...INITIAL_STATE.getAcceptedProjectList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -165,7 +170,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: true,
         },
       }
@@ -173,6 +178,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
+          ...INITIAL_STATE.getInfo,
           project: action.payload.data,
           isLoading: false,
           isSuccess: true,
@@ -182,7 +188,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         getInfo: {
-          ...state.getInfo,
+          ...INITIAL_STATE.getInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -193,7 +199,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
-          ...state.updateInfo,
+          ...INITIAL_STATE.updateInfo,
           isLoading: true,
         },
       }
@@ -201,6 +207,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
+          ...INITIAL_STATE.updateInfo,
           isLoading: false,
           isSuccess: true,
         },
@@ -209,6 +216,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
+          ...INITIAL_STATE.updateInfo,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
@@ -219,7 +227,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteProject: {
-          ...state.deleteProject,
+          ...INITIAL_STATE.deleteProject,
           isLoading: true,
         },
       }
@@ -227,6 +235,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteProject: {
+          ...INITIAL_STATE.deleteProject,
           isLoading: false,
           isSuccess: true,
         },
@@ -235,6 +244,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         deleteProject: {
+          ...INITIAL_STATE.deleteProject,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

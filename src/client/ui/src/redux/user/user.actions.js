@@ -109,7 +109,7 @@ export const sendEmailResetPasswordSuccess = () => ({
 })
 
 export const sendEmailResetPasswordFailure = message => ({
-  type: UserTypes.SEND_EMAIL_RESET_PASSWORD_FAILUE,
+  type: UserTypes.SEND_EMAIL_RESET_PASSWORD_FAILURE,
   payload: message,
 })
 
@@ -167,41 +167,21 @@ export const authenticateFailure = message => ({
 
 // change password
 export const changePassword = ({ userId, oldPassword, newPassword }) => ({
-  type: UserTypes.CHANGE_PASSPWORD,
+  type: UserTypes.CHANGE_PASSWORD,
   payload: { userId, oldPassword, newPassword },
 })
 
 export const changePasswordSuccess = () => ({
-  type: UserTypes.CHANGE_PASSPWORD_SUCCESS,
+  type: UserTypes.CHANGE_PASSWORD_SUCCESS,
 })
 
 export const changePasswordFailure = message => ({
-  type: UserTypes.CHANGE_PASSPWORD_FAILURE,
+  type: UserTypes.CHANGE_PASSWORD_FAILURE,
   payload: message,
 })
 
 export const clearChangePassword = () => ({
-  type: UserTypes.CHANGE_PASSPWORD_CLEAR,
-})
-
-// change avatar
-export const updateAvatar = ({ avatar, token }) => ({
-  type: UserTypes.UPDATE_AVATAR,
-  payload: { avatar, token },
-})
-
-export const updateAvatarSuccess = newAvatar => ({
-  type: UserTypes.UPDATE_AVATAR_SUCCESS,
-  payload: newAvatar,
-})
-
-export const updateAvatarFailure = message => ({
-  type: UserTypes.UPDATE_AVATAR_FAIILURE,
-  payload: message,
-})
-
-export const updateAvatarClear = () => ({
-  type: UserTypes.UPDATE_AVATAR_CLEAR,
+  type: UserTypes.CHANGE_PASSWORD_CLEAR,
 })
 
 // get user list
