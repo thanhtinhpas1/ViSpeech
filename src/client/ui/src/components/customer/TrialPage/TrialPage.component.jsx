@@ -2,7 +2,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
@@ -36,9 +36,14 @@ const {
 
 const TrialPage = ({
   currentUser,
+  createRequestObj,
   updateRequestInfoObj,
   getRequestListByUserId,
+  clearCreateRequestState,
   clearUpdateRequestInfo,
+  createRequest,
+  createRequestSuccess,
+  createRequestFailure,
   updateRequestInfo,
   updateRequestInfoSuccess,
   updateRequestInfoFailure,
@@ -51,10 +56,20 @@ const TrialPage = ({
   const [tokenName, setTokenName] = useState('')
   const [newRequest, setNewRequest] = useState({})
   const [infoModal, setInfoModal] = useState({})
+  const [firebaseFolder, setFirebaseFolder] = useState(null)
+  const [asrData, setAsrData] = useState(null)
+
+  const updateRequestLoadingRef = useRef(updateRequestInfoObj.isLoading)
+  updateRequestLoadingRef.current = updateRequestInfoObj.isLoading
+  const createRequestLoadingRef = useRef(createRequestObj.isLoading)
+  createRequestLoadingRef.current = createRequestObj.isLoading
 
   useEffect(() => {
-    return () => clearUpdateRequestInfo()
-  }, [clearUpdateRequestInfo])
+    return () => {
+      clearCreateRequestState()
+      clearUpdateRequestInfo()
+    }
+  }, [clearCreateRequestState, clearUpdateRequestInfo])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(REQUEST_CREATED_SUCCESS_EVENT)
@@ -99,100 +114,132 @@ const TrialPage = ({
   }, [getRequestListByUserId, currentUser._id])
 
   useEffect(() => {
+    let timer = null
     if (updateRequestInfoObj.isLoading === true) {
-      setTimeout(() => {
-        if (updateRequestInfoObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (updateRequestLoadingRef.current === true) {
           updateRequestInfoFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
     }
     if (updateRequestInfoObj.isLoading === false && updateRequestInfoObj.isSuccess != null) {
+      refreshRequestList()
       if (updateRequestInfoObj.isSuccess === true) {
         openInfoModal('Yêu cầu dùng thử', 'Thành công', true)
+        setTimeout(() => {
+          closeInfoModal()
+          history.push(`${CUSTOMER_PATH}/request-details/${updateRequestInfoObj.requestId}`)
+        }, 1000)
       } else {
         openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
       }
-      refreshRequestList()
-      setTimeout(() => {
-        closeInfoModal()
-        history.push(`${CUSTOMER_PATH}/request-details/${updateRequestInfoObj.requestId}`)
-      }, 1000)
     }
+    return () => clearTimeout(timer)
   }, [updateRequestInfoObj, updateRequestInfoFailure, history, openInfoModal, closeInfoModal, refreshRequestList])
 
-  const updateRequest = async (requestId, transcriptFileUrl) => {
-    if (!requestId) return
+  const updateRequest = useCallback(
+    async (requestId, transcriptFileUrl) => {
+      if (!requestId) return
 
-    updateRequestInfo(requestId, transcriptFileUrl)
-    try {
-      await RequestService.updateRequest(requestId, transcriptFileUrl)
-      invokeCheckSubject.RequestUpdated.subscribe(data => {
-        if (data.error != null) {
-          updateRequestInfoFailure(data.errorObj)
-        } else {
-          updateRequestInfoSuccess(transcriptFileUrl)
-        }
-      })
-    } catch (err) {
-      updateRequestInfoFailure({ message: err.message })
-    }
-  }
-
-  const callAsr = async (file, folder, url) => {
-    let data = null
-    try {
-      data = await SpeechService.callAsr(file, url, tokenValue)
-    } catch (err) {
-      refreshRequestList()
-      console.log(`Error while calling asr: ${err.message}`)
-    }
-    let requestCreatedSuccess = false
-    invokeCheckSubject.RequestCreated.subscribe(data => {
-      if (data.error != null) {
-        //
-      } else {
-        requestCreatedSuccess = true
+      updateRequestInfo(requestId, transcriptFileUrl)
+      try {
+        await RequestService.updateRequest(requestId, transcriptFileUrl)
+        invokeCheckSubject.RequestUpdated.subscribe(data => {
+          if (data.error != null) {
+            updateRequestInfoFailure(data.errorObj)
+          } else {
+            updateRequestInfoSuccess(transcriptFileUrl)
+          }
+        })
+      } catch (err) {
+        updateRequestInfoFailure({ message: err.message })
       }
-    })
-    setTimeout(() => {
-      // invalid file || invalid token || not enough token minutes to request || cannot execute creating request
-      if (requestCreatedSuccess === false) {
+    },
+    [updateRequestInfo, updateRequestInfoSuccess, updateRequestInfoFailure]
+  )
+
+  useEffect(() => {
+    let timer = null
+    if (createRequestObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (createRequestLoadingRef.current === true) {
+          createRequestFailure({ message: DEFAULT_ERR_MESSAGE })
+        }
+      }, TIMEOUT_MILLISECONDS)
+    }
+    if (createRequestObj.isLoading === false && createRequestObj.isSuccess != null) {
+      if (createRequestObj.isSuccess === true) {
+        if (asrData && asrData.text) {
+          const { requestId, text } = asrData
+          setAsrData(null) // duplicate RequestCreatedSuccessEvent => duplicate calling update request
+          const fileName = `transcript`
+          const textFile = new File([new Blob([text], { type: 'text/plain;charset=utf-8' })], fileName, {
+            type: 'text/plain;charset=utf-8',
+          })
+          const uploadTask = storage.ref(`${FILE_PATH}/${firebaseFolder}/${fileName}`).put(textFile)
+          uploadTask.on(
+            'state_changed',
+            snapshot => {
+              Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+              // setProgress(progressValue)
+            },
+            error => {
+              refreshRequestList()
+              openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
+              console.log(`Error uploading transcript file to firebase storage: ${error.message}`)
+            },
+            () => {
+              storage
+                .ref(`${FILE_PATH}/${firebaseFolder}`)
+                .child(fileName)
+                .getDownloadURL()
+                .then(async transcriptFileUrl => {
+                  updateRequest(requestId, transcriptFileUrl)
+                  console.log(`Transcript file was uploaded to firebase storage with url ${transcriptFileUrl}`)
+                })
+            }
+          )
+        }
+      } else {
         refreshRequestList()
         openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
-      } else if (requestCreatedSuccess === true && data && data.text) {
-        const { requestId, text } = data
-        const fileName = `transcript`
-        const textFile = new File([new Blob([text], { type: 'text/plain;charset=utf-8' })], fileName, {
-          type: 'text/plain;charset=utf-8',
-        })
-        const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${fileName}`).put(textFile)
-        uploadTask.on(
-          'state_changed',
-          snapshot => {
-            Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-            // setProgress(progressValue)
-          },
-          error => {
-            refreshRequestList()
-            openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
-            console.log(`Error uploading transcript file: ${error.message}`)
-          },
-          () => {
-            storage
-              .ref(`${FILE_PATH}/${folder}`)
-              .child(fileName)
-              .getDownloadURL()
-              .then(async transcriptFileUrl => {
-                updateRequest(requestId, transcriptFileUrl)
-                console.log(`Transcript file was uploaded with url ${transcriptFileUrl}`)
-              })
-          }
-        )
       }
-    }, TIMEOUT_MILLISECONDS)
+    }
+    return () => clearTimeout(timer)
+  }, [
+    asrData,
+    firebaseFolder,
+    createRequestObj,
+    createRequestFailure,
+    updateRequest,
+    openInfoModal,
+    refreshRequestList,
+  ])
+
+  const callAsr = async (file, url) => {
+    createRequest()
+    setAsrData(null)
+    invokeCheckSubject.RequestCreated.subscribe(data => {
+      if (data.error != null) {
+        createRequestFailure(data.errorObj)
+      } else {
+        createRequestSuccess()
+      }
+    })
+    try {
+      const data = await SpeechService.callAsr(file, url, tokenValue)
+      setAsrData(data)
+    } catch (err) {
+      refreshRequestList()
+      createRequestFailure({ message: err.message })
+      console.log(`Error while calling asr: ${err.message}`)
+    }
   }
 
   const handleUpload = async ({ file, onProgress, onSuccess, onError }) => {
+    clearCreateRequestState()
+    clearUpdateRequestInfo()
+
     setInfoModal({
       visible: true,
       title: 'Tải tập tin âm thanh',
@@ -228,6 +275,7 @@ const TrialPage = ({
 
     const fileName = `audio-${file.name}`
     const folder = `${Date.now()}`
+    setFirebaseFolder(folder)
     const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${fileName}`).put(file)
     uploadTask.on(
       'state_changed',
@@ -257,7 +305,7 @@ const TrialPage = ({
                 onCancel: () => closeInfoModal(),
               })
             }, 1500)
-            callAsr(file, folder, url)
+            callAsr(file, url)
           })
       }
     )

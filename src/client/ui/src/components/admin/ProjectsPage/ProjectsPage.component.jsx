@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
@@ -33,6 +33,8 @@ const ProjectsPage = ({
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+  const loadingRef = useRef(deleteProjectObj.isLoading)
+  loadingRef.current = deleteProjectObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteProjectState()
@@ -58,9 +60,10 @@ const ProjectsPage = ({
   }, [])
 
   useEffect(() => {
+    let timer = null
     if (deleteProjectObj.isLoading === true) {
-      setTimeout(() => {
-        if (deleteProjectObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           deleteProjectFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -102,6 +105,7 @@ const ProjectsPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [deleteProjectObj, getProjectList, closeInfoModal, deleteProjectFailure])
 
   const onDeleteProject = async projectId => {

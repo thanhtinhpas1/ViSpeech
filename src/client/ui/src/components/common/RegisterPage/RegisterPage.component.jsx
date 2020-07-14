@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button } from 'antd'
 import { ROLES, USER_TYPE, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
@@ -15,6 +15,8 @@ const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSuccess, registerFailure }) => {
   const history = useHistory()
+  const loadingRef = useRef(registerObj.isLoading)
+  loadingRef.current = registerObj.isLoading
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_CREATED_SUCCESS_EVENT)
@@ -32,13 +34,15 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
   }, [registerObj.data, history])
 
   useEffect(() => {
+    let timer = null
     if (registerObj.isLoading === true) {
-      setTimeout(() => {
-        if (registerObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           registerFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
     }
+    return () => clearTimeout(timer)
   }, [registerObj, registerFailure])
 
   const handleOnSubmit = async e => {

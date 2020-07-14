@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback, useState, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Tabs } from 'antd'
 import { ADMIN_PATH, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
@@ -44,6 +44,8 @@ const UserInfoPage = ({
   const history = useHistory()
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+  const loadingRef = useRef(deleteUserObj.isLoading)
+  loadingRef.current = deleteUserObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteUserState()
@@ -78,9 +80,10 @@ const UserInfoPage = ({
   }, [id, getUserInfo])
 
   useEffect(() => {
+    let timer = null
     if (deleteUserObj.isLoading === true) {
-      setTimeout(() => {
-        if (deleteUserObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           deleteUserFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -122,6 +125,7 @@ const UserInfoPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [deleteUserObj, closeInfoModal, history, deleteUserFailure])
 
   const onDeleteUser = (e, userId) => {

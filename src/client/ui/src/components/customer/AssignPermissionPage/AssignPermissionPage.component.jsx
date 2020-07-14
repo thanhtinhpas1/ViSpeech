@@ -4,7 +4,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Select, Button } from 'antd'
 import { PERMISSIONS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
@@ -35,6 +35,8 @@ const AssignPermissionPage = ({
   const query = Utils.useQuery()
   const [form] = Form.useForm()
   const [infoModal, setInfoModal] = useState({})
+  const loadingRef = useRef(assignPermissionObj.isLoading)
+  loadingRef.current = assignPermissionObj.isLoading
 
   const formItemLayout = {
     labelCol: {
@@ -64,9 +66,10 @@ const AssignPermissionPage = ({
   }, [])
 
   useEffect(() => {
+    let timer = null
     if (assignPermissionObj.isLoading === true) {
-      setTimeout(() => {
-        if (assignPermissionObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           assignPermissionFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -102,6 +105,7 @@ const AssignPermissionPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [assignPermissionObj, closeInfoModal, assignPermissionFailure])
 
   useEffect(() => {

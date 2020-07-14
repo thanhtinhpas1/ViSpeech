@@ -60,6 +60,7 @@ export const getRequestListByUserIdFailure = message => ({
   payload: message,
 })
 
+// update request info
 export const updateRequestInfo = (id, data) => ({
   type: RequestTypes.UPDATE_REQUEST_INFO,
   payload: { id, data },
@@ -72,5 +73,24 @@ export const updateRequestInfoSuccess = data => ({
 
 export const updateRequestInfoFailure = message => ({
   type: RequestTypes.UPDATE_REQUEST_INFO_FAILURE,
+  payload: message,
+})
+
+// create request
+export const onClearCreateRequestState = () => ({
+  type: RequestTypes.CLEAR_CREATE_REQUEST_STATE,
+})
+
+export const createRequest = () => ({
+  type: RequestTypes.CREATE_REQUEST,
+})
+
+export const createRequestSuccess = data => ({
+  type: RequestTypes.CREATE_REQUEST_SUCCESS,
+  payload: data,
+})
+
+export const createRequestFailure = message => ({
+  type: RequestTypes.CREATE_REQUEST_FAILURE,
   payload: message,
 })

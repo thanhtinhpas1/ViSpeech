@@ -73,6 +73,15 @@ const SelectTokenForm = ({
     onSelectTokenFormValuesChange,
   ])
 
+  const onFormValuesChange = (changedValue, allValues) => {
+    const { projectId, tokenValue } = allValues
+    const project = projectId ? getMyProjectListObj.myProjectList.data.find(item => item._id === projectId) : null
+    const token = tokenValue
+      ? getProjectTokenListObj.projectTokenList.data.find(item => item.value === tokenValue)
+      : null
+    onSelectTokenFormValuesChange(project, token)
+  }
+
   return (
     <Row style={{ marginBottom: 20, marginTop: 20 }} className="select-token-form">
       {(getMyProjectListObj.isLoading || getProjectTokenListObj.isLoading) && (
@@ -87,6 +96,7 @@ const SelectTokenForm = ({
           <Form
             layout="inline"
             form={form}
+            onValuesChange={onFormValuesChange}
             initialValues={{
               projectId: getMyProjectListObj.myProjectList.data[0] && getMyProjectListObj.myProjectList.data[0]._id,
               tokenValue:

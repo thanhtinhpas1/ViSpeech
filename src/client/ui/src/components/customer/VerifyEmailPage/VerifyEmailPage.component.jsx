@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { CUSTOMER_PATH, JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import STORAGE from 'utils/storage'
@@ -24,6 +24,8 @@ const VerifyEmailPage = ({
   const [infoTemplate, setInfoTemplate] = useState({})
   const { emailToken } = useParams()
   const history = useHistory()
+  const loadingRef = useRef(verifyEmailObj.isLoading)
+  loadingRef.current = verifyEmailObj.isLoading
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(EMAIL_VERIFIED_SUCCESS_EVENT)
@@ -153,9 +155,10 @@ const VerifyEmailPage = ({
   }, [currentUser, emailToken, history, onVerifyEmail])
 
   useEffect(() => {
+    let timer = null
     if (verifyEmailObj.isLoading === true) {
-      setTimeout(() => {
-        if (verifyEmailObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           verifyEmailFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -196,6 +199,7 @@ const VerifyEmailPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [verifyEmailObj, history, closeInfoModal, verifyEmailFailure])
 
   return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />

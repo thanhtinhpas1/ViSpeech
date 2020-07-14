@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import Utils from 'utils'
@@ -20,6 +20,8 @@ const PersonalDataTab = ({
   updateCurrentUserFailure,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+  const loadingRef = useRef(updateCurrentUserObj.isLoading)
+  loadingRef.current = updateCurrentUserObj.isLoading
 
   useEffect(() => {
     return () => clearUpdateCurrentUserState()
@@ -53,9 +55,10 @@ const PersonalDataTab = ({
   }, [currentUser.roles])
 
   useEffect(() => {
+    let timer = null
     if (updateCurrentUserObj.isLoading === true) {
-      setTimeout(() => {
-        if (updateCurrentUserObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           updateCurrentUserFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -91,6 +94,7 @@ const PersonalDataTab = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [updateCurrentUserObj, closeInfoModal, updateCurrentUserFailure])
 
   const onSubmit = async event => {

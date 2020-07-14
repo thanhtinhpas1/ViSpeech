@@ -25,6 +25,11 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  createRequest: {
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const requestReducer = (state = INITIAL_STATE, action) => {
@@ -148,16 +153,52 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         updateInfo: {
-          ...INITIAL_STATE.updateInfo,
+          ...state.updateInfo,
           isLoading: false,
           isSuccess: true,
+          message: null,
         },
       }
     case RequestTypes.UPDATE_REQUEST_INFO_FAILURE:
       return {
         ...state,
         updateInfo: {
-          ...INITIAL_STATE.updateInfo,
+          ...state.updateInfo,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // CREATE REQUEST
+    case RequestTypes.CLEAR_CREATE_REQUEST_STATE:
+      return {
+        ...state,
+        createRequest: {
+          ...INITIAL_STATE.createRequest,
+        },
+      }
+    case RequestTypes.CREATE_REQUEST:
+      return {
+        ...state,
+        createRequest: {
+          ...INITIAL_STATE.createRequest,
+          isLoading: true,
+        },
+      }
+    case RequestTypes.CREATE_REQUEST_SUCCESS:
+      return {
+        ...state,
+        createRequest: {
+          ...INITIAL_STATE.createRequest,
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case RequestTypes.CREATE_REQUEST_FAILURE:
+      return {
+        ...state,
+        createRequest: {
+          ...INITIAL_STATE.createRequest,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

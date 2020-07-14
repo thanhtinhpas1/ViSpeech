@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Alert, Button, Form, Input, Radio, Row } from 'antd'
 import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import Utils from 'utils'
@@ -17,6 +17,9 @@ const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, createUserSuccess, createUserFailure }) => {
   const [form] = Form.useForm()
+  const loadingRef = useRef(createUserObj.isLoading)
+  loadingRef.current = createUserObj.isLoading
+
   const formItemLayout = {
     labelCol: {
       span: 6,
@@ -39,13 +42,15 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
   }, [])
 
   useEffect(() => {
+    let timer = null
     if (createUserObj.isLoading === true) {
-      setTimeout(() => {
-        if (createUserObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           createUserFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
     }
+    return () => clearTimeout(timer)
   }, [createUserObj, createUserFailure])
 
   const onSubmit = async values => {

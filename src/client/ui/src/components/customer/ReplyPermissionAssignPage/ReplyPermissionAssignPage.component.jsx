@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { CUSTOMER_PATH, JWT_TOKEN, STATUS, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import STORAGE from 'utils/storage'
@@ -26,6 +26,8 @@ const ReplyPermissionAssignPage = ({
   const [infoTemplate, setInfoTemplate] = useState({})
   const { emailToken } = useParams()
   const history = useHistory()
+  const loadingRef = useRef(replyPermissionAssignObj.isLoading)
+  loadingRef.current = replyPermissionAssignObj.isLoading
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PERMISSION_ASSIGN_REPLIED_SUCCESS_EVENT)
@@ -155,9 +157,10 @@ const ReplyPermissionAssignPage = ({
   }, [currentUser, findPermissionByEmailTokenObj, history, onReplyPermissionAssign])
 
   useEffect(() => {
+    let timer = null
     if (replyPermissionAssignObj.isLoading === true) {
-      setTimeout(() => {
-        if (replyPermissionAssignObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           replyPermissionAssignFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -197,6 +200,7 @@ const ReplyPermissionAssignPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [replyPermissionAssignObj, history, closeInfoModal, replyPermissionAssignFailure])
 
   return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />

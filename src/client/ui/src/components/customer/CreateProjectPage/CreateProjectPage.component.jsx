@@ -3,7 +3,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { CUSTOMER_PATH, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import SocketService from 'services/socket.service'
@@ -24,6 +24,8 @@ const CreateProjectPage = ({
   createProjectFailure,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+  const loadingRef = useRef(createProjectObj.isLoading)
+  loadingRef.current = createProjectObj.isLoading
 
   useEffect(() => {
     return () => clearCreateProjectState()
@@ -45,9 +47,10 @@ const CreateProjectPage = ({
   }
 
   useEffect(() => {
+    let timer = null
     if (createProjectObj.isLoading === true) {
-      setTimeout(() => {
-        if (createProjectObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           createProjectFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -84,6 +87,7 @@ const CreateProjectPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [createProjectObj, closeInfoModal, createProjectFailure])
 
   const onSubmit = async event => {

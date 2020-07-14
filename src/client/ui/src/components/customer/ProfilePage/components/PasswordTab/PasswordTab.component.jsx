@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useRef } from 'react'
 import { Form, Input, Button, Alert } from 'antd'
 import { useHistory } from 'react-router-dom'
 import SocketService from 'services/socket.service'
@@ -24,6 +24,8 @@ const PasswordTab = ({
 }) => {
   const history = useHistory()
   const [form] = Form.useForm()
+  const loadingRef = useRef(changePasswordObj.isLoading)
+  loadingRef.current = changePasswordObj.isLoading
 
   useEffect(() => {
     return () => clearChangePasswordState()
@@ -40,9 +42,10 @@ const PasswordTab = ({
   }, [history, logout])
 
   useEffect(() => {
+    let timer = null
     if (changePasswordObj.isLoading === true) {
-      setTimeout(() => {
-        if (changePasswordObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           changePasswordFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -52,6 +55,7 @@ const PasswordTab = ({
         onLogout()
       }, 1500)
     }
+    return () => clearTimeout(timer)
   }, [changePasswordObj, onLogout, changePasswordFailure])
 
   const onSubmit = async values => {

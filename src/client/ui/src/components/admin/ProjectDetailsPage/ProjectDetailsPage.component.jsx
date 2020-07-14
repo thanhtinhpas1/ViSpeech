@@ -2,7 +2,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
@@ -39,6 +39,8 @@ const ProjectDetailsPage = ({
   const { id } = useParams()
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+  const loadingRef = useRef(updateInfoObj.isLoading)
+  loadingRef.current = updateInfoObj.isLoading
 
   useEffect(() => {
     return () => clearUpdateProjectInfoState()
@@ -66,9 +68,10 @@ const ProjectDetailsPage = ({
   }, [id, getProjectInfo])
 
   useEffect(() => {
+    let timer = null
     if (updateInfoObj.isLoading === true) {
-      setTimeout(() => {
-        if (updateInfoObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           updateProjectInfoFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -112,6 +115,7 @@ const ProjectDetailsPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [id, updateInfoObj, getProjectInfo, closeInfoModal, updateProjectInfoFailure])
 
   const columns = [

@@ -2,7 +2,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Alert, Button } from 'antd'
 import Utils from 'utils'
 import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
@@ -25,6 +25,9 @@ const LoginPage = ({
   loginWithSocialFailure,
   onClearUserState,
 }) => {
+  const loadingRef = useRef(loginWithSocialObj.isLoading)
+  loadingRef.current = loginWithSocialObj.isLoading
+
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_CREATED_SUCCESS_EVENT)
     SocketService.socketOnListeningEvent(USER_CREATED_FAILED_EVENT)
@@ -47,13 +50,15 @@ const LoginPage = ({
   }
 
   useEffect(() => {
+    let timer = null
     if (loginWithSocialObj.isLoading === true) {
-      setTimeout(() => {
-        if (loginWithSocialObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           loginWithSocialFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
     }
+    return () => clearTimeout(timer)
   }, [loginWithSocialObj, loginWithSocialFailure])
 
   const loginWithFacebookOrGoogle = async (accessToken, userType) => {

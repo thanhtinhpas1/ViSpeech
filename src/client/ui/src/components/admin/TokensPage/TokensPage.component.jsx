@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
@@ -35,6 +35,8 @@ const TokensPage = ({
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+  const loadingRef = useRef(deleteTokenObj.isLoading)
+  loadingRef.current = deleteTokenObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteTokenState()
@@ -58,9 +60,10 @@ const TokensPage = ({
   }, [])
 
   useEffect(() => {
+    let timer = null
     if (deleteTokenObj.isLoading === true) {
-      setTimeout(() => {
-        if (deleteTokenObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           deleteTokenFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -102,6 +105,7 @@ const TokensPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [deleteTokenObj, getTokenList, closeInfoModal, deleteTokenFailure])
 
   const onDeleteToken = async tokenId => {

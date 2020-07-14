@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import {
   ADMIN_PATH,
   ROLES,
@@ -43,6 +43,8 @@ const UserListPage = ({
 }) => {
   const [infoModal, setInfoModal] = useState({})
   const [confirmModal, setConfirmModal] = useState({})
+  const loadingRef = useRef(deleteUserObj.isLoading)
+  loadingRef.current = deleteUserObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteUserState()
@@ -71,9 +73,10 @@ const UserListPage = ({
   }, [])
 
   useEffect(() => {
+    let timer = null
     if (deleteUserObj.isLoading === true) {
-      setTimeout(() => {
-        if (deleteUserObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           deleteUserFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -115,6 +118,7 @@ const UserListPage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [deleteUserObj, getUserList, closeInfoModal, deleteUserFailure])
 
   const onDeleteUser = async userId => {

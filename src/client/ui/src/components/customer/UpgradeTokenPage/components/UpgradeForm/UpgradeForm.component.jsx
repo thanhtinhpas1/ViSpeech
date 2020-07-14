@@ -1,6 +1,6 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd'
 import Utils from 'utils'
@@ -34,6 +34,8 @@ const UpgradeForm = ({
   const [selectedProjectId, setSelectedProjectId] = useState(null)
   const [selectedTokenId, setSelectedTokenId] = useState(null)
   const [selectedTokenTypeId, setSelectedTokenTypeId] = useState(null)
+  const loadingRef = useRef(createOrderToUpgradeObj.isLoading)
+  loadingRef.current = createOrderToUpgradeObj.isLoading
 
   const cardElementOptions = {
     iconStyle: 'solid',
@@ -208,9 +210,10 @@ const UpgradeForm = ({
   }
 
   useEffect(() => {
+    let timer = null
     if (createOrderToUpgradeObj.isLoading === true) {
-      setTimeout(() => {
-        if (createOrderToUpgradeObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           createOrderToUpgradeFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -221,6 +224,7 @@ const UpgradeForm = ({
         setErrorMessage(Utils.buildFailedMessage(createOrderToUpgradeObj.message, 'Nâng cấp API key thất bại'))
       }
     }
+    return () => clearTimeout(timer)
   }, [createOrderToUpgradeObj, createOrderToUpgradeFailure])
 
   const onTokenTypeChange = e => {

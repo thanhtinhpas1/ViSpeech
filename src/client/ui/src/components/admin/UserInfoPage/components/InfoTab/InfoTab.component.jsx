@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Alert, Button, Empty, Form, Input, Radio } from 'antd'
 import { ROLES, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import Utils from 'utils'
@@ -27,6 +27,9 @@ const InfoTab = ({
   updateUserInfoFailure,
 }) => {
   const [form] = Form.useForm()
+  const loadingRef = useRef(updateInfoObj.isLoading)
+  loadingRef.current = updateInfoObj.isLoading
+
   const formItemLayout = {
     labelCol: {
       span: 6,
@@ -49,13 +52,15 @@ const InfoTab = ({
   }, [])
 
   useEffect(() => {
+    let timer = null
     if (updateInfoObj.isLoading === true) {
-      setTimeout(() => {
-        if (updateInfoObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           updateUserInfoFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
     }
+    return () => clearTimeout(timer)
   }, [updateInfoObj, updateUserInfoFailure])
 
   const onSubmit = async values => {

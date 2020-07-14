@@ -1,6 +1,6 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Alert, Button, Checkbox, Form, Input, Select } from 'antd'
 import Utils from 'utils'
@@ -34,9 +34,10 @@ const CheckoutForm = ({
   const stripe = useStripe()
   const elements = useElements()
   const [form] = Form.useForm()
-
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
+  const loadingRef = useRef(createOrderObj.isLoading)
+  loadingRef.current = createOrderObj.isLoading
 
   useEffect(() => {
     return () => clearCreateOrderState()
@@ -142,9 +143,10 @@ const CheckoutForm = ({
   }
 
   useEffect(() => {
+    let timer = null
     if (createOrderObj.isLoading === true) {
-      setTimeout(() => {
-        if (createOrderObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           createOrderFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -161,6 +163,7 @@ const CheckoutForm = ({
         setErrorMessage(Utils.buildFailedMessage(createOrderObj.message, 'Giao dịch thất bại'))
       }
     }
+    return () => clearTimeout(timer)
   }, [createOrderObj, onOrderSuccess, createOrderFailure])
 
   const cardElementOptions = {

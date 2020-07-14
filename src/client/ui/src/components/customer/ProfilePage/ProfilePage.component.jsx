@@ -3,7 +3,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import Utils from 'utils'
 import STORAGE from 'utils/storage'
 import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
@@ -26,6 +26,8 @@ const ProfilePage = ({
   onAuthenticate,
 }) => {
   const [infoModal, setInfoModal] = useState({})
+  const loadingRef = useRef(sendVerifyEmailObj.isLoading)
+  loadingRef.current = sendVerifyEmailObj.isLoading
 
   useEffect(() => {
     if (currentUser && !Utils.isEmailVerified(currentUser.roles)) {
@@ -46,9 +48,10 @@ const ProfilePage = ({
   }, [onAuthenticate])
 
   useEffect(() => {
+    let timer = null
     if (sendVerifyEmailObj.isLoading === true) {
-      setTimeout(() => {
-        if (sendVerifyEmailObj.isLoading === true) {
+      timer = setTimeout(() => {
+        if (loadingRef.current === true) {
           sendVerifyEmailFailure({ message: DEFAULT_ERR_MESSAGE })
         }
       }, TIMEOUT_MILLISECONDS)
@@ -84,6 +87,7 @@ const ProfilePage = ({
         })
       }
     }
+    return () => clearTimeout(timer)
   }, [sendVerifyEmailObj, closeInfoModal, sendVerifyEmailFailure])
 
   const onSendVerifyEmail = async () => {
