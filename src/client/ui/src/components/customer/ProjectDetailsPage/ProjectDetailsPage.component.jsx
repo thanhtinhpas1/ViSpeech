@@ -141,23 +141,25 @@ const ProjectDetailsPage = ({
               {getProjectInfoObj.project && (
                 <>
                   <h4 className="card-title mb-0">{getProjectInfoObj.project.name}</h4>
-                  {currentUser && getProjectInfoObj.project.userId === currentUser._id && (
-                    <>
-                      <Link
-                        to={`${CUSTOMER_PATH}/assign-permission?projectId=${getProjectInfoObj.project._id}`}
-                        className="btn btn-sm btn-auto btn-primary d-sm-block d-none"
-                      >
-                        Mời tham gia
-                        <em className="fas fa-user-plus ml-3" />
-                      </Link>
-                      <Link
-                        to={`${CUSTOMER_PATH}/assign-permission?projectId=${getProjectInfoObj.project._id}`}
-                        className="btn btn-icon btn-sm btn-primary d-sm-none"
-                      >
-                        <em className="fas fa-user-plus" />
-                      </Link>
-                    </>
-                  )}
+                  {currentUser &&
+                    getProjectInfoObj.project.userId === currentUser._id &&
+                    getProjectInfoObj.project.isValid && (
+                      <>
+                        <Link
+                          to={`${CUSTOMER_PATH}/assign-permission?projectId=${getProjectInfoObj.project._id}`}
+                          className="btn btn-sm btn-auto btn-primary d-sm-block d-none"
+                        >
+                          Mời tham gia
+                          <em className="fas fa-user-plus ml-3" />
+                        </Link>
+                        <Link
+                          to={`${CUSTOMER_PATH}/assign-permission?projectId=${getProjectInfoObj.project._id}`}
+                          className="btn btn-icon btn-sm btn-primary d-sm-none"
+                        >
+                          <em className="fas fa-user-plus" />
+                        </Link>
+                      </>
+                    )}
                 </>
               )}
             </div>

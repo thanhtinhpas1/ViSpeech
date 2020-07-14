@@ -63,7 +63,7 @@ export const EventHandlers = [
 
     PermissionWelcomedHandler,
 
-    // send email assign permissison
+    // send email assign permission
     PermissionAssignEmailSentHandler,
     PermissionAssignEmailSentSuccessHandler,
     PermissionAssignEmailSentFailedHandler,

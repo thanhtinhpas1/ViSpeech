@@ -26,11 +26,15 @@ export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAss
             const assignee = await getMongoRepository(UserDto).findOne({username: assigneeUsername});
             if (!assignee) {
                 throw new NotFoundException(`Assignee with username ${assigneeUsername} does not exist.`)
+            } else if (!assignee.isActive) {
+                throw new BadRequestException(`Assignee with username ${assigneeUsername} is not active.`);
             }
 
             const project = await getMongoRepository(ProjectDto).findOne({_id: projectId});
             if (!project) {
                 throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
+            } else if (!project.isValid) {
+                throw new BadRequestException(`Project with _id ${projectId} is not valid.`);
             }
 
             const assigner = await getMongoRepository(UserDto).findOne({_id: assignerId});

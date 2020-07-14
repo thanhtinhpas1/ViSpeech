@@ -46,11 +46,15 @@ export class VerifyEmailGuard implements CanActivate {
             throw new UnauthorizedException();
         }
         const decodedEmailToken = this.jwtService.decode(emailToken);
-        if (!decodedEmailToken || !decodedEmailToken['id']) {
-            throw new BadRequestException("Token is invalid.");
+        const userId = decodedEmailToken['id'];
+        const exp = decodedEmailToken['exp'];
+        if (!decodedEmailToken || !userId) {
+            throw new BadRequestException('Token is invalid.');
         }
-
-        const user = await getMongoRepository(UserDto).findOne({_id: decodedEmailToken['id']});
-        return user && !Utils.isEmailVerified(user.roles) && decodedEmailToken['id'] === requestJwt['id'];
+        if (Number(`${exp}000`) < Date.now()) {
+            throw new BadRequestException('Token is expired.');
+        }
+        const user = await getMongoRepository(UserDto).findOne({_id: userId});
+        return user && !Utils.isEmailVerified(user.roles) && userId === requestJwt['id'];
     }
 }

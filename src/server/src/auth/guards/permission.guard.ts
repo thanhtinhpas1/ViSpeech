@@ -51,7 +51,6 @@ export class AssignPermissionGuard implements CanActivate {
         const isAdmin = UserUtils.isAdmin(payload['roles']);
         const isManagerUser = UserUtils.isManagerUser(payload['roles']);
         return isAdmin || (isManagerUser && assignerId === payload['id']);
-
     }
 }
 
@@ -76,8 +75,12 @@ export class ReplyPermissionAssignGuard implements CanActivate {
         const assigneeId = decodedEmailToken['assigneeId'];
         const projectId = decodedEmailToken['projectId'];
         const permissions = decodedEmailToken['permissions'];
-        if (!decodedEmailToken || !assignerId || !assigneeId || !projectId || !permissions) {
+        const exp = decodedEmailToken['exp'];
+        if (!decodedEmailToken || !assignerId || !assigneeId || !projectId || !permissions || !exp) {
             throw new BadRequestException('Token is invalid.');
+        }
+        if (Number(`${exp}000`) < Date.now()) {
+            throw new BadRequestException('Token is expired.');
         }
 
         const permission = await getMongoRepository(PermissionDto).findOne({
