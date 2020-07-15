@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React from 'react'
-import { Row, Col, Divider } from 'antd'
+import { Divider } from 'antd'
 import './StatisticsPage.style.scss'
 import StatisticsProject from './components/StatisticsProject/StatisticsProject.container'
 import StatisticsToken from './components/StatisticsToken/StatisticsToken.container'
@@ -13,17 +13,49 @@ import TotalStatisticsToken from './components/TotalStatisticsToken/TotalStatist
 import TotalStatisticsTokenType from './components/TotalStatisticsTokenType/TotalStatisticsTokenType.container'
 
 const StatisticsPage = () => {
-  const options = {
+  const twoYAxisOptions = {
+    responsive: true,
+    tooltips: {
+      mode: 'label',
+    },
+    elements: {
+      line: {
+        fill: false,
+      },
+    },
     scales: {
-      yAxes: [
+      xAxes: [
         {
+          display: true,
+          gridLines: {
+            display: false,
+          },
           ticks: {
             beginAtZero: true,
           },
         },
       ],
-      xAxes: [
+      yAxes: [
         {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          id: 'y-axis-1',
+          gridLines: {
+            display: true,
+          },
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+        {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          id: 'y-axis-2',
+          gridLines: {
+            display: false,
+          },
           ticks: {
             beginAtZero: true,
           },
@@ -31,8 +63,86 @@ const StatisticsPage = () => {
       ],
     },
     maintainAspectRatio: false,
-    responsive: true,
   }
+
+  const twoXAxisOptions = {
+    responsive: true,
+    tooltips: {
+      mode: 'label',
+    },
+    elements: {
+      line: {
+        fill: false,
+      },
+    },
+    scales: {
+      yAxes: [
+        {
+          display: true,
+          gridLines: {
+            display: false,
+          },
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+      xAxes: [
+        {
+          type: 'linear',
+          display: true,
+          position: 'bottom',
+          id: 'x-axis-1',
+          gridLines: {
+            display: true,
+          },
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+        {
+          type: 'linear',
+          display: true,
+          position: 'top',
+          id: 'x-axis-2',
+          gridLines: {
+            display: true,
+          },
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+    maintainAspectRatio: false,
+  }
+
+  // const options = {
+  //   scales: {
+  //     yAxes: [
+  //       {
+  //         gridLines: {
+  //           display: false,
+  //         },
+  //         ticks: {
+  //           beginAtZero: true,
+  //         },
+  //       },
+  //     ],
+  //     xAxes: [
+  //       {
+  //         gridLines: {
+  //           display: true,
+  //         },
+  //         ticks: {
+  //           beginAtZero: true,
+  //         },
+  //       },
+  //     ],
+  //   },
+  //   maintainAspectRatio: false,
+  //   responsive: true,
+  // }
 
   return (
     <div className="page-content statistics-page">
@@ -58,67 +168,43 @@ const StatisticsPage = () => {
             <div className="tab-content">
               <div className="tab-pane fade active show" id="statistics-by-id-list">
                 <div className="gaps-1x" />
-                <Row gutter={16}>
-                  <Col>
-                    <div className="card-head">
-                      <h4 className="card-title">Thống kê theo dự án</h4>
-                    </div>
-                    <div className="gaps-1x" />
-                    <StatisticsProject chartOptions={options} />
-                  </Col>
-                </Row>
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê theo dự án</h4>
+                </div>
+                <div className="gaps-1x" />
+                <StatisticsProject chartOptions={twoYAxisOptions} />
                 <Divider />
-                <Row gutter={16}>
-                  <Col>
-                    <div className="card-head">
-                      <h4 className="card-title">Thống kê theo API key</h4>
-                    </div>
-                    <div className="gaps-1x" />
-                    <StatisticsToken chartOptions={options} />
-                  </Col>
-                </Row>
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê theo API key</h4>
+                </div>
+                <div className="gaps-1x" />
+                <StatisticsToken chartOptions={twoYAxisOptions} />
                 <Divider />
-                <Row gutter={16}>
-                  <Col>
-                    <div className="card-head">
-                      <h4 className="card-title">Thống kê theo loại API key</h4>
-                    </div>
-                    <div className="gaps-1x" />
-                    <StatisticsTokenType chartOptions={options} />
-                  </Col>
-                </Row>
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê theo loại API key</h4>
+                </div>
+                <div className="gaps-1x" />
+                <StatisticsTokenType chartOptions={twoYAxisOptions} />
               </div>
               <div className="tab-pane fade" id="user-total-statistics-list">
                 <div className="gaps-1x" />
-                <Row gutter={16}>
-                  <Col>
-                    <div className="card-head">
-                      <h4 className="card-title">Thống kê theo dự án</h4>
-                    </div>
-                    <div className="gaps-1x" />
-                    <TotalStatisticsProject chartOptions={options} />
-                  </Col>
-                </Row>
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê theo dự án</h4>
+                </div>
+                <div className="gaps-1x" />
+                <TotalStatisticsProject chartOptions={twoXAxisOptions} />
                 <Divider />
-                <Row gutter={16}>
-                  <Col>
-                    <div className="card-head">
-                      <h4 className="card-title">Thống kê theo API key</h4>
-                    </div>
-                    <div className="gaps-1x" />
-                    <TotalStatisticsToken chartOptions={options} />
-                  </Col>
-                </Row>
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê theo API key</h4>
+                </div>
+                <div className="gaps-1x" />
+                <TotalStatisticsToken chartOptions={twoXAxisOptions} />
                 <Divider />
-                <Row gutter={16}>
-                  <Col>
-                    <div className="card-head">
-                      <h4 className="card-title">Thống kê theo loại API key</h4>
-                    </div>
-                    <div className="gaps-1x" />
-                    <TotalStatisticsTokenType chartOptions={options} />
-                  </Col>
-                </Row>
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê theo loại API key</h4>
+                </div>
+                <div className="gaps-1x" />
+                <TotalStatisticsTokenType chartOptions={twoXAxisOptions} />
               </div>
             </div>
           </div>

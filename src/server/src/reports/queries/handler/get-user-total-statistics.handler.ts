@@ -51,7 +51,8 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
                     _id: {
                         userId: '$userId'
                     },
-                    usedMinutes: {$sum: '$usedMinutes'}
+                    usedMinutes: {$sum: '$usedMinutes'},
+                    totalRequests: {$sum: '$totalRequests'}
                 }
             }
             aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
@@ -63,19 +64,19 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
             if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
                 const tokenTypes = await this.tokenTypeRepository.find();
                 for (const tokenType of tokenTypes) {
-                    data.push({data: tokenType, usedMinutes: 0});
+                    data.push({data: tokenType, usedMinutes: 0, totalRequests: 0});
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN) {
                 const tokens = await this.tokenRepository.find({userId, isValid: true});
                 for (const token of tokens) {
                     const project = await this.projectRepository.findOne({_id: token.projectId.toString()});
                     const projectName = project ? project.name : '';
-                    data.push({data: {...token, projectName}, usedMinutes: 0});
+                    data.push({data: {...token, projectName}, usedMinutes: 0, totalRequests: 0});
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
                 const projects = await this.projectRepository.find({userId, isValid: true});
                 for (const project of projects) {
-                    data.push({data: project, usedMinutes: 0});
+                    data.push({data: project, usedMinutes: 0, totalRequests: 0});
                 }
             }
 

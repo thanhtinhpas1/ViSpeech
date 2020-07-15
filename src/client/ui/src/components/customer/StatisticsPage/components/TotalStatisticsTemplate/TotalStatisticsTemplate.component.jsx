@@ -60,7 +60,8 @@ const TotalStatisticsTemplate = ({
         data.forEach(element => {
           dataChart.push({
             display: element.data.display,
-            value: element.usedMinutes,
+            value1: element.usedMinutes,
+            value2: element.totalRequests,
           })
         })
       }
@@ -309,13 +310,30 @@ const TotalStatisticsTemplate = ({
     labels: chartData.map(item => item.display),
     datasets: [
       {
+        type: 'horizontalBar',
         label: 'Số phút đã dùng (phút)',
-        data: chartData.map(item => item.value),
-        backgroundColor: 'rgba(255,99,132,0.2)',
-        borderColor: 'rgba(255,99,132,1)',
+        data: chartData.map(item => item.value1),
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+        borderColor: 'rgba(255, 206, 86, 1)',
         borderWidth: 1,
-        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-        hoverBorderColor: 'rgba(255,99,132,1)',
+        hoverBackgroundColor: 'rgba(255, 206, 86, 0.4)',
+        hoverBorderColor: 'rgba(255, 206, 86, 1)',
+        fill: false,
+        xAxisID: 'x-axis-1',
+        barPercentage: 0.9,
+        categoryPercentage: 0.9,
+      },
+      {
+        type: 'horizontalBar',
+        label: 'Số lần sử dụng dịch vụ (lần)',
+        data: chartData.map(item => item.value2),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+        hoverBackgroundColor: 'rgba(54, 162, 235, 0.4)',
+        hoverBorderColor: 'rgba(54, 162, 235, 1)',
+        fill: false,
+        xAxisID: 'x-axis-2',
       },
     ],
   }
@@ -367,7 +385,7 @@ const TotalStatisticsTemplate = ({
         </div>
       </Row>
       <Row>
-        <div className="statistics-page__chart">
+        <div className="statistics-page__total-chart">
           {(chartData.length === 0 || getUserTotalStatisticsObj.isLoading) && <Empty />}
           {getUserTotalStatisticsObj.isLoading === false &&
             getUserTotalStatisticsObj.isSuccess === true &&

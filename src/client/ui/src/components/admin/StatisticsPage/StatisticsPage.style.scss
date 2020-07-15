@@ -9,6 +9,11 @@
   .ant-col .card-title {
     text-align: center;
   }
+  .tab-content {
+    .card-title {
+      text-align: center;
+    }
+  }
   &__select-type {
     display: flex;
     justify-content: center;
@@ -29,8 +34,16 @@
     }
   }
   &__chart {
-    width: 100%;
-    min-height: 250px;
+    width: 90%;
+    min-height: 50vh;
+    margin-top: 30px;
+    .ant-empty {
+      margin: 130px 0px;
+    }
+  }
+  &__total-chart {
+    width: 90%;
+    min-height: 80vh;
     margin-top: 30px;
     .ant-empty {
       margin: 130px 0px;

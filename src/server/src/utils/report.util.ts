@@ -261,7 +261,8 @@ export const ReportUtils = {
                     return date.valueOf() === dateReport.valueOf()
                 });
                 if (index > -1) {
-                    result[index].value = report.usedMinutes;
+                    result[index].usedMinutes = report.usedMinutes;
+                    result[index].totalRequests = report.totalRequests;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
                 let index = result.findIndex(el => el.week === ReportUtils.getWeek(dateReport) && el.year === dateReport.getFullYear());
@@ -270,23 +271,27 @@ export const ReportUtils = {
                     index = result.findIndex(el => el.week === 1 && el.year === dateReport.getFullYear() + 1);
                 }
                 if (index > -1) {
-                    result[index].value = report.usedMinutes;
+                    result[index].usedMinutes = report.usedMinutes;
+                    result[index].totalRequests = report.totalRequests;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
                 const index = result.findIndex(el => el.month === dateReport.getMonth() && el.year === dateReport.getFullYear());
                 if (index > -1) {
-                    result[index].value = report.usedMinutes;
+                    result[index].usedMinutes = report.usedMinutes;
+                    result[index].totalRequests = report.totalRequests;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
                 const index = result.findIndex(el => el.quarter === ReportUtils.getQuarter(dateReport.getMonth())
                     && el.year === dateReport.getFullYear());
                 if (index > -1) {
-                    result[index].value = report.usedMinutes;
+                    result[index].usedMinutes = report.usedMinutes;
+                    result[index].totalRequests = report.totalRequests;
                 }
             } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
                 const index = result.findIndex(el => el.year === dateReport.getFullYear());
                 if (index > -1) {
-                    result[index].value = report.usedMinutes;
+                    result[index].usedMinutes = report.usedMinutes;
+                    result[index].totalRequests = report.totalRequests;
                 }
             }
         }
@@ -300,6 +305,7 @@ export const ReportUtils = {
             const index = data.findIndex(el => el.data._id === report._id[groupKey]);
             if (index > -1) {
                 result[index].usedMinutes = report.usedMinutes;
+                result[index].totalRequests = report.totalRequests;
             }
         }
 

@@ -42,7 +42,8 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
             const aggregateGroup = {
                 $group: {
                     _id: {},
-                    usedMinutes: {$sum: '$usedMinutes'}
+                    usedMinutes: {$sum: '$usedMinutes'},
+                    totalRequests: {$sum: '$totalRequests'}
                 }
             }
             aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
@@ -54,12 +55,12 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
             if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
                 const tokenTypes = await this.tokenTypeRepository.find();
                 for (const tokenType of tokenTypes) {
-                    data.push({data: tokenType, usedMinutes: 0});
+                    data.push({data: tokenType, usedMinutes: 0, totalRequests: 0});
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.USER) {
                 const users = await this.userRepository.find();
                 for (const user of users) {
-                    data.push({data: user, usedMinutes: 0});
+                    data.push({data: user, usedMinutes: 0, totalRequests: 0});
                 }
             }
 

@@ -69,35 +69,40 @@ const StatisticsTemplate = ({
           data.forEach(element => {
             dataChart.push({
               display: moment(element.date).format('DD/MM/YYYY'),
-              value: element.value,
+              value1: element.usedMinutes,
+              value2: element.totalRequests,
             })
           })
         } else if (pickerType === TIME_TYPE.WEEK) {
           data.forEach(element => {
             dataChart.push({
               display: `Tuần ${element.week}/${element.year}`,
-              value: element.value,
+              value1: element.usedMinutes,
+              value2: element.totalRequests,
             })
           })
         } else if (pickerType === TIME_TYPE.MONTH) {
           data.forEach(element => {
             dataChart.push({
               display: `${parseInt(element.month) + 1}/${element.year}`,
-              value: element.value,
+              value1: element.usedMinutes,
+              value2: element.totalRequests,
             })
           })
         } else if (pickerType === TIME_TYPE.QUARTER) {
           data.forEach(element => {
             dataChart.push({
               display: `Quý ${element.quarter}/${element.year}`,
-              value: element.value,
+              value1: element.usedMinutes,
+              value2: element.totalRequests,
             })
           })
         } else if (pickerType === TIME_TYPE.YEAR) {
           data.forEach(element => {
             dataChart.push({
               display: `${element.year}`,
-              value: element.value,
+              value1: element.usedMinutes,
+              value2: element.totalRequests,
             })
           })
         }
@@ -357,13 +362,31 @@ const StatisticsTemplate = ({
     labels: chartData.map(item => item.display),
     datasets: [
       {
+        type: 'bar',
         label: 'Số phút đã dùng (phút)',
-        data: chartData.map(item => item.value),
-        backgroundColor: 'rgba(255,99,132,0.2)',
-        borderColor: 'rgba(255,99,132,1)',
+        data: chartData.map(item => item.value1),
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+        borderColor: 'rgba(255, 206, 86, 1)',
         borderWidth: 1,
-        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-        hoverBorderColor: 'rgba(255,99,132,1)',
+        hoverBackgroundColor: 'rgba(255, 206, 86, 0.4)',
+        hoverBorderColor: 'rgba(255, 206, 86, 1)',
+        fill: false,
+        yAxisID: 'y-axis-1',
+        barPercentage: 0.9,
+      },
+      {
+        type: 'line',
+        label: 'Số lần sử dụng dịch vụ (lần)',
+        data: chartData.map(item => item.value2),
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+        pointBorderColor: 'rgba(54, 162, 235, 1)',
+        pointBackgroundColor: 'rgba(54, 162, 235, 0.2)',
+        pointHoverBackgroundColor: 'rgba(54, 162, 235, 0.4)',
+        pointHoverBorderColor: 'rgba(54, 162, 235, 1)',
+        fill: false,
+        yAxisID: 'y-axis-2',
       },
     ],
   }
