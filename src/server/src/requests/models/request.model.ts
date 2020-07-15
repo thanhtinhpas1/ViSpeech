@@ -23,7 +23,7 @@ export class RequestModel extends AggregateRoot {
         this.apply(new AsrCalledRequestEvent(streamId, this.data, tokenDto));
     }
 
-    updateRequestTranscriptFileUrl(streamId: string, requestId: string) {
-        this.apply(new RequestTranscriptFileUrlUpdatedEvent(streamId, requestId, this.data));
+    updateRequestTranscriptFileUrl(streamId: string, requestId: string, tokenDto: TokenDto) {
+        this.apply(new RequestTranscriptFileUrlUpdatedEvent(streamId, requestId, tokenDto, this.data));
     }
 }

@@ -138,17 +138,17 @@ const TrialPage = ({
   }, [updateRequestInfoObj, updateRequestInfoFailure, history, openInfoModal, closeInfoModal, refreshRequestList])
 
   const updateRequest = useCallback(
-    async (requestId, transcriptFileUrl) => {
+    async (requestId, tokenId, transcriptFileUrl) => {
       if (!requestId) return
 
-      updateRequestInfo(requestId, transcriptFileUrl)
+      updateRequestInfo(requestId)
       try {
-        await RequestService.updateRequest(requestId, transcriptFileUrl)
+        await RequestService.updateRequest(requestId, tokenId, transcriptFileUrl)
         invokeCheckSubject.RequestUpdated.subscribe(data => {
           if (data.error != null) {
             updateRequestInfoFailure(data.errorObj)
           } else {
-            updateRequestInfoSuccess(transcriptFileUrl)
+            updateRequestInfoSuccess()
           }
         })
       } catch (err) {
@@ -170,7 +170,7 @@ const TrialPage = ({
     if (createRequestObj.isLoading === false && createRequestObj.isSuccess != null) {
       if (createRequestObj.isSuccess === true) {
         if (asrData && asrData.text) {
-          const { requestId, text } = asrData
+          const { requestId, tokenId, text } = asrData
           setAsrData(null) // duplicate RequestCreatedSuccessEvent => duplicate calling update request
           const fileName = `transcript`
           const textFile = new File([new Blob([text], { type: 'text/plain;charset=utf-8' })], fileName, {
@@ -194,7 +194,7 @@ const TrialPage = ({
                 .child(fileName)
                 .getDownloadURL()
                 .then(async transcriptFileUrl => {
-                  updateRequest(requestId, transcriptFileUrl)
+                  updateRequest(requestId, tokenId, transcriptFileUrl)
                   console.log(`Transcript file was uploaded to firebase storage with url ${transcriptFileUrl}`)
                 })
             }

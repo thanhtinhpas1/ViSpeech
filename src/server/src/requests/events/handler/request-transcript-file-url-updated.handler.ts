@@ -25,13 +25,13 @@ export class RequestTranscriptFileUrlUpdatedHandler implements IEventHandler<Req
 
     async handle(event: RequestTranscriptFileUrlUpdatedEvent) {
         Logger.log(event.requestId, 'RequestTranscriptFileUrlUpdatedEvent'); // write here
-        const {streamId, requestId, url} = event;
+        const {streamId, requestId, tokenDto, url} = event;
 
         try {
             await this.repository.update({_id: requestId}, {transcriptFileUrl: url, status: CONSTANTS.STATUS.SUCCESS, updatedDate: new Date()});
-            this.eventBus.publish(new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, requestId, url));
+            this.eventBus.publish(new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, requestId, tokenDto, url));
         } catch (error) {
-            this.eventBus.publish(new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, requestId, url, error));
+            this.eventBus.publish(new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, requestId, tokenDto, url, error));
         }
     }
 }

@@ -19,8 +19,6 @@ export class ConstTaskService {
         private readonly taskRepository: Repository<TaskDto>,
         @InjectRepository(TokenDto)
         private readonly tokenRepository: Repository<TokenDto>,
-        @InjectRepository(RequestDto)
-        private readonly requestRepository: Repository<RequestDto>,
     ) {
     }
 
@@ -57,6 +55,8 @@ export class ConstTaskService {
 
         try {
             const currentDate = new Date();
+            currentDate.setMilliseconds(0);
+            currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report day from ${previousDate} to ${currentDate}`, taskType);
             const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
@@ -83,6 +83,8 @@ export class ConstTaskService {
 
         try {
             const currentDate = new Date();
+            currentDate.setMilliseconds(0);
+            currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report week from ${previousDate} to ${currentDate}`, taskType);
             const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
@@ -109,6 +111,8 @@ export class ConstTaskService {
 
         try {
             const currentDate = new Date();
+            currentDate.setMilliseconds(0);
+            currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report month from ${previousDate} to ${currentDate}`, taskType);
             const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
@@ -135,6 +139,8 @@ export class ConstTaskService {
 
         try {
             const currentDate = new Date();
+            currentDate.setMilliseconds(0);
+            currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report quarter from ${previousDate} to ${currentDate}`, taskType);
             const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
@@ -161,6 +167,8 @@ export class ConstTaskService {
 
         try {
             const currentDate = new Date();
+            currentDate.setMilliseconds(0);
+            currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report year from ${previousDate} to ${currentDate}`, taskType);
             const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
@@ -182,7 +190,7 @@ export class ConstTaskService {
         const cronTime = CronExpression.EVERY_DAY_AT_MIDNIGHT;
 
         try {
-            const currentDate = new Date(year, month - 1, date);
+            const currentDate = new Date(year, month, date);
             const nextDate = CronUtils.nextDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report day from ${currentDate} to ${nextDate}`, taskType);
             const aggregateMatchDates = CronUtils.aggregateMatchDates(currentDate, nextDate);
@@ -199,7 +207,7 @@ export class ConstTaskService {
         const cronTime = CronExpression.EVERY_WEEK;
 
         try {
-            const currentDate = new Date(year, month - 1, date);
+            const currentDate = new Date(year, month, date);
             const currentWeek = ReportUtils.getWeek(currentDate);
             const firstDateOfWeek = ReportUtils.firstDateOfWeek(currentWeek, year);
             const nextDate = CronUtils.nextDateOfCron(cronTime, firstDateOfWeek);
@@ -218,7 +226,7 @@ export class ConstTaskService {
         const cronTime = CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT;
 
         try {
-            const firstDateOfMonth = ReportUtils.firstDateOfMonth(month - 1, year);
+            const firstDateOfMonth = ReportUtils.firstDateOfMonth(month, year);
             const nextDate = CronUtils.nextDateOfCron(cronTime, firstDateOfMonth);
             this.logger.log(`Generate report month from ${firstDateOfMonth} to ${nextDate}`, taskType);
             const aggregateMatchDates = CronUtils.aggregateMatchDates(firstDateOfMonth, nextDate);
@@ -235,7 +243,7 @@ export class ConstTaskService {
         const cronTime = CronExpression.EVERY_QUARTER;
 
         try {
-            const currentQuarter = ReportUtils.getQuarter(month - 1);
+            const currentQuarter = ReportUtils.getQuarter(month);
             const firstDateOfQuarter = ReportUtils.firstDateOfQuarter(currentQuarter, year);
             const nextDate = CronUtils.nextDateOfCron(cronTime, firstDateOfQuarter);
             this.logger.log(`Generate report quarter from ${firstDateOfQuarter} to ${nextDate}`, taskType);
@@ -280,7 +288,7 @@ export class ConstTaskService {
         await this.createReports(CONSTANTS.STATISTICS_TYPE.PROJECT, aggregateMatchDates, timeType, taskType);
 
         // report for userId, tokenTypeId
-        await this.createReports(CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE, aggregateMatchDates, timeType, taskType);
+        await this.createReports(CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, aggregateMatchDates, timeType, taskType);
 
         // report for userId
         await this.createReportsForAdmin(CONSTANTS.STATISTICS_TYPE.USER, aggregateMatchDates, timeType, taskType);
@@ -301,7 +309,7 @@ export class ConstTaskService {
     }
 
     async deleteRelatedReports(aggregateMatchDates, timeType, reportType) {
-        await this.reportRepository.delete({ createdDate: aggregateMatchDates.$match.createdDate, timeType, reportType });
+        await getMongoRepository(ReportDto).deleteMany({ createdDate: aggregateMatchDates.$match.createdDate, timeType, reportType });
     }
 
     // report for users and tokenTypes
@@ -334,7 +342,11 @@ export class ConstTaskService {
     }
 
     async createReports(reportType: string, aggregateMatchDates, timeType: string, taskType: string) {
-        await this.deleteRelatedReports(aggregateMatchDates, timeType, reportType);
+        if (reportType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
+            await this.deleteRelatedReports(aggregateMatchDates, timeType, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE);
+        } else {
+            await this.deleteRelatedReports(aggregateMatchDates, timeType, reportType);
+        }
 
         // create reports
         const aggregateGroup = CronUtils.aggregateGroup();

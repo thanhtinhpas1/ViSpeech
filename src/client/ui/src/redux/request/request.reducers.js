@@ -38,6 +38,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
       return {
         ...INITIAL_STATE,
       }
+    // GET INFO
     case RequestTypes.CLEAR_REQUEST_INFO:
       return {
         ...state,
@@ -45,14 +46,6 @@ const requestReducer = (state = INITIAL_STATE, action) => {
           ...INITIAL_STATE.getInfo,
         },
       }
-    case RequestTypes.CLEAR_UPDATE_REQUEST_INFO:
-      return {
-        ...state,
-        updateInfo: {
-          ...INITIAL_STATE.updateInfo,
-        },
-      }
-    // GET INFO
     case RequestTypes.GET_REQUEST_INFO:
       return {
         ...state,
@@ -140,6 +133,13 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // UPDATE INFO
+    case RequestTypes.CLEAR_UPDATE_REQUEST_INFO:
+      return {
+        ...state,
+        updateInfo: {
+          ...INITIAL_STATE.updateInfo,
+        },
+      }
     case RequestTypes.UPDATE_REQUEST_INFO:
       return {
         ...state,

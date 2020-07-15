@@ -4,6 +4,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import ReportUtils from 'utils/report.util'
+import { FREE_TOKEN } from 'utils/constant'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
 
 const StatisticsToken = ({
@@ -31,7 +32,7 @@ const StatisticsToken = ({
       const tokens = getUserTokenListObj.userTokenList.data.map(token => {
         return {
           ...token,
-          display: token.name,
+          display: token.name.includes(FREE_TOKEN) ? token.name : `${token.projectName} - ${token.name}`,
         }
       })
       setTokenList(tokens)

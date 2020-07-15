@@ -110,8 +110,8 @@ export default class RequestService {
       })
   }
 
-  static updateRequest = (id, transcriptFileUrl) => {
-    const api = `${apiUrl}/requests/transcriptFileUrl/${id}`
+  static updateRequest = (requestId, tokenId, transcriptFileUrl) => {
+    const api = `${apiUrl}/requests/transcriptFileUrl/${requestId}/${tokenId}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400

@@ -6,10 +6,13 @@ import { map } from 'rxjs/operators';
 import { CONSTANTS } from 'common/constant';
 import { EventStore } from '../../core/event-store/lib';
 import { TokenUpdatedEvent } from '../../tokens/events/impl/token-updated.event';
+import { RequestTranscriptFileUrlUpdatedSuccessEvent } from 'requests/events/impl/request-transcript-file-url-updated.event';
+import { ConstTaskService } from 'tasks/services/const-task.service';
 
 @Injectable()
 export class CallAsrSagas {
     constructor(
+        private readonly cronTaskService: ConstTaskService,
         private readonly eventStore: EventStore,
     ) {
     }
@@ -21,12 +24,34 @@ export class CallAsrSagas {
             map((event: AsrCalledRequestEvent) => {
                 Logger.log('Inside [RequestSagas] asrCalledRequest Saga', 'RequestSagas');
                 const {streamId, requestDto, tokenDto} = event;
-                if (requestDto.status === CONSTANTS.STATUS.IN_PROGRESS) {
+                if (CONSTANTS.STATUS.SUCCESS === requestDto.status) {
+                    // generate report
+                    const date = new Date();
+                    this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
+                    // update token usedMinutes
                     const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
                     updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
                     this.eventStore.publish(updateTokenEvent, '$ce-token');
                 }
                 // else do nothing
+            })
+        );
+    };
+
+    @Saga()
+    requestTranscriptFileUrlUpdatedSuccess = (events$: Observable<any>): Observable<void> => {
+        return events$.pipe(
+            ofType(RequestTranscriptFileUrlUpdatedSuccessEvent),
+            map((event: RequestTranscriptFileUrlUpdatedSuccessEvent) => {
+                Logger.log('Inside [RequestSagas] requestTranscriptFileUrlUpdatedSuccess Saga', 'RequestSagas');
+                const {streamId, tokenDto } = event;
+                // generate report
+                const date = new Date();
+                this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
+                // update token usedMinutes
+                const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
+                updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
+                this.eventStore.publish(updateTokenEvent, '$ce-token');
             })
         );
     };

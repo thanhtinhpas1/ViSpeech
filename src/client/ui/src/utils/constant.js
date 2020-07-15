@@ -78,3 +78,4 @@ export const USER_TYPE = {
 }
 export const MONETARY_UNIT = 'vnđ'
 export const TIMEOUT_MILLISECONDS = 30000
+export const FREE_TOKEN = 'API key miễn phí'

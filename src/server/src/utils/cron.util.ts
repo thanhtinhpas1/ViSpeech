@@ -3,7 +3,11 @@ import { Logger } from '@nestjs/common';
 
 export const CronUtils = {
     previousDateOfCron(cron: string, currentDate?: Date): Date {
-        if (!currentDate) currentDate = new Date();
+        if (!currentDate) {
+            currentDate = new Date();
+            currentDate.setMilliseconds(0);
+            currentDate.setSeconds(0);
+        }
         const options = {
             currentDate,
             tz: 'Asia/Ho_Chi_Minh'

@@ -4,6 +4,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import ReportUtils from 'utils/report.util'
+import { FREE_TOKEN } from 'utils/constant'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsToken = ({
@@ -21,7 +22,9 @@ const TotalStatisticsToken = ({
           ...item,
           data: {
             ...item.data,
-            display: item.data.name,
+            display: item.data.name.includes(FREE_TOKEN)
+              ? item.data.name
+              : `${item.data.projectName} - ${item.data.name}`,
           },
         }
       })

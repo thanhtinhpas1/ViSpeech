@@ -380,7 +380,7 @@ const StatisticsTemplate = ({
           {data.length > 0 && data[0]._id && (
             <Select
               defaultValue={data[0]._id}
-              style={{ minWidth: 180 }}
+              style={{ minWidth: 220 }}
               onChange={onChangeIdData}
               placeholder={placeHolderSelectId.found}
             >

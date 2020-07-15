@@ -5,7 +5,7 @@ import { CONSTANTS } from 'common/constant';
 import { Response } from 'express'
 import { RequestService } from 'requests/services/request.service';
 import { FindRequestsQuery } from 'requests/queries/impl/find-requests.query';
-import { FindRequestsParam, RequestIdParamsDto } from 'requests/dtos/requests.dto';
+import { FindRequestsParam, UpdateRequestParamsDto } from 'requests/dtos/requests.dto';
 import { Roles } from 'auth/roles.decorator';
 import { AuthService } from 'auth/auth.service';
 import { RequestGuard } from 'auth/guards/request.guard';
@@ -63,13 +63,14 @@ export class HistoriesController {
     /*--------------------------------------------*/
     @ApiOperation({tags: ['Update Request TranscriptFileUrl']})
     @ApiResponse({status: 200, description: 'Update Request TranscriptFileUrl.'})
-    @Put('/transcriptFileUrl/:_id')
+    @Put('/transcriptFileUrl/:_id/:tokenId')
     async updateRequest(
-        @Param() requestIdDto: RequestIdParamsDto,
+        @Param() params: UpdateRequestParamsDto,
         @Body() body,
     ) {
-        const streamId = requestIdDto._id;
-        return this.requestService.updateRequestTranscriptFileUrl(streamId, requestIdDto._id, body.transcriptFileUrl);
+        const { _id, tokenId } = params;
+        const streamId = _id;
+        return this.requestService.updateRequestTranscriptFileUrl(streamId, _id, tokenId, body.transcriptFileUrl);
     }
 
     /* Find Request */

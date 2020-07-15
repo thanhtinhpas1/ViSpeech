@@ -75,21 +75,21 @@ export class AsrController {
         axios.post(url, formData, {headers: formData.getHeaders()}).then(result => {
             requestStatus = CONSTANTS.STATUS.IN_PROGRESS;
             asrData = result.data?.text
-            // send back requestId
+            // send back requestId, tokenId
             result.data.requestId = requestId;
+            result.data.tokenId = requestDto.tokenId;
             return res.status(HttpStatus.OK).json(result.data);
         }).catch(err => {
             Logger.error(err.message, 'RequestCall');
             requestStatus = CONSTANTS.STATUS.FAILURE;
             return res.status(HttpStatus.BAD_REQUEST).send();
         }).finally(async () => {
-            if (requestStatus === CONSTANTS.STATUS.SUCCESS) {
-                tokenDto.usedMinutes = usedMinutes + duration;
-            }
-
             requestDto.status = requestStatus;
-            if (requestStatus === CONSTANTS.STATUS.IN_PROGRESS && !asrData) {
-                requestDto.status = CONSTANTS.STATUS.SUCCESS
+            if (requestStatus === CONSTANTS.STATUS.IN_PROGRESS) {
+                tokenDto.usedMinutes = usedMinutes + duration;
+                if (!asrData) {
+                    requestDto.status = CONSTANTS.STATUS.SUCCESS
+                }
             }
 
             this.requestService.callAsr(requestId, requestDto, tokenDto);

@@ -140,5 +140,6 @@ export const CONSTANTS = {
         VERIFY_EMAIL: 1,
         REPLY_PERMISSION_ASSIGN: 2,
         RESET_PASSWORD: 1,
-    }
+    },
+    FREE_TOKEN: 'API key miễn phí'
 };

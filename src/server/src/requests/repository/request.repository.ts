@@ -19,10 +19,10 @@ export class RequestRepository {
         return request;
     }
 
-    async updateRequestTranscriptFileUrl(streamId: string, requestId: string, url: string) {
+    async updateRequestTranscriptFileUrl(streamId: string, requestId: string, tokenDto: TokenDto, url: string) {
         const request = new RequestModel(requestId);
         request.setData(url);
-        request.updateRequestTranscriptFileUrl(streamId, requestId);
+        request.updateRequestTranscriptFileUrl(streamId, requestId, tokenDto);
         return request;
     }
 }

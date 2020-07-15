@@ -17,10 +17,14 @@ export class FindRequestsParam {
     userId: string;
 }
 
-export class RequestIdParamsDto {
+export class UpdateRequestParamsDto {
     @IsNotEmpty(ErrorUtils.getMessage('_id', ERR.IsNotEmpty))
     @IsString(ErrorUtils.getMessage('_id', ERR.IsString))
     _id: string;
+
+    @IsNotEmpty(ErrorUtils.getMessage('tokenId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('tokenId', ERR.IsString))
+    tokenId: string;
 }
 
 export class RequestBody {

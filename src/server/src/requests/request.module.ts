@@ -33,6 +33,9 @@ import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../cor
 import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from './events/impl/request-created.event';
 import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
 import { getMongoRepository } from 'typeorm';
+import { ConstTaskService } from 'tasks/services/const-task.service';
+import { ReportDto } from 'reports/dtos/reports.dto';
+import { TaskDto } from 'tasks/dto/task.dto';
 
 @Module({
     imports: [
@@ -41,6 +44,8 @@ import { getMongoRepository } from 'typeorm';
             ...kafkaClientOptions,
         }]),
         TypeOrmModule.forFeature([
+            ReportDto,
+            TaskDto,
             RequestDto,
             TokenDto,
             TokenTypeDto,
@@ -79,6 +84,7 @@ import { getMongoRepository } from 'typeorm';
         AsrController, HistoriesController,
     ],
     providers: [
+        ConstTaskService,
         RequestService,
         CallAsrSagas,
         TokenRepository,
@@ -133,9 +139,10 @@ export class RequestModule implements OnModuleInit, OnModuleDestroy {
         RequestCreatedSuccessEvent: (streamId, requestDto, tokenDto) => new RequestCreatedSuccessEvent(streamId, requestDto, tokenDto),
         RequestCreatedFailedEvent: (streamId, requestDto, tokenDto, error) => new RequestCreatedFailedEvent(streamId, requestDto, tokenDto, error),
         // update
-        RequestTranscriptFileUrlUpdatedEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedEvent(streamId, id, url),
-        RequestTranscriptFileUrlUpdatedSuccessEvent: (streamId, id, url) => new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, id, url),
-        RequestTranscriptFileUrlUpdatedFailedEvent: (streamId, id, url, error) =>
-            new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, id, url, error),
+        RequestTranscriptFileUrlUpdatedEvent: (streamId, id, tokenDto, url) => new RequestTranscriptFileUrlUpdatedEvent(streamId, id, tokenDto, url),
+        RequestTranscriptFileUrlUpdatedSuccessEvent: (streamId, id, tokenDto, url) =>
+            new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, id, tokenDto, url),
+        RequestTranscriptFileUrlUpdatedFailedEvent: (streamId, id, tokenDto, url, error) =>
+            new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, id, tokenDto, url, error),
     };
 }

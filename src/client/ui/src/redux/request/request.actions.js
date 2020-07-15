@@ -61,14 +61,13 @@ export const getRequestListByUserIdFailure = message => ({
 })
 
 // update request info
-export const updateRequestInfo = (id, data) => ({
+export const updateRequestInfo = id => ({
   type: RequestTypes.UPDATE_REQUEST_INFO,
-  payload: { id, data },
+  payload: { id },
 })
 
-export const updateRequestInfoSuccess = data => ({
+export const updateRequestInfoSuccess = () => ({
   type: RequestTypes.UPDATE_REQUEST_INFO_SUCCESS,
-  payload: data,
 })
 
 export const updateRequestInfoFailure = message => ({

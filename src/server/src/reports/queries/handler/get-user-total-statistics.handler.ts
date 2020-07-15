@@ -68,7 +68,9 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN) {
                 const tokens = await this.tokenRepository.find({userId});
                 for (const token of tokens) {
-                    data.push({data: token, usedMinutes: 0});
+                    const project = await this.projectRepository.findOne({_id: token.projectId.toString()});
+                    const projectName = project ? project.name : '';
+                    data.push({data: {...token, projectName}, usedMinutes: 0});
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
                 const projects = await this.projectRepository.find({userId});

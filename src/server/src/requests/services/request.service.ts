@@ -26,8 +26,8 @@ export class RequestService {
         return await this.commandBus.execute(new CallAsrRequestCommand(streamId, requestDto, tokenDto));
     }
 
-    async updateRequestTranscriptFileUrl(streamId: string, requestId: string, url: string) {
-        return await this.commandBus.execute(new UpdateRequestTranscriptFileUrlCommand(streamId, requestId, url));
+    async updateRequestTranscriptFileUrl(streamId: string, requestId: string, tokenId: string, url: string) {
+        return await this.commandBus.execute(new UpdateRequestTranscriptFileUrlCommand(streamId, requestId, tokenId, url));
     }
 
     async findOne(findRequestQuery: FindRequestQuery): Promise<RequestDto> {

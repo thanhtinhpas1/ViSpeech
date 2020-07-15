@@ -24,8 +24,8 @@ const mapDispatchToProps = dispatch => ({
   createRequest: () => dispatch(createRequest()),
   createRequestSuccess: () => dispatch(createRequestSuccess()),
   createRequestFailure: () => dispatch(createRequestFailure()),
-  updateRequestInfo: (requestId, transcriptFileUrl) => dispatch(updateRequestInfo(requestId, transcriptFileUrl)),
-  updateRequestInfoSuccess: info => dispatch(updateRequestInfoSuccess(info)),
+  updateRequestInfo: requestId => dispatch(updateRequestInfo(requestId)),
+  updateRequestInfoSuccess: () => dispatch(updateRequestInfoSuccess()),
   updateRequestInfoFailure: message => dispatch(updateRequestInfoFailure(message)),
   getRequestListByUserId: (userId, { pagination, sortField, sortOrder, filters }) =>
     dispatch(getRequestListByUserId(userId, { pagination, sortField, sortOrder, filters })),
