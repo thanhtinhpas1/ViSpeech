@@ -67,6 +67,7 @@ We practice continuous integration and deployment. Every merge to master causes 
 <p align="center">
   <img src="https://topdev.vn/blog/wp-content/uploads/2019/05/jenkins.png" width="70%" alt="cicd" />
 </p>
+
 ## Running the app
 
 ```bash
