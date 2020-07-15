@@ -110,6 +110,9 @@ const TrialPage = ({
     setNewRequest({})
     getRequestListByUserId(currentUser._id, {
       pagination: DEFAULT_PAGINATION.SIZE_5,
+      filters: {
+        audioFileUrl: ['true'],
+      },
       sortField: 'createdDate',
       sortOrder: SORT_ORDER.DESC,
     })

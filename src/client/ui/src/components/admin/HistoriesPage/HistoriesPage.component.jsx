@@ -51,6 +51,7 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
       sorter: true,
       render: duration => <span>{duration}</span>,
       width: 180,
+      align: 'center',
     },
     {
       title: 'Thời gian tạo',

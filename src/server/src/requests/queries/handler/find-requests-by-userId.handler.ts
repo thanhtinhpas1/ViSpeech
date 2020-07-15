@@ -52,13 +52,21 @@ export class FindRequestsByUserIdHandler implements IQueryHandler<FindRequestsBy
                 if (filters['status']) {
                     findOptions.where['status'] = filters['status']
                 }
+                if (filters['audioFileUrl']) {
+                    const shouldAudioFileUrlExist = Utils.convertToBoolean(filters['audioFileUrl'])
+                    if (!shouldAudioFileUrlExist) {
+                        findOptions.where['audioFileUrl'] = null
+                    } else {
+                        findOptions.where['audioFileUrl'] = { $exists: true, $ne: null }
+                    }
+                }
             }
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)
                 findOptions.order[sortField] = sort.order
             }
 
-            const requests = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
+            const requests = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions});
             for (const request of requests) {
                 const token = await this.tokenRepository.findOne({_id: request.tokenId});
                 const project = await this.projectRepository.findOne({_id: request.projectId});

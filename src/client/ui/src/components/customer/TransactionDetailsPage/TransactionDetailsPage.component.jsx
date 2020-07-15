@@ -68,6 +68,10 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
                 </div>
               </li>
               <li>
+                <div className="data-details-head">Tên API key</div>
+                <div className="data-details-des">{getInfoObj.order.token && getInfoObj.order.token.name}</div>
+              </li>
+              <li>
                 <div className="data-details-head">API key</div>
                 <div className="data-details-des" style={{ wordBreak: 'break-all', whiteSpace: 'nowrap' }}>
                   <div className="copy-wrap mgb-1-5x mgt-1-5x w-100">
@@ -92,12 +96,10 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
                 <div className="data-details-head">Loại API key</div>
                 <div className="data-details-des">
                   {getInfoObj.order.tokenType && (
-                    <>
-                      <span className={`dt-type-md badge badge-outline ${getInfoObj.order.tokenType.class} badge-md`}>
-                        {Utils.formatPrice(getInfoObj.order.tokenType.saleOffPrice)} {MONETARY_UNIT} /{' '}
-                        {getInfoObj.order.tokenType.name}
-                      </span>
-                    </>
+                    <span className={`dt-type-md badge badge-outline ${getInfoObj.order.tokenType.class} badge-md`}>
+                      {Utils.formatPrice(getInfoObj.order.tokenType.saleOffPrice)} {MONETARY_UNIT} /{' '}
+                      {getInfoObj.order.tokenType.name}
+                    </span>
                   )}
                 </div>
               </li>

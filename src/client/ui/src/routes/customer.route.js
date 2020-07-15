@@ -5,6 +5,7 @@
 import React from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { CUSTOMER_PATH } from 'utils/constant'
+import Utils from 'utils'
 import CustomerLayout from 'components/customer/CustomerLayout'
 import CustomerHomePage from 'components/customer/HomePage/HomePage.container'
 import TransactionsPage from 'components/customer/TransactionsPage/TransactionsPage.container'
@@ -20,7 +21,7 @@ import StatisticsPage from 'components/customer/StatisticsPage/StatisticsPage.co
 import TrialPage from 'components/customer/TrialPage/TrialPage.container'
 import TrialDetailsPage from 'components/customer/TrialDetailsPage/TrialDetailsPage.container'
 import UpgradeTokenPage from 'components/customer/UpgradeTokenPage/UpgradeTokenPage.container'
-import Utils from 'utils'
+import RequestsPage from '../components/customer/RequestsPage/RequestsPage.container'
 import DocumentsPage from '../components/customer/DocumentsPage/DocumentsPage.component'
 
 const RouteCustomer = ({ currentUser }) => {
@@ -74,6 +75,9 @@ const RouteCustomer = ({ currentUser }) => {
             </Route>
             <Route path={`${CUSTOMER_PATH}/upgrade-token`}>
               <UpgradeTokenPage />
+            </Route>
+            <Route path={`${CUSTOMER_PATH}/requests`}>
+              <RequestsPage />
             </Route>
             <Route exact path={CUSTOMER_PATH}>
               <CustomerHomePage />

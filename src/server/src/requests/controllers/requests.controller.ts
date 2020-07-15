@@ -87,7 +87,7 @@ export class AsrController {
             requestDto.status = requestStatus;
             if (requestStatus === CONSTANTS.STATUS.IN_PROGRESS) {
                 tokenDto.usedMinutes = usedMinutes + duration;
-                if (!asrData) {
+                if (!requestBody?.audioFileUrl || !asrData) {
                     requestDto.status = CONSTANTS.STATUS.SUCCESS
                 }
             }

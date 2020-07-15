@@ -1,15 +1,14 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useCallback, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
+/* eslint-disable no-alert */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react/button-has-type */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useEffect, useCallback } from 'react'
 import * as moment from 'moment'
+import AntdTable from 'components/common/AntdTable/AntdTable.component'
+import { DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
 
-const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUserIdObj, getRequestListByUserId }) => {
-  const [requestData, setRequestData] = useState({ data: [], count: 0 })
-
+const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListByUserId }) => {
   const columns = [
     {
       title: 'Tên dự án',
@@ -75,52 +74,18 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
       width: 240,
       align: 'center',
     },
-    {
-      title: '',
-      dataIndex: '_id',
-      render: (_id, record) => {
-        const isRequestCompleted = [STATUS.SUCCESS.name, STATUS.FAILURE.name].includes(record.status.value)
-        return (
-          <Link
-            to={isRequestCompleted ? `${CUSTOMER_PATH}/request-details/${_id}` : '#!'}
-            className={`btn btn-light-alt btn-xs btn-icon ${isRequestCompleted ? '' : 'disabled'}`}
-          >
-            <em className="ti ti-eye" />
-          </Link>
-        )
-      },
-      align: 'right',
-      width: 60,
-    },
   ]
 
   useEffect(() => {
     const userId = currentUser._id
     if (userId) {
       getRequestListByUserId(userId, {
-        pagination: DEFAULT_PAGINATION.SIZE_5,
-        filters: {
-          audioFileUrl: ['true'],
-        },
+        pagination: DEFAULT_PAGINATION.SIZE_10,
         sortField: 'createdDate',
         sortOrder: SORT_ORDER.DESC,
       })
     }
   }, [currentUser._id, getRequestListByUserId])
-
-  useEffect(() => {
-    if (uploading === false && newRequest.projectName) {
-      const newRequestData = { data: [newRequest, ...requestData.data], count: requestData.count + 1 }
-      setRequestData(newRequestData)
-    }
-  }, [newRequest, requestData, uploading])
-
-  useEffect(() => {
-    setRequestData({ data: [], count: 0 })
-    if (getRequestListByUserIdObj.isLoading === false && getRequestListByUserIdObj.isSuccess != null) {
-      setRequestData(getRequestListByUserIdObj.requestList)
-    }
-  }, [getRequestListByUserIdObj])
 
   const getList = useCallback(
     // eslint-disable-next-line no-unused-vars
@@ -131,7 +96,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
           pagination,
           sortField,
           sortOrder,
-          filters: { ...filters, audioFileUrl: ['true'] },
+          filters,
         })
       }
     },
@@ -139,17 +104,26 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
   )
 
   return (
-    <div style={{ marginTop: 30 }}>
-      <AntdTable
-        dataObj={requestData}
-        columns={columns}
-        fetchData={getList}
-        isLoading={getRequestListByUserIdObj.isLoading}
-        pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-        scrollY={500}
-      />
+    <div className="page-content">
+      <div className="container">
+        <div className="card content-area">
+          <div className="card-innr">
+            <div className="card-head">
+              <h4 className="card-title">Lịch sử sử dụng dịch vụ</h4>
+            </div>
+            <AntdTable
+              dataObj={getRequestListByUserIdObj.requestList}
+              columns={columns}
+              fetchData={getList}
+              isLoading={getRequestListByUserIdObj.isLoading}
+              pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
+              scrollY={700}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
 
-export default RequestTable
+export default RequestsPage

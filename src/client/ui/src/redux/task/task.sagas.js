@@ -12,10 +12,8 @@ const formatTaskList = taskList => {
       ...task,
       previousRunStatus: {
         status: task.previousRunStatus,
-        name: ORDER_STATUS[task.previousRunStatus]
-          ? ORDER_STATUS[task.previousRunStatus].viText
-          : task.previousRunStatus,
-        class: ORDER_STATUS[task.previousRunStatus] ? ORDER_STATUS[task.previousRunStatus].cssClass : 'badge-success',
+        name: ORDER_STATUS[task.previousRunStatus].viText,
+        class: ORDER_STATUS[task.previousRunStatus].cssClass1,
       },
     }
   }

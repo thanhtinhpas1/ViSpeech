@@ -35,9 +35,9 @@ export const STATUS = {
   // -canceled -missing
 }
 export const ORDER_STATUS = {
-  PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass: 'badge-warning' },
-  SUCCESS: { name: 'SUCCESS', viText: 'Thành công', cssClass: 'badge-success' },
-  FAILURE: { name: 'FAILURE', viText: 'Thất bại', cssClass: 'badge-danger' },
+  PENDING: { name: 'PENDING', viText: 'Đang xử lý', cssClass1: 'badge-warning', cssClass2: 'data-state-progress' },
+  SUCCESS: { name: 'SUCCESS', viText: 'Thành công', cssClass1: 'badge-success', cssClass2: 'data-state-approved' },
+  FAILURE: { name: 'FAILURE', viText: 'Thất bại', cssClass1: 'badge-danger', cssClass2: 'data-state-canceled' },
   // -canceled -missing
 }
 export const DEFAULT_ERR_MESSAGE = 'Đã có lỗi xảy ra. Vui lòng thử lại sau ít phút.'

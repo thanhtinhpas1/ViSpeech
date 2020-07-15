@@ -19,7 +19,7 @@ const formatOrderList = orderList => {
       status: {
         value: order.status,
         name: ORDER_STATUS[order.status]?.viText,
-        class: ORDER_STATUS[order.status]?.cssClass,
+        class: ORDER_STATUS[order.status]?.cssClass2,
       },
       tokenType: {
         ...order.tokenType,
@@ -75,7 +75,7 @@ const formatOrderInfo = order => {
     status: {
       status: info.status,
       name: ORDER_STATUS[info.status].viText,
-      class: ORDER_STATUS[info.status].cssClass,
+      class: ORDER_STATUS[info.status].cssClass1,
     },
   }
   return info

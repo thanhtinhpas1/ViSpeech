@@ -18,8 +18,13 @@ const Header = ({ currentUser, authenticate, logout }) => {
         name: 'Trang cá nhân',
       },
       {
-        href: `${CUSTOMER_PATH}/transactions`,
+        href: `${CUSTOMER_PATH}/requests`,
         iconClass: 'ti-book',
+        name: 'Lịch sử sử dụng dịch vụ',
+      },
+      {
+        href: `${CUSTOMER_PATH}/transactions`,
+        iconClass: 'ti-wallet',
         name: 'Lịch sử giao dịch',
       },
       {
@@ -38,11 +43,6 @@ const Header = ({ currentUser, authenticate, logout }) => {
         href: `${CUSTOMER_PATH}/projects`,
         emClass: 'ikon-exchange',
         name: 'Dự án',
-      },
-      {
-        href: `${CUSTOMER_PATH}/transactions`,
-        emClass: 'ikon-transactions',
-        name: 'Lịch sử giao dịch',
       },
       {
         href: `${CUSTOMER_PATH}/reports`,
