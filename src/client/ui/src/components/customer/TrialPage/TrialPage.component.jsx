@@ -63,11 +63,13 @@ const TrialPage = ({
   updateRequestLoadingRef.current = updateRequestInfoObj.isLoading
   const createRequestLoadingRef = useRef(createRequestObj.isLoading)
   createRequestLoadingRef.current = createRequestObj.isLoading
+  const isMounted = useRef(true)
 
   useEffect(() => {
     return () => {
       clearCreateRequestState()
       clearUpdateRequestInfo()
+      isMounted.current = false
     }
   }, [clearCreateRequestState, clearUpdateRequestInfo])
 
@@ -145,10 +147,12 @@ const TrialPage = ({
       try {
         await RequestService.updateRequest(requestId, tokenId, transcriptFileUrl)
         invokeCheckSubject.RequestUpdated.subscribe(data => {
-          if (data.error != null) {
-            updateRequestInfoFailure(data.errorObj)
-          } else {
-            updateRequestInfoSuccess()
+          if (isMounted.current) {
+            if (data.error != null) {
+              updateRequestInfoFailure(data.errorObj)
+            } else {
+              updateRequestInfoSuccess()
+            }
           }
         })
       } catch (err) {
@@ -230,7 +234,6 @@ const TrialPage = ({
       const data = await SpeechService.callAsr(file, url, tokenValue)
       setAsrData(data)
     } catch (err) {
-      refreshRequestList()
       createRequestFailure({ message: err.message })
       console.log(`Error while calling asr: ${err.message}`)
     }

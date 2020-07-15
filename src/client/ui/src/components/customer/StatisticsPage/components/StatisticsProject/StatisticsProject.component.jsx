@@ -28,12 +28,14 @@ const StatisticsProject = ({
 
   useEffect(() => {
     if (getMyProjectListObj.myProjectList.data.length > 0) {
-      const projects = getMyProjectListObj.myProjectList.data.map(project => {
-        return {
-          ...project,
-          display: project.name,
-        }
-      })
+      const projects = getMyProjectListObj.myProjectList.data
+        .filter(project => project.isValid.name === true)
+        .map(project => {
+          return {
+            ...project,
+            display: project.name,
+          }
+        })
       setProjectList(projects)
     }
   }, [getMyProjectListObj])

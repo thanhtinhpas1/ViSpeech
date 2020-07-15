@@ -29,12 +29,14 @@ const StatisticsToken = ({
 
   useEffect(() => {
     if (getUserTokenListObj.userTokenList.data.length > 0) {
-      const tokens = getUserTokenListObj.userTokenList.data.map(token => {
-        return {
-          ...token,
-          display: token.name.includes(FREE_TOKEN) ? token.name : `${token.projectName} - ${token.name}`,
-        }
-      })
+      const tokens = getUserTokenListObj.userTokenList.data
+        .filter(token => token.isValid === true)
+        .map(token => {
+          return {
+            ...token,
+            display: token.name.includes(FREE_TOKEN) ? token.name : `${token.projectName} - ${token.name}`,
+          }
+        })
       setTokenList(tokens)
     }
   }, [getUserTokenListObj])
