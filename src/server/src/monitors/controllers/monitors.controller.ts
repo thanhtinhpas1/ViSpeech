@@ -22,7 +22,7 @@ export class MonitorsController {
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Roles([ CONSTANTS.ROLE.ADMIN ])
     @Get()
-    async getOrders(@Query() getMonitorsQuery: GetMonitorsQuery) {
+    async getMonitors(@Query() getMonitorsQuery: GetMonitorsQuery) {
         return this.monitorsService.getMonitors(getMonitorsQuery);
     }
 }

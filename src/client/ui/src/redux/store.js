@@ -6,13 +6,13 @@ import rootReducer from './root.reducer'
 import rootSagas from './root.saga'
 
 const sagaMiddleWare = createSagaMiddleware()
-const middlewares = [sagaMiddleWare]
+const middleWares = [sagaMiddleWare]
 
 if (process.env.NODE_ENV !== 'production') {
-  middlewares.push(logger)
+  middleWares.push(logger)
 }
 
-export const store = createStore(rootReducer, applyMiddleware(...middlewares))
+export const store = createStore(rootReducer, applyMiddleware(...middleWares))
 sagaMiddleWare.run(rootSagas)
 export const persistor = persistStore(store)
 

@@ -9,6 +9,7 @@ import permissionReducer from './permission/permission.reducers'
 import reportReducer from './report/report.reducers'
 import requestReducer from './request/request.reducers'
 import taskReducer from './task/task.reducers'
+import monitorReducer from './monitor/monitor.reducers'
 
 const userPersistConfig = {
   key: 'user',
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   report: reportReducer,
   request: requestReducer,
   task: taskReducer,
+  monitor: monitorReducer,
 })
 
 export default rootReducer

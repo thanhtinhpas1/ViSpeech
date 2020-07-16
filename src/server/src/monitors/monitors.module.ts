@@ -52,6 +52,22 @@ import { AuthModule } from '../auth/auth.module';
                     persistentSubscriptionName: 'steamName',
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
+                {
+                    type: EventStoreSubscriptionType.CatchUp,
+                    stream: '$ce-monitor',
+                    resolveLinkTos: true, // Default is true (Optional)
+                    lastCheckpoint: 0, // Default is 0 (Optional)
+                },
+                {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: '$ce-monitor',
+                },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: '$ce-monitor',
+                    persistentSubscriptionName: 'steamName',
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
             ],
             eventHandlers: {
                 ...MonitorsModule.eventHandlers,

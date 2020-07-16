@@ -1,5 +1,4 @@
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetOrdersQuery } from '../../orders/queries/impl/get-orders.query';
 import { GetMonitorsQuery } from '../queries/impl/get-monitors.query';
 import { Injectable } from '@nestjs/common';
 
@@ -12,7 +11,7 @@ export class MonitorsService {
     }
 
     async getMonitors(getMonitorsQuery: GetMonitorsQuery) {
-        const query = new GetOrdersQuery();
+        const query = new GetMonitorsQuery();
         Object.assign(query, getMonitorsQuery);
         return await this.queryBus.execute(query);
     }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { DEFAULT_PAGINATION, ADMIN_PATH } from 'utils/constant'
-import TokenSaleGraph from '../TokenSaleGraph/TokenSaleGraph.component'
+import MonitorBeatChart from './components/MonitorBeatChart/MonitorBeatChart.container'
 
 const HomePage = ({
   getOrderListObj,
@@ -105,7 +105,8 @@ const HomePage = ({
           </div>
         </div>
       </div>
-      <TokenSaleGraph orderListObj={getOrderListObj} />
+      {/* <TokenSaleGraph orderListObj={getOrderListObj} /> */}
+      <MonitorBeatChart />
     </>
   )
 }

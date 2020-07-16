@@ -113,10 +113,10 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         const streamName = streams.map(stream => eventPayload.type.includes(stream) ? stream : null)
             .filter(event => event != null)[0];
         let streamId = stream ? stream : `$ce-${ streamName?.toLowerCase() ?? 'user' }`;
-        if (streamName === 'Monitor') {
+        //if (streamName === 'Monitor') {
             // replace with sheep array when have cluster
-            streamId = '$stats-0.0.0.0:2113';
-        }
+            //streamId = '$stats-0.0.0.0:2113';
+        //}
 
         try {
             let version = await this.store.readExpectedVersion(streamId);
@@ -130,10 +130,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 version = lcp;
                 await this.store.writeExpectedVersion(streamId, version + 1);
             } else {
-                if (streamName === 'Monitor') {
-                    await this.store.writeExpectedVersion(streamId, version = version + 1);
-                }
-                else await this.store.writeExpectedVersion(streamId, version + 1);
+                await this.store.writeExpectedVersion(streamId, version + 1);
             }
             await this.eventStore.getConnection().appendToStream(streamId, version, [ eventPayload ]);
         } catch (err) {

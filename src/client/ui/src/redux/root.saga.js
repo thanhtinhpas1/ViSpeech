@@ -7,6 +7,7 @@ import { permissionSaga } from './permission/permission.sagas'
 import { reportSaga } from './report/report.sagas'
 import { requestSaga } from './request/request.sagas'
 import { taskSaga } from './task/task.sagas'
+import { monitorSaga } from './monitor/monitor.sagas'
 
 export default function* rootSagas() {
   yield all([
@@ -18,5 +19,6 @@ export default function* rootSagas() {
     call(reportSaga),
     call(requestSaga),
     call(taskSaga),
+    call(monitorSaga),
   ])
 }

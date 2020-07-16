@@ -29,8 +29,10 @@ export class MonitorBeatHandler implements IEventHandler<$statsCollected> {
                 const monitor = await this.repository.find({ take: 1, skip: 0, order: { createdDate: 'ASC' } })
                 this.repository.delete({ _id: monitor[0]._id });
             }
-            getMongoRepository(MonitorDto).save(new MonitorDto(data));
-            this.eventBus.publish(new MonitorBeatSuccessEvent(streamId, data));
+            const monitor = new MonitorDto(data);
+            const savedData = await getMongoRepository(MonitorDto).save(monitor);
+            monitor.createdDate = savedData.createdDate
+            this.eventBus.publish(new MonitorBeatSuccessEvent(streamId, monitor));
         } catch (error) {
             this.logger.error(error)
             this.eventBus.publish(new MonitorBeatFailedEvent(streamId, data, error));

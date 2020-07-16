@@ -17,7 +17,7 @@ export class GetMonitorsHandler implements IQueryHandler<GetMonitorsQuery> {
     }
 
     async execute(query: GetMonitorsQuery) {
-        Logger.log('Async GetTokensHandler...', 'GetTokensQuery');
+        Logger.log('Async GetMonitorsHandler...', 'GetMonitorsQuery');
         const { offset, limit, sort } = query;
         let snapshots = [];
         try {
@@ -27,7 +27,7 @@ export class GetMonitorsHandler implements IQueryHandler<GetMonitorsQuery> {
             }
             if (sort) {
                 const sortField = Utils.getCorrectSortField(sort.field)
-                findOptions.order[sortField] = sort.order
+                findOptions.order[`data.${sortField}`] = sort.order
             }
             snapshots = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             const count = await this.repository.count(findOptions.where);
