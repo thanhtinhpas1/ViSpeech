@@ -76,7 +76,9 @@ const LoginPage = ({
             loginWithSocialFailure(data.errorObj)
           } else {
             const user = { ...data.userDto }
-            user.roles = [user.roles]
+            if (!Array.isArray(user.roles)) {
+              user.roles = [user.roles]
+            }
             loginWithSocialSuccess(user)
             STORAGE.setPreferences(JWT_TOKEN, user.jwtToken)
           }

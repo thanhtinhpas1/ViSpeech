@@ -38,8 +38,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
         const user = JSON.parse(JSON.stringify(userDto));
         try {
             user.password = Utils.hashPassword(user.password);
-            user.roles = Utils.convertToArray(user.roles);
-            user.roles = user.roles.map(role => {
+            user.roles = Utils.convertToArray(user.roles).map(role => {
                 if (role.name === CONSTANTS.ROLE.ADMIN) return new RoleDto(CONSTANTS.ROLE.USER);
                 return new RoleDto(role.name)
             });
