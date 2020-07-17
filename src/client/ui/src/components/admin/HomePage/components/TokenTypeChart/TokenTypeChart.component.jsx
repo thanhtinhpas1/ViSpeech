@@ -2,14 +2,13 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react'
-import { ColumnLine } from '@ant-design/charts'
+import { Pie } from '@ant-design/charts'
 import ReportUtils from 'utils/report.util'
+import Utils from 'utils'
+import { MONETARY_UNIT } from 'utils/constant'
 
-const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
+const TokenTypeChart = ({ getAdminTotalStatisticsBytokenTypeObj, getAdminTotalStatistics }) => {
   const [data, setData] = useState([])
-  const USED_MINUTES = 'Số phút đã dùng'
-  const TOTAL_REQUESTS = 'Số lần sử dụng dịch vụ'
-  const TIME = 'time'
 
   useEffect(() => {
     const { from, to } = ReportUtils.getPreviousSixMonthsFromNow()
@@ -25,21 +24,23 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
         },
       },
     }
-    getTotalStatistics(ReportUtils.TIME_TYPE.MONTH, queryParams)
-  }, [getTotalStatistics])
+    getAdminTotalStatistics(ReportUtils.STATISTICS_TYPE.TOKEN_TYPE, ReportUtils.TIME_TYPE.MONTH, queryParams)
+  }, [getAdminTotalStatistics])
 
   useEffect(() => {
-    if (getTotalStatisticsObj.isLoading === false && getTotalStatisticsObj.isSuccess === true) {
-      const chartData = getTotalStatisticsObj.data.map(data => {
-        const obj = {}
-        obj[USED_MINUTES] = data.usedMinutes
-        obj[TOTAL_REQUESTS] = data.totalRequests
-        obj[TIME] = `${parseInt(data.month) + 1}/${data.year}`
-        return obj
+    if (
+      getAdminTotalStatisticsBytokenTypeObj.isLoading === false &&
+      getAdminTotalStatisticsBytokenTypeObj.isSuccess === true
+    ) {
+      const chartData = getAdminTotalStatisticsBytokenTypeObj.data.map(item => {
+        return {
+          value: Math.round((item.usedMinutes + Number.EPSILON) * 100) / 100,
+          type: `${Utils.formatPrice(item.data.price)} ${MONETARY_UNIT}/${item.data.minutes} phút`,
+        }
       })
       setData(chartData)
     }
-  }, [getTotalStatisticsObj])
+  }, [getAdminTotalStatisticsBytokenTypeObj])
 
   const onRefreshData = () => {
     const { from, to } = ReportUtils.getPreviousSixMonthsFromNow()
@@ -55,7 +56,7 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
         },
       },
     }
-    getTotalStatistics(ReportUtils.TIME_TYPE.MONTH, queryParams)
+    getAdminTotalStatistics(ReportUtils.STATISTICS_TYPE.TOKEN_TYPE, ReportUtils.TIME_TYPE.MONTH, queryParams)
   }
 
   const DEFAULT_STYLE = {
@@ -65,24 +66,6 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
     fontSize: 15,
   }
 
-  const metaObj = {}
-  metaObj[USED_MINUTES] = {
-    formatter: v => {
-      return `${v} phút`
-    },
-    style: DEFAULT_STYLE,
-  }
-  metaObj[TOTAL_REQUESTS] = {
-    formatter: v => {
-      return `${v} lần`
-    },
-    style: DEFAULT_STYLE,
-  }
-  metaObj[TIME] = {
-    alias: '6 tháng gần đây',
-    style: DEFAULT_STYLE,
-  }
-
   const config = {
     title: {
       visible: false,
@@ -90,15 +73,32 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
     description: {
       visible: false,
     },
-    data: [data, data],
-    xField: TIME,
-    yField: [USED_MINUTES, TOTAL_REQUESTS],
-    xAxis: {
-      label: { autoHide: false, style: DEFAULT_STYLE },
-      title: { style: DEFAULT_STYLE },
+    padding: 'auto',
+    forceFit: true,
+    data,
+    radius: 0.8,
+    angleField: 'value',
+    colorField: 'type',
+    meta: {
+      value: {
+        formatter: v => {
+          return `${v} phút`
+        },
+      },
+      type: {},
     },
-    yAxis: {},
-    meta: { ...metaObj },
+    label: {
+      visible: true,
+      type: 'outer',
+      offset: 40,
+      style: DEFAULT_STYLE,
+    },
+    legend: {
+      position: 'bottom-center',
+      text: {
+        style: DEFAULT_STYLE,
+      },
+    },
   }
 
   return (
@@ -111,12 +111,10 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
               <i className="fas fa-redo" />
             </button>
           </div>
-          <div className="card-content">
-            <ColumnLine forceFit {...config} />
-          </div>
+          <div className="card-content">{data.length > 0 && <Pie {...config} />}</div>
         </div>
       </div>
     </div>
   )
 }
-export default TotalChart
+export default TokenTypeChart

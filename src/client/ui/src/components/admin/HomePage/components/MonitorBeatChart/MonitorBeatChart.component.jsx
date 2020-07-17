@@ -47,7 +47,7 @@ const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
   }, [])
 
   const DEFAULT_STYLE = {
-    fill: 'rgba(0, 0, 0, 0.65)',
+    fill: 'rgba(0, 0, 0, 0.9)',
     stroke: '#ffffff',
     lineWidth: 2,
     fontSize: 15,

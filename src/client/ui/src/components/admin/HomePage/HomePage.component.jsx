@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { DEFAULT_PAGINATION, ADMIN_PATH } from 'utils/constant'
 import MonitorBeatChart from './components/MonitorBeatChart/MonitorBeatChart.container'
 import TotalChart from './components/TotalChart/TotalChart.container'
+import TokenTypeChart from './components/TokenTypeChart/TokenTypeChart.container'
 
 const HomePage = ({
   getOrderListObj,
@@ -104,9 +105,19 @@ const HomePage = ({
           </div>
         </div>
       </div>
-      {/* <TokenSaleGraph orderListObj={getOrderListObj} /> */}
-      <MonitorBeatChart />
-      <TotalChart />
+      <div className="row">
+        <div className="col-12">
+          <MonitorBeatChart />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-lg-7 col-md-12 col-sm-12">
+          <TotalChart />
+        </div>
+        <div className="col-lg-5 col-md-12 col-sm-12">
+          <TokenTypeChart />
+        </div>
+      </div>
     </>
   )
 }

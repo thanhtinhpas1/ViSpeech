@@ -155,6 +155,7 @@ export class ReportsController {
     @ApiOperation({tags: ['Get Total Statistics']})
     @ApiResponse({status: 200, description: 'Get Total Statistics.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get('total-statistics/:timeType')
     async getTotalStatistics(@Query() query: GetTotalStatisticsQuery,
                              @Param() param: GetStatisticsParam) {
