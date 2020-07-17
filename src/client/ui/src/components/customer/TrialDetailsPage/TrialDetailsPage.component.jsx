@@ -107,7 +107,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
   const saveAsDocx = () => {
     getIndex
       .then(async css => {
-        let html = `<html><head lang="en"><style></style></head><body><div class="ql-editor">${editorHtml}</div></body></html>`
+        let html = `<!DOCTYPE html><html><head lang="en"><style></style><meta charset="UTF-8"><title>Transcript File</title></head><body><div class="ql-editor">${editorHtml}</div></body></html>`
         html = juice.inlineContent(html, css)
         const result = await RequestService.downloadTranscript(html, id)
         saveAs(result, 'vietspeech-transcript.docx')
