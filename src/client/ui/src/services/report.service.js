@@ -155,4 +155,41 @@ export default class ReportService {
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
+
+  static getTotalStatistics = (timeType, queryParams) => {
+    const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = queryParams
+    let query = `${Utils.parameterizeObject({ fromDate, toDate })}&${Utils.parameterizeObject({
+      weekObj,
+    })}&${Utils.parameterizeObject({ monthObj })}&${Utils.parameterizeObject({
+      quarterObj,
+    })}&${Utils.parameterizeObject({ fromYear, toYear })}`
+    query = Utils.trimByChar(query, '&')
+
+    const api = `${apiUrl}/reports/total-statistics/${timeType}?${query}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    // eslint-disable-next-line no-undef
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(DEFAULT_ERR_MESSAGE)
+        }
+        return result
+      })
+      .catch(err => {
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
 }

@@ -67,3 +67,19 @@ export const getAdminTotalStatisticsFailure = (message, statisticsType) => ({
   type: ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE,
   payload: { message, statisticsType },
 })
+
+// get total statistics
+export const getTotalStatistics = (timeType, queryParams) => ({
+  type: ReportTypes.GET_TOTAL_STATISTICS,
+  payload: { timeType, queryParams },
+})
+
+export const getTotalStatisticsSuccess = data => ({
+  type: ReportTypes.GET_TOTAL_STATISTICS_SUCCESS,
+  payload: { data },
+})
+
+export const getTotalStatisticsFailure = message => ({
+  type: ReportTypes.GET_TOTAL_STATISTICS_FAILURE,
+  payload: message,
+})

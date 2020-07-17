@@ -61,6 +61,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  getTotalStatistics: {
+    data: [],
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const reportReducer = (state = INITIAL_STATE, action) => {
@@ -184,6 +190,35 @@ const reportReducer = (state = INITIAL_STATE, action) => {
       return returnObjSuccess
     case ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE:
       return returnObjFailure
+    // GET TOTAL STATISTICS
+    case ReportTypes.GET_TOTAL_STATISTICS:
+      return {
+        ...state,
+        getTotalStatistics: {
+          ...INITIAL_STATE.getTotalStatistics,
+          isLoading: true,
+        },
+      }
+    case ReportTypes.GET_TOTAL_STATISTICS_SUCCESS:
+      return {
+        ...state,
+        getTotalStatistics: {
+          ...INITIAL_STATE.getTotalStatistics,
+          isLoading: false,
+          isSuccess: true,
+          data: action.payload.data,
+        },
+      }
+    case ReportTypes.GET_TOTAL_STATISTICS_FAILURE:
+      return {
+        ...state,
+        getTotalStatistics: {
+          ...INITIAL_STATE.getTotalStatistics,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
     default:
       return state
   }

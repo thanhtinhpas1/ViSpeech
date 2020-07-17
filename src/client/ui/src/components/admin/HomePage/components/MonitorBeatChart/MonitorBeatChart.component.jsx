@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect, useRef } from 'react'
-import { LineChart } from 'bizcharts'
+import { Line } from '@ant-design/charts'
 import SocketService from 'services/socket.service'
 import SocketUtils from 'utils/socket.util'
 import { DEFAULT_PAGINATION, SORT_ORDER } from 'utils/constant'
@@ -46,6 +46,68 @@ const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
     }
   }, [])
 
+  const DEFAULT_STYLE = {
+    fill: 'rgba(0, 0, 0, 0.65)',
+    stroke: '#ffffff',
+    lineWidth: 2,
+    fontSize: 15,
+  }
+
+  const config = {
+    title: {
+      visible: false,
+    },
+    description: {
+      visible: false,
+    },
+    padding: 'auto',
+    forceFit: true,
+    data,
+    xField: 'date',
+    yField: 'rate',
+    seriesField: 'type',
+    xAxis: {
+      label: {
+        visible: true,
+        autoHide: true,
+        autoRotate: false,
+        style: DEFAULT_STYLE,
+      },
+    },
+    yAxis: {
+      label: {
+        visible: true,
+        style: DEFAULT_STYLE,
+      },
+    },
+    meta: {
+      rate: {
+        formatter: v => {
+          return `${v} items/s`
+        },
+      },
+      type: {
+        formatter: MonitorUtils.formatTextFunc,
+      },
+    },
+    legend: {
+      position: 'top-center',
+      text: {
+        formatter: MonitorUtils.formatTextFunc,
+        style: DEFAULT_STYLE,
+      },
+    },
+    label: {
+      visible: true,
+      type: 'line',
+      formatter: MonitorUtils.formatTextFunc,
+      style: { ...DEFAULT_STYLE, fontSize: 14 },
+    },
+    // animation: { appear: { animation: 'clipingWithData' } },
+    smooth: true,
+    responsive: true,
+  }
+
   return (
     <div className="row">
       <div className="col-md-12">
@@ -54,51 +116,7 @@ const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
             <h4 className="card-title">Biểu đồ</h4>
           </div>
           <div className="card-content">
-            <LineChart
-              responsive
-              forceFit
-              label={{ visible: true, type: 'line' }}
-              legend={{ position: 'top-center' }}
-              tooltip={{
-                shared: true,
-                showCrosshairs: true,
-                crosshairs: { type: 'x' },
-                formatter: (xField, yField, seriesField) => {
-                  if (seriesField === 'mainQueue') {
-                    return { name: 'Main queue', value: `${yField} items/s` }
-                  }
-                  if (seriesField === 'monitoringQueue') {
-                    return { name: 'Monitor queue', value: `${yField} items/s` }
-                  }
-                  return { name: 'Persistent subscriptions', value: `${yField} items/s` }
-                },
-              }}
-              data={data}
-              title={{
-                visible: false,
-              }}
-              description={{
-                visible: false,
-              }}
-              smooth
-              point={{
-                shape: 'hollow-circle',
-                visible: true,
-                style: () => {},
-              }}
-              xField="date"
-              yField="rate"
-              seriesField="type"
-              xAxis={{
-                label: { autoHide: true, autoRotate: false },
-              }}
-              yAxis={{
-                label: { autoHide: false, formatter: v => `${v} items/s` },
-                line: {
-                  visible: true,
-                },
-              }}
-            />
+            <Line {...config} onlyChangeData />
           </div>
         </div>
       </div>

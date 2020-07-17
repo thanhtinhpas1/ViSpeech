@@ -1,24 +1,29 @@
 import * as moment from 'moment'
 
 const MonitorUtils = {
+  QUEUE: {
+    MAIN: 'mainQueue',
+    MONITOR: 'monitoringQueue',
+    PERSISTENT_SUBSCRIPTIONS: 'persistentSubscriptions',
+  },
   mapMonitorDataFunc: monitor => {
-    return {
-      mainQueue: {
-        rate: monitor.data['es-queue-MainQueue-avgItemsPerSecond'],
-        time: monitor.data['es-queue-MainQueue-avgProcessingTime'],
-        date: monitor.createdDate,
-      },
-      monitoringQueue: {
-        rate: monitor.data['es-queue-MonitoringQueue-avgItemsPerSecond'],
-        time: monitor.data['es-queue-MonitoringQueue-avgProcessingTime'],
-        date: monitor.createdDate,
-      },
-      persistentSubscriptions: {
-        rate: monitor.data['es-queue-PersistentSubscriptions-avgItemsPerSecond'],
-        time: monitor.data['es-queue-PersistentSubscriptions-avgProcessingTime'],
-        date: monitor.createdDate,
-      },
+    const result = {}
+    result[MonitorUtils.QUEUE.MAIN] = {
+      rate: monitor.data['es-queue-MainQueue-avgItemsPerSecond'],
+      time: monitor.data['es-queue-MainQueue-avgProcessingTime'],
+      date: monitor.createdDate,
     }
+    result[MonitorUtils.QUEUE.MONITOR] = {
+      rate: monitor.data['es-queue-MonitoringQueue-avgItemsPerSecond'],
+      time: monitor.data['es-queue-MonitoringQueue-avgProcessingTime'],
+      date: monitor.createdDate,
+    }
+    result[MonitorUtils.QUEUE.PERSISTENT_SUBSCRIPTIONS] = {
+      rate: monitor.data['es-queue-PersistentSubscriptions-avgItemsPerSecond'],
+      time: monitor.data['es-queue-PersistentSubscriptions-avgProcessingTime'],
+      date: monitor.createdDate,
+    }
+    return result
   },
   convertArrToChartData: data => {
     const result = []
@@ -47,6 +52,15 @@ const MonitorUtils = {
       })
     })
     return result
+  },
+  formatTextFunc: text => {
+    if (text === MonitorUtils.QUEUE.MAIN) {
+      return 'Main queue'
+    }
+    if (text === MonitorUtils.QUEUE.MONITOR) {
+      return 'Monitor queue'
+    }
+    return 'Persistent subscriptions'
   },
 }
 

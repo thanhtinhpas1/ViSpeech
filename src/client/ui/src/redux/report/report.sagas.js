@@ -11,6 +11,8 @@ import {
   getStatisticsByIdFailure,
   getUserTokenTypeStatisticsSuccess,
   getUserTokenTypeStatisticsFailure,
+  getTotalStatisticsSuccess,
+  getTotalStatisticsFailure,
 } from './report.actions'
 
 // get statistics by id
@@ -65,6 +67,19 @@ export function* getAdminTotalStatisticsSaga() {
   yield takeEvery(ReportTypes.GET_ADMIN_TOTAL_STATISTICS, getAdminTotalStatistics)
 }
 
+// get total statistics
+function* getTotalStatistics({ payload: { timeType, queryParams } }) {
+  try {
+    const data = yield ReportService.getTotalStatistics(timeType, queryParams)
+    yield put(getTotalStatisticsSuccess(data))
+  } catch (err) {
+    yield put(getTotalStatisticsFailure(err.message))
+  }
+}
+export function* getTotalStatisticsSaga() {
+  yield takeEvery(ReportTypes.GET_TOTAL_STATISTICS, getTotalStatistics)
+}
+
 // =================================
 
 export function* reportSaga() {
@@ -73,5 +88,6 @@ export function* reportSaga() {
     call(getUserTokenTypeStatisticsSaga),
     call(getUserTotalStatisticsSaga),
     call(getAdminTotalStatisticsSaga),
+    call(getTotalStatisticsSaga),
   ])
 }

@@ -13,6 +13,7 @@ import { GetStatisticsParam } from 'reports/dtos/statistics.dto';
 import { GetStatisticsByTokenTypeIdAndUserIdQuery } from 'reports/queries/impl/get-statistics-by-tokenTypeId-userId.query';
 import { GetUserTotalStatisticsQuery } from 'reports/queries/impl/get-user-total-statistics.query';
 import { GetAdminTotalStatisticsQuery } from 'reports/queries/impl/get-admin-total-statistics.query';
+import { GetTotalStatisticsQuery } from 'reports/queries/impl/get-total-statistics.query';
 
 @Controller('reports')
 @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
@@ -146,5 +147,19 @@ export class ReportsController {
         query.statisticsType = statisticsType;
         query.timeType = timeType;
         return this.reportsService.getUserTotalStatistics(query);
+    }
+
+    /* Get Total Statistics */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Get Total Statistics']})
+    @ApiResponse({status: 200, description: 'Get Total Statistics.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
+    @Get('total-statistics/:timeType')
+    async getTotalStatistics(@Query() query: GetTotalStatisticsQuery,
+                             @Param() param: GetStatisticsParam) {
+        const {timeType} = param;
+        query.timeType = timeType;
+        return this.reportsService.getTotalStatistics(query);
     }
 }

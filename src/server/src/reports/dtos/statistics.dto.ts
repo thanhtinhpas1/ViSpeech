@@ -85,7 +85,7 @@ export class GetStatisticsParam {
     statisticsType: string;
 }
 
-export class GetStatisticsQuery {
+export class GetStatisticsBaseQuery {
     constructor(id: string, statisticsType: string, timeType: string) {
         this.id = id;
         this.statisticsType = statisticsType;
@@ -154,7 +154,7 @@ export class GetStatisticsQuery {
     toYear: number;
 }
 
-export class GetTotalStatisticsQuery {
+export class GetTotalStatisticsBaseQuery {
     constructor(statisticsType: string, timeType: string) {
         this.statisticsType = statisticsType;
         this.timeType = timeType;

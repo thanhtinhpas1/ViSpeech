@@ -26,12 +26,12 @@ export const ReportUtils = {
     nextDate: (currentDate: Date) => {
         return ReportUtils.addDays(new Date(currentDate), 1);
     },
-    getDates: (fromDate: Date, toDate: Date) => {
+    getDates: (fromDate: Date, toDate: Date, values) => {
         const dateArray = [];
         let currentDate = ReportUtils.getOnlyDate(fromDate);
         const endDate = ReportUtils.getOnlyDate(toDate);
         while (currentDate <= endDate) {
-            dateArray.push({date: new Date(currentDate), value: 0});
+            dateArray.push({date: new Date(currentDate), ...values});
             currentDate = ReportUtils.nextDate(currentDate);
         }
         return dateArray;
@@ -170,9 +170,12 @@ export const ReportUtils = {
     prepareStatisticalData: (type, queryParams) => {
         let data = [];
         const {fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear} = queryParams;
-
+        const values = {
+            usedMinutes: 0,
+            totalRequests: 0,
+        }
         if (type === CONSTANTS.TIME_TYPE.DATE) {
-            data = ReportUtils.getDates(fromDate, toDate);
+            data = ReportUtils.getDates(fromDate, toDate, values);
         } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
             const fromWeek = weekObj.from.data;
             const toWeek = weekObj.to.data;
@@ -181,20 +184,20 @@ export const ReportUtils = {
             const totalWeekOfFromYear = ReportUtils.getTotalWeeksOfYear(fromYear);
             if (fromYear !== toYear) {
                 for (let i = fromWeek; i <= totalWeekOfFromYear; i++) {
-                    data.push({week: i, year: fromYear, value: 0});
+                    data.push({week: i, year: fromYear, ...values});
                 }
                 for (let j = fromYear + 1; j < toYear; j++) {
                     const totalWeekOfYear = ReportUtils.getTotalWeeksOfYear(j);
                     for (let i = 1; i <= totalWeekOfYear; i++) {
-                        data.push({week: i, year: j, value: 0});
+                        data.push({week: i, year: j, ...values});
                     }
                 }
                 for (let i = 1; i <= toWeek; i++) {
-                    data.push({week: i, year: toYear, value: 0});
+                    data.push({week: i, year: toYear, ...values});
                 }
             } else {
                 for (let i = fromWeek; i <= toWeek; i++) {
-                    data.push({week: i, year: fromYear, value: 0});
+                    data.push({week: i, year: fromYear, ...values});
                 }
             }
         } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
@@ -204,19 +207,19 @@ export const ReportUtils = {
             const toYear = monthObj.to.year;
             if (fromYear !== toYear) {
                 for (let i = fromMonth; i < 12; i++) {
-                    data.push({month: i, year: fromYear, value: 0});
+                    data.push({month: i, year: fromYear, ...values});
                 }
                 for (let j = fromYear + 1; j < toYear; j++) {
                     for (let i = 0; i < 12; i++) {
-                        data.push({month: i, year: j, value: 0});
+                        data.push({month: i, year: j, ...values});
                     }
                 }
                 for (let i = 0; i <= toMonth; i++) {
-                    data.push({month: i, year: toYear, value: 0});
+                    data.push({month: i, year: toYear, ...values});
                 }
             } else {
                 for (let i = fromMonth; i <= toMonth; i++) {
-                    data.push({month: i, year: fromYear, value: 0});
+                    data.push({month: i, year: fromYear, ...values});
                 }
             }
         } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
@@ -226,24 +229,24 @@ export const ReportUtils = {
             const toYear = quarterObj.to.year;
             if (fromYear !== toYear) {
                 for (let i = fromQuarter; i <= 4; i++) {
-                    data.push({quarter: i, year: fromYear, value: 0});
+                    data.push({quarter: i, year: fromYear, ...values});
                 }
                 for (let j = fromYear + 1; j < toYear; j++) {
                     for (let i = 1; i <= 4; i++) {
-                        data.push({quarter: i, year: j, value: 0});
+                        data.push({quarter: i, year: j, ...values});
                     }
                 }
                 for (let i = 1; i <= toQuarter; i++) {
-                    data.push({quarter: i, year: toYear, value: 0});
+                    data.push({quarter: i, year: toYear, ...values});
                 }
             } else {
                 for (let i = fromQuarter; i <= toQuarter; i++) {
-                    data.push({quarter: i, year: fromYear, value: 0});
+                    data.push({quarter: i, year: fromYear, ...values});
                 }
             }
         } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
             for (let i = fromYear; i <= toYear; i++) {
-                data.push({year: i, value: 0});
+                data.push({year: i, ...values});
             }
         }
         return data;
@@ -306,6 +309,56 @@ export const ReportUtils = {
             if (index > -1) {
                 result[index].usedMinutes = report.usedMinutes;
                 result[index].totalRequests = report.totalRequests;
+            }
+        }
+
+        return result;
+    },
+    getTotalData: (groupedReports, data, type) => {
+        const result = [...data];
+
+        for (const report of groupedReports) {
+            let dateReport = new Date(report._id.dateReport);
+
+            if (type === CONSTANTS.TIME_TYPE.DATE) {
+                dateReport = ReportUtils.getOnlyDate(dateReport);
+                const index = result.findIndex(el => {
+                    const date = new Date(el.date.valueOf());
+                    return date.valueOf() === dateReport.valueOf()
+                });
+                if (index > -1) {
+                    result[index].usedMinutes += report.usedMinutes;
+                    result[index].totalRequests += report.totalRequests;
+                }
+            } else if (type === CONSTANTS.TIME_TYPE.WEEK) {
+                let index = result.findIndex(el => el.week === ReportUtils.getWeek(dateReport) && el.year === dateReport.getFullYear());
+                const lastDatesOfYear = ReportUtils.getLastDatesOfYear(dateReport.getFullYear());
+                if (lastDatesOfYear.findIndex(date => date === dateReport.getDate() && dateReport.getMonth() === 11) > -1) {
+                    index = result.findIndex(el => el.week === 1 && el.year === dateReport.getFullYear() + 1);
+                }
+                if (index > -1) {
+                    result[index].usedMinutes += report.usedMinutes;
+                    result[index].totalRequests += report.totalRequests;
+                }
+            } else if (type === CONSTANTS.TIME_TYPE.MONTH) {
+                const index = result.findIndex(el => el.month === dateReport.getMonth() && el.year === dateReport.getFullYear());
+                if (index > -1) {
+                    result[index].usedMinutes += report.usedMinutes;
+                    result[index].totalRequests += report.totalRequests;
+                }
+            } else if (type === CONSTANTS.TIME_TYPE.QUARTER) {
+                const index = result.findIndex(el => el.quarter === ReportUtils.getQuarter(dateReport.getMonth())
+                    && el.year === dateReport.getFullYear());
+                if (index > -1) {
+                    result[index].usedMinutes += report.usedMinutes;
+                    result[index].totalRequests += report.totalRequests;
+                }
+            } else if (type === CONSTANTS.TIME_TYPE.YEAR) {
+                const index = result.findIndex(el => el.year === dateReport.getFullYear());
+                if (index > -1) {
+                    result[index].usedMinutes += report.usedMinutes;
+                    result[index].totalRequests += report.totalRequests;
+                }
             }
         }
 

@@ -23,6 +23,18 @@ const ReportUtils = {
   getPreviousTenDatesFromNow: () => {
     return moment(new Date(Date.now() - ReportUtils.ONE_DAY_IN_MILLISECONDS * (ReportUtils.RANGE_PICKER_LIMIT - 3)))
   },
+  getPreviousSixMonthsFromNow: () => {
+    const now = new Date(Date.now())
+    const currentMonth = now.getMonth()
+    const currentYear = now.getFullYear()
+    let fromMonth = currentMonth - 5
+    let fromYear = currentYear
+    if (fromMonth < 0) {
+      fromYear -= 1
+      fromMonth += 12
+    }
+    return { from: { month: fromMonth, year: fromYear }, to: { month: currentMonth, year: currentYear } }
+  },
   getOnlyDate: date => {
     let formattedDate = JSON.parse(JSON.stringify(date)) // string
     formattedDate = new Date(formattedDate)

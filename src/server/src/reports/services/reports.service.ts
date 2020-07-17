@@ -10,6 +10,7 @@ import { GetStatisticsByIdQuery } from 'reports/queries/impl/get-statistics-by-i
 import { GetStatisticsByTokenTypeIdAndUserIdQuery } from 'reports/queries/impl/get-statistics-by-tokenTypeId-userId.query';
 import { GetAdminTotalStatisticsQuery } from 'reports/queries/impl/get-admin-total-statistics.query';
 import { GetUserTotalStatisticsQuery } from 'reports/queries/impl/get-user-total-statistics.query';
+import { GetTotalStatisticsQuery } from 'reports/queries/impl/get-total-statistics.query';
 
 @Injectable()
 export class ReportsService {
@@ -67,6 +68,13 @@ export class ReportsService {
         const {userId, statisticsType, timeType} = getUserTotalStatisticsQuery;
         const query = new GetUserTotalStatisticsQuery(userId, statisticsType, timeType);
         Object.assign(query, getUserTotalStatisticsQuery);
+        return await this.queryBus.execute(query);
+    }
+
+    async getTotalStatistics(getTotalStatisticsQuery: GetTotalStatisticsQuery) {
+        const {timeType} = getTotalStatisticsQuery;
+        const query = new GetTotalStatisticsQuery(timeType);
+        Object.assign(query, getTotalStatisticsQuery);
         return await this.queryBus.execute(query);
     }
 }

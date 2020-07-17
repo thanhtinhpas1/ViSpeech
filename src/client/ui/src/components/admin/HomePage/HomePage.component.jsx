@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { DEFAULT_PAGINATION, ADMIN_PATH } from 'utils/constant'
 import MonitorBeatChart from './components/MonitorBeatChart/MonitorBeatChart.container'
+import TotalChart from './components/TotalChart/TotalChart.container'
 
 const HomePage = ({
   getOrderListObj,
@@ -18,8 +19,6 @@ const HomePage = ({
     getOrderList({ pagination: DEFAULT_PAGINATION.SIZE_TOTAL_COUNT })
     getProjectList({ pagination: DEFAULT_PAGINATION.SIZE_TOTAL_COUNT })
   }, [getUserList, getTokenList, getOrderList, getProjectList])
-
-  useEffect(() => {}, [getOrderList])
 
   return (
     <>
@@ -107,6 +106,7 @@ const HomePage = ({
       </div>
       {/* <TokenSaleGraph orderListObj={getOrderListObj} /> */}
       <MonitorBeatChart />
+      <TotalChart />
     </>
   )
 }

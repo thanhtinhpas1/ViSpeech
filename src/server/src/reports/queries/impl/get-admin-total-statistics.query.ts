@@ -1,6 +1,6 @@
-import { GetTotalStatisticsQuery } from 'reports/dtos/statistics.dto';
+import { GetTotalStatisticsBaseQuery } from 'reports/dtos/statistics.dto';
 
-export class GetAdminTotalStatisticsQuery extends GetTotalStatisticsQuery {
+export class GetAdminTotalStatisticsQuery extends GetTotalStatisticsBaseQuery {
     constructor(statisticsType: string, timeType: string) {
         super(statisticsType, timeType);
     }
