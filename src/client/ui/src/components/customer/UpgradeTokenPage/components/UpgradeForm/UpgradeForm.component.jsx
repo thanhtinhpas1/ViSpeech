@@ -251,7 +251,11 @@ const UpgradeForm = ({
             <div className="token-currency-choose" style={{ color: '#495463' }}>
               {tokenTypeToUpgradeList.length === 0 && <p>API key đã được nâng cấp lên gói cao nhất</p>}
               {(getTokenTypeListObj.tokenTypeList || []).length > 0 && (
-                <Radio.Group name="radiogroup" style={{ width: '100%' }} onChange={onTokenTypeChange}>
+                <Radio.Group
+                  name="radiogroup"
+                  style={{ width: '100%', fontSize: 'inherit' }}
+                  onChange={onTokenTypeChange}
+                >
                   <div className="row guttar-15px" style={{ display: 'flex' }}>
                     {tokenTypeToUpgradeList.map(tokenType => {
                       return (

@@ -67,7 +67,7 @@ export class MonitorBeatFailedHandler implements IEventHandler<MonitorBeatFailed
     handle(event: MonitorBeatFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error)
         event['errorObj'] = errorObj
-        this.clientKafka.emit(CONSTANTS.TOPICS.MONITOR_BEAR_FAILED_EVENT, JSON.stringify(event));
+        this.clientKafka.emit(CONSTANTS.TOPICS.MONITOR_BEAT_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'MonitorBeatFailedEvent');
     }
 }

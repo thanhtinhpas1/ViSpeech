@@ -128,7 +128,7 @@ const PersonalDataTab = ({
         if (data.error != null) {
           updateCurrentUserFailure(data.errorObj)
         } else {
-          updateCurrentUserSuccess(user)
+          updateCurrentUserSuccess(data.userDto)
         }
       })
     } catch (err) {

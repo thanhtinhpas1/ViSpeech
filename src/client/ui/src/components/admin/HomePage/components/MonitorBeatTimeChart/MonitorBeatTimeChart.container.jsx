@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { getMonitorList } from 'redux/monitor/monitor.actions'
-import MonitorBeatChart from './MonitorBeatChart.component'
+import MonitorBeatTimeChart from './MonitorBeatTimeChart.component'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
@@ -12,6 +12,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getMonitorList({ pagination, sortField, sortOrder, filters })),
 })
 
-const MonitorBeatChartContainer = connect(mapStateToProps, mapDispatchToProps)(MonitorBeatChart)
+const MonitorBeatTimeChartContainer = connect(mapStateToProps, mapDispatchToProps)(MonitorBeatTimeChart)
 
-export default MonitorBeatChartContainer
+export default MonitorBeatTimeChartContainer

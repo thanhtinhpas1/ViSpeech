@@ -41,7 +41,7 @@ export default class UserService {
   }
 
   static loginWithSocial = (accessToken, userType) => {
-    if (![USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE].includes(userType)) {
+    if (!Utils.isSocialAccount(userType)) {
       throw new Error('Loại người dùng không hợp lệ.')
     }
     const api = userType === USER_TYPE.FACEBOOK ? `${apiUrl}/login-facebook` : `${apiUrl}/login-google`

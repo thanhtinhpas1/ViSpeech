@@ -144,7 +144,7 @@ const VerifyEmailPage = ({
           title: 'Kích hoạt tài khoản',
           user: currentUser,
           content:
-            'Bạn đã yêu cầu kích hoạt tài khoản.<br/>Nhấn vào nút kích hoạt tài khoản để có thể sử dụng nhiều thao tác trên ViSpeech.',
+            'Bạn đã yêu cầu kích hoạt tài khoản.<br/>Nhấn vào nút kích hoạt tài khoản để có thể sử dụng nhiều thao tác trên VietSpeech.',
           positiveButton: {
             content: 'Kích hoạt tài khoản',
             clickFunc: () => onVerifyEmail(),

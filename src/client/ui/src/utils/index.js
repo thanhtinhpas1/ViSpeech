@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
-import { ROLES, SORT_ORDER } from './constant'
+import { ROLES, SORT_ORDER, USER_TYPE } from './constant'
 
 const numeral = require('numeral')
 
@@ -10,6 +10,9 @@ const Utils = {
   },
   isAdmin: roleList => {
     return (roleList || []).findIndex(role => role.name === ROLES.ADMIN) !== -1
+  },
+  isSocialAccount: userType => {
+    return [USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE].includes(userType)
   },
   getRolesInArray: roleList => {
     return (roleList || []).map(role => role.name)

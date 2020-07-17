@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { DEFAULT_PAGINATION, ADMIN_PATH } from 'utils/constant'
-import MonitorBeatChart from './components/MonitorBeatChart/MonitorBeatChart.container'
+import MonitorBeatRateChart from './components/MonitorBeatRateChart/MonitorBeatRateChart.container'
+import MonitorBeatTimeChart from './components/MonitorBeatTimeChart/MonitorBeatTimeChart.container'
 import TotalChart from './components/TotalChart/TotalChart.container'
 import TokenTypeChart from './components/TokenTypeChart/TokenTypeChart.container'
 
@@ -107,7 +108,12 @@ const HomePage = ({
       </div>
       <div className="row">
         <div className="col-12">
-          <MonitorBeatChart />
+          <MonitorBeatRateChart />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <MonitorBeatTimeChart />
         </div>
       </div>
       <div className="row">

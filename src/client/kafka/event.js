@@ -77,6 +77,6 @@ module.exports = {
         REQUEST_UPDATED_FAILED_EVENT: 'RequestUpdatedFailedEvent',
         // MONITOR
         MONITOR_BEAT_SUCCESS_EVENT: 'MonitorBeatSuccessEvent',
-        MONITOR_BEAR_FAILED_EVENT: 'MonitorBeatFailedEvent',
+        MONITOR_BEAT_FAILED_EVENT: 'MonitorBeatFailedEvent',
     }
 }

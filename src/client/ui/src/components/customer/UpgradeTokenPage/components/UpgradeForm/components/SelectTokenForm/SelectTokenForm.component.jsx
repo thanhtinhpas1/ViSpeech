@@ -13,6 +13,7 @@ const SelectTokenForm = ({
   currentUser,
   getMyProjectListObj,
   getProjectTokenListObj,
+  createOrderToUpgradeObj,
   getMyProjects,
   getProjectTokenList,
   onSelectTokenFormValuesChange,
@@ -60,6 +61,24 @@ const SelectTokenForm = ({
       form.resetFields(['tokenId'])
     }
   }, [getProjectTokenListObj, form])
+
+  useEffect(() => {
+    if (createOrderToUpgradeObj.isLoading === false && createOrderToUpgradeObj.isSuccess === true) {
+      const userId = currentUser && currentUser._id
+      const fieldsValue = form.getFieldsValue(['projectId'])
+      if (userId) {
+        const filters = {
+          isValid: ['true'],
+        }
+        getProjectTokenList({
+          userId,
+          projectId: fieldsValue.projectId,
+          pagination: DEFAULT_PAGINATION.SIZE_100,
+          filters,
+        })
+      }
+    }
+  }, [currentUser, form, createOrderToUpgradeObj, getProjectTokenList])
 
   useEffect(() => {
     const fieldsValue = form.getFieldsValue(['projectId', 'tokenId'])

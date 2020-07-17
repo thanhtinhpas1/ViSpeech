@@ -1,10 +1,12 @@
-import * as moment from 'moment'
+/* eslint-disable no-underscore-dangle */
 
 const MonitorUtils = {
   QUEUE: {
     MAIN: 'mainQueue',
     MONITOR: 'monitoringQueue',
     PERSISTENT_SUBSCRIPTIONS: 'persistentSubscriptions',
+    STORAGE_READER: 'StorageReaderQueue',
+    STORAGE_WRITER: 'StorageWriterQueue',
   },
   mapMonitorDataFunc: monitor => {
     const result = {}
@@ -18,9 +20,22 @@ const MonitorUtils = {
       time: monitor.data['es-queue-MonitoringQueue-avgProcessingTime'],
       date: monitor.createdDate,
     }
-    result[MonitorUtils.QUEUE.PERSISTENT_SUBSCRIPTIONS] = {
-      rate: monitor.data['es-queue-PersistentSubscriptions-avgItemsPerSecond'],
-      time: monitor.data['es-queue-PersistentSubscriptions-avgProcessingTime'],
+    result[MonitorUtils.QUEUE.STORAGE_READER] = {
+      rate:
+        monitor.data['es-queue-StorageReaderQueue #1-avgItemsPerSecond'] +
+        monitor.data['es-queue-StorageReaderQueue #2-avgItemsPerSecond'] +
+        monitor.data['es-queue-StorageReaderQueue #3-avgItemsPerSecond'] +
+        monitor.data['es-queue-StorageReaderQueue #4-avgItemsPerSecond'],
+      time:
+        monitor.data['es-queue-StorageReaderQueue #1-avgProcessingTime'] +
+        monitor.data['es-queue-StorageReaderQueue #2-avgProcessingTime'] +
+        monitor.data['es-queue-StorageReaderQueue #3-avgProcessingTime'] +
+        monitor.data['es-queue-StorageReaderQueue #4-avgProcessingTime'],
+      date: monitor.createdDate,
+    }
+    result[MonitorUtils.QUEUE.STORAGE_WRITER] = {
+      rate: monitor.data['es-queue-StorageWriterQueue-avgItemsPerSecond'],
+      time: monitor.data['es-queue-StorageWriterQueue-avgProcessingTime'],
       date: monitor.createdDate,
     }
     return result
@@ -33,7 +48,7 @@ const MonitorUtils = {
         result.push({
           time: item[key].time || 0,
           rate: item[key].rate || 0,
-          date: moment(item[key].date).format('DD-MM-YYYY HH:mm:ss'),
+          date: item[key].date,
           type: key,
         })
       })
@@ -47,7 +62,7 @@ const MonitorUtils = {
       result.push({
         time: item[key].time || 0,
         rate: item[key].rate || 0,
-        date: moment(item[key].date).format('DD-MM-YYYY HH:mm:ss'),
+        date: item[key].date,
         type: key,
       })
     })
@@ -60,7 +75,13 @@ const MonitorUtils = {
     if (text === MonitorUtils.QUEUE.MONITOR) {
       return 'Monitor queue'
     }
-    return 'Persistent subscriptions'
+    if (text === MonitorUtils.QUEUE.STORAGE_READER) {
+      return 'Storage reader queue'
+    }
+    if (text === MonitorUtils.QUEUE.STORAGE_WRITER) {
+      return 'Storage writer queue'
+    }
+    return ''
   },
 }
 

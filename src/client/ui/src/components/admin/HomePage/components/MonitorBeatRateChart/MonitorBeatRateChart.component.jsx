@@ -6,17 +6,18 @@ import SocketService from 'services/socket.service'
 import SocketUtils from 'utils/socket.util'
 import { DEFAULT_PAGINATION, SORT_ORDER } from 'utils/constant'
 import MonitorUtils from 'utils/monitor.util'
+import * as moment from 'moment'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
-const { MONITOR_BEAT_SUCCESS_EVENT, MONITOR_BEAR_FAILED_EVENT } = KAFKA_TOPIC
+const { MONITOR_BEAT_SUCCESS_EVENT, MONITOR_BEAT_FAILED_EVENT } = KAFKA_TOPIC
 
-const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
+const MonitorBeatRateChart = ({ getMonitorListObj, getMonitorList }) => {
   const [data, setData] = useState([])
   const isMounted = useRef(true)
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(MONITOR_BEAT_SUCCESS_EVENT)
-    SocketService.socketOnListeningEvent(MONITOR_BEAR_FAILED_EVENT)
+    SocketService.socketOnListeningEvent(MONITOR_BEAT_FAILED_EVENT)
   }, [])
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
         const mappedData = MonitorUtils.mapMonitorDataFunc(event.data)
         const convertedData = MonitorUtils.convertToChartData(mappedData)
         setData(p => {
-          const data = p.slice(3)
+          const data = p.slice(4)
           return [...data, ...convertedData]
         })
       }
@@ -69,8 +70,8 @@ const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
     xAxis: {
       label: {
         visible: true,
-        autoHide: true,
-        autoRotate: false,
+        autoHide: false,
+        autoRotate: true,
         style: DEFAULT_STYLE,
       },
     },
@@ -89,20 +90,25 @@ const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
       type: {
         formatter: MonitorUtils.formatTextFunc,
       },
+      date: {
+        formatter: v => {
+          return moment(v).format('DD-MM-YYYY HH:mm:ss')
+        },
+      },
     },
     legend: {
       position: 'top-center',
       text: {
-        formatter: MonitorUtils.formatTextFunc,
+        // formatter: MonitorUtils.formatTextFunc,
         style: DEFAULT_STYLE,
       },
     },
-    label: {
-      visible: true,
-      type: 'line',
-      formatter: MonitorUtils.formatTextFunc,
-      style: { ...DEFAULT_STYLE, fontSize: 14 },
-    },
+    // label: {
+    //   visible: true,
+    //   type: 'line',
+    //   formatter: MonitorUtils.formatTextFunc,
+    //   style: { ...DEFAULT_STYLE, fontSize: 14 },
+    // },
     // animation: { appear: { animation: 'clipingWithData' } },
     smooth: true,
     responsive: true,
@@ -123,4 +129,4 @@ const MonitorBeatChart = ({ getMonitorListObj, getMonitorList }) => {
     </div>
   )
 }
-export default MonitorBeatChart
+export default MonitorBeatRateChart

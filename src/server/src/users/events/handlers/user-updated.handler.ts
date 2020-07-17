@@ -8,6 +8,7 @@ import { UserDto } from 'users/dtos/users.dto';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
 import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from '../impl/user-updated.event';
+import { RoleDto } from 'roles/dtos/roles.dto';
 
 @EventsHandler(UserUpdatedEvent)
 export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
@@ -24,15 +25,19 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
         const {_id, ...userInfo} = userDto;
 
         try {
-            const user = await this.repository.findOne({_id: userDto._id});
+            const user = await this.repository.findOne({_id});
 
-            let formattedInfo = Utils.removePropertiesFromObject(userInfo, [ 'password', 'isActive' ]);
+            let formattedInfo = Utils.removePropertiesFromObject(userInfo, [ 'password', 'isActive', 'username', 'userType', 'socialId' ]);
             if (Utils.isEmailVerified(user.roles)) {
                 formattedInfo = Utils.removePropertyFromObject(formattedInfo, 'email');
             }
-
+            if (formattedInfo.roles) {
+                formattedInfo.roles = Utils.convertToArray(formattedInfo.roles).map(role => {
+                    return new RoleDto(role.name)
+                });
+            }
             await this.repository.update({_id}, {...formattedInfo, updatedDate: new Date()});
-            this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, userDto));
+            this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, { ...user, ...formattedInfo }));
         } catch (error) {
             this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));
         }

@@ -7,6 +7,7 @@ const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
   getMyProjectListObj: state.project.getMyProjectList,
   getProjectTokenListObj: state.token.getProjectTokenList,
+  createOrderToUpgradeObj: state.order.createOrderToUpgrade,
 })
 
 const mapDispatchToProps = dispatch => ({

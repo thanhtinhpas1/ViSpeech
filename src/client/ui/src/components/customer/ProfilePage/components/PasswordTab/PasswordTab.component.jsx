@@ -184,7 +184,13 @@ const PasswordTab = ({
           </div>
           <div className="col-md-12 d-sm-flex justify-content-between align-items-center">
             <Form.Item>
-              <Button htmlType="submit" loading={changePasswordObj.isLoading} type="primary" size="large">
+              <Button
+                htmlType="submit"
+                loading={changePasswordObj.isLoading}
+                disabled={Utils.isSocialAccount(currentUser.userType)}
+                type="primary"
+                size="large"
+              >
                 Cập nhật
               </Button>
             </Form.Item>
