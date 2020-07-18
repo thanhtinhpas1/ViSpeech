@@ -1,11 +1,42 @@
 import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { kafkaClientOptions } from 'common/kafka-client.options';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { getMongoRepository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { config } from '../../config';
+import { AuthModule } from '../auth/auth.module';
+import { EventStore, EventStoreModule } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
 import { CommandHandlers } from './commands/handlers';
 import { PermissionsController } from './controllers/permissions.controller';
 import { PermissionDto } from './dtos/permissions.dto';
 import { EventHandlers } from './events/handlers';
+import {
+    PermissionAssignEmailSentEvent,
+    PermissionAssignEmailSentFailedEvent,
+    PermissionAssignEmailSentSuccessEvent
+} from './events/impl/permission-assign-email-sent.event';
+import {
+    PermissionAssignRepliedEvent,
+    PermissionAssignRepliedFailedEvent,
+    PermissionAssignRepliedSuccessEvent
+} from './events/impl/permission-assign-replied.event';
 import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from './events/impl/permission-created.event';
+import {
+    PermissionDeletedByProjectIdEvent,
+    PermissionDeletedByProjectIdFailedEvent,
+    PermissionDeletedByProjectIdSuccessEvent
+} from './events/impl/permission-deleted-by-projectId.event';
+import {
+    PermissionDeletedByUserIdEvent,
+    PermissionDeletedByUserIdFailedEvent,
+    PermissionDeletedByUserIdSuccessEvent
+} from './events/impl/permission-deleted-by-userId.event';
 import { PermissionDeletedEvent, PermissionDeletedFailedEvent, PermissionDeletedSuccessEvent } from './events/impl/permission-deleted.event';
 import { PermissionUpdatedEvent, PermissionUpdatedFailedEvent, PermissionUpdatedSuccessEvent } from './events/impl/permission-updated.event';
 import { PermissionWelcomedEvent } from './events/impl/permission-welcomed.event';
@@ -13,29 +44,6 @@ import { QueryHandlers } from './queries/handler';
 import { PermissionRepository } from './repository/permission.repository';
 import { PermissionsSagas } from './sagas/permissions.sagas';
 import { PermissionsService } from './services/permissions.service';
-import { AuthModule } from '../auth/auth.module';
-import { UserDto } from 'users/dtos/users.dto';
-import { ProjectDto } from 'projects/dtos/projects.dto';
-import {
-    PermissionAssignEmailSentEvent, PermissionAssignEmailSentFailedEvent, PermissionAssignEmailSentSuccessEvent
-} from './events/impl/permission-assign-email-sent.event';
-import {
-    PermissionAssignRepliedEvent, PermissionAssignRepliedFailedEvent, PermissionAssignRepliedSuccessEvent
-} from './events/impl/permission-assign-replied.event';
-import { config } from '../../config';
-import { ClientsModule } from '@nestjs/microservices';
-import { kafkaClientOptions } from 'common/kafka-client.options';
-import {
-    PermissionDeletedByUserIdEvent, PermissionDeletedByUserIdFailedEvent, PermissionDeletedByUserIdSuccessEvent
-} from './events/impl/permission-deleted-by-userId.event';
-import {
-    PermissionDeletedByProjectIdEvent, PermissionDeletedByProjectIdFailedEvent, PermissionDeletedByProjectIdSuccessEvent
-} from './events/impl/permission-deleted-by-projectId.event';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
-import { EventStore, EventStoreModule } from '../core/event-store/lib';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
-import { getMongoRepository } from 'typeorm';
 
 @Module({
     imports: [
@@ -59,16 +67,6 @@ import { getMongoRepository } from 'typeorm';
                     stream: '$ce-permission',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-permission',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-permission',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {

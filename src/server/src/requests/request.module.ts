@@ -1,41 +1,41 @@
 import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UpdateTokenHandler } from 'tokens/commands/handlers/update-token.handler';
+import { kafkaClientOptions } from 'common/kafka-client.options';
+import { OrderDto } from 'orders/dtos/orders.dto';
+import { ProjectDto } from 'projects/dtos/projects.dto';
 import { CreateReportHandler } from 'reports/commands/handlers/create-report.handler';
+import { ReportDto } from 'reports/dtos/reports.dto';
+import { ReportRepository } from 'reports/repository/report.repository';
+import { TaskDto } from 'tasks/dto/task.dto';
+import { ConstTaskService } from 'tasks/services/const-task.service';
+import { UpdateTokenHandler } from 'tokens/commands/handlers/update-token.handler';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenRepository } from 'tokens/repository/token.repository';
+import { getMongoRepository } from 'typeorm';
+import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
+import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { TokenDto } from '../tokens/dtos/tokens.dto';
 import { CommandHandlers } from './commands/handler';
+import { HistoriesController } from './controllers/histories.controller';
 import { AsrController } from './controllers/requests.controller';
 import { RequestDto } from './dtos/requests.dto';
 import { EventHandlers } from './events/handler';
-import { QueryHandlers } from './queries/handler';
-import { RequestRepository } from './repository/request.repository';
-import { CallAsrSagas } from './sagas/call-asr.sagas';
-import { RequestService } from './services/request.service';
-import { HistoriesController } from './controllers/histories.controller';
-import { ReportRepository } from 'reports/repository/report.repository';
-import { OrderDto } from 'orders/dtos/orders.dto';
-import { ProjectDto } from 'projects/dtos/projects.dto';
 import { AsrCalledRequestEvent } from './events/impl/asr-called-request.event';
+import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from './events/impl/request-created.event';
 import {
     RequestTranscriptFileUrlUpdatedEvent,
     RequestTranscriptFileUrlUpdatedFailedEvent,
     RequestTranscriptFileUrlUpdatedSuccessEvent
 } from './events/impl/request-transcript-file-url-updated.event';
-import { ClientsModule } from '@nestjs/microservices';
-import { config } from '../../config';
-import { kafkaClientOptions } from 'common/kafka-client.options';
-import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
-import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from './events/impl/request-created.event';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
-import { getMongoRepository } from 'typeorm';
-import { ConstTaskService } from 'tasks/services/const-task.service';
-import { ReportDto } from 'reports/dtos/reports.dto';
-import { TaskDto } from 'tasks/dto/task.dto';
+import { QueryHandlers } from './queries/handler';
+import { RequestRepository } from './repository/request.repository';
+import { CallAsrSagas } from './sagas/call-asr.sagas';
+import { RequestService } from './services/request.service';
 
 @Module({
     imports: [
@@ -62,16 +62,6 @@ import { TaskDto } from 'tasks/dto/task.dto';
                     stream: '$ce-request',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-request',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-request',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {

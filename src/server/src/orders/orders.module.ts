@@ -4,31 +4,34 @@ import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'auth/auth.module';
 import { kafkaClientOptions } from 'common/kafka-client.options';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { getMongoRepository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
 import { config } from '../../config';
+import { EventStore, EventStoreModule } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
 import { CommandHandlers } from './commands/handlers';
 import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
 import { EventHandlers } from './events/handlers';
 import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent } from './events/impl/order-created.event';
-import { OrderToUpgradeCreatedEvent, OrderToUpgradeCreatedSuccessEvent,
-    OrderToUpgradeCreatedFailedEvent } from './events/impl/order-to-upgrade-created.event';
 import { OrderDeletedEvent, OrderDeletedFailedEvent, OrderDeletedSuccessEvent } from './events/impl/order-deleted.event';
+import {
+    OrderToUpgradeCreatedEvent,
+    OrderToUpgradeCreatedFailedEvent,
+    OrderToUpgradeCreatedSuccessEvent
+} from './events/impl/order-to-upgrade-created.event';
 import { OrderUpdatedEvent, OrderUpdatedFailedEvent, OrderUpdatedSuccessEvent } from './events/impl/order-updated.event';
 import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { OrderRepository } from './repository/order.repository';
 import { OrdersSagas } from './sagas/orders.sagas';
 import { OrdersService } from './services/orders.service';
-import { ProjectDto } from 'projects/dtos/projects.dto';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { UserDto } from 'users/dtos/users.dto';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
-import { EventStore, EventStoreModule } from '../core/event-store/lib';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
-import { getMongoRepository } from 'typeorm';
 
 @Module({
     imports: [
@@ -49,16 +52,6 @@ import { getMongoRepository } from 'typeorm';
                     stream: '$ce-order',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-order',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-order',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {

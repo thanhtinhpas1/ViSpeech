@@ -49,17 +49,7 @@ import { UsersService } from './services/users.service';
                     stream: '$ce-user',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-user',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-user',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
-                },
+                }
             ],
             eventHandlers: {
                 // Warning: add event handles of token or another module can make duplicate write event

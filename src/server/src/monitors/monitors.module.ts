@@ -1,24 +1,24 @@
 import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
-import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
 import { ClientsModule } from '@nestjs/microservices';
-import { config } from '../../config';
-import { kafkaClientOptions } from '../common/kafka-client.options';
-import { MonitorDto } from './dtos/monitor.dto';
-import { $statsCollected, MonitorBeatFailedEvent, MonitorBeatSuccessEvent } from './events/impl/monitor-beat.event';
-import { EventHandlers } from './events/handlers';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { getMongoRepository } from 'typeorm';
-import { MonitorsController } from './controllers/monitors.controller';
-import { MonitorsService } from './services/monitors.service';
-import { QueryHandlers } from './queries/handlers';
+import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
+import { kafkaClientOptions } from '../common/kafka-client.options';
+import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { MonitorsController } from './controllers/monitors.controller';
+import { MonitorDto } from './dtos/monitor.dto';
+import { EventHandlers } from './events/handlers';
+import { $statsCollected, MonitorBeatFailedEvent, MonitorBeatSuccessEvent } from './events/impl/monitor-beat.event';
+import { QueryHandlers } from './queries/handlers';
+import { MonitorsService } from './services/monitors.service';
 
 @Module({
     imports: [
-        ClientsModule.register([ {
+        ClientsModule.register([{
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
         } ]),
@@ -43,30 +43,10 @@ import { AuthModule } from '../auth/auth.module';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$stats-0.0.0.0:2113',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$stats-0.0.0.0:2113',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
-                },
-                {
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: '$ce-monitor',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-monitor',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-monitor',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {

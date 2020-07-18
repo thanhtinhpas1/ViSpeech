@@ -236,7 +236,6 @@ const Main = () => {
                   <br />
                 </h2>
                 <p />
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
                 <a className="m-btn btn-theme" href="/register">
                   Đăng ký dùng thử
                 </a>

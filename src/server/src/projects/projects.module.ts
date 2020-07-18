@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'auth/auth.module';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { TokenRepository } from 'tokens/repository/token.repository';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { config } from '../../config';
@@ -32,10 +31,10 @@ import { ProjectsService } from './services/projects.service';
 
 @Module({
     imports: [
-        ClientsModule.register([ {
+        ClientsModule.register([{
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
-        } ]),
+        }]),
         TypeOrmModule.forFeature([
             PermissionDto,
             UserDto,
@@ -52,29 +51,18 @@ import { ProjectsService } from './services/projects.service';
                     stream: '$ce-project',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-project',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-project',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
-                },
+                }
             ],
             eventHandlers: {
                 ...ProjectsModule.eventHandlers,
             },
         }),
     ],
-    controllers: [ ProjectsController ],
+    controllers: [ProjectsController],
     providers: [
         ProjectsService,
         ProjectsSagas,
         ProjectRepository,
-        TokenRepository,
         QueryBus, EventBus,
         CommandBus, EventPublisher,
         MongoStore,
@@ -82,7 +70,7 @@ import { ProjectsService } from './services/projects.service';
         ...EventHandlers,
         ...QueryHandlers,
     ],
-    exports: [ ProjectsService ],
+    exports: [ProjectsService],
 })
 export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
     constructor(
@@ -102,7 +90,7 @@ export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
         this.event$.register(EventHandlers);
         this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
-        this.event$.registerSagas([ ProjectsSagas ]);
+        this.event$.registerSagas([ProjectsSagas]);
         await this.seedProjection();
     }
 

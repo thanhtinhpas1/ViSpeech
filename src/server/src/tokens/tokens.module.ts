@@ -1,46 +1,46 @@
 import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
+import { kafkaClientOptions } from 'common/kafka-client.options';
 import { getMongoRepository } from 'typeorm';
+import { config } from '../../config';
+import { AuthModule } from '../auth/auth.module';
+import { EventStore, EventStoreModule } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
+import { OrderDto } from '../orders/dtos/orders.dto';
+import { PermissionDto } from '../permissions/dtos/permissions.dto';
+import { ProjectDto } from '../projects/dtos/projects.dto';
+import { UserDto } from '../users/dtos/users.dto';
 import { CommandHandlers } from './commands/handlers';
 import { TokensController } from './controllers/tokens.controller';
 import { TokenTypeDto } from './dtos/token-types.dto';
 import { TokenDto } from './dtos/tokens.dto';
 import { EventHandlers } from './events/handlers';
-import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
-import { TokenDeletedEvent, TokenDeletedFailedEvent, TokenDeletedSuccessEvent } from './events/impl/token-deleted.event';
-import { TokenUpdatedEvent, TokenUpdatedFailedEvent, TokenUpdatedSuccessEvent } from './events/impl/token-updated.event';
-import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
-import { QueryHandlers } from './queries/handler';
-import { TokenRepository } from './repository/token.repository';
-import { TokensSagas } from './sagas/tokens.sagas';
-import { TokensService } from './services/tokens.service';
 import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from './events/impl/free-token-created.event';
 import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from './events/impl/ordered-token-created.event';
-import { AuthModule } from '../auth/auth.module';
-import { config } from '../../config';
-import { ClientsModule } from '@nestjs/microservices';
-import { kafkaClientOptions } from 'common/kafka-client.options';
-import {
-    TokenDeletedByUserIdEvent,
-    TokenDeletedByUserIdFailedEvent,
-    TokenDeletedByUserIdSuccessEvent
-} from './events/impl/token-deleted-by-userId.event';
+import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
 import {
     TokenDeletedByProjectIdEvent,
     TokenDeletedByProjectIdFailedEvent,
     TokenDeletedByProjectIdSuccessEvent
 } from './events/impl/token-deleted-by-projectId.event';
+import {
+    TokenDeletedByUserIdEvent,
+    TokenDeletedByUserIdFailedEvent,
+    TokenDeletedByUserIdSuccessEvent
+} from './events/impl/token-deleted-by-userId.event';
+import { TokenDeletedEvent, TokenDeletedFailedEvent, TokenDeletedSuccessEvent } from './events/impl/token-deleted.event';
+import { TokenUpdatedEvent, TokenUpdatedFailedEvent, TokenUpdatedSuccessEvent } from './events/impl/token-updated.event';
 import { TokenUpgradedEvent, TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from './events/impl/token-upgraded.event';
-import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
-import { EventStore, EventStoreModule } from '../core/event-store/lib';
-import { PermissionDto } from '../permissions/dtos/permissions.dto';
-import { UserDto } from '../users/dtos/users.dto';
-import { ProjectDto } from '../projects/dtos/projects.dto';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import { OrderDto } from '../orders/dtos/orders.dto';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
+import { QueryHandlers } from './queries/handler';
+import { TokenRepository } from './repository/token.repository';
+import { TokensSagas } from './sagas/tokens.sagas';
+import { TokensService } from './services/tokens.service';
 
 @Module({
     imports: [
@@ -66,16 +66,6 @@ import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
                     stream: '$ce-token',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-token',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-token',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {
@@ -123,13 +113,13 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const tokenProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-token'});
+        const tokenProjection = await getMongoRepository(ProjectionDto).findOne({ streamName: '$ce-token' });
         if (tokenProjection) {
-            await getMongoRepository(ProjectionDto).save({...tokenProjection, expectedVersion: tokenProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({ ...tokenProjection, expectedVersion: tokenProjection.eventNumber });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-token', eventNumber: 0, expectedVersion: 0});
+            await getMongoRepository(ProjectionDto).save({ streamName: '$ce-token', eventNumber: 0, expectedVersion: 0 });
         }
-        Logger.log('Seed projection token success')
+        Logger.log('Seed projection token success');
     }
 
     public static eventHandlers = {

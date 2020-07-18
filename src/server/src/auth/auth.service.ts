@@ -3,8 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
-import { Utils } from 'utils';
 import { UsersService } from 'users/services/users.service';
+import { Utils } from 'utils';
 
 @Injectable()
 export class AuthService {
@@ -20,24 +20,24 @@ export class AuthService {
      * Function validate with local strategy
      */
     async validateUser(username: string, password: string): Promise<any> {
-        const user = await this.userRepository.findOne({username});
+        const user = await this.userRepository.findOne({ username });
         if (user && Utils.comparePassword(password, user.password)) {
-            const {password, ...result} = user;
+            const { password, ...result } = user;
             return result;
         }
         return null;
     }
 
     async validateUserId(userId: string) {
-        let user = await this.userRepository.findOne({_id: userId});
+        let user = await this.userRepository.findOne({ _id: userId });
         user = user && Utils.removePropertyFromObject(user, 'password');
         return user || null;
     }
 
     async validateUserSocialId(socialId: string, userDto: UserDto) {
-        let socialUser = await this.userRepository.findOne({socialId});
+        let socialUser = await this.userRepository.findOne({ socialId });
         if (!socialUser) {
-            const streamId = Utils.getUuid()
+            const streamId = Utils.getUuid();
             await this.usersService.createUser(streamId, userDto);
             return {};
         }
@@ -46,21 +46,21 @@ export class AuthService {
     }
 
     generateToken(userId, username, roles) {
-        const payload = {username, id: userId, roles, iat: Date.now()};
+        const payload = { username, id: userId, roles, iat: Date.now() };
         return this.jwtService.sign(payload);
     }
 
     generateTokenWithUserId(userId, expiresIn = null) {
-        const payload = {id: userId};
+        const payload = { id: userId };
         if (expiresIn) {
-            return this.jwtService.sign(payload, {expiresIn});
+            return this.jwtService.sign(payload, { expiresIn });
         }
         return this.jwtService.sign(payload);
     }
 
     generateEmailToken(assignerId, projectId, assigneeId, permissions, expiresIn = null) {
-        const payload = {assignerId, projectId, assigneeId, permissions};
-        return this.jwtService.sign(payload, {expiresIn: expiresIn || '2 days'});
+        const payload = { assignerId, projectId, assigneeId, permissions };
+        return this.jwtService.sign(payload, { expiresIn: expiresIn || '2 days' });
     }
 
     decode(request: any) {

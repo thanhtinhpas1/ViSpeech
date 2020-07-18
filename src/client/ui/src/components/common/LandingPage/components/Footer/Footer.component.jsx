@@ -40,51 +40,51 @@ const Footer = () => {
             <div className="d-flex justify-content-around">
               <ul className="list-style">
                 <li>
-                  <a href="#">Gym Training</a>
+                  <a href="/customer/login">Đăng nhập</a>
                 </li>
                 <li>
-                  <a href="#">Crossfit</a>
+                  <a href="/register">Đăng ký</a>
                 </li>
                 <li>
-                  <a href="#">Cardio</a>
+                  <a href="/customer/documents">Tài liệu</a>
                 </li>
                 <li>
-                  <a href="#">Contact</a>
-                </li>
-                <li>
-                  <a href="#">Blog</a>
+                  <a href="/customer/projects">Dự án</a>
                 </li>
               </ul>
               <ul className="list-style">
                 <li>
-                  <a href="#">About</a>
+                  <a href="#">Microservices</a>
                 </li>
                 <li>
-                  <a href="#">Trainings</a>
+                  <a href="#">Domain Driven Design</a>
                 </li>
                 <li>
-                  <a href="#">Coaches</a>
+                  <a href="#">Command Query Responsibility Separate</a>
                 </li>
                 <li>
-                  <a href="#">Club cards</a>
+                  <a href="#">Event Sourcing</a>
                 </li>
               </ul>
             </div>
           </div>
           <div className="col-md-3 col-lg-3 sm-m-15px-tb">
             <h4 className="font-18 font-alt color-white font-w-600 m-0px m-15px-b">Địa chỉ liên hệ</h4>
-            <p>12345 Little Lonsdale St, Melbourne</p>
+            <p>227 Nguyễn Văn Cừ</p>
             <p>
-              <span>E-Mail:</span> info@example.com
+              <span>E-Mail:</span> 1612704@student.hcmus.edu.vn
             </p>
             <p>
-              <span>Phone:</span> (123) 123-456
+              1612339@student.hcmus.edu.vn
+            </p>
+            <p>
+              <span>Phone:</span> +083 0962804643
             </p>
           </div>
         </div>
         <div className="row">
           <div className="col-12 footer-copy">
-            <p className="m-0px">© Copyright by ViSpeech. Rights Reserved.</p>
+            <p className="m-0px">© Copyright by VietSpeech. Rights Reserved.</p>
           </div>
         </div>
       </div>

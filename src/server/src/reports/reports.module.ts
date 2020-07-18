@@ -1,7 +1,19 @@
 import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
+import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { kafkaClientOptions } from 'common/kafka-client.options';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { getMongoRepository } from 'typeorm';
+import { UserDto } from 'users/dtos/users.dto';
+import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
+import { EventStore, EventStoreModule } from '../core/event-store/lib';
+import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
+import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
+import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
 import { CommandHandlers } from './commands/handlers';
 import { ReportsController } from './controllers/reports.controller';
 import { ReportDto } from './dtos/reports.dto';
@@ -14,18 +26,6 @@ import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';
 import { ReportsSagas } from './sagas/reports.sagas';
 import { ReportsService } from './services/reports.service';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { UserDto } from 'users/dtos/users.dto';
-import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
-import { ProjectDto } from 'projects/dtos/projects.dto';
-import { ClientsModule } from '@nestjs/microservices';
-import { kafkaClientOptions } from 'common/kafka-client.options';
-import { config } from '../../config';
-import { ProjectionDto } from '../core/event-store/lib/adapter/projection.dto';
-import { EventStoreSubscriptionType } from '../core/event-store/lib/contract';
-import { EventStore, EventStoreModule } from '../core/event-store/lib';
-import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
-import { getMongoRepository } from 'typeorm';
 
 @Module({
     imports: [
@@ -50,16 +50,6 @@ import { getMongoRepository } from 'typeorm';
                     stream: '$ce-report',
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$ce-report',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$ce-report',
-                    persistentSubscriptionName: 'steamName',
-                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {
