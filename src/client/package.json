@@ -7,6 +7,8 @@
     "start:dev": "nodemon ./bin/www",
     "prestart:staging": "npm run build:staging --prefix ui/",
     "start:staging": "env-cmd -f .env.staging  node ./bin/www",
+    "prestart:test": "npm run build --prefix ui/",
+    "start:test": "node ./bin/www",
     "prestart:prod": "npm run build --prefix ui/",
     "start:prod": "env-cmd -f .env node ./bin/www"
   },
@@ -16,6 +18,7 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
     "express": "~4.16.1",
     "express-http-proxy": "^1.6.0",
     "hbs": "~4.0.4",
