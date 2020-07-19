@@ -119,20 +119,20 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         //}
 
         try {
-            let version = await this.store.readExpectedVersion(streamId);
+            // let version = await this.store.readExpectedVersion(streamId);
             const lcp = await this.store.read(streamId);
             // case when does not exist stream => expected version will be overlap with case start event  = 0
             // so in this case we accept for all event have event number less than 1
-            if (version === 0) {
-                version = expectedVersion.any;
-                await this.store.writeExpectedVersion(streamId, 1);
-            } else if (version < lcp && version !== -1) {
-                version = lcp;
-                await this.store.writeExpectedVersion(streamId, version + 1);
-            } else {
-                await this.store.writeExpectedVersion(streamId, version + 1);
-            }
-            await this.eventStore.getConnection().appendToStream(streamId, version, [ eventPayload ]);
+            // if (version === 0) {
+            //     version = expectedVersion.any;
+            //     await this.store.writeExpectedVersion(streamId, 1);
+            // } else if (version < lcp && version !== -1) {
+            //     version = lcp;
+            //     await this.store.writeExpectedVersion(streamId, version + 1);
+            // } else {
+            //     await this.store.writeExpectedVersion(streamId, version + 1);
+            // }
+            await this.eventStore.getConnection().appendToStream(streamId, expectedVersion.any, [ eventPayload ]);
         } catch (err) {
             if (err.name === 'WrongExpectedVersionError') {
                 this.logger.warn('Detect duplicate event ' + eventPayload.type + ' ' + err.message);
