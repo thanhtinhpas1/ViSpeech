@@ -61,6 +61,62 @@ In case you don't feel like downloading dependencies locally, I've added support
 7. To shutdown / remove stack, run: `kubectl delete stack rtcstack`
    </details>
    
+
+<details>
+<summary>Without Docker (for development/debugging)</summary>
+
+1. Fork and clone the ReactiveTraderCloud repo ([see Contributing page](CONTRIBUTING.md))
+
+2. Install dependencies & add them to your path:
+
+- [Node.js and npm](https://nodejs.org/en/download/)
+- [Event Store](https://eventstore.com/downloads/)
+- [Kafka](https://kafka.apache.org/downloads)
+
+3. Enable Kafka
+
+   ```bash
+  tar -xzf kafka_2.12-2.5.0.tgz
+  cd kafka_2.12-2.5.0
+  bin/zookeeper-server-start.sh config/zookeeper.properties
+  bin/kafka-server-start.sh config/server.properties
+   ```
+
+4. Populate Event Store:
+
+   ```bash
+   EventStore.ClusterNode.exe --db ./db --log ./logs
+   ```
+
+5. Start the ViSpeech server:
+
+   ```bash
+   cd src/server
+   npm install
+   npm run start
+   ```
+
+6. (Optional) Start Node services by running `npm run start:dev` from their respective folders, e.g.:
+
+   ```bash
+   cd src/server/node/priceHistory
+   npm install
+   npm run start:dev
+   ```
+
+7. Start the client against the local server components:
+
+   ```bash
+   cd src/client
+   npm install
+   npm run start:dev
+   cd src/client/ui
+   npm install
+   npm run start
+   ```
+  </details>
+
+
 ## CI/CD
 
 We practice continuous integration and deployment. Every merge to master causes a build and deployment to our [development environment](https://web-dev.adaptivecluster.com) to occur as follows:
