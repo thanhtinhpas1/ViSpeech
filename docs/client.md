@@ -29,8 +29,6 @@ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo s
 
 ### Windows
 
-Install the C++ Compiler. Visual Studio Express comes bundled with a free C++ compiler. Or, if you already have Visual Studio installed: Open Visual Studio and go to File -> New -> Project -> Visual C++ -> Install Visual C++ Tools for Windows Desktop. The C++ compiler is used to compile browser-sync (and perhaps other Node modules).
-
 ## RT Enviroments
 
 We deploy ViSpeech to three enviroments:
@@ -51,17 +49,17 @@ You can then browse the app at [http://localhost:3000](http://localhost:3000)
 Run the client with pointing to your local backend server:
 
 ```sh
-npm run start:local-backend
+npm run start
 ```
 
 Run the client with a back end on the cloud:
 
 ```sh
-npm run start:dev-backend
+npm run start
 
 # or
 
-npm run start:demo-backend
+npm run start
 ```
 
 Runs unit tests with Jest.

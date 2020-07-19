@@ -22,6 +22,14 @@ Please note that commands have been implemented and they do write into the Event
 
 In case you don't feel like downloading dependencies locally, I've added support for Docker so follow those instructions in "Running the app" and you'll have everything up and running in less than 2 minutes.
 
+The system has 5 main folder (can run as a stand-alone) as located in `./src` <br />
+- `server` - main web api build with NestJS
+- `client` - web proxy for navigate request and security network
+- `client/ui` - web ui for main application
+- `core` - web api build with Python Flask for transcript audio file to text
+- `release` - release plan and steps build system
+- `services` - stack for deploy application with Event Store, GCloud, Jenkins, Nginx, Kafka, Redis
+
 ## Dependency Table
 | Name        | Version           |
 | ------------- |:-------------: |
