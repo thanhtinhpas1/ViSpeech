@@ -31,7 +31,7 @@ In case you don't feel like downloading dependencies locally, I've added support
 <summary>With Docker</summary>
 
 1. Install Docker ([from the Docker website](https://www.docker.com/get-started))
-2. Fork and clone the ReactiveTraderCloud repo ([see Contributing page](CONTRIBUTING.md))
+2. Fork and clone the ViSpeech repo ([see Contributing page](CONTRIBUTING.md))
 3. From the src folder run: `docker-compose up`
 4. Open a browser and navigate to http://localhost to see the application running
 5. To shutdown the application run: `docker-compose down`
