@@ -10,7 +10,6 @@ The app has 3 main routes (can run as a stand-alone) as described in `../apps/Ro
 <hr>
 
 The main application can be broken down into 6 main sections: <br />
-![RTC layout](./images/rtc-layout.png) <br />
 - [**Header**](#header) section has the Adaptive logo and toggle theme button and in different platforms (OpenFin) also comes with window controls such as `minimize`, `maximize`, and `close`.
 - [**Footer**](#footer) section has a status button that toggles a service list pop-up showing the connection status of each services and the number of connected instances open. 
 
