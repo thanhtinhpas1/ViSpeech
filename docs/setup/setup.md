@@ -10,8 +10,8 @@
 Grab the source, then restore the packages used by the application
 
 ```bash
-$ cd ./src/server/dotNet
-$ dotnet restore
+$ cd ./src/services/eventStore
+$ 
 ```
 
 Alternatively on Windows, you can run `GetDependencies.bat` (this runs `dotnet restore` and downloads the relevant NuGet packages to your machine)
@@ -27,10 +27,10 @@ Or, [use the docker image](https://hub.docker.com/r/eventstore/eventstore/).
 
 #### Populate Event Store
 
-Populate eventstore with the following command from the`/src/server/dotNet` directory:
+Populate eventstore with the following command from the`/src/services/eventStore` directory:
 
 ```bash
-$ dotnet run -p Adaptive.ReactiveTrader.Server.Launcher --populate-eventstore
+$ EventStore.ClusterNode.exe --db ./db --log ./logs
 ```
 
 Alternatively on Windows, you can run `Populate Event Store.bat` to add some dummy data
@@ -40,17 +40,17 @@ Alternatively on Windows, you can run `Populate Event Store.bat` to add some dum
 
 #### Start Services
 
-To start the backend services, run the following command from the`/src/server/dotNet` directory:
+To start the backend services, run the following command from the`/src/services/` directory:
 
 ```bash
-$ dotnet run -p Adaptive.ReactiveTrader.Server.Launcher all
+$ 
 ```
 
-The services should now run and connect to Crossbar and Event Store.
+The services should now run and connect to Kafka and Event Store.
 
-To run each service individually, cd into each of the services (analytics, blotter, pricing, referenceDataRead, tradeExecution) and run `dotnet run`
+To run each service individually, cd into each of the services
 
-On Windows, once the stand-alone Event Store and Crossbar are running, you can fire up the services by running `StartServices.bat`
+On Windows, once the stand-alone Event Store and Kafka are running, you can fire up the services by running
 
 This calls the Launcher console application and will start all the services, the messaging broker and Event Store.
 
