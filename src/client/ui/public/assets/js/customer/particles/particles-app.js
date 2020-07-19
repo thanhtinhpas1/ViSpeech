@@ -14,7 +14,7 @@ particlesJS.load('particles-js', 'particles.json', function() {
 /* Otherwise just put the config content (json): */
 
 window.particlesJS('home',
-  
+
   {
     "particles": {
       "number": {
@@ -131,5 +131,4 @@ window.particlesJS('home',
       "background_size": "cover"
     }
   }
-
 );

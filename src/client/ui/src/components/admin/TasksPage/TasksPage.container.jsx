@@ -8,7 +8,12 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getTaskList: ({ pagination, sortField, sortOrder, filters }) => dispatch(getTaskList({ pagination, sortField, sortOrder, filters })),
+  getTaskList: ({ pagination, sortField, sortOrder, filters }) => dispatch(getTaskList({
+    pagination,
+    sortField,
+    sortOrder,
+    filters
+  })),
 })
 
 const TasksPageContainer = connect(mapStateToProps, mapDispatchToProps)(TasksPage)

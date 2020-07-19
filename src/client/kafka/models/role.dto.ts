@@ -5,5 +5,6 @@ export class RoleDto extends BaseEntityDto {
         super();
         this.name = name;
     }
+
     name: string;
 }

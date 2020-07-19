@@ -8,10 +8,10 @@ import Footer from './components/Footer/Footer.component'
 const LandingPage = () => {
   return (
     <div>
-      <Loading />
-      <Header />
-      <Main />
-      <Footer />
+      <Loading/>
+      <Header/>
+      <Main/>
+      <Footer/>
     </div>
   )
 }

@@ -1,14 +1,14 @@
 /* eslint-disable radix */
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Pie } from '@ant-design/charts'
 import ReportUtils from 'utils/report.util'
 import Utils from 'utils'
 import { MONETARY_UNIT } from 'utils/constant'
 
 const TokenTypeChart = ({ getAdminTotalStatisticsBytokenTypeObj, getAdminTotalStatistics }) => {
-  const [data, setData] = useState([])
+  const [ data, setData ] = useState([])
 
   useEffect(() => {
     const { from, to } = ReportUtils.getPreviousSixMonthsFromNow()
@@ -25,7 +25,7 @@ const TokenTypeChart = ({ getAdminTotalStatisticsBytokenTypeObj, getAdminTotalSt
       },
     }
     getAdminTotalStatistics(ReportUtils.STATISTICS_TYPE.TOKEN_TYPE, ReportUtils.TIME_TYPE.MONTH, queryParams)
-  }, [getAdminTotalStatistics])
+  }, [ getAdminTotalStatistics ])
 
   useEffect(() => {
     if (
@@ -35,12 +35,12 @@ const TokenTypeChart = ({ getAdminTotalStatisticsBytokenTypeObj, getAdminTotalSt
       const chartData = getAdminTotalStatisticsBytokenTypeObj.data.map(item => {
         return {
           value: Math.round((item.usedMinutes + Number.EPSILON) * 100) / 100,
-          type: `${Utils.formatPrice(item.data.price)} ${MONETARY_UNIT}/${item.data.minutes} phút`,
+          type: `${ Utils.formatPrice(item.data.price) } ${ MONETARY_UNIT }/${ item.data.minutes } phút`,
         }
       })
       setData(chartData)
     }
-  }, [getAdminTotalStatisticsBytokenTypeObj])
+  }, [ getAdminTotalStatisticsBytokenTypeObj ])
 
   const onRefreshData = () => {
     const { from, to } = ReportUtils.getPreviousSixMonthsFromNow()
@@ -82,7 +82,7 @@ const TokenTypeChart = ({ getAdminTotalStatisticsBytokenTypeObj, getAdminTotalSt
     meta: {
       value: {
         formatter: v => {
-          return `${v} phút`
+          return `${ v } phút`
         },
       },
       type: {},
@@ -107,11 +107,11 @@ const TokenTypeChart = ({ getAdminTotalStatisticsBytokenTypeObj, getAdminTotalSt
         <div className="card">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h4 className="card-title">Biểu đồ</h4>
-            <button type="button" onClick={onRefreshData} className="btn btn-just-icon btn-simple btn-primary m-0">
-              <i className="fas fa-redo" />
+            <button type="button" onClick={ onRefreshData } className="btn btn-just-icon btn-simple btn-primary m-0">
+              <i className="fas fa-redo"/>
             </button>
           </div>
-          <div className="card-content">{data.length > 0 && <Pie {...config} />}</div>
+          <div className="card-content">{ data.length > 0 && <Pie { ...config } /> }</div>
         </div>
       </div>
     </div>

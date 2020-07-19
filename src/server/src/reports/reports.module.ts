@@ -99,7 +99,7 @@ export class ReportsModule implements OnModuleInit, OnModuleDestroy {
         if (userProjection) {
             await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-report', eventNumber: 0, expectedVersion: 0});
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-report', eventNumber: 0, expectedVersion: -1});
         }
         Logger.log('Seed projection report success')
     }

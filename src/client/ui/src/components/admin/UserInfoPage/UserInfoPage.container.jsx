@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import {
-  getUserInfo,
   deleteUser,
   deleteUserFailure,
   deleteUserSuccess,
+  getUserInfo,
   onClearDeleteUserState,
 } from 'redux/user/user.actions'
 import UserInfoPage from './UserInfoPage.component'

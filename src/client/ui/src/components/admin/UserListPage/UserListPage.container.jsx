@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import {
-  getUserList,
   deleteUser,
-  deleteUserSuccess,
   deleteUserFailure,
+  deleteUserSuccess,
+  getUserList,
   onClearDeleteUserState,
 } from 'redux/user/user.actions'
 import UserListPage from './UserListPage.component'

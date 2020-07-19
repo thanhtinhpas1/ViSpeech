@@ -81,65 +81,67 @@ const csharpCode =
   '        }\n' +
   '    }'
 const DocumentsPage = () => {
-  useEffect(() => {}, [])
+  useEffect(() => {
+  }, [])
   return (
     <div className="row container-fluid mt-0">
       <div className="col-md-12 pl-5 pr-5">
         <div className="card" id="profile-main">
           <div className="card-header">
-            <h4 className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h4 className="card-title" style={ { display: 'flex', justifyContent: 'space-between' } }>
               Tài liệu: Hướng dẫn sử dụng thư viện SDK
             </h4>
-            <hr />
+            <hr/>
             <p>
               Tài liệu này sẽ hướng dẫn gửi <b>request</b> đến Speech-To-Text API trong ngôn môt số ngôn ngữ
               <code> C#, JavaScript, Java</code> sử dụng các thư viện SDK.
             </p>
-            <br />
+            <br/>
             <p>
               Thư viện SDK Speech-To-Text giúp dễ dàng sử dụng API key nhận dạng âm thanh tiếng Việt. Bạn có thể dễ dàng
               gửi một <code>file</code> âm thanh đến Speech-To-Text API, để nhận về kết quả dịch của file này.
             </p>
-            <br />
+            <br/>
             <h4>Cài đặt thư viện SDK</h4>
             <Tabs className="ml-5 doc-tab" type="card">
               <TabPane tab="JavaScript" key="1">
                 Trước khi cài đặt NPM package, hãy đảm bảo rằng bạn đã chuẩn bị đủ môi trường lập trình NodeJs.
-                <br />
+                <br/>
                 <code>npm install --save asr-vietspeech</code>
               </TabPane>
               <TabPane tab="Java" key="2">
                 <p>
-                  Nếu bạn đang sử dụng <a href="https://maven.apache.org/">Maven</a>, thêm những thông tin sau vào{' '}
+                  Nếu bạn đang sử dụng <a href="https://maven.apache.org/">Maven</a>, thêm những thông tin sau
+                  vào{ ' ' }
                   <b>pom.xml</b>
-                  <br />
+                  <br/>
                   <code>
                     <span className="tag main-color">&lt;dependency&gt;</span>
-                    <br />
+                    <br/>
                     <span className="tag ml-4">&lt;groupId&gt;</span>com.asr.vietspeech
                     <span className="tag">&lt;&#47;groupId&gt;</span>
-                    <br />
+                    <br/>
                     <span className="tag ml-4">&lt;artifactId&gt;</span>asr-vietspeech
                     <span className="tag">&lt;&#47;artifactId&gt;</span>
-                    <br />
+                    <br/>
                     <span className="tag ml-4">&lt;version&gt;</span>0.0.1
                     <span className="tag">&lt;&#47;version&gt;</span>
-                    <br />
+                    <br/>
                     <span className="tag">&lt;&#47;dependency&gt;</span>
                   </code>
                 </p>
-                <br />
+                <br/>
                 <p>
                   Nếu bạn đang sử dụng <a href="https://gradle.org/">Gradle</a>, thêm những thông tin sau vào
                   depedencies.
-                  <br />
+                  <br/>
                   <code>&apos;com.vietspeech:asr-vietspeech:0.0.1&apos;</code>
                 </p>
-                <br />
+                <br/>
                 <p>
                   Nếu bạn đang sử dụng <a href="https://www.scala-sbt.org/">sbt</a>, thêm những thông tin sau vào
                   depedencies.
-                  <br />
+                  <br/>
                   <code>
                     libraryDependencies += &quot;com.asr.vietspeech&quot; % &quot;asr-vietspeech&quot; %
                     &quot;0.0.1&quot;
@@ -150,7 +152,7 @@ const DocumentsPage = () => {
                 <code>Install-Package asr-vietspeech -Version 1.0.0</code>
               </TabPane>
             </Tabs>
-            <br />
+            <br/>
             <h4>Sử dụng API</h4>
             <p>
               Bây giờ chúng ta có thể sử dụng <b>Speech-To-Text API</b> để dịch một tập tin âm thanh thành văn bản. Sử
@@ -158,36 +160,36 @@ const DocumentsPage = () => {
             </p>
             <Tabs className="ml-5 doc-tab" type="card">
               <TabPane tab="JavaScript" key="1">
-                <div style={{ textAlign: 'left' }}>
+                <div style={ { textAlign: 'left' } }>
                   <a target="blank" className="button" href="https://github.com/trankhanhlinh/vispeech-asr">
                     Xem GitHub
                   </a>
-                  <MonacoEditor width="60%" height="350" language="javascript" theme="vs-dark" value={jsCode} />
+                  <MonacoEditor width="60%" height="350" language="javascript" theme="vs-dark" value={ jsCode }/>
                 </div>
               </TabPane>
               <TabPane tab="Java" key="2">
-                <div style={{ textAlign: 'left' }}>
+                <div style={ { textAlign: 'left' } }>
                   <a target="blank" className="button" href="https://github.com/thanhtinhpas1/asr-sdk-java">
                     Xem GitHub
                   </a>
-                  <MonacoEditor width="60%" height="350" language="java" theme="vs-dark" value={javaCode} />
+                  <MonacoEditor width="60%" height="350" language="java" theme="vs-dark" value={ javaCode }/>
                 </div>
               </TabPane>
               <TabPane tab="C#" key="3">
-                <div style={{ textAlign: 'left' }}>
+                <div style={ { textAlign: 'left' } }>
                   <a target="blank" className="button" href="https://github.com/thanhtinhpas1/asr-sdk-csharp">
                     Xem GitHub
                   </a>
-                  <MonacoEditor width="60%" height="350" language="csharp" theme="vs-dark" value={csharpCode} />
+                  <MonacoEditor width="60%" height="350" language="csharp" theme="vs-dark" value={ csharpCode }/>
                 </div>
               </TabPane>
             </Tabs>
-            <br />
+            <br/>
             <p>
               Như vậy là bạn đã gửi thành công request đến Speech-To-Text API. Nếu bạn nhận được bất kỳ lỗi nào thì có
               thể do tập tin âm thanh chưa được đính kèm, hoặc api key không hợp lệ.
             </p>
-            <br />
+            <br/>
           </div>
         </div>
       </div>

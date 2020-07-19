@@ -14,9 +14,9 @@ const Navbar = ({ currentUser, logout }) => {
         <div className="navbar-header">
           <button type="button" className="navbar-toggle" data-toggle="collapse">
             <span className="sr-only">Toggle navigation</span>
-            <span className="icon-bar" />
-            <span className="icon-bar" />
-            <span className="icon-bar" />
+            <span className="icon-bar"/>
+            <span className="icon-bar"/>
+            <span className="icon-bar"/>
           </button>
           <a className="navbar-brand" href="/">
             Viet Speech Admin
@@ -29,31 +29,31 @@ const Navbar = ({ currentUser, logout }) => {
                 <i className="material-icons">person</i>
                 <p className="hidden-lg hidden-md">
                   Trang cá nhân
-                  <b className="caret" />
+                  <b className="caret"/>
                 </p>
               </a>
               <ul className="dropdown-menu">
                 <li>
                   <div
-                    style={{
+                    style={ {
                       color: '#333',
                       fontSize: '13px',
                       padding: '10px 20px',
                       margin: '0 5px',
                       whiteSpace: 'nowrap',
-                    }}
+                    } }
                   >
-                    Xin chào, {currentUser.lastName} {currentUser.firstName}
+                    Xin chào, { currentUser.lastName } { currentUser.firstName }
                   </div>
                 </li>
                 <li>
-                  <a href="#!" onClick={logout}>
+                  <a href="#!" onClick={ logout }>
                     Đăng xuất
                   </a>
                 </li>
               </ul>
             </li>
-            <li className="separator hidden-lg hidden-md" />
+            <li className="separator hidden-lg hidden-md"/>
           </ul>
         </div>
       </div>

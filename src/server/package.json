@@ -38,6 +38,8 @@
     "axios": "^0.19.2",
     "babel-jest": "24.9.0",
     "bcryptjs": "^2.4.3",
+    "cache-manager": "^3.3.0",
+    "cache-manager-redis-store": "^2.0.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
     "cron-parser": "^2.13.0",

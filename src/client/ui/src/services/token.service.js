@@ -10,12 +10,12 @@ export default class TokenService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/tokens?${query}`
+    const api = `${ apiUrl }/tokens?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -23,7 +23,7 @@ export default class TokenService {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -87,8 +87,8 @@ export default class TokenService {
 
     const api =
       pageIndex != null && pageSize != null
-        ? `${apiUrl}/tokens/user-tokens?userId=${encodeURIComponent(userId)}&offset=${offset}&limit=${limit}`
-        : `${apiUrl}/tokens/user-tokens?userId=${encodeURIComponent(userId)}`
+        ? `${ apiUrl }/tokens/user-tokens?userId=${ encodeURIComponent(userId) }&offset=${ offset }&limit=${ limit }`
+        : `${ apiUrl }/tokens/user-tokens?userId=${ encodeURIComponent(userId) }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -96,7 +96,7 @@ export default class TokenService {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -116,7 +116,7 @@ export default class TokenService {
   }
 
   static getFreeToken = userId => {
-    const api = `${apiUrl}/tokens/free-token/${encodeURIComponent(userId)}`
+    const api = `${ apiUrl }/tokens/free-token/${ encodeURIComponent(userId) }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -124,7 +124,7 @@ export default class TokenService {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -149,12 +149,12 @@ export default class TokenService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ userId, projectId, offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ userId, projectId, offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/tokens/project-tokens?${query}`
+    const api = `${ apiUrl }/tokens/project-tokens?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -162,7 +162,7 @@ export default class TokenService {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -182,7 +182,7 @@ export default class TokenService {
   }
 
   static getTokenTypeList = () => {
-    const api = `${apiUrl}/tokens/token-types`
+    const api = `${ apiUrl }/tokens/token-types`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -190,7 +190,7 @@ export default class TokenService {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -210,7 +210,7 @@ export default class TokenService {
   }
 
   static deleteToken = id => {
-    const api = `${apiUrl}/tokens/${id}`
+    const api = `${ apiUrl }/tokens/${ id }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -218,7 +218,7 @@ export default class TokenService {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {

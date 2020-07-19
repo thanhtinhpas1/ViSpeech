@@ -3,7 +3,7 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import { CUSTOMER_PATH } from 'utils/constant'
 import Utils from 'utils'
 import CustomerLayout from 'components/customer/CustomerLayout'
@@ -16,7 +16,8 @@ import VerifyEmailPage from 'components/customer/VerifyEmailPage/VerifyEmailPage
 import ProjectPage from 'components/customer/ProjectPage/ProjectPage.container'
 import CreateProjectPage from 'components/customer/CreateProjectPage/CreateProjectPage.container'
 import AssignPermissionPage from 'components/customer/AssignPermissionPage/AssignPermissionPage.container'
-import ReplyPermissionAssignPage from 'components/customer/ReplyPermissionAssignPage/ReplyPermissionAssignPage.container'
+import ReplyPermissionAssignPage
+  from 'components/customer/ReplyPermissionAssignPage/ReplyPermissionAssignPage.container'
 import StatisticsPage from 'components/customer/StatisticsPage/StatisticsPage.container'
 import TrialPage from 'components/customer/TrialPage/TrialPage.container'
 import TrialDetailsPage from 'components/customer/TrialDetailsPage/TrialDetailsPage.container'
@@ -27,78 +28,78 @@ import DocumentsPage from '../components/customer/DocumentsPage/DocumentsPage.co
 const RouteCustomer = ({ currentUser }) => {
   return (
     <>
-      {/* WITHOUT login, user can access those links */}
-      {currentUser && Utils.isUser(currentUser.roles) && (
+      {/* WITHOUT login, user can access those links */ }
+      { currentUser && Utils.isUser(currentUser.roles) && (
         <CustomerLayout>
           <Switch>
-            <Route path={`${CUSTOMER_PATH}/transactions`}>
-              <TransactionsPage />
+            <Route path={ `${ CUSTOMER_PATH }/transactions` }>
+              <TransactionsPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/transaction-details`}>
-              <TransactionDetailsPage />
+            <Route path={ `${ CUSTOMER_PATH }/transaction-details` }>
+              <TransactionDetailsPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/profile`}>
-              <ProfilePage />
+            <Route path={ `${ CUSTOMER_PATH }/profile` }>
+              <ProfilePage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/verify-email/:emailToken`}>
-              <VerifyEmailPage />
+            <Route path={ `${ CUSTOMER_PATH }/verify-email/:emailToken` }>
+              <VerifyEmailPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/projects`}>
-              <ProjectPage />
+            <Route path={ `${ CUSTOMER_PATH }/projects` }>
+              <ProjectPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/create-project`}>
-              <CreateProjectPage />
+            <Route path={ `${ CUSTOMER_PATH }/create-project` }>
+              <CreateProjectPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/my-project/:id`}>
-              <ProjectDetailsPage />
+            <Route path={ `${ CUSTOMER_PATH }/my-project/:id` }>
+              <ProjectDetailsPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/accepted-project/:id`}>
-              <ProjectDetailsPage />
+            <Route path={ `${ CUSTOMER_PATH }/accepted-project/:id` }>
+              <ProjectDetailsPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/assign-permission`}>
-              <AssignPermissionPage />
+            <Route path={ `${ CUSTOMER_PATH }/assign-permission` }>
+              <AssignPermissionPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/reply-permission-assign/:emailToken`}>
-              <ReplyPermissionAssignPage />
+            <Route path={ `${ CUSTOMER_PATH }/reply-permission-assign/:emailToken` }>
+              <ReplyPermissionAssignPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/reports`}>
-              <StatisticsPage />
+            <Route path={ `${ CUSTOMER_PATH }/reports` }>
+              <StatisticsPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/documents`}>
-              <DocumentsPage />
+            <Route path={ `${ CUSTOMER_PATH }/documents` }>
+              <DocumentsPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/trial`}>
-              <TrialPage />
+            <Route path={ `${ CUSTOMER_PATH }/trial` }>
+              <TrialPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/request-details/:id`}>
-              <TrialDetailsPage />
+            <Route path={ `${ CUSTOMER_PATH }/request-details/:id` }>
+              <TrialDetailsPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/upgrade-token`}>
-              <UpgradeTokenPage />
+            <Route path={ `${ CUSTOMER_PATH }/upgrade-token` }>
+              <UpgradeTokenPage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/requests`}>
-              <RequestsPage />
+            <Route path={ `${ CUSTOMER_PATH }/requests` }>
+              <RequestsPage/>
             </Route>
-            <Route exact path={CUSTOMER_PATH}>
-              <CustomerHomePage />
+            <Route exact path={ CUSTOMER_PATH }>
+              <CustomerHomePage/>
             </Route>
-            <Route path={`${CUSTOMER_PATH}/*`}>
-              <Redirect to="/404" />
+            <Route path={ `${ CUSTOMER_PATH }/*` }>
+              <Redirect to="/404"/>
             </Route>
           </Switch>
         </CustomerLayout>
-      )}
+      ) }
 
-      {(!currentUser || !Utils.isUser(currentUser.roles)) && (
+      { (!currentUser || !Utils.isUser(currentUser.roles)) && (
         <Switch>
-          <Route exact path={CUSTOMER_PATH}>
-            <Redirect to="/" />
+          <Route exact path={ CUSTOMER_PATH }>
+            <Redirect to="/"/>
           </Route>
-          <Route path={`${CUSTOMER_PATH}/*`}>
-            <Redirect to="/" />
+          <Route path={ `${ CUSTOMER_PATH }/*` }>
+            <Redirect to="/"/>
           </Route>
         </Switch>
-      )}
+      ) }
     </>
   )
 }

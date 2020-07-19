@@ -1,8 +1,8 @@
-import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
 import MonitorService from 'services/monitor.service'
 import MonitorUtils from 'utils/monitor.util'
 import MonitorTypes from './monitor.types'
-import { getMonitorListSuccess, getMonitorListFailure } from './monitor.actions'
+import { getMonitorListFailure, getMonitorListSuccess } from './monitor.actions'
 
 // get monitors
 const formatMonitorList = monitorList => {
@@ -20,6 +20,7 @@ function* getMonitors({ payload: filterConditions }) {
     yield put(getMonitorListFailure(err.message))
   }
 }
+
 export function* getMonitorsSaga() {
   yield takeLatest(MonitorTypes.GET_MONITORS, getMonitors)
 }
@@ -27,5 +28,5 @@ export function* getMonitorsSaga() {
 // =================================
 
 export function* monitorSaga() {
-  yield all([call(getMonitorsSaga)])
+  yield all([ call(getMonitorsSaga) ])
 }

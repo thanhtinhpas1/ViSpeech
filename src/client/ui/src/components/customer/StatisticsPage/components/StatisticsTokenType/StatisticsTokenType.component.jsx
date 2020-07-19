@@ -2,21 +2,21 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ReportUtils from 'utils/report.util'
 import { MONETARY_UNIT } from 'utils/constant'
 import Utils from 'utils'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
 
 const StatisticsTokenType = ({
-  currentUser,
-  chartOptions,
-  getTokenTypeListObj,
-  getUserTokenTypeStatisticsObj,
-  getTokenTypes,
-  getUserTokenTypeStatistics,
-}) => {
-  const [tokenTypeList, setTokenTypeList] = useState([])
+                               currentUser,
+                               chartOptions,
+                               getTokenTypeListObj,
+                               getUserTokenTypeStatisticsObj,
+                               getTokenTypes,
+                               getUserTokenTypeStatistics,
+                             }) => {
+  const [ tokenTypeList, setTokenTypeList ] = useState([])
   const placeHolderSelectId = {
     found: 'Chọn loại API key',
     notFound: 'Không tìm thấy loại API key',
@@ -24,19 +24,19 @@ const StatisticsTokenType = ({
 
   useEffect(() => {
     getTokenTypes()
-  }, [getTokenTypes])
+  }, [ getTokenTypes ])
 
   useEffect(() => {
     if (getTokenTypeListObj.tokenTypeList.length > 0) {
       const tokens = getTokenTypeListObj.tokenTypeList.map(tokenType => {
         return {
           ...tokenType,
-          display: `${Utils.formatPrice(tokenType.price)} ${MONETARY_UNIT} / ${tokenType.minutes} phút`,
+          display: `${ Utils.formatPrice(tokenType.price) } ${ MONETARY_UNIT } / ${ tokenType.minutes } phút`,
         }
       })
       setTokenTypeList(tokens)
     }
-  }, [getTokenTypeListObj])
+  }, [ getTokenTypeListObj ])
 
   const getStatisticsById = useCallback(
     (id, statisticsType, timeType, queryParams) => {
@@ -44,21 +44,21 @@ const StatisticsTokenType = ({
         getUserTokenTypeStatistics(id, currentUser._id, timeType, queryParams)
       }
     },
-    [currentUser._id, getUserTokenTypeStatistics]
+    [ currentUser._id, getUserTokenTypeStatistics ]
   )
 
   return (
     <div>
-      {currentUser._id && (
+      { currentUser._id && (
         <StatisticsTemplate
-          chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.USER_TOKEN_TYPE}
-          data={tokenTypeList}
-          placeHolderSelectId={placeHolderSelectId}
-          getStatisticsByIdObj={getUserTokenTypeStatisticsObj}
-          getStatisticsById={getStatisticsById}
+          chartOptions={ chartOptions }
+          statisticsType={ ReportUtils.STATISTICS_TYPE.USER_TOKEN_TYPE }
+          data={ tokenTypeList }
+          placeHolderSelectId={ placeHolderSelectId }
+          getStatisticsByIdObj={ getUserTokenTypeStatisticsObj }
+          getStatisticsById={ getStatisticsById }
         />
-      )}
+      ) }
     </div>
   )
 }

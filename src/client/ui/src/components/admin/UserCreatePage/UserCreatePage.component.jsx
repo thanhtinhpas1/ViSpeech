@@ -6,7 +6,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef } from 'react'
 import { Alert, Button, Form, Input, Radio, Row } from 'antd'
-import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, ROLES, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -16,7 +16,7 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, createUserSuccess, createUserFailure }) => {
-  const [form] = Form.useForm()
+  const [ form ] = Form.useForm()
   const loadingRef = useRef(createUserObj.isLoading)
   loadingRef.current = createUserObj.isLoading
 
@@ -34,7 +34,7 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
 
   useEffect(() => {
     return () => clearCreateUserState()
-  }, [clearCreateUserState])
+  }, [ clearCreateUserState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_CREATED_SUCCESS_EVENT)
@@ -51,7 +51,7 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
       }, TIMEOUT_MILLISECONDS)
     }
     return () => clearTimeout(timer)
-  }, [createUserObj, createUserFailure])
+  }, [ createUserObj, createUserFailure ])
 
   const onSubmit = async values => {
     const { firstName, lastName, username, password, email, role } = values
@@ -62,7 +62,7 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
       username,
       password,
       email,
-      roles: [{ name: role }],
+      roles: [ { name: role } ],
     }
 
     createUser(user)
@@ -89,75 +89,75 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
         </div>
         <div className="card-content">
           <Form
-            form={form}
-            onFinish={onSubmit}
-            initialValues={{
+            form={ form }
+            onFinish={ onSubmit }
+            initialValues={ {
               role: ROLES.USER,
-            }}
+            } }
           >
             <Form.Item
-              {...formItemLayout}
+              { ...formItemLayout }
               name="lastName"
               label="Họ"
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng nhập họ khách hàng!',
                 },
-              ]}
+              ] }
             >
-              <Input />
+              <Input/>
             </Form.Item>
             <Form.Item
-              {...formItemLayout}
+              { ...formItemLayout }
               name="firstName"
               label="Tên"
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng nhập tên khách hàng!',
                 },
-              ]}
+              ] }
             >
-              <Input />
+              <Input/>
             </Form.Item>
             <Form.Item
-              {...formItemLayout}
+              { ...formItemLayout }
               name="username"
               label="Tên đăng nhập"
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng nhập tên đăng nhập!',
                 },
-              ]}
+              ] }
             >
-              <Input />
+              <Input/>
             </Form.Item>
             <Form.Item
-              {...formItemLayout}
+              { ...formItemLayout }
               name="password"
               label="Mật khẩu"
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng nhập mật khẩu!',
                 },
-              ]}
+              ] }
             >
-              <Input.Password />
+              <Input.Password/>
             </Form.Item>
             <Form.Item
-              {...formItemLayout}
+              { ...formItemLayout }
               name="confirmedPassword"
               label="Nhập lại mật khẩu"
-              dependencies={['password']}
+              dependencies={ [ 'password' ] }
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng xác nhận mật khẩu!',
@@ -171,48 +171,48 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
                     return Promise.reject('Mật khẩu không khớp. Vui lòng nhập lại!')
                   },
                 }),
-              ]}
+              ] }
             >
-              <Input.Password />
+              <Input.Password/>
             </Form.Item>
             <Form.Item
-              {...formItemLayout}
+              { ...formItemLayout }
               name="email"
               label="Email"
               hasFeedback
-              rules={[{ type: 'email', required: true, message: 'Vui lòng nhập email!' }]}
+              rules={ [ { type: 'email', required: true, message: 'Vui lòng nhập email!' } ] }
             >
-              <Input />
+              <Input/>
             </Form.Item>
             <Form.Item
-              {...formItemLayout}
+              { ...formItemLayout }
               name="role"
               label="Vai trò"
               hasFeedback
-              rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
+              rules={ [ { required: true, message: 'Vui lòng chọn vai trò!' } ] }
             >
               <Radio.Group>
-                {Object.values(ROLES).map(role => {
+                { Object.values(ROLES).map(role => {
                   return (
-                    <Radio value={role} key={role}>
-                      {role}
+                    <Radio value={ role } key={ role }>
+                      { role }
                     </Radio>
                   )
-                })}
+                }) }
               </Radio.Group>
             </Form.Item>
-            {!createUserObj.isLoading && createUserObj.isSuccess === false && (
-              <Form.Item {...tailLayout}>
-                <Alert message={Utils.buildFailedMessage(createUserObj.message)} type="error" showIcon closable />
+            { !createUserObj.isLoading && createUserObj.isSuccess === false && (
+              <Form.Item { ...tailLayout }>
+                <Alert message={ Utils.buildFailedMessage(createUserObj.message) } type="error" showIcon closable/>
               </Form.Item>
-            )}
-            {!createUserObj.isLoading && createUserObj.isSuccess === true && (
-              <Form.Item {...tailLayout}>
-                <Alert message="Thêm khách hàng thành công" type="success" showIcon closable />
+            ) }
+            { !createUserObj.isLoading && createUserObj.isSuccess === true && (
+              <Form.Item { ...tailLayout }>
+                <Alert message="Thêm khách hàng thành công" type="success" showIcon closable/>
               </Form.Item>
-            )}
-            <Form.Item {...tailLayout}>
-              <Button htmlType="submit" loading={createUserObj.isLoading} type="primary" size="middle">
+            ) }
+            <Form.Item { ...tailLayout }>
+              <Button htmlType="submit" loading={ createUserObj.isLoading } type="primary" size="middle">
                 Thêm mới
               </Button>
             </Form.Item>

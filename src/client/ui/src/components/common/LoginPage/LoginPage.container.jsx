@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import {
   loginStart,
-  onClearUserState,
   loginWithSocial,
-  loginWithSocialSuccess,
   loginWithSocialFailure,
+  loginWithSocialSuccess,
+  onClearUserState,
 } from 'redux/user/user.actions'
 import LoginPage from './LoginPage.component'
 

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { createUser, createUserSuccess, createUserFailure, onClearCreateUserState } from 'redux/user/user.actions'
+import { createUser, createUserFailure, createUserSuccess, onClearCreateUserState } from 'redux/user/user.actions'
 import UserCreatePage from './UserCreatePage.component'
 
 const mapStateToProps = state => ({

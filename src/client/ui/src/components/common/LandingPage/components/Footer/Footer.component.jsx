@@ -9,28 +9,29 @@ const Footer = () => {
           <div className="col-md-4 col-lg-5 sm-m-15px-tb">
             <h4>Về chúng tôi</h4>
             <p className="footer-text">
-              Chúng tôi là đội ngũ phát triển ViSpeech nhằm xây dựng cơ sở cung cấp dịch vụ nhận dạng âm thanh tiếng
+              Chúng tôi là đội ngũ phát triển ViSpeech nhằm xây dựng cơ sở cung cấp dịch vụ nhận dạng âm
+              thanh tiếng
               Việt phục vụ cho các tổ chức cá nhân có nhu cầu.
             </p>
             <ul className="social-icons">
               <li>
                 <a className="facebook" href="#">
-                  <i className="fab fa-facebook-f" />
+                  <i className="fab fa-facebook-f"/>
                 </a>
               </li>
               <li>
                 <a className="twitter" href="#">
-                  <i className="fab fa-twitter" />
+                  <i className="fab fa-twitter"/>
                 </a>
               </li>
               <li>
                 <a className="google" href="#">
-                  <i className="fab fa-google-plus-g" />
+                  <i className="fab fa-google-plus-g"/>
                 </a>
               </li>
               <li>
                 <a className="linkedin" href="#">
-                  <i className="fab fa-linkedin-in" />
+                  <i className="fab fa-linkedin-in"/>
                 </a>
               </li>
             </ul>

@@ -3,13 +3,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ADMIN_PATH,
-  ROLES,
-  DEFAULT_PAGINATION,
-  STATUS,
   DEFAULT_ERR_MESSAGE,
+  DEFAULT_PAGINATION,
+  ROLES,
+  STATUS,
   TIMEOUT_MILLISECONDS,
 } from 'utils/constant'
 import * as moment from 'moment'
@@ -33,22 +33,22 @@ const {
 } = KAFKA_TOPIC
 
 const UserListPage = ({
-  userListObj,
-  deleteUserObj,
-  clearDeleteUserState,
-  getUserList,
-  deleteUser,
-  deleteUserSuccess,
-  deleteUserFailure,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
-  const [confirmModal, setConfirmModal] = useState({})
+                        userListObj,
+                        deleteUserObj,
+                        clearDeleteUserState,
+                        getUserList,
+                        deleteUser,
+                        deleteUserSuccess,
+                        deleteUserFailure,
+                      }) => {
+  const [ infoModal, setInfoModal ] = useState({})
+  const [ confirmModal, setConfirmModal ] = useState({})
   const loadingRef = useRef(deleteUserObj.isLoading)
   loadingRef.current = deleteUserObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteUserState()
-  }, [clearDeleteUserState])
+  }, [ clearDeleteUserState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_DELETED_FAILED_EVENT)
@@ -119,7 +119,7 @@ const UserListPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [deleteUserObj, getUserList, closeInfoModal, deleteUserFailure])
+  }, [ deleteUserObj, getUserList, closeInfoModal, deleteUserFailure ])
 
   const onDeleteUser = async userId => {
     if (!userId) return
@@ -177,28 +177,28 @@ const UserListPage = ({
       title: 'Họ',
       dataIndex: 'lastName',
       canSearch: true,
-      render: lastName => <span>{lastName}</span>,
+      render: lastName => <span>{ lastName }</span>,
       width: 180,
     },
     {
       title: 'Tên',
       dataIndex: 'firstName',
       canSearch: true,
-      render: firstName => <span>{firstName}</span>,
+      render: firstName => <span>{ firstName }</span>,
       width: 180,
     },
     {
       title: 'Tên đăng nhập',
       dataIndex: 'username',
       canSearch: true,
-      render: username => <span>{username}</span>,
+      render: username => <span>{ username }</span>,
       width: 180,
     },
     {
       title: 'Email',
       dataIndex: 'email',
       canSearch: true,
-      render: email => <span>{email}</span>,
+      render: email => <span>{ email }</span>,
       width: 180,
     },
     {
@@ -211,7 +211,7 @@ const UserListPage = ({
       ],
       filterMultiple: false,
       render: roles => {
-        return <span>{roles[0].name}</span>
+        return <span>{ roles[0].name }</span>
       },
       width: 180,
     },
@@ -227,9 +227,9 @@ const UserListPage = ({
       filterMultiple: false,
       render: isActive => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${isActive.cssClass}`} />
-          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
-            {isActive.viText}
+          <div className={ `data-state ${ isActive.cssClass }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: '0' } }>
+            { isActive.viText }
           </span>
         </div>
       ),
@@ -251,15 +251,15 @@ const UserListPage = ({
         const isActive = record.isActive.name === STATUS.ACTIVE.name
         return (
           <>
-            <a href={`${ADMIN_PATH}/user-info/${_id}`} className="btn btn-simple btn-secondary btn-just-icon">
-              <i className="far fa-eye" />
+            <a href={ `${ ADMIN_PATH }/user-info/${ _id }` } className="btn btn-simple btn-secondary btn-just-icon">
+              <i className="far fa-eye"/>
             </a>
             <button
-              disabled={!isActive}
+              disabled={ !isActive }
               className="btn btn-simple btn-danger btn-just-icon"
-              onClick={() => onDeleteUser(_id)}
+              onClick={ () => onDeleteUser(_id) }
             >
-              <i className="fas fa-times" />
+              <i className="fas fa-times"/>
             </button>
           </>
         )
@@ -271,41 +271,41 @@ const UserListPage = ({
 
   useEffect(() => {
     getUserList({ pagination: DEFAULT_PAGINATION.SIZE_5 })
-  }, [getUserList])
+  }, [ getUserList ])
 
   return (
     <div className="row">
       <div className="col-md-12">
         <div className="card">
           <div className="card-header">
-            <h4 className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h4 className="card-title" style={ { display: 'flex', justifyContent: 'space-between' } }>
               <span>Danh sách khách hàng</span>
               <a
-                href={`${ADMIN_PATH}/create-user`}
+                href={ `${ ADMIN_PATH }/create-user` }
                 className="btn btn-just-icon btn-simple btn-primary m-0"
                 rel="tooltip"
                 title="Thêm mới"
               >
-                <i className="fas fa-plus" />
+                <i className="fas fa-plus"/>
               </a>
             </h4>
           </div>
           <div className="card-content">
             <div className="material-datatables">
               <AntdTable
-                dataObj={userListObj.userList}
-                columns={columns}
-                fetchData={getUserList}
-                isLoading={userListObj.isLoading}
-                pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-                scrollY={500}
+                dataObj={ userListObj.userList }
+                columns={ columns }
+                fetchData={ getUserList }
+                isLoading={ userListObj.isLoading }
+                pageSize={ DEFAULT_PAGINATION.SIZE_5.pageSize }
+                scrollY={ 500 }
               />
             </div>
           </div>
         </div>
       </div>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
-      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
+      { confirmModal.visible && <ConfirmModal confirmModal={ confirmModal }/> }
     </div>
   )
 }

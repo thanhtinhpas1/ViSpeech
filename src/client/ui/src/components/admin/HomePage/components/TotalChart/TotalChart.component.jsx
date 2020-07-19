@@ -1,12 +1,12 @@
 /* eslint-disable radix */
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColumnLine } from '@ant-design/charts'
 import ReportUtils from 'utils/report.util'
 
 const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
-  const [data, setData] = useState([])
+  const [ data, setData ] = useState([])
   const USED_MINUTES = 'Số phút đã dùng'
   const TOTAL_REQUESTS = 'Số lần sử dụng dịch vụ'
   const TIME = 'time'
@@ -26,7 +26,7 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
       },
     }
     getTotalStatistics(ReportUtils.TIME_TYPE.MONTH, queryParams)
-  }, [getTotalStatistics])
+  }, [ getTotalStatistics ])
 
   useEffect(() => {
     if (getTotalStatisticsObj.isLoading === false && getTotalStatisticsObj.isSuccess === true) {
@@ -34,12 +34,12 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
         const obj = {}
         obj[USED_MINUTES] = data.usedMinutes
         obj[TOTAL_REQUESTS] = data.totalRequests
-        obj[TIME] = `${parseInt(data.month) + 1}/${data.year}`
+        obj[TIME] = `${ parseInt(data.month) + 1 }/${ data.year }`
         return obj
       })
       setData(chartData)
     }
-  }, [getTotalStatisticsObj])
+  }, [ getTotalStatisticsObj ])
 
   const onRefreshData = () => {
     const { from, to } = ReportUtils.getPreviousSixMonthsFromNow()
@@ -68,13 +68,13 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
   const metaObj = {}
   metaObj[USED_MINUTES] = {
     formatter: v => {
-      return `${v} phút`
+      return `${ v } phút`
     },
     style: DEFAULT_STYLE,
   }
   metaObj[TOTAL_REQUESTS] = {
     formatter: v => {
-      return `${v} lần`
+      return `${ v } lần`
     },
     style: DEFAULT_STYLE,
   }
@@ -90,9 +90,9 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
     description: {
       visible: false,
     },
-    data: [data, data],
+    data: [ data, data ],
     xField: TIME,
-    yField: [USED_MINUTES, TOTAL_REQUESTS],
+    yField: [ USED_MINUTES, TOTAL_REQUESTS ],
     xAxis: {
       label: { autoHide: false, style: DEFAULT_STYLE },
       title: { style: DEFAULT_STYLE },
@@ -107,12 +107,12 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
         <div className="card">
           <div className="card-header d-flex justify-content-between align-items-center">
             <h4 className="card-title">Biểu đồ</h4>
-            <button type="button" onClick={onRefreshData} className="btn btn-just-icon btn-simple btn-primary m-0">
-              <i className="fas fa-redo" />
+            <button type="button" onClick={ onRefreshData } className="btn btn-just-icon btn-simple btn-primary m-0">
+              <i className="fas fa-redo"/>
             </button>
           </div>
           <div className="card-content">
-            <ColumnLine forceFit {...config} />
+            <ColumnLine forceFit { ...config } />
           </div>
         </div>
       </div>

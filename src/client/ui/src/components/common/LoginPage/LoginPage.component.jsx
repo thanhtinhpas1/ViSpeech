@@ -5,7 +5,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Alert, Button } from 'antd'
 import Utils from 'utils'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -17,14 +17,14 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const LoginPage = ({
-  loginObj,
-  loginWithSocialObj,
-  login,
-  loginWithSocial,
-  loginWithSocialSuccess,
-  loginWithSocialFailure,
-  onClearUserState,
-}) => {
+                     loginObj,
+                     loginWithSocialObj,
+                     login,
+                     loginWithSocial,
+                     loginWithSocialSuccess,
+                     loginWithSocialFailure,
+                     onClearUserState,
+                   }) => {
   const loadingRef = useRef(loginWithSocialObj.isLoading)
   loadingRef.current = loginWithSocialObj.isLoading
 
@@ -35,7 +35,7 @@ const LoginPage = ({
 
   useEffect(() => {
     onClearUserState()
-  }, [onClearUserState])
+  }, [ onClearUserState ])
 
   const handleOnSubmit = e => {
     e.preventDefault()
@@ -59,7 +59,7 @@ const LoginPage = ({
       }, TIMEOUT_MILLISECONDS)
     }
     return () => clearTimeout(timer)
-  }, [loginWithSocialObj, loginWithSocialFailure])
+  }, [ loginWithSocialObj, loginWithSocialFailure ])
 
   const loginWithFacebookOrGoogle = async (accessToken, userType) => {
     loginWithSocial(accessToken, userType)
@@ -77,7 +77,7 @@ const LoginPage = ({
           } else {
             const user = { ...data.userDto }
             if (!Array.isArray(user.roles)) {
-              user.roles = [user.roles]
+              user.roles = [ user.roles ]
             }
             loginWithSocialSuccess(user)
             STORAGE.setPreferences(JWT_TOKEN, user.jwtToken)
@@ -94,48 +94,50 @@ const LoginPage = ({
       <div className="page-ath-wrap">
         <div className="page-ath-content">
           <div className="page-ath-header">
-            <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold', letterSpacing: '1px' }}>
+            <a href="/" className="page-ath-logo"
+               style={ { fontSize: '2em', fontWeight: 'bold', letterSpacing: '1px' } }>
               VIET SPEECH
             </a>
           </div>
           <div className="page-ath-form">
             <h2 className="page-ath-heading">Đăng nhập</h2>
-            {!loginObj.isLoading && loginObj.isSuccess === false && (
+            { !loginObj.isLoading && loginObj.isSuccess === false && (
               <Alert
-                message={Utils.buildFailedMessage(loginObj)}
+                message={ Utils.buildFailedMessage(loginObj) }
                 type="error"
                 showIcon
                 closable
-                style={{ marginBottom: '20px' }}
+                style={ { marginBottom: '20px' } }
               />
-            )}
-            {!loginWithSocialObj.isLoading && loginWithSocialObj.isSuccess === false && (
+            ) }
+            { !loginWithSocialObj.isLoading && loginWithSocialObj.isSuccess === false && (
               <Alert
-                message={Utils.buildFailedMessage(loginWithSocialObj.message)}
+                message={ Utils.buildFailedMessage(loginWithSocialObj.message) }
                 type="error"
                 showIcon
                 closable
-                style={{ marginBottom: '20px' }}
+                style={ { marginBottom: '20px' } }
               />
-            )}
-            <form onSubmit={e => handleOnSubmit(e)}>
+            ) }
+            <form onSubmit={ e => handleOnSubmit(e) }>
               <div className="input-item">
-                <input type="text" placeholder="Tên đăng nhập" className="input-bordered" name="username" required />
+                <input type="text" placeholder="Tên đăng nhập" className="input-bordered" name="username" required/>
               </div>
               <div className="input-item">
-                <input type="password" placeholder="Mật khẩu" className="input-bordered" name="password" required />
+                <input type="password" placeholder="Mật khẩu" className="input-bordered" name="password" required/>
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <div className="input-item text-left">
-                  <input className="input-checkbox input-checkbox-md" id="remember-me" type="checkbox" />
+                  <input className="input-checkbox input-checkbox-md" id="remember-me" type="checkbox"/>
                   <label htmlFor="remember-me">Ghi nhớ tài khoản</label>
                 </div>
                 <div>
                   <a href="/customer/forgot.html">Quên mật khẩu?</a>
-                  <div className="gaps-2x" />
+                  <div className="gaps-2x"/>
                 </div>
               </div>
-              <Button htmlType="submit" loading={loginObj.isLoading} type="primary" size="large" className="btn-block">
+              <Button htmlType="submit" loading={ loginObj.isLoading } type="primary" size="large"
+                      className="btn-block">
                 Đăng nhập
               </Button>
             </form>
@@ -144,18 +146,18 @@ const LoginPage = ({
             </div>
             <ul className="row guttar-20px guttar-vr-20px">
               <li className="col">
-                <LoginWithFacebook loginWithSocial={loginWithFacebookOrGoogle} />
+                <LoginWithFacebook loginWithSocial={ loginWithFacebookOrGoogle }/>
               </li>
               <li className="col">
-                <LoginWithGoogle loginWithSocial={loginWithFacebookOrGoogle} />
+                <LoginWithGoogle loginWithSocial={ loginWithFacebookOrGoogle }/>
               </li>
             </ul>
-            <div className="gaps-2x" />
-            <div className="gaps-2x" />
+            <div className="gaps-2x"/>
+            <div className="gaps-2x"/>
             <div className="form-note">
               Chưa có tài khoản?
               <a href="/register">
-                {' '}
+                { ' ' }
                 <strong>Đăng ký ở đây</strong>
               </a>
             </div>
@@ -176,7 +178,7 @@ const LoginPage = ({
         <div className="page-ath-gfx">
           <div className="w-100 d-flex justify-content-center">
             <div className="col-md-8 col-xl-5">
-              <img src={`${process.env.PUBLIC_URL}/images/all/ath-gfx.png`} alt="" />
+              <img src={ `${ process.env.PUBLIC_URL }/images/all/ath-gfx.png` } alt=""/>
             </div>
           </div>
         </div>

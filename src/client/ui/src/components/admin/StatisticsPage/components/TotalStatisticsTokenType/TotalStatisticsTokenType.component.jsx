@@ -2,19 +2,19 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ReportUtils from 'utils/report.util'
 import Utils from 'utils'
 import { MONETARY_UNIT } from 'utils/constant'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsTokenType = ({
-  currentUser,
-  chartOptions,
-  getAdminTotalStatisticsBytokenTypeObj,
-  getAdminTotalStatistics,
-}) => {
-  const [adminTotalStatistics, setAdminTotalStatistics] = useState({ data: [] })
+                                    currentUser,
+                                    chartOptions,
+                                    getAdminTotalStatisticsBytokenTypeObj,
+                                    getAdminTotalStatistics,
+                                  }) => {
+  const [ adminTotalStatistics, setAdminTotalStatistics ] = useState({ data: [] })
 
   useEffect(() => {
     if (getAdminTotalStatisticsBytokenTypeObj.data.length > 0) {
@@ -23,7 +23,7 @@ const TotalStatisticsTokenType = ({
           ...item,
           data: {
             ...item.data,
-            display: `${Utils.formatPrice(item.data.price)} ${MONETARY_UNIT} / ${item.data.minutes} phút`,
+            display: `${ Utils.formatPrice(item.data.price) } ${ MONETARY_UNIT } / ${ item.data.minutes } phút`,
           },
         }
       })
@@ -32,26 +32,26 @@ const TotalStatisticsTokenType = ({
         data: formatStatisticsData,
       })
     }
-  }, [getAdminTotalStatisticsBytokenTypeObj])
+  }, [ getAdminTotalStatisticsBytokenTypeObj ])
 
   const getTotalStatistics = useCallback(
     (userId, statisticsType, timeType, queryParams) => {
       getAdminTotalStatistics(statisticsType, timeType, queryParams)
     },
-    [getAdminTotalStatistics]
+    [ getAdminTotalStatistics ]
   )
 
   return (
     <div>
-      {currentUser._id && (
+      { currentUser._id && (
         <TotalStatisticsTemplate
-          userId={currentUser._id}
-          chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.TOKEN_TYPE}
-          getTotalStatisticsObj={adminTotalStatistics}
-          getTotalStatistics={getTotalStatistics}
+          userId={ currentUser._id }
+          chartOptions={ chartOptions }
+          statisticsType={ ReportUtils.STATISTICS_TYPE.TOKEN_TYPE }
+          getTotalStatisticsObj={ adminTotalStatistics }
+          getTotalStatistics={ getTotalStatistics }
         />
-      )}
+      ) }
     </div>
   )
 }

@@ -3,10 +3,10 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Utils from 'utils'
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import SocketUtils from 'utils/socket.util'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -18,14 +18,14 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { VERIFY_EMAIL_SENT_SUCCESS_EVENT, VERIFY_EMAIL_SENT_FAILED_EVENT } = KAFKA_TOPIC
 
 const ProfilePage = ({
-  currentUser,
-  sendVerifyEmailObj,
-  sendVerifyEmail,
-  sendVerifyEmailSuccess,
-  sendVerifyEmailFailure,
-  onAuthenticate,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
+                       currentUser,
+                       sendVerifyEmailObj,
+                       sendVerifyEmail,
+                       sendVerifyEmailSuccess,
+                       sendVerifyEmailFailure,
+                       onAuthenticate,
+                     }) => {
+  const [ infoModal, setInfoModal ] = useState({})
   const loadingRef = useRef(sendVerifyEmailObj.isLoading)
   loadingRef.current = sendVerifyEmailObj.isLoading
 
@@ -34,7 +34,7 @@ const ProfilePage = ({
       SocketService.socketOnListeningEvent(VERIFY_EMAIL_SENT_SUCCESS_EVENT)
       SocketService.socketOnListeningEvent(VERIFY_EMAIL_SENT_FAILED_EVENT)
     }
-  }, [currentUser])
+  }, [ currentUser ])
 
   const closeInfoModal = useCallback(() => {
     setInfoModal(i => {
@@ -45,7 +45,7 @@ const ProfilePage = ({
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
     onAuthenticate(token)
-  }, [onAuthenticate])
+  }, [ onAuthenticate ])
 
   useEffect(() => {
     let timer = null
@@ -88,7 +88,7 @@ const ProfilePage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [sendVerifyEmailObj, closeInfoModal, sendVerifyEmailFailure])
+  }, [ sendVerifyEmailObj, closeInfoModal, sendVerifyEmailFailure ])
 
   const onSendVerifyEmail = async () => {
     const infoObj = {
@@ -140,8 +140,8 @@ const ProfilePage = ({
                   </li>
                 </ul>
                 <div className="tab-content" id="profile-details">
-                  <PersonalDataTab />
-                  <PasswordTab />
+                  <PersonalDataTab/>
+                  <PasswordTab/>
                 </div>
               </div>
             </div>
@@ -152,18 +152,18 @@ const ProfilePage = ({
                 <h6 className="card-title card-title-sm">Trạng thái tài khoản</h6>
                 <ul className="btn-grp">
                   <li>
-                    {currentUser && !Utils.isEmailVerified(currentUser.roles) ? (
+                    { currentUser && !Utils.isEmailVerified(currentUser.roles) ? (
                       <>
                         <p className="pdb-0-5x">
                           Email của bạn chưa được xác thực. Xác thực email để kích hoạt tài khoản.
                         </p>
-                        <button className="btn btn-sm btn-auto btn-warning" onClick={onSendVerifyEmail}>
+                        <button className="btn btn-sm btn-auto btn-warning" onClick={ onSendVerifyEmail }>
                           Xác thực email
                         </button>
                       </>
                     ) : (
                       <span className="badge badge-sm badge-success">Email đã được xác thực</span>
-                    )}
+                    ) }
                   </li>
                 </ul>
               </div>
@@ -171,7 +171,7 @@ const ProfilePage = ({
           </div>
         </div>
       </div>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
     </div>
   )
 }

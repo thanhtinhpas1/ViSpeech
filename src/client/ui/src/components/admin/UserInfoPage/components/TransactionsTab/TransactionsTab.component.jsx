@@ -7,14 +7,14 @@
 import React, { useCallback, useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from 'utils/constant'
+import { ADMIN_PATH, DEFAULT_PAGINATION, ORDER_STATUS, TOKEN_TYPE } from 'utils/constant'
 
 const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList }) => {
   const columns = [
     {
       title: 'Mã đơn hàng',
       dataIndex: '_id',
-      render: _id => <span className="lead tnx-id">{_id}</span>,
+      render: _id => <span className="lead tnx-id">{ _id }</span>,
       width: 150,
     },
     {
@@ -30,9 +30,9 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       filterMultiple: false,
       render: status => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${status.class}`} />
-          <span className="sub sub-s2" style={{ paddingTop: 0 }}>
-            {status.name}
+          <div className={ `data-state ${ status.class }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: 0 } }>
+            { status.name }
           </span>
         </div>
       ),
@@ -46,11 +46,11 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       render: token => (
         <span className="lead tnx-id">
           <div className="copy-wrap w-100">
-            <span className="copy-feedback" />
-            <em className="fas fa-key" />
-            <input type="text" className="copy-address" defaultValue={token} disabled />
-            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={token}>
-              <em className="ti ti-files" />
+            <span className="copy-feedback"/>
+            <em className="fas fa-key"/>
+            <input type="text" className="copy-address" defaultValue={ token } disabled/>
+            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={ token }>
+              <em className="ti ti-files"/>
             </button>
           </div>
         </span>
@@ -71,9 +71,9 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       filterMultiple: false,
       render: tokenType => (
         <>
-          <span className={`dt-type-md badge badge-outline ${tokenType.class} badge-md`}>{tokenType.name}</span>
-          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.class} badge-md`}>
-            {tokenType.name}
+          <span className={ `dt-type-md badge badge-outline ${ tokenType.class } badge-md` }>{ tokenType.name }</span>
+          <span className={ `dt-type-sm badge badge-sq badge-outline ${ tokenType.class } badge-md` }>
+            { tokenType.name }
           </span>
         </>
       ),
@@ -87,8 +87,8 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 240,
@@ -98,8 +98,9 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
       title: '',
       dataIndex: '_id',
       render: _id => (
-        <a href={`${ADMIN_PATH}/transaction-details?id=${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="far fa-eye" />
+        <a href={ `${ ADMIN_PATH }/transaction-details?id=${ _id }` }
+           className="btn btn-just-icon btn-secondary btn-simple">
+          <i className="far fa-eye"/>
         </a>
       ),
       align: 'right',
@@ -112,7 +113,7 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
     if (userId) {
       getUserOrderList({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
-  }, [userInfoObj.user._id, getUserOrderList])
+  }, [ userInfoObj.user._id, getUserOrderList ])
 
   const getList = useCallback(
     ({ pagination, sortField, sortOrder, filters }) => {
@@ -121,18 +122,18 @@ const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList })
         getUserOrderList({ userId, pagination, sortField, sortOrder, filters })
       }
     },
-    [userInfoObj.user._id, getUserOrderList]
+    [ userInfoObj.user._id, getUserOrderList ]
   )
 
   return (
     <div>
       <AntdTable
-        dataObj={getUserOrderListObj.userOrderList}
-        columns={columns}
-        fetchData={getList}
-        isLoading={getUserOrderListObj.isLoading}
-        pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-        scrollY={500}
+        dataObj={ getUserOrderListObj.userOrderList }
+        columns={ columns }
+        fetchData={ getList }
+        isLoading={ getUserOrderListObj.isLoading }
+        pageSize={ DEFAULT_PAGINATION.SIZE_5.pageSize }
+        scrollY={ 500 }
       />
     </div>
   )

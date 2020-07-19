@@ -1,5 +1,5 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
 import Utils from 'utils'
 import { apiUrl } from './api-url'
 
@@ -10,12 +10,12 @@ export default class TaskService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/tasks?${query}`
+    const api = `${ apiUrl }/tasks?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -24,7 +24,7 @@ export default class TaskService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {

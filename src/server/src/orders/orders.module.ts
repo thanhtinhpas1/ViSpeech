@@ -102,7 +102,7 @@ export class OrdersModule implements OnModuleInit, OnModuleDestroy {
         if (orderProjection) {
             await getMongoRepository(ProjectionDto).save({...orderProjection, expectedVersion: orderProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-order', eventNumber: 0, expectedVersion: 0});
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-order', eventNumber: 0, expectedVersion: -1});
         }
         Logger.log('Seed projection order success')
     }

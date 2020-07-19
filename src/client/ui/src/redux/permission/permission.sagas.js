@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-globals */
-import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
 import PermissionService from 'services/permission.service'
 import PermissionTypes from './permission.types'
-import { findPermissionByEmailTokenSuccess, findPermissionByEmailTokenFailure } from './permission.actions'
+import { findPermissionByEmailTokenFailure, findPermissionByEmailTokenSuccess } from './permission.actions'
 
 // find permission by email token
 function* findPermissionByEmailToken({ payload: token }) {
@@ -13,6 +13,7 @@ function* findPermissionByEmailToken({ payload: token }) {
     yield put(findPermissionByEmailTokenFailure(err.message))
   }
 }
+
 export function* findPermissionByEmailTokenSaga() {
   yield takeLatest(PermissionTypes.FIND_PERMISSION_BY_EMAIL_TOKEN, findPermissionByEmailToken)
 }
@@ -51,5 +52,5 @@ export function* findPermissionByEmailTokenSaga() {
 // =================================
 
 export function* permissionSaga() {
-  yield all([call(findPermissionByEmailTokenSaga)])
+  yield all([ call(findPermissionByEmailTokenSaga) ])
 }

@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { CUSTOMER_PATH, DEFAULT_ERR_MESSAGE, JWT_TOKEN, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import Utils from 'utils'
 import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
@@ -13,15 +13,15 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { EMAIL_VERIFIED_SUCCESS_EVENT, EMAIL_VERIFIED_FAILED_EVENT } = KAFKA_TOPIC
 
 const VerifyEmailPage = ({
-  currentUser,
-  verifyEmailObj,
-  verifyEmail,
-  verifyEmailSuccess,
-  verifyEmailFailure,
-  onAuthenticate,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
-  const [infoTemplate, setInfoTemplate] = useState({})
+                           currentUser,
+                           verifyEmailObj,
+                           verifyEmail,
+                           verifyEmailSuccess,
+                           verifyEmailFailure,
+                           onAuthenticate,
+                         }) => {
+  const [ infoModal, setInfoModal ] = useState({})
+  const [ infoTemplate, setInfoTemplate ] = useState({})
   const { emailToken } = useParams()
   const history = useHistory()
   const loadingRef = useRef(verifyEmailObj.isLoading)
@@ -41,7 +41,7 @@ const VerifyEmailPage = ({
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
     onAuthenticate(token)
-  }, [onAuthenticate])
+  }, [ onAuthenticate ])
 
   const onVerifyEmail = useCallback(async () => {
     let infoObj = {
@@ -53,7 +53,7 @@ const VerifyEmailPage = ({
         content: 'Về trang cá nhân',
         clickFunc: () => {
           closeInfoModal()
-          history.push(`${CUSTOMER_PATH}/profile`)
+          history.push(`${ CUSTOMER_PATH }/profile`)
         },
       },
       onCancel: () => closeInfoModal(),
@@ -116,7 +116,7 @@ const VerifyEmailPage = ({
           content: 'Xin lỗi! Yêu cầu kích hoạt tài khoản này không phải của bạn.',
           positiveButton: {
             content: 'Về trang cá nhân',
-            clickFunc: () => history.push(`${CUSTOMER_PATH}/profile`),
+            clickFunc: () => history.push(`${ CUSTOMER_PATH }/profile`),
           },
         })
       } else if (Utils.isEmailVerified(currentUser.roles)) {
@@ -126,17 +126,17 @@ const VerifyEmailPage = ({
           content: 'Tài khoản của bạn đã được kích hoạt.',
           positiveButton: {
             content: 'Về trang cá nhân',
-            clickFunc: () => history.push(`${CUSTOMER_PATH}/profile`),
+            clickFunc: () => history.push(`${ CUSTOMER_PATH }/profile`),
           },
         })
-      } else if (Number(`${decodedToken.exp}000`) < Date.now()) {
+      } else if (Number(`${ decodedToken.exp }000`) < Date.now()) {
         setInfoTemplate({
           title: 'Kích hoạt tài khoản',
           user: currentUser,
           content: 'Xin lỗi! Yêu cầu kích hoạt tài khoản của bạn đã hết hiệu lực.',
           positiveButton: {
             content: 'Về trang cá nhân',
-            clickFunc: () => history.push(`${CUSTOMER_PATH}/profile`),
+            clickFunc: () => history.push(`${ CUSTOMER_PATH }/profile`),
           },
         })
       } else {
@@ -152,7 +152,7 @@ const VerifyEmailPage = ({
         })
       }
     }
-  }, [currentUser, emailToken, history, onVerifyEmail])
+  }, [ currentUser, emailToken, history, onVerifyEmail ])
 
   useEffect(() => {
     let timer = null
@@ -174,7 +174,7 @@ const VerifyEmailPage = ({
             content: 'Về trang cá nhân',
             clickFunc: () => {
               closeInfoModal()
-              history.push(`${CUSTOMER_PATH}/profile`)
+              history.push(`${ CUSTOMER_PATH }/profile`)
             },
           },
           onCancel: () => {
@@ -200,9 +200,9 @@ const VerifyEmailPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [verifyEmailObj, history, closeInfoModal, verifyEmailFailure])
+  }, [ verifyEmailObj, history, closeInfoModal, verifyEmailFailure ])
 
-  return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />
+  return <InfoTemplatePage infoTemplate={ infoTemplate } infoModal={ infoModal }/>
 }
 
 export default VerifyEmailPage

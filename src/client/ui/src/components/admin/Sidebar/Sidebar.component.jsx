@@ -10,117 +10,117 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
     if ((!currentUser && token) || !token) onAuthenticate(token)
-  }, [currentUser, onAuthenticate])
+  }, [ currentUser, onAuthenticate ])
 
   return (
     <div className="sidebar">
       <div className="logo">
-        <a href={`${ADMIN_PATH}`} className="simple-text">
+        <a href={ `${ ADMIN_PATH }` } className="simple-text">
           VIET SPEECH ADMIN
         </a>
       </div>
       <div className="logo logo-mini">
-        <a href={`${ADMIN_PATH}`} className="simple-text">
+        <a href={ `${ ADMIN_PATH }` } className="simple-text">
           VS
         </a>
       </div>
       <div className="sidebar-wrapper">
-        <ul className="nav nav-mobile-menu" style={{ marginTop: '15px' }}>
+        <ul className="nav nav-mobile-menu" style={ { marginTop: '15px' } }>
           <li className="dropdown">
             <a href="#!" className="dropdown-toggle" data-toggle="dropdown">
               <i className="material-icons">person</i>
               <p className="hidden-lg hidden-md">
                 Trang cá nhân
-                <b className="caret" />
+                <b className="caret"/>
               </p>
             </a>
             <ul className="dropdown-menu">
               <li>
                 <div
-                  style={{
+                  style={ {
                     color: '#333',
                     fontSize: '13px',
                     padding: '10px 20px',
                     margin: '0 5px',
                     whiteSpace: 'nowrap',
-                  }}
+                  } }
                 >
-                  Xin chào, {currentUser.lastName} {currentUser.firstName}
+                  Xin chào, { currentUser.lastName } { currentUser.firstName }
                 </div>
               </li>
               <li>
-                <a href="#!" onClick={logout}>
+                <a href="#!" onClick={ logout }>
                   Đăng xuất
                 </a>
               </li>
             </ul>
           </li>
-          <li className="separator hidden-lg hidden-md" />
+          <li className="separator hidden-lg hidden-md"/>
         </ul>
         <ul className="nav">
-          <li className={`${location.pathname === ADMIN_PATH ? 'active' : ''} `}>
-            <a href={`${ADMIN_PATH}`}>
+          <li className={ `${ location.pathname === ADMIN_PATH ? 'active' : '' } ` }>
+            <a href={ `${ ADMIN_PATH }` }>
               <i className="material-icons">dashboard</i>
               <p>Trang chủ</p>
             </a>
           </li>
           <li
-            className={`${
-              location.pathname === `${ADMIN_PATH}/users` || location.pathname === `${ADMIN_PATH}/create-user`
+            className={ `${
+              location.pathname === `${ ADMIN_PATH }/users` || location.pathname === `${ ADMIN_PATH }/create-user`
                 ? 'active'
                 : ''
-            } `}
+            } ` }
           >
             <a data-toggle="collapse" href="#layouts" className="collapsed" aria-expanded="false">
-              <i className="fas fa-users" />
+              <i className="fas fa-users"/>
               <p>
                 Khách hàng
-                <b className="caret" />
+                <b className="caret"/>
               </p>
             </a>
-            <div className="collapse" id="layouts" aria-expanded="false" style={{ height: '0px' }}>
+            <div className="collapse" id="layouts" aria-expanded="false" style={ { height: '0px' } }>
               <ul className="nav">
                 <li>
-                  <a href={`${ADMIN_PATH}/users`}>Danh sách</a>
+                  <a href={ `${ ADMIN_PATH }/users` }>Danh sách</a>
                 </li>
                 <li>
-                  <a href={`${ADMIN_PATH}/create-user`}>Thêm mới</a>
+                  <a href={ `${ ADMIN_PATH }/create-user` }>Thêm mới</a>
                 </li>
               </ul>
             </div>
           </li>
-          <li className={`${location.pathname === `${ADMIN_PATH}/projects` ? 'active' : ''} `}>
-            <a href={`${ADMIN_PATH}/projects`}>
+          <li className={ `${ location.pathname === `${ ADMIN_PATH }/projects` ? 'active' : '' } ` }>
+            <a href={ `${ ADMIN_PATH }/projects` }>
               <i className="material-icons">business</i>
               <p>Danh sách dự án</p>
             </a>
           </li>
-          <li className={`${location.pathname === `${ADMIN_PATH}/tokens` ? 'active' : ''} `}>
-            <a href={`${ADMIN_PATH}/tokens`}>
+          <li className={ `${ location.pathname === `${ ADMIN_PATH }/tokens` ? 'active' : '' } ` }>
+            <a href={ `${ ADMIN_PATH }/tokens` }>
               <i className="material-icons">vpn_key</i>
               <p>Danh sách API key</p>
             </a>
           </li>
-          <li className={`${location.pathname === `${ADMIN_PATH}/transactions` ? 'active' : ''} `}>
-            <a href={`${ADMIN_PATH}/transactions`}>
+          <li className={ `${ location.pathname === `${ ADMIN_PATH }/transactions` ? 'active' : '' } ` }>
+            <a href={ `${ ADMIN_PATH }/transactions` }>
               <i className="material-icons">history</i>
               <p>Lịch sử giao dịch</p>
             </a>
           </li>
-          <li className={`${location.pathname === `${ADMIN_PATH}/reports` ? 'active' : ''} `}>
-            <a href={`${ADMIN_PATH}/reports`}>
+          <li className={ `${ location.pathname === `${ ADMIN_PATH }/reports` ? 'active' : '' } ` }>
+            <a href={ `${ ADMIN_PATH }/reports` }>
               <i className="material-icons">bar_chart</i>
               <p>Thống kê</p>
             </a>
           </li>
-          <li className={`${location.pathname === `${ADMIN_PATH}/histories` ? 'active' : ''} `}>
-            <a href={`${ADMIN_PATH}/histories`}>
+          <li className={ `${ location.pathname === `${ ADMIN_PATH }/histories` ? 'active' : '' } ` }>
+            <a href={ `${ ADMIN_PATH }/histories` }>
               <i className="material-icons">audiotrack</i>
               <p>Lịch sử sử dụng dịch vụ</p>
             </a>
           </li>
-          <li className={`${location.pathname === `${ADMIN_PATH}/tasks` ? 'active' : ''} `}>
-            <a href={`${ADMIN_PATH}/tasks`}>
+          <li className={ `${ location.pathname === `${ ADMIN_PATH }/tasks` ? 'active' : '' } ` }>
+            <a href={ `${ ADMIN_PATH }/tasks` }>
               <i className="material-icons">admin_panel_settings</i>
               <p>Danh sách thực thi</p>
             </a>

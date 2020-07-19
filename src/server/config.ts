@@ -77,6 +77,11 @@ const configs = {
             PORT: process.env.KAFKA_PORT || 9092,
             TOPIC: process.env.KAFKA_TOPIC || 'vispeech',
         },
+        REDIS: {
+          NAME: 'REDIS',
+            HOST: process.env.REDIS_HOST || '0.0.0.0',
+            PORT: process.env.REDIS_PORT || 6379,
+        },
         ASR: {
             PROTOCOL: process.env.ASR_PROTOCOL || 'http',
             HOST: process.env.ASR_HOST || 'asr.vietspeech.com',

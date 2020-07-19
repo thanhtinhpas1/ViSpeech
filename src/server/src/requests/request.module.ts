@@ -117,7 +117,7 @@ export class RequestModule implements OnModuleInit, OnModuleDestroy {
         if (userProjection) {
             await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-request', eventNumber: 0, expectedVersion: 0});
+            await getMongoRepository(ProjectionDto).save({streamName: '$ce-request', eventNumber: 0, expectedVersion: -1});
         }
         Logger.log('Seed projection request success')
     }

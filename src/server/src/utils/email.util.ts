@@ -4,16 +4,6 @@ import nodemailer from 'nodemailer';
 import { config } from '../../config';
 
 const hostUrl = `${ config.ASR.PROTOCOL }://${ config.ASR.HOST }:3200/customer`;
-// const transport = nodemailer.createTransport({
-//     host: "smtp.gmail.com",
-//     port: 465,
-//     secure: true, // upgrade later with STARTTLS
-//     // ignoreTLS: false,
-//     auth: {
-//         user: "vispeech2020@gmail.com",
-//         pass: "vispeech"
-//     }
-// });
 const transport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -72,20 +62,3 @@ ${ hostUrl }/reset-password/${ token }`;
             'lời mời tham gia dự án', CONSTANTS.TOKEN_EXPIRATION.REPLY_PERMISSION_ASSIGN));
     },
 };
-
-// // using Twilio SendGrid's v3 Node.js Library
-// // https://github.com/sendgrid/sendgrid-nodejs
-// const sgMail = require('@sendgrid/mail');
-// sgMail.setApiKey(config.SEND_GRID_API_KEY);
-
-// const sendEmail = (to, subject, contentEmail) => {
-//     const msg = {
-//         to,
-//         from: 'vispeech2020@gmail.com',
-//         subject,
-//         text: contentEmail,
-//         html: contentEmail,
-//     };
-//     console.log('Message sent: %s', msg);
-//     return sgMail.send(msg);
-// };

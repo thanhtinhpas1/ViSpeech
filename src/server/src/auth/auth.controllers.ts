@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from 'auth/auth.service';
 
 @Controller()
@@ -8,6 +9,9 @@ export class AuthController {
     }
 
     @UseGuards(AuthGuard('local'))
+    @ApiOperation({tags: ['User Login']})
+    @ApiBody({type: 'json'})
+    @ApiResponse({status: 200, description: 'User Login.'})
     @Post('login')
     login(@Request() req) {
         const {_id, username, roles} = req.user;

@@ -87,7 +87,7 @@ const reportReducer = (state = INITIAL_STATE, action) => {
     action.type === ReportTypes.GET_STATISTICS_BY_ID_SUCCESS ||
     action.type === ReportTypes.GET_STATISTICS_BY_ID_FAILURE
   ) {
-    getStatistics = `getStatisticsBy${action.payload.statisticsType}Id`
+    getStatistics = `getStatisticsBy${ action.payload.statisticsType }Id`
   }
   // Only for get user total statistics
   if (
@@ -95,7 +95,7 @@ const reportReducer = (state = INITIAL_STATE, action) => {
     action.type === ReportTypes.GET_USER_TOTAL_STATISTICS_SUCCESS ||
     action.type === ReportTypes.GET_USER_TOTAL_STATISTICS_FAILURE
   ) {
-    getStatistics = `getUserTotalStatisticsBy${action.payload.statisticsType}`
+    getStatistics = `getUserTotalStatisticsBy${ action.payload.statisticsType }`
   }
   // Only for get admin total statistics
   if (
@@ -103,7 +103,7 @@ const reportReducer = (state = INITIAL_STATE, action) => {
     action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS_SUCCESS ||
     action.type === ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE
   ) {
-    getStatistics = `getAdminTotalStatisticsBy${action.payload.statisticsType}`
+    getStatistics = `getAdminTotalStatisticsBy${ action.payload.statisticsType }`
   }
 
   if (

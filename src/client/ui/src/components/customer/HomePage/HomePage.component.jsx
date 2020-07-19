@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
-import { SORT_ORDER, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
+import { DEFAULT_PAGINATION, SORT_ORDER, TOKEN_TYPE } from 'utils/constant'
 import TokenStatistics from './components/TokenStatistics/TokenStatistics.container'
 import TokenTransaction from './components/TokenTransaction/TokenTransaction.container'
 import TokenCalculator from './components/TokenCalculator/TokenCalculator.component'
@@ -19,7 +19,7 @@ const Home = ({ currentUser, getUserOrderListObj, getFreeTokenObj, getFreeToken,
         sortOrder: SORT_ORDER.DESC,
       })
     }
-  }, [currentUser._id, getFreeToken, getUserOrderList])
+  }, [ currentUser._id, getFreeToken, getUserOrderList ])
 
   return (
     <div className="page-content">
@@ -27,48 +27,48 @@ const Home = ({ currentUser, getUserOrderListObj, getFreeTokenObj, getFreeToken,
         <div className="row">
           <div className="col-lg-12">
             <div className="token-statistics card card-token height-auto">
-              <TokenStatistics />
+              <TokenStatistics/>
             </div>
           </div>
           <div className="col-lg-12">
             <div className="token-statistics card card-token height-auto">
               <div className="card-innr">
                 <div className="card-head has-aside">
-                  <h4 className="card-title" style={{ fontSize: '16px', color: '#fff', textTransform: 'uppercase' }}>
+                  <h4 className="card-title" style={ { fontSize: '16px', color: '#fff', textTransform: 'uppercase' } }>
                     API key miễn phí
                   </h4>
-                  <div>Miễn phí {TOKEN_TYPE.FREE.minutes} phút sử dụng</div>
+                  <div>Miễn phí { TOKEN_TYPE.FREE.minutes } phút sử dụng</div>
                 </div>
                 <div className="card-opt">
                   <span className="lead tnx-id">
-                    {getFreeTokenObj.isLoading && getFreeTokenObj.isSuccess == null && (
-                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <LoadingIcon size={30} color="#fff" />
+                    { getFreeTokenObj.isLoading && getFreeTokenObj.isSuccess == null && (
+                      <div style={ { display: 'flex', justifyContent: 'center', alignItems: 'center' } }>
+                        <LoadingIcon size={ 30 } color="#fff"/>
                       </div>
-                    )}
-                    {getFreeTokenObj.isLoading === false && getFreeTokenObj.isSuccess === false && (
+                    ) }
+                    { getFreeTokenObj.isLoading === false && getFreeTokenObj.isSuccess === false && (
                       <div>Lấy API key miễn phí thất bại</div>
-                    )}
-                    {getFreeTokenObj.freeToken && (
+                    ) }
+                    { getFreeTokenObj.freeToken && (
                       <div className="copy-wrap w-100">
-                        <span className="copy-feedback" />
-                        <em className="fas fa-key" />
+                        <span className="copy-feedback"/>
+                        <em className="fas fa-key"/>
                         <input
                           type="text"
                           className="copy-address"
-                          defaultValue={getFreeTokenObj.freeToken.value}
+                          defaultValue={ getFreeTokenObj.freeToken.value }
                           disabled
-                          style={{ fontSize: '15px' }}
+                          style={ { fontSize: '15px' } }
                         />
                         <button
                           type="button"
                           className="copy-trigger copy-clipboard"
-                          data-clipboard-text={getFreeTokenObj.freeToken.value}
+                          data-clipboard-text={ getFreeTokenObj.freeToken.value }
                         >
-                          <em className="ti ti-files" />
+                          <em className="ti ti-files"/>
                         </button>
                       </div>
-                    )}
+                    ) }
                   </span>
                 </div>
               </div>
@@ -76,19 +76,19 @@ const Home = ({ currentUser, getUserOrderListObj, getFreeTokenObj, getFreeToken,
           </div>
           <div className="col-xl-8 col-lg-7">
             <div className="token-transaction card card-full-height">
-              <TokenTransaction userOrderListObj={getUserOrderListObj} />
+              <TokenTransaction userOrderListObj={ getUserOrderListObj }/>
             </div>
           </div>
           <div className="col-xl-4 col-lg-5">
             <div className="token-calculator card card-full-height">
-              <TokenCalculator keyQuantity={getUserOrderListObj.userOrderList.data.length} />
+              <TokenCalculator keyQuantity={ getUserOrderListObj.userOrderList.data.length }/>
             </div>
           </div>
         </div>
         <div className="row">
           <div className="col-xl-12 col-lg-12">
             <div className="token-sale-graph card card-full-height">
-              <TokenSaleGraph userOrderListObj={getUserOrderListObj} />
+              <TokenSaleGraph userOrderListObj={ getUserOrderListObj }/>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Line } from '@ant-design/charts'
 import SocketService from 'services/socket.service'
 import SocketUtils from 'utils/socket.util'
@@ -12,7 +12,7 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { MONITOR_BEAT_SUCCESS_EVENT, MONITOR_BEAT_FAILED_EVENT } = KAFKA_TOPIC
 
 const MonitorBeatRateChart = ({ getMonitorListObj, getMonitorList }) => {
-  const [data, setData] = useState([])
+  const [ data, setData ] = useState([])
   const isMounted = useRef(true)
 
   useEffect(() => {
@@ -22,14 +22,14 @@ const MonitorBeatRateChart = ({ getMonitorListObj, getMonitorList }) => {
 
   useEffect(() => {
     getMonitorList({ pagination: DEFAULT_PAGINATION.SIZE_10, sortField: 'createdDate', sortOrder: SORT_ORDER.DESC })
-  }, [getMonitorList])
+  }, [ getMonitorList ])
 
   useEffect(() => {
     if (getMonitorListObj.isLoading === false && getMonitorListObj.isSuccess === true) {
       const chartData = MonitorUtils.convertArrToChartData(getMonitorListObj.monitorList.data)
       setData(chartData)
     }
-  }, [getMonitorListObj])
+  }, [ getMonitorListObj ])
 
   useEffect(() => {
     invokeCheckSubject.MonitorBeat.subscribe(event => {
@@ -38,7 +38,7 @@ const MonitorBeatRateChart = ({ getMonitorListObj, getMonitorList }) => {
         const convertedData = MonitorUtils.convertToChartData(mappedData)
         setData(p => {
           const data = p.slice(4)
-          return [...data, ...convertedData]
+          return [ ...data, ...convertedData ]
         })
       }
     })
@@ -84,7 +84,7 @@ const MonitorBeatRateChart = ({ getMonitorListObj, getMonitorList }) => {
     meta: {
       rate: {
         formatter: v => {
-          return `${v} items/s`
+          return `${ v } items/s`
         },
       },
       type: {
@@ -122,7 +122,7 @@ const MonitorBeatRateChart = ({ getMonitorListObj, getMonitorList }) => {
             <h4 className="card-title">Biểu đồ</h4>
           </div>
           <div className="card-content">
-            <Line {...config} onlyChangeData />
+            <Line { ...config } onlyChangeData/>
           </div>
         </div>
       </div>

@@ -8,12 +8,12 @@ const loadLink = (url, id, action) => {
       let tag = document.getElementsByTagName('link')
       tag = document.getElementsByTagName('link')[tag.length - 1]
 
-      const linkToLoad = document.getElementById(`link-${id}`)
+      const linkToLoad = document.getElementById(`link-${ id }`)
       if (linkToLoad) {
         resolve(linkToLoad)
       } else {
         const link = document.createElement('link')
-        link.id = `link-${id}`
+        link.id = `link-${ id }`
         link.rel = 'stylesheet'
         link.type = 'text/css'
         link.href = url
@@ -42,11 +42,11 @@ const loadLink = (url, id, action) => {
         }
       }
     } else {
-      const linkToRemove = document.getElementById(`link-${id}`)
+      const linkToRemove = document.getElementById(`link-${ id }`)
       if (linkToRemove) {
         linkToRemove.parentNode.removeChild(linkToRemove)
       }
-      resolve(linkToRemove || { id: `link-${id}` })
+      resolve(linkToRemove || { id: `link-${ id }` })
     }
   })
 }

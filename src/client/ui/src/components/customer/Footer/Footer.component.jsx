@@ -23,11 +23,12 @@ const Footer = () => {
             </ul>
           </div>
           <div className="col-md-4 mt-2 mt-sm-0">
-            <div className="d-flex justify-content-between justify-content-md-end align-items-center guttar-25px pdt-0-5x pdb-0-5x">
+            <div
+              className="d-flex justify-content-between justify-content-md-end align-items-center guttar-25px pdt-0-5x pdb-0-5x">
               <div className="copyright-text">&copy; 2020 ASR VietSpeech.</div>
               <div className="lang-switch relative">
                 <a href="#" className="lang-switch-btn toggle-tigger">
-                  En <em className="ti ti-angle-up" />
+                  En <em className="ti ti-angle-up"/>
                 </a>
                 <div className="toggle-class dropdown-content dropdown-content-up">
                   <ul className="lang-list">

@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect } from 'react'
-import { useTable, usePagination } from 'react-table'
+import { usePagination, useTable } from 'react-table'
 
 const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPageCount, defaultPageSize }) => {
   // Use the state and functions returned from useTable to build your UI
@@ -39,88 +39,89 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
 
   useEffect(() => {
     fetchData({ pageIndex, pageSize })
-  }, [fetchData, pageIndex, pageSize])
+  }, [ fetchData, pageIndex, pageSize ])
 
   return (
     <>
       <div className="dataTables_wrapper">
-        <table {...getTableProps()} className="table data-table user-tnx table-striped table-no-bordered table-hover">
+        <table { ...getTableProps() } className="table data-table user-tnx table-striped table-no-bordered table-hover">
           <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th
-                    {...column.getHeaderProps()}
-                    style={column.headerStyle || {}}
-                    className={column.headerClassName || {}}
-                  >
-                    {column.render('Header')}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map(row => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()} className="data-item">
-                  {row.cells.map(cell => {
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        style={cell.column.style || {}}
-                        className={cell.column.className || {}}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    )
-                  })}
-                </tr>
-              )
-            })}
-            <tr className="data-item">
-              {loading ? (
-                // Use our custom loading state to show a loading indicator
-                <td colSpan="10000" className="data-col" style={{ borderBottom: 'none', color: '#23406c' }}>
-                  Đang tải...
-                </td>
-              ) : (
-                <td colSpan="10000" className="data-col" style={{ borderBottom: 'none', color: '#23406c' }}>
-                  Hiển thị {page.length} trên ~{controlledPageCount * pageSize} kết quả
-                </td>
-              )}
+          { headerGroups.map(headerGroup => (
+            <tr { ...headerGroup.getHeaderGroupProps() }>
+              { headerGroup.headers.map(column => (
+                <th
+                  { ...column.getHeaderProps() }
+                  style={ column.headerStyle || {} }
+                  className={ column.headerClassName || {} }
+                >
+                  { column.render('Header') }
+                </th>
+              )) }
             </tr>
+          )) }
+          </thead>
+          <tbody { ...getTableBodyProps() }>
+          { page.map(row => {
+            prepareRow(row)
+            return (
+              <tr { ...row.getRowProps() } className="data-item">
+                { row.cells.map(cell => {
+                  return (
+                    <td
+                      { ...cell.getCellProps() }
+                      style={ cell.column.style || {} }
+                      className={ cell.column.className || {} }
+                    >
+                      { cell.render('Cell') }
+                    </td>
+                  )
+                }) }
+              </tr>
+            )
+          }) }
+          <tr className="data-item">
+            { loading ? (
+              // Use our custom loading state to show a loading indicator
+              <td colSpan="10000" className="data-col" style={ { borderBottom: 'none', color: '#23406c' } }>
+                Đang tải...
+              </td>
+            ) : (
+              <td colSpan="10000" className="data-col" style={ { borderBottom: 'none', color: '#23406c' } }>
+                Hiển thị { page.length } trên ~{ controlledPageCount * pageSize } kết quả
+              </td>
+            ) }
+          </tr>
           </tbody>
         </table>
         {/* 
         Pagination can be built however you'd like. 
         This is just a very basic UI implementation:
-      */}
+      */ }
         <div
           className="row align-items-center"
-          style={{ display: 'flex', flexWrap: 'wrap', marginRight: '0px', marginLeft: '0px' }}
+          style={ { display: 'flex', flexWrap: 'wrap', marginRight: '0px', marginLeft: '0px' } }
         >
-          <div className="text-left" style={{ whiteSpace: 'nowrap' }}>
+          <div className="text-left" style={ { whiteSpace: 'nowrap' } }>
             <div className="pagination dataTables_paginate">
               <ul className="pagination">
                 <li className="paginate-button-page-item previous">
-                  <a href="#!" className="page-link" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+                  <a href="#!" className="page-link" onClick={ () => gotoPage(0) } disabled={ !canPreviousPage }>
                     Trang đầu
                   </a>
                 </li>
                 <li className="paginate-button-page-item previous">
-                  <a href="#!" className="page-link" onClick={() => previousPage()} disabled={!canPreviousPage}>
+                  <a href="#!" className="page-link" onClick={ () => previousPage() } disabled={ !canPreviousPage }>
                     Trang trước
                   </a>
                 </li>
                 <li className="paginate-button-page-item next">
-                  <a href="#!" className="page-link" onClick={() => nextPage()} disabled={!canNextPage}>
+                  <a href="#!" className="page-link" onClick={ () => nextPage() } disabled={ !canNextPage }>
                     Trang kế
                   </a>
                 </li>
                 <li className="paginate-button-page-item next">
-                  <a href="#!" className="page-link" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+                  <a href="#!" className="page-link" onClick={ () => gotoPage(pageCount - 1) }
+                     disabled={ !canNextPage }>
                     Trang cuối
                   </a>
                 </li>
@@ -130,27 +131,28 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
         </div>
         <div
           className="row align-items-center justify-content-end"
-          style={{ color: '#23406c', marginRight: '0px', marginLeft: '0px' }}
+          style={ { color: '#23406c', marginRight: '0px', marginLeft: '0px' } }
         >
           <div>
-            Trang{' '}
+            Trang{ ' ' }
             <strong>
-              {pageIndex + 1} / {pageOptions.length}
-            </strong>{' '}
+              { pageIndex + 1 } / { pageOptions.length }
+            </strong>{ ' ' }
           </div>
           <div>
-            | Nhập số trang{' '}
+            | Nhập số trang{ ' ' }
             <input
               className="input-bordered"
               type="number"
-              defaultValue={pageIndex + 1}
-              onChange={e => {
+              defaultValue={ pageIndex + 1 }
+              onChange={ e => {
                 const page = e.target.value ? Number(e.target.value) - 1 : 0
                 gotoPage(page)
-              }}
-              style={{ width: '100px' }}
+              } }
+              style={ { width: '100px' } }
             />
-          </div>{' '}
+          </div>
+          { ' ' }
           {/* <select
             value={pageSize}
             onChange={e => {
@@ -162,7 +164,7 @@ const ReactTable = ({ columns, data, fetchData, loading, pageCount: controlledPa
                 Hiển thị trang {pageSize}
               </option>
             ))}
-          </select> */}
+          </select> */ }
         </div>
       </div>
     </>

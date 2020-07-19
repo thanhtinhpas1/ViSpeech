@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import {
-  updateUserInfo,
-  updateUserInfoSuccess,
-  updateUserInfoFailure,
   onClearUpdateUserInfoState,
+  updateUserInfo,
+  updateUserInfoFailure,
+  updateUserInfoSuccess,
 } from 'redux/user/user.actions'
 import InfoTab from './InfoTab.component'
 

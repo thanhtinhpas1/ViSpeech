@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { createOrder, createOrderSuccess, createOrderFailure, onClearCreateOrderState } from 'redux/order/order.actions'
+import { createOrder, createOrderFailure, createOrderSuccess, onClearCreateOrderState } from 'redux/order/order.actions'
 import { getProjectTokenList } from 'redux/token/token.actions'
 import CheckoutForm from './CheckoutForm.component'
 

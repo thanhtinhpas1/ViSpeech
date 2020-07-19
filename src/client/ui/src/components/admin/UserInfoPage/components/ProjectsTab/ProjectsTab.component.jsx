@@ -8,17 +8,17 @@ import React, { useCallback, useEffect } from 'react'
 import { Tabs } from 'antd'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
+import { ADMIN_PATH, DEFAULT_PAGINATION, STATUS } from 'utils/constant'
 
 const { TabPane } = Tabs
 
 const ProjectsTab = ({
-  userInfoObj,
-  getMyProjectListObj,
-  getAcceptedProjectListObj,
-  getMyProjects,
-  getAcceptedProjects,
-}) => {
+                       userInfoObj,
+                       getMyProjectListObj,
+                       getAcceptedProjectListObj,
+                       getMyProjects,
+                       getAcceptedProjects,
+                     }) => {
   const userProjectTableColumns = [
     {
       title: 'Tên dự án',
@@ -26,8 +26,8 @@ const ProjectsTab = ({
       style: { paddingRight: '30px' },
       canSearch: true,
       render: name => (
-        <span className="lead tnx-id" style={{ color: '#2c80ff' }}>
-          {name}
+        <span className="lead tnx-id" style={ { color: '#2c80ff' } }>
+          { name }
         </span>
       ),
       width: 180,
@@ -38,7 +38,7 @@ const ProjectsTab = ({
       headerClassName: 'dt-type',
       className: 'dt-type',
       style: { paddingRight: '30px' },
-      render: description => <div className="d-flex align-items-center">{description}</div>,
+      render: description => <div className="d-flex align-items-center">{ description }</div>,
       width: 200,
     },
     {
@@ -53,9 +53,9 @@ const ProjectsTab = ({
       filterMultiple: false,
       render: isValid => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${isValid.cssClass}`} />
-          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
-            {isValid.viText}
+          <div className={ `data-state ${ isValid.cssClass }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: '0' } }>
+            { isValid.viText }
           </span>
         </div>
       ),
@@ -68,8 +68,8 @@ const ProjectsTab = ({
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 180,
@@ -79,8 +79,8 @@ const ProjectsTab = ({
       title: '',
       dataIndex: '_id',
       render: _id => (
-        <a href={`${ADMIN_PATH}/user-project/${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="far fa-eye" />
+        <a href={ `${ ADMIN_PATH }/user-project/${ _id }` } className="btn btn-just-icon btn-secondary btn-simple">
+          <i className="far fa-eye"/>
         </a>
       ),
       width: 60,
@@ -95,8 +95,8 @@ const ProjectsTab = ({
       style: { paddingRight: '30px' },
       canSearch: true,
       render: name => (
-        <span className="lead tnx-id" style={{ color: '#2c80ff' }}>
-          {name}
+        <span className="lead tnx-id" style={ { color: '#2c80ff' } }>
+          { name }
         </span>
       ),
       width: 180,
@@ -107,7 +107,7 @@ const ProjectsTab = ({
       headerClassName: 'dt-type',
       className: 'dt-type',
       style: { paddingRight: '30px' },
-      render: description => <div className="d-flex align-items-center">{description}</div>,
+      render: description => <div className="d-flex align-items-center">{ description }</div>,
       width: 200,
     },
     {
@@ -122,9 +122,9 @@ const ProjectsTab = ({
       filterMultiple: false,
       render: isValid => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${isValid.cssClass}`} />
-          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
-            {isValid.viText}
+          <div className={ `data-state ${ isValid.cssClass }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: '0' } }>
+            { isValid.viText }
           </span>
         </div>
       ),
@@ -136,7 +136,7 @@ const ProjectsTab = ({
       headerClassName: 'dt-amount',
       className: 'dt-amount',
       canSearch: true,
-      render: ownerName => <span className="lead tnx-id">{ownerName}</span>,
+      render: ownerName => <span className="lead tnx-id">{ ownerName }</span>,
       width: 180,
     },
     {
@@ -146,8 +146,8 @@ const ProjectsTab = ({
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 180,
@@ -165,9 +165,9 @@ const ProjectsTab = ({
       filterMultiple: false,
       render: status => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${status.class}`} />
-          <span className="sub sub-s2" style={{ paddingTop: 0 }}>
-            {status.name}
+          <div className={ `data-state ${ status.class }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: 0 } }>
+            { status.name }
           </span>
         </div>
       ),
@@ -178,8 +178,9 @@ const ProjectsTab = ({
       title: '',
       dataIndex: '_id',
       render: _id => (
-        <a href={`${ADMIN_PATH}/user-accepted-project/${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="far fa-eye" />
+        <a href={ `${ ADMIN_PATH }/user-accepted-project/${ _id }` }
+           className="btn btn-just-icon btn-secondary btn-simple">
+          <i className="far fa-eye"/>
         </a>
       ),
       width: 60,
@@ -193,7 +194,7 @@ const ProjectsTab = ({
       getMyProjects({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
       getAcceptedProjects({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
-  }, [userInfoObj.user._id, getMyProjects, getAcceptedProjects])
+  }, [ userInfoObj.user._id, getMyProjects, getAcceptedProjects ])
 
   const getUserProjectList = useCallback(
     ({ pagination, sortField, sortOrder, filters }) => {
@@ -202,7 +203,7 @@ const ProjectsTab = ({
         getMyProjects({ userId, pagination, sortField, sortOrder, filters })
       }
     },
-    [userInfoObj.user._id, getMyProjects]
+    [ userInfoObj.user._id, getMyProjects ]
   )
 
   const getUserAcceptedProjectList = useCallback(
@@ -212,7 +213,7 @@ const ProjectsTab = ({
         getAcceptedProjects({ userId, pagination, sortField, sortOrder, filters })
       }
     },
-    [userInfoObj.user._id, getAcceptedProjects]
+    [ userInfoObj.user._id, getAcceptedProjects ]
   )
 
   return (
@@ -220,22 +221,22 @@ const ProjectsTab = ({
       <Tabs size="large">
         <TabPane tab="Dự án của tôi" key="1">
           <AntdTable
-            dataObj={getMyProjectListObj.myProjectList}
-            columns={userProjectTableColumns}
-            fetchData={getUserProjectList}
-            isLoading={getMyProjectListObj.isLoading}
-            pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-            scrollY={500}
+            dataObj={ getMyProjectListObj.myProjectList }
+            columns={ userProjectTableColumns }
+            fetchData={ getUserProjectList }
+            isLoading={ getMyProjectListObj.isLoading }
+            pageSize={ DEFAULT_PAGINATION.SIZE_5.pageSize }
+            scrollY={ 500 }
           />
         </TabPane>
         <TabPane tab="Dự án đã tham gia" key="2">
           <AntdTable
-            dataObj={getAcceptedProjectListObj.acceptedProjectList}
-            columns={userAcceptedProjectTableColumns}
-            fetchData={getUserAcceptedProjectList}
-            isLoading={getAcceptedProjectListObj.isLoading}
-            pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-            scrollY={500}
+            dataObj={ getAcceptedProjectListObj.acceptedProjectList }
+            columns={ userAcceptedProjectTableColumns }
+            fetchData={ getUserAcceptedProjectList }
+            isLoading={ getAcceptedProjectListObj.isLoading }
+            pageSize={ DEFAULT_PAGINATION.SIZE_5.pageSize }
+            scrollY={ 500 }
           />
         </TabPane>
       </Tabs>

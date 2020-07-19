@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import {
   changePassword,
-  changePasswordSuccess,
   changePasswordFailure,
+  changePasswordSuccess,
   logout,
   onClearChangePasswordState,
 } from 'redux/user/user.actions'

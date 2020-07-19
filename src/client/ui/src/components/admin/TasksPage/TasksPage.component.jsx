@@ -6,7 +6,7 @@
 import React, { useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { STATUS, DEFAULT_PAGINATION } from 'utils/constant'
+import { DEFAULT_PAGINATION, STATUS } from 'utils/constant'
 
 const TasksPage = ({ taskListObj, getTaskList }) => {
   const columns = [
@@ -14,7 +14,7 @@ const TasksPage = ({ taskListObj, getTaskList }) => {
       title: 'Tên',
       dataIndex: 'name',
       canSearch: true,
-      render: name => <span>{name}</span>,
+      render: name => <span>{ name }</span>,
       width: 180,
     },
     {
@@ -42,8 +42,8 @@ const TasksPage = ({ taskListObj, getTaskList }) => {
       ],
       filterMultiple: false,
       render: previousRunStatus => (
-        <span className={`badge ${previousRunStatus.status && previousRunStatus.class} ucap`}>
-          {previousRunStatus.name}
+        <span className={ `badge ${ previousRunStatus.status && previousRunStatus.class } ucap` }>
+          { previousRunStatus.name }
         </span>
       ),
       width: 180,
@@ -52,7 +52,7 @@ const TasksPage = ({ taskListObj, getTaskList }) => {
     {
       title: 'Lỗi',
       dataIndex: 'errorLog',
-      render: errorLog => <span>{errorLog}</span>,
+      render: errorLog => <span>{ errorLog }</span>,
       width: 200,
       ellipsis: true,
     },
@@ -60,7 +60,7 @@ const TasksPage = ({ taskListObj, getTaskList }) => {
 
   useEffect(() => {
     getTaskList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
-  }, [getTaskList])
+  }, [ getTaskList ])
 
   return (
     <div className="row">
@@ -72,12 +72,12 @@ const TasksPage = ({ taskListObj, getTaskList }) => {
           <div className="card-content">
             <div className="material-datatables">
               <AntdTable
-                dataObj={taskListObj.taskList}
-                columns={columns}
-                fetchData={getTaskList}
-                isLoading={taskListObj.isLoading}
-                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
-                scrollY={700}
+                dataObj={ taskListObj.taskList }
+                columns={ columns }
+                fetchData={ getTaskList }
+                isLoading={ taskListObj.isLoading }
+                pageSize={ DEFAULT_PAGINATION.SIZE_10.pageSize }
+                scrollY={ 700 }
               />
             </div>
           </div>

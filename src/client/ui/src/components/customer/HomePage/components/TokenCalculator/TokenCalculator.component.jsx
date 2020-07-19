@@ -10,12 +10,12 @@ const TokenCalculator = ({ keyQuantity }) => {
       </div>
       <h1 className="token-info-head text-light">
         <em className="pay-icon">
-          <i className="fas fa-key" />
+          <i className="fas fa-key"/>
         </em>
-        {keyQuantity}
+        { keyQuantity }
       </h1>
       <div className="token-buy">
-        <Link to={`${CUSTOMER_PATH}/transactions`} className="btn btn-primary">
+        <Link to={ `${ CUSTOMER_PATH }/transactions` } className="btn btn-primary">
           Xem lịch sử giao dịch
         </Link>
       </div>

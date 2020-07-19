@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, JWT_TOKEN, STATUS, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { CUSTOMER_PATH, DEFAULT_ERR_MESSAGE, JWT_TOKEN, STATUS, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
 import SocketUtils from 'utils/socket.util'
@@ -13,17 +13,17 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PERMISSION_ASSIGN_REPLIED_SUCCESS_EVENT, PERMISSION_ASSIGN_REPLIED_FAILED_EVENT } = KAFKA_TOPIC
 
 const ReplyPermissionAssignPage = ({
-  currentUser,
-  findPermissionByEmailTokenObj,
-  replyPermissionAssignObj,
-  findPermissionByEmailToken,
-  replyPermissionAssign,
-  replyPermissionAssignSuccess,
-  replyPermissionAssignFailure,
-  onAuthenticate,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
-  const [infoTemplate, setInfoTemplate] = useState({})
+                                     currentUser,
+                                     findPermissionByEmailTokenObj,
+                                     replyPermissionAssignObj,
+                                     findPermissionByEmailToken,
+                                     replyPermissionAssign,
+                                     replyPermissionAssignSuccess,
+                                     replyPermissionAssignFailure,
+                                     onAuthenticate,
+                                   }) => {
+  const [ infoModal, setInfoModal ] = useState({})
+  const [ infoTemplate, setInfoTemplate ] = useState({})
   const { emailToken } = useParams()
   const history = useHistory()
   const loadingRef = useRef(replyPermissionAssignObj.isLoading)
@@ -43,7 +43,7 @@ const ReplyPermissionAssignPage = ({
   useEffect(() => {
     const token = STORAGE.getPreferences(JWT_TOKEN)
     onAuthenticate(token)
-  }, [onAuthenticate])
+  }, [ onAuthenticate ])
 
   useEffect(() => {
     if (currentUser._id) {
@@ -58,12 +58,12 @@ const ReplyPermissionAssignPage = ({
           content: 'Xin lỗi! Lời mời tham gia dự án này không dành cho bạn. Bạn không có quyền phản hồi.',
           positiveButton: {
             content: 'Về trang dự án',
-            clickFunc: () => history.push(`${CUSTOMER_PATH}/projects`),
+            clickFunc: () => history.push(`${ CUSTOMER_PATH }/projects`),
           },
         })
       }
     }
-  }, [currentUser, history, emailToken, findPermissionByEmailToken])
+  }, [ currentUser, history, emailToken, findPermissionByEmailToken ])
 
   const onReplyPermissionAssign = useCallback(
     async status => {
@@ -76,7 +76,7 @@ const ReplyPermissionAssignPage = ({
           content: 'Về trang dự án',
           clickFunc: () => {
             closeInfoModal()
-            history.push(`${CUSTOMER_PATH}/projects`)
+            history.push(`${ CUSTOMER_PATH }/projects`)
           },
         },
         onCancel: () => closeInfoModal(),
@@ -135,7 +135,7 @@ const ReplyPermissionAssignPage = ({
           content: 'Bạn đã phản hồi lời mời tham gia dự án.',
           positiveButton: {
             content: 'Về trang dự án',
-            clickFunc: () => history.push(`${CUSTOMER_PATH}/projects`),
+            clickFunc: () => history.push(`${ CUSTOMER_PATH }/projects`),
           },
         })
       } else {
@@ -154,7 +154,7 @@ const ReplyPermissionAssignPage = ({
         })
       }
     }
-  }, [currentUser, findPermissionByEmailTokenObj, history, onReplyPermissionAssign])
+  }, [ currentUser, findPermissionByEmailTokenObj, history, onReplyPermissionAssign ])
 
   useEffect(() => {
     let timer = null
@@ -176,7 +176,7 @@ const ReplyPermissionAssignPage = ({
             content: 'Về trang chủ',
             clickFunc: () => {
               closeInfoModal()
-              history.push(`${CUSTOMER_PATH}/`)
+              history.push(`${ CUSTOMER_PATH }/`)
             },
           },
           onCancel: () => closeInfoModal(),
@@ -201,9 +201,9 @@ const ReplyPermissionAssignPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [replyPermissionAssignObj, history, closeInfoModal, replyPermissionAssignFailure])
+  }, [ replyPermissionAssignObj, history, closeInfoModal, replyPermissionAssignFailure ])
 
-  return <InfoTemplatePage infoTemplate={infoTemplate} infoModal={infoModal} />
+  return <InfoTemplatePage infoTemplate={ infoTemplate } infoModal={ infoModal }/>
 }
 
 export default ReplyPermissionAssignPage

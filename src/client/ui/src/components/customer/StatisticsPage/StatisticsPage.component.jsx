@@ -152,7 +152,7 @@ const StatisticsPage = () => {
             <div className="card-head">
               <h4 className="card-title">Thống kê</h4>
             </div>
-            <div className="gaps-1x" />
+            <div className="gaps-1x"/>
             <ul className="nav nav-tabs nav-tabs-line" role="tablist">
               <li className="nav-item">
                 <a className="nav-link active" data-toggle="tab" href="#statistics-by-id-list">
@@ -167,44 +167,44 @@ const StatisticsPage = () => {
             </ul>
             <div className="tab-content">
               <div className="tab-pane fade active show" id="statistics-by-id-list">
-                <div className="gaps-1x" />
+                <div className="gaps-1x"/>
                 <div className="card-head">
                   <h4 className="card-title">Thống kê theo dự án</h4>
                 </div>
-                <div className="gaps-1x" />
-                <StatisticsProject chartOptions={twoYAxisOptions} />
-                <Divider />
+                <div className="gaps-1x"/>
+                <StatisticsProject chartOptions={ twoYAxisOptions }/>
+                <Divider/>
                 <div className="card-head">
                   <h4 className="card-title">Thống kê theo API key</h4>
                 </div>
-                <div className="gaps-1x" />
-                <StatisticsToken chartOptions={twoYAxisOptions} />
-                <Divider />
+                <div className="gaps-1x"/>
+                <StatisticsToken chartOptions={ twoYAxisOptions }/>
+                <Divider/>
                 <div className="card-head">
                   <h4 className="card-title">Thống kê theo loại API key</h4>
                 </div>
-                <div className="gaps-1x" />
-                <StatisticsTokenType chartOptions={twoYAxisOptions} />
+                <div className="gaps-1x"/>
+                <StatisticsTokenType chartOptions={ twoYAxisOptions }/>
               </div>
               <div className="tab-pane fade" id="user-total-statistics-list">
-                <div className="gaps-1x" />
+                <div className="gaps-1x"/>
                 <div className="card-head">
                   <h4 className="card-title">Thống kê theo dự án</h4>
                 </div>
-                <div className="gaps-1x" />
-                <TotalStatisticsProject chartOptions={twoXAxisOptions} />
-                <Divider />
+                <div className="gaps-1x"/>
+                <TotalStatisticsProject chartOptions={ twoXAxisOptions }/>
+                <Divider/>
                 <div className="card-head">
                   <h4 className="card-title">Thống kê theo API key</h4>
                 </div>
-                <div className="gaps-1x" />
-                <TotalStatisticsToken chartOptions={twoXAxisOptions} />
-                <Divider />
+                <div className="gaps-1x"/>
+                <TotalStatisticsToken chartOptions={ twoXAxisOptions }/>
+                <Divider/>
                 <div className="card-head">
                   <h4 className="card-title">Thống kê theo loại API key</h4>
                 </div>
-                <div className="gaps-1x" />
-                <TotalStatisticsTokenType chartOptions={twoXAxisOptions} />
+                <div className="gaps-1x"/>
+                <TotalStatisticsTokenType chartOptions={ twoXAxisOptions }/>
               </div>
             </div>
           </div>

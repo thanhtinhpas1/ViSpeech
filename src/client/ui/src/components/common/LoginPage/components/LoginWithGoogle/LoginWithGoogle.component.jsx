@@ -14,22 +14,22 @@ const LoginWithGoogle = ({ loginWithSocialObj, loginWithSocial }) => {
 
   return (
     <GoogleLogin
-      clientId={GOOGLE_CLIENT_ID}
-      disabled={loginWithSocialObj.isLoading}
+      clientId={ GOOGLE_CLIENT_ID }
+      disabled={ loginWithSocialObj.isLoading }
       cookiePolicy="single_host_origin"
-      render={renderProps => (
+      render={ renderProps => (
         <button
           type="button"
           className="btn btn-outline btn-dark btn-google btn-block"
-          onClick={renderProps.onClick}
-          disabled={renderProps.disabled}
+          onClick={ renderProps.onClick }
+          disabled={ renderProps.disabled }
         >
-          <em className="fab fa-google" />
+          <em className="fab fa-google"/>
           <span>Google</span>
         </button>
-      )}
-      onSuccess={responseGoogle}
-      onFailure={responseGoogle}
+      ) }
+      onSuccess={ responseGoogle }
+      onFailure={ responseGoogle }
     />
   )
 

@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, ROLES, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -12,20 +12,20 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_UPDATED_SUCCESS_EVENT, USER_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const PersonalDataTab = ({
-  currentUser,
-  updateCurrentUserObj,
-  clearUpdateCurrentUserState,
-  updateCurrentUser,
-  updateCurrentUserSuccess,
-  updateCurrentUserFailure,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
+                           currentUser,
+                           updateCurrentUserObj,
+                           clearUpdateCurrentUserState,
+                           updateCurrentUser,
+                           updateCurrentUserSuccess,
+                           updateCurrentUserFailure,
+                         }) => {
+  const [ infoModal, setInfoModal ] = useState({})
   const loadingRef = useRef(updateCurrentUserObj.isLoading)
   loadingRef.current = updateCurrentUserObj.isLoading
 
   useEffect(() => {
     return () => clearUpdateCurrentUserState()
-  }, [clearUpdateCurrentUserState])
+  }, [ clearUpdateCurrentUserState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_UPDATED_SUCCESS_EVENT)
@@ -52,7 +52,7 @@ const PersonalDataTab = ({
         }
       }
     }
-  }, [currentUser.roles])
+  }, [ currentUser.roles ])
 
   useEffect(() => {
     let timer = null
@@ -95,7 +95,7 @@ const PersonalDataTab = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [updateCurrentUserObj, closeInfoModal, updateCurrentUserFailure])
+  }, [ updateCurrentUserObj, closeInfoModal, updateCurrentUserFailure ])
 
   const onSubmit = async event => {
     event.preventDefault()
@@ -138,7 +138,7 @@ const PersonalDataTab = ({
 
   return (
     <div className="tab-pane fade show active" id="personal-data">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={ onSubmit }>
         <div className="row">
           <div className="col-md-6">
             <div className="input-item input-with-label">
@@ -150,7 +150,7 @@ const PersonalDataTab = ({
                 type="text"
                 id="last-name"
                 name="lastName"
-                defaultValue={currentUser.lastName || ''}
+                defaultValue={ currentUser.lastName || '' }
               />
             </div>
           </div>
@@ -164,7 +164,7 @@ const PersonalDataTab = ({
                 type="text"
                 id="first-name"
                 name="firstName"
-                defaultValue={currentUser.firstName || ''}
+                defaultValue={ currentUser.firstName || '' }
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ const PersonalDataTab = ({
                 type="text"
                 id="username"
                 name="username"
-                defaultValue={currentUser.username || ''}
+                defaultValue={ currentUser.username || '' }
                 disabled
               />
             </div>
@@ -193,7 +193,7 @@ const PersonalDataTab = ({
                 type="email"
                 id="email"
                 name="email"
-                defaultValue={currentUser.email || ''}
+                defaultValue={ currentUser.email || '' }
                 disabled
                 // disabled={Utils.isEmailVerified(currentUser.roles)}
               />
@@ -202,32 +202,32 @@ const PersonalDataTab = ({
           <div className="col-md-12">
             <label className="input-item-label text-exlight">Vai trò</label>
             <ul className="d-flex flex-wrap checkbox-list">
-              {Utils.filter(Object.values(ROLES), role => role !== ROLES.ADMIN).map(role => {
+              { Utils.filter(Object.values(ROLES), role => role !== ROLES.ADMIN).map(role => {
                 return (
-                  <li key={role}>
+                  <li key={ role }>
                     <div className="input-item text-left">
                       <input
                         className="input-checkbox input-checkbox-sm role-inputs"
                         type="checkbox"
-                        name={role}
+                        name={ role }
                         disabled
                       />
-                      <label>{role.toUpperCase()}</label>
+                      <label>{ role.toUpperCase() }</label>
                     </div>
                   </li>
                 )
-              })}
+              }) }
             </ul>
           </div>
         </div>
-        <div className="gaps-1x" />
+        <div className="gaps-1x"/>
         <div className="d-sm-flex justify-content-between align-items-center">
           <button type="submit" className="btn btn-primary">
             Cập nhật
           </button>
         </div>
       </form>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
     </div>
   )
 }

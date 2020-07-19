@@ -11,8 +11,8 @@ const AntdTable = ({ dataObj, columns, fetchData, isLoading, pageSize, scrollY }
   const [ searchText, setSearchText ] = useState('')
   const [ searchedColumn, setSearchedColumn ] = useState('')
   const [ tempColumns, setTempColumns ] = useState([ ...columns ])
-  const [tableColumns, setTableColumns] = useState([])
-  const [components] = useState({
+  const [ tableColumns, setTableColumns ] = useState([])
+  const [ components ] = useState({
     header: {
       cell: ResizableTitle,
     },
@@ -25,7 +25,7 @@ const AntdTable = ({ dataObj, columns, fetchData, isLoading, pageSize, scrollY }
         return { ...p, total: dataObj.count }
       })
     }
-  }, [dataObj, isLoading])
+  }, [ dataObj, isLoading ])
 
   // eslint-disable-next-line no-shadow
   const handleTableChange = (pagination, filters, sorter) => {
@@ -52,32 +52,32 @@ const AntdTable = ({ dataObj, columns, fetchData, isLoading, pageSize, scrollY }
   const getColumnSearchProps = useCallback(
     (dataIndex, title) => ({
       filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
+        <div style={ { padding: 8 } }>
           <Input
-            ref={searchInput}
-            placeholder={`Tìm kiếm ${title.toLowerCase()}`}
-            value={selectedKeys[0]}
-            onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            style={{ width: 188, marginBottom: 8, display: 'block' }}
+            ref={ searchInput }
+            placeholder={ `Tìm kiếm ${ title.toLowerCase() }` }
+            value={ selectedKeys[0] }
+            onChange={ e => setSelectedKeys(e.target.value ? [ e.target.value ] : []) }
+            onPressEnter={ () => handleSearch(selectedKeys, confirm, dataIndex) }
+            style={ { width: 188, marginBottom: 8, display: 'block' } }
           />
           <Space>
             <Button
               type="primary"
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-              icon={<SearchOutlined />}
+              onClick={ () => handleSearch(selectedKeys, confirm, dataIndex) }
+              icon={ <SearchOutlined/> }
               size="small"
-              style={{ width: 90 }}
+              style={ { width: 90 } }
             >
               Tìm
             </Button>
-            <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            <Button onClick={ () => handleReset(clearFilters) } size="small" style={ { width: 90 } }>
               Bỏ tìm kiếm
             </Button>
           </Space>
         </div>
       ),
-      filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+      filterIcon: filtered => <SearchOutlined style={ { color: filtered ? '#1890ff' : undefined } }/>,
       onFilter: (value, record) =>
         record[dataIndex]
           .toString()
@@ -91,22 +91,22 @@ const AntdTable = ({ dataObj, columns, fetchData, isLoading, pageSize, scrollY }
       render: text =>
         searchedColumn === dataIndex ? (
           <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[searchText]}
+            highlightStyle={ { backgroundColor: '#ffc069', padding: 0 } }
+            searchWords={ [ searchText ] }
             autoEscape
-            textToHighlight={text.toString()}
+            textToHighlight={ text.toString() }
           />
         ) : (
           text
         ),
     }),
-    [searchedColumn, searchText]
+    [ searchedColumn, searchText ]
   )
 
   const handleResize = useCallback(
     index => {
       return (e, { size }) => {
-        const nextColumns = [...tempColumns]
+        const nextColumns = [ ...tempColumns ]
         nextColumns[index] = {
           ...nextColumns[index],
           width: size.width,
@@ -114,7 +114,7 @@ const AntdTable = ({ dataObj, columns, fetchData, isLoading, pageSize, scrollY }
         setTempColumns(nextColumns)
       }
     },
-    [tempColumns]
+    [ tempColumns ]
   )
 
   useEffect(() => {
@@ -129,26 +129,26 @@ const AntdTable = ({ dataObj, columns, fetchData, isLoading, pageSize, scrollY }
       return col.canSearch ? { ...defaultCol, ...getColumnSearchProps(col.dataIndex, col.title) } : { ...defaultCol }
     })
     setTableColumns(cols)
-  }, [getColumnSearchProps, tempColumns, handleResize])
+  }, [ getColumnSearchProps, tempColumns, handleResize ])
 
   return (
     <div className="dataTables_wrapper">
       <Table
         tableLayout="auto"
-        rowKey={record => record._id}
-        columns={tableColumns}
-        dataSource={dataObj.data}
-        pagination={{
+        rowKey={ record => record._id }
+        columns={ tableColumns }
+        dataSource={ dataObj.data }
+        pagination={ {
           ...pagination,
-          position: ['bottomCenter'],
+          position: [ 'bottomCenter' ],
           hideOnSinglePage: true,
-          pageSizeOptions: ['5', '10', '20', '50'],
-        }}
-        scroll={{ y: scrollY || 500, scrollToFirstRowOnChange: true }}
-        components={components}
-        loading={isLoading}
-        onChange={handleTableChange}
-        showSorterTooltip={false}
+          pageSizeOptions: [ '5', '10', '20', '50' ],
+        } }
+        scroll={ { y: scrollY || 500, scrollToFirstRowOnChange: true } }
+        components={ components }
+        loading={ isLoading }
+        onChange={ handleTableChange }
+        showSorterTooltip={ false }
       />
     </div>
   )

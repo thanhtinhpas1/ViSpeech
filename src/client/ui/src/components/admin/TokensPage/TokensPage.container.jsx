@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import {
-  getTokenList,
   deleteToken,
-  deleteTokenSuccess,
   deleteTokenFailure,
+  deleteTokenSuccess,
+  getTokenList,
   onClearDeleteTokenState,
 } from 'redux/token/token.actions'
 import TokensPage from './TokensPage.component'

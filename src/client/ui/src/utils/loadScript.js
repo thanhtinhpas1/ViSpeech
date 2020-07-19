@@ -8,12 +8,12 @@ const loadScript = (url, id, action) => {
       let tag = document.getElementsByTagName('script')
       tag = document.getElementsByTagName('script')[tag.length - 1]
 
-      const scriptToLoad = document.getElementById(`script-${id}`)
+      const scriptToLoad = document.getElementById(`script-${ id }`)
       if (scriptToLoad) {
         resolve(scriptToLoad)
       } else {
         const script = document.createElement('script')
-        script.id = `script-${id}`
+        script.id = `script-${ id }`
         script.type = 'text/javascript'
         script.src = url
         script.async = true
@@ -40,11 +40,11 @@ const loadScript = (url, id, action) => {
         }
       }
     } else {
-      const scriptToRemove = document.getElementById(`script-${id}`)
+      const scriptToRemove = document.getElementById(`script-${ id }`)
       if (scriptToRemove) {
         scriptToRemove.parentNode.removeChild(scriptToRemove)
       }
-      resolve(scriptToRemove || { id: `script-${id}` })
+      resolve(scriptToRemove || { id: `script-${ id }` })
     }
   })
 }

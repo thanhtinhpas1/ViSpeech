@@ -43,6 +43,7 @@ function* getOrderList({ payload: filterConditions }) {
     yield put(getOrderListFailure(err.message))
   }
 }
+
 export function* getOrderListSaga() {
   yield takeLatest(OrderTypes.GET_ORDER_LIST, getOrderList)
 }
@@ -57,6 +58,7 @@ function* getUserOrderList({ payload: filterConditions }) {
     yield put(getUserOrderListFailure(err.message))
   }
 }
+
 export function* getUserOrderListSaga() {
   yield takeLatest(OrderTypes.GET_USER_ORDER_LIST, getUserOrderList)
 }
@@ -90,6 +92,7 @@ function* getOrderInfo({ payload: { id, tokenId } }) {
     yield put(getOrderInfoFailure(err.message))
   }
 }
+
 export function* getOrderInfoSaga() {
   yield takeLatest(OrderTypes.GET_ORDER_INFO, getOrderInfo)
 }
@@ -111,5 +114,5 @@ export function* getOrderInfoSaga() {
 // =================================
 
 export function* orderSaga() {
-  yield all([call(getOrderListSaga), call(getUserOrderListSaga), call(getOrderInfoSaga)])
+  yield all([ call(getOrderListSaga), call(getUserOrderListSaga), call(getOrderInfoSaga) ])
 }

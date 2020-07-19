@@ -2,10 +2,10 @@ import { connect } from 'react-redux'
 import { getProjectTokenList } from 'redux/token/token.actions'
 import {
   getProjectInfo,
-  updateProjectInfo,
-  updateProjectInfoSuccess,
-  updateProjectInfoFailure,
   onClearUpdateProjectInfoState,
+  updateProjectInfo,
+  updateProjectInfoFailure,
+  updateProjectInfoSuccess,
 } from 'redux/project/project.actions'
 import ProjectDetailsPage from './ProjectDetailsPage.component'
 

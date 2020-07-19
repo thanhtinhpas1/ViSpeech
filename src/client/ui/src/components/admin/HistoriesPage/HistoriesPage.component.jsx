@@ -14,42 +14,42 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
       title: 'Mã API Key',
       dataIndex: 'tokenId',
       canSearch: true,
-      render: tokenId => <span>{tokenId}</span>,
+      render: tokenId => <span>{ tokenId }</span>,
       width: 150,
     },
     {
       title: 'Tên file',
       dataIndex: 'fileName',
       canSearch: true,
-      render: fileName => <span>{fileName}</span>,
+      render: fileName => <span>{ fileName }</span>,
       width: 180,
     },
     {
       title: 'Định dạng',
       dataIndex: 'mimeType',
       canSearch: true,
-      render: mimeType => <span>{mimeType}</span>,
+      render: mimeType => <span>{ mimeType }</span>,
       width: 180,
     },
     {
       title: 'Kích thước',
       dataIndex: 'size',
       sorter: true,
-      render: size => <span>{size}</span>,
+      render: size => <span>{ size }</span>,
       width: 180,
     },
     {
       title: 'Mã dự án',
       dataIndex: 'projectId',
       canSearch: true,
-      render: projectId => <span>{projectId}</span>,
+      render: projectId => <span>{ projectId }</span>,
       width: 150,
     },
     {
       title: 'Thời gian sử dụng (phút)',
       dataIndex: 'duration',
       sorter: true,
-      render: duration => <span>{duration}</span>,
+      render: duration => <span>{ duration }</span>,
       width: 180,
       align: 'center',
     },
@@ -65,7 +65,7 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
 
   useEffect(() => {
     getRequestList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
-  }, [getRequestList])
+  }, [ getRequestList ])
 
   return (
     <div className="row">
@@ -77,12 +77,12 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
           <div className="card-content">
             <div className="material-datatables">
               <AntdTable
-                dataObj={requestListObj.requestList}
-                columns={columns}
-                fetchData={getRequestList}
-                isLoading={requestListObj.isLoading}
-                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
-                scrollY={700}
+                dataObj={ requestListObj.requestList }
+                columns={ columns }
+                fetchData={ getRequestList }
+                isLoading={ requestListObj.isLoading }
+                pageSize={ DEFAULT_PAGINATION.SIZE_10.pageSize }
+                scrollY={ 700 }
               />
             </div>
           </div>

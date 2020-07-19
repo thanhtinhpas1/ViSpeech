@@ -6,7 +6,7 @@
 import React, { useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from 'utils/constant'
+import { ADMIN_PATH, DEFAULT_PAGINATION, ORDER_STATUS, TOKEN_TYPE } from 'utils/constant'
 
 const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
   const columns = [
@@ -14,7 +14,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       title: 'Mã đơn hàng',
       dataIndex: '_id',
       canSearch: true,
-      render: _id => <span className="lead tnx-id">{_id}</span>,
+      render: _id => <span className="lead tnx-id">{ _id }</span>,
       width: 150,
     },
     {
@@ -30,9 +30,9 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       filterMultiple: false,
       render: status => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${status.class}`} />
-          <span className="sub sub-s2" style={{ paddingTop: 0 }}>
-            {status.name}
+          <div className={ `data-state ${ status.class }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: 0 } }>
+            { status.name }
           </span>
         </div>
       ),
@@ -46,11 +46,11 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       render: token => (
         <span className="lead tnx-id">
           <div className="copy-wrap w-100">
-            <span className="copy-feedback" />
-            <em className="fas fa-key" />
-            <input type="text" className="copy-address" defaultValue={token} disabled />
-            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={token}>
-              <em className="ti ti-files" />
+            <span className="copy-feedback"/>
+            <em className="fas fa-key"/>
+            <input type="text" className="copy-address" defaultValue={ token } disabled/>
+            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={ token }>
+              <em className="ti ti-files"/>
             </button>
           </div>
         </span>
@@ -70,9 +70,9 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       filterMultiple: false,
       render: tokenType => (
         <>
-          <span className={`dt-type-md badge badge-outline ${tokenType.class} badge-md`}>{tokenType.name}</span>
-          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.class} badge-md`}>
-            {tokenType.name}
+          <span className={ `dt-type-md badge badge-outline ${ tokenType.class } badge-md` }>{ tokenType.name }</span>
+          <span className={ `dt-type-sm badge badge-sq badge-outline ${ tokenType.class } badge-md` }>
+            { tokenType.name }
           </span>
         </>
       ),
@@ -85,7 +85,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       headerClassName: 'dt-amount',
       className: 'dt-amount',
       canSearch: true,
-      render: username => <span className="lead tnx-id">{username}</span>,
+      render: username => <span className="lead tnx-id">{ username }</span>,
       width: 180,
     },
     {
@@ -94,7 +94,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       headerClassName: 'dt-amount',
       className: 'dt-amount',
       canSearch: true,
-      render: projectName => <span className="lead tnx-id">{projectName}</span>,
+      render: projectName => <span className="lead tnx-id">{ projectName }</span>,
       width: 180,
     },
     {
@@ -104,8 +104,8 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 240,
@@ -115,8 +115,9 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       title: '',
       dataIndex: '_id',
       render: _id => (
-        <a href={`${ADMIN_PATH}/transaction-details?id=${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-          <i className="far fa-eye" />
+        <a href={ `${ ADMIN_PATH }/transaction-details?id=${ _id }` }
+           className="btn btn-just-icon btn-secondary btn-simple">
+          <i className="far fa-eye"/>
         </a>
       ),
       align: 'right',
@@ -126,7 +127,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
 
   useEffect(() => {
     getOrderList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
-  }, [getOrderList])
+  }, [ getOrderList ])
 
   return (
     <div className="row">
@@ -138,12 +139,12 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
           <div className="card-content">
             <div className="material-datatables">
               <AntdTable
-                dataObj={getOrderListObj.orderList}
-                columns={columns}
-                fetchData={getOrderList}
-                isLoading={getOrderListObj.isLoading}
-                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
-                scrollY={700}
+                dataObj={ getOrderListObj.orderList }
+                columns={ columns }
+                fetchData={ getOrderList }
+                isLoading={ getOrderListObj.isLoading }
+                pageSize={ DEFAULT_PAGINATION.SIZE_10.pageSize }
+                scrollY={ 700 }
               />
             </div>
           </div>

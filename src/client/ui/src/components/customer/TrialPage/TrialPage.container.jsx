@@ -1,14 +1,14 @@
 import { connect } from 'react-redux'
 import {
-  getRequestListByUserId,
-  updateRequestInfo,
-  updateRequestInfoSuccess,
-  updateRequestInfoFailure,
-  onClearUpdateRequestInfo,
   createRequest,
-  createRequestSuccess,
   createRequestFailure,
+  createRequestSuccess,
+  getRequestListByUserId,
   onClearCreateRequestState,
+  onClearUpdateRequestInfo,
+  updateRequestInfo,
+  updateRequestInfoFailure,
+  updateRequestInfoSuccess,
 } from 'redux/request/request.actions'
 import TrialPage from './TrialPage.component'
 

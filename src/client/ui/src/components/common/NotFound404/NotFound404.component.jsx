@@ -1,5 +1,5 @@
 import React from 'react'
-import { Result, Button } from 'antd'
+import { Button, Result } from 'antd'
 
 const NotFound404 = () => {
   return (

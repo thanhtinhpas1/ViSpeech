@@ -4,10 +4,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useCallback, useState, useRef } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import { Tabs } from 'antd'
-import { ADMIN_PATH, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { ADMIN_PATH, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
 import SocketService from 'services/socket.service'
@@ -32,24 +32,24 @@ const {
 } = KAFKA_TOPIC
 
 const UserInfoPage = ({
-  userInfoObj,
-  deleteUserObj,
-  clearDeleteUserState,
-  getUserInfo,
-  deleteUser,
-  deleteUserSuccess,
-  deleteUserFailure,
-}) => {
+                        userInfoObj,
+                        deleteUserObj,
+                        clearDeleteUserState,
+                        getUserInfo,
+                        deleteUser,
+                        deleteUserSuccess,
+                        deleteUserFailure,
+                      }) => {
   const { id } = useParams()
   const history = useHistory()
-  const [infoModal, setInfoModal] = useState({})
-  const [confirmModal, setConfirmModal] = useState({})
+  const [ infoModal, setInfoModal ] = useState({})
+  const [ confirmModal, setConfirmModal ] = useState({})
   const loadingRef = useRef(deleteUserObj.isLoading)
   loadingRef.current = deleteUserObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteUserState()
-  }, [clearDeleteUserState])
+  }, [ clearDeleteUserState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_DELETED_FAILED_EVENT)
@@ -77,7 +77,7 @@ const UserInfoPage = ({
     if (id) {
       getUserInfo(id)
     }
-  }, [id, getUserInfo])
+  }, [ id, getUserInfo ])
 
   useEffect(() => {
     let timer = null
@@ -99,12 +99,12 @@ const UserInfoPage = ({
             content: 'Về danh sách khách hàng',
             clickFunc: () => {
               closeInfoModal()
-              history.push(`${ADMIN_PATH}/users`)
+              history.push(`${ ADMIN_PATH }/users`)
             },
           },
           onCancel: () => {
             closeInfoModal()
-            history.push(`${ADMIN_PATH}/users`)
+            history.push(`${ ADMIN_PATH }/users`)
           },
         })
       } else {
@@ -126,7 +126,7 @@ const UserInfoPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [deleteUserObj, closeInfoModal, history, deleteUserFailure])
+  }, [ deleteUserObj, closeInfoModal, history, deleteUserFailure ])
 
   const onDeleteUser = (e, userId) => {
     if (!userId) return
@@ -184,37 +184,37 @@ const UserInfoPage = ({
       <div className="col-md-12">
         <div className="card" id="profile-main">
           <div className="card-header">
-            <h4 className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h4 className="card-title" style={ { display: 'flex', justifyContent: 'space-between' } }>
               <span>Thông tin chi tiết khách hàng</span>
-              {userInfoObj.isLoading === false && userInfoObj.isSuccess === true && (
+              { userInfoObj.isLoading === false && userInfoObj.isSuccess === true && (
                 <button
                   className="btn btn-just-icon btn-simple btn-danger m-0"
                   rel="tooltip"
                   title="Xoá khách hàng"
-                  onClick={e => onDeleteUser(e, userInfoObj.user._id)}
+                  onClick={ e => onDeleteUser(e, userInfoObj.user._id) }
                 >
-                  <i className="fas fa-times" />
+                  <i className="fas fa-times"/>
                 </button>
-              )}
+              ) }
             </h4>
           </div>
           <div className="card-content">
             <Tabs tabPosition="left" size="large">
               <TabPane tab="Thông tin" key="1">
-                <InfoTab userInfoObj={userInfoObj} />
+                <InfoTab userInfoObj={ userInfoObj }/>
               </TabPane>
               <TabPane tab="Dự án" key="2">
-                <ProjectsTab userInfoObj={userInfoObj} />
+                <ProjectsTab userInfoObj={ userInfoObj }/>
               </TabPane>
               <TabPane tab="Lịch sử giao dịch" key="3">
-                <TransactionsTab userInfoObj={userInfoObj} />
+                <TransactionsTab userInfoObj={ userInfoObj }/>
               </TabPane>
             </Tabs>
           </div>
         </div>
       </div>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
-      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
+      { confirmModal.visible && <ConfirmModal confirmModal={ confirmModal }/> }
     </div>
   )
 }

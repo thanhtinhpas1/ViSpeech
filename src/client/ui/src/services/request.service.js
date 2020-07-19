@@ -1,5 +1,5 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
 import Utils from 'utils'
 import { apiUrl } from './api-url'
 
@@ -10,12 +10,12 @@ export default class RequestService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/requests?${query}`
+    const api = `${ apiUrl }/requests?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -24,7 +24,7 @@ export default class RequestService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -49,12 +49,12 @@ export default class RequestService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/requests/userId/${userId}?${query}`
+    const api = `${ apiUrl }/requests/userId/${ userId }?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -63,7 +63,7 @@ export default class RequestService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -83,7 +83,7 @@ export default class RequestService {
   }
 
   static getRequestInfo = async id => {
-    const api = `${apiUrl}/requests/${id}`
+    const api = `${ apiUrl }/requests/${ id }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -91,7 +91,7 @@ export default class RequestService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -111,7 +111,7 @@ export default class RequestService {
   }
 
   static updateRequest = (requestId, tokenId, transcriptFileUrl) => {
-    const api = `${apiUrl}/requests/transcriptFileUrl/${requestId}/${tokenId}`
+    const api = `${ apiUrl }/requests/transcriptFileUrl/${ requestId }/${ tokenId }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -120,7 +120,7 @@ export default class RequestService {
       body: JSON.stringify({ transcriptFileUrl }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -141,7 +141,7 @@ export default class RequestService {
   }
 
   static downloadTranscript = (html, id) => {
-    const api = `${apiUrl}/requests/download-transcript/${id}`
+    const api = `${ apiUrl }/requests/download-transcript/${ id }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -150,7 +150,7 @@ export default class RequestService {
       body: JSON.stringify({ html }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {

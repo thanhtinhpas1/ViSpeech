@@ -7,7 +7,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from 'utils/constant'
+import { CUSTOMER_PATH, DEFAULT_PAGINATION, ORDER_STATUS, TOKEN_TYPE } from 'utils/constant'
 import * as moment from 'moment'
 
 const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }) => {
@@ -16,14 +16,14 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       title: 'Mã',
       dataIndex: '_id',
       canSearch: true,
-      render: _id => <span className="lead tnx-id">{_id}</span>,
+      render: _id => <span className="lead tnx-id">{ _id }</span>,
       width: 150,
     },
     {
       title: 'Tên API key',
       dataIndex: 'tokenName',
       canSearch: true,
-      render: tokenName => <span className="lead tnx-id">{tokenName}</span>,
+      render: tokenName => <span className="lead tnx-id">{ tokenName }</span>,
       width: 150,
     },
     {
@@ -39,9 +39,9 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       filterMultiple: false,
       render: status => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${status.class}`} />
-          <span className="sub sub-s2" style={{ paddingTop: 0 }}>
-            {status.name}
+          <div className={ `data-state ${ status.class }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: 0 } }>
+            { status.name }
           </span>
         </div>
       ),
@@ -54,8 +54,8 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 240,
@@ -69,11 +69,11 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       render: token => (
         <span className="lead tnx-id">
           <div className="copy-wrap w-100">
-            <span className="copy-feedback" />
-            <em className="fas fa-key" />
-            <input type="text" className="copy-address" defaultValue={token} disabled />
-            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={token}>
-              <em className="ti ti-files" />
+            <span className="copy-feedback"/>
+            <em className="fas fa-key"/>
+            <input type="text" className="copy-address" defaultValue={ token } disabled/>
+            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={ token }>
+              <em className="ti ti-files"/>
             </button>
           </div>
         </span>
@@ -91,9 +91,9 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       filterMultiple: false,
       render: tokenType => (
         <>
-          <span className={`dt-type-md badge badge-outline ${tokenType.class} badge-md`}>{tokenType.name}</span>
-          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.class} badge-md`}>
-            {tokenType.name}
+          <span className={ `dt-type-md badge badge-outline ${ tokenType.class } badge-md` }>{ tokenType.name }</span>
+          <span className={ `dt-type-sm badge badge-sq badge-outline ${ tokenType.class } badge-md` }>
+            { tokenType.name }
           </span>
         </>
       ),
@@ -104,8 +104,8 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
       title: '',
       dataIndex: '_id',
       render: _id => (
-        <Link to={`${CUSTOMER_PATH}/transaction-details?id=${_id}`} className="btn btn-light-alt btn-xs btn-icon">
-          <em className="ti ti-eye" />
+        <Link to={ `${ CUSTOMER_PATH }/transaction-details?id=${ _id }` } className="btn btn-light-alt btn-xs btn-icon">
+          <em className="ti ti-eye"/>
         </Link>
       ),
       align: 'right',
@@ -118,7 +118,7 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
     if (userId) {
       getUserOrderList({ userId, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
-  }, [currentUser._id, getUserOrderList])
+  }, [ currentUser._id, getUserOrderList ])
 
   const getList = useCallback(
     // eslint-disable-next-line no-unused-vars
@@ -128,7 +128,7 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
         getUserOrderList({ userId, pagination, sortField, sortOrder, filters })
       }
     },
-    [currentUser._id, getUserOrderList]
+    [ currentUser._id, getUserOrderList ]
   )
 
   return (
@@ -140,12 +140,12 @@ const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }
               <h4 className="card-title">Lịch sử giao dịch</h4>
             </div>
             <AntdTable
-              dataObj={getUserOrderListObj.userOrderList}
-              columns={columns}
-              fetchData={getList}
-              isLoading={getUserOrderListObj.isLoading}
-              pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-              scrollY={600}
+              dataObj={ getUserOrderListObj.userOrderList }
+              columns={ columns }
+              fetchData={ getList }
+              isLoading={ getUserOrderListObj.isLoading }
+              pageSize={ DEFAULT_PAGINATION.SIZE_5.pageSize }
+              scrollY={ 600 }
             />
           </div>
         </div>

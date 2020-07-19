@@ -1,17 +1,19 @@
 /* eslint-disable */
 
 /*! Template: TokenWiz v1.0.2 */
-!(function(e) {
+!(function (e) {
   // 'use strict'
   var t = e(window)
   var a = e('body')
   var o = e(document)
+
   function i() {
     return t.width()
   }
+
   'ontouchstart' in document.documentElement || a.addClass('no-touch')
   var l = i()
-  t.on('resize', function() {
+  t.on('resize', function () {
     l = i()
   })
   var n = e('.is-sticky')
@@ -19,107 +21,109 @@
   var r = e('.topbar-wrap')
   if (n.length > 0) {
     var c = n.offset()
-    t.scroll(function() {
+    t.scroll(function () {
       var e = t.scrollTop()
       var a = s.height()
       e > c.top
         ? n.hasClass('has-fixed') ||
-          (n.addClass('has-fixed'), r.css('padding-top', a))
+        (n.addClass('has-fixed'), r.css('padding-top', a))
         : n.hasClass('has-fixed') &&
-          (n.removeClass('has-fixed'), r.css('padding-top', 0))
+        (n.removeClass('has-fixed'), r.css('padding-top', 0))
     })
   }
   var d = e('[data-percent]')
   d.length > 0 &&
-    d.each(function() {
-      var t = e(this)
-      var a = t.data('percent')
-      t.css('width', `${a}%`)
-    })
+  d.each(function () {
+    var t = e(this)
+    var a = t.data('percent')
+    t.css('width', `${ a }%`)
+  })
   var p = window.location.href
   var g = p.split('#')
   var f = e('a')
   f.length > 0 &&
-    f.each(function() {
-      p === this.href &&
-        (g[1] !== '' && g[1] !== '!') &&
-        e(this)
-          .closest('li')
-          .addClass('active')
-          .parent()
-          .closest('li')
-          .addClass('active')
-    })
+  f.each(function () {
+    p === this.href &&
+    (g[1] !== '' && g[1] !== '!') &&
+    e(this)
+      .closest('li')
+      .addClass('active')
+      .parent()
+      .closest('li')
+      .addClass('active')
+  })
   var h = e('.countdown-clock')
   h.length > 0 &&
-    h.each(function() {
-      var t = e(this)
-      var a = t.attr('data-date')
-      t.countdown(a).on('update.countdown', function(t) {
-        e(this).html(
-          t.strftime(
-            '<div><span class="countdown-time countdown-time-first">%D</span><span class="countdown-text">Day</span></div><div><span class="countdown-time">%H</span><span class="countdown-text">Hour</span></div><div><span class="countdown-time">%M</span><span class="countdown-text">Min</span></div><div><span class="countdown-time countdown-time-last">%S</span><span class="countdown-text">Sec</span></div>'
-          )
+  h.each(function () {
+    var t = e(this)
+    var a = t.attr('data-date')
+    t.countdown(a).on('update.countdown', function (t) {
+      e(this).html(
+        t.strftime(
+          '<div><span class="countdown-time countdown-time-first">%D</span><span class="countdown-text">Day</span></div><div><span class="countdown-time">%H</span><span class="countdown-text">Hour</span></div><div><span class="countdown-time">%M</span><span class="countdown-text">Min</span></div><div><span class="countdown-time countdown-time-last">%S</span><span class="countdown-text">Sec</span></div>'
         )
-      })
+      )
     })
+  })
   var u = e('.select')
   u.length > 0 &&
-    u.each(function() {
-      e(this).select2({ theme: 'flat' })
-    })
+  u.each(function () {
+    e(this).select2({ theme: 'flat' })
+  })
   var m = e('.select-bordered')
   m.length > 0 &&
-    m.each(function() {
-      e(this).select2({ theme: 'flat bordered' })
-    })
+  m.each(function () {
+    e(this).select2({ theme: 'flat bordered' })
+  })
   var v = '.toggle-tigger'
   var b = '.toggle-class'
   e(v).length > 0 &&
-    o.on('click', v, function(t) {
-      var a = e(this)
-      e(v)
-        .not(a)
+  o.on('click', v, function (t) {
+    var a = e(this)
+    e(v)
+      .not(a)
+      .removeClass('active'),
+      e(b)
+        .not(a.parent().children())
         .removeClass('active'),
-        e(b)
-          .not(a.parent().children())
-          .removeClass('active'),
-        a
-          .toggleClass('active')
-          .parent()
-          .find(b)
-          .toggleClass('active'),
-        t.preventDefault()
-    }),
-    o.on('click', 'body', function(t) {
+      a
+        .toggleClass('active')
+        .parent()
+        .find(b)
+        .toggleClass('active'),
+      t.preventDefault()
+  }),
+    o.on('click', 'body', function (t) {
       var a = e(v)
       var o = e(b)
       o.is(t.target) ||
-        o.has(t.target).length !== 0 ||
-        a.is(t.target) ||
-        a.has(t.target).length !== 0 ||
-        (o.removeClass('active'), a.removeClass('active'))
+      o.has(t.target).length !== 0 ||
+      a.is(t.target) ||
+      a.has(t.target).length !== 0 ||
+      (o.removeClass('active'), a.removeClass('active'))
     })
   var x = e('.toggle-nav')
   var y = e('.navbar')
+
   function C(e) {
     l < 991
       ? e.delay(500).addClass('navbar-mobile')
       : e.delay(500).removeClass('navbar-mobile')
   }
+
   x.length > 0 &&
-    x.on('click', function(e) {
-      x.toggleClass('active'), y.toggleClass('active'), e.preventDefault()
-    }),
-    o.on('click', 'body', function(e) {
+  x.on('click', function (e) {
+    x.toggleClass('active'), y.toggleClass('active'), e.preventDefault()
+  }),
+    o.on('click', 'body', function (e) {
       x.is(e.target) ||
-        x.has(e.target).length !== 0 ||
-        y.is(e.target) ||
-        y.has(e.target).length !== 0 ||
-        (x.removeClass('active'), y.removeClass('active'))
+      x.has(e.target).length !== 0 ||
+      y.is(e.target) ||
+      y.has(e.target).length !== 0 ||
+      (x.removeClass('active'), y.removeClass('active'))
     }),
     C(y),
-    t.on('resize', function() {
+    t.on('resize', function () {
       C(y)
     })
   var k = e('[data-toggle="tooltip"]')
@@ -127,95 +131,97 @@
   var w = e('.date-picker')
   var T = e('.date-picker-dob')
   var S = e('.time-picker')
+
   function _(t, a) {
     a === 'success'
       ? e(t)
-          .parent()
-          .find('.copy-feedback')
-          .text('Copied to Clipboard')
-          .fadeIn()
-          .delay(1e3)
-          .fadeOut()
+        .parent()
+        .find('.copy-feedback')
+        .text('Copied to Clipboard')
+        .fadeIn()
+        .delay(1e3)
+        .fadeOut()
       : e(t)
-          .parent()
-          .find('.copy-feedback')
-          .text('Faild to Copy')
-          .fadeIn()
-          .delay(1e3)
-          .fadeOut()
+        .parent()
+        .find('.copy-feedback')
+        .text('Faild to Copy')
+        .fadeIn()
+        .delay(1e3)
+        .fadeOut()
   }
+
   w.length > 0 &&
-    w.each(function() {
-      e(this).datepicker({
-        format: 'dd/mm/yyyy',
-        maxViewMode: 2,
-        clearBtn: !0,
-        autoclose: !0,
-        todayHighlight: !0,
-      })
-    }),
-    T.length > 0 &&
-      T.each(function() {
-        e(this).datepicker({
-          format: 'dd/mm/yyyy',
-          startView: 2,
-          maxViewMode: 2,
-          clearBtn: !0,
-          autoclose: !0,
-        })
-      }),
-    S.length > 0 &&
-      S.each(function() {
-        e(this)
-          .parent()
-          .addClass('has-timepicker'),
-          e(this).timepicker({ timeFormat: 'HH:mm', interval: 15 })
-      }),
+  w.each(function () {
+    e(this).datepicker({
+      format: 'dd/mm/yyyy',
+      maxViewMode: 2,
+      clearBtn: !0,
+      autoclose: !0,
+      todayHighlight: !0,
+    })
+  }),
+  T.length > 0 &&
+  T.each(function () {
+    e(this).datepicker({
+      format: 'dd/mm/yyyy',
+      startView: 2,
+      maxViewMode: 2,
+      clearBtn: !0,
+      autoclose: !0,
+    })
+  }),
+  S.length > 0 &&
+  S.each(function () {
+    e(this)
+      .parent()
+      .addClass('has-timepicker'),
+      e(this).timepicker({ timeFormat: 'HH:mm', interval: 15 })
+  }),
     new window.ClipboardJS('.copy-clipboard')
-      .on('success', function(e) {
+      .on('success', function (e) {
         _(e.trigger, 'success'), e.clearSelection()
       })
-      .on('error', function(e) {
+      .on('error', function (e) {
         _(e.trigger, 'fail')
       }),
     new window.ClipboardJS('.copy-clipboard-modal', {
       container: document.querySelector('.modal'),
     })
-      .on('success', function(e) {
+      .on('success', function (e) {
         _(e.trigger, 'success'), e.clearSelection()
       })
-      .on('error', function(e) {
+      .on('error', function (e) {
         _(e.trigger, 'fail')
       })
   var D = e('.input-file')
   D.length > 0 &&
-    D.each(function() {
-      var t = e(this)
-      var a = e(this).next()
-      var o = e(this)
-        .next()
-        .text()
-      t.on('change', function() {
-        var e = t.val()
-        a.html(e), a.is(':empty') && a.html(o)
-      })
+  D.each(function () {
+    var t = e(this)
+    var a = e(this).next()
+    var o = e(this)
+      .next()
+      .text()
+    t.on('change', function () {
+      var e = t.val()
+      a.html(e), a.is(':empty') && a.html(o)
     })
+  })
   var L = e('.upload-zone')
   L.length > 0 &&
-    ((window.Dropzone.autoDiscover = !1),
-    L.each(function() {
+  ((window.Dropzone.autoDiscover = !1),
+    L.each(function () {
       e(this)
         .addClass('dropzone')
         .dropzone({ url: '/images' })
     }))
   var z = e('.image-popup')
   z.length > 0 &&
-    z.magnificPopup({
-      type: 'image',
-      preloader: !0,
-      removalDelay: 400,
-      mainClass: 'mfp-fade',
-    })
+  z.magnificPopup({
+    type: 'image',
+    preloader: !0,
+    removalDelay: 400,
+    mainClass: 'mfp-fade',
+  })
   // var A = e('.dt-init')
   // A.length > 0 &&
   //   A.DataTable({
@@ -274,31 +280,31 @@
   //         .draw()
   //     })
   // }
-  e('.modal').on('shown.bs.modal', function() {
+  e('.modal').on('shown.bs.modal', function () {
     a.hasClass('modal-open') || a.addClass('modal-open')
   })
   var H = e('.drop-toggle')
   H.length > 0 &&
-    H.on('click', function(a) {
-      t.width() < 991 &&
-        (e(this)
-          .parent()
-          .children('.navbar-dropdown')
-          .slideToggle(400),
-        e(this)
-          .parent()
-          .siblings()
-          .children('.navbar-dropdown')
-          .slideUp(400),
-        e(this)
-          .parent()
-          .toggleClass('current'),
-        e(this)
-          .parent()
-          .siblings()
-          .removeClass('current'),
-        a.preventDefault())
-    })
+  H.on('click', function (a) {
+    t.width() < 991 &&
+    (e(this)
+      .parent()
+      .children('.navbar-dropdown')
+      .slideToggle(400),
+      e(this)
+        .parent()
+        .siblings()
+        .children('.navbar-dropdown')
+        .slideUp(400),
+      e(this)
+        .parent()
+        .toggleClass('current'),
+      e(this)
+        .parent()
+        .siblings()
+        .removeClass('current'),
+      a.preventDefault())
+  })
   // var M = e('.color-trigger')
   // M.length > 0 &&
   //   M.on('click', function() {

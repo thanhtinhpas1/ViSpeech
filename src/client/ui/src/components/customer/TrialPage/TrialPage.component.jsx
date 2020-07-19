@@ -2,19 +2,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import storage from 'firebaseStorage'
 import {
-  FILE_PATH,
+  CUSTOMER_PATH,
+  DEFAULT_ERR_MESSAGE,
   DEFAULT_PAGINATION,
+  FILE_PATH,
   SORT_ORDER,
   STATUS,
-  CUSTOMER_PATH,
   TIMEOUT_MILLISECONDS,
-  DEFAULT_ERR_MESSAGE,
 } from 'utils/constant'
 import SpeechService from 'services/speech.service'
 import SocketService from 'services/socket.service'
@@ -35,29 +35,29 @@ const {
 } = KAFKA_TOPIC
 
 const TrialPage = ({
-  currentUser,
-  createRequestObj,
-  updateRequestInfoObj,
-  getRequestListByUserId,
-  clearCreateRequestState,
-  clearUpdateRequestInfo,
-  createRequest,
-  createRequestSuccess,
-  createRequestFailure,
-  updateRequestInfo,
-  updateRequestInfoSuccess,
-  updateRequestInfoFailure,
-}) => {
+                     currentUser,
+                     createRequestObj,
+                     updateRequestInfoObj,
+                     getRequestListByUserId,
+                     clearCreateRequestState,
+                     clearUpdateRequestInfo,
+                     createRequest,
+                     createRequestSuccess,
+                     createRequestFailure,
+                     updateRequestInfo,
+                     updateRequestInfoSuccess,
+                     updateRequestInfoFailure,
+                   }) => {
   const history = useHistory()
-  const [draggerDisabled, setDraggerDisabled] = useState(true)
-  const [tokenValue, setTokenValue] = useState(null)
-  const [uploading, setUploading] = useState(false)
-  const [projectName, setProjectName] = useState('')
-  const [tokenName, setTokenName] = useState('')
-  const [newRequest, setNewRequest] = useState({})
-  const [infoModal, setInfoModal] = useState({})
-  const [firebaseFolder, setFirebaseFolder] = useState(null)
-  const [asrData, setAsrData] = useState(null)
+  const [ draggerDisabled, setDraggerDisabled ] = useState(true)
+  const [ tokenValue, setTokenValue ] = useState(null)
+  const [ uploading, setUploading ] = useState(false)
+  const [ projectName, setProjectName ] = useState('')
+  const [ tokenName, setTokenName ] = useState('')
+  const [ newRequest, setNewRequest ] = useState({})
+  const [ infoModal, setInfoModal ] = useState({})
+  const [ firebaseFolder, setFirebaseFolder ] = useState(null)
+  const [ asrData, setAsrData ] = useState(null)
 
   const updateRequestLoadingRef = useRef(updateRequestInfoObj.isLoading)
   updateRequestLoadingRef.current = updateRequestInfoObj.isLoading
@@ -71,7 +71,7 @@ const TrialPage = ({
       clearUpdateRequestInfo()
       isMounted.current = false
     }
-  }, [clearCreateRequestState, clearUpdateRequestInfo])
+  }, [ clearCreateRequestState, clearUpdateRequestInfo ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(REQUEST_CREATED_SUCCESS_EVENT)
@@ -102,7 +102,7 @@ const TrialPage = ({
         onCancel: () => closeInfoModal(),
       })
     },
-    [closeInfoModal]
+    [ closeInfoModal ]
   )
 
   const refreshRequestList = useCallback(() => {
@@ -111,12 +111,12 @@ const TrialPage = ({
     getRequestListByUserId(currentUser._id, {
       pagination: DEFAULT_PAGINATION.SIZE_5,
       filters: {
-        audioFileUrl: ['true'],
+        audioFileUrl: [ 'true' ],
       },
       sortField: 'createdDate',
       sortOrder: SORT_ORDER.DESC,
     })
-  }, [getRequestListByUserId, currentUser._id])
+  }, [ getRequestListByUserId, currentUser._id ])
 
   useEffect(() => {
     let timer = null
@@ -133,14 +133,14 @@ const TrialPage = ({
         openInfoModal('Yêu cầu dùng thử', 'Thành công', true)
         setTimeout(() => {
           closeInfoModal()
-          history.push(`${CUSTOMER_PATH}/request-details/${updateRequestInfoObj.requestId}`)
+          history.push(`${ CUSTOMER_PATH }/request-details/${ updateRequestInfoObj.requestId }`)
         }, 1000)
       } else {
         openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
       }
     }
     return () => clearTimeout(timer)
-  }, [updateRequestInfoObj, updateRequestInfoFailure, history, openInfoModal, closeInfoModal, refreshRequestList])
+  }, [ updateRequestInfoObj, updateRequestInfoFailure, history, openInfoModal, closeInfoModal, refreshRequestList ])
 
   const updateRequest = useCallback(
     async (requestId, tokenId, transcriptFileUrl) => {
@@ -162,7 +162,7 @@ const TrialPage = ({
         updateRequestInfoFailure({ message: err.message })
       }
     },
-    [updateRequestInfo, updateRequestInfoSuccess, updateRequestInfoFailure]
+    [ updateRequestInfo, updateRequestInfoSuccess, updateRequestInfoFailure ]
   )
 
   useEffect(() => {
@@ -180,10 +180,10 @@ const TrialPage = ({
           const { requestId, tokenId, text } = asrData
           setAsrData(null) // duplicate RequestCreatedSuccessEvent => duplicate calling update request
           const fileName = `transcript`
-          const textFile = new File([new Blob([text], { type: 'text/plain;charset=utf-8' })], fileName, {
+          const textFile = new File([ new Blob([ text ], { type: 'text/plain;charset=utf-8' }) ], fileName, {
             type: 'text/plain;charset=utf-8',
           })
-          const uploadTask = storage.ref(`${FILE_PATH}/${firebaseFolder}/${fileName}`).put(textFile)
+          const uploadTask = storage.ref(`${ FILE_PATH }/${ firebaseFolder }/${ fileName }`).put(textFile)
           uploadTask.on(
             'state_changed',
             snapshot => {
@@ -193,16 +193,16 @@ const TrialPage = ({
             error => {
               refreshRequestList()
               openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
-              console.log(`Error uploading transcript file to firebase storage: ${error.message}`)
+              console.log(`Error uploading transcript file to firebase storage: ${ error.message }`)
             },
             () => {
               storage
-                .ref(`${FILE_PATH}/${firebaseFolder}`)
+                .ref(`${ FILE_PATH }/${ firebaseFolder }`)
                 .child(fileName)
                 .getDownloadURL()
                 .then(async transcriptFileUrl => {
                   updateRequest(requestId, tokenId, transcriptFileUrl)
-                  console.log(`Transcript file was uploaded to firebase storage with url ${transcriptFileUrl}`)
+                  console.log(`Transcript file was uploaded to firebase storage with url ${ transcriptFileUrl }`)
                 })
             }
           )
@@ -238,7 +238,7 @@ const TrialPage = ({
       setAsrData(data)
     } catch (err) {
       createRequestFailure({ message: err.message })
-      console.log(`Error while calling asr: ${err.message}`)
+      console.log(`Error while calling asr: ${ err.message }`)
     }
   }
 
@@ -279,10 +279,10 @@ const TrialPage = ({
     setNewRequest(request)
     setUploading(true)
 
-    const fileName = `audio-${file.name}`
-    const folder = `${Date.now()}`
+    const fileName = `audio-${ file.name }`
+    const folder = `${ Date.now() }`
     setFirebaseFolder(folder)
-    const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${fileName}`).put(file)
+    const uploadTask = storage.ref(`${ FILE_PATH }/${ folder }/${ fileName }`).put(file)
     uploadTask.on(
       'state_changed',
       snapshot => {
@@ -296,7 +296,7 @@ const TrialPage = ({
       },
       () => {
         storage
-          .ref(`${FILE_PATH}/${folder}`)
+          .ref(`${ FILE_PATH }/${ folder }`)
           .child(fileName)
           .getDownloadURL()
           .then(async url => {
@@ -328,9 +328,9 @@ const TrialPage = ({
         console.log(info.file, info.fileList)
       }
       if (status === 'done') {
-        console.log(`Tải file "${info.file.name}" thành công.`)
+        console.log(`Tải file "${ info.file.name }" thành công.`)
       } else if (status === 'error') {
-        console.log(`Tải file "${info.file.name}" thất bại.`)
+        console.log(`Tải file "${ info.file.name }" thất bại.`)
       }
     },
   }
@@ -353,19 +353,19 @@ const TrialPage = ({
             <div className="card-head">
               <h4 className="card-title">Dùng thử</h4>
             </div>
-            <SelectTokenForm uploading={uploading} onSelectTokenFormValuesChange={onSelectTokenFormValuesChange} />
-            <Dragger {...props} disabled={draggerDisabled || uploading}>
+            <SelectTokenForm uploading={ uploading } onSelectTokenFormValuesChange={ onSelectTokenFormValuesChange }/>
+            <Dragger { ...props } disabled={ draggerDisabled || uploading }>
               <p className="ant-upload-drag-icon">
-                <InboxOutlined />
+                <InboxOutlined/>
               </p>
               <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin âm thanh vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
-            <RequestTable newRequest={newRequest} uploading={uploading} />
+            <RequestTable newRequest={ newRequest } uploading={ uploading }/>
           </div>
         </div>
       </div>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
     </div>
   )
 }

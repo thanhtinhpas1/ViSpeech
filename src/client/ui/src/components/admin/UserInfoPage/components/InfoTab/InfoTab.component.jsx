@@ -7,7 +7,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef } from 'react'
 import { Alert, Button, Empty, Form, Input, Radio } from 'antd'
-import { ROLES, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, ROLES, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
@@ -19,14 +19,14 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_UPDATED_SUCCESS_EVENT, USER_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const InfoTab = ({
-  userInfoObj,
-  updateInfoObj,
-  clearUpdateUserInfoState,
-  updateUserInfo,
-  updateUserInfoSuccess,
-  updateUserInfoFailure,
-}) => {
-  const [form] = Form.useForm()
+                   userInfoObj,
+                   updateInfoObj,
+                   clearUpdateUserInfoState,
+                   updateUserInfo,
+                   updateUserInfoSuccess,
+                   updateUserInfoFailure,
+                 }) => {
+  const [ form ] = Form.useForm()
   const loadingRef = useRef(updateInfoObj.isLoading)
   loadingRef.current = updateInfoObj.isLoading
 
@@ -44,7 +44,7 @@ const InfoTab = ({
 
   useEffect(() => {
     return () => clearUpdateUserInfoState()
-  }, [clearUpdateUserInfoState])
+  }, [ clearUpdateUserInfoState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(USER_UPDATED_SUCCESS_EVENT)
@@ -61,7 +61,7 @@ const InfoTab = ({
       }, TIMEOUT_MILLISECONDS)
     }
     return () => clearTimeout(timer)
-  }, [updateInfoObj, updateUserInfoFailure])
+  }, [ updateInfoObj, updateUserInfoFailure ])
 
   const onSubmit = async values => {
     const userId = userInfoObj.user._id
@@ -76,7 +76,7 @@ const InfoTab = ({
       firstName,
       lastName,
       email,
-      roles: [{ name: role }],
+      roles: [ { name: role } ],
     }
 
     updateUserInfo(userId, user)
@@ -96,97 +96,97 @@ const InfoTab = ({
 
   return (
     <div className="info-tab">
-      {userInfoObj.isLoading && (
+      { userInfoObj.isLoading && (
         <div className="info-tab__loading">
-          <LoadingIcon />
+          <LoadingIcon/>
         </div>
-      )}
-      {(userInfoObj.isLoading || userInfoObj.isSuccess === false) && <Empty />}
-      {!userInfoObj.isLoading && userInfoObj.isSuccess === true && (
+      ) }
+      { (userInfoObj.isLoading || userInfoObj.isSuccess === false) && <Empty/> }
+      { !userInfoObj.isLoading && userInfoObj.isSuccess === true && (
         <Form
-          form={form}
-          onFinish={onSubmit}
-          initialValues={{
+          form={ form }
+          onFinish={ onSubmit }
+          initialValues={ {
             lastName: userInfoObj.user.lastName,
             firstName: userInfoObj.user.firstName,
             email: userInfoObj.user.email,
             role: Array.isArray(userInfoObj.user.roles) && userInfoObj.user.roles[0].name,
-          }}
+          } }
         >
           <Form.Item
-            {...formItemLayout}
+            { ...formItemLayout }
             name="lastName"
             label="Họ"
             hasFeedback
-            rules={[
+            rules={ [
               {
                 required: true,
                 message: 'Vui lòng nhập họ khách hàng!',
               },
-            ]}
+            ] }
           >
-            <Input />
+            <Input/>
           </Form.Item>
           <Form.Item
-            {...formItemLayout}
+            { ...formItemLayout }
             name="firstName"
             label="Tên"
             hasFeedback
-            rules={[
+            rules={ [
               {
                 required: true,
                 message: 'Vui lòng nhập tên khách hàng!',
               },
-            ]}
+            ] }
           >
-            <Input />
+            <Input/>
           </Form.Item>
-          <Form.Item {...formItemLayout} label="Tên đăng nhập">
-            <div>{userInfoObj.user.username}</div>
+          <Form.Item { ...formItemLayout } label="Tên đăng nhập">
+            <div>{ userInfoObj.user.username }</div>
           </Form.Item>
           <Form.Item
-            {...formItemLayout}
+            { ...formItemLayout }
             label="Email"
             name="email"
             hasFeedback
-            rules={[{ type: 'email', required: true, message: 'Vui lòng nhập email!' }]}
+            rules={ [ { type: 'email', required: true, message: 'Vui lòng nhập email!' } ] }
           >
-            {Utils.isEmailVerified(userInfoObj.user.roles) ? <div>{userInfoObj.user.email}</div> : <Input />}
+            { Utils.isEmailVerified(userInfoObj.user.roles) ? <div>{ userInfoObj.user.email }</div> : <Input/> }
           </Form.Item>
           <Form.Item
-            {...formItemLayout}
+            { ...formItemLayout }
             name="role"
             label="Vai trò"
             hasFeedback
-            rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
+            rules={ [ { required: true, message: 'Vui lòng chọn vai trò!' } ] }
           >
             <Radio.Group>
-              {Object.values(ROLES).map(role => {
+              { Object.values(ROLES).map(role => {
                 return (
-                  <Radio value={role} key={role}>
-                    {role}
+                  <Radio value={ role } key={ role }>
+                    { role }
                   </Radio>
                 )
-              })}
+              }) }
             </Radio.Group>
           </Form.Item>
-          {!updateInfoObj.isLoading && updateInfoObj.isSuccess === false && (
-            <Form.Item {...tailLayout}>
-              <Alert message={Utils.buildFailedMessage(updateInfoObj.message)} type="error" showIcon closable />
+          { !updateInfoObj.isLoading && updateInfoObj.isSuccess === false && (
+            <Form.Item { ...tailLayout }>
+              <Alert message={ Utils.buildFailedMessage(updateInfoObj.message) } type="error" showIcon closable/>
             </Form.Item>
-          )}
-          {!updateInfoObj.isLoading && updateInfoObj.isSuccess === true && (
-            <Form.Item {...tailLayout}>
-              <Alert message="Cập nhật thông tin thành công" type="success" showIcon closable />
+          ) }
+          { !updateInfoObj.isLoading && updateInfoObj.isSuccess === true && (
+            <Form.Item { ...tailLayout }>
+              <Alert message="Cập nhật thông tin thành công" type="success" showIcon closable/>
             </Form.Item>
-          )}
-          <Form.Item {...tailLayout}>
-            <Button htmlType="submit" loading={updateInfoObj.isLoading} type="primary" size="middle">
+          ) }
+          <Form.Item { ...tailLayout }>
+            <Button htmlType="submit" loading={ updateInfoObj.isLoading } type="primary" size="middle">
               Cập nhật
             </Button>
           </Form.Item>
         </Form>
-      )}
+      ) }
     </div>
   )
 }

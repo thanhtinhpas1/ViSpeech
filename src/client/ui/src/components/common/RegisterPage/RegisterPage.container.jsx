@@ -1,10 +1,5 @@
 import { connect } from 'react-redux'
-import {
-  registerStart,
-  registerSuccess,
-  registerFailure,
-  onClearUserState,
-} from 'redux/user/user.actions'
+import { onClearUserState, registerFailure, registerStart, registerSuccess, } from 'redux/user/user.actions'
 import RegisterPage from './RegisterPage.component'
 
 const mapStateToProps = state => ({

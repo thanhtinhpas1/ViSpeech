@@ -7,25 +7,25 @@ import './ResizableTitle.style.scss'
 
 const ResizableTitle = ({ onResize, width, ...restProps }) => {
   if (!width) {
-    return <th {...restProps} />
+    return <th { ...restProps } />
   }
 
   return (
     <Resizable
-      width={width}
-      height={0}
+      width={ width }
+      height={ 0 }
       handle={
         <span
           className="react-resizable-handle"
-          onClick={e => {
+          onClick={ e => {
             e.stopPropagation()
-          }}
+          } }
         />
       }
-      onResize={onResize}
-      draggableOpts={{ enableUserSelectHack: false }}
+      onResize={ onResize }
+      draggableOpts={ { enableUserSelectHack: false } }
     >
-      <th {...restProps} />
+      <th { ...restProps } />
     </Resizable>
   )
 }

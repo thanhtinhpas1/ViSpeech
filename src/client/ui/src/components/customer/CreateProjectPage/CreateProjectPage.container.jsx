@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import {
   createProject,
-  createProjectSuccess,
   createProjectFailure,
+  createProjectSuccess,
   onClearCreateProjectState,
 } from 'redux/project/project.actions'
 import CreateProjectPage from './CreateProjectPage.component'

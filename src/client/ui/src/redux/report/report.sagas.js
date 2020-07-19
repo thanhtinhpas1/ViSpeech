@@ -1,18 +1,18 @@
 /* eslint-disable no-restricted-globals */
-import { call, all, takeLatest, put, takeEvery } from 'redux-saga/effects'
+import { all, call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import ReportService from 'services/report.service'
 import ReportTypes from './report.types'
 import {
-  getUserTotalStatisticsSuccess,
-  getUserTotalStatisticsFailure,
-  getAdminTotalStatisticsSuccess,
   getAdminTotalStatisticsFailure,
-  getStatisticsByIdSuccess,
+  getAdminTotalStatisticsSuccess,
   getStatisticsByIdFailure,
-  getUserTokenTypeStatisticsSuccess,
-  getUserTokenTypeStatisticsFailure,
-  getTotalStatisticsSuccess,
+  getStatisticsByIdSuccess,
   getTotalStatisticsFailure,
+  getTotalStatisticsSuccess,
+  getUserTokenTypeStatisticsFailure,
+  getUserTokenTypeStatisticsSuccess,
+  getUserTotalStatisticsFailure,
+  getUserTotalStatisticsSuccess,
 } from './report.actions'
 
 // get statistics by id
@@ -24,6 +24,7 @@ function* getStatisticsById({ payload: { id, statisticsType, timeType, queryPara
     yield put(getStatisticsByIdFailure(err.message, statisticsType))
   }
 }
+
 export function* getStatisticsByIdSaga() {
   yield takeEvery(ReportTypes.GET_STATISTICS_BY_ID, getStatisticsById)
 }
@@ -37,6 +38,7 @@ function* getUserTokenTypeStatistics({ payload: { id, userId, timeType, queryPar
     yield put(getUserTokenTypeStatisticsFailure(err.message))
   }
 }
+
 export function* getUserTokenTypeStatisticsSaga() {
   yield takeLatest(ReportTypes.GET_USER_TOKEN_TYPE_STATISTICS, getUserTokenTypeStatistics)
 }
@@ -50,6 +52,7 @@ function* getUserTotalStatistics({ payload: { userId, statisticsType, timeType, 
     yield put(getUserTotalStatisticsFailure(err.message, statisticsType))
   }
 }
+
 export function* getUserTotalStatisticsSaga() {
   yield takeEvery(ReportTypes.GET_USER_TOTAL_STATISTICS, getUserTotalStatistics)
 }
@@ -63,6 +66,7 @@ function* getAdminTotalStatistics({ payload: { statisticsType, timeType, queryPa
     yield put(getAdminTotalStatisticsFailure(err.message, statisticsType))
   }
 }
+
 export function* getAdminTotalStatisticsSaga() {
   yield takeEvery(ReportTypes.GET_ADMIN_TOTAL_STATISTICS, getAdminTotalStatistics)
 }
@@ -76,6 +80,7 @@ function* getTotalStatistics({ payload: { timeType, queryParams } }) {
     yield put(getTotalStatisticsFailure(err.message))
   }
 }
+
 export function* getTotalStatisticsSaga() {
   yield takeEvery(ReportTypes.GET_TOTAL_STATISTICS, getTotalStatistics)
 }

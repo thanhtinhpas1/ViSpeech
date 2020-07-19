@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Line } from '@ant-design/charts'
 import SocketService from 'services/socket.service'
 import SocketUtils from 'utils/socket.util'
@@ -12,7 +12,7 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { MONITOR_BEAT_SUCCESS_EVENT, MONITOR_BEAT_FAILED_EVENT } = KAFKA_TOPIC
 
 const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
-  const [data, setData] = useState([])
+  const [ data, setData ] = useState([])
   const isMounted = useRef(true)
 
   useEffect(() => {
@@ -22,14 +22,14 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
 
   useEffect(() => {
     getMonitorList({ pagination: DEFAULT_PAGINATION.SIZE_10, sortField: 'createdDate', sortOrder: SORT_ORDER.DESC })
-  }, [getMonitorList])
+  }, [ getMonitorList ])
 
   useEffect(() => {
     if (getMonitorListObj.isLoading === false && getMonitorListObj.isSuccess === true) {
       const chartData = MonitorUtils.convertArrToChartData(getMonitorListObj.monitorList.data)
       setData(chartData)
     }
-  }, [getMonitorListObj])
+  }, [ getMonitorListObj ])
 
   useEffect(() => {
     invokeCheckSubject.MonitorBeat.subscribe(event => {
@@ -38,7 +38,7 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
         const convertedData = MonitorUtils.convertToChartData(mappedData)
         setData(p => {
           const data = p.slice(4)
-          return [...data, ...convertedData]
+          return [ ...data, ...convertedData ]
         })
       }
     })
@@ -84,7 +84,7 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
     meta: {
       time: {
         formatter: v => {
-          return `${v} ms/item`
+          return `${ v } ms/item`
         },
       },
       type: {
@@ -99,17 +99,9 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
     legend: {
       position: 'top-center',
       text: {
-        // formatter: MonitorUtils.formatTextFunc,
         style: DEFAULT_STYLE,
       },
     },
-    // label: {
-    //   visible: true,
-    //   type: 'line',
-    //   formatter: MonitorUtils.formatTextFunc,
-    //   style: { ...DEFAULT_STYLE, fontSize: 14 },
-    // },
-    // animation: { appear: { animation: 'clipingWithData' } },
     smooth: true,
     responsive: true,
   }
@@ -122,7 +114,7 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
             <h4 className="card-title">Biểu đồ</h4>
           </div>
           <div className="card-content">
-            <Line {...config} onlyChangeData />
+            <Line { ...config } onlyChangeData/>
           </div>
         </div>
       </div>

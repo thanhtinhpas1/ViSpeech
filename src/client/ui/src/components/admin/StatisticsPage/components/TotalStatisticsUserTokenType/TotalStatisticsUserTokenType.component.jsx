@@ -9,12 +9,12 @@ import Utils from 'utils'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsUserTokenType = ({
-  currentUser,
-  chartOptions,
-  getUserTotalStatisticsBytokenTypeObj,
-  getUserTotalStatistics,
-}) => {
-  const [userTotalStatistics, setUserTotalStatistics] = useState({ data: [] })
+                                        currentUser,
+                                        chartOptions,
+                                        getUserTotalStatisticsBytokenTypeObj,
+                                        getUserTotalStatistics,
+                                      }) => {
+  const [ userTotalStatistics, setUserTotalStatistics ] = useState({ data: [] })
 
   useEffect(() => {
     if (getUserTotalStatisticsBytokenTypeObj.data.length > 0) {
@@ -23,7 +23,7 @@ const TotalStatisticsUserTokenType = ({
           ...item,
           data: {
             ...item.data,
-            display: `${Utils.formatPrice(item.data.price)} ${MONETARY_UNIT} / ${item.data.minutes} phút`,
+            display: `${ Utils.formatPrice(item.data.price) } ${ MONETARY_UNIT } / ${ item.data.minutes } phút`,
           },
         }
       })
@@ -32,19 +32,19 @@ const TotalStatisticsUserTokenType = ({
         data: formatStatisticsData,
       })
     }
-  }, [getUserTotalStatisticsBytokenTypeObj])
+  }, [ getUserTotalStatisticsBytokenTypeObj ])
 
   return (
     <div>
-      {currentUser._id && (
+      { currentUser._id && (
         <TotalStatisticsTemplate
-          userId={currentUser._id}
-          chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.TOKEN_TYPE}
-          getTotalStatisticsObj={userTotalStatistics}
-          getTotalStatistics={getUserTotalStatistics}
+          userId={ currentUser._id }
+          chartOptions={ chartOptions }
+          statisticsType={ ReportUtils.STATISTICS_TYPE.TOKEN_TYPE }
+          getTotalStatisticsObj={ userTotalStatistics }
+          getTotalStatistics={ getUserTotalStatistics }
         />
-      )}
+      ) }
     </div>
   )
 }

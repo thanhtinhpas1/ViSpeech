@@ -9,14 +9,14 @@ import Utils from 'utils'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
 
 const StatisticsTokenType = ({
-  currentUser,
-  chartOptions,
-  getTokenTypeListObj,
-  getStatisticsBytokenTypeIdObj,
-  getTokenTypes,
-  getStatisticsById,
-}) => {
-  const [tokenTypeList, setTokenTypeList] = useState([])
+                               currentUser,
+                               chartOptions,
+                               getTokenTypeListObj,
+                               getStatisticsBytokenTypeIdObj,
+                               getTokenTypes,
+                               getStatisticsById,
+                             }) => {
+  const [ tokenTypeList, setTokenTypeList ] = useState([])
   const placeHolderSelectId = {
     found: 'Chọn loại API key',
     notFound: 'Không tìm thấy loại API key',
@@ -24,32 +24,32 @@ const StatisticsTokenType = ({
 
   useEffect(() => {
     getTokenTypes()
-  }, [getTokenTypes])
+  }, [ getTokenTypes ])
 
   useEffect(() => {
     if (getTokenTypeListObj.tokenTypeList.length > 0) {
       const tokens = getTokenTypeListObj.tokenTypeList.map(tokenType => {
         return {
           ...tokenType,
-          display: `${Utils.formatPrice(tokenType.price)} ${MONETARY_UNIT} / ${tokenType.minutes} phút`,
+          display: `${ Utils.formatPrice(tokenType.price) } ${ MONETARY_UNIT } / ${ tokenType.minutes } phút`,
         }
       })
       setTokenTypeList(tokens)
     }
-  }, [getTokenTypeListObj])
+  }, [ getTokenTypeListObj ])
 
   return (
     <div>
-      {currentUser._id && (
+      { currentUser._id && (
         <StatisticsTemplate
-          chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.TOKEN_TYPE}
-          data={tokenTypeList}
-          placeHolderSelectId={placeHolderSelectId}
-          getStatisticsByIdObj={getStatisticsBytokenTypeIdObj}
-          getStatisticsById={getStatisticsById}
+          chartOptions={ chartOptions }
+          statisticsType={ ReportUtils.STATISTICS_TYPE.TOKEN_TYPE }
+          data={ tokenTypeList }
+          placeHolderSelectId={ placeHolderSelectId }
+          getStatisticsByIdObj={ getStatisticsBytokenTypeIdObj }
+          getStatisticsById={ getStatisticsById }
         />
-      )}
+      ) }
     </div>
   )
 }

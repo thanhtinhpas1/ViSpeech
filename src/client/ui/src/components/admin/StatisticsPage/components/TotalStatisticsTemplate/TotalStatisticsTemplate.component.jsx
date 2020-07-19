@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import { HorizontalBar } from 'react-chartjs-2'
-import { Row, Select, DatePicker, Button, Empty } from 'antd'
+import { Button, DatePicker, Empty, Row, Select } from 'antd'
 import STORAGE from 'utils/storage'
 import ReportUtils from 'utils/report.util'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
@@ -23,25 +23,25 @@ const {
 } = ReportUtils
 
 const TotalStatisticsTemplate = ({
-  userId,
-  chartOptions,
-  statisticsType,
-  getTotalStatisticsObj,
-  getTotalStatistics,
-}) => {
+                                   userId,
+                                   chartOptions,
+                                   statisticsType,
+                                   getTotalStatisticsObj,
+                                   getTotalStatistics,
+                                 }) => {
   // for antd range picker
-  const [pickerType, setPickerType] = useState(TIME_TYPE.DATE)
-  const [formatRangePicker, setFormatRangePicker] = useState('DD/MM/YYYY')
-  const [placeHolderRangePicker, setPlaceHolderRangePicker] = useState(['Ngày bắt đầu', 'Ngày kết thúc'])
-  const [valueRangePicker, setValueRangePicker] = useState([getPreviousTenDatesFromNow(), getDateNow()])
+  const [ pickerType, setPickerType ] = useState(TIME_TYPE.DATE)
+  const [ formatRangePicker, setFormatRangePicker ] = useState('DD/MM/YYYY')
+  const [ placeHolderRangePicker, setPlaceHolderRangePicker ] = useState([ 'Ngày bắt đầu', 'Ngày kết thúc' ])
+  const [ valueRangePicker, setValueRangePicker ] = useState([ getPreviousTenDatesFromNow(), getDateNow() ])
 
   const defaultQuarterData = {
     from: { quarter: 0, year: 2020 },
     to: { quarter: 1, year: 2020 },
   }
-  const [quarterData, setQuarterData] = useState(defaultQuarterData)
-  const [chartData, setChartData] = useState([])
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true)
+  const [ quarterData, setQuarterData ] = useState(defaultQuarterData)
+  const [ chartData, setChartData ] = useState([])
+  const [ isButtonDisabled, setIsButtonDisabled ] = useState(true)
 
   useEffect(() => {
     if (userId) {
@@ -50,7 +50,7 @@ const TotalStatisticsTemplate = ({
       setIsButtonDisabled(false)
       getTotalStatistics(userId, statisticsType, TIME_TYPE.DATE, { fromDate, toDate })
     }
-  }, [userId, statisticsType, getTotalStatistics])
+  }, [ userId, statisticsType, getTotalStatistics ])
 
   useEffect(() => {
     const { isLoading, isSuccess, data } = getTotalStatisticsObj
@@ -67,10 +67,10 @@ const TotalStatisticsTemplate = ({
       }
       setChartData(dataChart)
     }
-  }, [getTotalStatisticsObj])
+  }, [ getTotalStatisticsObj ])
 
   const getStatistics = (timeType, queryParams) => {
-    STORAGE.setPreferences(`'vispeech-user-total-statistics-${statisticsType}'`, JSON.stringify(queryParams))
+    STORAGE.setPreferences(`'vispeech-user-total-statistics-${ statisticsType }'`, JSON.stringify(queryParams))
     getTotalStatistics(userId, statisticsType, timeType, queryParams)
   }
 
@@ -90,16 +90,16 @@ const TotalStatisticsTemplate = ({
 
     if (value === TIME_TYPE.DATE) {
       format = 'DD/MM/YYYY'
-      placeHolder = ['Ngày bắt đầu', 'Ngày kết thúc']
+      placeHolder = [ 'Ngày bắt đầu', 'Ngày kết thúc' ]
     } else if (value === TIME_TYPE.WEEK) {
       format = 'Tuần ww / YYYY'
-      placeHolder = ['Tuần bắt đầu', 'Tuần kết thúc']
+      placeHolder = [ 'Tuần bắt đầu', 'Tuần kết thúc' ]
     } else if (value === TIME_TYPE.MONTH) {
       format = 'MM/YYYY'
-      placeHolder = ['Tháng bắt đầu', 'Tháng kết thúc']
+      placeHolder = [ 'Tháng bắt đầu', 'Tháng kết thúc' ]
     } else if (value === TIME_TYPE.YEAR) {
       format = 'YYYY'
-      placeHolder = ['Năm bắt đầu', 'Năm kết thúc']
+      placeHolder = [ 'Năm bắt đầu', 'Năm kết thúc' ]
     }
 
     setFormatRangePicker(format)
@@ -339,57 +339,57 @@ const TotalStatisticsTemplate = ({
   }
 
   return (
-    <div style={{ position: 'relative' }}>
-      {getTotalStatisticsObj.isLoading && (
+    <div style={ { position: 'relative' } }>
+      { getTotalStatisticsObj.isLoading && (
         <div className="statistics-page__loading">
-          <LoadingIcon />
+          <LoadingIcon/>
         </div>
-      )}
+      ) }
       <Row>
         <div className="statistics-page__select-type">
-          <Select defaultValue={pickerType} style={{ minWidth: 180 }} onChange={onChangePickerType}>
-            <Option value={TIME_TYPE.DATE}>Theo ngày</Option>
-            <Option value={TIME_TYPE.WEEK}>Theo tuần</Option>
-            <Option value={TIME_TYPE.MONTH}>Theo tháng</Option>
-            <Option value={TIME_TYPE.QUARTER}>Theo quý</Option>
-            <Option value={TIME_TYPE.YEAR}>Theo năm</Option>
+          <Select defaultValue={ pickerType } style={ { minWidth: 180 } } onChange={ onChangePickerType }>
+            <Option value={ TIME_TYPE.DATE }>Theo ngày</Option>
+            <Option value={ TIME_TYPE.WEEK }>Theo tuần</Option>
+            <Option value={ TIME_TYPE.MONTH }>Theo tháng</Option>
+            <Option value={ TIME_TYPE.QUARTER }>Theo quý</Option>
+            <Option value={ TIME_TYPE.YEAR }>Theo năm</Option>
           </Select>
-          {pickerType === TIME_TYPE.QUARTER ? (
+          { pickerType === TIME_TYPE.QUARTER ? (
             <>
               <DatePicker
                 picker="quarter"
-                onChange={onChangeFromQuarter}
+                onChange={ onChangeFromQuarter }
                 format="quý 0Q/YYYY"
                 placeholder="Quý bắt đầu"
               />
-              <div style={{ margin: '0px 5px' }}>đến</div>
+              <div style={ { margin: '0px 5px' } }>đến</div>
               <DatePicker
                 picker="quarter"
-                onChange={onChangeToQuarter}
+                onChange={ onChangeToQuarter }
                 format="quý 0Q/YYYY"
                 placeholder="Quý kết thúc"
               />
             </>
           ) : (
             <RangePicker
-              picker={pickerType}
-              onChange={onChangeRangePicker}
-              format={formatRangePicker}
-              placeholder={placeHolderRangePicker}
-              value={valueRangePicker}
+              picker={ pickerType }
+              onChange={ onChangeRangePicker }
+              format={ formatRangePicker }
+              placeholder={ placeHolderRangePicker }
+              value={ valueRangePicker }
             />
-          )}
-          <Button onClick={onClickGetStatistics} disabled={isButtonDisabled} type="primary">
+          ) }
+          <Button onClick={ onClickGetStatistics } disabled={ isButtonDisabled } type="primary">
             Thống kê
           </Button>
         </div>
       </Row>
       <Row>
         <div className="statistics-page__total-chart">
-          {(chartData.length === 0 || getTotalStatisticsObj.isLoading) && <Empty />}
-          {getTotalStatisticsObj.isLoading === false &&
-            getTotalStatisticsObj.isSuccess === true &&
-            chartData.length > 0 && <HorizontalBar data={dataChart} options={chartOptions} />}
+          { (chartData.length === 0 || getTotalStatisticsObj.isLoading) && <Empty/> }
+          { getTotalStatisticsObj.isLoading === false &&
+          getTotalStatisticsObj.isSuccess === true &&
+          chartData.length > 0 && <HorizontalBar data={ dataChart } options={ chartOptions }/> }
         </div>
       </Row>
     </div>

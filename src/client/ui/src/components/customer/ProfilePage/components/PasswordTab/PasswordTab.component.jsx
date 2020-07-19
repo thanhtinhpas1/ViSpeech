@@ -1,35 +1,35 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useCallback, useRef } from 'react'
-import { Form, Input, Button, Alert } from 'antd'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { Alert, Button, Form, Input } from 'antd'
 import { useHistory } from 'react-router-dom'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
 import Utils from 'utils'
-import { TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PASSWORD_CHANGED_SUCCESS_EVENT, PASSWORD_CHANGED_FAILED_EVENT } = KAFKA_TOPIC
 
 const PasswordTab = ({
-  currentUser,
-  changePasswordObj,
-  clearChangePasswordState,
-  changePassword,
-  changePasswordSuccess,
-  changePasswordFailure,
-  logout,
-}) => {
+                       currentUser,
+                       changePasswordObj,
+                       clearChangePasswordState,
+                       changePassword,
+                       changePasswordSuccess,
+                       changePasswordFailure,
+                       logout,
+                     }) => {
   const history = useHistory()
-  const [form] = Form.useForm()
+  const [ form ] = Form.useForm()
   const loadingRef = useRef(changePasswordObj.isLoading)
   loadingRef.current = changePasswordObj.isLoading
 
   useEffect(() => {
     return () => clearChangePasswordState()
-  }, [clearChangePasswordState])
+  }, [ clearChangePasswordState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PASSWORD_CHANGED_SUCCESS_EVENT)
@@ -39,7 +39,7 @@ const PasswordTab = ({
   const onLogout = useCallback(() => {
     logout()
     history.push(`/`)
-  }, [history, logout])
+  }, [ history, logout ])
 
   useEffect(() => {
     let timer = null
@@ -56,7 +56,7 @@ const PasswordTab = ({
       }, 1500)
     }
     return () => clearTimeout(timer)
-  }, [changePasswordObj, onLogout, changePasswordFailure])
+  }, [ changePasswordObj, onLogout, changePasswordFailure ])
 
   const onSubmit = async values => {
     if (!currentUser._id) return
@@ -86,27 +86,27 @@ const PasswordTab = ({
 
   return (
     <div className="tab-pane fade" id="change-password">
-      <Form form={form} onFinish={onSubmit} id="change-password-form">
+      <Form form={ form } onFinish={ onSubmit } id="change-password-form">
         <div className="row">
           <div className="col-md-12">
-            {!changePasswordObj.isLoading && changePasswordObj.isSuccess === false && (
+            { !changePasswordObj.isLoading && changePasswordObj.isSuccess === false && (
               <Alert
-                message={Utils.buildFailedMessage(changePasswordObj.message)}
+                message={ Utils.buildFailedMessage(changePasswordObj.message) }
                 type="error"
                 showIcon
                 closable
-                style={{ marginBottom: '20px' }}
+                style={ { marginBottom: '20px' } }
               />
-            )}
-            {!changePasswordObj.isLoading && changePasswordObj.isSuccess === true && (
+            ) }
+            { !changePasswordObj.isLoading && changePasswordObj.isSuccess === true && (
               <Alert
                 message="Thay đổi mật khẩu thành công"
                 type="success"
                 showIcon
                 closable
-                style={{ marginBottom: '20px' }}
+                style={ { marginBottom: '20px' } }
               />
-            )}
+            ) }
           </div>
           <div className="col-md-6">
             <label htmlFor="oldPassword" className="input-item-label">
@@ -116,14 +116,14 @@ const PasswordTab = ({
               id="oldPassword"
               name="oldPassword"
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng nhập mật khẩu hiện tại!',
                 },
-              ]}
+              ] }
             >
-              <Input.Password />
+              <Input.Password/>
             </Form.Item>
           </div>
         </div>
@@ -134,9 +134,9 @@ const PasswordTab = ({
             </label>
             <Form.Item
               name="newPassword"
-              dependencies={['oldPassword']}
+              dependencies={ [ 'oldPassword' ] }
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng nhập mật khẩu mới!',
@@ -150,9 +150,9 @@ const PasswordTab = ({
                     return Promise.reject('Mật khẩu mới trùng mật khẩu cũ!')
                   },
                 }),
-              ]}
+              ] }
             >
-              <Input.Password />
+              <Input.Password/>
             </Form.Item>
           </div>
           <div className="col-md-6">
@@ -161,9 +161,9 @@ const PasswordTab = ({
             </label>
             <Form.Item
               name="confirmedNewPassword"
-              dependencies={['newPassword']}
+              dependencies={ [ 'newPassword' ] }
               hasFeedback
-              rules={[
+              rules={ [
                 {
                   required: true,
                   message: 'Vui lòng xác nhận mật khẩu mới!',
@@ -177,17 +177,17 @@ const PasswordTab = ({
                     return Promise.reject('Mật khẩu không khớp. Vui lòng nhập lại!')
                   },
                 }),
-              ]}
+              ] }
             >
-              <Input.Password />
+              <Input.Password/>
             </Form.Item>
           </div>
           <div className="col-md-12 d-sm-flex justify-content-between align-items-center">
             <Form.Item>
               <Button
                 htmlType="submit"
-                loading={changePasswordObj.isLoading}
-                disabled={Utils.isSocialAccount(currentUser.userType)}
+                loading={ changePasswordObj.isLoading }
+                disabled={ Utils.isSocialAccount(currentUser.userType) }
                 type="primary"
                 size="large"
               >

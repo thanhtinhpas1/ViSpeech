@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import { authenticate } from 'redux/user/user.actions'
 import {
-  replyPermissionAssign,
-  replyPermissionAssignSuccess,
-  replyPermissionAssignFailure,
   findPermissionByEmailToken,
+  replyPermissionAssign,
+  replyPermissionAssignFailure,
+  replyPermissionAssignSuccess,
 } from 'redux/permission/permission.actions'
 import ReplyPermissionAssignPage from './ReplyPermissionAssignPage.component'
 

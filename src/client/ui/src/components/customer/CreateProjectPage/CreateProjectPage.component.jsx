@@ -3,7 +3,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CUSTOMER_PATH, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import SocketService from 'services/socket.service'
@@ -16,20 +16,20 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PROJECT_CREATED_SUCCESS_EVENT, PROJECT_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const CreateProjectPage = ({
-  currentUser,
-  createProjectObj,
-  clearCreateProjectState,
-  createProject,
-  createProjectSuccess,
-  createProjectFailure,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
+                             currentUser,
+                             createProjectObj,
+                             clearCreateProjectState,
+                             createProject,
+                             createProjectSuccess,
+                             createProjectFailure,
+                           }) => {
+  const [ infoModal, setInfoModal ] = useState({})
   const loadingRef = useRef(createProjectObj.isLoading)
   loadingRef.current = createProjectObj.isLoading
 
   useEffect(() => {
     return () => clearCreateProjectState()
-  }, [clearCreateProjectState])
+  }, [ clearCreateProjectState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_CREATED_SUCCESS_EVENT)
@@ -88,7 +88,7 @@ const CreateProjectPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [createProjectObj, closeInfoModal, createProjectFailure])
+  }, [ createProjectObj, closeInfoModal, createProjectFailure ])
 
   const onSubmit = async event => {
     event.preventDefault()
@@ -133,33 +133,33 @@ const CreateProjectPage = ({
           <div className="card-innr card-innr-fix">
             <div className="card-head d-flex justify-content-between align-items-center">
               <h4 className="card-title mb-0">Tạo dự án</h4>
-              <Link to={`${CUSTOMER_PATH}/projects`} className="btn btn-sm btn-auto btn-primary d-sm-block d-none">
-                <em className="fas fa-arrow-left mr-3" />
+              <Link to={ `${ CUSTOMER_PATH }/projects` } className="btn btn-sm btn-auto btn-primary d-sm-block d-none">
+                <em className="fas fa-arrow-left mr-3"/>
                 Trở lại
               </Link>
-              <Link to={`${CUSTOMER_PATH}/projects`} className="btn btn-icon btn-sm btn-primary d-sm-none">
-                <em className="fas fa-arrow-left" />
+              <Link to={ `${ CUSTOMER_PATH }/projects` } className="btn btn-icon btn-sm btn-primary d-sm-none">
+                <em className="fas fa-arrow-left"/>
               </Link>
             </div>
-            <div className="gaps-1x" />
-            <form onSubmit={onSubmit} id="create-project-form" style={{ overflow: 'auto' }}>
+            <div className="gaps-1x"/>
+            <form onSubmit={ onSubmit } id="create-project-form" style={ { overflow: 'auto' } }>
               <div className="input-item input-with-label">
                 <label className="input-item-label text-exlight">Tên dự án *</label>
-                <input className="input-bordered" type="text" name="name" required />
+                <input className="input-bordered" type="text" name="name" required/>
               </div>
               <div className="input-item input-with-label">
                 <label className="input-item-label text-exlight">Mô tả</label>
-                <textarea className="input-bordered input-textarea" defaultValue="" name="description" />
+                <textarea className="input-bordered input-textarea" defaultValue="" name="description"/>
               </div>
-              <div className="gaps-1x" />
-              <button type="submit" className="btn btn-primary" style={{ float: 'right' }}>
+              <div className="gaps-1x"/>
+              <button type="submit" className="btn btn-primary" style={ { float: 'right' } }>
                 Tạo
               </button>
             </form>
           </div>
         </div>
       </div>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
     </div>
   )
 }

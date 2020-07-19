@@ -98,7 +98,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     }
 
     async publish(event: IEvent, stream?: string) {
-        if ([ null, undefined ].includes(event)) {
+        if ([null, undefined].includes(event)) {
             return;
         }
 
@@ -109,30 +109,17 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             event['eventType'] || stream,
         );
         // it's hack for find out streamId by include stream
-        const streams = [ 'Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task', 'Monitor' ];
+        const streams = ['Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task', 'Monitor'];
         const streamName = streams.map(stream => eventPayload.type.includes(stream) ? stream : null)
-            .filter(event => event != null)[0];
+        .filter(event => event != null)[0];
         let streamId = stream ? stream : `$ce-${ streamName?.toLowerCase() ?? 'user' }`;
         //if (streamName === 'Monitor') {
-            // replace with sheep array when have cluster
-            //streamId = '$stats-0.0.0.0:2113';
+        // replace with sheep array when have cluster
+        //streamId = '$stats-0.0.0.0:2113';
         //}
 
         try {
-            let version = await this.store.readExpectedVersion(streamId);
-            const lcp = await this.store.read(streamId);
-            // case when does not exist stream => expected version will be overlap with case start event  = 0
-            // so in this case we accept for all event have event number less than 1
-            if (version === 0) {
-                version = expectedVersion.any;
-                await this.store.writeExpectedVersion(streamId, 1);
-            } else if (version < lcp && version !== -1) {
-                version = lcp;
-                await this.store.writeExpectedVersion(streamId, version + 1);
-            } else {
-                await this.store.writeExpectedVersion(streamId, version + 1);
-            }
-            await this.eventStore.getConnection().appendToStream(streamId, version, [ eventPayload ]);
+            await this.eventStore.getConnection().appendToStream(streamId, expectedVersion.any, [eventPayload]);
         } catch (err) {
             if (err.name === 'WrongExpectedVersionError') {
                 this.logger.warn('Detect duplicate event ' + eventPayload.type + ' ' + err.message);

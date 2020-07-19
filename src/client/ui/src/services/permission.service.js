@@ -1,10 +1,10 @@
 import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
 import { apiUrl } from './api-url'
 
 export default class PermissionService {
   static sendAssignPermissionEmail = ({ assigneeUsername, projectId, permissions, assignerId }) => {
-    const api = `${apiUrl}/permissions/assign-permission`
+    const api = `${ apiUrl }/permissions/assign-permission`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -19,7 +19,7 @@ export default class PermissionService {
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -39,7 +39,7 @@ export default class PermissionService {
   }
 
   static replyPermissionAssign = ({ emailToken, status }) => {
-    const api = `${apiUrl}/permissions/reply-permission-assign`
+    const api = `${ apiUrl }/permissions/reply-permission-assign`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let httpStatus = 400
@@ -49,7 +49,7 @@ export default class PermissionService {
       body: JSON.stringify({ emailToken, status }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -70,7 +70,7 @@ export default class PermissionService {
   }
 
   static findPermissionByEmailToken = token => {
-    const api = `${apiUrl}/permissions/email-token/${token}`
+    const api = `${ apiUrl }/permissions/email-token/${ token }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -78,7 +78,7 @@ export default class PermissionService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {

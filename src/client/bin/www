@@ -10,10 +10,10 @@ var http = require('http');
 var { Kafka, logLevel } = require('kafkajs');
 
 const host = process.env.KAFKA_HOST;
-console.log(`Kafka host: ${host}`);
+console.log(`Kafka host: ${ host }`);
 const kafka = new Kafka({
   logLevel: logLevel.INFO,
-  brokers: [`${host}:9092`],
+  brokers: [ `${ host }:9092` ],
   clientId: 'vispeech',
 })
 
@@ -43,13 +43,13 @@ io.sockets.on('connection', function (socket) {
 
   const topicNames = Object.values(TOPICS)
   topicNames.forEach(name => {
-      consumerUtil.run(consumer, name, socket);
+    consumerUtil.run(consumer, name, socket);
   })
 
   consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
       console.log(`====== start ======`)
-      console.log(`RECEIVE TOPIC ${topic}`)
+      console.log(`RECEIVE TOPIC ${ topic }`)
       console.log(`======= end =======`)
       socket.emit(topic, message.value);
     },
@@ -67,7 +67,7 @@ io.sockets.on('connection', function (socket) {
  */
 
 server.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+  console.log(`Server is listening on port ${ port }`);
 });
 server.on('error', onError);
 server.on('listening', onListening);

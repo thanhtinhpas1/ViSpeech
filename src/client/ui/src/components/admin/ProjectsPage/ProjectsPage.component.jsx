@@ -3,12 +3,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
-import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import { ADMIN_PATH, DEFAULT_ERR_MESSAGE, DEFAULT_PAGINATION, STATUS, TIMEOUT_MILLISECONDS } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import ProjectService from 'services/project.service'
 import SocketUtils from 'utils/socket.util'
@@ -23,22 +23,22 @@ const {
 } = KAFKA_TOPIC
 
 const ProjectsPage = ({
-  getProjectListObj,
-  deleteProjectObj,
-  clearDeleteProjectState,
-  getProjectList,
-  deleteProject,
-  deleteProjectSuccess,
-  deleteProjectFailure,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
-  const [confirmModal, setConfirmModal] = useState({})
+                        getProjectListObj,
+                        deleteProjectObj,
+                        clearDeleteProjectState,
+                        getProjectList,
+                        deleteProject,
+                        deleteProjectSuccess,
+                        deleteProjectFailure,
+                      }) => {
+  const [ infoModal, setInfoModal ] = useState({})
+  const [ confirmModal, setConfirmModal ] = useState({})
   const loadingRef = useRef(deleteProjectObj.isLoading)
   loadingRef.current = deleteProjectObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteProjectState()
-  }, [clearDeleteProjectState])
+  }, [ clearDeleteProjectState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_DELETED_SUCCESS_EVENT)
@@ -106,7 +106,7 @@ const ProjectsPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [deleteProjectObj, getProjectList, closeInfoModal, deleteProjectFailure])
+  }, [ deleteProjectObj, getProjectList, closeInfoModal, deleteProjectFailure ])
 
   const onDeleteProject = async projectId => {
     if (!projectId) return
@@ -154,27 +154,27 @@ const ProjectsPage = ({
       title: 'Mã dự án',
       dataIndex: '_id',
       canSearch: true,
-      render: _id => <span>{_id}</span>,
+      render: _id => <span>{ _id }</span>,
       width: 150,
     },
     {
       title: 'Tên dự án',
       dataIndex: 'name',
       canSearch: true,
-      render: name => <span>{name}</span>,
+      render: name => <span>{ name }</span>,
       width: 180,
     },
     {
       title: 'Mô tả',
       dataIndex: 'description',
-      render: description => <div className="d-flex align-items-center">{description}</div>,
+      render: description => <div className="d-flex align-items-center">{ description }</div>,
       width: 200,
     },
     {
       title: 'Tạo bởi',
       dataIndex: 'ownerName',
       canSearch: true,
-      render: ownerName => <span>{ownerName}</span>,
+      render: ownerName => <span>{ ownerName }</span>,
       width: 120,
     },
     {
@@ -189,9 +189,9 @@ const ProjectsPage = ({
       filterMultiple: false,
       render: isValid => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${isValid.cssClass}`} />
-          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
-            {isValid.viText}
+          <div className={ `data-state ${ isValid.cssClass }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: '0' } }>
+            { isValid.viText }
           </span>
         </div>
       ),
@@ -204,8 +204,8 @@ const ProjectsPage = ({
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 180,
@@ -218,15 +218,15 @@ const ProjectsPage = ({
         const isValid = record.isValid.name === STATUS.VALID.name
         return (
           <>
-            <a href={`${ADMIN_PATH}/user-project/${_id}`} className="btn btn-just-icon btn-secondary btn-simple">
-              <i className="far fa-eye" />
+            <a href={ `${ ADMIN_PATH }/user-project/${ _id }` } className="btn btn-just-icon btn-secondary btn-simple">
+              <i className="far fa-eye"/>
             </a>
             <button
-              disabled={!isValid}
+              disabled={ !isValid }
               className="btn btn-simple btn-danger btn-just-icon"
-              onClick={() => onDeleteProject(_id)}
+              onClick={ () => onDeleteProject(_id) }
             >
-              <i className="fas fa-times" />
+              <i className="fas fa-times"/>
             </button>
           </>
         )
@@ -238,7 +238,7 @@ const ProjectsPage = ({
 
   useEffect(() => {
     getProjectList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
-  }, [getProjectList])
+  }, [ getProjectList ])
 
   return (
     <div className="row">
@@ -250,19 +250,19 @@ const ProjectsPage = ({
           <div className="card-content">
             <div className="material-datatables">
               <AntdTable
-                dataObj={getProjectListObj.projectList}
-                columns={columns}
-                fetchData={getProjectList}
-                isLoading={getProjectListObj.isLoading}
-                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
-                scrollY={700}
+                dataObj={ getProjectListObj.projectList }
+                columns={ columns }
+                fetchData={ getProjectList }
+                isLoading={ getProjectListObj.isLoading }
+                pageSize={ DEFAULT_PAGINATION.SIZE_10.pageSize }
+                scrollY={ 700 }
               />
             </div>
           </div>
         </div>
       </div>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
-      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
+      { confirmModal.visible && <ConfirmModal confirmModal={ confirmModal }/> }
     </div>
   )
 }

@@ -1,15 +1,15 @@
 /* eslint-disable no-restricted-globals */
-import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
 import RequestService from 'services/request.service'
 import { STATUS } from 'utils/constant'
 import RequestTypes from './request.types'
 import {
-  getRequestListSuccess,
-  getRequestListFailure,
-  getRequestListByUserIdSuccess,
-  getRequestListByUserIdFailure,
-  getRequestInfoSuccess,
   getRequestInfoFailure,
+  getRequestInfoSuccess,
+  getRequestListByUserIdFailure,
+  getRequestListByUserIdSuccess,
+  getRequestListFailure,
+  getRequestListSuccess,
 } from './request.actions'
 
 // get request info
@@ -63,6 +63,7 @@ function* getList({ payload: filterConditions }) {
     yield put(getRequestListFailure(err.message))
   }
 }
+
 export function* getRequestListSaga() {
   yield takeLatest(RequestTypes.GET_REQUEST_LIST, getList)
 }
@@ -77,6 +78,7 @@ function* getListByUserId({ payload: { userId, filterConditions } }) {
     yield put(getRequestListByUserIdFailure(err.message))
   }
 }
+
 export function* getRequestListByUserIdSaga() {
   yield takeLatest(RequestTypes.GET_REQUEST_LIST_BY_USERID, getListByUserId)
 }
@@ -84,5 +86,5 @@ export function* getRequestListByUserIdSaga() {
 // =================================
 
 export function* requestSaga() {
-  yield all([call(getRequestInfoSaga), call(getRequestListSaga), call(getRequestListByUserIdSaga)])
+  yield all([ call(getRequestInfoSaga), call(getRequestListSaga), call(getRequestListByUserIdSaga) ])
 }

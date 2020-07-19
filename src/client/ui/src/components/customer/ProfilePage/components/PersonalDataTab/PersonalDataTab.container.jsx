@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import {
-  updateCurrentUser,
-  updateCurrentUserSuccess,
-  updateCurrentUserFailure,
   onClearUpdateCurrentUserState,
+  updateCurrentUser,
+  updateCurrentUserFailure,
+  updateCurrentUserSuccess,
 } from 'redux/user/user.actions'
 import PersonalDataTab from './PersonalDataTab.component'
 

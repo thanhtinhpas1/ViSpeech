@@ -9,15 +9,15 @@ const AdminLayout = ({ children }) => {
   return (
     <>
       <div className="wrapper">
-        <Sidebar />
+        <Sidebar/>
         <div className="main-panel">
-          <Navbar />
+          <Navbar/>
           <div className="content">
             <div className="container-fluid">
-              <div>{children}</div>
+              <div>{ children }</div>
             </div>
           </div>
-          <Footer />
+          <Footer/>
         </div>
         {/* <div className="fixed-plugin">
           <div className="dropdown show-dropdown">
@@ -62,7 +62,7 @@ const AdminLayout = ({ children }) => {
               </li>
             </ul>
           </div>
-        </div> */}
+        </div> */ }
       </div>
     </>
   )

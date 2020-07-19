@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 
 const Header = () => {
-  const [navbarMenu, setNavbarMenu] = useState([])
+  const [ navbarMenu, setNavbarMenu ] = useState([])
 
   useEffect(() => {
     const navbarMenuArr = [
@@ -39,9 +39,9 @@ const Header = () => {
     <header className="header">
       <div className="container">
         <nav className="navbar navbar-expand-lg">
-          <a className="navbar-brand" href="/" style={{ fontSize: '1.8em', letterSpacing: '3px' }}>
+          <a className="navbar-brand" href="/" style={ { fontSize: '1.8em', letterSpacing: '3px' } }>
             VIET SPEECH
-            {/* <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo1.png`} alt="" /> */}
+            {/* <img className="light-logo" src={`${process.env.PUBLIC_URL}/images/customer/logo1.png`} alt="" /> */ }
           </a>
           <button
             className="navbar-toggler"
@@ -52,19 +52,19 @@ const Header = () => {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span />
-            <span />
-            <span />
+            <span/>
+            <span/>
+            <span/>
           </button>
           <div className="collapse navbar-collapse justify-content-end" id="navbarshark">
             <ul className="navbar-nav ml-auto">
-              {navbarMenu.map(navLink => (
-                <li key={navLink.name}>
-                  <a className={`nav-link ${navLink.isActive ? 'active' : ''}`} href={navLink.href}>
-                    {navLink.name}
+              { navbarMenu.map(navLink => (
+                <li key={ navLink.name }>
+                  <a className={ `nav-link ${ navLink.isActive ? 'active' : '' }` } href={ navLink.href }>
+                    { navLink.name }
                   </a>
                 </li>
-              ))}
+              )) }
             </ul>
           </div>
         </nav>

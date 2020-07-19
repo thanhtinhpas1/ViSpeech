@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { updateAvatarClear, updateAvatar } from 'redux/user/user.actions'
+import { updateAvatar, updateAvatarClear } from 'redux/user/user.actions'
 import UploadAvatar from './UploadAvatar.component'
 
 const mapStateToProps = state => ({

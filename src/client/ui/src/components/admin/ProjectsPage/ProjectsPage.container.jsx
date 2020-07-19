@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import {
-  getProjectList,
   deleteProject,
-  deleteProjectSuccess,
   deleteProjectFailure,
+  deleteProjectSuccess,
+  getProjectList,
   onClearDeleteProjectState,
 } from 'redux/project/project.actions'
 import ProjectsPage from './ProjectsPage.component'

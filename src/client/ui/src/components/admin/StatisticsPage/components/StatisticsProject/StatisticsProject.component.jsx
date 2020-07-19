@@ -7,14 +7,14 @@ import ReportUtils from 'utils/report.util'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
 
 const StatisticsProject = ({
-  currentUser,
-  chartOptions,
-  getMyProjectListObj,
-  getStatisticsByprojectIdObj,
-  getMyProjects,
-  getStatisticsById,
-}) => {
-  const [projectList, setProjectList] = useState([])
+                             currentUser,
+                             chartOptions,
+                             getMyProjectListObj,
+                             getStatisticsByprojectIdObj,
+                             getMyProjects,
+                             getStatisticsById,
+                           }) => {
+  const [ projectList, setProjectList ] = useState([])
   const placeHolderSelectId = {
     found: 'Chọn dự án',
     notFound: 'Không tìm thấy dự án',
@@ -24,7 +24,7 @@ const StatisticsProject = ({
     if (currentUser._id) {
       getMyProjects({ userId: currentUser._id })
     }
-  }, [currentUser._id, getMyProjects])
+  }, [ currentUser._id, getMyProjects ])
 
   useEffect(() => {
     if (getMyProjectListObj.myProjectList.data.length > 0) {
@@ -36,20 +36,20 @@ const StatisticsProject = ({
       })
       setProjectList(projects)
     }
-  }, [getMyProjectListObj])
+  }, [ getMyProjectListObj ])
 
   return (
     <div>
-      {currentUser._id && (
+      { currentUser._id && (
         <StatisticsTemplate
-          chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.PROJECT}
-          data={projectList}
-          placeHolderSelectId={placeHolderSelectId}
-          getStatisticsByIdObj={getStatisticsByprojectIdObj}
-          getStatisticsById={getStatisticsById}
+          chartOptions={ chartOptions }
+          statisticsType={ ReportUtils.STATISTICS_TYPE.PROJECT }
+          data={ projectList }
+          placeHolderSelectId={ placeHolderSelectId }
+          getStatisticsByIdObj={ getStatisticsByprojectIdObj }
+          getStatisticsById={ getStatisticsById }
         />
-      )}
+      ) }
     </div>
   )
 }

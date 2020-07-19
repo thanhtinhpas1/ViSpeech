@@ -6,13 +6,13 @@ const numeral = require('numeral')
 
 const Utils = {
   isUser: roleList => {
-    return (roleList || []).findIndex(role => [ROLES.USER, ROLES.MANAGER_USER].includes(role.name)) !== -1
+    return (roleList || []).findIndex(role => [ ROLES.USER, ROLES.MANAGER_USER ].includes(role.name)) !== -1
   },
   isAdmin: roleList => {
     return (roleList || []).findIndex(role => role.name === ROLES.ADMIN) !== -1
   },
   isSocialAccount: userType => {
-    return [USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE].includes(userType)
+    return [ USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE ].includes(userType)
   },
   getRolesInArray: roleList => {
     return (roleList || []).map(role => role.name)
@@ -22,22 +22,22 @@ const Utils = {
     const str = []
     Object.keys(obj).forEach(key => {
       if (obj[key] != null) {
-        const formatKey = prefix ? `${prefix}[${key}]` : key
+        const formatKey = prefix ? `${ prefix }[${ key }]` : key
         const value = obj[key]
         str.push(
           value != null && typeof value === 'object'
             ? Utils.parameterizeObject(value, formatKey)
-            : `${encodeURIComponent(formatKey)}=${encodeURIComponent(value)}`
+            : `${ encodeURIComponent(formatKey) }=${ encodeURIComponent(value) }`
         )
       }
     })
     if (str.length === 0) return ''
-    return `${str.join('&')}`
+    return `${ str.join('&') }`
   },
   parameterizeArray: (key, arr) => {
     if (!arr || arr.length === 0) return ''
     const array = arr.map(encodeURIComponent)
-    return `&${key}[]=${array.join(`&${key}[]=`)}`
+    return `&${ key }[]=${ array.join(`&${ key }[]=`) }`
   },
   trimByChar: (str, char) => {
     return str
@@ -96,12 +96,12 @@ const Utils = {
         const dupKey = 'dup key: '
         const indexDup = message.indexOf(dupKey)
         if (indexDup >= 0) {
-          errMessage = `Đã tồn tại ${message.substr(indexDup + dupKey.length).replace(/[^a-zA-Z0-9@./S]/g, ' ')}`
+          errMessage = `Đã tồn tại ${ message.substr(indexDup + dupKey.length).replace(/[^a-zA-Z0-9@./S]/g, ' ') }`
         }
       }
     }
     // case duplicate
-    return failedAction ? `${failedAction}. ${errMessage}` : `${errMessage}`
+    return failedAction ? `${ failedAction }. ${ errMessage }` : `${ errMessage }`
   },
   buildSortQuery: (sortField, sortOrder) => {
     if (sortField && sortOrder) {
@@ -109,7 +109,7 @@ const Utils = {
         field: sortField,
         order: Utils.getSortOrder(sortOrder),
       }
-      return `&${Utils.parameterizeObject({ sort })}`
+      return `&${ Utils.parameterizeObject({ sort }) }`
     }
     return ''
   },
@@ -118,11 +118,11 @@ const Utils = {
       const formatFilters = {}
       Object.keys(filters).forEach(key => {
         if (Array.isArray(filters[key])) {
-          const [filterValue] = filters[key]
+          const [ filterValue ] = filters[key]
           formatFilters[key] = filterValue
         }
       })
-      return `&${Utils.parameterizeObject({ filters: formatFilters })}`
+      return `&${ Utils.parameterizeObject({ filters: formatFilters }) }`
     }
     return ''
   },
@@ -134,7 +134,7 @@ const Utils = {
     curTokenTypeMinutes = 0,
     sortType = SORT_ORDER.ASC
   ) => {
-    const result = [...(list || [])]
+    const result = [ ...(list || []) ]
     const sortFunc = (a, b) => {
       return sortType === SORT_ORDER.ASC ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]
     }

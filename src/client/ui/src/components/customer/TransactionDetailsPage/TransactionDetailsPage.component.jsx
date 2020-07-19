@@ -18,7 +18,7 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
     if (orderId || tokenId) {
       getOrderInfo({ id: orderId, tokenId })
     }
-  }, [orderId, tokenId, getOrderInfo])
+  }, [ orderId, tokenId, getOrderInfo ])
 
   return (
     <div className="page-content">
@@ -27,36 +27,36 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
           <div className="card-innr">
             <div className="card-head d-flex justify-content-between align-items-center">
               <h4 className="card-title mb-0">Chi tiết giao dịch</h4>
-              <button onClick={history.goBack} className="btn btn-sm btn-auto btn-primary d-sm-block d-none">
-                <em className="fas fa-arrow-left mr-3" />
+              <button onClick={ history.goBack } className="btn btn-sm btn-auto btn-primary d-sm-block d-none">
+                <em className="fas fa-arrow-left mr-3"/>
                 Trở lại
               </button>
-              <button onClick={history.goBack} className="btn btn-icon btn-sm btn-primary d-sm-none">
-                <em className="fas fa-arrow-left" />
+              <button onClick={ history.goBack } className="btn btn-icon btn-sm btn-primary d-sm-none">
+                <em className="fas fa-arrow-left"/>
               </button>
             </div>
-            <div className="gaps-1-5x" />
+            <div className="gaps-1-5x"/>
             <div className="data-details d-md-flex">
               <div className="fake-class">
                 <span className="data-details-title">Mã giao dịch</span>
                 <span className="data-details-info">
-                  <strong>{getInfoObj.order._id}</strong>
+                  <strong>{ getInfoObj.order._id }</strong>
                 </span>
               </div>
               <div className="fake-class">
                 <span className="data-details-title">Thời gian giao dịch</span>
                 <span className="data-details-info">
-                  {moment(getInfoObj.order.createdDate).format('DD/MM/YYYY hh:mm:ss')}
+                  { moment(getInfoObj.order.createdDate).format('DD/MM/YYYY hh:mm:ss') }
                 </span>
               </div>
               <div className="fake-class">
                 <span className="data-details-title">Trạng thái</span>
-                <span className={`badge ${getInfoObj.order.status && getInfoObj.order.status.class} ucap`}>
-                  {getInfoObj.order.status && getInfoObj.order.status.name}
+                <span className={ `badge ${ getInfoObj.order.status && getInfoObj.order.status.class } ucap` }>
+                  { getInfoObj.order.status && getInfoObj.order.status.name }
                 </span>
               </div>
             </div>
-            <div className="gaps-3x" />
+            <div className="gaps-3x"/>
             <h6 className="card-sub-title">Chi tiết</h6>
             <ul className="data-details-list">
               <li>
@@ -69,25 +69,25 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
               </li>
               <li>
                 <div className="data-details-head">Tên API key</div>
-                <div className="data-details-des">{getInfoObj.order.token && getInfoObj.order.token.name}</div>
+                <div className="data-details-des">{ getInfoObj.order.token && getInfoObj.order.token.name }</div>
               </li>
               <li>
                 <div className="data-details-head">API key</div>
-                <div className="data-details-des" style={{ wordBreak: 'break-all', whiteSpace: 'nowrap' }}>
+                <div className="data-details-des" style={ { wordBreak: 'break-all', whiteSpace: 'nowrap' } }>
                   <div className="copy-wrap mgb-1-5x mgt-1-5x w-100">
-                    <span className="copy-feedback" />
-                    <em className="fas fa-key" />
+                    <span className="copy-feedback"/>
+                    <em className="fas fa-key"/>
                     <input
                       type="text"
                       className="copy-address"
-                      defaultValue={getInfoObj.order.token && getInfoObj.order.token.value}
+                      defaultValue={ getInfoObj.order.token && getInfoObj.order.token.value }
                       disabled
                     />
                     <button
                       className="copy-trigger copy-clipboard"
-                      data-clipboard-text={getInfoObj.order.token && getInfoObj.order.token.value}
+                      data-clipboard-text={ getInfoObj.order.token && getInfoObj.order.token.value }
                     >
-                      <em className="ti ti-files" />
+                      <em className="ti ti-files"/>
                     </button>
                   </div>
                 </div>
@@ -95,18 +95,18 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
               <li>
                 <div className="data-details-head">Loại API key</div>
                 <div className="data-details-des">
-                  {getInfoObj.order.tokenType && (
-                    <span className={`dt-type-md badge badge-outline ${getInfoObj.order.tokenType.class} badge-md`}>
-                      {Utils.formatPrice(getInfoObj.order.tokenType.saleOffPrice)} {MONETARY_UNIT} /{' '}
-                      {getInfoObj.order.tokenType.name}
+                  { getInfoObj.order.tokenType && (
+                    <span className={ `dt-type-md badge badge-outline ${ getInfoObj.order.tokenType.class } badge-md` }>
+                      { Utils.formatPrice(getInfoObj.order.tokenType.saleOffPrice) } { MONETARY_UNIT } /{ ' ' }
+                      { getInfoObj.order.tokenType.name }
                     </span>
-                  )}
+                  ) }
                 </div>
               </li>
               <li>
                 <div className="data-details-head">Thuộc dự án</div>
                 <div className="data-details-des">
-                  <strong>{getInfoObj.order.token && getInfoObj.order.token.projectName}</strong>
+                  <strong>{ getInfoObj.order.token && getInfoObj.order.token.projectName }</strong>
                 </div>
               </li>
             </ul>

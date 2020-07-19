@@ -25,7 +25,6 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
             const order = await this.repository.findOne({_id: id});
             if (order) {
                 project = await this.projectDtoRepository.findOne({_id: order.token.projectId});
-                // TODO: verify why we need create new field here
                 order.token['projectName'] = project.name
             }
             return order

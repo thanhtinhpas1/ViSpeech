@@ -46,10 +46,10 @@ const TokenSaleGraph = ({ userOrderListObj }) => {
         tooltips: {
           callbacks: {
             title(e, t) {
-              return `Ngày: ${t.labels[e[0].index]}`
+              return `Ngày: ${ t.labels[e[0].index] }`
             },
             label(e, t) {
-              return `Giá ${Utils.formatPrice(t.datasets[0].data[e.index])} ${MONETARY_UNIT}`
+              return `Giá ${ Utils.formatPrice(t.datasets[0].data[e.index]) } ${ MONETARY_UNIT }`
             },
           },
           backgroundColor: '#eff6ff',
@@ -88,7 +88,7 @@ const TokenSaleGraph = ({ userOrderListObj }) => {
         },
       },
     })
-  }, [userOrderListObj])
+  }, [ userOrderListObj ])
 
   return (
     <div className="card-innr">
@@ -96,7 +96,7 @@ const TokenSaleGraph = ({ userOrderListObj }) => {
         <h4 className="card-title">Biểu đồ giao dịch</h4>
       </div>
       <div className="chart-tokensale">
-        <canvas id="tknSale" />
+        <canvas id="tknSale"/>
       </div>
     </div>
   )

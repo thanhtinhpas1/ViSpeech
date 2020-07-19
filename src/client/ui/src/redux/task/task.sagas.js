@@ -1,9 +1,9 @@
 /* eslint-disable no-restricted-globals */
-import { call, all, takeLatest, put } from 'redux-saga/effects'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
 import { ORDER_STATUS } from 'utils/constant'
 import TaskService from 'services/task.service'
 import TaskTypes from './task.types'
-import { getTaskListSuccess, getTaskListFailure } from './task.actions'
+import { getTaskListFailure, getTaskListSuccess } from './task.actions'
 
 // get task list
 const formatTaskList = taskList => {
@@ -30,6 +30,7 @@ function* getList({ payload: filterConditions }) {
     yield put(getTaskListFailure(err.message))
   }
 }
+
 export function* getTaskListSaga() {
   yield takeLatest(TaskTypes.GET_TASK_LIST, getList)
 }
@@ -37,5 +38,5 @@ export function* getTaskListSaga() {
 // =================================
 
 export function* taskSaga() {
-  yield all([call(getTaskListSaga)])
+  yield all([ call(getTaskListSaga) ])
 }

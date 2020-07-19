@@ -7,13 +7,13 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-import { store, persistor } from './redux/store'
+import { persistor, store } from './redux/store'
 
 ReactDOM.hydrate(
-  <Provider store={store}>
+  <Provider store={ store }>
     <BrowserRouter>
-      <PersistGate persistor={persistor}>
-        <Route path="/" component={App} />
+      <PersistGate persistor={ persistor }>
+        <Route path="/" component={ App }/>
       </PersistGate>
     </BrowserRouter>
   </Provider>,

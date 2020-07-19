@@ -85,7 +85,6 @@ export class MonitorsModule implements OnModuleInit, OnModuleDestroy {
     async onModuleInit() {
         this.event$.publisher = this.eventStore;
         this.event$.register(EventHandlers);
-        // this.command$.register(CommandHandlers);
         this.query$.register(QueryHandlers);
         this.event$.registerSagas([]);
         // seed projection

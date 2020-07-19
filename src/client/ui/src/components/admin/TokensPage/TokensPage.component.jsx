@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
@@ -12,11 +12,11 @@ import SocketService from 'services/socket.service'
 import SocketUtils from 'utils/socket.util'
 import {
   ADMIN_PATH,
-  STATUS,
-  TOKEN_TYPE,
-  DEFAULT_PAGINATION,
-  TIMEOUT_MILLISECONDS,
   DEFAULT_ERR_MESSAGE,
+  DEFAULT_PAGINATION,
+  STATUS,
+  TIMEOUT_MILLISECONDS,
+  TOKEN_TYPE,
 } from 'utils/constant'
 import Utils from 'utils'
 import TokenService from 'services/token.service'
@@ -25,22 +25,22 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { TOKEN_DELETED_SUCCESS_EVENT, TOKEN_DELETED_FAILED_EVENT } = KAFKA_TOPIC
 
 const TokensPage = ({
-  getTokenListObj,
-  deleteTokenObj,
-  clearDeleteTokenState,
-  getTokenList,
-  deleteToken,
-  deleteTokenSuccess,
-  deleteTokenFailure,
-}) => {
-  const [infoModal, setInfoModal] = useState({})
-  const [confirmModal, setConfirmModal] = useState({})
+                      getTokenListObj,
+                      deleteTokenObj,
+                      clearDeleteTokenState,
+                      getTokenList,
+                      deleteToken,
+                      deleteTokenSuccess,
+                      deleteTokenFailure,
+                    }) => {
+  const [ infoModal, setInfoModal ] = useState({})
+  const [ confirmModal, setConfirmModal ] = useState({})
   const loadingRef = useRef(deleteTokenObj.isLoading)
   loadingRef.current = deleteTokenObj.isLoading
 
   useEffect(() => {
     return () => clearDeleteTokenState()
-  }, [clearDeleteTokenState])
+  }, [ clearDeleteTokenState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(TOKEN_DELETED_SUCCESS_EVENT)
@@ -106,7 +106,7 @@ const TokensPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [deleteTokenObj, getTokenList, closeInfoModal, deleteTokenFailure])
+  }, [ deleteTokenObj, getTokenList, closeInfoModal, deleteTokenFailure ])
 
   const onDeleteToken = async tokenId => {
     if (!tokenId) return
@@ -149,7 +149,7 @@ const TokensPage = ({
       title: 'Mã API key',
       dataIndex: '_id',
       canSearch: true,
-      render: _id => <span>{_id}</span>,
+      render: _id => <span>{ _id }</span>,
       width: 150,
     },
     {
@@ -161,11 +161,11 @@ const TokensPage = ({
       render: value => (
         <span className="lead tnx-id">
           <div className="copy-wrap w-100">
-            <span className="copy-feedback" />
-            <em className="fas fa-key" />
-            <input type="text" className="copy-address" defaultValue={value} disabled />
-            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={value}>
-              <em className="ti ti-files" />
+            <span className="copy-feedback"/>
+            <em className="fas fa-key"/>
+            <input type="text" className="copy-address" defaultValue={ value } disabled/>
+            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={ value }>
+              <em className="ti ti-files"/>
             </button>
           </div>
         </span>
@@ -187,9 +187,9 @@ const TokensPage = ({
       filterMultiple: false,
       render: tokenType => (
         <>
-          <span className={`dt-type-md badge badge-outline ${tokenType.class} badge-md`}>{tokenType.name}</span>
-          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.class} badge-md`}>
-            {tokenType.name}
+          <span className={ `dt-type-md badge badge-outline ${ tokenType.class } badge-md` }>{ tokenType.name }</span>
+          <span className={ `dt-type-sm badge badge-sq badge-outline ${ tokenType.class } badge-md` }>
+            { tokenType.name }
           </span>
         </>
       ),
@@ -208,9 +208,9 @@ const TokensPage = ({
       filterMultiple: false,
       render: isValid => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${isValid.cssClass}`} />
-          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
-            {isValid.viText}
+          <div className={ `data-state ${ isValid.cssClass }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: '0' } }>
+            { isValid.viText }
           </span>
         </div>
       ),
@@ -222,7 +222,7 @@ const TokensPage = ({
       headerClassName: 'dt-amount',
       className: 'dt-amount',
       canSearch: true,
-      render: ownerName => <span className="lead tnx-id">{ownerName}</span>,
+      render: ownerName => <span className="lead tnx-id">{ ownerName }</span>,
       width: 180,
     },
     {
@@ -231,7 +231,7 @@ const TokensPage = ({
       headerClassName: 'dt-amount',
       className: 'dt-amount',
       canSearch: true,
-      render: projectName => <span className="lead tnx-id">{projectName}</span>,
+      render: projectName => <span className="lead tnx-id">{ projectName }</span>,
       width: 180,
     },
     {
@@ -240,7 +240,7 @@ const TokensPage = ({
       headerClassName: 'dt-amount',
       headerStyle: { textAlign: 'center' },
       className: 'dt-amount',
-      render: minutesLeft => <span className="lead">{minutesLeft} phút</span>,
+      render: minutesLeft => <span className="lead">{ minutesLeft } phút</span>,
       width: 200,
       align: 'center',
     },
@@ -251,8 +251,8 @@ const TokensPage = ({
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 180,
@@ -268,17 +268,17 @@ const TokensPage = ({
           !isFreeToken && (
             <>
               <a
-                href={`${ADMIN_PATH}/transaction-details?tokenId=${_id}`}
+                href={ `${ ADMIN_PATH }/transaction-details?tokenId=${ _id }` }
                 className="btn btn-just-icon btn-secondary btn-simple"
               >
-                <i className="far fa-eye" />
+                <i className="far fa-eye"/>
               </a>
               <button
-                disabled={!isValid}
+                disabled={ !isValid }
                 className="btn btn-simple btn-danger btn-just-icon"
-                onClick={() => onDeleteToken(_id)}
+                onClick={ () => onDeleteToken(_id) }
               >
-                <i className="fas fa-times" />
+                <i className="fas fa-times"/>
               </button>
             </>
           )
@@ -291,7 +291,7 @@ const TokensPage = ({
 
   useEffect(() => {
     getTokenList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
-  }, [getTokenList])
+  }, [ getTokenList ])
 
   return (
     <div className="row">
@@ -303,19 +303,19 @@ const TokensPage = ({
           <div className="card-content">
             <div className="material-datatables">
               <AntdTable
-                dataObj={getTokenListObj.tokenList}
-                columns={columns}
-                fetchData={getTokenList}
-                isLoading={getTokenListObj.isLoading}
-                pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
-                scrollY={700}
+                dataObj={ getTokenListObj.tokenList }
+                columns={ columns }
+                fetchData={ getTokenList }
+                isLoading={ getTokenListObj.isLoading }
+                pageSize={ DEFAULT_PAGINATION.SIZE_10.pageSize }
+                scrollY={ 700 }
               />
             </div>
           </div>
         </div>
       </div>
-      {infoModal.visible && <InfoModal infoModal={infoModal} />}
-      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
+      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
+      { confirmModal.visible && <ConfirmModal confirmModal={ confirmModal }/> }
     </div>
   )
 }

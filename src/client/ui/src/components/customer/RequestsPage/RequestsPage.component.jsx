@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import { DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
@@ -14,28 +14,28 @@ const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
       title: 'Tên dự án',
       dataIndex: 'projectName',
       canSearch: true,
-      render: projectName => <span className="lead tnx-id">{projectName}</span>,
+      render: projectName => <span className="lead tnx-id">{ projectName }</span>,
       width: 180,
     },
     {
       title: 'Tên API key',
       dataIndex: 'tokenName',
       canSearch: true,
-      render: tokenName => <span className="lead tnx-id">{tokenName}</span>,
+      render: tokenName => <span className="lead tnx-id">{ tokenName }</span>,
       width: 180,
     },
     {
       title: 'Tên file',
       dataIndex: 'fileName',
       canSearch: true,
-      render: fileName => <span className="lead tnx-id">{fileName}</span>,
+      render: fileName => <span className="lead tnx-id">{ fileName }</span>,
       width: 180,
     },
     {
       title: 'Kích thước file (phút)',
       dataIndex: 'duration',
       sorter: true,
-      render: duration => <span className="lead tnx-id">{duration}</span>,
+      render: duration => <span className="lead tnx-id">{ duration }</span>,
       width: 180,
     },
     {
@@ -52,9 +52,9 @@ const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
       filterMultiple: false,
       render: status => (
         <div className="d-flex align-items-center">
-          <div className={`data-state ${status.class}`} />
-          <span className="sub sub-s2" style={{ paddingTop: 0 }}>
-            {status.name}
+          <div className={ `data-state ${ status.class }` }/>
+          <span className="sub sub-s2" style={ { paddingTop: 0 } }>
+            { status.name }
           </span>
         </div>
       ),
@@ -67,8 +67,8 @@ const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
       className: 'dt-amount',
       sorter: true,
       render: createdDate => (
-        <span className="sub sub-date" style={{ fontSize: '13px' }}>
-          {moment(createdDate).format('DD/MM/YYYY HH:mm')}
+        <span className="sub sub-date" style={ { fontSize: '13px' } }>
+          { moment(createdDate).format('DD/MM/YYYY HH:mm') }
         </span>
       ),
       width: 240,
@@ -85,7 +85,7 @@ const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
         sortOrder: SORT_ORDER.DESC,
       })
     }
-  }, [currentUser._id, getRequestListByUserId])
+  }, [ currentUser._id, getRequestListByUserId ])
 
   const getList = useCallback(
     // eslint-disable-next-line no-unused-vars
@@ -100,7 +100,7 @@ const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
         })
       }
     },
-    [currentUser._id, getRequestListByUserId]
+    [ currentUser._id, getRequestListByUserId ]
   )
 
   return (
@@ -112,12 +112,12 @@ const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListBy
               <h4 className="card-title">Lịch sử sử dụng dịch vụ</h4>
             </div>
             <AntdTable
-              dataObj={getRequestListByUserIdObj.requestList}
-              columns={columns}
-              fetchData={getList}
-              isLoading={getRequestListByUserIdObj.isLoading}
-              pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
-              scrollY={700}
+              dataObj={ getRequestListByUserIdObj.requestList }
+              columns={ columns }
+              fetchData={ getList }
+              isLoading={ getRequestListByUserIdObj.isLoading }
+              pageSize={ DEFAULT_PAGINATION.SIZE_10.pageSize }
+              scrollY={ 700 }
             />
           </div>
         </div>

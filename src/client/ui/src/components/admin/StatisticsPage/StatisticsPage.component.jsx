@@ -140,32 +140,32 @@ const StatisticsPage = () => {
               </ul>
               <div className="tab-content">
                 <div role="tabpanel" className="tab-pane active" id="total-statistics">
-                  <div className="gaps-1x" />
+                  <div className="gaps-1x"/>
                   <h4 className="card-title">
                     <span>Thống kê theo người dùng</span>
                   </h4>
-                  <div className="gaps-1x" />
-                  <TotalStatisticsUser chartOptions={twoXAxisOptions} />
-                  <Divider />
+                  <div className="gaps-1x"/>
+                  <TotalStatisticsUser chartOptions={ twoXAxisOptions }/>
+                  <Divider/>
                   <h4 className="card-title">
                     <span>Thống kê theo loại API key</span>
                   </h4>
-                  <div className="gaps-1x" />
-                  <TotalStatisticsTokenType chartOptions={twoXAxisOptions} />
+                  <div className="gaps-1x"/>
+                  <TotalStatisticsTokenType chartOptions={ twoXAxisOptions }/>
                 </div>
                 <div role="tabpanel" className="tab-pane" id="statistics-by-id">
-                  <div className="gaps-1x" />
+                  <div className="gaps-1x"/>
                   <h4 className="card-title">
                     <span>Thống kê theo người dùng</span>
                   </h4>
-                  <div className="gaps-1x" />
-                  <StatisticsUser chartOptions={twoYAxisOptions} />
-                  <Divider />
+                  <div className="gaps-1x"/>
+                  <StatisticsUser chartOptions={ twoYAxisOptions }/>
+                  <Divider/>
                   <h4 className="card-title">
                     <span>Thống kê theo loại API key</span>
                   </h4>
-                  <div className="gaps-1x" />
-                  <StatisticsTokenType chartOptions={twoYAxisOptions} />
+                  <div className="gaps-1x"/>
+                  <StatisticsTokenType chartOptions={ twoYAxisOptions }/>
                 </div>
               </div>
             </div>

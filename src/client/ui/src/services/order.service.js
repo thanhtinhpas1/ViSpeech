@@ -5,7 +5,7 @@ import { apiUrl } from './api-url'
 
 export default class OrderService {
   static createOrder = (order, paymentIntent) => {
-    const api = `${apiUrl}/orders`
+    const api = `${ apiUrl }/orders`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -14,7 +14,7 @@ export default class OrderService {
       body: JSON.stringify({ order, paymentIntent }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -35,7 +35,7 @@ export default class OrderService {
   }
 
   static createOrderToUpgradeToken = (order, paymentIntent) => {
-    const api = `${apiUrl}/orders/upgrade-token`
+    const api = `${ apiUrl }/orders/upgrade-token`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -44,7 +44,7 @@ export default class OrderService {
       body: JSON.stringify({ order, paymentIntent }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -65,7 +65,7 @@ export default class OrderService {
   }
 
   static createPaymentIntent = amount => {
-    const api = `${apiUrl}/orders/payment-intent`
+    const api = `${ apiUrl }/orders/payment-intent`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -74,7 +74,7 @@ export default class OrderService {
       body: JSON.stringify({ amount }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -99,12 +99,12 @@ export default class OrderService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/orders?${query}`
+    const api = `${ apiUrl }/orders?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -113,7 +113,7 @@ export default class OrderService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -138,12 +138,12 @@ export default class OrderService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ userId, offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ userId, offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/orders/userId?${query}`
+    const api = `${ apiUrl }/orders/userId?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -152,7 +152,7 @@ export default class OrderService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -172,9 +172,9 @@ export default class OrderService {
   }
 
   static getOrderInfo = ({ id, tokenId }) => {
-    let api = `${apiUrl}/orders/${encodeURIComponent(id)}`
+    let api = `${ apiUrl }/orders/${ encodeURIComponent(id) }`
     if (tokenId) {
-      api = `${apiUrl}/orders/get-by-token/${encodeURIComponent(tokenId)}`
+      api = `${ apiUrl }/orders/get-by-token/${ encodeURIComponent(tokenId) }`
     }
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
@@ -184,7 +184,7 @@ export default class OrderService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {

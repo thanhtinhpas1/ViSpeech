@@ -8,12 +8,12 @@ import { FREE_TOKEN } from 'utils/constant'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsToken = ({
-  currentUser,
-  chartOptions,
-  getUserTotalStatisticsBytokenObj,
-  getUserTotalStatistics,
-}) => {
-  const [userTotalStatistics, setUserTotalStatistics] = useState({ data: [] })
+                                currentUser,
+                                chartOptions,
+                                getUserTotalStatisticsBytokenObj,
+                                getUserTotalStatistics,
+                              }) => {
+  const [ userTotalStatistics, setUserTotalStatistics ] = useState({ data: [] })
 
   useEffect(() => {
     if (getUserTotalStatisticsBytokenObj.data.length > 0) {
@@ -24,25 +24,25 @@ const TotalStatisticsToken = ({
             ...item.data,
             display: item.data.name.includes(FREE_TOKEN)
               ? item.data.name
-              : `${item.data.projectName} - ${item.data.name}`,
+              : `${ item.data.projectName } - ${ item.data.name }`,
           },
         }
       })
       setUserTotalStatistics({ ...getUserTotalStatisticsBytokenObj, data: formatStatisticsData })
     }
-  }, [getUserTotalStatisticsBytokenObj])
+  }, [ getUserTotalStatisticsBytokenObj ])
 
   return (
     <div>
-      {currentUser._id && (
+      { currentUser._id && (
         <TotalStatisticsTemplate
-          userId={currentUser._id}
-          chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.TOKEN}
-          getTotalStatisticsObj={userTotalStatistics}
-          getTotalStatistics={getUserTotalStatistics}
+          userId={ currentUser._id }
+          chartOptions={ chartOptions }
+          statisticsType={ ReportUtils.STATISTICS_TYPE.TOKEN }
+          getTotalStatisticsObj={ userTotalStatistics }
+          getTotalStatistics={ getUserTotalStatistics }
         />
-      )}
+      ) }
     </div>
   )
 }

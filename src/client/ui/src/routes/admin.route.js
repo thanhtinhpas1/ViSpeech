@@ -3,7 +3,7 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import { ADMIN_PATH } from 'utils/constant'
 import AdminLayout from 'components/admin/AdminLayout'
 import AdminHomePage from 'components/admin/HomePage/HomePage.container'
@@ -23,66 +23,66 @@ import Utils from 'utils'
 const RouteAdmin = ({ currentUser }) => {
   return (
     <>
-      {/* WITHOUT login, user can access those links */}
-      {currentUser && Utils.isAdmin(currentUser.roles) && (
+      {/* WITHOUT login, user can access those links */ }
+      { currentUser && Utils.isAdmin(currentUser.roles) && (
         <AdminLayout>
           <Switch>
-            <Route exact path={ADMIN_PATH}>
-              <AdminHomePage />
+            <Route exact path={ ADMIN_PATH }>
+              <AdminHomePage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/users`}>
-              <AdminUserListPage />
+            <Route path={ `${ ADMIN_PATH }/users` }>
+              <AdminUserListPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/user-info/:id`}>
-              <AdminUserInfoPage />
+            <Route path={ `${ ADMIN_PATH }/user-info/:id` }>
+              <AdminUserInfoPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/create-user`}>
-              <AdminUserCreatePage />
+            <Route path={ `${ ADMIN_PATH }/create-user` }>
+              <AdminUserCreatePage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/reports`}>
-              <StatisticsPage />
+            <Route path={ `${ ADMIN_PATH }/reports` }>
+              <StatisticsPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/transaction-details`}>
-              <AdminTransactionDetailsPage />
+            <Route path={ `${ ADMIN_PATH }/transaction-details` }>
+              <AdminTransactionDetailsPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/user-project/:id`}>
-              <AdminProjectDetailsPage />
+            <Route path={ `${ ADMIN_PATH }/user-project/:id` }>
+              <AdminProjectDetailsPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/user-accepted-project/:id`}>
-              <AdminProjectDetailsPage />
+            <Route path={ `${ ADMIN_PATH }/user-accepted-project/:id` }>
+              <AdminProjectDetailsPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/projects`}>
-              <ProjectsPage />
+            <Route path={ `${ ADMIN_PATH }/projects` }>
+              <ProjectsPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/tokens`}>
-              <TokensPage />
+            <Route path={ `${ ADMIN_PATH }/tokens` }>
+              <TokensPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/transactions`}>
-              <TransactionsPage />
+            <Route path={ `${ ADMIN_PATH }/transactions` }>
+              <TransactionsPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/histories`}>
-              <AdminHistoriesPage />
+            <Route path={ `${ ADMIN_PATH }/histories` }>
+              <AdminHistoriesPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/tasks`}>
-              <AdminTasksPage />
+            <Route path={ `${ ADMIN_PATH }/tasks` }>
+              <AdminTasksPage/>
             </Route>
-            <Route path={`${ADMIN_PATH}/*`}>
-              <Redirect to="/404" />
+            <Route path={ `${ ADMIN_PATH }/*` }>
+              <Redirect to="/404"/>
             </Route>
           </Switch>
         </AdminLayout>
-      )}
+      ) }
 
-      {(!currentUser || !Utils.isAdmin(currentUser.roles)) && (
+      { (!currentUser || !Utils.isAdmin(currentUser.roles)) && (
         <Switch>
-          <Route exact path={ADMIN_PATH}>
-            <Redirect to="/" />
+          <Route exact path={ ADMIN_PATH }>
+            <Redirect to="/"/>
           </Route>
-          <Route path={`${ADMIN_PATH}/*`}>
-            <Redirect to="/" />
+          <Route path={ `${ ADMIN_PATH }/*` }>
+            <Redirect to="/"/>
           </Route>
         </Switch>
-      )}
+      ) }
     </>
   )
 }

@@ -4,7 +4,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button } from 'antd'
-import { ROLES, USER_TYPE, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, ROLES, TIMEOUT_MILLISECONDS, USER_TYPE } from 'utils/constant'
 import SocketService from 'services/socket.service'
 import UserService from 'services/user.service'
 import SocketUtils from 'utils/socket.util'
@@ -25,13 +25,13 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
 
   useEffect(() => {
     onClearUserState()
-  }, [onClearUserState])
+  }, [ onClearUserState ])
 
   useEffect(() => {
     if (registerObj.data) {
       history.push(`/login`)
     }
-  }, [registerObj.data, history])
+  }, [ registerObj.data, history ])
 
   useEffect(() => {
     let timer = null
@@ -43,7 +43,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
       }, TIMEOUT_MILLISECONDS)
     }
     return () => clearTimeout(timer)
-  }, [registerObj, registerFailure])
+  }, [ registerObj, registerFailure ])
 
   const handleOnSubmit = async e => {
     e.preventDefault()
@@ -55,7 +55,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
       lastName: form.elements.lastName.value,
       firstName: form.elements.firstName.value,
       password: form.elements.password.value,
-      roles: [{ name: ROLES.USER }],
+      roles: [ { name: ROLES.USER } ],
       userType: USER_TYPE.NORMAL,
     }
 
@@ -79,39 +79,40 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
       <div className="page-ath-wrap">
         <div className="page-ath-content">
           <div className="page-ath-header">
-            <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold', letterSpacing: '1px' }}>
+            <a href="/" className="page-ath-logo"
+               style={ { fontSize: '2em', fontWeight: 'bold', letterSpacing: '1px' } }>
               VIET SPEECH
             </a>
           </div>
           <div className="page-ath-form">
             <h2 className="page-ath-heading">Đăng ký</h2>
-            {!registerObj.isLoading && registerObj.isSuccess === false && (
+            { !registerObj.isLoading && registerObj.isSuccess === false && (
               <Alert
-                message={Utils.buildFailedMessage(registerObj.message)}
+                message={ Utils.buildFailedMessage(registerObj.message) }
                 type="error"
                 showIcon
                 closable
-                style={{ marginBottom: '20px' }}
+                style={ { marginBottom: '20px' } }
               />
-            )}
-            <form onSubmit={e => handleOnSubmit(e)}>
+            ) }
+            <form onSubmit={ e => handleOnSubmit(e) }>
               <div className="input-item">
-                <input type="text" placeholder="Tên đăng nhập" className="input-bordered" name="username" required />
+                <input type="text" placeholder="Tên đăng nhập" className="input-bordered" name="username" required/>
               </div>
               <div className="input-item">
-                <input type="email" placeholder="Email" className="input-bordered" name="email" required />
+                <input type="email" placeholder="Email" className="input-bordered" name="email" required/>
               </div>
               <div className="input-item">
-                <input type="text" placeholder="Họ" className="input-bordered" name="lastName" />
+                <input type="text" placeholder="Họ" className="input-bordered" name="lastName"/>
               </div>
               <div className="input-item">
-                <input type="text" placeholder="Tên" className="input-bordered" name="firstName" required />
+                <input type="text" placeholder="Tên" className="input-bordered" name="firstName" required/>
               </div>
               <div className="input-item">
-                <input type="password" placeholder="Mật khẩu" className="input-bordered" name="password" required />
+                <input type="password" placeholder="Mật khẩu" className="input-bordered" name="password" required/>
               </div>
               <div className="input-item text-left">
-                <input className="input-checkbox input-checkbox-md" id="term-condition" type="checkbox" required />
+                <input className="input-checkbox input-checkbox-md" id="term-condition" type="checkbox" required/>
                 <label htmlFor="term-condition">
                   Tôi đồng ý với
                   <a href="#"> Điều khoản và</a> &amp;
@@ -120,7 +121,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
               </div>
               <Button
                 htmlType="submit"
-                loading={registerObj.isLoading}
+                loading={ registerObj.isLoading }
                 type="primary"
                 size="large"
                 className="btn-block"
@@ -128,12 +129,12 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                 Đăng ký
               </Button>
             </form>
-            <div className="gaps-2x" />
-            <div className="gaps-2x" />
+            <div className="gaps-2x"/>
+            <div className="gaps-2x"/>
             <div className="form-note">
               Đã có tài khoản?
               <a href="/login">
-                {' '}
+                { ' ' }
                 <strong>Đăng nhập</strong>
               </a>
             </div>
@@ -153,7 +154,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
         <div className="page-ath-gfx">
           <div className="w-100 d-flex justify-content-center">
             <div className="col-md-8 col-xl-5">
-              <img src={`${process.env.PUBLIC_URL}/images/all/ath-gfx.png`} alt="" />
+              <img src={ `${ process.env.PUBLIC_URL }/images/all/ath-gfx.png` } alt=""/>
             </div>
           </div>
         </div>

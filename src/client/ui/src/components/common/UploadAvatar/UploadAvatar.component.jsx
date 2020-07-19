@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
 // import { Button, message } from 'antd'
-import { FILE_PATH, DEFAULT_AVATAR_URL } from 'utils/constant'
+import { DEFAULT_AVATAR_URL, FILE_PATH } from 'utils/constant'
 import storage from 'firebaseStorage'
 import './UploadAvatar.style.scss'
 
@@ -40,7 +40,7 @@ class UploadAvatar extends Component {
       return
     }
     this.setState({ isUploadLoading: true }, () => {
-      const uploadTask = storage.ref(`${FILE_PATH}/${uploadFile.name}`).put(uploadFile)
+      const uploadTask = storage.ref(`${ FILE_PATH }/${ uploadFile.name }`).put(uploadFile)
       uploadTask.on(
         'state_changed',
         null,
@@ -91,22 +91,22 @@ class UploadAvatar extends Component {
     return (
       <div className="upload-avatar-wrap">
         <div className="message">
-          {!isLoading && isSuccess === false ? this.getMessage() : null}
-          {!isLoading && isSuccess === true ? this.getMessage('Đổi ảnh đại diện thành công') : null}
+          { !isLoading && isSuccess === false ? this.getMessage() : null }
+          { !isLoading && isSuccess === true ? this.getMessage('Đổi ảnh đại diện thành công') : null }
         </div>
         <div className="current-avatar">
-          <img src={(currentUser && currentUser.avatar) || DEFAULT_AVATAR_URL} alt="" />
+          <img src={ (currentUser && currentUser.avatar) || DEFAULT_AVATAR_URL } alt=""/>
         </div>
         <div className="upload-avatar">
           <div className="upload-avatar__input text-center mt-5">
-            <Dropzone onDrop={this.onDrop} accept="image/png, image/jpg, image/jpeg">
-              {({ getRootProps, getInputProps }) => (
-                <div {...getRootProps()}>
+            <Dropzone onDrop={ this.onDrop } accept="image/png, image/jpg, image/jpeg">
+              { ({ getRootProps, getInputProps }) => (
+                <div { ...getRootProps() }>
                   <span> Click vào đây để upload ảnh đại diện mới.</span>
-                  <input {...getInputProps()} />
-                  <div>{uploadFile && `${uploadFile.name.substring(0, 30)}...`}</div>
+                  <input { ...getInputProps() } />
+                  <div>{ uploadFile && `${ uploadFile.name.substring(0, 30) }...` }</div>
                 </div>
-              )}
+              ) }
             </Dropzone>
           </div>
           {/* <Button
@@ -116,7 +116,7 @@ class UploadAvatar extends Component {
             loading={isLoading || isUploadLoading}
           >
             Lưu
-          </Button> */}
+          </Button> */ }
         </div>
       </div>
     )

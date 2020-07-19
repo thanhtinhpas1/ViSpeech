@@ -1,14 +1,16 @@
 .select-token-form {
-    position: relative;
-    &__loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -100%);
-        .ant-spin {
-            i {
-                font-size: 40px;
-            }
-        }
+  position: relative;
+
+  &__loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+
+    .ant-spin {
+      i {
+        font-size: 40px;
+      }
     }
+  }
 }

@@ -8,10 +8,6 @@ import UserTypes from './user.types'
 import {
   authenticateFailure,
   authenticateSuccess,
-  // createUserFailure,
-  // createUserSuccess,
-  // deleteUserFailure,
-  // deleteUserSuccess,
   getUserInfoFailure,
   getUserInfoSuccess,
   getUserListFailure,
@@ -23,8 +19,6 @@ import {
   resetPasswordSuccess,
   sendEmailResetPasswordFailure,
   sendEmailResetPasswordSuccess,
-  // updateUserInfoFailure,
-  // updateUserInfoSuccess,
   verifyTokenResetPasswordFailure,
   verifyTokenResetPasswordSuccess,
 } from './user.actions'

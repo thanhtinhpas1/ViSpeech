@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import { getTokenTypes } from 'redux/token/token.actions'
 import {
-  onClearCreateOrderToUpgradeState,
   createOrderToUpgrade,
-  createOrderToUpgradeSuccess,
   createOrderToUpgradeFailure,
+  createOrderToUpgradeSuccess,
+  onClearCreateOrderToUpgradeState,
 } from 'redux/order/order.actions'
 import UpgradeForm from './UpgradeForm.component'
 

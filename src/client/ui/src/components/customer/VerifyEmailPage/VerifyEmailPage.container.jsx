@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { verifyEmail, verifyEmailSuccess, verifyEmailFailure, authenticate } from 'redux/user/user.actions'
+import { authenticate, verifyEmail, verifyEmailFailure, verifyEmailSuccess } from 'redux/user/user.actions'
 import VerifyEmailPage from './VerifyEmailPage.component'
 
 const mapStateToProps = state => ({

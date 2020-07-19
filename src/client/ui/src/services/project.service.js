@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, DEFAULT_PAGINATION } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, DEFAULT_PAGINATION, JWT_TOKEN } from 'utils/constant'
 import STORAGE from 'utils/storage'
 import Utils from 'utils'
 import { apiUrl } from './api-url'
@@ -7,7 +7,7 @@ import UserService from './user.service'
 
 export default class ProjectService {
   static createProject = ({ name, description, userId }) => {
-    const api = `${apiUrl}/projects`
+    const api = `${ apiUrl }/projects`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -16,7 +16,7 @@ export default class ProjectService {
       body: JSON.stringify({ name, description, userId }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -42,12 +42,12 @@ export default class ProjectService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/projects?${query}`
+    const api = `${ apiUrl }/projects?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -56,7 +56,7 @@ export default class ProjectService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -81,12 +81,12 @@ export default class ProjectService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ userId, offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ userId, offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/projects/user-projects?${query}`
+    const api = `${ apiUrl }/projects/user-projects?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -95,7 +95,7 @@ export default class ProjectService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -120,12 +120,12 @@ export default class ProjectService {
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
-    let query = `${Utils.parameterizeObject({ userId, offset, limit })}`
+    let query = `${ Utils.parameterizeObject({ userId, offset, limit }) }`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')
 
-    const api = `${apiUrl}/projects/accepted-projects?${query}`
+    const api = `${ apiUrl }/projects/accepted-projects?${ query }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -134,7 +134,7 @@ export default class ProjectService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -154,7 +154,7 @@ export default class ProjectService {
   }
 
   static getProjectInfo = async id => {
-    const api = `${apiUrl}/projects/${id}`
+    const api = `${ apiUrl }/projects/${ id }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
     const assignees = await UserService.getProjectAssignees(id)
 
@@ -163,7 +163,7 @@ export default class ProjectService {
       method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -185,7 +185,7 @@ export default class ProjectService {
   }
 
   static updateProjectInfo = (id, info) => {
-    const api = `${apiUrl}/projects/${id}`
+    const api = `${ apiUrl }/projects/${ id }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -196,7 +196,7 @@ export default class ProjectService {
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {
@@ -217,7 +217,7 @@ export default class ProjectService {
   }
 
   static deleteProject = id => {
-    const api = `${apiUrl}/projects/${id}`
+    const api = `${ apiUrl }/projects/${ id }`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400
@@ -225,7 +225,7 @@ export default class ProjectService {
       method: 'DELETE',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${ jwtToken }`,
       },
     })
       .then(response => {

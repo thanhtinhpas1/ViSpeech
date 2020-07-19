@@ -1,13 +1,13 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Alert, Button, Checkbox, Form, Input, Select } from 'antd'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import OrderService from 'services/order.service'
 import SocketUtils from 'utils/socket.util'
-import { DEFAULT_PAGINATION, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import { DEFAULT_ERR_MESSAGE, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS } from 'utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -19,29 +19,29 @@ const {
 const { Option } = Select
 
 const CheckoutForm = ({
-  currentUser,
-  checkoutInfo,
-  myProjectList,
-  createOrderObj,
-  getProjectTokenListObj,
-  onOrderSuccess,
-  createOrder,
-  createOrderSuccess,
-  createOrderFailure,
-  clearCreateOrderState,
-  getProjectTokenList,
-}) => {
+                        currentUser,
+                        checkoutInfo,
+                        myProjectList,
+                        createOrderObj,
+                        getProjectTokenListObj,
+                        onOrderSuccess,
+                        createOrder,
+                        createOrderSuccess,
+                        createOrderFailure,
+                        clearCreateOrderState,
+                        getProjectTokenList,
+                      }) => {
   const stripe = useStripe()
   const elements = useElements()
-  const [form] = Form.useForm()
-  const [isLoading, setIsLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [ form ] = Form.useForm()
+  const [ isLoading, setIsLoading ] = useState(false)
+  const [ errorMessage, setErrorMessage ] = useState(null)
   const loadingRef = useRef(createOrderObj.isLoading)
   loadingRef.current = createOrderObj.isLoading
 
   useEffect(() => {
     return () => clearCreateOrderState()
-  }, [clearCreateOrderState])
+  }, [ clearCreateOrderState ])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(ORDER_CREATED_FAILED_EVENT)
@@ -86,7 +86,7 @@ const CheckoutForm = ({
           payment_method: {
             card: cardElement,
             billing_details: {
-              name: `${user.firstName} ${user.lastName}`,
+              name: `${ user.firstName } ${ user.lastName }`,
               email: user.email,
             },
           },
@@ -164,7 +164,7 @@ const CheckoutForm = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [createOrderObj, onOrderSuccess, createOrderFailure])
+  }, [ createOrderObj, onOrderSuccess, createOrderFailure ])
 
   const cardElementOptions = {
     iconStyle: 'solid',
@@ -188,32 +188,32 @@ const CheckoutForm = ({
     const userId = currentUser && currentUser._id
     if (userId) {
       const filters = {
-        isValid: ['true'],
+        isValid: [ 'true' ],
       }
       getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
     }
   }
 
   return (
-    <Form form={form} onFinish={onSubmit}>
+    <Form form={ form } onFinish={ onSubmit }>
       <h5 className="font-mid">Dự án</h5>
-      <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
-        <Select style={{ width: '100%' }} placeholder="Chọn một dự án" onChange={onProjectIdChange}>
-          {myProjectList.map(project => {
+      <Form.Item name="projectId" rules={ [ { required: true, message: 'Vui lòng chọn một dự án.' } ] }>
+        <Select style={ { width: '100%' } } placeholder="Chọn một dự án" onChange={ onProjectIdChange }>
+          { myProjectList.map(project => {
             return (
-              <Option value={project._id} key={project._id}>
-                {project.name}
+              <Option value={ project._id } key={ project._id }>
+                { project.name }
               </Option>
             )
-          })}
+          }) }
         </Select>
       </Form.Item>
       <h5 className="font-mid">Tên API key</h5>
       <Form.Item
         name="tokenName"
-        dependencies={['projectId']}
+        dependencies={ [ 'projectId' ] }
         hasFeedback
-        rules={[
+        rules={ [
           {
             required: true,
             message: 'Vui lòng đặt tên cho API key.',
@@ -229,24 +229,24 @@ const CheckoutForm = ({
               return Promise.resolve()
             },
           }),
-        ]}
+        ] }
       >
-        <Input placeholder="Nhập tên API key" />
+        <Input placeholder="Nhập tên API key"/>
       </Form.Item>
       <h5 className="font-mid">Thông tin thẻ</h5>
-      <Form.Item name="cardElement" rules={[{ required: true, message: 'Vui lòng nhập thông tin thẻ.' }]}>
-        <CardElement options={cardElementOptions} />
+      <Form.Item name="cardElement" rules={ [ { required: true, message: 'Vui lòng nhập thông tin thẻ.' } ] }>
+        <CardElement options={ cardElementOptions }/>
       </Form.Item>
       <Form.Item
         name="agreement"
         valuePropName="checked"
-        rules={[
+        rules={ [
           {
             validator: (_, value) =>
               // eslint-disable-next-line prefer-promise-reject-errors
               value ? Promise.resolve() : Promise.reject('Vui lòng đồng ý điều khoản giao dịch'),
           },
-        ]}
+        ] }
       >
         <Checkbox>
           Tôi đồng ý với
@@ -255,23 +255,23 @@ const CheckoutForm = ({
       </Form.Item>
       <ul className="d-flex flex-wrap align-items-center guttar-30px">
         <li>
-          {errorMessage != null && (
+          { errorMessage != null && (
             <Alert
-              message={Utils.buildFailedMessage({ message: errorMessage })}
+              message={ Utils.buildFailedMessage({ message: errorMessage }) }
               type="error"
               showIcon
               closable
-              style={{ marginBottom: '20px' }}
+              style={ { marginBottom: '20px' } }
             />
-          )}
-          <Button htmlType="submit" loading={isLoading} type="primary" size="large">
-            Thanh toán <em className="ti ti-arrow-right mgl-2x" />
+          ) }
+          <Button htmlType="submit" loading={ isLoading } type="primary" size="large">
+            Thanh toán <em className="ti ti-arrow-right mgl-2x"/>
           </Button>
         </li>
       </ul>
-      <div className="gaps-1x d-none d-sm-block" />
+      <div className="gaps-1x d-none d-sm-block"/>
       <div className="note note-plane note-light mgb-1x">
-        <em className="fas fa-info-circle" />
+        <em className="fas fa-info-circle"/>
         <p className="text-light">Sau khi giao dịch thành công, trang web sẽ hiển thị key cho bạn.</p>
       </div>
     </Form>

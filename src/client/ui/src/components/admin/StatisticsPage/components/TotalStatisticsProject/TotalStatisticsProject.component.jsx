@@ -7,12 +7,12 @@ import ReportUtils from 'utils/report.util'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsProject = ({
-  currentUser,
-  chartOptions,
-  getUserTotalStatisticsByprojectObj,
-  getUserTotalStatistics,
-}) => {
-  const [userTotalStatistics, setUserTotalStatistics] = useState({ data: [] })
+                                  currentUser,
+                                  chartOptions,
+                                  getUserTotalStatisticsByprojectObj,
+                                  getUserTotalStatistics,
+                                }) => {
+  const [ userTotalStatistics, setUserTotalStatistics ] = useState({ data: [] })
 
   useEffect(() => {
     if (getUserTotalStatisticsByprojectObj.data.length > 0) {
@@ -27,19 +27,19 @@ const TotalStatisticsProject = ({
       })
       setUserTotalStatistics({ ...getUserTotalStatisticsByprojectObj, data: formatStatisticsData })
     }
-  }, [getUserTotalStatisticsByprojectObj])
+  }, [ getUserTotalStatisticsByprojectObj ])
 
   return (
     <div>
-      {currentUser._id && (
+      { currentUser._id && (
         <TotalStatisticsTemplate
-          userId={currentUser._id}
-          chartOptions={chartOptions}
-          statisticsType={ReportUtils.STATISTICS_TYPE.PROJECT}
-          getTotalStatisticsObj={userTotalStatistics}
-          getTotalStatistics={getUserTotalStatistics}
+          userId={ currentUser._id }
+          chartOptions={ chartOptions }
+          statisticsType={ ReportUtils.STATISTICS_TYPE.PROJECT }
+          getTotalStatisticsObj={ userTotalStatistics }
+          getTotalStatistics={ getUserTotalStatistics }
         />
-      )}
+      ) }
     </div>
   )
 }
