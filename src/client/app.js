@@ -15,12 +15,12 @@ app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false, limit: '30mb' }))
 app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'ui/build')));
 
-const url = process.env.API_URL || 'http://asr.vietspeech.com:7070'
+const url = 'http://localhost:7070'
 app.use('/api', proxy(url, {
   proxyReqPathResolver: function (req) {
     return new Promise(function (resolve, reject) {
