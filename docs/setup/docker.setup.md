@@ -54,7 +54,7 @@ CONTAINER ID     IMAGE            COMMAND          CREATED          STATUS      
 
 ## Clone the repository
 
-Clone the repository by running `git clone https://github.com/AdaptiveConsulting/ReactiveTraderCloud.git`
+Clone the repository by running `git clone https://github.com/thanhtinhpas1/ViSpeech`
 
 #### Note for Windows
 
@@ -66,4 +66,4 @@ Before cloning :
 git config --global core.autocrlf false
 ```
 
-Also for Windows, ensure that your cloned project is under your user folder. E.g.: `c:\Users\myname\repository\reactivetradercloud`. This is because on Docker on Windows uses a Linux Docker host running on VirtualBox, which needs folder sharing with Windows for which the User folder is shared by default.
+Also for Windows, ensure that your cloned project is under your user folder. E.g.: `c:\Users\myname\repository\vispeech`. This is because on Docker on Windows uses a Linux Docker host running on VirtualBox, which needs folder sharing with Windows for which the User folder is shared by default.
