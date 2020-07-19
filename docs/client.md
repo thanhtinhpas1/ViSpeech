@@ -1,4 +1,4 @@
-# Reactive Trader Cloud - UI
+# ViSpeech - UI
 
 The trading client GUI is a single page app (SPA) built using Typescript, React, Redux and Styled components. It can run as a desktop application using Openfin, in the browser, or on mobile as a PWA.
 
@@ -8,7 +8,6 @@ The trading client GUI is a single page app (SPA) built using Typescript, React,
 - Tests use [Jest](https://jestjs.io/)
 - Streaming data abstractions are build with [RxJs](https://github.com/Reactive-Extensions/RxJS).
 - GUI state management is done with [redux](https://redux.js.org/).
-- Connectivity to the backend is done via [AutobahnJs](https://github.com/crossbario/autobahn-js).
 - Styles build using [Styled Components](https://www.styled-components.com/).
 
 ## Machine Setup
@@ -27,18 +26,6 @@ You might want to [increase the limit](http://stackoverflow.com/questions/167487
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 ```
 
-### Windows
-
-Install the C++ Compiler. Visual Studio Express comes bundled with a free C++ compiler. Or, if you already have Visual Studio installed: Open Visual Studio and go to File -> New -> Project -> Visual C++ -> Install Visual C++ Tools for Windows Desktop. The C++ compiler is used to compile browser-sync (and perhaps other Node modules).
-
-## RT Enviroments
-
-We deploy Reactive Trader to three enviroments:
-
-- [Demo](https://web-demo.adaptivecluster.com/)
-- [Uat](https://web-uat.adaptivecluster.com/)
-- [Dev](https://web-dev.adaptivecluster.com/)
-
 ## Starting the GUI
 
 Clone the repo and install the necessary node modules:
@@ -55,17 +42,17 @@ You can then browse the app at [http://localhost:3000](http://localhost:3000)
 Run the client with pointing to your local backend server:
 
 ```sh
-npm run start:local-backend
+npm run start
 ```
 
 Run the client with a back end on the cloud:
 
 ```sh
-npm run start:dev-backend
+npm run start:dev
 
 # or
 
-npm run start:demo-backend
+npm run start
 ```
 
 Runs unit tests with Jest.
@@ -80,16 +67,6 @@ Create a production version of the application in the dist folder
 npm run build
 
 # You can also build versions for particular enviroment
-npm run build:demo-backend
-npm run build:dev-backend
-
+npm run build
 ```
 
-## Openfin
-
-Starts the application in Openfin pointing to an enviroment
-
-```sh
-npm start:openfin:demo-backend
-npm start:openfin:dev-backend
-```
