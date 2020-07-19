@@ -18,7 +18,7 @@ The different scripts here will need to share code with the different containers
 
 ### No space left on device
 ```
-Error pulling image (0.0) from docker.io/reactivetrader/servers, 
+Error pulling image (0.0) from docker.io/vispeech/servers, 
 endpoint: https://registry-1.docker.io/v1/, 
 Untar re-exec error: 
 exit status 1: 

@@ -1,11 +1,5 @@
 # Running on Docker
 
-You will updated documentation here:
-- [docker setup page](https://github.com/AdaptiveConsulting/ReactiveTraderCloud/blob/master/docs/deployment/docker-setup.md)
-- [build locally with docker](https://github.com/AdaptiveConsulting/ReactiveTraderCloud/blob/master/docs/deployment/build-rtc-locally.md)
-- [run with docker](https://github.com/AdaptiveConsulting/ReactiveTraderCloud/blob/master/docs/deployment/run-rtc-with-docker.md)
-
-
 The following instructions have been tested on: 
 - Windows 7 / 10
 - Ubuntu 14.04.3 / 15.10
