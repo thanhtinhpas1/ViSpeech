@@ -76,10 +76,10 @@ In case you don't feel like downloading dependencies locally, I've added support
 3. Enable Kafka
 
    ```bash
-  tar -xzf kafka_2.12-2.5.0.tgz
-  cd kafka_2.12-2.5.0
-  bin/zookeeper-server-start.sh config/zookeeper.properties
-  bin/kafka-server-start.sh config/server.properties
+    tar -xzf kafka_2.12-2.5.0.tgz
+    cd kafka_2.12-2.5.0
+    bin/zookeeper-server-start.sh config/zookeeper.properties
+    bin/kafka-server-start.sh config/server.properties
    ```
 
 4. Populate Event Store:
