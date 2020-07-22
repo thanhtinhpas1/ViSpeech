@@ -31,13 +31,17 @@ export class RequestBody {
     @IsOptional()
     @IsString(ErrorUtils.getMessage('audioFileUrl', ERR.IsString))
     audioFileUrl: string;
+
+    @IsOptional()
+    @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
+    assigneeId: string;
 }
 
 @Entity('requests')
 export class RequestDto extends BaseEntityDto {
 
     constructor(tokenId: string, tokenTypeId: string, projectId: string, userId: string, fileName: string, encoding: string, size: string,
-                duration: number, mimeType: string, status: string, audioFileUrl?: string, transcriptFileUrl?: string) {
+                duration: number, mimeType: string, status: string, assigneeId?: string, audioFileUrl?: string, transcriptFileUrl?: string) {
         super();
         this.tokenId = tokenId;
         this.tokenTypeId = tokenTypeId;
@@ -49,6 +53,7 @@ export class RequestDto extends BaseEntityDto {
         this.duration = duration;
         this.mimeType = mimeType;
         this.status = status;
+        this.assigneeId = assigneeId;
         this.audioFileUrl = audioFileUrl;
         this.transcriptFileUrl = transcriptFileUrl;
     }
@@ -112,6 +117,12 @@ export class RequestDto extends BaseEntityDto {
     ])
     @Column()
     status: string;
+
+    @IsOptional()
+    @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
+    @Column()
+    assigneeId: string;
 
     @IsOptional()
     @IsString(ErrorUtils.getMessage('audioFileUrl', ERR.IsString))

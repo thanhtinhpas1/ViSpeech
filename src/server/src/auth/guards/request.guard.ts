@@ -25,7 +25,7 @@ export class RequestGuard implements CanActivate {
         const id = request.params._id || request.params.id;
         if (id) {
             const request = await this.repository.findOne({_id: id});
-            if (request && request.userId === payload['id']) {
+            if (request && [request.userId, request.assigneeId].includes(payload['id'])) {
                 return true;
             }
         }

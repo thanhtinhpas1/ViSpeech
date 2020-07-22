@@ -64,7 +64,7 @@ export class AsrController {
         let asrData = ''
         const requestId = Utils.getUuid();
         const requestDto = new RequestDto(tokenDto._id, tokenDto.tokenTypeId, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding,
-            file.size, duration, file.mimetype, requestStatus, requestBody?.audioFileUrl);
+            file.size, duration, file.mimetype, requestStatus, requestBody?.assigneeId, requestBody?.audioFileUrl);
         requestDto._id = requestId;
         await this.requestService.createRequest(requestId, requestDto, tokenDto);
 

@@ -38,6 +38,7 @@ const TrialPage = ({
   currentUser,
   createRequestObj,
   updateRequestInfoObj,
+  getAcceptedProjectListObj,
   getRequestListByUserId,
   clearCreateRequestState,
   clearUpdateRequestInfo,
@@ -234,7 +235,12 @@ const TrialPage = ({
       }
     })
     try {
-      const data = await SpeechService.callAsr(file, url, tokenValue)
+      const isAcceptedProject =
+        getAcceptedProjectListObj.acceptedProjectList.data.findIndex(project => project.name === projectName) > -1
+      const data =
+        isAcceptedProject && currentUser._id
+          ? await SpeechService.callAsr(file, url, tokenValue, currentUser._id)
+          : await SpeechService.callAsr(file, url, tokenValue)
       setAsrData(data)
     } catch (err) {
       createRequestFailure({ message: err.message })
