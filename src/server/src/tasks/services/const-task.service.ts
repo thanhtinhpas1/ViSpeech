@@ -355,6 +355,10 @@ export class ConstTaskService {
 
         // only create report for successful requests
         aggregateMatchDates.$match.status = CONSTANTS.STATUS.SUCCESS;
+        // do not create report for requests that have projectId='' (free token)
+        if (reportType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
+            aggregateMatchDates.$match.projectId = { $ne: ''};
+        }
         const groupedRequests = await getMongoRepository(RequestDto).aggregate([
             aggregateMatchDates,
             aggregateGroup

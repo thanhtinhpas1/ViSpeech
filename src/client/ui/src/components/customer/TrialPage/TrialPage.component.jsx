@@ -15,6 +15,7 @@ import {
   CUSTOMER_PATH,
   TIMEOUT_MILLISECONDS,
   DEFAULT_ERR_MESSAGE,
+  FREE_TOKEN,
 } from 'utils/constant'
 import SpeechService from 'services/speech.service'
 import SocketService from 'services/socket.service'
@@ -343,6 +344,12 @@ const TrialPage = ({
 
   const onSelectTokenFormValuesChange = (project, token) => {
     setDraggerDisabled(true)
+    if (token && token.name === FREE_TOKEN) {
+      setTokenValue(token.value)
+      setProjectName('')
+      setTokenName(token.name)
+      setDraggerDisabled(false)
+    }
     if (project && token) {
       setTokenValue(token.value)
       setProjectName(project.name)
