@@ -15,6 +15,7 @@ import { EventHandlers } from './events/handlers';
 import { $statsCollected, MonitorBeatFailedEvent, MonitorBeatSuccessEvent } from './events/impl/monitor-beat.event';
 import { QueryHandlers } from './queries/handlers';
 import { MonitorsService } from './services/monitors.service';
+import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -44,7 +45,7 @@ import { MonitorsService } from './services/monitors.service';
                 },
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-monitor',
+                    stream: CONSTANTS.STREAM_NAME.MONITOR,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
@@ -98,12 +99,12 @@ export class MonitorsModule implements OnModuleInit, OnModuleDestroy {
         if (monitorProjection1) {
             await getMongoRepository(ProjectionDto).save({ ...monitorProjection1, expectedVersion: monitorProjection1.eventNumber });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName: '$stats-127.0.0.1:2113', eventNumber: 0, expectedVersion: 0 });
+            await getMongoRepository(ProjectionDto).save({ streamName: '$stats-127.0.0.1:2113', eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
         }
         if (monitorProjection2) {
             await getMongoRepository(ProjectionDto).save({ ...monitorProjection2, expectedVersion: monitorProjection2.eventNumber });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName: '$stats-0.0.0.0:2113', eventNumber: 0, expectedVersion: 0 });
+            await getMongoRepository(ProjectionDto).save({ streamName: '$stats-0.0.0.0:2113', eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
         }
         Logger.log('Seed projection user success')
     }

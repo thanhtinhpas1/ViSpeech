@@ -141,5 +141,16 @@ export const CONSTANTS = {
         REPLY_PERMISSION_ASSIGN: 2,
         RESET_PASSWORD: 1,
     },
-    FREE_TOKEN: 'API key miễn phí'
+    FREE_TOKEN: 'API key miễn phí',
+    INIT_EXPECTED_VERSION: -1,
+    STREAM_NAME: {
+        MONITOR: '$ce-monitor',
+        ORDER: '$ce-order',
+        PERMISSION: '$ce-permission',
+        PROJECT: '$ce-project',
+        REPORT: '$ce-report',
+        REQUEST: '$ce-request',
+        TOKEN: '$ce-token',
+        USER: '$ce-user',
+    }
 };

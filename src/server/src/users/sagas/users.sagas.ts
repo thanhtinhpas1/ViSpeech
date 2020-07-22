@@ -33,7 +33,7 @@ export class UsersSagas {
                 const tokenDto = new TokenDto(tokenValue, userId, '', CONSTANTS.TOKEN_TYPE.FREE); // free token
                 const freeTokenCreatedEvent = new FreeTokenCreatedEvent(streamId, tokenDto);
                 freeTokenCreatedEvent['eventType'] = 'FreeTokenCreatedEvent';
-                this.eventStore.publish(freeTokenCreatedEvent, '$ce-token');
+                this.eventStore.publish(freeTokenCreatedEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };
@@ -48,15 +48,15 @@ export class UsersSagas {
                 // remove token
                 const tokenDeletedEvent = new TokenDeletedByUserIdEvent(streamId, userId);
                 tokenDeletedEvent['eventType'] = 'TokenDeletedByUserIdEvent';
-                this.eventStore.publish(tokenDeletedEvent, '$ce-token');
+                this.eventStore.publish(tokenDeletedEvent, CONSTANTS.STREAM_NAME.TOKEN);
                 // remove project
                 const projectDeletedEvent = new ProjectDeletedByUserIdEvent(streamId, userId);
                 projectDeletedEvent['eventType'] = 'ProjectDeletedByUserIdEvent';
-                this.eventStore.publish(projectDeletedEvent, '$ce-project');
+                this.eventStore.publish(projectDeletedEvent, CONSTANTS.STREAM_NAME.PROJECT);
                 // remove permission
                 const permissionDeletedEvent = new PermissionDeletedByUserIdEvent(streamId, userId);
                 permissionDeletedEvent['eventType'] = 'PermissionDeletedByUserIdEvent';
-                this.eventStore.publish(permissionDeletedEvent, '$ce-permission');
+                this.eventStore.publish(permissionDeletedEvent, CONSTANTS.STREAM_NAME.PERMISSION);
                 return null;
             })
         );

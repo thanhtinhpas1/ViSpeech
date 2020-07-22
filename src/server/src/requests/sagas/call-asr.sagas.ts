@@ -36,7 +36,7 @@ export class CallAsrSagas {
                         // update token usedMinutes
                         const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
                         updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
-                        this.eventStore.publish(updateTokenEvent, '$ce-token');
+                        this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
                     }
                 }
                 // else do nothing
@@ -60,7 +60,7 @@ export class CallAsrSagas {
                     // update token usedMinutes
                     const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
                     updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
-                    this.eventStore.publish(updateTokenEvent, '$ce-token');
+                    this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
                 }
             })
         );

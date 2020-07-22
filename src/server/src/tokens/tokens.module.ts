@@ -59,11 +59,11 @@ import { TokensService } from './services/tokens.service';
         forwardRef(() => AuthModule),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$ce-token',
+            featureStreamName: CONSTANTS.STREAM_NAME.TOKEN,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-token',
+                    stream: CONSTANTS.STREAM_NAME.TOKEN,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
@@ -113,11 +113,12 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const tokenProjection = await getMongoRepository(ProjectionDto).findOne({ streamName: '$ce-token' });
+        const streamName = CONSTANTS.STREAM_NAME.TOKEN;
+        const tokenProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (tokenProjection) {
             await getMongoRepository(ProjectionDto).save({ ...tokenProjection, expectedVersion: tokenProjection.eventNumber });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName: '$ce-token', eventNumber: 0, expectedVersion: 0 });
+            await getMongoRepository(ProjectionDto).save({ streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
         }
         Logger.log('Seed projection token success');
     }

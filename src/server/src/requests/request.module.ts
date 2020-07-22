@@ -36,6 +36,7 @@ import { QueryHandlers } from './queries/handler';
 import { RequestRepository } from './repository/request.repository';
 import { CallAsrSagas } from './sagas/call-asr.sagas';
 import { RequestService } from './services/request.service';
+import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -55,11 +56,11 @@ import { RequestService } from './services/request.service';
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$ce-request',
+            featureStreamName: CONSTANTS.STREAM_NAME.REQUEST,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-request',
+                    stream: CONSTANTS.STREAM_NAME.REQUEST,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
@@ -113,11 +114,12 @@ export class RequestModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-request'});
+        const streamName = CONSTANTS.STREAM_NAME.REQUEST;
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
         if (userProjection) {
             await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-request', eventNumber: 0, expectedVersion: 0});
+            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
         }
         Logger.log('Seed projection request success')
     }
