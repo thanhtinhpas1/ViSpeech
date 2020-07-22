@@ -117,6 +117,13 @@ const tokenReducer = (state = INITIAL_STATE, action) => {
         },
       }
     // GET PROJECT TOKENS
+    case TokenTypes.CLEAR_GET_PROJECT_TOKENS_STATE:
+      return {
+        ...state,
+        getProjectTokenList: {
+          ...INITIAL_STATE.getProjectTokenList,
+        },
+      }
     case TokenTypes.GET_PROJECT_TOKENS:
       return {
         ...state,

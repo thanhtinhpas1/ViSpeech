@@ -16,6 +16,8 @@ import {
   getUserInfoSuccess,
   getUserListFailure,
   getUserListSuccess,
+  getUsernameListFailure,
+  getUsernameListSuccess,
   loginFailure,
   loginSuccess,
   onClearUserState,
@@ -104,6 +106,20 @@ export function* getUserList({ payload: filterConditions }) {
 
 export function* getUserListSaga() {
   yield takeLatest(UserTypes.GET_USER_LIST, getUserList)
+}
+
+// ==== get username list
+export function* getUsernameList({ payload: filterConditions }) {
+  try {
+    const usernameList = yield UserService.getUsernameList(filterConditions)
+    yield put(getUsernameListSuccess(usernameList))
+  } catch (err) {
+    yield put(getUsernameListFailure(err.message))
+  }
+}
+
+export function* getUsernameListSaga() {
+  yield takeLatest(UserTypes.GET_USERNAME_LIST, getUsernameList)
 }
 
 // ==== get user info
@@ -253,6 +269,7 @@ export function* userSaga() {
   yield all([
     call(loginStartSaga),
     call(getUserListSaga),
+    call(getUsernameListSaga),
     call(getUserInfoSaga),
     // call(updateUserInfoSaga),
     // call(createUserSaga),

@@ -22,6 +22,17 @@ export class HistoriesController {
     ) {
     }
 
+    /* List Requests */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['List Request']})
+    @ApiResponse({status: 200, description: 'List Request.'})
+    @Roles([CONSTANTS.ROLE.ADMIN])
+    @Get()
+    async findRequests(@Query() findRequestsQuery: FindRequestsQuery) {
+        return this.requestService.findRequests(findRequestsQuery);
+    }
+
     /* List Requests by projectId*/
 
     /*--------------------------------------------*/
@@ -33,17 +44,6 @@ export class HistoriesController {
         const payload = this.authService.decode(req);
         findRequestsQuery.tokenId = payload['id'];
         findRequestsQuery.projectId = requestsParam.projectId;
-        return this.requestService.findRequests(findRequestsQuery);
-    }
-
-    /* List Requests */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Request']})
-    @ApiResponse({status: 200, description: 'List Request.'})
-    @Roles([CONSTANTS.ROLE.ADMIN])
-    @Get()
-    async findRequests(@Query() findRequestsQuery: FindRequestsQuery) {
         return this.requestService.findRequests(findRequestsQuery);
     }
 
@@ -73,16 +73,6 @@ export class HistoriesController {
         return this.requestService.updateRequestTranscriptFileUrl(streamId, _id, tokenId, body.transcriptFileUrl);
     }
 
-    /* Find Request */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Find Request']})
-    @ApiResponse({status: 200, description: 'Find Request.'})
-    @Get(':id')
-    async findOne(@Param() findRequestQuery: FindRequestQuery) {
-        return this.requestService.findOne(findRequestQuery);
-    }
-
     /* Download Transcript */
 
     /*--------------------------------------------*/
@@ -99,5 +89,15 @@ export class HistoriesController {
         } catch (err) {
             throw err;
         }
+    }
+
+    /* Find Request */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Find Request']})
+    @ApiResponse({status: 200, description: 'Find Request.'})
+    @Get(':id')
+    async findOne(@Param() findRequestQuery: FindRequestQuery) {
+        return this.requestService.findOne(findRequestQuery);
     }
 }

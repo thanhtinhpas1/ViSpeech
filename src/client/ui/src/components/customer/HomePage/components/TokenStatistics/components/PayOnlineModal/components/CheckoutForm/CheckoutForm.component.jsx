@@ -30,6 +30,7 @@ const CheckoutForm = ({
   createOrderFailure,
   clearCreateOrderState,
   getProjectTokenList,
+  clearGetProjectTokenState,
 }) => {
   const stripe = useStripe()
   const elements = useElements()
@@ -40,8 +41,11 @@ const CheckoutForm = ({
   loadingRef.current = createOrderObj.isLoading
 
   useEffect(() => {
-    return () => clearCreateOrderState()
-  }, [clearCreateOrderState])
+    return () => {
+      clearCreateOrderState()
+      clearGetProjectTokenState()
+    }
+  }, [clearCreateOrderState, clearGetProjectTokenState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(ORDER_CREATED_FAILED_EVENT)

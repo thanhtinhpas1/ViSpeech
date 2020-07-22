@@ -29,6 +29,7 @@ const ProjectDetailsPage = ({
   getProjectTokenListObj,
   updateInfoObj,
   clearUpdateProjectInfoState,
+  clearGetProjectTokenState,
   getProjectInfo,
   getProjectTokens,
   updateProjectInfo,
@@ -43,8 +44,11 @@ const ProjectDetailsPage = ({
   loadingRef.current = updateInfoObj.isLoading
 
   useEffect(() => {
-    return () => clearUpdateProjectInfoState()
-  }, [clearUpdateProjectInfoState])
+    return () => {
+      clearUpdateProjectInfoState()
+      clearGetProjectTokenState()
+    }
+  }, [clearUpdateProjectInfoState, clearGetProjectTokenState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_UPDATED_SUCCESS_EVENT)

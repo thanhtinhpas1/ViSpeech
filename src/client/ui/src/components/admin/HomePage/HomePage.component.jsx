@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { DEFAULT_PAGINATION, ADMIN_PATH } from 'utils/constant'
-import MonitorBeatRateChart from './components/MonitorBeatRateChart/MonitorBeatRateChart.container'
+// import MonitorBeatRateChart from './components/MonitorBeatRateChart/MonitorBeatRateChart.container'
 import MonitorBeatTimeChart from './components/MonitorBeatTimeChart/MonitorBeatTimeChart.container'
 import TotalChart from './components/TotalChart/TotalChart.container'
 import TokenTypeChart from './components/TokenTypeChart/TokenTypeChart.container'
@@ -29,7 +29,7 @@ const HomePage = ({
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-warning">
-                <i className="zmdi zmdi-account" />
+                <i className="fas fa-users" />
               </div>
             </div>
             <div className="card-content">
@@ -49,7 +49,7 @@ const HomePage = ({
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-rose">
-                <i className="zmdi zmdi-key" />
+                <i className="fas fa-key" />
               </div>
             </div>
             <div className="card-content">
@@ -69,7 +69,7 @@ const HomePage = ({
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-success">
-                <i className="zmdi zmdi-money" />
+                <i className="fas fa-dollar-sign" />
               </div>
             </div>
             <div className="card-content">
@@ -80,7 +80,7 @@ const HomePage = ({
             </div>
             <div className="card-footer">
               <div className="stats">
-                <a href={`${ADMIN_PATH}/orders`}>Xem chi tiết</a>
+                <a href={`${ADMIN_PATH}/transactions`}>Xem chi tiết</a>
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@ const HomePage = ({
           <div className="card card-stats">
             <div className="card-header">
               <div className="icon icon-info">
-                <i className="zmdi zmdi-badge-check" />
+                <i className="fas fa-project-diagram" />
               </div>
             </div>
             <div className="card-content">
@@ -106,11 +106,11 @@ const HomePage = ({
           </div>
         </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <div className="col-12">
           <MonitorBeatRateChart />
         </div>
-      </div>
+      </div> */}
       <div className="row">
         <div className="col-12">
           <MonitorBeatTimeChart />

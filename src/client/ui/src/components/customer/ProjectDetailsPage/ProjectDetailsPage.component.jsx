@@ -14,15 +14,27 @@ const ProjectDetailsPage = ({
   getProjectTokenListObj,
   getProjectInfo,
   getProjectTokens,
+  clearGetProjectTokenState,
 }) => {
   const { id } = useParams()
   const { pathname } = useLocation()
+
+  useEffect(() => {
+    return () => clearGetProjectTokenState()
+  }, [clearGetProjectTokenState])
 
   useEffect(() => {
     getProjectInfo(id)
   }, [id, getProjectInfo])
 
   const columns = [
+    {
+      title: 'Tên API key',
+      dataIndex: 'name',
+      style: { paddingRight: '30px' },
+      render: name => <span className="lead tnx-id">{name}</span>,
+      width: 250,
+    },
     {
       title: 'API key',
       dataIndex: 'value',

@@ -43,6 +43,10 @@ export const getUserTokenListFailure = message => ({
 })
 
 // Get project token list
+export const onClearGetProjectTokenState = () => ({
+  type: TokenTypes.CLEAR_GET_PROJECT_TOKENS_STATE,
+})
+
 export const getProjectTokenList = filterConditions => ({
   type: TokenTypes.GET_PROJECT_TOKENS,
   payload: filterConditions,

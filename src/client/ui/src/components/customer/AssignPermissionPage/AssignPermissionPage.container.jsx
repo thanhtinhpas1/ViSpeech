@@ -6,20 +6,20 @@ import {
   assignPermissionFailure,
   onClearAssignPermissionState,
 } from 'redux/permission/permission.actions'
-import { getUserList } from 'redux/user/user.actions'
+import { getUsernameList } from 'redux/user/user.actions'
 import AssignPermissionPage from './AssignPermissionPage.component'
 
 const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
   getMyProjectListObj: state.project.getMyProjectList,
-  getUserListObj: state.user.getList,
+  getUsernameListObj: state.user.getUsernameList,
   assignPermissionObj: state.permission.assignPermission,
 })
 
 const mapDispatchToProps = dispatch => ({
   clearAssignPermissionState: () => dispatch(onClearAssignPermissionState()),
-  getUserList: ({ pagination, sortField, sortOrder, filters }) =>
-    dispatch(getUserList({ pagination, sortField, sortOrder, filters })),
+  getUsernameList: ({ pagination, sortField, sortOrder, filters }) =>
+    dispatch(getUsernameList({ pagination, sortField, sortOrder, filters })),
   getMyProjects: ({ userId }) => dispatch(getMyProjectList({ userId })),
   assignPermission: ({ assigneeUsername, projectId, permissions, assignerId }) =>
     dispatch(assignPermission({ assigneeUsername, projectId, permissions, assignerId })),

@@ -10,6 +10,7 @@ import { VerifyEmailCommand } from 'users/commands/impl/verify-email.command';
 import { SendVerifyEmailCommand } from 'users/commands/impl/send-verify-email.command';
 import { CreateUserCommand } from "../commands/impl/create-user.command";
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
+import { GetUsernamesQuery } from 'users/queries/impl/get-usernames.query';
 
 @Injectable()
 export class UsersService {
@@ -46,6 +47,12 @@ export class UsersService {
     async getUsers(getUsersQuery: GetUsersQuery) {
         const query = new GetUsersQuery();
         Object.assign(query, getUsersQuery);
+        return await this.queryBus.execute(query);
+    }
+
+    async getUsernames(getUsernamesQuery: GetUsernamesQuery) {
+        const query = new GetUsernamesQuery();
+        Object.assign(query, getUsernamesQuery);
         return await this.queryBus.execute(query);
     }
 

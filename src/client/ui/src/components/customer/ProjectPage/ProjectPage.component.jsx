@@ -168,8 +168,10 @@ const ProjectPage = ({
       headerClassName: 'dt-token',
       className: 'dt-token',
       filters: [
+        { text: STATUS.PENDING.viText, value: STATUS.PENDING.name },
         { text: STATUS.ACCEPTED.viText, value: STATUS.ACCEPTED.name },
         { text: STATUS.REJECTED.viText, value: STATUS.REJECTED.name },
+        { text: STATUS.INVALID.viText, value: STATUS.INVALID.name },
       ],
       filterMultiple: false,
       render: status => (
@@ -187,9 +189,9 @@ const ProjectPage = ({
       title: '',
       dataIndex: '_id',
       render: (_id, record) => {
-        const isRejected = record.status.value === STATUS.REJECTED.name
+        const isPermissionValid = record.status.value === STATUS.ACCEPTED.name
         const isProjectValid = record.isValid.name === STATUS.VALID.name
-        const disableBtn = isRejected || !isProjectValid
+        const disableBtn = !isPermissionValid || !isProjectValid
         return (
           <Link
             to={disableBtn ? '#!' : `${CUSTOMER_PATH}/accepted-project/${_id}`}

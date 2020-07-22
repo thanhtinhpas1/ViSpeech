@@ -18,10 +18,15 @@ const SelectTokenForm = ({
   getProjectTokenList,
   onSelectTokenFormValuesChange,
   setCurrentTokenTypeMinutes,
+  clearGetProjectTokenState,
 }) => {
   const EMPTY = 'Trống'
   const [form] = Form.useForm()
   const [currentTokenType, setCurrentTokenType] = useState(EMPTY)
+
+  useEffect(() => {
+    return () => clearGetProjectTokenState()
+  }, [clearGetProjectTokenState])
 
   useEffect(() => {
     if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {

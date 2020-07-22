@@ -22,11 +22,11 @@ const { Option } = Select
 const AssignPermissionPage = ({
   currentUser,
   getMyProjectListObj,
-  getUserListObj,
+  getUsernameListObj,
   assignPermissionObj,
   clearAssignPermissionState,
   getMyProjects,
-  getUserList,
+  getUsernameList,
   assignPermission,
   assignPermissionSuccess,
   assignPermissionFailure,
@@ -115,8 +115,8 @@ const AssignPermissionPage = ({
     const filters = {
       isActive: ['true'],
     }
-    getUserList({ pagination: DEFAULT_PAGINATION.SIZE_100, filters })
-  }, [currentUser._id, getMyProjects, getUserList])
+    getUsernameList({ pagination: DEFAULT_PAGINATION.SIZE_100, filters })
+  }, [currentUser._id, getMyProjects, getUsernameList])
 
   const onSubmit = async values => {
     if (!currentUser._id) return
@@ -195,15 +195,17 @@ const AssignPermissionPage = ({
                 <Select
                   style={{ width: '100%' }}
                   placeholder={
-                    (getUserListObj.userList.data || []).length > 0 ? 'Chọn một tài khoản' : 'Không tìm thấy tài khoản'
+                    (getUsernameListObj.usernameList.data || []).length > 0
+                      ? 'Chọn một tài khoản'
+                      : 'Không tìm thấy tài khoản'
                   }
                 >
-                  {(getUserListObj.userList.data || [])
-                    .filter(user => user.username !== currentUser.username)
-                    .map(item => {
+                  {(getUsernameListObj.usernameList.data || [])
+                    .filter(username => username !== currentUser.username)
+                    .map(username => {
                       return (
-                        <Option key={item._id} value={item.username}>
-                          {item.username}
+                        <Option key={username} value={username}>
+                          {username}
                         </Option>
                       )
                     })}

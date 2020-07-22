@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { createOrder, createOrderSuccess, createOrderFailure, onClearCreateOrderState } from 'redux/order/order.actions'
-import { getProjectTokenList } from 'redux/token/token.actions'
+import { getProjectTokenList, onClearGetProjectTokenState } from 'redux/token/token.actions'
 import CheckoutForm from './CheckoutForm.component'
 
 const mapStateToProps = state => ({
@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearCreateOrderState: () => dispatch(onClearCreateOrderState()),
+  clearGetProjectTokenState: () => dispatch(onClearGetProjectTokenState()),
   createOrder: order => dispatch(createOrder(order)),
   createOrderSuccess: ({ order, token }) => dispatch(createOrderSuccess({ order, token })),
   createOrderFailure: message => dispatch(createOrderFailure(message)),
