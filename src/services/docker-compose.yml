@@ -1,9 +1,11 @@
 # API - VISPEECH
-version: 3
+version: "3"
 services:
   vispeech:
     build:
       context: "../server"
+    env_file:
+      - "/opt/.env"
     command: "npm run start:prod"
     restart: always
     environment:
