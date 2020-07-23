@@ -1,7 +1,7 @@
 ### BASE
 FROM node:12-alpine AS base
 
-LABEL maintainer "Vispeech <vispeech@hcmus.edu.vn>"
+LABEL maintainer="Vispeech <vispeech@hcmus.edu.vn>"
 
 # Set the working directory
 WORKDIR /user/src/app/vispeech

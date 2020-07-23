@@ -38,7 +38,7 @@ services:
   vispeech:
     build:
       context: "./src/server"
-    command: "npm start:prod"
+    command: "npm run start:prod"
     restart: always
     depends_on:
       - eventstore
@@ -58,7 +58,7 @@ services:
   vispeechui:
     build:
       context: "./src/client"
-    command: "npm start:prod"
+    command: "npm run start:prod"
     restart: always
     depends_on:
       - eventstore
@@ -72,7 +72,7 @@ services:
   vispeechrelease:
     build:
       context: "./src/release"
-    command: "npm start"
+    command: "npm run start"
     restart: always
     depends_on:
       - eventstore
