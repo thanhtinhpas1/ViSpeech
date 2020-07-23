@@ -26,7 +26,7 @@ pipeline {
         stage('delivery') {
             steps {
                 sh 'docker rm -f vispeech || true'
-                sh 'docker run --name=vispeech -d --restart=always -p 7070:7070 vispeech'
+                sh 'docker run --env-file /opt/.env --name=vispeech -d --restart=always -p 7070:7070 vispeech'
             }
         }
     }
