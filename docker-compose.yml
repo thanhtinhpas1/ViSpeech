@@ -59,7 +59,7 @@ services:
     build:
       context: "./src/client"
     command: "npm start:prod"
-    restard: always
+    restart: always
     depends_on:
       - eventstore
       - mongodb
@@ -86,7 +86,7 @@ services:
       - eventstore
       - mongodb
     #  - vispeech
-      network_mode: bridge
+    network_mode: bridge
   redis:
     build:
       context: './src/services/redis'
