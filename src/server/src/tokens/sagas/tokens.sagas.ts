@@ -82,6 +82,6 @@ export class TokensSagas {
     publishOrderUpdatedEvent = (streamId, orderDto) => {
         const event = new OrderUpdatedEvent(streamId, orderDto);
         event['eventType'] = 'OrderUpdatedEvent';
-        this.eventStore.publish(event, '$ce-order');
+        this.eventStore.publish(event, CONSTANTS.STREAM_NAME.ORDER);
     };
 }

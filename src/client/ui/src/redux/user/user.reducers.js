@@ -26,6 +26,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  getUsernameList: {
+    usernameList: { data: [], count: 0 },
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   getInfo: {
     user: {},
     isLoading: false,
@@ -204,6 +210,35 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getList: {
           ...INITIAL_STATE.getList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET USERNAME LIST
+    case UserTypes.GET_USERNAME_LIST:
+      return {
+        ...state,
+        getUsernameList: {
+          ...INITIAL_STATE.getUsernameList,
+          isLoading: true,
+        },
+      }
+    case UserTypes.GET_USERNAME_LIST_SUCCESS:
+      return {
+        ...state,
+        getUsernameList: {
+          ...INITIAL_STATE.getUsernameList,
+          isLoading: false,
+          isSuccess: true,
+          usernameList: action.payload.data,
+        },
+      }
+    case UserTypes.GET_USERNAME_LIST_FAILURE:
+      return {
+        ...state,
+        getUsernameList: {
+          ...INITIAL_STATE.getUsernameList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

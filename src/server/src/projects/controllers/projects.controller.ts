@@ -109,7 +109,7 @@ export class ProjectsController {
     @ApiOperation({tags: ['Find Project']})
     @ApiResponse({status: 200, description: 'Find Project.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
-    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.USER])
     @Get(':id')
     async findOneProject(@Param() findProjectQuery: FindProjectQuery) {
         return this.projectsService.findOne(findProjectQuery);

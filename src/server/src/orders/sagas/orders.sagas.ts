@@ -9,6 +9,7 @@ import { EventStore } from 'core/event-store/lib';
 import { AuthService } from 'auth/auth.service';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { OrderToUpgradeCreatedSuccessEvent } from 'orders/events/impl/order-to-upgrade-created.event';
+import { CONSTANTS } from 'common/constant';
 
 @Injectable()
 export class OrdersSagas {
@@ -29,7 +30,7 @@ export class OrdersSagas {
                 const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
                 const tokenCreatedEvent = new OrderedTokenCreatedEvent(streamId, tokenDto);
                 tokenCreatedEvent['eventType'] = 'OrderedTokenCreatedEvent';
-                this.eventStore.publish(tokenCreatedEvent, '$ce-token');
+                this.eventStore.publish(tokenCreatedEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };
@@ -45,7 +46,7 @@ export class OrdersSagas {
                 token.orderId = orderDto._id;
                 const tokenUpgradedEvent = new TokenUpgradedEvent(streamId, token, tokenType);
                 tokenUpgradedEvent['eventType'] = 'TokenUpgradedEvent';
-                this.eventStore.publish(tokenUpgradedEvent, '$ce-token');
+                this.eventStore.publish(tokenUpgradedEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };

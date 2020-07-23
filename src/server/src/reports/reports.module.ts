@@ -26,6 +26,7 @@ import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';
 import { ReportsSagas } from './sagas/reports.sagas';
 import { ReportsService } from './services/reports.service';
+import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -43,11 +44,11 @@ import { ReportsService } from './services/reports.service';
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$ce-report',
+            featureStreamName: CONSTANTS.STREAM_NAME.REPORT,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-report',
+                    stream: CONSTANTS.STREAM_NAME.REPORT,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
@@ -95,11 +96,12 @@ export class ReportsModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-report'});
+        const streamName = CONSTANTS.STREAM_NAME.REPORT;
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
         if (userProjection) {
             await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-report', eventNumber: 0, expectedVersion: -1});
+            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
         }
         Logger.log('Seed projection report success')
     }

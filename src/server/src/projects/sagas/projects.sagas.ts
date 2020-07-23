@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { ProjectDeletedSuccessEvent } from 'projects/events/impl/project-deleted.event';
 import { TokenDeletedByProjectIdEvent } from '../../tokens/events/impl/token-deleted-by-projectId.event';
 import { EventStore } from '../../core/event-store/lib';
+import { CONSTANTS } from 'common/constant';
 
 @Injectable()
 export class ProjectsSagas {
@@ -22,7 +23,7 @@ export class ProjectsSagas {
                 const {streamId, projectId} = event;
                 const deleteTokenEvent = new TokenDeletedByProjectIdEvent(streamId, projectId);
                 deleteTokenEvent['eventType'] = 'TokenDeletedByProjectIdEvent';
-                this.eventStore.publish(deleteTokenEvent, '$ce-token');
+                this.eventStore.publish(deleteTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };

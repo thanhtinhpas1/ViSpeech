@@ -2,17 +2,17 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
 import {
   ADMIN_PATH,
-  DEFAULT_ERR_MESSAGE,
-  DEFAULT_PAGINATION,
   STATUS,
-  TIMEOUT_MILLISECONDS,
   TOKEN_TYPE,
+  DEFAULT_PAGINATION,
+  TIMEOUT_MILLISECONDS,
+  DEFAULT_ERR_MESSAGE,
 } from 'utils/constant'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
 import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
@@ -25,26 +25,30 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PROJECT_UPDATED_SUCCESS_EVENT, PROJECT_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const ProjectDetailsPage = ({
-                              getProjectInfoObj,
-                              getProjectTokenListObj,
-                              updateInfoObj,
-                              clearUpdateProjectInfoState,
-                              getProjectInfo,
-                              getProjectTokens,
-                              updateProjectInfo,
-                              updateProjectInfoSuccess,
-                              updateProjectInfoFailure,
-                            }) => {
+  getProjectInfoObj,
+  getProjectTokenListObj,
+  updateInfoObj,
+  clearUpdateProjectInfoState,
+  clearGetProjectTokenState,
+  getProjectInfo,
+  getProjectTokens,
+  updateProjectInfo,
+  updateProjectInfoSuccess,
+  updateProjectInfoFailure,
+}) => {
   const history = useHistory()
   const { id } = useParams()
-  const [ infoModal, setInfoModal ] = useState({})
-  const [ confirmModal, setConfirmModal ] = useState({})
+  const [infoModal, setInfoModal] = useState({})
+  const [confirmModal, setConfirmModal] = useState({})
   const loadingRef = useRef(updateInfoObj.isLoading)
   loadingRef.current = updateInfoObj.isLoading
 
   useEffect(() => {
-    return () => clearUpdateProjectInfoState()
-  }, [ clearUpdateProjectInfoState ])
+    return () => {
+      clearUpdateProjectInfoState()
+      clearGetProjectTokenState()
+    }
+  }, [clearUpdateProjectInfoState, clearGetProjectTokenState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_UPDATED_SUCCESS_EVENT)
@@ -65,7 +69,7 @@ const ProjectDetailsPage = ({
 
   useEffect(() => {
     getProjectInfo(id)
-  }, [ id, getProjectInfo ])
+  }, [id, getProjectInfo])
 
   useEffect(() => {
     let timer = null
@@ -116,7 +120,7 @@ const ProjectDetailsPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [ id, updateInfoObj, getProjectInfo, closeInfoModal, updateProjectInfoFailure ])
+  }, [id, updateInfoObj, getProjectInfo, closeInfoModal, updateProjectInfoFailure])
 
   const columns = [
     {
@@ -128,11 +132,11 @@ const ProjectDetailsPage = ({
       render: value => (
         <span className="lead tnx-id">
           <div className="copy-wrap w-100">
-            <span className="copy-feedback"/>
-            <em className="fas fa-key"/>
-            <input type="text" className="copy-address" defaultValue={ value } disabled/>
-            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={ value }>
-              <em className="ti ti-files"/>
+            <span className="copy-feedback" />
+            <em className="fas fa-key" />
+            <input type="text" className="copy-address" defaultValue={value} disabled />
+            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={value}>
+              <em className="ti ti-files" />
             </button>
           </div>
         </span>
@@ -154,9 +158,9 @@ const ProjectDetailsPage = ({
       filterMultiple: false,
       render: tokenType => (
         <>
-          <span className={ `dt-type-md badge badge-outline ${ tokenType.class } badge-md` }>{ tokenType.name }</span>
-          <span className={ `dt-type-sm badge badge-sq badge-outline ${ tokenType.class } badge-md` }>
-            { tokenType.name }
+          <span className={`dt-type-md badge badge-outline ${tokenType.class} badge-md`}>{tokenType.name}</span>
+          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.class} badge-md`}>
+            {tokenType.name}
           </span>
         </>
       ),
@@ -175,9 +179,9 @@ const ProjectDetailsPage = ({
       filterMultiple: false,
       render: isValid => (
         <div className="d-flex align-items-center">
-          <div className={ `data-state ${ isValid.cssClass }` }/>
-          <span className="sub sub-s2" style={ { paddingTop: '0' } }>
-            { isValid.viText }
+          <div className={`data-state ${isValid.cssClass}`} />
+          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
+            {isValid.viText}
           </span>
         </div>
       ),
@@ -189,7 +193,7 @@ const ProjectDetailsPage = ({
       headerClassName: 'dt-amount',
       headerStyle: { textAlign: 'center' },
       className: 'dt-amount',
-      render: minutesLeft => <span className="lead">{ minutesLeft } phút</span>,
+      render: minutesLeft => <span className="lead">{minutesLeft} phút</span>,
       width: 200,
       align: 'center',
     },
@@ -198,10 +202,10 @@ const ProjectDetailsPage = ({
       dataIndex: '_id',
       render: _id => (
         <a
-          href={ `${ ADMIN_PATH }/transaction-details?tokenId=${ _id }` }
+          href={`${ADMIN_PATH}/transaction-details?tokenId=${_id}`}
           className="btn btn-just-icon btn-secondary btn-simple"
         >
-          <i className="far fa-eye"/>
+          <i className="far fa-eye" />
         </a>
       ),
       width: 60,
@@ -214,7 +218,7 @@ const ProjectDetailsPage = ({
     if (projectOwnerId) {
       getProjectTokens({ userId: projectOwnerId, projectId: id, pagination: DEFAULT_PAGINATION.SIZE_5 })
     }
-  }, [ getProjectInfoObj.project.userId, id, getProjectTokens ])
+  }, [getProjectInfoObj.project.userId, id, getProjectTokens])
 
   const getProjectTokensList = useCallback(
     ({ pagination, sortField, sortOrder, filters }) => {
@@ -230,7 +234,7 @@ const ProjectDetailsPage = ({
         })
       }
     },
-    [ getProjectInfoObj.project.userId, id, getProjectTokens ]
+    [getProjectInfoObj.project.userId, id, getProjectTokens]
   )
 
   const onSubmit = event => {
@@ -285,45 +289,45 @@ const ProjectDetailsPage = ({
       <div className="col-md-12">
         <div className="card">
           <div className="card-header d-flex justify-content-between align-items-center">
-            <h4 className="card-title">{ getProjectInfoObj.project.name }</h4>
-            <a href="#!" onClick={ history.goBack } className="btn btn-auto btn-primary d-sm-block d-none">
-              <em className="fas fa-arrow-left" style={ { marginRight: '10px' } }/>
+            <h4 className="card-title">{getProjectInfoObj.project.name}</h4>
+            <a href="#!" onClick={history.goBack} className="btn btn-auto btn-primary d-sm-block d-none">
+              <em className="fas fa-arrow-left" style={{ marginRight: '10px' }} />
               Trở lại
             </a>
-            <a href="#!" onClick={ history.goBack } className="btn btn-icon btn-primary d-sm-none">
-              <em className="fas fa-arrow-left"/>
+            <a href="#!" onClick={history.goBack} className="btn btn-icon btn-primary d-sm-none">
+              <em className="fas fa-arrow-left" />
             </a>
           </div>
           <div className="card-content">
-            <form onSubmit={ onSubmit }>
-              <div className="data-details" style={ { flexDirection: 'column' } }>
-                <div className="row d-md-flex" style={ { margin: '0px 0px' } }>
-                  <div className="fake-class" style={ { paddingRight: '10px' } }>
+            <form onSubmit={onSubmit}>
+              <div className="data-details" style={{ flexDirection: 'column' }}>
+                <div className="row d-md-flex" style={{ margin: '0px 0px' }}>
+                  <div className="fake-class" style={{ paddingRight: '10px' }}>
                     <span className="data-details-title">Tên dự án</span>
                     <span className="data-details-info">
-                      <div className="form-group label-floating is-empty" style={ { padding: '0px', margin: '0px' } }>
-                        <label className="control-label"/>
+                      <div className="form-group label-floating is-empty" style={{ padding: '0px', margin: '0px' }}>
+                        <label className="control-label" />
                         <input
                           type="text"
                           className="form-control"
                           placeholder="Tên dự án"
                           name="name"
-                          defaultValue={ getProjectInfoObj.project.name }
+                          defaultValue={getProjectInfoObj.project.name}
                         />
                       </div>
                     </span>
                   </div>
-                  <div className="fake-class" style={ { paddingRight: '10px' } }>
+                  <div className="fake-class" style={{ paddingRight: '10px' }}>
                     <span className="data-details-title">Mô tả</span>
                     <span className="data-details-info">
-                      <div className="form-group label-floating is-empty" style={ { padding: '0px', margin: '0px' } }>
-                        <label className="control-label"/>
+                      <div className="form-group label-floating is-empty" style={{ padding: '0px', margin: '0px' }}>
+                        <label className="control-label" />
                         <input
                           type="text"
                           className="form-control"
                           placeholder="Mô tả"
                           name="description"
-                          defaultValue={ getProjectInfoObj.project.description }
+                          defaultValue={getProjectInfoObj.project.description}
                         />
                       </div>
                     </span>
@@ -331,40 +335,40 @@ const ProjectDetailsPage = ({
                   <div className="fake-class">
                     <span className="data-details-title">Thời gian tạo</span>
                     <span className="data-details-info">
-                      { moment(getProjectInfoObj.project.createdDate).format('DD/MM/YYYY hh:mm:ss') }
+                      {moment(getProjectInfoObj.project.createdDate).format('DD/MM/YYYY hh:mm:ss')}
                     </span>
                   </div>
                   <div className="fake-class">
                     <span className="data-details-title">Thời gian cập nhật</span>
                     <span className="data-details-info">
-                      { moment(getProjectInfoObj.project.updatedDate).format('DD/MM/YYYY hh:mm:ss') }
+                      {moment(getProjectInfoObj.project.updatedDate).format('DD/MM/YYYY hh:mm:ss')}
                     </span>
                   </div>
                 </div>
 
-                <div className="row" style={ { display: 'flex', justifyContent: 'flex-end', margin: '0px 0px' } }>
+                <div className="row" style={{ display: 'flex', justifyContent: 'flex-end', margin: '0px 0px' }}>
                   <button type="submit" className="btn btn-primary">
                     Cập nhật
                   </button>
                 </div>
               </div>
             </form>
-            <div className="gaps-5x"/>
+            <div className="gaps-5x" />
             <div className="material-datatables">
               <AntdTable
-                dataObj={ getProjectTokenListObj.projectTokenList }
-                columns={ columns }
-                fetchData={ getProjectTokensList }
-                isLoading={ getProjectTokenListObj.isLoading }
-                pageSize={ DEFAULT_PAGINATION.SIZE_5.pageSize }
-                scrollY={ 500 }
+                dataObj={getProjectTokenListObj.projectTokenList}
+                columns={columns}
+                fetchData={getProjectTokensList}
+                isLoading={getProjectTokenListObj.isLoading}
+                pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
+                scrollY={500}
               />
             </div>
           </div>
         </div>
       </div>
-      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
-      { confirmModal.visible && <ConfirmModal confirmModal={ confirmModal }/> }
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
+      {confirmModal.visible && <ConfirmModal confirmModal={confirmModal} />}
     </div>
   )
 }

@@ -44,6 +44,7 @@ import { QueryHandlers } from './queries/handler';
 import { PermissionRepository } from './repository/permission.repository';
 import { PermissionsSagas } from './sagas/permissions.sagas';
 import { PermissionsService } from './services/permissions.service';
+import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -60,11 +61,11 @@ import { PermissionsService } from './services/permissions.service';
         forwardRef(() => AuthModule),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$ce-permission',
+            featureStreamName: CONSTANTS.STREAM_NAME.PERMISSION,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-permission',
+                    stream: CONSTANTS.STREAM_NAME.PERMISSION,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
@@ -107,11 +108,12 @@ export class PermissionsModule implements OnModuleInit {
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-permission'});
+        const streamName = CONSTANTS.STREAM_NAME.PERMISSION;
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
         if (userProjection) {
             await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-permission', eventNumber: 0, expectedVersion: -1});
+            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
         }
         Logger.log('Seed projection permission success')
     }

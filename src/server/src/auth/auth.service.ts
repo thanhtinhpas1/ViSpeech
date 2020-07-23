@@ -20,7 +20,7 @@ export class AuthService {
      * Function validate with local strategy
      */
     async validateUser(username: string, password: string): Promise<any> {
-        const user = await this.userRepository.findOne({ username });
+        const user = await this.userRepository.findOne({ username, isActive: true });
         if (user && Utils.comparePassword(password, user.password)) {
             const { password, ...result } = user;
             return result;
@@ -29,7 +29,7 @@ export class AuthService {
     }
 
     async validateUserId(userId: string) {
-        let user = await this.userRepository.findOne({ _id: userId });
+        let user = await this.userRepository.findOne({ _id: userId, isActive: true });
         user = user && Utils.removePropertyFromObject(user, 'password');
         return user || null;
     }

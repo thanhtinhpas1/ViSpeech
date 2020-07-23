@@ -70,8 +70,8 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
     xAxis: {
       label: {
         visible: true,
-        autoHide: false,
-        autoRotate: true,
+        autoHide: true,
+        autoRotate: false,
         style: DEFAULT_STYLE,
       },
     },

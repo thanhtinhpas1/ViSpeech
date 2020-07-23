@@ -1,12 +1,12 @@
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { Logger } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { ProjectDto } from "projects/dtos/projects.dto";
-import { getMongoRepository, Repository } from "typeorm";
-import { GetAcceptedProjectsByUserIdQuery } from "../impl/get-accepted-projects-by-userId";
-import { PermissionDto } from "permissions/dtos/permissions.dto";
-import { UserDto } from "users/dtos/users.dto";
-import { Utils } from "utils";
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProjectDto } from 'projects/dtos/projects.dto';
+import { getMongoRepository, Repository } from 'typeorm';
+import { GetAcceptedProjectsByUserIdQuery } from '../impl/get-accepted-projects-by-userId';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { UserDto } from 'users/dtos/users.dto';
+import { Utils } from 'utils';
 
 @QueryHandler(GetAcceptedProjectsByUserIdQuery)
 export class GetAcceptedProjectsByUserIdHandler
@@ -22,7 +22,7 @@ export class GetAcceptedProjectsByUserIdHandler
     }
 
     async execute(query: GetAcceptedProjectsByUserIdQuery): Promise<any> {
-        Logger.log("Async GetAcceptedProjectsByUserIdQuery...", "GetAcceptedProjectsByUserIdQuery");
+        Logger.log('Async GetAcceptedProjectsByUserIdQuery...', 'GetAcceptedProjectsByUserIdQuery');
         const {userId, offset, limit, filters, sort} = query;
         let permissions = [];
         let result = [];
@@ -81,7 +81,7 @@ export class GetAcceptedProjectsByUserIdHandler
             const count = await getMongoRepository(PermissionDto).count(findOptions.where)
             return {data: result, count};
         } catch (error) {
-            Logger.error(error.message, "", "GetAcceptedProjectsByUserIdQuery");
+            Logger.error(error.message, '', 'GetAcceptedProjectsByUserIdQuery');
         }
     }
 }

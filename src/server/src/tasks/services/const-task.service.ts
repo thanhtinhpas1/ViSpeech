@@ -59,9 +59,8 @@ export class ConstTaskService {
             currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report day from ${previousDate} to ${currentDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(previousDate, currentDate, timeType, taskType);
 
             const taskDto = this.generateTaskDto(taskType, PreviousRunStatus.SUCCESS, cronTime, '');
             this.taskRepository.save(taskDto);
@@ -87,9 +86,8 @@ export class ConstTaskService {
             currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report week from ${previousDate} to ${currentDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(previousDate, currentDate, timeType, taskType);
 
             const taskDto = this.generateTaskDto(taskType, PreviousRunStatus.SUCCESS, cronTime, '');
             this.taskRepository.save(taskDto);
@@ -115,9 +113,8 @@ export class ConstTaskService {
             currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report month from ${previousDate} to ${currentDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(previousDate, currentDate, timeType, taskType);
 
             const taskDto = this.generateTaskDto(taskType, PreviousRunStatus.SUCCESS, cronTime, '');
             this.taskRepository.save(taskDto);
@@ -143,9 +140,8 @@ export class ConstTaskService {
             currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report quarter from ${previousDate} to ${currentDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(previousDate, currentDate, timeType, taskType);
 
             const taskDto = this.generateTaskDto(taskType, PreviousRunStatus.SUCCESS, cronTime, '');
             this.taskRepository.save(taskDto);
@@ -171,9 +167,8 @@ export class ConstTaskService {
             currentDate.setSeconds(0);
             const previousDate = CronUtils.previousDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report year from ${previousDate} to ${currentDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(previousDate, currentDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(previousDate, currentDate, timeType, taskType);
 
             const taskDto = this.generateTaskDto(taskType, PreviousRunStatus.SUCCESS, cronTime, '');
             this.taskRepository.save(taskDto);
@@ -193,9 +188,8 @@ export class ConstTaskService {
             const currentDate = new Date(year, month, date);
             const nextDate = CronUtils.nextDateOfCron(cronTime, currentDate);
             this.logger.log(`Generate report day from ${currentDate} to ${nextDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(currentDate, nextDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(currentDate, nextDate, timeType, taskType);
         } catch (error) {
             this.logger.error('Something went wrong when generating report day', error.message, 'ConstTaskService');
         }
@@ -212,9 +206,8 @@ export class ConstTaskService {
             const firstDateOfWeek = ReportUtils.firstDateOfWeek(currentWeek, year);
             const nextDate = CronUtils.nextDateOfCron(cronTime, firstDateOfWeek);
             this.logger.log(`Generate report week from ${firstDateOfWeek} to ${nextDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(firstDateOfWeek, nextDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(firstDateOfWeek, nextDate, timeType, taskType);
         } catch (error) {
             this.logger.error('Something went wrong when generating report week', error.message, 'ConstTaskService');
         }
@@ -229,9 +222,8 @@ export class ConstTaskService {
             const firstDateOfMonth = ReportUtils.firstDateOfMonth(month, year);
             const nextDate = CronUtils.nextDateOfCron(cronTime, firstDateOfMonth);
             this.logger.log(`Generate report month from ${firstDateOfMonth} to ${nextDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(firstDateOfMonth, nextDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(firstDateOfMonth, nextDate, timeType, taskType);
         } catch (error) {
             this.logger.error('Something went wrong when generating report month', error.message, 'ConstTaskService');
         }
@@ -247,9 +239,8 @@ export class ConstTaskService {
             const firstDateOfQuarter = ReportUtils.firstDateOfQuarter(currentQuarter, year);
             const nextDate = CronUtils.nextDateOfCron(cronTime, firstDateOfQuarter);
             this.logger.log(`Generate report quarter from ${firstDateOfQuarter} to ${nextDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(firstDateOfQuarter, nextDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(firstDateOfQuarter, nextDate, timeType, taskType);
         } catch (error) {
             this.logger.error('Something went wrong when generating report quarter', error.message, 'ConstTaskService');
         }
@@ -264,9 +255,8 @@ export class ConstTaskService {
             const firstDateOfYear = ReportUtils.firstDateOfYear(year);
             const nextDate = CronUtils.nextDateOfCron(cronTime, firstDateOfYear);
             this.logger.log(`Generate report year from ${firstDateOfYear} to ${nextDate}`, taskType);
-            const aggregateMatchDates = CronUtils.aggregateMatchDates(firstDateOfYear, nextDate);
 
-            this.generateReports(aggregateMatchDates, timeType, taskType);
+            this.generateReports(firstDateOfYear, nextDate, timeType, taskType);
         } catch (error) {
             this.logger.error('Something went wrong when generating report year', error.message, 'ConstTaskService');
         }
@@ -280,21 +270,21 @@ export class ConstTaskService {
         this.taskGenerateReportForYearImmediately(year);
     }
 
-    async generateReports(aggregateMatchDates, timeType, taskType) {
+    async generateReports(fromDate, toDate, timeType, taskType) {
         // report for userId, tokenId
-        await this.createReports(CONSTANTS.STATISTICS_TYPE.TOKEN, aggregateMatchDates, timeType, taskType);
+        await this.createReports(CONSTANTS.STATISTICS_TYPE.TOKEN, fromDate, toDate, timeType, taskType);
 
         // report for userId, projectId
-        await this.createReports(CONSTANTS.STATISTICS_TYPE.PROJECT, aggregateMatchDates, timeType, taskType);
+        await this.createReports(CONSTANTS.STATISTICS_TYPE.PROJECT, fromDate, toDate, timeType, taskType);
 
         // report for userId, tokenTypeId
-        await this.createReports(CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, aggregateMatchDates, timeType, taskType);
+        await this.createReports(CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, fromDate, toDate, timeType, taskType);
 
         // report for userId
-        await this.createReportsForAdmin(CONSTANTS.STATISTICS_TYPE.USER, aggregateMatchDates, timeType, taskType);
+        await this.createReportsForAdmin(CONSTANTS.STATISTICS_TYPE.USER, fromDate, toDate, timeType, taskType);
 
         // report for tokenTypeId
-        await this.createReportsForAdmin(CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, aggregateMatchDates, timeType, taskType);
+        await this.createReportsForAdmin(CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, fromDate, toDate, timeType, taskType);
     }
 
     generateTaskDto(name: string, previousRunStatus: PreviousRunStatus, cron: string, errorLog?: string,): TaskDto {
@@ -313,7 +303,9 @@ export class ConstTaskService {
     }
 
     // report for users and tokenTypes
-    async createReportsForAdmin(reportType: string, aggregateMatchDates, timeType: string, taskType: string) {
+    async createReportsForAdmin(reportType: string, fromDate: Date, toDate: Date, timeType: string, taskType: string) {
+        const aggregateMatchDates = CronUtils.aggregateMatchDates(fromDate, toDate);
+
         if (![CONSTANTS.STATISTICS_TYPE.USER, CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE].includes(reportType)) {
             return;
         }
@@ -325,7 +317,7 @@ export class ConstTaskService {
         aggregateGroup.$group._id[`${reportType}Id`] = `$${reportType}Id`
 
         // only create report for successful requests
-        aggregateMatchDates.$match.status = CONSTANTS.STATUS.SUCCESS;
+        aggregateMatchDates.$match['status'] = CONSTANTS.STATUS.SUCCESS;
         const groupedRequests = await getMongoRepository(RequestDto).aggregate([
             aggregateMatchDates,
             aggregateGroup
@@ -341,7 +333,9 @@ export class ConstTaskService {
         }
     }
 
-    async createReports(reportType: string, aggregateMatchDates, timeType: string, taskType: string) {
+    async createReports(reportType: string, fromDate: Date, toDate: Date, timeType: string, taskType: string) {
+        const aggregateMatchDates = CronUtils.aggregateMatchDates(fromDate, toDate);
+
         if (reportType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
             await this.deleteRelatedReports(aggregateMatchDates, timeType, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE);
         } else {
@@ -354,7 +348,11 @@ export class ConstTaskService {
         aggregateGroup.$group._id[`${reportType}Id`] = `$${reportType}Id`
 
         // only create report for successful requests
-        aggregateMatchDates.$match.status = CONSTANTS.STATUS.SUCCESS;
+        aggregateMatchDates.$match['status'] = CONSTANTS.STATUS.SUCCESS;
+        // do not create report for requests that have projectId='' (free token)
+        if (reportType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
+            aggregateMatchDates.$match['projectId'] = { $ne: ''};
+        }
         const groupedRequests = await getMongoRepository(RequestDto).aggregate([
             aggregateMatchDates,
             aggregateGroup

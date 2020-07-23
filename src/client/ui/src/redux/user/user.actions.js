@@ -203,6 +203,22 @@ export const getUserListFailure = message => ({
   payload: message,
 })
 
+// get username list
+export const getUsernameList = filterConditions => ({
+  type: UserTypes.GET_USERNAME_LIST,
+  payload: filterConditions,
+})
+
+export const getUsernameListSuccess = data => ({
+  type: UserTypes.GET_USERNAME_LIST_SUCCESS,
+  payload: { data },
+})
+
+export const getUsernameListFailure = message => ({
+  type: UserTypes.GET_USERNAME_LIST_FAILURE,
+  payload: message,
+})
+
 // get user info
 export const getUserInfo = id => ({
   type: UserTypes.GET_USER_INFO,

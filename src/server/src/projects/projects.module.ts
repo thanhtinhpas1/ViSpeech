@@ -28,6 +28,7 @@ import { QueryHandlers } from './queries/handler';
 import { ProjectRepository } from './repository/project.repository';
 import { ProjectsSagas } from './sagas/projects.sagas';
 import { ProjectsService } from './services/projects.service';
+import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -44,11 +45,11 @@ import { ProjectsService } from './services/projects.service';
         forwardRef(() => AuthModule),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$ce-project',
+            featureStreamName: CONSTANTS.STREAM_NAME.PROJECT,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-project',
+                    stream: CONSTANTS.STREAM_NAME.PROJECT,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 }
@@ -95,11 +96,12 @@ export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName: '$ce-project' });
+        const streamName = CONSTANTS.STREAM_NAME.PROJECT;
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (userProjection) {
             await getMongoRepository(ProjectionDto).save({ ...userProjection, expectedVersion: userProjection.eventNumber });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName: '$ce-project', eventNumber: 0, expectedVersion: 0 });
+            await getMongoRepository(ProjectionDto).save({ streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
         }
         Logger.log('Seed projection project success');
     }

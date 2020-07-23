@@ -27,6 +27,7 @@ import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/use
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { UsersService } from '../services/users.service';
 import { UserUtils } from 'utils/user.util';
+import { GetUsernamesQuery } from 'users/queries/impl/get-usernames.query';
 
 @Controller('users')
 @ApiTags('Users')
@@ -145,27 +146,28 @@ export class UsersController {
         return this.usersService.verifyEmail(streamId, emailToken);
     }
 
-    /* Find User */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Find User']})
-    @ApiResponse({status: 200, description: 'Find User.'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
-    @Get(':id')
-    async findOneUser(@Param() findUserQuery: FindUserQuery) {
-        return await this.usersService.findOne(findUserQuery);
-    }
-
     /* List Users */
 
     /*--------------------------------------------*/
     @ApiOperation({tags: ['List Users']})
     @ApiResponse({status: 200, description: 'List Users.'})
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async getUsers(@Query() getUsersQuery: GetUsersQuery) {
         return this.usersService.getUsers(getUsersQuery);
+    }
+
+    /* Get Usernames */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Get Usernames']})
+    @ApiResponse({status: 200, description: 'Get Usernames.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Get('usernames')
+    async getUsernames(@Query() getUsernamesQuery: GetUsernamesQuery) {
+        return this.usersService.getUsernames(getUsernamesQuery);
     }
 
     /* Get Users assignee by project id */
@@ -176,5 +178,16 @@ export class UsersController {
     @Get('assignees/:projectId')
     async getProjectAssignees(@Param() query: GetProjectAssigneesQuery) {
         return await this.usersService.getProjectAssignees(query);
+    }
+
+    /* Find User */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Find User']})
+    @ApiResponse({status: 200, description: 'Find User.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
+    @Get(':id')
+    async findOneUser(@Param() findUserQuery: FindUserQuery) {
+        return await this.usersService.findOne(findUserQuery);
     }
 }

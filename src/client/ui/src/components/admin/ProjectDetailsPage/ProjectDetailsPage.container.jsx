@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getProjectTokenList } from 'redux/token/token.actions'
+import { getProjectTokenList, onClearGetProjectTokenState } from 'redux/token/token.actions'
 import {
   getProjectInfo,
   onClearUpdateProjectInfoState,
@@ -18,6 +18,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearUpdateProjectInfoState: () => dispatch(onClearUpdateProjectInfoState()),
+  clearGetProjectTokenState: () => dispatch(onClearGetProjectTokenState()),
   getProjectInfo: projectId => dispatch(getProjectInfo(projectId)),
   getProjectTokens: ({ userId, projectId, pagination, sortField, sortOrder, filters }) =>
     dispatch(getProjectTokenList({ userId, projectId, pagination, sortField, sortOrder, filters })),

@@ -4,10 +4,10 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button, Form, Select } from 'antd'
-import { DEFAULT_ERR_MESSAGE, DEFAULT_PAGINATION, PERMISSIONS, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import { Form, Select, Button } from 'antd'
+import { PERMISSIONS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
 import Utils from 'utils'
 import SocketService from 'services/socket.service'
 import PermissionService from 'services/permission.service'
@@ -20,21 +20,21 @@ const { PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, PERMISSION_ASSIGN_EMAIL_SENT
 const { Option } = Select
 
 const AssignPermissionPage = ({
-                                currentUser,
-                                getMyProjectListObj,
-                                getUserListObj,
-                                assignPermissionObj,
-                                clearAssignPermissionState,
-                                getMyProjects,
-                                getUserList,
-                                assignPermission,
-                                assignPermissionSuccess,
-                                assignPermissionFailure,
-                              }) => {
+  currentUser,
+  getMyProjectListObj,
+  getUsernameListObj,
+  assignPermissionObj,
+  clearAssignPermissionState,
+  getMyProjects,
+  getUsernameList,
+  assignPermission,
+  assignPermissionSuccess,
+  assignPermissionFailure,
+}) => {
   const history = useHistory()
   const query = Utils.useQuery()
-  const [ form ] = Form.useForm()
-  const [ infoModal, setInfoModal ] = useState({})
+  const [form] = Form.useForm()
+  const [infoModal, setInfoModal] = useState({})
   const loadingRef = useRef(assignPermissionObj.isLoading)
   loadingRef.current = assignPermissionObj.isLoading
 
@@ -52,7 +52,7 @@ const AssignPermissionPage = ({
 
   useEffect(() => {
     return () => clearAssignPermissionState()
-  }, [ clearAssignPermissionState ])
+  }, [clearAssignPermissionState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT)
@@ -106,17 +106,17 @@ const AssignPermissionPage = ({
       }
     }
     return () => clearTimeout(timer)
-  }, [ assignPermissionObj, closeInfoModal, assignPermissionFailure ])
+  }, [assignPermissionObj, closeInfoModal, assignPermissionFailure])
 
   useEffect(() => {
     if (currentUser._id) {
       getMyProjects({ userId: currentUser._id })
     }
     const filters = {
-      isActive: [ 'true' ],
+      isActive: ['true'],
     }
-    getUserList({ pagination: DEFAULT_PAGINATION.SIZE_100, filters })
-  }, [ currentUser._id, getMyProjects, getUserList ])
+    getUsernameList({ pagination: DEFAULT_PAGINATION.SIZE_100, filters })
+  }, [currentUser._id, getMyProjects, getUsernameList])
 
   const onSubmit = async values => {
     if (!currentUser._id) return
@@ -127,7 +127,7 @@ const AssignPermissionPage = ({
     const permission = {
       assigneeUsername: username.trim(),
       projectId,
-      permissions: [ PERMISSIONS.CSR_USER ],
+      permissions: [PERMISSIONS.CSR_USER],
       assignerId: userId,
     }
 
@@ -164,76 +164,78 @@ const AssignPermissionPage = ({
           <div className="card-innr card-innr-fix">
             <div className="card-head d-flex justify-content-between align-items-center">
               <h4 className="card-title mb-0">Mời tham gia dự án</h4>
-              <a href="#!" onClick={ history.goBack } className="btn btn-auto btn-primary d-sm-block d-none">
-                <em className="fas fa-arrow-left" style={ { marginRight: '10px' } }/>
+              <a href="#!" onClick={history.goBack} className="btn btn-auto btn-primary d-sm-block d-none">
+                <em className="fas fa-arrow-left" style={{ marginRight: '10px' }} />
                 Trở lại
               </a>
-              <a href="#!" onClick={ history.goBack } className="btn btn-icon btn-primary d-sm-none">
-                <em className="fas fa-arrow-left"/>
+              <a href="#!" onClick={history.goBack} className="btn btn-icon btn-primary d-sm-none">
+                <em className="fas fa-arrow-left" />
               </a>
             </div>
-            <div className="gaps-2x"/>
+            <div className="gaps-2x" />
             <Form
-              form={ form }
-              onFinish={ onSubmit }
-              initialValues={ {
+              form={form}
+              onFinish={onSubmit}
+              initialValues={{
                 projectId: query.get('projectId'),
-              } }
+              }}
             >
               <Form.Item
-                { ...formItemLayout }
+                {...formItemLayout}
                 name="username"
                 label="Tên tài khoản"
                 hasFeedback
-                rules={ [
+                rules={[
                   {
                     required: true,
                     message: 'Vui lòng chọn một tài khoản.',
                   },
-                ] }
+                ]}
               >
                 <Select
-                  style={ { width: '100%' } }
+                  style={{ width: '100%' }}
                   placeholder={
-                    (getUserListObj.userList.data || []).length > 0 ? 'Chọn một tài khoản' : 'Không tìm thấy tài khoản'
+                    (getUsernameListObj.usernameList.data || []).length > 0
+                      ? 'Chọn một tài khoản'
+                      : 'Không tìm thấy tài khoản'
                   }
                 >
-                  { (getUserListObj.userList.data || [])
-                    .filter(user => user.username !== currentUser.username)
-                    .map(item => {
+                  {(getUsernameListObj.usernameList.data || [])
+                    .filter(username => username !== currentUser.username)
+                    .map(username => {
                       return (
-                        <Option key={ item._id } value={ item.username }>
-                          { item.username }
+                        <Option key={username} value={username}>
+                          {username}
                         </Option>
                       )
-                    }) }
+                    })}
                 </Select>
               </Form.Item>
               <Form.Item
-                { ...formItemLayout }
+                {...formItemLayout}
                 name="projectId"
                 label="Dự án"
-                rules={ [ { required: true, message: 'Vui lòng chọn một dự án.' } ] }
+                rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}
               >
                 <Select
-                  style={ { width: '100%' } }
+                  style={{ width: '100%' }}
                   placeholder={
                     (getMyProjectListObj.myProjectList.data || []).length > 0
                       ? 'Chọn một dự án'
                       : 'Không tìm thấy dự án'
                   }
                 >
-                  { (getMyProjectListObj.myProjectList.data || []).map(item => {
+                  {(getMyProjectListObj.myProjectList.data || []).map(item => {
                     return (
-                      <Option key={ item._id } value={ item._id }>
-                        { item.name }
+                      <Option key={item._id} value={item._id}>
+                        {item.name}
                       </Option>
                     )
-                  }) }
+                  })}
                 </Select>
               </Form.Item>
-              <Form.Item { ...tailLayout }>
-                <Button htmlType="submit" loading={ assignPermissionObj.isLoading } type="primary" size="middle">
+              <Form.Item {...tailLayout}>
+                <Button htmlType="submit" loading={assignPermissionObj.isLoading} type="primary" size="middle">
                   Mời
                 </Button>
               </Form.Item>
@@ -241,7 +243,7 @@ const AssignPermissionPage = ({
           </div>
         </div>
       </div>
-      { infoModal.visible && <InfoModal infoModal={ infoModal }/> }
+      {infoModal.visible && <InfoModal infoModal={infoModal} />}
     </div>
   )
 }

@@ -28,9 +28,12 @@ export class FindRequestsByUserIdHandler implements IQueryHandler<FindRequestsBy
 
         try {
             const findOptions = {
-                where: {userId},
-                order: {}
+                where: {
+                    $or: [{ userId }, { assigneeId: userId }],
+                },
+                order: {},
             }
+
             if (filters) {
                 if (filters['tokenName']) {
                     const tokens = await this.tokenRepository.find({where: {name: new RegExp(filters['tokenName'], 'i')}});

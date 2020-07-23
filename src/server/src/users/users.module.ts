@@ -42,11 +42,11 @@ import { UsersService } from './services/users.service';
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$ce-user',
+            featureStreamName: CONSTANTS.STREAM_NAME.USER,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-user',
+                    stream: CONSTANTS.STREAM_NAME.USER,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 }
@@ -81,8 +81,6 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
-        private readonly mongoStore: MongoStore,
-        @InjectRepository(UserDto) private readonly repository: Repository<UserDto>,
     ) {
     }
 
@@ -104,11 +102,12 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-user'});
+        const streamName = CONSTANTS.STREAM_NAME.USER;
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
         if (userProjection) {
             await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-user', eventNumber: 0, expectedVersion: -1});
+            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
         }
         Logger.log('Seed projection user success')
     }

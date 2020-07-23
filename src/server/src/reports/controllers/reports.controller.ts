@@ -75,17 +75,6 @@ export class ReportsController {
         return this.reportsService.findReports(getReportsQuery);
     }
 
-    /* Find Report */
-
-    /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Report']})
-    @ApiResponse({status: 200, description: 'Get Report.'})
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
-    @Get(':id')
-    async findOneReport(@Param() findReportQuery: FindReportQuery) {
-        return this.reportsService.findOne(findReportQuery);
-    }
-
     /* Get Statistics By Id */
 
     /*--------------------------------------------*/
@@ -162,5 +151,16 @@ export class ReportsController {
         const {timeType} = param;
         query.timeType = timeType;
         return this.reportsService.getTotalStatistics(query);
+    }
+
+    /* Find Report */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Get Report']})
+    @ApiResponse({status: 200, description: 'Get Report.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
+    @Get(':id')
+    async findOneReport(@Param() findReportQuery: FindReportQuery) {
+        return this.reportsService.findOne(findReportQuery);
     }
 }

@@ -32,6 +32,7 @@ import { QueryHandlers } from './queries/handler';
 import { OrderRepository } from './repository/order.repository';
 import { OrdersSagas } from './sagas/orders.sagas';
 import { OrdersService } from './services/orders.service';
+import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -45,11 +46,11 @@ import { OrdersService } from './services/orders.service';
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$ce-order',
+            featureStreamName: CONSTANTS.STREAM_NAME.ORDER,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$ce-order',
+                    stream: CONSTANTS.STREAM_NAME.ORDER,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
@@ -98,11 +99,12 @@ export class OrdersModule implements OnModuleInit, OnModuleDestroy {
     }
 
     async seedProjection() {
-        const orderProjection = await getMongoRepository(ProjectionDto).findOne({streamName: '$ce-order'});
+        const streamName = CONSTANTS.STREAM_NAME.ORDER;
+        const orderProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
         if (orderProjection) {
             await getMongoRepository(ProjectionDto).save({...orderProjection, expectedVersion: orderProjection.eventNumber});
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName: '$ce-order', eventNumber: 0, expectedVersion: -1});
+            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
         }
         Logger.log('Seed projection order success')
     }
