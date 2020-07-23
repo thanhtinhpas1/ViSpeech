@@ -110,6 +110,13 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
             'on'
           )
           console.log(`${link.id} is loaded`)
+          // load link
+          link = await loadLink(
+            `${process.env.PUBLIC_URL}/assets/css/customer/quill-editor.css`,
+            'customer/quill-editor.css',
+            'on'
+          )
+          console.log(`${link.id} is loaded`)
           setIsCssLoaded(true)
           // if (isCssLoaded) {
           // load script
@@ -325,6 +332,14 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         'customer-style-emaila5f5.css',
         action
       )
+      console.log(`${link.id} is ${status}`)
+
+      link = await loadLink(
+        `${process.env.PUBLIC_URL}/assets/css/customer/quill-editor.css`,
+        'customer/quill-editor.css',
+        action
+      )
+      console.log(`${link.id} is ${status}`)
 
       link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/customer/style-2.css`, 'customer-style-2.css', action)
       console.log(`${link.id} is ${status}`)

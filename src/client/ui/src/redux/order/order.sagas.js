@@ -26,7 +26,7 @@ const formatOrderList = orderList => {
         name: TOKEN_TYPE[order.tokenType?.name]?.viText,
         class: TOKEN_TYPE[order.tokenType?.name]?.cssClass,
       },
-      tokenName: order.token.name,
+      tokenName: order.token.name || order.tokenName,
       token: order.token.value,
     }
   }

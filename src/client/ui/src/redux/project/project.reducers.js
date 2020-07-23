@@ -25,6 +25,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  getProjectNameList: {
+    projectNameList: { data: [], count: 0 },
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   getInfo: {
     project: {},
     isLoading: false,
@@ -167,6 +173,35 @@ const projectReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getAcceptedProjectList: {
           ...INITIAL_STATE.getAcceptedProjectList,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET PROJECT NAME LIST
+    case ProjectTypes.GET_PROJECT_NAME_LIST:
+      return {
+        ...state,
+        getProjectNameList: {
+          ...INITIAL_STATE.getProjectNameList,
+          isLoading: true,
+        },
+      }
+    case ProjectTypes.GET_PROJECT_NAME_LIST_SUCCESS:
+      return {
+        ...state,
+        getProjectNameList: {
+          ...INITIAL_STATE.getProjectNameList,
+          isLoading: false,
+          isSuccess: true,
+          projectNameList: action.payload.data,
+        },
+      }
+    case ProjectTypes.GET_PROJECT_NAME_LIST_FAILURE:
+      return {
+        ...state,
+        getProjectNameList: {
+          ...INITIAL_STATE.getProjectNameList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

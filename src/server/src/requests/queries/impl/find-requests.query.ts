@@ -34,4 +34,8 @@ export class FindRequestsQuery {
     @Type(() => BaseSortClass)
     @IsObject()
     sort: BaseSortClass;
+
+    @IsOptional()
+    @IsObject()
+    advancedFilters: Object;
 }

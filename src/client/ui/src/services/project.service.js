@@ -153,6 +153,44 @@ export default class ProjectService {
       })
   }
 
+  static getProjectNameList = filterConditions => {
+    const { pagination, sortField, sortOrder, filters } = filterConditions
+    const { current, pageSize } = pagination || DEFAULT_PAGINATION.SIZE_100
+    const offset = (current - 1) * pageSize || 0
+    const limit = pageSize || 0
+
+    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    query += Utils.buildSortQuery(sortField, sortOrder)
+    query += Utils.buildFiltersQuery(filters)
+    query = Utils.trimByChar(query, '&')
+
+    const api = `${apiUrl}/projects/names?${query}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(DEFAULT_ERR_MESSAGE)
+        }
+        return result
+      })
+      .catch(err => {
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
+
   static getProjectInfo = async id => {
     const api = `${apiUrl}/projects/${id}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)

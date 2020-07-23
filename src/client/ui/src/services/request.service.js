@@ -5,7 +5,7 @@ import { apiUrl } from './api-url'
 
 export default class RequestService {
   static getRequestList = filterConditions => {
-    const { pagination, sortField, sortOrder, filters } = filterConditions
+    const { pagination, sortField, sortOrder, filters, advancedFilters } = filterConditions
     const { current, pageSize } = pagination
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
@@ -13,6 +13,7 @@ export default class RequestService {
     let query = `${Utils.parameterizeObject({ offset, limit })}`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
+    query += Utils.buildFiltersQuery(advancedFilters, 'advancedFilters')
     query = Utils.trimByChar(query, '&')
 
     const api = `${apiUrl}/requests?${query}`

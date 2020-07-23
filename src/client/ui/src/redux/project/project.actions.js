@@ -52,6 +52,22 @@ export const getAcceptedProjectListFailure = message => ({
   payload: message,
 })
 
+// get project names
+export const getProjectNameList = filterConditions => ({
+  type: ProjectTypes.GET_PROJECT_NAME_LIST,
+  payload: filterConditions,
+})
+
+export const getProjectNameListSuccess = data => ({
+  type: ProjectTypes.GET_PROJECT_NAME_LIST_SUCCESS,
+  payload: { data },
+})
+
+export const getProjectNameListFailure = message => ({
+  type: ProjectTypes.GET_PROJECT_NAME_LIST_FAILURE,
+  payload: message,
+})
+
 // create project
 export const onClearCreateProjectState = () => ({
   type: ProjectTypes.CLEAR_CREATE_PROJECT_STATE,

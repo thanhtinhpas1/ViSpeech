@@ -67,6 +67,7 @@ const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUser
       headerClassName: 'dt-amount',
       className: 'dt-amount',
       sorter: true,
+      defaultSortOrder: 'descend',
       render: createdDate => (
         <span className="sub sub-date" style={{ fontSize: '13px' }}>
           {moment(createdDate).format('DD/MM/YYYY HH:mm')}

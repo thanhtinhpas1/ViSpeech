@@ -201,11 +201,11 @@ const AssignPermissionPage = ({
                   }
                 >
                   {(getUsernameListObj.usernameList.data || [])
-                    .filter(username => username !== currentUser.username)
-                    .map(username => {
+                    .filter(user => user.username !== currentUser.username)
+                    .map(user => {
                       return (
-                        <Option key={username} value={username}>
-                          {username}
+                        <Option key={user._id} value={user.username}>
+                          {user.username}
                         </Option>
                       )
                     })}

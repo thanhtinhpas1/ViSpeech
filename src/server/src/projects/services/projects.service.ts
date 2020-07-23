@@ -8,6 +8,7 @@ import { GetProjectsQuery } from "projects/queries/impl/get-projects.query";
 import { FindProjectQuery } from "projects/queries/impl/find-project.query";
 import { GetProjectsByUserIdQuery } from "projects/queries/impl/get-projects-by-userId";
 import { GetAcceptedProjectsByUserIdQuery } from "projects/queries/impl/get-accepted-projects-by-userId";
+import { GetProjectNamesQuery } from "projects/queries/impl/get-project-names.query";
 
 @Injectable()
 export class ProjectsService {
@@ -32,6 +33,12 @@ export class ProjectsService {
     async getProjects(getProjectsQuery: GetProjectsQuery) {
         const query = new GetProjectsQuery();
         Object.assign(query, getProjectsQuery);
+        return await this.queryBus.execute(query);
+    }
+
+    async getProjectNames(getProjectNamesQuery: GetProjectNamesQuery) {
+        const query = new GetProjectNamesQuery();
+        Object.assign(query, getProjectNamesQuery);
         return await this.queryBus.execute(query);
     }
 

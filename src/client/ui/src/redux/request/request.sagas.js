@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
 import RequestService from 'services/request.service'
-import { STATUS } from 'utils/constant'
+import { STATUS, TOKEN_TYPE } from 'utils/constant'
 import RequestTypes from './request.types'
 import {
   getRequestListSuccess,
@@ -47,6 +47,11 @@ const formatRequestList = requests => {
         value: request.status,
         name: STATUS[request.status].viText,
         class: STATUS[request.status].cssClass,
+      },
+      tokenType: {
+        ...request.tokenTypeName,
+        name: TOKEN_TYPE[request.tokenTypeName]?.viText,
+        class: TOKEN_TYPE[request.tokenTypeName]?.cssClass,
       },
     }
   }

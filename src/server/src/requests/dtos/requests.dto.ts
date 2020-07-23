@@ -112,6 +112,7 @@ export class RequestDto extends BaseEntityDto {
     @IsNotEmpty(ErrorUtils.getMessage('status', ERR.IsNotEmpty))
     @IsIn([
         CONSTANTS.STATUS.PENDING,
+        CONSTANTS.STATUS.IN_PROGRESS,
         CONSTANTS.STATUS.SUCCESS,
         CONSTANTS.STATUS.FAILURE,
     ])

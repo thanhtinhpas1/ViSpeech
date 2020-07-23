@@ -94,7 +94,7 @@ export default class OrderService {
   }
 
   static getOrderList = filterConditions => {
-    const { pagination, sortField, sortOrder, filters } = filterConditions
+    const { pagination, sortField, sortOrder, filters, advancedFilters } = filterConditions
     const { current, pageSize } = pagination
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
@@ -102,6 +102,7 @@ export default class OrderService {
     let query = `${Utils.parameterizeObject({ offset, limit })}`
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
+    query += Utils.buildFiltersQuery(advancedFilters, 'advancedFilters')
     query = Utils.trimByChar(query, '&')
 
     const api = `${apiUrl}/orders?${query}`

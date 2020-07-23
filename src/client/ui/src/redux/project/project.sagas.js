@@ -16,6 +16,8 @@ import {
   // updateProjectInfoFailure,
   getProjectListSuccess,
   getProjectListFailure,
+  getProjectNameListSuccess,
+  getProjectNameListFailure,
 } from './project.actions'
 
 const formatProjectList = projectList => {
@@ -85,6 +87,20 @@ export function* getAcceptedProjectListSaga() {
   yield takeLatest(ProjectTypes.GET_ACCEPTED_PROJECT_LIST, getAcceptedProjectList)
 }
 
+// ==== get project name list
+export function* getProjectNameList({ payload: filterConditions }) {
+  try {
+    const projectNameList = yield ProjectService.getProjectNameList(filterConditions)
+    yield put(getProjectNameListSuccess(projectNameList))
+  } catch (err) {
+    yield put(getProjectNameListFailure(err.message))
+  }
+}
+
+export function* getProjectNameListSaga() {
+  yield takeLatest(ProjectTypes.GET_PROJECT_NAME_LIST, getProjectNameList)
+}
+
 // create new project
 // function* createProject({ payload: project }) {
 //   try {
@@ -132,6 +148,7 @@ export function* projectSaga() {
     call(getProjectListSaga),
     call(getMyProjectListSaga),
     call(getAcceptedProjectListSaga),
+    call(getProjectNameListSaga),
     // call(createProjectSaga),
     call(getProjectInfoSaga),
     // call(updateProjectInfoSaga),

@@ -7,7 +7,7 @@ import { Button, Row } from 'antd'
 import { useHistory, useParams } from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import { saveAs } from 'file-saver'
-import './TrialDetailsPage.style.css'
+import './TrialDetailsPage.style.scss'
 import * as moment from 'moment'
 import RequestService from 'services/request.service'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
@@ -118,7 +118,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
   }
 
   return (
-    <div className="page-content">
+    <div className="page-content trial-details-page">
       <div className="container">
         <div className="card content-area">
           <div className="card-innr">

@@ -37,6 +37,7 @@ import { RequestRepository } from './repository/request.repository';
 import { CallAsrSagas } from './sagas/call-asr.sagas';
 import { RequestService } from './services/request.service';
 import { CONSTANTS } from 'common/constant';
+import { UserDto } from 'users/dtos/users.dto';
 
 @Module({
     imports: [
@@ -52,6 +53,7 @@ import { CONSTANTS } from 'common/constant';
             TokenTypeDto,
             OrderDto,
             ProjectDto,
+            UserDto,
             ProjectionDto
         ]),
         CqrsModule,
