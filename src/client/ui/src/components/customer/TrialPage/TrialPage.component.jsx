@@ -226,6 +226,7 @@ const TrialPage = ({
     }
     return () => clearTimeout(timer)
   }, [
+    history,
     asrData,
     firebaseFolder,
     createRequestObj,
@@ -281,12 +282,11 @@ const TrialPage = ({
       return
     }
 
-    const fileName = file.name || 'vietspeech-recording.wav'
     const request = {
       _id: 'vispeech',
       createdDate: Date.now(),
       duration: 0,
-      fileName,
+      fileName: file.name,
       projectName,
       status: {
         value: 'PENDING',
@@ -298,7 +298,7 @@ const TrialPage = ({
     setNewRequest(request)
     setUploading(true)
 
-    const firebaseFileName = `audio-${fileName}`
+    const firebaseFileName = `audio-${file.name}`
     const folder = `${Date.now()}`
     setFirebaseFolder(folder)
     const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${firebaseFileName}`).put(file)
@@ -399,8 +399,8 @@ const TrialPage = ({
               <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin âm thanh vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
-            <ReactMicRecorder setAudioFile={setAudioFile} uploading={uploading} />
-            <RequestTable newRequest={newRequest} disabled={draggerDisabled || uploading} />
+            <ReactMicRecorder setAudioFile={setAudioFile} disabled={draggerDisabled || uploading} />
+            <RequestTable newRequest={newRequest} />
           </div>
         </div>
       </div>
