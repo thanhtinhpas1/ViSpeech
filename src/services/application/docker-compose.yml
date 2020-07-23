@@ -1,0 +1,82 @@
+# Documentation
+# https://docs.docker.com/compose/compose-file
+
+version: "3"
+
+services:
+  # DATABASE - MONGODB
+  mongodb:
+    build:
+      context: 'mongo'
+    restart: always
+    ports:
+      - 27017:27017
+    network_mode: bridge
+    healthcheck:
+      test: ['CMD', 'pgrep', 'mongo']
+  core:
+    build:
+      context: "../../core"
+    restart: always
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+    network_mode: bridge
+  # API - VISPEECH
+  vispeech:
+    build:
+      context: "../../server"
+    command: "npm run start:prod"
+    restart: always
+    depends_on:
+      - eventstore
+      - mongodb
+    environment:
+      - EVENT_STORE_HOSTNAME=eventstore
+    ports:
+      - 7070:7070
+    expose:
+      - 7070
+    links:
+      - eventstore
+      - mongodb
+    healthcheck:
+      test: ['CMD', 'pgrep', 'vispeech']
+    network_mode: bridge
+  vispeechui:
+    build:
+      context: "../../client"
+    command: "npm run start:prod"
+    restart: always
+    depends_on:
+      - mongodb
+      - vispeech
+    ports:
+      - 80:80
+    expose:
+      - 80
+    network_mode: bridge
+  vispeechrelease:
+    build:
+      context: "../../release"
+    command: "npm run start"
+    restart: always
+    depends_on:
+      - eventstore
+      - mongodb
+      - vispeech
+    ports:
+      - 3200:3200
+    expose:
+      - 3200
+    links:
+      - eventstore
+      - mongodb
+    #  - vispeech
+    network_mode: bridge
+  redis:
+    build:
+      context: 'redis'
+    ports:
+    - 6379:6379

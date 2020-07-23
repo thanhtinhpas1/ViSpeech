@@ -2,7 +2,7 @@ version: '3.7'
 services:
   jenkins:
     build:
-      context: './'
+      context: ''
     volumes:
       - home:/home
       - jenkins_home:/var/jenkins_home
