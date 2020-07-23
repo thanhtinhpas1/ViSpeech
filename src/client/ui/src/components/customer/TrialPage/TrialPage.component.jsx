@@ -22,6 +22,7 @@ import SocketService from 'services/socket.service'
 import RequestService from 'services/request.service'
 import SocketUtils from 'utils/socket.util'
 import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import ReactMicRecorder from 'components/common/ReactMicRecorder/ReactMicRecorder.component'
 import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
 import RequestTable from './components/RequestTable/RequestTable.container'
 
@@ -60,6 +61,7 @@ const TrialPage = ({
   const [infoModal, setInfoModal] = useState({})
   const [firebaseFolder, setFirebaseFolder] = useState(null)
   const [asrData, setAsrData] = useState(null)
+  const [audioFile, setAudioFile] = useState(null)
 
   const updateRequestLoadingRef = useRef(updateRequestInfoObj.isLoading)
   updateRequestLoadingRef.current = updateRequestInfoObj.isLoading
@@ -178,36 +180,44 @@ const TrialPage = ({
     }
     if (createRequestObj.isLoading === false && createRequestObj.isSuccess != null) {
       if (createRequestObj.isSuccess === true) {
-        if (asrData && asrData.text) {
+        if (asrData && asrData.requestId) {
           const { requestId, tokenId, text } = asrData
           setAsrData(null) // duplicate RequestCreatedSuccessEvent => duplicate calling update request
-          const fileName = `transcript`
-          const textFile = new File([new Blob([text], { type: 'text/plain;charset=utf-8' })], fileName, {
-            type: 'text/plain;charset=utf-8',
-          })
-          const uploadTask = storage.ref(`${FILE_PATH}/${firebaseFolder}/${fileName}`).put(textFile)
-          uploadTask.on(
-            'state_changed',
-            snapshot => {
-              Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-              // setProgress(progressValue)
-            },
-            error => {
-              refreshRequestList()
-              openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
-              console.log(`Error uploading transcript file to firebase storage: ${error.message}`)
-            },
-            () => {
-              storage
-                .ref(`${FILE_PATH}/${firebaseFolder}`)
-                .child(fileName)
-                .getDownloadURL()
-                .then(async transcriptFileUrl => {
-                  updateRequest(requestId, tokenId, transcriptFileUrl)
-                  console.log(`Transcript file was uploaded to firebase storage with url ${transcriptFileUrl}`)
-                })
-            }
-          )
+          if (text) {
+            const fileName = `transcript`
+            const textFile = new File([new Blob([text], { type: 'text/plain;charset=utf-8' })], fileName, {
+              type: 'text/plain;charset=utf-8',
+            })
+            const uploadTask = storage.ref(`${FILE_PATH}/${firebaseFolder}/${fileName}`).put(textFile)
+            uploadTask.on(
+              'state_changed',
+              snapshot => {
+                Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                // setProgress(progressValue)
+              },
+              error => {
+                refreshRequestList()
+                openInfoModal('Yêu cầu dùng thử', 'Đã có lỗi xảy ra khi xử lí yêu cầu. Vui lòng thử lại sau!', false)
+                console.log(`Error uploading transcript file to firebase storage: ${error.message}`)
+              },
+              () => {
+                storage
+                  .ref(`${FILE_PATH}/${firebaseFolder}`)
+                  .child(fileName)
+                  .getDownloadURL()
+                  .then(async transcriptFileUrl => {
+                    updateRequest(requestId, tokenId, transcriptFileUrl)
+                    console.log(`Transcript file was uploaded to firebase storage with url ${transcriptFileUrl}`)
+                  })
+              }
+            )
+          } else {
+            openInfoModal('Yêu cầu dùng thử', 'Thành công', true)
+            setTimeout(() => {
+              closeInfoModal()
+              history.push(`${CUSTOMER_PATH}/request-details/${requestId}`)
+            }, 1000)
+          }
         }
       } else {
         refreshRequestList()
@@ -222,6 +232,7 @@ const TrialPage = ({
     createRequestFailure,
     updateRequest,
     openInfoModal,
+    closeInfoModal,
     refreshRequestList,
   ])
 
@@ -249,7 +260,7 @@ const TrialPage = ({
     }
   }
 
-  const handleUpload = async ({ file, onProgress, onSuccess, onError }) => {
+  const handleUpload = useCallback(async ({ file, onProgress, onSuccess, onError }) => {
     clearCreateRequestState()
     clearUpdateRequestInfo()
 
@@ -270,11 +281,12 @@ const TrialPage = ({
       return
     }
 
+    const fileName = file.name || 'vietspeech-recording.wav'
     const request = {
       _id: 'vispeech',
       createdDate: Date.now(),
       duration: 0,
-      fileName: file.name,
+      fileName,
       projectName,
       status: {
         value: 'PENDING',
@@ -286,28 +298,34 @@ const TrialPage = ({
     setNewRequest(request)
     setUploading(true)
 
-    const fileName = `audio-${file.name}`
+    const firebaseFileName = `audio-${fileName}`
     const folder = `${Date.now()}`
     setFirebaseFolder(folder)
-    const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${fileName}`).put(file)
+    const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${firebaseFileName}`).put(file)
     uploadTask.on(
       'state_changed',
       snapshot => {
         const progressValue = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        onProgress({ percent: progressValue })
+        if (onProgress) {
+          onProgress({ percent: progressValue })
+        }
       },
       error => {
         setUploading(false)
-        onError(error)
+        if (onError) {
+          onError(error)
+        }
         openInfoModal('Tải tập tin âm thanh', 'Đã có lỗi xảy ra khi tải tập tin. Vui lòng thử lại sau!', false)
       },
       () => {
         storage
           .ref(`${FILE_PATH}/${folder}`)
-          .child(fileName)
+          .child(firebaseFileName)
           .getDownloadURL()
           .then(async url => {
-            onSuccess()
+            if (onSuccess) {
+              onSuccess()
+            }
             openInfoModal('Tải tập tin âm thanh', 'Tải lên tập tin thành công!', true)
             setTimeout(() => {
               setInfoModal({
@@ -322,7 +340,14 @@ const TrialPage = ({
           })
       }
     )
-  }
+  })
+
+  useEffect(() => {
+    if (audioFile) {
+      handleUpload({ file: audioFile })
+      setAudioFile(null)
+    }
+  }, [audioFile, handleUpload])
 
   const props = {
     name: 'file',
@@ -367,14 +392,15 @@ const TrialPage = ({
               <h4 className="card-title">Dùng thử</h4>
             </div>
             <SelectTokenForm uploading={uploading} onSelectTokenFormValuesChange={onSelectTokenFormValuesChange} />
-            <Dragger {...props} disabled={draggerDisabled || uploading}>
+            <Dragger {...props} disabled={draggerDisabled || uploading || audioFile != null}>
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">Nhấn hoặc kéo thả tập tin âm thanh vào khu vực này để tải</p>
               <p className="ant-upload-hint">Chỉ nhận tập tin âm thanh có định dạng đuôi .wav</p>
             </Dragger>
-            <RequestTable newRequest={newRequest} uploading={uploading} />
+            <ReactMicRecorder setAudioFile={setAudioFile} uploading={uploading} />
+            <RequestTable newRequest={newRequest} disabled={draggerDisabled || uploading} />
           </div>
         </div>
       </div>

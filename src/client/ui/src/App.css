@@ -39,3 +39,7 @@ button:focus {
 .ant-modal-close-x:focus {
   outline: none;
 }
+
+svg {
+  vertical-align: initial !important;
+}
