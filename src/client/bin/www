@@ -9,7 +9,7 @@ var debug = require('debug')('vispeechui:server');
 var http = require('http');
 var { Kafka, logLevel } = require('kafkajs');
 
-const host = process.env.KAFKA_HOST;
+const host = process.env.APP_HOST;
 console.log(`Kafka host: ${ host }`);
 const kafka = new Kafka({
   logLevel: logLevel.INFO,

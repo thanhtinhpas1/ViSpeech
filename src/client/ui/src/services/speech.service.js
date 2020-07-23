@@ -5,14 +5,15 @@ export default class SpeechService {
     const formData = new FormData()
     formData.append('voice', file)
     formData.append('audioFileUrl', fileUrl)
-    const api = `${ process.env.REACT_APP_ASR_URL }` || `http://asr.vietspeech.com:7070/v1/speech`
+    const api = `${process.env.REACT_APP_ASR_URL}:7070/v1/speech` || `http://asr.vietspeech.com:7070/v1/speech`
 
-    return axios.post(api, formData, {
-      headers: {
-        Authorization: `Bearer ${ token }`,
-        ...formData.headers
-      },
-    })
+    return axios
+      .post(api, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...formData.headers,
+        },
+      })
       .then(response => {
         return response.data || null
       })
