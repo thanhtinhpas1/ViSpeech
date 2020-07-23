@@ -14,7 +14,7 @@
     "start:dev": "env-cmd -f .env.development nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "start:staging": "env-cmd -f .env.staging nodemon",
-    "start:prod": "env-cmd -f .env nodemon",
+    "start:prod": "nodemon",
     "start:prod:analyze": "npm run prestart:prod && 0x dist/src/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
