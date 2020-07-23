@@ -29,7 +29,7 @@ async function bootstrap() {
     app.setGlobalPrefix(config.PREFIX);
     SwaggerModule.setup(config.API_EXPLORER_PATH, app, document);
     app.connectMicroservice(kafkaClientOptions);
-    await app.listen(config.PORT, config.HOST, () => {
+    await app.listen(config.PORT, '0.0.0.0', () => {
         Logger.log(`Application is running PORT: ${config.PORT}`, 'Bootstrap');
     });
 }
