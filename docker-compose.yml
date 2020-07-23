@@ -98,6 +98,9 @@ services:
     hostname: zoo1
     ports:
       - 2181:2181
+    volumes:
+      - ./zk-single-kafka-single/zoo1/data:/dat
+      - ./zk-single-kafka-single/zoo1/datalog:/datalog
     network_mode: bridge
     healthcheck:
       test: ['CMD', 'pgrep', 'zoo1']
@@ -109,6 +112,8 @@ services:
       - 9092:9092
     expose:
       - 9092
+    volumes:
+      - ./zk-single-kafka-single/kafka1/data:/var/lib/kafka/data
     depends_on:
       - zoo1
     links:

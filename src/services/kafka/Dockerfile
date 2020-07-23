@@ -7,4 +7,3 @@ ENV KAFKA_ZOOKEEPER_CONNECT=zoo1:2181
 ENV KAFKA_BROKER_ID=1
 ENV KAFKA_LOG4J_LOGGERS="kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
 ENV KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-VOLUME ./zk-single-kafka-single/kafka1/data:/var/lib/kafka/data

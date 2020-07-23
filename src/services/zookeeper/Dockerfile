@@ -1,8 +1,6 @@
-FROM zookeeper:zookeeper:3.4.9
+FROM zookeeper/zookeeper:3.4.9
 
 ENV ALLOW_ANONYMOUS_LOGIN=yes
 ENV ZOO_MY_ID=1
 ENV ZOO_PORT=2181
 ENV ZOO_SERVERS="server.1=zoo1:2888:3888"
-VOLUME ./zk-single-kafka-single/zoo1/data:/dat
-VOLUME ./zk-single-kafka-single/zoo1/datalog:/datalog
