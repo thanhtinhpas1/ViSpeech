@@ -1,0 +1,30 @@
+# API - VISPEECH
+version: 3
+services:
+  vispeech:
+    build:
+      context: "../server"
+    command: "npm run start:prod"
+    restart: always
+    environment:
+      - EVENT_STORE_HOSTNAME=eventstore
+    ports:
+      - 7070:7070
+    expose:
+      - 7070
+    links:
+      - eventstore
+      - mongodb
+    healthcheck:
+      test: ['CMD', 'pgrep', 'vispeech']
+    network_mode: bridge
+  vispeechui:
+    build:
+      context: "../client"
+    command: "npm run start:prod"
+    restart: always
+    ports:
+      - 80:80
+    expose:
+      - 80
+    network_mode: bridge
