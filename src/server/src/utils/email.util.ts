@@ -14,6 +14,7 @@ const hostUrl = `${ config.ASR.PROTOCOL }://${ config.ASR.HOST }:3200/customer`;
 //         pass: "vispeech"
 //     }
 // });
+Logger.log(`${JSON.stringify(config.NODEMAILER)}`, 'NODEMAILER config')
 const transport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -43,7 +44,7 @@ const sendEmail = (to, subject, contentEmail) => {
     };
     return transport.sendMail(mailOptions, (error, info) => {
         if (error) {
-            return Logger.log(error);
+            return Logger.log(error, 'Error sending email');
         }
         Logger.log(`Message sent: ${info.messageId}`);
     });
