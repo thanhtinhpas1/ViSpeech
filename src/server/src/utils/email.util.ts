@@ -15,7 +15,10 @@ const hostUrl = `${ config.ASR.PROTOCOL }://${ config.ASR.HOST }:3200/customer`;
 //     }
 // });
 Logger.log(`${JSON.stringify(config.NODEMAILER)}`, 'NODEMAILER config')
-const transport = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     service: 'Gmail',
     auth: {
         type: 'OAuth2',
@@ -24,7 +27,15 @@ const transport = nodemailer.createTransport({
         clientSecret: config.NODEMAILER.clientSecret,
         accessToken: config.NODEMAILER.accessToken,
         refreshToken: config.NODEMAILER.refreshToken,
+        expires: 1484314697598
     }
+});
+
+transporter.on('token', token => {
+    Logger.log('A new access token was generated');
+    Logger.log(`User: ${token.user}`);
+    Logger.log(`Access Token: ${token.accessToken}`);
+    Logger.log(`Expires: ${new Date(token.expires)}`);
 });
 
 const getHtmlEmailContent = (user, content, expireText, expiresIn) => {
@@ -42,7 +53,7 @@ const sendEmail = (to, subject, contentEmail) => {
         subject,
         html: contentEmail
     };
-    return transport.sendMail(mailOptions, (error, info) => {
+    return transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             return Logger.log(error, 'Error sending email');
         }
