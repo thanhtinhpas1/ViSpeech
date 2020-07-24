@@ -27,9 +27,14 @@ export class GetUsernamesHandler implements IQueryHandler<GetUsernamesQuery> {
                 }
             }
             const users = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
-            const usernames = users.map(user => user.username).filter(username => username !== 'admin');
+            const data = users.map(user => {
+                return {
+                    _id: user._id,
+                    username: user.username
+                }
+            }).filter(user => user.username !== 'admin');
             const count = await getMongoRepository(UserDto).count(findOptions.where) - 1;
-            return {data: usernames, count};
+            return {data, count};
         } catch (error) {
             Logger.error(error, '', 'GetUsernamesQuery');
         }

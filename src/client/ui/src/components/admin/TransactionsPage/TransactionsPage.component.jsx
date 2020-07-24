@@ -3,40 +3,32 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import * as moment from 'moment'
 import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, DEFAULT_PAGINATION, ORDER_STATUS, TOKEN_TYPE } from 'utils/constant'
+import { ADMIN_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from 'utils/constant'
+import FilterForm from './components/FilterForm/FilterForm.container'
 
 const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
+  const [advancedFilters, setAdvancedFilters] = useState(null)
+  const [advancedFilterClick, setAdvancedFilterClick] = useState(false)
+
   const columns = [
+    // {
+    //   title: 'Mã đơn hàng',
+    //   dataIndex: '_id',
+    //   canSearch: true,
+    //   render: _id => <span className="lead tnx-id">{_id}</span>,
+    //   width: 150,
+    // },
     {
-      title: 'Mã đơn hàng',
-      dataIndex: '_id',
+      title: 'Tên API key',
+      dataIndex: 'tokenName',
+      headerClassName: 'dt-amount',
+      className: 'dt-amount',
       canSearch: true,
-      render: _id => <span className="lead tnx-id">{ _id }</span>,
-      width: 150,
-    },
-    {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      headerClassName: 'dt-token',
-      className: 'dt-token',
-      filters: [
-        { text: ORDER_STATUS.PENDING.viText, value: ORDER_STATUS.PENDING.name },
-        { text: ORDER_STATUS.SUCCESS.viText, value: ORDER_STATUS.SUCCESS.name },
-        { text: ORDER_STATUS.FAILURE.viText, value: ORDER_STATUS.FAILURE.name },
-      ],
-      filterMultiple: false,
-      render: status => (
-        <div className="d-flex align-items-center">
-          <div className={ `data-state ${ status.class }` }/>
-          <span className="sub sub-s2" style={ { paddingTop: 0 } }>
-            { status.name }
-          </span>
-        </div>
-      ),
-      width: 160,
+      render: tokenName => <span className="lead tnx-id">{tokenName}</span>,
+      width: 180,
     },
     {
       title: 'API key',
@@ -98,6 +90,27 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       width: 180,
     },
     {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      headerClassName: 'dt-token',
+      className: 'dt-token',
+      filters: [
+        { text: ORDER_STATUS.PENDING.viText, value: ORDER_STATUS.PENDING.name },
+        { text: ORDER_STATUS.SUCCESS.viText, value: ORDER_STATUS.SUCCESS.name },
+        { text: ORDER_STATUS.FAILURE.viText, value: ORDER_STATUS.FAILURE.name },
+      ],
+      filterMultiple: false,
+      render: status => (
+        <div className="d-flex align-items-center">
+          <div className={`data-state ${status.class}`} />
+          <span className="sub sub-s2" style={{ paddingTop: 0 }}>
+            {status.name}
+          </span>
+        </div>
+      ),
+      width: 160,
+    },
+    {
       title: 'Thời gian tạo',
       dataIndex: 'createdDate',
       headerClassName: 'dt-amount',
@@ -129,23 +142,40 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
     getOrderList({ pagination: DEFAULT_PAGINATION.SIZE_10 })
   }, [ getOrderList ])
 
+  const getList = useCallback(
+    // eslint-disable-next-line no-unused-vars
+    ({ pagination, sortField, sortOrder, filters }) => {
+      getOrderList({ pagination, sortField, sortOrder, filters, advancedFilters })
+    },
+    [getOrderList, advancedFilters]
+  )
+
+  const filterData = filters => {
+    setAdvancedFilterClick(true)
+    getOrderList({ pagination: DEFAULT_PAGINATION.SIZE_10, advancedFilters: filters })
+    setAdvancedFilterClick(false)
+  }
+
   return (
     <div className="row">
       <div className="col-md-12">
         <div className="card">
           <div className="card-header">
-            <h4 className="card-title">Lịc sử giao dịch</h4>
+            <h4 className="card-title">Lịch sử giao dịch</h4>
           </div>
           <div className="card-content">
+            <FilterForm setAdvancedFilters={setAdvancedFilters} filterData={filterData} />
             <div className="material-datatables">
-              <AntdTable
-                dataObj={ getOrderListObj.orderList }
-                columns={ columns }
-                fetchData={ getOrderList }
-                isLoading={ getOrderListObj.isLoading }
-                pageSize={ DEFAULT_PAGINATION.SIZE_10.pageSize }
-                scrollY={ 700 }
-              />
+              {!advancedFilterClick && (
+                <AntdTable
+                  dataObj={getOrderListObj.orderList}
+                  columns={columns}
+                  fetchData={getList}
+                  isLoading={getOrderListObj.isLoading}
+                  pageSize={DEFAULT_PAGINATION.SIZE_10.pageSize}
+                  scrollY={700}
+                />
+              )}
             </div>
           </div>
         </div>

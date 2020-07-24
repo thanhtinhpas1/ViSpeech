@@ -14,6 +14,9 @@ const Utils = {
   isSocialAccount: userType => {
     return [ USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE ].includes(userType)
   },
+  isObject: data => {
+    return data != null && typeof data === 'object'
+  },
   getRolesInArray: roleList => {
     return (roleList || []).map(role => role.name)
   },
@@ -25,7 +28,7 @@ const Utils = {
         const formatKey = prefix ? `${ prefix }[${ key }]` : key
         const value = obj[key]
         str.push(
-          value != null && typeof value === 'object'
+          Utils.isObject(value)
             ? Utils.parameterizeObject(value, formatKey)
             : `${ encodeURIComponent(formatKey) }=${ encodeURIComponent(value) }`
         )
@@ -47,14 +50,14 @@ const Utils = {
   },
   removePropertyFromObject: (obj, property) => {
     const result = JSON.parse(JSON.stringify(obj))
-    if (typeof obj === 'object' && Object.prototype.hasOwnProperty.call(result, property)) {
+    if (Utils.isObject(obj) && Object.prototype.hasOwnProperty.call(result, property)) {
       delete result[property]
     }
     return result
   },
   removePropertiesFromObject: (obj, properties) => {
     let result = JSON.parse(JSON.stringify(obj))
-    if (typeof obj === 'object' && Array.isArray(properties)) {
+    if (Utils.isObject(obj) && Array.isArray(properties)) {
       properties.forEach(property => {
         result = Utils.removePropertyFromObject(result, property)
       })
@@ -113,16 +116,24 @@ const Utils = {
     }
     return ''
   },
-  buildFiltersQuery: filters => {
-    if (typeof filters === 'object' && Object.keys(filters).length > 0) {
+  buildFiltersQuery: (filters, name = 'filters') => {
+    if (Utils.isObject(filters) && Object.keys(filters).length > 0) {
       const formatFilters = {}
       Object.keys(filters).forEach(key => {
         if (Array.isArray(filters[key])) {
-          const [ filterValue ] = filters[key]
-          formatFilters[key] = filterValue
+          if (name === 'filters') {
+            const [filterValue] = filters[key]
+            formatFilters[key] = filterValue
+          } else {
+            formatFilters[key] = filters[key]
+          }
+        } else if (Utils.isObject(filters[key])) {
+          formatFilters[key] = filters[key]
         }
       })
-      return `&${ Utils.parameterizeObject({ filters: formatFilters }) }`
+      const obj = {}
+      obj[name] = formatFilters
+      return `&${Utils.parameterizeObject(obj)}`
     }
     return ''
   },

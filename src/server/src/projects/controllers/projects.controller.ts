@@ -10,6 +10,7 @@ import { Roles } from 'auth/roles.decorator';
 import { ProjectGuard, ProjectQueryGuard } from 'auth/guards/project.guard';
 import { GetProjectsByUserIdQuery } from 'projects/queries/impl/get-projects-by-userId';
 import { GetAcceptedProjectsByUserIdQuery } from 'projects/queries/impl/get-accepted-projects-by-userId';
+import { GetProjectNamesQuery } from 'projects/queries/impl/get-project-names.query';
 
 @Controller('projects')
 @ApiTags('Projects')
@@ -74,6 +75,18 @@ export class ProjectsController {
     @Get()
     async getProjects(@Query() getProjectsQuery: GetProjectsQuery) {
         return this.projectsService.getProjects(getProjectsQuery);
+    }
+
+    /* Get Project Names */
+
+    /*--------------------------------------------*/
+    @ApiOperation({tags: ['Get Project Names']})
+    @ApiResponse({status: 200, description: ' Get Project Names.'})
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @Roles([CONSTANTS.ROLE.ADMIN])
+    @Get('names')
+    async getProjectNames(@Query() getProjectNamesQuery: GetProjectNamesQuery) {
+        return this.projectsService.getProjectNames(getProjectNamesQuery);
     }
 
     /* List Projects By UserId */

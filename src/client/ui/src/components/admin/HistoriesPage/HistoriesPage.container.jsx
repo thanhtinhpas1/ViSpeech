@@ -8,8 +8,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getRequestList: ({ pagination, sortField, sortOrder, filters }) =>
-    dispatch(getRequestList({ pagination, sortField, sortOrder, filters })),
+  getRequestList: ({ pagination, sortField, sortOrder, filters, advancedFilters }) =>
+    dispatch(getRequestList({ pagination, sortField, sortOrder, filters, advancedFilters })),
 })
 
 const HistoriesPageContainer = connect(mapStateToProps, mapDispatchToProps)(HistoriesPage)

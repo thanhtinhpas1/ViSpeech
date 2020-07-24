@@ -1,11 +1,14 @@
 import axios from 'axios'
 
 export default class SpeechService {
-  static callAsr = (file, fileUrl, token) => {
+  static callAsr = (file, fileUrl, token, assigneeId) => {
     const formData = new FormData()
     formData.append('voice', file)
     formData.append('audioFileUrl', fileUrl)
-    const api = `${process.env.REACT_APP_APP_HOST}:7070/v1/speech` || `http://asr.vietspeech.com:7070/v1/speech`
+    if (assigneeId) {
+      formData.append('assigneeId', assigneeId)
+    }
+    const api = `http://asr.vietspeech.com:7070/v1/speech`
 
     return axios
       .post(api, formData, {

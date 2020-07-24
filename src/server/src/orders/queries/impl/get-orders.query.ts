@@ -27,4 +27,8 @@ export class GetOrdersQuery {
     @Type(() => BaseSortClass)
     @IsObject()
     sort: BaseSortClass;
+
+    @IsOptional()
+    @IsObject()
+    advancedFilters: Object;
 }
