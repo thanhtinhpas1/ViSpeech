@@ -20,12 +20,12 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'ui/build')));
 
-const url = 'http://asr.vietspeech.com:7070'
+const url = `${process.env.APP_HOST}:7070` || 'http://asr.vietspeech.com:7070'
 app.use('/api', proxy(url, {
   proxyReqPathResolver: function (req) {
     return new Promise(function (resolve, reject) {
       setTimeout(function () {   // simulate async
-        const path = `${process.env.BASE_PATH}${req.url}`;
+        const path = `/v1${req.url}`;
         console.info(`${url}${path}`)
         resolve(path);
       }, 200);
@@ -41,7 +41,7 @@ const forceSSL = function () {
   return function (req, res, next) {
     if (req.headers['x-forwarded-proto'] !== 'https') {
       return res.redirect(
-        ['https://', req.get('Host'), req.url].join('')
+          ['https://', req.get('Host'), req.url].join('')
       );
     }
     next();
