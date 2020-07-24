@@ -96,3 +96,5 @@ api/swagger-spec/swagger.json
 *.0x/
 
 .vscode/
+
+*/.env
