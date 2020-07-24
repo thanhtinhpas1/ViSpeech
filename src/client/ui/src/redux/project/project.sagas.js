@@ -12,7 +12,7 @@ import {
   getProjectInfoSuccess,
   getProjectListFailure,
   getProjectNameListSuccess,
-  getProjectNameListFailure,
+  getProjectNameListFailure, getProjectListSuccess,
 } from './project.actions'
 
 const formatProjectList = projectList => {
