@@ -8,8 +8,6 @@ services:
       - "/opt/.env"
     command: "npm run start:prod"
     restart: always
-    environment:
-      - EVENT_STORE_HOSTNAME=eventstore
     ports:
       - 7070:7070
     expose:

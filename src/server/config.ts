@@ -25,7 +25,7 @@ const configs = {
         // Event Store
         EVENTSTORE: {
             tcpEndpoint: {
-                host: process.env.APP_HOST || '0.0.0.0',
+                host: '35.240.211.37' || '0.0.0.0',
                 port: process.env.EVENT_STORE_PORT || 1113,
             },
             options: {
