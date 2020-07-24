@@ -12,6 +12,9 @@ services:
       - 7070:7070
     expose:
       - 7070
+    links:
+      - eventstore
+      - mongodb
     healthcheck:
       test: ['CMD', 'pgrep', 'vispeech']
     network_mode: bridge
