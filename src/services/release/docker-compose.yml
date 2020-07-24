@@ -1,0 +1,20 @@
+version: 3
+services:
+  vispeechrelease:
+    build:
+      context: "../release"
+    command: "npm run start"
+    restart: always
+    depends_on:
+      - eventstore
+      - mongodb
+      - vispeech
+    ports:
+      - 3200:3200
+    expose:
+      - 3200
+    links:
+      - eventstore
+      - mongodb
+    #  - vispeech
+    network_mode: bridge

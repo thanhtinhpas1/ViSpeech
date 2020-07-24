@@ -1,0 +1,30 @@
+# Documentation
+# https://docs.docker.com/compose/compose-file
+
+version: "3"
+
+services:
+  # DATABASE - MONGODB
+  mongodb:
+    build:
+      context: 'mongo'
+    restart: always
+    ports:
+      - 27017:27017
+    network_mode: bridge
+    healthcheck:
+      test: ['CMD', 'pgrep', 'mongo']
+  core:
+    build:
+      context: "../../core"
+    restart: always
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+    network_mode: bridge
+  redis:
+    build:
+      context: 'redis'
+    ports:
+    - 6379:6379

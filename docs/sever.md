@@ -12,4 +12,4 @@ Multiple instances of each service run concurrently for fail-over purposes. Each
 
 ## Nestjs server components
 
-[Getting Started](./setup/setup.md)
+[Getting Started](setup/setup.md)
