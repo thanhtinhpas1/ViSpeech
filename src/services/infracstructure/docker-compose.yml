@@ -9,6 +9,7 @@ services:
     build:
       context: 'eventstore'
     restart: always
+    hostname: eventstore
     ports:
       - 2113:2113
       - 1113
