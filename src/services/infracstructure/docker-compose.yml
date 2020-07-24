@@ -9,9 +9,10 @@ services:
     build:
       context: 'eventstore'
     restart: always
+    hostname: eventstore
     ports:
       - 2113:2113
-      - 1113
+      - 1113:1113
     network_mode: bridge
     healthcheck:
       test: ['CMD', 'WGET', '--spider', 'http://localhost:2113']
