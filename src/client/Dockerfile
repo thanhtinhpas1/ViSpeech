@@ -1,23 +1,21 @@
 ### BASE
 FROM node:12-alpine AS base
 
-LABEL maintainer "VispeechUI <vispeech@hcmus.edu.vn>"
+LABEL maintainer="VispeechUI <vispeech@hcmus.edu.vn>"
 
 # Set the working directory
 WORKDIR /user/src/app/vispeechui
-ARG mode
-ENV mode=$mode
 
 # Copy project specification and dependencies lock files
-COPY package.json package-lock.json /tmp/
-COPY ui/package.json package-lock.json /tmp/ui/
+COPY package.json package-lock.json /user/src/app/vispeechui/
+COPY ui/package.json package-lock.json /user/src/app/vispeechui/ui/
 
 ### DEPENDENCIES
 FROM base AS dependencies
 
 # Install Node.js dependencies
-RUN cd /tmp && npm install --production
-RUN cd /tmp/ui && npm install --production
+RUN cd /user/src/app/vispeechui && npm install --production
+RUN cd /user/src/app/vispeechui/ui && npm install --production
 
 ### RELEASE
 FROM base AS development
@@ -25,9 +23,9 @@ FROM base AS development
 # Copy app sources
 COPY . .
 
-COPY --from=dependencies /tmp/node_modules ./node_modules
-COPY --from=dependencies /tmp/ui/node_modules ./node_modules
+COPY --from=dependencies /user/src/app/vispeechui/node_modules ./node_modules
+COPY --from=dependencies /user/src/app/vispeechui/ui/node_modules ./node_modules
 
-CMD npm run start:$mode
+CMD npm run start:prod
 # Expose application port
-EXPOSE 3200:3200
+EXPOSE 80:80
