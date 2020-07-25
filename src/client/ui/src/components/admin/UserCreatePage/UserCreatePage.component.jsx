@@ -85,7 +85,7 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
     <Row>
       <div className="card">
         <div className="card-header">
-          <h4 className="card-title">Thêm khách hàng mới</h4>
+          <h4 className="card-title">Thêm người dùng mới</h4>
         </div>
         <div className="card-content">
           <Form
@@ -103,7 +103,7 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
               rules={[
                 {
                   required: true,
-                  message: 'Vui lòng nhập họ khách hàng!',
+                  message: 'Vui lòng nhập họ người dùng!',
                 },
               ]}
             >
@@ -117,7 +117,7 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
               rules={[
                 {
                   required: true,
-                  message: 'Vui lòng nhập tên khách hàng!',
+                  message: 'Vui lòng nhập tên người dùng!',
                 },
               ]}
             >
@@ -192,13 +192,15 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
               rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
             >
               <Radio.Group>
-                {Object.values(ROLES).map(role => {
-                  return (
-                    <Radio value={role} key={role}>
-                      {role}
-                    </Radio>
-                  )
-                })}
+                {Object.values(ROLES)
+                  .filter(role => role !== ROLES.ADMIN)
+                  .map(role => {
+                    return (
+                      <Radio value={role} key={role}>
+                        {role}
+                      </Radio>
+                    )
+                  })}
               </Radio.Group>
             </Form.Item>
             {!createUserObj.isLoading && createUserObj.isSuccess === false && (
@@ -208,7 +210,7 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
             )}
             {!createUserObj.isLoading && createUserObj.isSuccess === true && (
               <Form.Item {...tailLayout}>
-                <Alert message="Thêm khách hàng thành công" type="success" showIcon closable />
+                <Alert message="Thêm người dùng thành công" type="success" showIcon closable />
               </Form.Item>
             )}
             <Form.Item {...tailLayout}>

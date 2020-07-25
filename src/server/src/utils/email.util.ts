@@ -14,7 +14,7 @@ const hostUrl = `${ config.ASR.PROTOCOL }://${ config.ASR.HOST }:3200/customer`;
 //         pass: "vispeech"
 //     }
 // });
-Logger.log(`${JSON.stringify(config.NODEMAILER)}`, 'NODEMAILER config')
+
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -42,7 +42,7 @@ const getHtmlEmailContent = (user, content, expireText, expiresIn) => {
     const greeting = `Xin chào <strong>${ user }</strong>,`;
     const tokenExpire = `Lưu ý, ${ expireText } sẽ hết hiệu lực trong vòng ${ expiresIn }
     ngày kể từ lúc nhận được mail này.`;
-    const closing = `Trân trọng,<br>ViSpeech.`;
+    const closing = `Trân trọng,<br>Viet Speech.`;
     return `${ greeting }<br><br>${ content }<br><br>${ tokenExpire }<br><br>${ closing }`;
 }
 

@@ -7,12 +7,12 @@ const Main = () => {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-md-12 col-lg-10 text-center">
-              <span>Speech to text</span>
+              <span style={{ fontSize: '20px' }}>Speech to text</span>
               <h1>
-                Hệ thống nhận dạng âm thanh <br /> Tiếng Việt.
+                Hệ thống cung cấp dịch vụ nhận dạng âm thanh <br /> Tiếng Việt
               </h1>
               <p>
-                Chúng tôi là hệ thống hàng đầu trong cung cấp và tích hợp <br />
+                VietSpeech là hệ thống hàng đầu trong cung cấp và tích hợp <br />
                 dịch vụ nhận dạng âm thanh Tiếng Việt.
               </p>
               <a className="m-btn btn-white" href="/login">
@@ -33,12 +33,13 @@ const Main = () => {
             <div className="col-md-12 text-center m-40px-b sm-m-30px-b">
               <div className="section-title">
                 <span className="theme-g-bg" />
-                <h2 id="introduce">Asr VietSpeech giúp gì cho bạn?</h2>
+                <h2 id="introduce">VietSpeech giúp gì cho bạn?</h2>
                 <p>
-                  Asr VietSpeech là sản phẩm hỗ trợ chuyển đổi file âm thanh thành văn bản một cách hiệu quả và nhanh
-                  chóng. Thay vì mất hàng giờ ngồi nghe và gõ lại văn bản, giờ đây với Asr VietSpeech chỉ cần một vài
-                  thao tác, chúng ta đã có ngay văn bản. Với những tính năng như cho phép xuất file và tải xuống dưới
-                  nhiều định dạng, chuẩn hóa số-ngày tháng,...
+                  VietSpeech là hệ thống hỗ trợ chuyển đổi file âm thanh thành văn bản một cách hiệu quả và nhanh chóng.
+                  Thay vì mất hàng giờ ngồi nghe và gõ lại văn bản, giờ đây với VietSpeech, chỉ cần một vài thao tác,
+                  bạn đã có ngay văn bản. Hệ thống cung cấp những tính năng như cung cấp các báo cáo sử dụng dịch vụ của
+                  người dùng theo thời gian thực, mời tham gia dự án, cho phép chỉnh sửa và tải xuống văn bản được
+                  dịch,...
                 </p>
               </div>
             </div>
@@ -74,8 +75,8 @@ const Main = () => {
                 </div>
                 <h4>Mô hình linh hoạt.</h4>
                 <p>
-                  Asr VietSpeech triển khai các sản phẩm, dịch vụ cũng như hỗ trợ một cách linh hoạt từ cloud đến
-                  on-premise để đáp ứng nhu cầu của doanh nghiệp.
+                  VietSpeech triển khai các sản phẩm, dịch vụ cũng như hỗ trợ một cách linh hoạt từ cloud đến on-premise
+                  để đáp ứng nhu cầu của doanh nghiệp.
                 </p>
               </div>
             </div>
@@ -94,7 +95,7 @@ const Main = () => {
                 Hỗ trợ khách hàng <br />
                 24/7
               </h4>
-              <p>Asr VietSpeech giúp mối quan hệ giữa doanh nghiệp và khách hàng ngày càng bền chặt</p>
+              <p>VietSpeech giúp mối quan hệ giữa doanh nghiệp và khách hàng ngày càng bền chặt</p>
               <ul className="ul-list-style m-20px-b">
                 <li>Tiếp cận với khách hàng qua nhiều kênh</li>
                 <li>Luôn có mặt khi khách hàng cần, mọi lúc, mọi nơi</li>
@@ -109,7 +110,7 @@ const Main = () => {
                 Đảm bảo khách hàng <br />
                 có dịch vụ tốt nhất.
               </h4>
-              <p>Asr VietSpeech luôn liên tục cập nhật và nâng cao chất lượng sản phẩm.</p>
+              <p>VietSpeech luôn liên tục cập nhật và nâng cao chất lượng sản phẩm.</p>
               <ul className="ul-list-style m-20px-b">
                 <li>Tự đông cập nhật</li>
                 <li>Tích hợp liên tục</li>

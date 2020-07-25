@@ -289,7 +289,7 @@ const UpgradeForm = ({
         >
           <Checkbox>
             Tôi đồng ý với
-            <strong> điều khoản giao dịch mua bán key</strong> của ASR VietSpeech.
+            <strong> điều khoản giao dịch mua bán key</strong> của VietSpeech.
           </Checkbox>
         </Form.Item>
         <ul className="d-flex flex-wrap align-items-center guttar-30px">

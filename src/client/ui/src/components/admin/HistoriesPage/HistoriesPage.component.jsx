@@ -54,7 +54,7 @@ const HistoriesPage = ({ requestListObj, getRequestList }) => {
       align: 'center',
     },
     {
-      title: 'Khách hàng',
+      title: 'Người dùng',
       dataIndex: 'username',
       headerClassName: 'dt-amount',
       className: 'dt-amount',

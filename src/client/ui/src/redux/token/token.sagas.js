@@ -48,7 +48,7 @@ const formatTokenList = tokenList => {
     return {
       ...token,
       tokenType: {
-        ...token.tokenTypeId,
+        id: token.tokenTypeId,
         ...getTokenTypeByMinutes(token.minutes),
       },
       isValid: token.isValid ? STATUS.VALID : STATUS.INVALID,

@@ -44,6 +44,12 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
                 </span>
               </div>
               <div className="fake-class">
+                <span className="data-details-title">Loại giao dịch</span>
+                <span className="data-details-info">
+                  <strong>{getInfoObj.order.upgradeToken ? 'Nâng cấp API key' : 'Mua API key'}</strong>
+                </span>
+              </div>
+              <div className="fake-class">
                 <span className="data-details-title">Thời gian giao dịch</span>
                 <span className="data-details-info">
                   {moment(getInfoObj.order.createdDate).format('DD/MM/YYYY hh:mm:ss')}

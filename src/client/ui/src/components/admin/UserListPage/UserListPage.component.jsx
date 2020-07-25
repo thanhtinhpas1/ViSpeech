@@ -85,7 +85,7 @@ const UserListPage = ({
       if (deleteUserObj.isSuccess === true) {
         setInfoModal({
           visible: true,
-          title: 'Xoá khách hàng',
+          title: 'Xoá người dùng',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
@@ -103,7 +103,7 @@ const UserListPage = ({
       } else {
         setInfoModal({
           visible: true,
-          title: 'Xoá khách hàng',
+          title: 'Xoá người dùng',
           message: Utils.buildFailedMessage(deleteUserObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
@@ -126,13 +126,13 @@ const UserListPage = ({
 
     setConfirmModal({
       visible: true,
-      message: 'Bạn có chắc muốn xoá khách hàng?',
+      message: 'Bạn có chắc muốn xoá người dùng?',
       onCancel: () => closeConfirmModal(),
       onOk: async () => {
         closeConfirmModal()
         setInfoModal({
           visible: true,
-          title: 'Xoá khách hàng',
+          title: 'Xoá người dùng',
           message: 'Vui lòng chờ giây lát...',
           icon: {
             isLoading: true,
@@ -141,6 +141,9 @@ const UserListPage = ({
         })
 
         deleteUser(userId)
+        let tokenDeleted = false
+        let projectDeleted = false
+        let permissionDeleted = false
         try {
           await UserService.deleteUser(userId)
           invokeCheckSubject.UserDeleted.subscribe(data => {
@@ -151,18 +154,31 @@ const UserListPage = ({
           invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
+            } else {
+              tokenDeleted = true
+              if (tokenDeleted && projectDeleted && permissionDeleted) {
+                deleteUserSuccess()
+              }
             }
           })
           invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
+            } else {
+              projectDeleted = true
+              if (tokenDeleted && projectDeleted && permissionDeleted) {
+                deleteUserSuccess()
+              }
             }
           })
           invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
-              deleteUserSuccess()
+              permissionDeleted = true
+              if (tokenDeleted && projectDeleted && permissionDeleted) {
+                deleteUserSuccess()
+              }
             }
           })
         } catch (err) {
@@ -279,7 +295,7 @@ const UserListPage = ({
         <div className="card">
           <div className="card-header">
             <h4 className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Danh sách khách hàng</span>
+              <span>Danh sách người dùng</span>
               <a
                 href={`${ADMIN_PATH}/create-user`}
                 className="btn btn-just-icon btn-simple btn-primary m-0"

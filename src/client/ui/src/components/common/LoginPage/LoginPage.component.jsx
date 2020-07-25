@@ -168,7 +168,7 @@ const LoginPage = ({
               <li>
                 <a href="#">Tài liệu</a>
               </li>
-              <li>© 2020 ASR VietSpeech.</li>
+              <li>© 2020 VietSpeech.</li>
               <li>Sponsored by SendGrid</li>
             </ul>
           </div>

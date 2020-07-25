@@ -56,14 +56,18 @@ const SelectTokenForm = ({
     if (getMyProjectListObj.isLoading === false && getMyProjectListObj.isSuccess === true) {
       if (getMyProjectListObj.myProjectList.data.length > 0) {
         onProjectIdChange(getMyProjectListObj.myProjectList.data[0]._id)
+        form.setFields([{ name: 'projectId', value: getMyProjectListObj.myProjectList.data[0]._id }])
       }
     }
-  }, [getMyProjectListObj, onProjectIdChange])
+  }, [form, getMyProjectListObj, onProjectIdChange])
 
   useEffect(() => {
     if (getProjectTokenListObj.isLoading === false && getProjectTokenListObj.isSuccess === true) {
       // reset tokenId value to new initial value
-      form.resetFields(['tokenId'])
+      // form.resetFields(['tokenId'])
+      if (getProjectTokenListObj.projectTokenList.data.length > 0) {
+        form.setFields([{ name: 'tokenId', value: getProjectTokenListObj.projectTokenList.data[0]._id }])
+      }
     }
   }, [getProjectTokenListObj, form])
 
@@ -123,84 +127,82 @@ const SelectTokenForm = ({
           <LoadingIcon />
         </div>
       )}
-      {!getMyProjectListObj.isLoading &&
+      {/* {!getMyProjectListObj.isLoading &&
         getMyProjectListObj.isSuccess != null &&
         !getProjectTokenListObj.isLoading &&
-        getProjectTokenListObj.isSuccess != null && (
-          <Form
-            layout="inline"
-            form={form}
-            onValuesChange={onFormValuesChange}
-            initialValues={{
-              projectId: getMyProjectListObj.myProjectList.data[0] && getMyProjectListObj.myProjectList.data[0]._id,
-              tokenId:
-                getProjectTokenListObj.projectTokenList.data[0] && getProjectTokenListObj.projectTokenList.data[0]._id,
-            }}
+        getProjectTokenListObj.isSuccess != null && ( */}
+      <Form
+        layout="inline"
+        form={form}
+        onValuesChange={onFormValuesChange}
+        // initialValues={{
+        //   projectId: getMyProjectListObj.myProjectList.data[0] && getMyProjectListObj.myProjectList.data[0]._id,
+        //   tokenId:
+        //     getProjectTokenListObj.projectTokenList.data[0] && getProjectTokenListObj.projectTokenList.data[0]._id,
+        // }}
+      >
+        <div>
+          <h5 className="font-mid">Dự án</h5>
+          <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
+            <Select
+              style={{ minWidth: 200 }}
+              placeholder={
+                (getMyProjectListObj.myProjectList.data || []).length > 0 ? 'Chọn một dự án' : 'Không tìm thấy dự án'
+              }
+              onChange={onProjectIdChange}
+            >
+              {(getMyProjectListObj.myProjectList.data || []).map(project => {
+                return (
+                  <Option value={project._id} key={project._id}>
+                    {project.name}
+                  </Option>
+                )
+              })}
+            </Select>
+          </Form.Item>
+        </div>
+        <div>
+          <h5 className="font-mid">Tên API key</h5>
+          <Form.Item
+            name="tokenId"
+            dependencies={['projectId']}
+            rules={[
+              { required: true, message: 'Vui lòng chọn một API key.' },
+              ({ getFieldValue }) => ({
+                async validator() {
+                  const projectId = getFieldValue('projectId')
+                  if (!projectId) {
+                    return Promise.reject('Vui lòng chọn một dự án')
+                  }
+                  return Promise.resolve()
+                },
+              }),
+            ]}
           >
-            <div>
-              <h5 className="font-mid">Dự án</h5>
-              <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
-                <Select
-                  style={{ minWidth: 200 }}
-                  placeholder={
-                    (getMyProjectListObj.myProjectList.data || []).length > 0
-                      ? 'Chọn một dự án'
-                      : 'Không tìm thấy dự án'
-                  }
-                  onChange={onProjectIdChange}
-                >
-                  {(getMyProjectListObj.myProjectList.data || []).map(project => {
-                    return (
-                      <Option value={project._id} key={project._id}>
-                        {project.name}
-                      </Option>
-                    )
-                  })}
-                </Select>
-              </Form.Item>
-            </div>
-            <div>
-              <h5 className="font-mid">Tên API key</h5>
-              <Form.Item
-                name="tokenId"
-                dependencies={['projectId']}
-                rules={[
-                  { required: true, message: 'Vui lòng chọn một API key.' },
-                  ({ getFieldValue }) => ({
-                    async validator() {
-                      const projectId = getFieldValue('projectId')
-                      if (!projectId) {
-                        return Promise.reject('Vui lòng chọn một dự án')
-                      }
-                      return Promise.resolve()
-                    },
-                  }),
-                ]}
-              >
-                <Select
-                  style={{ minWidth: 200 }}
-                  placeholder={
-                    (getProjectTokenListObj.projectTokenList.data || []).length > 0
-                      ? 'Chọn một API key'
-                      : 'Không tìm thấy API key'
-                  }
-                >
-                  {(getProjectTokenListObj.projectTokenList.data || []).map(item => {
-                    return (
-                      <Option key={item._id} value={item._id}>
-                        {item.name}
-                      </Option>
-                    )
-                  })}
-                </Select>
-              </Form.Item>
-            </div>
-            <div>
-              <h5 className="font-mid">Gói API key hiện tại</h5>
-              <div style={{ minWidth: 180 }}>{currentTokenType}</div>
-            </div>
-          </Form>
-        )}
+            <Select
+              style={{ minWidth: 200 }}
+              placeholder={
+                (getProjectTokenListObj.projectTokenList.data || []).length > 0
+                  ? 'Chọn một API key'
+                  : 'Không tìm thấy API key'
+              }
+            >
+              {(getProjectTokenListObj.projectTokenList.data || []).map(item => {
+                return (
+                  <Option key={item._id} value={item._id}>
+                    {item.name}
+                  </Option>
+                )
+              })}
+            </Select>
+          </Form.Item>
+        </div>
+        <div>
+          <h5 className="font-mid">Gói API key hiện tại</h5>
+          <div style={{ minWidth: 180 }}>{currentTokenType}</div>
+        </div>
+      </Form>
+      {/* )} */}
     </Row>
   )
 }

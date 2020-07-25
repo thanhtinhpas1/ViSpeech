@@ -24,7 +24,7 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
     async handle(event: OrderCreatedEvent) {
         Logger.log(event.orderDto._id, 'OrderCreatedEvent');
         const {streamId, orderDto} = event;
-        const order = {...orderDto};
+        const order = JSON.parse(JSON.stringify(orderDto));
 
         try {
             order.tokenType = await this.tokenTypeRepository.findOne({_id: order.tokenType._id});

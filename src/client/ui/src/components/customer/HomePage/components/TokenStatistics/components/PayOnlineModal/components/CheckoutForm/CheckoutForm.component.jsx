@@ -254,7 +254,7 @@ const CheckoutForm = ({
       >
         <Checkbox>
           Tôi đồng ý với
-          <strong> điều khoản giao dịch mua bán key</strong> của ASR VietSpeech.
+          <strong> điều khoản giao dịch mua bán key</strong> của VietSpeech.
         </Checkbox>
       </Form.Item>
       <ul className="d-flex flex-wrap align-items-center guttar-30px">
@@ -276,7 +276,7 @@ const CheckoutForm = ({
       <div className="gaps-1x d-none d-sm-block" />
       <div className="note note-plane note-light mgb-1x">
         <em className="fas fa-info-circle" />
-        <p className="text-light">Sau khi giao dịch thành công, trang web sẽ hiển thị key cho bạn.</p>
+        <p className="text-light">Sau khi giao dịch thành công, trang web sẽ hiển thị API key cho bạn.</p>
       </div>
     </Form>
   )

@@ -60,6 +60,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.USER) {
                 const users = await this.userRepository.find();
                 for (const user of users) {
+                    if (user.username === 'admin') continue;
                     data.push({data: user, usedMinutes: 0, totalRequests: 0});
                 }
             }
