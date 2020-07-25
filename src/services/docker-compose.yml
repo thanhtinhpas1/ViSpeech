@@ -18,6 +18,8 @@ services:
   vispeechui:
     build:
       context: "../client"
+    env_file:
+      - '/opt/.env'
     command: "npm run start:prod"
     restart: always
     ports:
