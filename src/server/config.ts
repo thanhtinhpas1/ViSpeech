@@ -73,7 +73,7 @@ const configs = {
         },
         KAFKA: {
             NAME: process.env.KAFKA_NAME || 'VISPEECH',
-            HOST: process.env.APP_HOST || 'asr.vietspeech.com',
+            HOST: process.env.KAFKA_HOST || 'asr.vietspeech.com',
             PORT: process.env.KAFKA_PORT || 9092,
             TOPIC: process.env.KAFKA_TOPIC || 'vispeech',
         },
