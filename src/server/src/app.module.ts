@@ -20,6 +20,7 @@ import { UsersModule } from './users/users.module';
         ScheduleModule.forRoot(),
         TypeOrmModule.forRoot({
             ...config.DATABASE,
+            poolSize: 200,
             useUnifiedTopology: true,
             entities: [__dirname + '/../**/*.dto{.ts,.js}'],
         }),
