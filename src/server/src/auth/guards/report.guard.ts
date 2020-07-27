@@ -24,9 +24,9 @@ export class ReportQueryGuard implements CanActivate {
         }
         if (UserUtils.isAdmin(payload['roles'])) return true;
 
-        const {id, userId, statisticsType, timeType} = request.params;
+        const { id, userId, statisticsType, timeType } = request.params;
         if (userId) {
-            const user = await getMongoRepository(UserDto).findOne({_id: userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${id} does not exist.`);
             }
@@ -35,7 +35,7 @@ export class ReportQueryGuard implements CanActivate {
             }
         }
         if (id && !userId && !statisticsType && !timeType) { // find report
-            const report = await getMongoRepository(ReportDto).findOne({_id: id});
+            const report = await getMongoRepository(ReportDto).findOne({ _id: id });
             if (!report) {
                 throw new NotFoundException(`Report with _id ${id} does not exist.`);
             }
@@ -45,7 +45,7 @@ export class ReportQueryGuard implements CanActivate {
         }
         if (id && statisticsType && timeType) { // get statistics by id
             if (statisticsType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
-                const project = await getMongoRepository(ProjectDto).findOne({_id: id});
+                const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
                 if (!project) {
                     throw new NotFoundException(`Project with _id ${id} does not exist.`);
                 }
@@ -53,7 +53,7 @@ export class ReportQueryGuard implements CanActivate {
                     return true;
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN) {
-                const token = await getMongoRepository(TokenDto).findOne({_id: id});
+                const token = await getMongoRepository(TokenDto).findOne({ _id: id });
                 if (!token) {
                     throw new NotFoundException(`Token with _id ${id} does not exist.`);
                 }
@@ -61,14 +61,14 @@ export class ReportQueryGuard implements CanActivate {
                     return true;
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
-                const tokenType = await getMongoRepository(TokenTypeDto).findOne({_id: id});
+                const tokenType = await getMongoRepository(TokenTypeDto).findOne({ _id: id });
                 if (!tokenType) {
                     throw new NotFoundException(`Token type with _id ${id} does not exist.`);
                 }
             }
         }
         if (id && userId && timeType) { // get statistics by token type id and user id
-            const tokenType = await getMongoRepository(TokenTypeDto).findOne({_id: id});
+            const tokenType = await getMongoRepository(TokenTypeDto).findOne({ _id: id });
             if (!tokenType) {
                 throw new NotFoundException(`Token type with _id ${id} does not exist.`);
             }

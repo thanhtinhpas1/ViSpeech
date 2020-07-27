@@ -3,7 +3,11 @@ import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RequestDto } from 'requests/dtos/requests.dto';
 import { Repository } from 'typeorm';
-import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from '../impl/request-created.event';
+import {
+    RequestCreatedEvent,
+    RequestCreatedFailedEvent,
+    RequestCreatedSuccessEvent
+} from '../impl/request-created.event';
 import { CONSTANTS } from 'common/constant';
 import { ClientKafka } from '@nestjs/microservices';
 import { config } from '../../../../config';
@@ -20,7 +24,7 @@ export class RequestCreatedHandler implements IEventHandler<RequestCreatedEvent>
 
     async handle(event: RequestCreatedEvent) {
         Logger.log(event.tokenDto._id, 'RequestCreatedEvent');
-        const {streamId, requestDto, tokenDto} = event;
+        const { streamId, requestDto, tokenDto } = event;
         try {
             requestDto.duration = Number(requestDto.duration);
             requestDto.status = CONSTANTS.STATUS.PENDING;
@@ -59,8 +63,8 @@ export class RequestCreatedFailedHandler
     }
 
     handle(event: RequestCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.REQUEST_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'RequestCreatedFailedEvent');
     }

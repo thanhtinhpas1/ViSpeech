@@ -24,7 +24,7 @@ export class PermissionCreatedHandler implements IEventHandler<PermissionCreated
 
     async handle(event: PermissionCreatedEvent) {
         Logger.log(event.permissionDto._id, 'PermissionCreatedEvent');
-        const {streamId, permissionDto} = event;
+        const { streamId, permissionDto } = event;
         const permission = JSON.parse(JSON.stringify(permissionDto));
 
         try {
@@ -64,8 +64,8 @@ export class PermissionCreatedFailedHandler
     }
 
     handle(event: PermissionCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PermissionCreatedFailedEvent');
     }

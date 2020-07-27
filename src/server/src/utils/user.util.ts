@@ -1,4 +1,4 @@
-import { CONSTANTS } from "../common/constant";
+import { CONSTANTS } from '../common/constant';
 
 export const UserUtils = {
     isAdmin: (roles: any) => {
@@ -7,6 +7,6 @@ export const UserUtils = {
     },
     isManagerUser: (roles: any) => {
         if (!roles || roles.length === 0) return false;
-        return roles.findIndex(role => role.name === CONSTANTS.ROLE.MANAGER_USER) !== -1
+        return roles.findIndex(role => role.name === CONSTANTS.ROLE.MANAGER_USER) !== -1;
     }
-}
+};

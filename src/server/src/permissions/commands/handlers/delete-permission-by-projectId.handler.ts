@@ -17,10 +17,10 @@ export class DeletePermissionByProjectIdHandler implements ICommandHandler<Delet
 
     async execute(command: DeletePermissionByProjectIdCommand) {
         Logger.log('Async DeletePermissionByProjectIdHandler...', 'DeletePermissionByProjectIdCommand');
-        const {streamId, projectId} = command;
+        const { streamId, projectId } = command;
 
         try {
-            const permissions = await getMongoRepository(PermissionDto).find({projectId})
+            const permissions = await getMongoRepository(PermissionDto).find({ projectId });
             if (permissions.length === 0) {
                 throw new NotFoundException(`Permission with projectId ${projectId} does not exist.`);
             }

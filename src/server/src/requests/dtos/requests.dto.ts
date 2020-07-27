@@ -1,8 +1,8 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUUID } from 'class-validator';
 import { Column, Entity } from 'typeorm';
-import { ErrorUtils } from "../../utils/errorUtils";
-import { ERR } from "../../common/error";
+import { ErrorUtils } from '../../utils/errorUtils';
+import { ERR } from '../../common/error';
 import { CONSTANTS } from 'common/constant';
 
 export class FindRequestsParam {

@@ -1,6 +1,6 @@
-import { BaseEntityDto } from "base/base-entity.dto";
-import { IsDate, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from "class-validator";
-import { Column, Entity } from "typeorm";
+import { BaseEntityDto } from 'base/base-entity.dto';
+import { IsDate, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString } from 'class-validator';
+import { Column, Entity } from 'typeorm';
 
 @Entity('tasks')
 export class TaskDto extends BaseEntityDto {
@@ -50,6 +50,6 @@ export class TaskDto extends BaseEntityDto {
 }
 
 export enum PreviousRunStatus {
-    SUCCESS = "SUCCESS",
-    FAILURE = "FAILURE",
+    SUCCESS = 'SUCCESS',
+    FAILURE = 'FAILURE',
 }

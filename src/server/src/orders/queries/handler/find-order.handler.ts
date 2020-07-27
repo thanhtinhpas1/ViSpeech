@@ -18,17 +18,17 @@ export class FindOrderHandler implements IQueryHandler<FindOrderQuery> {
 
     async execute(query: FindOrderQuery): Promise<any> {
         Logger.log('Async FindOrderQuery...', 'FindOrderQuery');
-        const {id} = query;
+        const { id } = query;
         let project = null;
 
         try {
-            const order = await this.repository.findOne({_id: id});
+            const order = await this.repository.findOne({ _id: id });
             if (order) {
-                project = await this.projectDtoRepository.findOne({_id: order.token.projectId});
+                project = await this.projectDtoRepository.findOne({ _id: order.token.projectId });
                 // TODO: verify why we need create new field here
-                order.token['projectName'] = project.name
+                order.token['projectName'] = project.name;
             }
-            return order
+            return order;
         } catch (error) {
             Logger.error(error.message, '', 'FindOrderQuery');
         }

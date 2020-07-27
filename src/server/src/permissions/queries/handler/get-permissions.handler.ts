@@ -15,14 +15,14 @@ export class GetPermissionsHandler implements IQueryHandler<GetPermissionsQuery>
 
     async execute(query: GetPermissionsQuery) {
         Logger.log('Async GetPermissionsHandler...', 'GetPermissionsQuery');
-        const {offset, limit} = query;
-        let permissions = []
+        const { offset, limit } = query;
+        let permissions = [];
         try {
             permissions = limit != null && offset != null ?
-                await this.repository.find({skip: offset, take: limit}) :
+                await this.repository.find({ skip: offset, take: limit }) :
                 await this.repository.find();
             const count = await this.repository.count();
-            return {data: permissions, count};
+            return { data: permissions, count };
         } catch (error) {
             Logger.error(error.message, '', 'GetPermissionsQuery');
         }

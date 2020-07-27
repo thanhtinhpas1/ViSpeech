@@ -17,10 +17,10 @@ export class UpdatePermissionHandler implements ICommandHandler<UpdatePermission
 
     async execute(command: UpdatePermissionCommand) {
         Logger.log('Async UpdatePermissionHandler...', 'UpdatePermissionCommand');
-        const {streamId, permissionDto} = command;
+        const { streamId, permissionDto } = command;
 
         try {
-            const permission = await getMongoRepository(PermissionDto).findOne({_id: permissionDto._id});
+            const permission = await getMongoRepository(PermissionDto).findOne({ _id: permissionDto._id });
             if (!permission) {
                 throw new NotFoundException(`Permission with _id ${permissionDto._id} does not exist.`);
             }

@@ -1,6 +1,6 @@
-import { IsNumber, IsObject, IsOptional, IsString, IsUUID, Min, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { BaseSortClass } from "base/base-sort.class";
+import { IsNumber, IsObject, IsOptional, IsString, IsUUID, Min, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { BaseSortClass } from 'base/base-sort.class';
 
 export class FindRequestsQuery {
     @IsOptional()

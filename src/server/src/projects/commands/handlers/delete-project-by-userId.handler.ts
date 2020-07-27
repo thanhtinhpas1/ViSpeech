@@ -17,10 +17,10 @@ export class DeleteProjectByUserIdHandler implements ICommandHandler<DeleteProje
 
     async execute(command: DeleteProjectByUserIdCommand) {
         Logger.log('Async DeleteProjectByUserIdHandler...', 'DeleteProjectByUserIdCommand');
-        const {streamId, userId} = command;
+        const { streamId, userId } = command;
 
         try {
-            const project = await getMongoRepository(ProjectDto).find({userId});
+            const project = await getMongoRepository(ProjectDto).find({ userId });
             if (!project) {
                 throw new NotFoundException(`Project with userId ${userId} does not exist.`);
             }

@@ -13,21 +13,21 @@ export class TokenRepository {
     }
 
     async createFreeToken(streamId: string, tokenDto: TokenDto) {
-        const token = new Token(undefined);
+        const token = new Token(streamId);
         token.setData(tokenDto);
         token.createFreeToken(streamId);
         return token;
     }
 
     async createOrderedToken(streamId: string, tokenDto: TokenDto) {
-        const token = new Token(undefined);
+        const token = new Token(streamId);
         token.setData(tokenDto);
         token.createOrderedToken(streamId);
         return token;
     }
 
     async updateToken(streamId: string, tokenDto: TokenDto) {
-        const token = new Token(undefined);
+        const token = new Token(streamId);
         token.setData(tokenDto);
         token.updateToken(streamId);
         return token;
@@ -40,14 +40,14 @@ export class TokenRepository {
     }
 
     async deleteTokenByUserId(streamId: string, userId: string) {
-        const token = new Token(undefined);
+        const token = new Token(streamId);
         token.setData(userId);
         token.deleteTokenByUserId(streamId);
         return token;
     }
 
     async deleteTokenByProjectId(streamId: string, projectId: string) {
-        const token = new Token(undefined);
+        const token = new Token(streamId);
         token.setData(projectId);
         token.deleteTokenByProjectId(streamId);
         return token;

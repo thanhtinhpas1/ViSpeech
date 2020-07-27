@@ -19,12 +19,12 @@ export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
 
     async execute(command: VerifyEmailCommand) {
         Logger.log('Async VerifyEmailHandler...', 'VerifyEmailCommand');
-        const {streamId, emailToken} = command;
+        const { streamId, emailToken } = command;
 
         try {
             const decodedToken = this.jwtService.decode(emailToken);
             const userId = decodedToken['id'];
-            const user = await getMongoRepository(UserDto).findOne({_id: userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }

@@ -17,7 +17,7 @@ export class FindUserHandler implements IQueryHandler<FindUserQuery> {
     async execute(query: FindUserQuery) {
         Logger.log('Async FindUserQuery...', 'FindUserQuery');
         try {
-            let user = await this.repository.findOne({_id: query.id});
+            let user = await this.repository.findOne({ _id: query.id });
             user = Utils.removePropertyFromObject(user, 'password');
             return user;
         } catch (error) {

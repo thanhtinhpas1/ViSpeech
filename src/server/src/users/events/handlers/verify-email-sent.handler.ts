@@ -26,10 +26,10 @@ export class VerifyEmailSentHandler implements IEventHandler<VerifyEmailSentEven
 
     async handle(event: VerifyEmailSentEvent) {
         Logger.log(event.userId, 'VerifyEmailSentEvent');
-        const {streamId, userId} = event;
+        const { streamId, userId } = event;
 
         try {
-            const user = await this.repository.findOne({_id: userId});
+            const user = await this.repository.findOne({ _id: userId });
             const verifyEmailToken = this.authService.generateTokenWithUserId(userId, `${CONSTANTS.TOKEN_EXPIRATION.VERIFY_EMAIL} days`);
             await EmailUtils.sendVerifyEmail(user.username, user.email, verifyEmailToken);
             this.eventBus.publish(new VerifyEmailSentSuccessEvent(streamId, userId));
@@ -66,8 +66,8 @@ export class VerifyEmailSentFailedHandler
     }
 
     handle(event: VerifyEmailSentFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.VERIFY_EMAIL_SENT_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'VerifyEmailSentFailedEvent');
     }

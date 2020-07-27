@@ -4,7 +4,7 @@ import { CONSTANTS } from 'common/constant';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { getMongoRepository } from 'typeorm';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
-import { UserUtils } from "../../utils/user.util";
+import { UserUtils } from '../../utils/user.util';
 
 @Injectable()
 export class ProjectGuard implements CanActivate {
@@ -13,7 +13,7 @@ export class ProjectGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -23,7 +23,7 @@ export class ProjectGuard implements CanActivate {
         if (!id) return true;
         if (UserUtils.isAdmin(payload['roles'])) return true;
 
-        const project = await getMongoRepository(ProjectDto).findOne({_id: id});
+        const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
         if (project && project.userId === payload['id']) {
             return true;
         }
@@ -39,7 +39,7 @@ export class ProjectQueryGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -49,7 +49,7 @@ export class ProjectQueryGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (id) {
-            const project = await getMongoRepository(ProjectDto).findOne({_id: id});
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
             if (!project) {
                 throw new NotFoundException(`Project with _id ${id} does not exist.`);
             }
@@ -58,7 +58,7 @@ export class ProjectQueryGuard implements CanActivate {
             }
             // verify assignee
             const permission = await getMongoRepository(PermissionDto)
-                .findOne({assigneeId: payload['id'], projectId: id, status: CONSTANTS.STATUS.ACCEPTED});
+                .findOne({ assigneeId: payload['id'], projectId: id, status: CONSTANTS.STATUS.ACCEPTED });
             if (permission && project.isValid) {
                 return true;
             }

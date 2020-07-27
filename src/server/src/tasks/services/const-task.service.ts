@@ -33,7 +33,7 @@ export class ConstTaskService {
             const freeTokens = await this.tokenRepository.find({ tokenType: CONSTANTS.TOKEN_TYPE.FREE });
             for (const token of freeTokens) {
                 token.usedMinutes = 0;
-                this.tokenRepository.update({_id: token._id}, {usedMinutes: Number(token.usedMinutes)});
+                this.tokenRepository.update({ _id: token._id }, { usedMinutes: Number(token.usedMinutes) });
                 this.logger.log(`Refresh free token's usedMinutes ${token._id}`);
             }
         } catch (error) {
@@ -299,7 +299,11 @@ export class ConstTaskService {
     }
 
     async deleteRelatedReports(aggregateMatchDates, timeType, reportType) {
-        await getMongoRepository(ReportDto).deleteMany({ createdDate: aggregateMatchDates.$match.createdDate, timeType, reportType });
+        await getMongoRepository(ReportDto).deleteMany({
+            createdDate: aggregateMatchDates.$match.createdDate,
+            timeType,
+            reportType
+        });
     }
 
     // report for users and tokenTypes
@@ -314,7 +318,7 @@ export class ConstTaskService {
 
         // create reports
         const aggregateGroup = CronUtils.aggregateGroup();
-        aggregateGroup.$group._id[`${reportType}Id`] = `$${reportType}Id`
+        aggregateGroup.$group._id[`${reportType}Id`] = `$${reportType}Id`;
 
         // only create report for successful requests
         aggregateMatchDates.$match['status'] = CONSTANTS.STATUS.SUCCESS;
@@ -344,14 +348,14 @@ export class ConstTaskService {
 
         // create reports
         const aggregateGroup = CronUtils.aggregateGroup();
-        aggregateGroup.$group._id[`userId`] = `$userId`
-        aggregateGroup.$group._id[`${reportType}Id`] = `$${reportType}Id`
+        aggregateGroup.$group._id[`userId`] = `$userId`;
+        aggregateGroup.$group._id[`${reportType}Id`] = `$${reportType}Id`;
 
         // only create report for successful requests
         aggregateMatchDates.$match['status'] = CONSTANTS.STATUS.SUCCESS;
         // do not create report for requests that have projectId='' (free token)
         if (reportType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
-            aggregateMatchDates.$match['projectId'] = { $ne: ''};
+            aggregateMatchDates.$match['projectId'] = { $ne: '' };
         }
         const groupedRequests = await getMongoRepository(RequestDto).aggregate([
             aggregateMatchDates,

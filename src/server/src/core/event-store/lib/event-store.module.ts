@@ -1,5 +1,10 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { EventStoreFeatureAsyncOptions, EventStoreModuleAsyncOptions, EventStoreModuleOptions, EventStoreOptionConfig } from './contract';
+import {
+    EventStoreFeatureAsyncOptions,
+    EventStoreModuleAsyncOptions,
+    EventStoreModuleOptions,
+    EventStoreOptionConfig
+} from './contract';
 import { EventStoreCoreModule } from './event-store-core.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TypeOrmModule } from '@nestjs/typeorm';

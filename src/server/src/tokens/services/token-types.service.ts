@@ -15,6 +15,6 @@ export class TokenTypesService {
     }
 
     async findByName(name: string) {
-        return await this.repository.findOne({name});
+        return await this.repository.findOne({ name });
     }
 }

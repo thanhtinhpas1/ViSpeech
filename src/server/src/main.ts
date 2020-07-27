@@ -13,12 +13,12 @@ async function bootstrap() {
     app.setGlobalPrefix(config.PREFIX);
     app.use(json({ limit: '20mb' }));
     const documentOptions = new DocumentBuilder()
-    .setTitle(config.TITLE)
-    .setDescription(config.DESCRIPTION)
-    .setVersion(config.VERSION)
-    .addTag(config.NAME)
-    .addBearerAuth()
-    .build();
+        .setTitle(config.TITLE)
+        .setDescription(config.DESCRIPTION)
+        .setVersion(config.VERSION)
+        .addTag(config.NAME)
+        .addBearerAuth()
+        .build();
     const document = SwaggerModule.createDocument(app, documentOptions);
     const validationOptions = {
         transform: false,

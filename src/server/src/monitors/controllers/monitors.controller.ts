@@ -17,10 +17,10 @@ export class MonitorsController {
     /* List Monitors */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'List Monitors' ] })
+    @ApiOperation({ tags: ['List Monitors'] })
     @ApiResponse({ status: 200, description: 'List Monitors.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-    @Roles([ CONSTANTS.ROLE.ADMIN ])
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async getMonitors(@Query() getMonitorsQuery: GetMonitorsQuery) {
         return this.monitorsService.getMonitors(getMonitorsQuery);

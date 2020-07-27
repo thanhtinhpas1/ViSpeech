@@ -24,10 +24,13 @@ export class PermissionDeletedHandler implements IEventHandler<PermissionDeleted
 
     async handle(event: PermissionDeletedEvent) {
         Logger.log(event.permissionId, 'PermissionDeletedEvent');
-        const {streamId, permissionId} = event;
+        const { streamId, permissionId } = event;
 
         try {
-            await this.repository.update({_id: permissionId}, {status: CONSTANTS.STATUS.INVALID, updatedDate: new Date()});
+            await this.repository.update({ _id: permissionId }, {
+                status: CONSTANTS.STATUS.INVALID,
+                updatedDate: new Date()
+            });
             this.eventBus.publish(new PermissionDeletedSuccessEvent(streamId, permissionId));
         } catch (error) {
             this.eventBus.publish(new PermissionDeletedFailedEvent(streamId, permissionId, error));
@@ -62,8 +65,8 @@ export class PermissionDeletedFailedHandler
     }
 
     handle(event: PermissionDeletedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PermissionDeletedFailedEvent');
     }

@@ -4,7 +4,7 @@ import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { Utils } from 'utils';
 import { JwtService } from '@nestjs/jwt';
-import { UserUtils } from "../../utils/user.util";
+import { UserUtils } from '../../utils/user.util';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -13,7 +13,7 @@ export class UserGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -38,9 +38,9 @@ export class VerifyEmailGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
-        const {emailToken} = request.body;
+        const { emailToken } = request.body;
         const requestJwt = this.authService.decode(request);
         if (!requestJwt || !requestJwt['id'] || !requestJwt['roles']) {
             throw new UnauthorizedException();
@@ -54,7 +54,7 @@ export class VerifyEmailGuard implements CanActivate {
         if (Number(`${exp}000`) < Date.now()) {
             throw new BadRequestException('Token is expired.');
         }
-        const user = await getMongoRepository(UserDto).findOne({_id: userId});
+        const user = await getMongoRepository(UserDto).findOne({ _id: userId });
         return user && !Utils.isEmailVerified(user.roles) && userId === requestJwt['id'];
     }
 }

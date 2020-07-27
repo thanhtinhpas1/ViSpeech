@@ -3,8 +3,8 @@ import { IsArray, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-v
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
 import { Column, Entity } from 'typeorm';
-import { ErrorUtils } from "../../utils/errorUtils";
-import { ERR } from "../../common/error";
+import { ErrorUtils } from '../../utils/errorUtils';
+import { ERR } from '../../common/error';
 
 export class PermissionAssignDto {
     constructor(assigneeUsername: string, projectId, permissions: string[], assignerId) {
@@ -28,7 +28,7 @@ export class PermissionAssignDto {
 
     @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
     @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
-    @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
+    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true })
     permissions: string[];
 
     @IsNotEmpty(ErrorUtils.getMessage('assignerId', ERR.IsNotEmpty))
@@ -100,7 +100,7 @@ export class PermissionDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
     @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
-    @IsIn([CONSTANTS.PERMISSION.CSR_USER], {each: true})
+    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true })
     @Column()
     permissions: string[];
 

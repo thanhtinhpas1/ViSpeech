@@ -2,8 +2,8 @@ import { Column, Entity } from 'typeorm';
 import { BaseEntityDto } from 'base/base-entity.dto';
 import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 import { CONSTANTS } from 'common/constant';
-import { ErrorUtils } from "../../utils/errorUtils";
-import { ERR } from "../../common/error";
+import { ErrorUtils } from '../../utils/errorUtils';
+import { ERR } from '../../common/error';
 
 @Entity('roles')
 export class RoleDto extends BaseEntityDto {
@@ -19,6 +19,6 @@ export class RoleDto extends BaseEntityDto {
         CONSTANTS.ROLE.MANAGER_USER,
         CONSTANTS.ROLE.ADMIN,
     ])
-    @Column({unique: true})
+    @Column({ unique: true })
     name: string;
 }

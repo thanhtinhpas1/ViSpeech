@@ -20,10 +20,10 @@ export class ReportDeletedHandler implements IEventHandler<ReportDeletedEvent> {
 
     async handle(event: ReportDeletedEvent) {
         Logger.log(event.reportId, 'ReportDeletedEvent');
-        const {streamId, reportId} = event;
+        const { streamId, reportId } = event;
 
         try {
-            await this.repository.delete({_id: reportId});
+            await this.repository.delete({ _id: reportId });
             this.eventBus.publish(new ReportDeletedSuccessEvent(streamId, reportId));
         } catch (error) {
             this.eventBus.publish(new ReportDeletedFailedEvent(streamId, reportId, error));
@@ -58,8 +58,8 @@ export class ReportDeletedFailedHandler
     }
 
     handle(event: ReportDeletedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_DELETED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'ReportDeletedFailedEvent');
     }

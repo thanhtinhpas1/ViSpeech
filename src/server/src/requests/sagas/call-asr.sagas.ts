@@ -17,7 +17,7 @@ export class CallAsrSagas {
     ) {
     }
 
-    streamId: string = null
+    streamId: string = null;
 
     @Saga()
     asrCalledRequest = (events$: Observable<any>): Observable<void> => {
@@ -25,11 +25,11 @@ export class CallAsrSagas {
             ofType(AsrCalledRequestEvent),
             map((event: AsrCalledRequestEvent) => {
                 Logger.log('Inside [RequestSagas] asrCalledRequest Saga', 'RequestSagas');
-                const {streamId, requestDto, tokenDto} = event;
+                const { streamId, requestDto, tokenDto } = event;
                 // prevent from duplicated events
                 if (!this.streamId || this.streamId !== streamId) {
                     if (CONSTANTS.STATUS.SUCCESS === requestDto.status) {
-                        this.streamId = streamId
+                        this.streamId = streamId;
                         // generate report
                         const date = new Date();
                         this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
@@ -50,10 +50,10 @@ export class CallAsrSagas {
             ofType(RequestTranscriptFileUrlUpdatedSuccessEvent),
             map((event: RequestTranscriptFileUrlUpdatedSuccessEvent) => {
                 Logger.log('Inside [RequestSagas] requestTranscriptFileUrlUpdatedSuccess Saga', 'RequestSagas');
-                const {streamId, tokenDto } = event;
+                const { streamId, tokenDto } = event;
                 // prevent from duplicated events
                 if (!this.streamId || this.streamId !== streamId) {
-                    this.streamId = streamId
+                    this.streamId = streamId;
                     // generate report
                     const date = new Date();
                     this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());

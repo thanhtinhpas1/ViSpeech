@@ -15,14 +15,26 @@ import { CommandHandlers } from './commands/handlers';
 import { ProjectsController } from './controllers/projects.controller';
 import { ProjectDto } from './dtos/projects.dto';
 import { EventHandlers } from './events/handlers';
-import { ProjectCreatedEvent, ProjectCreatedFailedEvent, ProjectCreatedSuccessEvent } from './events/impl/project-created.event';
+import {
+    ProjectCreatedEvent,
+    ProjectCreatedFailedEvent,
+    ProjectCreatedSuccessEvent
+} from './events/impl/project-created.event';
 import {
     ProjectDeletedByUserIdEvent,
     ProjectDeletedByUserIdFailedEvent,
     ProjectDeletedByUserIdSuccessEvent
 } from './events/impl/project-deleted-by-userId.event';
-import { ProjectDeletedEvent, ProjectDeletedFailedEvent, ProjectDeletedSuccessEvent } from './events/impl/project-deleted.event';
-import { ProjectUpdatedEvent, ProjectUpdatedFailedEvent, ProjectUpdatedSuccessEvent } from './events/impl/project-updated.event';
+import {
+    ProjectDeletedEvent,
+    ProjectDeletedFailedEvent,
+    ProjectDeletedSuccessEvent
+} from './events/impl/project-deleted.event';
+import {
+    ProjectUpdatedEvent,
+    ProjectUpdatedFailedEvent,
+    ProjectUpdatedSuccessEvent
+} from './events/impl/project-updated.event';
 import { ProjectWelcomedEvent } from './events/impl/project-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { ProjectRepository } from './repository/project.repository';
@@ -99,9 +111,16 @@ export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
         const streamName = CONSTANTS.STREAM_NAME.PROJECT;
         const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({ ...userProjection, expectedVersion: userProjection.eventNumber });
+            await getMongoRepository(ProjectionDto).save({
+                ...userProjection,
+                expectedVersion: userProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
         Logger.log('Seed projection project success');
     }

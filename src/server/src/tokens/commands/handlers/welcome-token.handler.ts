@@ -14,7 +14,7 @@ export class WelcomeTokenHandler
 
     async execute(command: WelcomeTokenCommand) {
         Logger.log('Async WelcomeTokenHandler...', 'WelcomeTokenCommand');
-        const {streamId, tokenId} = command;
+        const { streamId, tokenId } = command;
         const token = this.publisher.mergeObjectContext(
             await this.repository.welcomeToken(streamId, tokenId)
         );

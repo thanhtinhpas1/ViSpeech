@@ -5,6 +5,6 @@ import { Logger } from '@nestjs/common';
 @EventsHandler(OrderWelcomedEvent)
 export class OrderWelcomedHandler implements IEventHandler<OrderWelcomedEvent> {
     handle(event: OrderWelcomedEvent) {
-        Logger.log(event.orderId, 'OrderWelcomedEvent'); // write here
+        Logger.log(event.orderId, 'OrderWelcomedEvent');
     }
 }

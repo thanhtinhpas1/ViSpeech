@@ -1,5 +1,5 @@
-import { IsNumber, IsOptional, Min, IsObject } from "class-validator";
-import { Type } from "class-transformer";
+import { IsNumber, IsObject, IsOptional, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class GetProjectNamesQuery {
     constructor() {

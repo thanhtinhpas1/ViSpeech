@@ -19,13 +19,13 @@ export class UserDeletedHandler implements IEventHandler<UserDeletedEvent> {
 
     async handle(event: UserDeletedEvent) {
         Logger.log(event.userId, 'UserDeletedEvent');
-        const {streamId, userId, isDeleted} = event;
+        const { streamId, userId, isDeleted } = event;
 
         try {
             if (Utils.convertToBoolean(isDeleted)) {
-                await this.repository.delete({_id: userId});
+                await this.repository.delete({ _id: userId });
             } else {
-                await this.repository.update({_id: userId}, {isActive: false, updatedDate: new Date()});
+                await this.repository.update({ _id: userId }, { isActive: false, updatedDate: new Date() });
             }
 
             this.eventBus.publish(new UserDeletedSuccessEvent(streamId, userId));
@@ -60,8 +60,8 @@ export class UserDeletedFailedHandler implements IEventHandler<UserDeletedFailed
     }
 
     handle(event: UserDeletedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.USER_DELETED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'UserDeletedFailedEvent');
     }

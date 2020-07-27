@@ -4,7 +4,7 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
-import { forwardRef } from "@nestjs/common";
+import { forwardRef } from '@nestjs/common';
 
 describe('AuthService', () => {
     let service: AuthService;

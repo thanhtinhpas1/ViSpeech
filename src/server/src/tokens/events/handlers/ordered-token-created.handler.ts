@@ -10,7 +10,11 @@ import { Utils } from 'utils';
 import { config } from '../../../../config';
 import { AuthService } from '../../../auth/auth.service';
 import { UserDto } from '../../../users/dtos/users.dto';
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from '../impl/ordered-token-created.event';
+import {
+    OrderedTokenCreatedEvent,
+    OrderedTokenCreatedFailedEvent,
+    OrderedTokenCreatedSuccessEvent
+} from '../impl/ordered-token-created.event';
 
 @EventsHandler(OrderedTokenCreatedEvent)
 export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCreatedEvent> {
@@ -26,7 +30,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
 
     async handle(event: OrderedTokenCreatedEvent) {
         Logger.log(event.tokenDto._id, 'OrderedTokenCreatedEvent');
-        const {streamId, tokenDto} = event;
+        const { streamId, tokenDto } = event;
         let token = JSON.parse(JSON.stringify(tokenDto));
         let tokenTypeDto = null;
 
@@ -41,7 +45,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
             token.minutes = Number(tokenTypeDto?.minutes);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
-            token = Utils.removePropertiesFromObject(token, [ 'orderId' ]);
+            token = Utils.removePropertiesFromObject(token, ['orderId']);
             const user = await getMongoRepository(UserDto).findOne({ _id: tokenDto.userId });
             token.value = this.authService.generateToken(user._id, user.username, user.roles);
             await this.repository.save(token);
@@ -80,8 +84,8 @@ export class OrderedTokenCreatedFailedHandler
     }
 
     handle(event: OrderedTokenCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.ORDERED_TOKEN_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'OrderedTokenCreatedFailedEvent');
     }

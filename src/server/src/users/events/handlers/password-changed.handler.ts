@@ -23,16 +23,16 @@ export class PasswordChangedHandler implements IEventHandler<PasswordChangedEven
 
     async handle(event: PasswordChangedEvent) {
         Logger.log(event.streamId, 'PasswordChangedEvent');
-        const {streamId, changePasswordBody} = event;
-        const {userId, oldPassword, newPassword} = changePasswordBody;
+        const { streamId, changePasswordBody } = event;
+        const { userId, oldPassword, newPassword } = changePasswordBody;
 
         try {
-            const user = await this.repository.findOne({_id: userId});
+            const user = await this.repository.findOne({ _id: userId });
             const isValid = await Utils.comparePassword(oldPassword, user.password);
             if (isValid) {
                 if (oldPassword === newPassword) throw new BadRequestException('New password must be different from old password.');
                 const newHashedPassword = Utils.hashPassword(newPassword);
-                await this.repository.update({_id: userId}, {password: newHashedPassword, updatedDate: new Date()});
+                await this.repository.update({ _id: userId }, { password: newHashedPassword, updatedDate: new Date() });
                 this.eventBus.publish(new PasswordChangedSuccessEvent(streamId, changePasswordBody));
                 return;
             }
@@ -66,8 +66,8 @@ export class PasswordChangedFailedHandler implements IEventHandler<PasswordChang
     }
 
     handle(event: PasswordChangedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PASSWORD_CHANGED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PasswordChangedFailedEvent');
     }

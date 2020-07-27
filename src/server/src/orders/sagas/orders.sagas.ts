@@ -16,7 +16,8 @@ export class OrdersSagas {
     constructor(
         private readonly eventStore: EventStore,
         private readonly authService: AuthService,
-    ) { }
+    ) {
+    }
 
     @Saga()
     orderCreatedSuccess = (event$: Observable<any>): Observable<void> => {

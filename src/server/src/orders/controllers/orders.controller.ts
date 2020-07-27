@@ -20,11 +20,11 @@ export class OrdersController {
     /* Create Order */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Order']})
-    @ApiResponse({status: 200, description: 'Create Order.'})
+    @ApiOperation({ tags: ['Create Order'] })
+    @ApiResponse({ status: 200, description: 'Create Order.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Post()
-    async createOrder(@Body("order") orderDto: OrderDto, @Body("paymentIntent") paymentIntent: PaymentIntent): Promise<OrderDto> {
+    async createOrder(@Body('order') orderDto: OrderDto, @Body('paymentIntent') paymentIntent: PaymentIntent): Promise<OrderDto> {
         const streamId = orderDto._id;
         return this.ordersService.createOrder(streamId, orderDto, paymentIntent);
     }
@@ -32,11 +32,11 @@ export class OrdersController {
     /* Create Order To Upgrade Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Order To Upgrade Token']})
-    @ApiResponse({status: 200, description: 'Create Order To Upgrade Token.'})
+    @ApiOperation({ tags: ['Create Order To Upgrade Token'] })
+    @ApiResponse({ status: 200, description: 'Create Order To Upgrade Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Post('/upgrade-token')
-    async createOrderToUpgrade(@Body("order") orderDto: OrderDto, @Body("paymentIntent") paymentIntent: PaymentIntent): Promise<OrderDto> {
+    async createOrderToUpgrade(@Body('order') orderDto: OrderDto, @Body('paymentIntent') paymentIntent: PaymentIntent): Promise<OrderDto> {
         const streamId = orderDto._id;
         return this.ordersService.createOrderToUpgrade(streamId, orderDto, paymentIntent);
     }
@@ -44,8 +44,8 @@ export class OrdersController {
     /* Update Order */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Update Order']})
-    @ApiResponse({status: 200, description: 'Update Order.'})
+    @ApiOperation({ tags: ['Update Order'] })
+    @ApiResponse({ status: 200, description: 'Update Order.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
@@ -63,8 +63,8 @@ export class OrdersController {
     /* Delete Order */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Delete Order']})
-    @ApiResponse({status: 200, description: 'Delete Order.'})
+    @ApiOperation({ tags: ['Delete Order'] })
+    @ApiResponse({ status: 200, description: 'Delete Order.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Delete(':_id')
@@ -76,8 +76,8 @@ export class OrdersController {
     /* List Orders */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Orders']})
-    @ApiResponse({status: 200, description: 'List Orders.'})
+    @ApiOperation({ tags: ['List Orders'] })
+    @ApiResponse({ status: 200, description: 'List Orders.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
@@ -88,8 +88,8 @@ export class OrdersController {
     /* List Orders By UserId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Orders By UserId']})
-    @ApiResponse({status: 200, description: 'List Orders By UserId.'})
+    @ApiOperation({ tags: ['List Orders By UserId'] })
+    @ApiResponse({ status: 200, description: 'List Orders By UserId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
     @Get('/userId')
     async getOrdersByUserId(
@@ -98,15 +98,15 @@ export class OrdersController {
         return this.ordersService.getOrdersByUserId(getOrdersByUserIdQuery);
     }
 
-    @ApiOperation({tags: ['Get Payment Intent']})
-    @ApiResponse({status: 200, description: 'Get Payment Intent.'})
+    @ApiOperation({ tags: ['Get Payment Intent'] })
+    @ApiResponse({ status: 200, description: 'Get Payment Intent.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Post('/payment-intent')
     async getPaymentIntent(@Body() body) {
         try {
             const paymentIntent = await this.ordersService.getPaymentIntent(body.amount);
-            return {clientSecret: paymentIntent.client_secret};
+            return { clientSecret: paymentIntent.client_secret };
         } catch (err) {
             throw err;
         }
@@ -115,8 +115,8 @@ export class OrdersController {
     /* Get Order By TokenId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Order By TokenId']})
-    @ApiResponse({status: 200, description: 'Get Order By TokenId.'})
+    @ApiOperation({ tags: ['Get Order By TokenId'] })
+    @ApiResponse({ status: 200, description: 'Get Order By TokenId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
     @Get('/get-by-token/:tokenId')
     async findOrderByTokenId(@Param() findOrderByTokenIdQuery: FindOrderByTokenIdQuery) {
@@ -126,8 +126,8 @@ export class OrdersController {
     /* Find Order */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Order']})
-    @ApiResponse({status: 200, description: 'Get Order.'})
+    @ApiOperation({ tags: ['Get Order'] })
+    @ApiResponse({ status: 200, description: 'Get Order.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), OrderQueryGuard)
     @Get(':id')
     async findOneOrder(@Param() findOrderQuery: FindOrderQuery) {

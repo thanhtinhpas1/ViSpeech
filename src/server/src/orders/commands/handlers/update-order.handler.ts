@@ -17,10 +17,10 @@ export class UpdateOrderHandler implements ICommandHandler<UpdateOrderCommand> {
 
     async execute(command: UpdateOrderCommand) {
         Logger.log('Async UpdateOrderHandler...', 'UpdateOrderCommand');
-        const {streamId, orderDto} = command;
+        const { streamId, orderDto } = command;
 
         try {
-            const order = await getMongoRepository(OrderDto).findOne({_id: orderDto._id});
+            const order = await getMongoRepository(OrderDto).findOne({ _id: orderDto._id });
             if (!order) {
                 throw new NotFoundException(`Order with _id ${orderDto._id} does not exist.`);
             }

@@ -1,11 +1,11 @@
 import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientKafka, ClientsModule } from '@nestjs/microservices';
-import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { RoleDto } from 'roles/dtos/roles.dto';
-import { getMongoRepository, Repository } from 'typeorm';
+import { getMongoRepository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
@@ -17,13 +17,30 @@ import { CommandHandlers } from './commands/handlers';
 import { UsersController } from './controllers/users.controller';
 import { USER_TYPE, UserDto } from './dtos/users.dto';
 import { EventHandlers } from './events/handlers';
-import { EmailVerifiedEvent, EmailVerifiedFailedEvent, EmailVerifiedSuccessEvent } from './events/impl/email-verified.event';
-import { PasswordChangedEvent, PasswordChangedFailedEvent, PasswordChangedSuccessEvent, } from './events/impl/password-changed.event';
-import { UserCreatedEvent, UserCreatedFailedEvent, UserCreatedSuccessEvent, UserCreationStartedEvent, } from './events/impl/user-created.event';
+import {
+    EmailVerifiedEvent,
+    EmailVerifiedFailedEvent,
+    EmailVerifiedSuccessEvent
+} from './events/impl/email-verified.event';
+import {
+    PasswordChangedEvent,
+    PasswordChangedFailedEvent,
+    PasswordChangedSuccessEvent,
+} from './events/impl/password-changed.event';
+import {
+    UserCreatedEvent,
+    UserCreatedFailedEvent,
+    UserCreatedSuccessEvent,
+    UserCreationStartedEvent,
+} from './events/impl/user-created.event';
 import { UserDeletedEvent, UserDeletedFailedEvent, UserDeletedSuccessEvent } from './events/impl/user-deleted.event';
 import { UserUpdatedEvent, UserUpdatedFailedEvent, UserUpdatedSuccessEvent } from './events/impl/user-updated.event';
 import { UserWelcomedEvent } from './events/impl/user-welcomed.event';
-import { VerifyEmailSentEvent, VerifyEmailSentFailedEvent, VerifyEmailSentSuccessEvent, } from './events/impl/verify-email-sent.event';
+import {
+    VerifyEmailSentEvent,
+    VerifyEmailSentFailedEvent,
+    VerifyEmailSentSuccessEvent,
+} from './events/impl/verify-email-sent.event';
 import { QueryHandlers } from './queries/handler';
 import { UserRepository } from './repository/user.repository';
 import { UsersSagas } from './sagas/users.sagas';
@@ -32,9 +49,9 @@ import { UsersService } from './services/users.service';
 @Module({
     imports: [
         ClientsModule.register(
-            [ {
+            [{
                 name: config.KAFKA.NAME, ...kafkaClientOptions,
-            } ]),
+            }]),
         TypeOrmModule.forFeature([
             UserDto,
             PermissionDto,
@@ -103,19 +120,27 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
 
     async seedProjection() {
         const streamName = CONSTANTS.STREAM_NAME.USER;
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({
+                ...userProjection,
+                expectedVersion: userProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
-        Logger.log('Seed projection user success')
+        Logger.log('Seed projection user success');
     }
 
     private async seedAdminAccount() {
         const admin = new UserDto(config.APPLICATION.ADMIN_NAME, config.APPLICATION.ADMIN_LAST_NAME, 'admin',
             Utils.hashPassword('admin'), config.APPLICATION.ADMIN_EMAIL,
             [new RoleDto(CONSTANTS.ROLE.ADMIN)], USER_TYPE.NORMAL);
+        admin._id = '75971bc0-ce34-11ea-b053-b99c52bf0172';
         await getMongoRepository(UserDto).save(admin).then(() => {
             Logger.log('Seed admin account success.', 'UserModule');
         }).catch(err => Logger.warn('User admin existed.', err.message));

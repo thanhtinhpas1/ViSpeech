@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "start:dev": "nodemon ./bin/www",
     "prestart:staging": "npm run build:staging --prefix ui/",
-    "start:staging": "env-cmd -f .env.staging  node ./bin/www",
+    "start:staging": "node ./bin/www",
     "prestart:test": "npm run build --prefix ui/",
     "start:test": "node ./bin/www",
     "prestart:prod": "npm run build --prefix ui/",

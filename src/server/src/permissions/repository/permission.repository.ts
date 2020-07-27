@@ -5,14 +5,14 @@ import { PermissionAssignDto, PermissionDto, PermissionResponseDto } from 'permi
 @Injectable()
 export class PermissionRepository {
     async createPermission(streamId: string, permissionDto: PermissionDto) {
-        const permission = new Permission(undefined);
+        const permission = new Permission(streamId);
         permission.setData(permissionDto);
         permission.createPermission(streamId);
         return permission;
     }
 
     async updatePermission(streamId: string, permissionDto: PermissionDto) {
-        const permission = new Permission(undefined);
+        const permission = new Permission(streamId);
         permission.setData(permissionDto);
         permission.updatePermission(streamId);
         return permission;
@@ -25,13 +25,13 @@ export class PermissionRepository {
     }
 
     async deletePermissionByUserId(streamId: string, userId: string) {
-        const permission = new Permission(undefined);
+        const permission = new Permission(streamId);
         permission.deletePermissionByUserId(streamId, userId);
         return permission;
     }
 
     async deletePermissionByProjectId(streamId: string, projectId: string) {
-        const permission = new Permission(undefined);
+        const permission = new Permission(streamId);
         permission.deletePermissionByProjectId(streamId, projectId);
         return permission;
     }
@@ -43,14 +43,14 @@ export class PermissionRepository {
     }
 
     async sendAssignPermissionEmail(streamId: string, permissionAssignDto: PermissionAssignDto) {
-        const permission = new Permission(undefined);
+        const permission = new Permission(streamId);
         permission.setData(permissionAssignDto);
         permission.sendAssignPermissionEmail(streamId);
         return permission;
     }
 
     async replyPermissionAssign(streamId: string, permissionResponseDto: PermissionResponseDto) {
-        const permission = new Permission(undefined);
+        const permission = new Permission(streamId);
         permission.setData(permissionResponseDto);
         permission.replyPermissionAssign(streamId);
         return permission;

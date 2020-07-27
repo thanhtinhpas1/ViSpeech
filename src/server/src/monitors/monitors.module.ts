@@ -22,7 +22,7 @@ import { CONSTANTS } from 'common/constant';
         ClientsModule.register([{
             name: config.KAFKA.NAME,
             ...kafkaClientOptions,
-        } ]),
+        }]),
         TypeOrmModule.forFeature([
             ProjectionDto,
             MonitorDto,
@@ -97,21 +97,35 @@ export class MonitorsModule implements OnModuleInit, OnModuleDestroy {
         const monitorProjection1 = await getMongoRepository(ProjectionDto).findOne({ streamName: '$stats-127.0.0.1:2113' });
         const monitorProjection2 = await getMongoRepository(ProjectionDto).findOne({ streamName: '$stats-0.0.0.0:2113' });
         if (monitorProjection1) {
-            await getMongoRepository(ProjectionDto).save({ ...monitorProjection1, expectedVersion: monitorProjection1.eventNumber });
+            await getMongoRepository(ProjectionDto).save({
+                ...monitorProjection1,
+                expectedVersion: monitorProjection1.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName: '$stats-127.0.0.1:2113', eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
+            await getMongoRepository(ProjectionDto).save({
+                streamName: '$stats-127.0.0.1:2113',
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
         if (monitorProjection2) {
-            await getMongoRepository(ProjectionDto).save({ ...monitorProjection2, expectedVersion: monitorProjection2.eventNumber });
+            await getMongoRepository(ProjectionDto).save({
+                ...monitorProjection2,
+                expectedVersion: monitorProjection2.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName: '$stats-0.0.0.0:2113', eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
+            await getMongoRepository(ProjectionDto).save({
+                streamName: '$stats-0.0.0.0:2113',
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
-        Logger.log('Seed projection user success')
+        Logger.log('Seed projection user success');
     }
 
     public static eventHandlers = {
         $statsCollected: (streamId, snapshot) => new $statsCollected(streamId, snapshot),
         MonitorBeatSuccessEvent: (streamId, snapshot) => new MonitorBeatSuccessEvent(streamId, snapshot),
         MonitorBeatFailedEvent: (streamId, snapshot, error) => new MonitorBeatFailedEvent(streamId, snapshot, error),
-    }
+    };
 }

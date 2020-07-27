@@ -20,7 +20,7 @@ export class ReportCreatedHandler implements IEventHandler<ReportCreatedEvent> {
 
     async handle(event: ReportCreatedEvent) {
         Logger.log(event.reportDto._id, 'ReportCreatedEvent');
-        const {streamId, reportDto} = event;
+        const { streamId, reportDto } = event;
 
         try {
             reportDto.usedMinutes = Number(reportDto.usedMinutes);
@@ -60,8 +60,8 @@ export class ReportCreatedFailedHandler
     }
 
     handle(event: ReportCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'ReportCreatedFailedEvent');
     }

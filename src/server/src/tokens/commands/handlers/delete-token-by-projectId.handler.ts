@@ -17,10 +17,10 @@ export class DeleteTokenByProjectIdHandler implements ICommandHandler<DeleteToke
 
     async execute(command: DeleteTokenByProjectIdCommand) {
         Logger.log('Async DeleteTokenByProjectIdHandler...', 'DeleteTokenByProjectIdCommand');
-        const {streamId, projectId} = command;
+        const { streamId, projectId } = command;
 
         try {
-            const tokens = await getMongoRepository(TokenDto).find({projectId});
+            const tokens = await getMongoRepository(TokenDto).find({ projectId });
             if (tokens.length === 0) {
                 throw new NotFoundException(`Token with projectId ${projectId} does not exist.`);
             }

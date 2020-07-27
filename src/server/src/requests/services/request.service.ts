@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common'
-import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { RequestDto } from 'requests/dtos/requests.dto'
-import { TokenDto } from 'tokens/dtos/tokens.dto'
-import { FindRequestsQuery } from 'requests/queries/impl/find-requests.query'
-import { FindRequestsByUserIdQuery } from 'requests/queries/impl/find-requests-by-userId.query'
-import { CallAsrRequestCommand } from 'requests/commands/impl/call-asr-request.command'
-import { UpdateRequestTranscriptFileUrlCommand } from 'requests/commands/impl/update-request-transcript-file-url.command'
-import { FindRequestQuery } from 'requests/queries/impl/find-request.query'
-import HtmlDocx from 'html-docx-js'
-import { CreateRequestCommand } from 'requests/commands/impl/create-request.command'
+import { Injectable } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { RequestDto } from 'requests/dtos/requests.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { FindRequestsQuery } from 'requests/queries/impl/find-requests.query';
+import { FindRequestsByUserIdQuery } from 'requests/queries/impl/find-requests-by-userId.query';
+import { CallAsrRequestCommand } from 'requests/commands/impl/call-asr-request.command';
+import { UpdateRequestTranscriptFileUrlCommand } from 'requests/commands/impl/update-request-transcript-file-url.command';
+import { FindRequestQuery } from 'requests/queries/impl/find-request.query';
+import HtmlDocx from 'html-docx-js';
+import { CreateRequestCommand } from 'requests/commands/impl/create-request.command';
 
 @Injectable()
 export class RequestService {
@@ -36,7 +36,7 @@ export class RequestService {
     }
 
     async findRequests(findRequestsQuery: FindRequestsQuery) {
-        const query = new FindRequestsQuery()
+        const query = new FindRequestsQuery();
         Object.assign(query, findRequestsQuery);
         return await this.queryBus.execute(query);
     }
@@ -48,6 +48,6 @@ export class RequestService {
     }
 
     async downloadTranscript(html: string) {
-        return HtmlDocx.asBlob(html)
+        return HtmlDocx.asBlob(html);
     }
 }

@@ -22,7 +22,7 @@ export class TokenTypeDto extends BaseEntityDto {
         CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES,
         CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES,
     ])
-    @Column({unique: true})
+    @Column({ unique: true })
     name: string;
 
     @IsNotEmpty()

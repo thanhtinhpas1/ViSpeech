@@ -17,10 +17,10 @@ export class UpdateTokenHandler implements ICommandHandler<UpdateTokenCommand> {
 
     async execute(command: UpdateTokenCommand) {
         Logger.log('Async UpdateTokenHandler...', 'UpdateTokenCommand');
-        const {streamId, tokenDto} = command;
+        const { streamId, tokenDto } = command;
 
         try {
-            const token = await getMongoRepository(TokenDto).findOne({_id: tokenDto._id});
+            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenDto._id });
             if (!token) {
                 throw new NotFoundException(`Token with _id ${tokenDto._id} does not exist.`);
             }

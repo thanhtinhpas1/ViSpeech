@@ -5,14 +5,14 @@ import { User } from '../models/user.model';
 @Injectable()
 export class UserRepository {
     async createUser(streamId: string, userDto: UserDto) {
-        const user = new User(undefined);
+        const user = new User(streamId);
         user.setData(userDto);
         user.createUser(streamId);
         return user;
     }
 
     async updateUser(streamId: string, userDto: UserDto) {
-        const user = new User(undefined);
+        const user = new User(streamId);
         user.setData(userDto);
         user.updateUser(streamId);
         return user;
@@ -44,7 +44,7 @@ export class UserRepository {
     }
 
     async verifyEmail(streamId: string, emailToken: string) {
-        const user = new User(undefined);
+        const user = new User(streamId);
         user.setData(emailToken);
         user.verifyEmail(streamId);
         return user;

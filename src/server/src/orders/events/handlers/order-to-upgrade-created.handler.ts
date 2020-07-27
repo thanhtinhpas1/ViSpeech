@@ -9,8 +9,11 @@ import { Repository } from 'typeorm';
 import { config } from '../../../../config';
 import { Utils } from 'utils';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { OrderToUpgradeCreatedEvent, OrderToUpgradeCreatedSuccessEvent,
-    OrderToUpgradeCreatedFailedEvent } from '../impl/order-to-upgrade-created.event';
+import {
+    OrderToUpgradeCreatedEvent,
+    OrderToUpgradeCreatedFailedEvent,
+    OrderToUpgradeCreatedSuccessEvent
+} from '../impl/order-to-upgrade-created.event';
 
 @EventsHandler(OrderToUpgradeCreatedEvent)
 export class OrderToUpgradeCreatedHandler implements IEventHandler<OrderToUpgradeCreatedEvent> {
@@ -27,12 +30,12 @@ export class OrderToUpgradeCreatedHandler implements IEventHandler<OrderToUpgrad
 
     async handle(event: OrderToUpgradeCreatedEvent) {
         Logger.log(event.orderDto._id, 'OrderToUpgradeCreatedEvent');
-        const {streamId, orderDto} = event;
+        const { streamId, orderDto } = event;
         const order = JSON.parse(JSON.stringify(orderDto));
 
         try {
-            order.tokenType = await this.tokenTypeRepository.findOne({_id: order.tokenType._id});
-            order.token = await this.tokenRepository.findOne({_id: order.token._id});
+            order.tokenType = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
+            order.token = await this.tokenRepository.findOne({ _id: order.token._id });
             order.upgradeToken = true;
             await this.repository.save(order);
             this.eventBus.publish(new OrderToUpgradeCreatedSuccessEvent(streamId, orderDto));
@@ -69,8 +72,8 @@ export class OrderToUpgradeCreatedFailedHandler
     }
 
     handle(event: OrderToUpgradeCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_TO_UPGRADE_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'OrderToUpgradeCreatedFailedEvent');
     }

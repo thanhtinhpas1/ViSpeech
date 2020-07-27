@@ -5,14 +5,14 @@ import { ReportDto } from 'reports/dtos/reports.dto';
 @Injectable()
 export class ReportRepository {
     async createReport(streamId: string, reportDto: ReportDto) {
-        const report = new Report(undefined);
+        const report = new Report(streamId);
         report.setData(reportDto);
         report.createReport(streamId);
         return report;
     }
 
     async updateReport(streamId: string, reportDto: ReportDto) {
-        const report = new Report(undefined);
+        const report = new Report(streamId);
         report.setData(reportDto);
         report.updateReport(streamId);
         return report;

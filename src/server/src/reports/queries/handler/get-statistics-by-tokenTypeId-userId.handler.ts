@@ -17,7 +17,7 @@ export class GetStatisticsByTokenTypeIdAndUserIdHandler implements IQueryHandler
 
     async execute(query: GetStatisticsByTokenTypeIdAndUserIdQuery): Promise<any> {
         Logger.log('Async GetStatisticsByTokenTypeIdAndUserIdQuery...', 'GetStatisticsByTokenTypeIdAndUserIdQuery');
-        const {id, userId, timeType} = query;
+        const { id, userId, timeType } = query;
 
         try {
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);

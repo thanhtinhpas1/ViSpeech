@@ -20,9 +20,21 @@ import { TokensController } from './controllers/tokens.controller';
 import { TokenTypeDto } from './dtos/token-types.dto';
 import { TokenDto } from './dtos/tokens.dto';
 import { EventHandlers } from './events/handlers';
-import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from './events/impl/free-token-created.event';
-import { OrderedTokenCreatedEvent, OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from './events/impl/ordered-token-created.event';
-import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
+import {
+    FreeTokenCreatedEvent,
+    FreeTokenCreatedFailedEvent,
+    FreeTokenCreatedSuccessEvent
+} from './events/impl/free-token-created.event';
+import {
+    OrderedTokenCreatedEvent,
+    OrderedTokenCreatedFailedEvent,
+    OrderedTokenCreatedSuccessEvent
+} from './events/impl/ordered-token-created.event';
+import {
+    TokenCreatedEvent,
+    TokenCreatedFailedEvent,
+    TokenCreatedSuccessEvent
+} from './events/impl/token-created.event';
 import {
     TokenDeletedByProjectIdEvent,
     TokenDeletedByProjectIdFailedEvent,
@@ -33,9 +45,21 @@ import {
     TokenDeletedByUserIdFailedEvent,
     TokenDeletedByUserIdSuccessEvent
 } from './events/impl/token-deleted-by-userId.event';
-import { TokenDeletedEvent, TokenDeletedFailedEvent, TokenDeletedSuccessEvent } from './events/impl/token-deleted.event';
-import { TokenUpdatedEvent, TokenUpdatedFailedEvent, TokenUpdatedSuccessEvent } from './events/impl/token-updated.event';
-import { TokenUpgradedEvent, TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from './events/impl/token-upgraded.event';
+import {
+    TokenDeletedEvent,
+    TokenDeletedFailedEvent,
+    TokenDeletedSuccessEvent
+} from './events/impl/token-deleted.event';
+import {
+    TokenUpdatedEvent,
+    TokenUpdatedFailedEvent,
+    TokenUpdatedSuccessEvent
+} from './events/impl/token-updated.event';
+import {
+    TokenUpgradedEvent,
+    TokenUpgradedFailedEvent,
+    TokenUpgradedSuccessEvent
+} from './events/impl/token-upgraded.event';
 import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { TokenRepository } from './repository/token.repository';
@@ -116,9 +140,16 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
         const streamName = CONSTANTS.STREAM_NAME.TOKEN;
         const tokenProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (tokenProjection) {
-            await getMongoRepository(ProjectionDto).save({ ...tokenProjection, expectedVersion: tokenProjection.eventNumber });
+            await getMongoRepository(ProjectionDto).save({
+                ...tokenProjection,
+                expectedVersion: tokenProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({ streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION });
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
         Logger.log('Seed projection token success');
     }

@@ -17,8 +17,9 @@ export class FacebookStrategy extends PassportStrategy(FacebookTokenStrategy) {
     }
 
     async validate(accessToken: any, refreshToken: any, profile: any) {
-        const {id, name, emails} = profile
-        const userDto = new UserDto(name.givenName, name.familyName, id, '', emails[0].value, [new RoleDto(CONSTANTS.ROLE.USER)], USER_TYPE.FACEBOOK, id);
+        const { id, name, emails } = profile;
+        const userDto = new UserDto(name.givenName, name.familyName, id, '', emails[0].value,
+            [new RoleDto(CONSTANTS.ROLE.USER)], USER_TYPE.FACEBOOK, id);
         return await this.authService.validateUserSocialId(id, userDto);
     }
 }

@@ -25,8 +25,8 @@ export class ReportsController {
     /* Create Report */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Report']})
-    @ApiResponse({status: 200, description: 'Create Report.'})
+    @ApiOperation({ tags: ['Create Report'] })
+    @ApiResponse({ status: 200, description: 'Create Report.' })
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createReport(@Body() reportDto: ReportDto): Promise<ReportDto> {
@@ -37,8 +37,8 @@ export class ReportsController {
     /* Update Report */
     // TODO: verify why we need to update report
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Update Report']})
-    @ApiResponse({status: 200, description: 'Update Report.'})
+    @ApiOperation({ tags: ['Update Report'] })
+    @ApiResponse({ status: 200, description: 'Update Report.' })
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updateReport(
@@ -55,8 +55,8 @@ export class ReportsController {
     /* Delete Report */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Delete Report']})
-    @ApiResponse({status: 200, description: 'Delete Report.'})
+    @ApiOperation({ tags: ['Delete Report'] })
+    @ApiResponse({ status: 200, description: 'Delete Report.' })
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Delete(':_id')
     async deleteReport(@Param() reportIdDto: ReportIdRequestParamsDto) {
@@ -67,8 +67,8 @@ export class ReportsController {
     /* List Reports */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Reports']})
-    @ApiResponse({status: 200, description: 'List Reports.'})
+    @ApiOperation({ tags: ['List Reports'] })
+    @ApiResponse({ status: 200, description: 'List Reports.' })
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async findReports(@Query() getReportsQuery: GetReportsQuery) {
@@ -78,13 +78,13 @@ export class ReportsController {
     /* Get Statistics By Id */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Statistics By Id']})
-    @ApiResponse({status: 200, description: 'Get Statistics By Id.'})
+    @ApiOperation({ tags: ['Get Statistics By Id'] })
+    @ApiResponse({ status: 200, description: 'Get Statistics By Id.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('statistics-by-id/:id/:statisticsType/:timeType')
     async getStatisticsById(@Query() query: GetStatisticsByIdQuery,
                             @Param() param: GetStatisticsParam) {
-        const {id, statisticsType, timeType} = param;
+        const { id, statisticsType, timeType } = param;
         query.id = id;
         query.statisticsType = statisticsType;
         query.timeType = timeType;
@@ -94,13 +94,13 @@ export class ReportsController {
     /* Get Statistics By TokenTypeId And UserId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Statistics By TokenTypeId And UserId']})
-    @ApiResponse({status: 200, description: 'Get Statistics By TokenTypeId And UserId.'})
+    @ApiOperation({ tags: ['Get Statistics By TokenTypeId And UserId'] })
+    @ApiResponse({ status: 200, description: 'Get Statistics By TokenTypeId And UserId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('user-token-type-statistics/:id/:userId/:timeType')
     async getStatisticalDataByTokenTypeIdAndUserId(@Query() query: GetStatisticsByTokenTypeIdAndUserIdQuery,
                                                    @Param() param: GetStatisticsParam) {
-        const {id, userId, timeType} = param;
+        const { id, userId, timeType } = param;
         query.id = id;
         query.userId = userId;
         query.timeType = timeType;
@@ -110,13 +110,13 @@ export class ReportsController {
     /* Get Admin Total Statistics */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Admin Total Statistics']})
-    @ApiResponse({status: 200, description: 'Get Admin Total Statistics.'})
+    @ApiOperation({ tags: ['Get Admin Total Statistics'] })
+    @ApiResponse({ status: 200, description: 'Get Admin Total Statistics.' })
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get('admin-total-statistics/:statisticsType/:timeType')
     async getAdminTotalStatistics(@Query() query: GetAdminTotalStatisticsQuery,
                                   @Param() param: GetStatisticsParam) {
-        const {statisticsType, timeType} = param;
+        const { statisticsType, timeType } = param;
         query.statisticsType = statisticsType;
         query.timeType = timeType;
         return this.reportsService.getAdminTotalStatistics(query);
@@ -125,13 +125,13 @@ export class ReportsController {
     /* Get User Total Statistics */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get User Total Statistics']})
-    @ApiResponse({status: 200, description: 'Get User Total Statistics.'})
+    @ApiOperation({ tags: ['Get User Total Statistics'] })
+    @ApiResponse({ status: 200, description: 'Get User Total Statistics.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get('user-total-statistics/:userId/:statisticsType/:timeType')
     async getUserTotalStatistics(@Query() query: GetUserTotalStatisticsQuery,
                                  @Param() param: GetStatisticsParam) {
-        const {userId, statisticsType, timeType} = param;
+        const { userId, statisticsType, timeType } = param;
         query.userId = userId;
         query.statisticsType = statisticsType;
         query.timeType = timeType;
@@ -141,14 +141,14 @@ export class ReportsController {
     /* Get Total Statistics */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Total Statistics']})
-    @ApiResponse({status: 200, description: 'Get Total Statistics.'})
+    @ApiOperation({ tags: ['Get Total Statistics'] })
+    @ApiResponse({ status: 200, description: 'Get Total Statistics.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get('total-statistics/:timeType')
     async getTotalStatistics(@Query() query: GetTotalStatisticsQuery,
                              @Param() param: GetStatisticsParam) {
-        const {timeType} = param;
+        const { timeType } = param;
         query.timeType = timeType;
         return this.reportsService.getTotalStatistics(query);
     }
@@ -156,8 +156,8 @@ export class ReportsController {
     /* Find Report */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Report']})
-    @ApiResponse({status: 200, description: 'Get Report.'})
+    @ApiOperation({ tags: ['Get Report'] })
+    @ApiResponse({ status: 200, description: 'Get Report.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
     @Get(':id')
     async findOneReport(@Param() findReportQuery: FindReportQuery) {

@@ -17,8 +17,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(accessToken: any, refreshToken: any, profile: any) {
-        const { id, name, emails } = profile
-        const userDto = new UserDto(name.givenName, name.familyName, id, '', emails[0].value, [new RoleDto(CONSTANTS.ROLE.MANAGER_USER)], USER_TYPE.GOOGLE, id);
+        const { id, name, emails } = profile;
+        const userDto = new UserDto(name.givenName, name.familyName, id, '', emails[0].value,
+            [new RoleDto(CONSTANTS.ROLE.MANAGER_USER)], USER_TYPE.GOOGLE, id);
         return await this.authService.validateUserSocialId(id, userDto);
     }
 }

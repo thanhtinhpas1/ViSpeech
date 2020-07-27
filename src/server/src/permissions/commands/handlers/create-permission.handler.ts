@@ -15,7 +15,7 @@ export class CreatePermissionHandler
     async execute(command: CreatePermissionCommand) {
         Logger.log('Async CreatePermissionHandler...', 'CreatePermissionCommand');
 
-        const {streamId, permissionDto} = command;
+        const { streamId, permissionDto } = command;
         // use mergeObjectContext for dto dispatch events
         const permission = this.publisher.mergeObjectContext(
             await this.repository.createPermission(streamId, permissionDto)

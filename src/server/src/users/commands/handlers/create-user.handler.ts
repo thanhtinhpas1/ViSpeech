@@ -14,7 +14,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
     async execute(command: CreateUserCommand) {
         Logger.log('Async CreateUserHandler...', 'CreateUserCommand');
 
-        const {streamId, userDto} = command;
+        const { streamId, userDto } = command;
         // use mergeObjectContext for dto dispatch events
         const user = this.publisher.mergeObjectContext(
             await this.repository.createUser(streamId, userDto)

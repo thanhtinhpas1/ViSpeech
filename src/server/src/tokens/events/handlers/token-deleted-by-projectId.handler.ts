@@ -24,10 +24,15 @@ export class TokenDeletedByProjectIdHandler implements IEventHandler<TokenDelete
 
     async handle(event: TokenDeletedByProjectIdEvent) {
         Logger.log(event.streamId, 'TokenDeletedByProjectIdEvent');
-        const {streamId, projectId} = event;
+        const { streamId, projectId } = event;
 
         try {
-            await getMongoRepository(TokenDto).updateMany({projectId}, {$set: {isValid: false, updatedDate: new Date()}});
+            await getMongoRepository(TokenDto).updateMany({ projectId }, {
+                $set: {
+                    isValid: false,
+                    updatedDate: new Date()
+                }
+            });
             this.eventBus.publish(new TokenDeletedByProjectIdSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedByProjectIdFailedEvent(streamId, projectId, error));
@@ -62,8 +67,8 @@ export class TokenDeletedByProjectIdFailedHandler
     }
 
     handle(event: TokenDeletedByProjectIdFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_BY_PROJECTID_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'TokenDeletedByProjectIdFailedEvent');
     }

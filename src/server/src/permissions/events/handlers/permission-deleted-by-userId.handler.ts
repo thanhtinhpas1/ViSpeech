@@ -24,11 +24,21 @@ export class PermissionDeletedByUserIdHandler implements IEventHandler<Permissio
 
     async handle(event: PermissionDeletedByUserIdEvent) {
         Logger.log(event.userId, 'PermissionDeletedByUserIdEvent');
-        const {streamId, userId} = event;
+        const { streamId, userId } = event;
 
         try {
-            await getMongoRepository(PermissionDto).updateMany({assigneeId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID, updatedDate: new Date()}});
-            await getMongoRepository(PermissionDto).updateMany({assignerId: userId}, {$set: {status: CONSTANTS.STATUS.INVALID, updatedDate: new Date()}});
+            await getMongoRepository(PermissionDto).updateMany({ assigneeId: userId }, {
+                $set: {
+                    status: CONSTANTS.STATUS.INVALID,
+                    updatedDate: new Date()
+                }
+            });
+            await getMongoRepository(PermissionDto).updateMany({ assignerId: userId }, {
+                $set: {
+                    status: CONSTANTS.STATUS.INVALID,
+                    updatedDate: new Date()
+                }
+            });
             this.eventBus.publish(new PermissionDeletedByUserIdSuccessEvent(streamId, userId));
         } catch (error) {
             this.eventBus.publish(new PermissionDeletedByUserIdFailedEvent(streamId, userId, error));
@@ -63,8 +73,8 @@ export class PermissionDeletedByUserIdFailedHandler
     }
 
     handle(event: PermissionDeletedByUserIdFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_BY_USERID_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PermissionDeletedByUserIdFailedEvent');
     }

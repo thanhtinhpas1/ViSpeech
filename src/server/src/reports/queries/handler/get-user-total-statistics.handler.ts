@@ -24,7 +24,7 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
 
     async execute(query: GetUserTotalStatisticsQuery): Promise<any> {
         Logger.log('Async GetUserTotalStatisticsQuery...', 'GetUserTotalStatisticsQuery');
-        const {userId, statisticsType, timeType} = query;
+        const { userId, statisticsType, timeType } = query;
         const data = [];
 
         try {
@@ -45,17 +45,17 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
                         $lt: ReportUtils.nextDate(endDate)
                     }
                 }
-            }
+            };
             const aggregateGroup = {
                 $group: {
                     _id: {
                         userId: '$userId'
                     },
-                    usedMinutes: {$sum: '$usedMinutes'},
-                    totalRequests: {$sum: '$totalRequests'}
+                    usedMinutes: { $sum: '$usedMinutes' },
+                    totalRequests: { $sum: '$totalRequests' }
                 }
-            }
-            aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
+            };
+            aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`;
             const groupedReports = await getMongoRepository(ReportDto).aggregate([
                 aggregateMatch,
                 aggregateGroup
@@ -64,19 +64,19 @@ export class GetUserTotalStatisticsHandler implements IQueryHandler<GetUserTotal
             if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
                 const tokenTypes = await this.tokenTypeRepository.find();
                 for (const tokenType of tokenTypes) {
-                    data.push({data: tokenType, usedMinutes: 0, totalRequests: 0});
+                    data.push({ data: tokenType, usedMinutes: 0, totalRequests: 0 });
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN) {
-                const tokens = await this.tokenRepository.find({userId, isValid: true});
+                const tokens = await this.tokenRepository.find({ userId, isValid: true });
                 for (const token of tokens) {
-                    const project = await this.projectRepository.findOne({_id: token.projectId.toString()});
+                    const project = await this.projectRepository.findOne({ _id: token.projectId.toString() });
                     const projectName = project ? project.name : '';
-                    data.push({data: {...token, projectName}, usedMinutes: 0, totalRequests: 0});
+                    data.push({ data: { ...token, projectName }, usedMinutes: 0, totalRequests: 0 });
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.PROJECT) {
-                const projects = await this.projectRepository.find({userId, isValid: true});
+                const projects = await this.projectRepository.find({ userId, isValid: true });
                 for (const project of projects) {
-                    data.push({data: project, usedMinutes: 0, totalRequests: 0});
+                    data.push({ data: project, usedMinutes: 0, totalRequests: 0 });
                 }
             }
 
