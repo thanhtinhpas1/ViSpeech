@@ -33,23 +33,23 @@ export function* getUserTokensSaga() {
   yield takeLatest(TokenTypes.GET_USER_TOKENS, getUserTokens)
 }
 
-const getTokenTypeByMinutes = minutes => {
-  const tokenTypes = Object.keys(TOKEN_TYPE)
-  const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === Number(minutes)
-  const result = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
-  return {
-    name: TOKEN_TYPE[result]?.viText || '',
-    class: TOKEN_TYPE[result]?.cssClass || 'badge-success',
-  }
-}
+// const getTokenTypeByMinutes = minutes => {
+//   const tokenTypes = Object.keys(TOKEN_TYPE)
+//   const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === Number(minutes)
+//   const result = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
+//   return {
+//     name: TOKEN_TYPE[result]?.viText || '',
+//     class: TOKEN_TYPE[result]?.cssClass || 'badge-success',
+//   }
+// }
 
 const formatTokenList = tokenList => {
   const mapFunc = token => {
     return {
       ...token,
       tokenType: {
-        id: token.tokenTypeId,
-        ...getTokenTypeByMinutes(token.minutes),
+        _id: token.tokenTypeId,
+        ...(TOKEN_TYPE[token.tokenType] || { viText: '', cssClass: 'badge-success' }),
       },
       isValid: token.isValid ? STATUS.VALID : STATUS.INVALID,
       minutesLeft: Number(token.minutes) - Number(token.usedMinutes || 0),

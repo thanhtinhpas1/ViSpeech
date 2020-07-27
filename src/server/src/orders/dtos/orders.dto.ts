@@ -66,7 +66,7 @@ export class OrderDto extends BaseEntityDto {
         CONSTANTS.STATUS.PENDING,
         CONSTANTS.STATUS.SUCCESS,
         CONSTANTS.STATUS.FAILURE,
-    ])
+    ], { message: ErrorUtils.getMessage('status', ERR.IsIn).message })
     @Column()
     status: string;
 

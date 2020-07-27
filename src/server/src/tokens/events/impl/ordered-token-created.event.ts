@@ -13,7 +13,7 @@ export class OrderedTokenCreatedSuccessEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly tokenDto: any,
-        public readonly formattedToken: any
+        public readonly updatedToken: any
     ) {
     }
 }

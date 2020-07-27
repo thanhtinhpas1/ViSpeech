@@ -20,31 +20,19 @@ export class PermissionAssignDto {
 
     @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
     @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
-    @Column({
-        nullable: false,
-        type: 'uuid',
-    })
     projectId: ObjectID;
 
     @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
     @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
-    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true })
+    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true, message: ErrorUtils.getMessage('permissions', ERR.IsIn).message })
     permissions: string[];
 
     @IsNotEmpty(ErrorUtils.getMessage('assignerId', ERR.IsNotEmpty))
     @IsUUID('all', ErrorUtils.getMessage('assignerId', ERR.IsUUID))
-    @Column({
-        nullable: false,
-        type: 'uuid',
-    })
     assignerId: ObjectID;
 
     @IsOptional()
     @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
-    @Column({
-        nullable: false,
-        type: 'uuid',
-    })
     assigneeId: ObjectID;
 }
 
@@ -62,8 +50,7 @@ export class PermissionResponseDto {
     @IsIn([
         CONSTANTS.STATUS.ACCEPTED,
         CONSTANTS.STATUS.REJECTED
-    ])
-    @Column()
+    ], { message: ErrorUtils.getMessage('status', ERR.IsIn).message })
     status: string;
 }
 
@@ -100,7 +87,7 @@ export class PermissionDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
     @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
-    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true })
+    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true, message: ErrorUtils.getMessage('permissions', ERR.IsIn).message })
     @Column()
     permissions: string[];
 
@@ -136,7 +123,7 @@ export class PermissionDto extends BaseEntityDto {
         CONSTANTS.STATUS.ACCEPTED,
         CONSTANTS.STATUS.REJECTED,
         CONSTANTS.STATUS.INVALID,
-    ])
+    ], { message: ErrorUtils.getMessage('status', ERR.IsIn).message })
     @Column()
     status: string;
 }

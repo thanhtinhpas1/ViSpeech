@@ -32,8 +32,7 @@ export class ConstTaskService {
         try {
             const freeTokens = await this.tokenRepository.find({ tokenType: CONSTANTS.TOKEN_TYPE.FREE });
             for (const token of freeTokens) {
-                token.usedMinutes = 0;
-                this.tokenRepository.update({ _id: token._id }, { usedMinutes: Number(token.usedMinutes) });
+                this.tokenRepository.update({ _id: token._id }, { usedMinutes: 0 });
                 this.logger.log(`Refresh free token's usedMinutes ${token._id}`);
             }
         } catch (error) {

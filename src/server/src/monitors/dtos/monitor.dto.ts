@@ -1,6 +1,8 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntityDto } from '../../base/base-entity.dto';
 import { IsNotEmpty } from 'class-validator';
+import { ErrorUtils } from 'utils/errorUtils';
+import { ERR } from 'common/error';
 
 @Entity('monitors')
 export class MonitorDto extends BaseEntityDto {
@@ -9,7 +11,7 @@ export class MonitorDto extends BaseEntityDto {
         this.data = data;
     }
 
+    @IsNotEmpty(ErrorUtils.getMessage('data', ERR.IsNotEmpty))
     @Column()
-    @IsNotEmpty()
     data: object;
 }

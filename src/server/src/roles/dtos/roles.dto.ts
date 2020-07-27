@@ -18,7 +18,7 @@ export class RoleDto extends BaseEntityDto {
         CONSTANTS.ROLE.USER,
         CONSTANTS.ROLE.MANAGER_USER,
         CONSTANTS.ROLE.ADMIN,
-    ])
+    ], { message: ErrorUtils.getMessage('name', ERR.IsIn).message })
     @Column({ unique: true })
     name: string;
 }

@@ -9,4 +9,5 @@ export const ERR = {
     IsNumber: '.isNumber',
     IsPositive: '.isPositive',
     IsDate: '.isDate',
-};
+    IsIn: '.isIn'
+}

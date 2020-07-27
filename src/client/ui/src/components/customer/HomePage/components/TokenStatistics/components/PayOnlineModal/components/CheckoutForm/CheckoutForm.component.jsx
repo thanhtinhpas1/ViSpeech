@@ -132,7 +132,7 @@ const CheckoutForm = ({
             if (data.error != null) {
               createOrderFailure(data.errorObj)
             } else {
-              createOrderSuccess({ order, token: data.formattedToken })
+              createOrderSuccess({ order, token: data.updatedToken })
             }
           })
         } catch (err) {

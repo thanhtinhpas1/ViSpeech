@@ -115,7 +115,7 @@ export class RequestDto extends BaseEntityDto {
         CONSTANTS.STATUS.IN_PROGRESS,
         CONSTANTS.STATUS.SUCCESS,
         CONSTANTS.STATUS.FAILURE,
-    ])
+    ], { message: ErrorUtils.getMessage('status', ERR.IsIn).message })
     @Column()
     status: string;
 

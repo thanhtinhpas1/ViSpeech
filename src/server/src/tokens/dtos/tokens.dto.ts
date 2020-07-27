@@ -101,12 +101,14 @@ export class TokenDto extends BaseEntityDto {
     isValid: boolean;
 
     @IsOptional()
+    @IsString(ErrorUtils.getMessage('tokenType', ERR.IsString))
     @IsIn([
         CONSTANTS.TOKEN_TYPE.FREE,
         CONSTANTS.TOKEN_TYPE.TYPE_50_MINUTES,
         CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES,
         CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES,
-    ])
+    ], { message: ErrorUtils.getMessage('tokenType', ERR.IsIn).message })
+    @Column()
     tokenType: string;
 
     @IsOptional()

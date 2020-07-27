@@ -14,6 +14,8 @@ import {
     ValidateNested
 } from 'class-validator';
 import { CONSTANTS } from 'common/constant';
+import { ErrorUtils } from 'utils/errorUtils';
+import { ERR } from 'common/error';
 
 export class StatisticalDto {
     constructor(data: number, year: number) {
@@ -75,13 +77,13 @@ export class GetStatisticsParam {
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
-        CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+        CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR], { message: ErrorUtils.getMessage('timeType', ERR.IsIn).message })
     timeType: string;
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
-        CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
+    @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT, CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER],
+        { message: ErrorUtils.getMessage('statisticsType', ERR.IsIn).message })
     statisticsType: string;
 }
 
@@ -99,14 +101,14 @@ export class GetStatisticsBaseQuery {
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT,
-        CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE])
+    @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT, CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE,
+        CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE], { message: ErrorUtils.getMessage('statisticsType', ERR.IsIn).message })
     statisticsType: string;
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
-        CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH, CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR],
+        { message: ErrorUtils.getMessage('timeType', ERR.IsIn).message })
     timeType: string;
 
     @IsOptional()
@@ -163,13 +165,13 @@ export class GetTotalStatisticsBaseQuery {
     @IsOptional()
     @IsString()
     @IsIn([CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.PROJECT, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE,
-        CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER])
+        CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER], { message: ErrorUtils.getMessage('statisticsType', ERR.IsIn).message })
     statisticsType: string;
 
     @IsOptional()
     @IsString()
-    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH,
-        CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH, CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR],
+        { message: ErrorUtils.getMessage('timeType', ERR.IsIn).message })
     timeType: string;
 
     @IsOptional()

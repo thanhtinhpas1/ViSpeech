@@ -181,8 +181,8 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
         FreeTokenCreatedFailedEvent: (streamId, data, error) => new FreeTokenCreatedFailedEvent(streamId, data, error),
         // ordered token
         OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
-        OrderedTokenCreatedSuccessEvent: (streamId, tokenDto, formattedToken) =>
-            new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, formattedToken),
+        OrderedTokenCreatedSuccessEvent: (streamId, tokenDto, updatedToken) =>
+            new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, updatedToken),
         OrderedTokenCreatedFailedEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
         // upgrade token
         TokenUpgradedEvent: (streamId, token, tokenType) => new TokenUpgradedEvent(streamId, token, tokenType),

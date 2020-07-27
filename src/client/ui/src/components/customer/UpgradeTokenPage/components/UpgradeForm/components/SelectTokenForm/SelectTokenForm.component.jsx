@@ -98,11 +98,9 @@ const SelectTokenForm = ({
     const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === tokenId)
     if (!token) return
 
-    const tokenTypes = Object.keys(TOKEN_TYPE)
-    const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === token.minutes
-    const index = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
-    setCurrentTokenType(TOKEN_TYPE[index].viText)
-    setCurrentTokenTypeMinutes(TOKEN_TYPE[index].minutes)
+    const { viText, minutes } = TOKEN_TYPE[token.tokenType?.name]
+    setCurrentTokenType(viText)
+    setCurrentTokenTypeMinutes(minutes)
   }, [form, getProjectTokenListObj.projectTokenList.data, onSelectTokenFormValuesChange, setCurrentTokenTypeMinutes])
 
   const onFormValuesChange = (changedValue, allValues) => {
@@ -113,11 +111,9 @@ const SelectTokenForm = ({
     const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === tokenId)
     if (!token) return
 
-    const tokenTypes = Object.keys(TOKEN_TYPE)
-    const findIndexFunc = tokenType => TOKEN_TYPE[tokenType].minutes === token.minutes
-    const index = tokenTypes[tokenTypes.findIndex(findIndexFunc)]
-    setCurrentTokenType(TOKEN_TYPE[index].viText)
-    setCurrentTokenTypeMinutes(TOKEN_TYPE[index].minutes)
+    const { viText, minutes } = TOKEN_TYPE[token.tokenType?.name]
+    setCurrentTokenType(viText)
+    setCurrentTokenTypeMinutes(minutes)
   }
 
   return (

@@ -68,9 +68,9 @@ const ProjectDetailsPage = ({
       filterMultiple: false,
       render: tokenType => (
         <>
-          <span className={`dt-type-md badge badge-outline ${tokenType.class} badge-md`}>{tokenType.name}</span>
-          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.class} badge-md`}>
-            {tokenType.name}
+          <span className={`dt-type-md badge badge-outline ${tokenType.cssClass} badge-md`}>{tokenType.viText}</span>
+          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.cssClass} badge-md`}>
+            {tokenType.viText}
           </span>
         </>
       ),

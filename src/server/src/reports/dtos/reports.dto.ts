@@ -89,7 +89,8 @@ export class ReportDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrorUtils.getMessage('reportType', ERR.IsNotEmpty))
     @IsString(ErrorUtils.getMessage('reportType', ERR.IsString))
-    @IsIn([CONSTANTS.STATISTICS_TYPE.PROJECT, CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER, CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE])
+    @IsIn([CONSTANTS.STATISTICS_TYPE.PROJECT, CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER, 
+        CONSTANTS.STATISTICS_TYPE.USER_TOKEN_TYPE], { message: ErrorUtils.getMessage('reportType', ERR.IsIn).message })
     @Column({
         nullable: false,
     })
@@ -97,7 +98,8 @@ export class ReportDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrorUtils.getMessage('timeType', ERR.IsNotEmpty))
     @IsString(ErrorUtils.getMessage('timeType', ERR.IsString))
-    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH, CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR])
+    @IsIn([CONSTANTS.TIME_TYPE.DATE, CONSTANTS.TIME_TYPE.WEEK, CONSTANTS.TIME_TYPE.MONTH, CONSTANTS.TIME_TYPE.QUARTER, CONSTANTS.TIME_TYPE.YEAR],
+        { message: ErrorUtils.getMessage('timeType', ERR.IsIn).message })
     @Column({
         nullable: false,
     })
