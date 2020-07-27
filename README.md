@@ -13,7 +13,7 @@
 - [Web ASR ViSpeech]
 
 
-[Web ASR ViSpeech]: http://asr.vietspeech.com:3200
+[Web ASR ViSpeech]: http://asr.vietspeech.com
 ## Description
 
 This is an application boilerplate that demonstrates how to use Nest.js and Event Store to create a RESTful Users API microservice.
