@@ -20,12 +20,15 @@ export class TokenUpdatedHandler implements IEventHandler<TokenUpdatedEvent> {
 
     async handle(event: TokenUpdatedEvent) {
         Logger.log(event.tokenDto._id, 'TokenUpdatedEvent'); // write here
-        const {streamId, tokenDto} = event;
-        const {_id, ...tokenInfo} = tokenDto;
+        const { streamId, tokenDto } = event;
+        const { _id, ...tokenInfo } = tokenDto;
 
         try {
             // Can only update usedMinutes
-            await this.repository.update({_id}, {usedMinutes: Number(tokenInfo.usedMinutes), updatedDate: new Date()});
+            await this.repository.update({ _id }, {
+                usedMinutes: Number(tokenInfo.usedMinutes),
+                updatedDate: new Date()
+            });
             this.eventBus.publish(new TokenUpdatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
             this.eventBus.publish(new TokenUpdatedFailedEvent(streamId, tokenDto, error));
@@ -58,8 +61,8 @@ export class TokenUpdatedFailedHandler implements IEventHandler<TokenUpdatedFail
     }
 
     handle(event: TokenUpdatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPDATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'TokenUpdatedFailedEvent');
     }

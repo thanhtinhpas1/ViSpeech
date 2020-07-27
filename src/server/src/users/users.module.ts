@@ -49,9 +49,9 @@ import { UsersService } from './services/users.service';
 @Module({
     imports: [
         ClientsModule.register(
-            [ {
+            [{
                 name: config.KAFKA.NAME, ...kafkaClientOptions,
-            } ]),
+            }]),
         TypeOrmModule.forFeature([
             UserDto,
             PermissionDto,
@@ -120,13 +120,20 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
 
     async seedProjection() {
         const streamName = CONSTANTS.STREAM_NAME.USER;
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({
+                ...userProjection,
+                expectedVersion: userProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
-        Logger.log('Seed projection user success')
+        Logger.log('Seed projection user success');
     }
 
     private async seedAdminAccount() {

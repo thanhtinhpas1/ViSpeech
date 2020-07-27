@@ -18,11 +18,11 @@ export class DeleteReportHandler
 
     async execute(command: DeleteReportCommand) {
         Logger.log('Async DeleteReportHandler...', 'DeleteReportCommand');
-        const {streamId, reportIdDto} = command;
+        const { streamId, reportIdDto } = command;
         const reportId = reportIdDto._id;
 
         try {
-            const report = await getMongoRepository(ReportDto).findOne({_id: reportId});
+            const report = await getMongoRepository(ReportDto).findOne({ _id: reportId });
             if (!report) {
                 throw new NotFoundException(`Report with _id ${reportId} does not exist.`);
             }

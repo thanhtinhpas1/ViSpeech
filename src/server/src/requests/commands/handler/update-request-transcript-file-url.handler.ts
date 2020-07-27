@@ -18,15 +18,15 @@ export class UpdateRequestTranscriptFileUrlHandler implements ICommandHandler<Up
 
     async execute(command: UpdateRequestTranscriptFileUrlCommand) {
         Logger.log('Async UpdateRequestHandler...', 'UpdateRequestTranscriptFileUrlCommand');
-        const {streamId, requestId, tokenId, url} = command;
+        const { streamId, requestId, tokenId, url } = command;
         let token = null;
         try {
-            const request = await getMongoRepository(RequestDto).findOne({_id: requestId});
+            const request = await getMongoRepository(RequestDto).findOne({ _id: requestId });
             if (!request) {
                 throw new NotFoundException(`Request with _id ${requestId} does not exist.`);
             }
 
-            token = await getMongoRepository(TokenDto).findOne({_id: tokenId});
+            token = await getMongoRepository(TokenDto).findOne({ _id: tokenId });
             if (!token) {
                 throw new NotFoundException(`Token with _id ${tokenId} does not exist.`);
             }

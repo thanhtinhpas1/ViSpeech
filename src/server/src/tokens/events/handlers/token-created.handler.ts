@@ -23,15 +23,15 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
 
     async handle(event: TokenCreatedEvent) {
         Logger.log(event.tokenDto._id, 'TokenCreatedEvent');
-        const {streamId, tokenDto} = event;
+        const { streamId, tokenDto } = event;
         let token = JSON.parse(JSON.stringify(tokenDto));
         let tokenTypeDto = null;
 
         try {
             if (token.tokenTypeId) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({_id: token.tokenTypeId});
+                tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
             } else if (token.tokenType) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({name: token.tokenType});
+                tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
             }
             token.tokenTypeId = tokenTypeDto._id;
             token.tokenType = tokenTypeDto.name;
@@ -72,8 +72,8 @@ export class TokenCreatedFailedHandler implements IEventHandler<TokenCreatedFail
     }
 
     handle(event: TokenCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'TokenCreatedFailedEvent');
     }

@@ -4,8 +4,8 @@ import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
 import { Column, Entity } from 'typeorm';
-import { ErrorUtils } from "../../utils/errorUtils";
-import { ERR } from "../../common/error";
+import { ErrorUtils } from '../../utils/errorUtils';
+import { ERR } from '../../common/error';
 
 export class TokenIdRequestParamsDto {
     constructor(tokenId) {
@@ -34,7 +34,7 @@ export class TokenDto extends BaseEntityDto {
 
     @IsOptional()
     @IsString(ErrorUtils.getMessage('name', ERR.IsString))
-    @Column({nullable: false, default: 'DEFAULT'})
+    @Column({ nullable: false, default: 'DEFAULT' })
     name: string;
 
     @IsOptional()
@@ -64,7 +64,7 @@ export class TokenDto extends BaseEntityDto {
 
     @IsOptional()
     @Type(() => Number)
-    @IsNumber({allowInfinity: false, allowNaN: false}, ErrorUtils.getMessage('minutes', ERR.IsNumber))
+    @IsNumber({ allowInfinity: false, allowNaN: false }, ErrorUtils.getMessage('minutes', ERR.IsNumber))
     @IsPositive(ErrorUtils.getMessage('minutes', ERR.IsPositive))
     @Column({
         default: 0,
@@ -74,7 +74,7 @@ export class TokenDto extends BaseEntityDto {
 
     @IsNotEmpty(ErrorUtils.getMessage('minutes', ERR.IsNotEmpty))
     @Type(() => Number)
-    @IsNumber({allowNaN: false, allowInfinity: false}, ErrorUtils.getMessage('usedMinutes', ERR.IsNumber))
+    @IsNumber({ allowNaN: false, allowInfinity: false }, ErrorUtils.getMessage('usedMinutes', ERR.IsNumber))
     @Min(0)
     @Column({
         default: 0,

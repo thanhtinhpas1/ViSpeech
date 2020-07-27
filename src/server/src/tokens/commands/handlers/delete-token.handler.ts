@@ -17,11 +17,11 @@ export class DeleteTokenHandler implements ICommandHandler<DeleteTokenCommand> {
 
     async execute(command: DeleteTokenCommand) {
         Logger.log('Async DeleteTokenHandler...', 'DeleteTokenCommand');
-        const {streamId, tokenIdDto} = command;
+        const { streamId, tokenIdDto } = command;
         const tokenId = tokenIdDto._id;
 
         try {
-            const token = await getMongoRepository(TokenDto).findOne({_id: tokenId});
+            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenId });
             if (!token) {
                 throw new NotFoundException(`Token with _id ${tokenId} does not exist.`);
             }

@@ -20,10 +20,10 @@ export class TokenDeletedHandler implements IEventHandler<TokenDeletedEvent> {
 
     async handle(event: TokenDeletedEvent) {
         Logger.log(event.tokenId, 'TokenDeletedEvent');
-        const {streamId, tokenId} = event;
+        const { streamId, tokenId } = event;
 
         try {
-            await this.repository.update({_id: tokenId}, {isValid: false, updatedDate: new Date()});
+            await this.repository.update({ _id: tokenId }, { isValid: false, updatedDate: new Date() });
             this.eventBus.publish(new TokenDeletedSuccessEvent(streamId, tokenId));
         } catch (error) {
             this.eventBus.publish(new TokenDeletedFailedEvent(streamId, tokenId, error));
@@ -58,8 +58,8 @@ export class TokenDeletedFailedHandler
     }
 
     handle(event: TokenDeletedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_DELETED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'TokenDeletedFailedEvent');
     }

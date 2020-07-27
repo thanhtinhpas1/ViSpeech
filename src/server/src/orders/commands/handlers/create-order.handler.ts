@@ -10,7 +10,9 @@ import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { UserDto } from 'users/dtos/users.dto';
 
-const stripe = require('stripe')(config.STRIPE_SECRET_KEY);
+import Stripe from 'stripe';
+
+const stripe = new Stripe(config.STRIPE_SECRET_KEY, { apiVersion: '2020-03-02' });
 
 @CommandHandler(CreateOrderCommand)
 export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
@@ -23,17 +25,17 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
 
     async execute(command: CreateOrderCommand) {
         Logger.log('Async CreateOrderHandler...', 'CreateOrderCommand');
-        const {streamId, orderDto, paymentIntent} = command;
+        const { streamId, orderDto, paymentIntent } = command;
 
         try {
             const paymentIntentObj = await stripe.paymentIntents.retrieve(paymentIntent.id);
             if (paymentIntentObj && paymentIntentObj.status === 'succeeded') {
-                const user = await getMongoRepository(UserDto).findOne({_id: orderDto.userId.toString()});
+                const user = await getMongoRepository(UserDto).findOne({ _id: orderDto.userId.toString() });
                 if (!user) {
                     throw new NotFoundException(`User with _id ${orderDto.userId} does not exist.`);
                 }
 
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: orderDto.tokenType.name});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ name: orderDto.tokenType.name });
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with name ${orderDto.tokenType.name} does not exist.`);
                 }
@@ -55,9 +57,9 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                         projectId: orderDto.token.projectId
                     }
                 });
-                const isTokenNameExisted = projectTokens.findIndex(token => token.name === orderDto.token.name) > -1
+                const isTokenNameExisted = projectTokens.findIndex(token => token.name === orderDto.token.name) > -1;
                 if (isTokenNameExisted) {
-                    throw new BadRequestException('Token name is existed.')
+                    throw new BadRequestException('Token name is existed.');
                 }
 
                 // use mergeObjectContext for dto dispatch events
@@ -65,7 +67,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                     await this.repository.createOrder(streamId, orderDto)
                 );
                 order.commit();
-                return
+                return;
             }
 
             throw new BadRequestException(`Payment intent with id "${paymentIntent.id}" does not exist or payment intent status is not succeeded.`);
@@ -74,7 +76,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
             if (error.raw && error.raw.message) {
                 errorMessage = error.raw.message;
             }
-            this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, {message: errorMessage}));
+            this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, { message: errorMessage }));
         }
     }
 }

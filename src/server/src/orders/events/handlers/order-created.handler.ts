@@ -23,11 +23,11 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
 
     async handle(event: OrderCreatedEvent) {
         Logger.log(event.orderDto._id, 'OrderCreatedEvent');
-        const {streamId, orderDto} = event;
-        const order = {...orderDto};
+        const { streamId, orderDto } = event;
+        const order = { ...orderDto };
 
         try {
-            order.tokenType = await this.tokenTypeRepository.findOne({_id: order.tokenType._id});
+            order.tokenType = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
             order.upgradeToken = false;
             await this.repository.save(order);
             this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, orderDto));
@@ -64,8 +64,8 @@ export class OrderCreatedFailedHandler
     }
 
     handle(event: OrderCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'OrderCreatedFailedEvent');
     }

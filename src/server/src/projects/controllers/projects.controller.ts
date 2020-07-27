@@ -23,8 +23,8 @@ export class ProjectsController {
     /* Create Project */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Project']})
-    @ApiResponse({status: 200, description: 'Create Project.'})
+    @ApiOperation({ tags: ['Create Project'] })
+    @ApiResponse({ status: 200, description: 'Create Project.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Post()
@@ -36,8 +36,8 @@ export class ProjectsController {
     /* Update Project */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Update Project']})
-    @ApiResponse({status: 200, description: 'Update Project.'})
+    @ApiOperation({ tags: ['Update Project'] })
+    @ApiResponse({ status: 200, description: 'Update Project.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Put(':_id')
@@ -55,8 +55,8 @@ export class ProjectsController {
     /* Delete Project */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Delete Project']})
-    @ApiResponse({status: 200, description: 'Delete Project.'})
+    @ApiOperation({ tags: ['Delete Project'] })
+    @ApiResponse({ status: 200, description: 'Delete Project.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Delete(':_id')
@@ -68,8 +68,8 @@ export class ProjectsController {
     /* List Projects */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Projects']})
-    @ApiResponse({status: 200, description: 'List Projects.'})
+    @ApiOperation({ tags: ['List Projects'] })
+    @ApiResponse({ status: 200, description: 'List Projects.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
@@ -80,8 +80,8 @@ export class ProjectsController {
     /* Get Project Names */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Project Names']})
-    @ApiResponse({status: 200, description: ' Get Project Names.'})
+    @ApiOperation({ tags: ['Get Project Names'] })
+    @ApiResponse({ status: 200, description: ' Get Project Names.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get('names')
@@ -92,8 +92,8 @@ export class ProjectsController {
     /* List Projects By UserId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Projects By UserId']})
-    @ApiResponse({status: 200, description: 'List Projects By UserId.'})
+    @ApiOperation({ tags: ['List Projects By UserId'] })
+    @ApiResponse({ status: 200, description: 'List Projects By UserId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Get('/user-projects')
@@ -106,8 +106,8 @@ export class ProjectsController {
     /* List Accepted Projects By UserId */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Accepted Projects By UserId']})
-    @ApiResponse({status: 200, description: 'List Accepted Projects By UserId.'})
+    @ApiOperation({ tags: ['List Accepted Projects By UserId'] })
+    @ApiResponse({ status: 200, description: 'List Accepted Projects By UserId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
     @Get('/accepted-projects')
     async getAcceptedProjectsByUserId(
@@ -119,8 +119,8 @@ export class ProjectsController {
     /* Find Project */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Find Project']})
-    @ApiResponse({status: 200, description: 'Find Project.'})
+    @ApiOperation({ tags: ['Find Project'] })
+    @ApiResponse({ status: 200, description: 'Find Project.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER, CONSTANTS.ROLE.USER])
     @Get(':id')

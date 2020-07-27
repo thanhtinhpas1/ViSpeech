@@ -19,11 +19,11 @@ export class FindFreeTokenHandler implements IQueryHandler<FindFreeTokenQuery> {
 
     async execute(query: FindFreeTokenQuery): Promise<any> {
         Logger.log('Async FindFreeTokenQuery...', 'FindFreeTokenQuery');
-        const {userId} = query;
+        const { userId } = query;
 
         try {
-            const freeToken = await this.tokenTypeRepository.findOne({name: CONSTANTS.TOKEN_TYPE.FREE})
-            return await this.repository.findOne({userId, tokenTypeId: freeToken._id});
+            const freeToken = await this.tokenTypeRepository.findOne({ name: CONSTANTS.TOKEN_TYPE.FREE });
+            return await this.repository.findOne({ userId, tokenTypeId: freeToken._id });
         } catch (error) {
             Logger.error(error.message, '', 'FindFreeTokenQuery');
         }

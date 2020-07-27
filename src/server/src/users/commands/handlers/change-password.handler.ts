@@ -17,10 +17,10 @@ export class ChangePasswordHandler implements ICommandHandler<ChangePasswordComm
 
     async execute(command: ChangePasswordCommand) {
         Logger.log('Async ChangePasswordHandler', 'ChangePasswordCommand');
-        const {streamId, changePasswordBody} = command;
+        const { streamId, changePasswordBody } = command;
 
         try {
-            const user = await getMongoRepository(UserDto).findOne({_id: changePasswordBody.userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: changePasswordBody.userId });
             if (!user) {
                 throw new BadRequestException(`User with _id ${changePasswordBody.userId} does not exist.`);
             }

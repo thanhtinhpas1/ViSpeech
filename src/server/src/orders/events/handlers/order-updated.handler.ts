@@ -20,8 +20,8 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
 
     async handle(event: OrderUpdatedEvent) {
         Logger.log(event.orderDto._id, 'OrderUpdatedEvent'); // write here
-        const {streamId, orderDto} = event;
-        const {_id, ...orderInfo} = orderDto;
+        const { streamId, orderDto } = event;
+        const { _id, ...orderInfo } = orderDto;
 
         try {
             const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenType', 'upgradeToken']);
@@ -60,8 +60,8 @@ export class OrderUpdatedFailedHandler
     }
 
     handle(event: OrderUpdatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'OrderUpdatedFailedEvent');
     }

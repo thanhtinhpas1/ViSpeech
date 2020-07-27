@@ -17,16 +17,16 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
 
     async execute(command: DeleteUserCommand) {
         Logger.log('Async DeleteUserHandler...', 'DeleteUserCommand');
-        const {streamId, userIdDto, isDeleted} = command;
+        const { streamId, userIdDto, isDeleted } = command;
         const userId = userIdDto._id;
 
         try {
-            const user = await getMongoRepository(UserDto).findOne({_id: userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }
 
-            const isDeletedStr = isDeleted ? "true" : "false";
+            const isDeletedStr = isDeleted ? 'true' : 'false';
             const userModel = this.publisher.mergeObjectContext(
                 await this.repository.deleteUser(streamId, userId, isDeletedStr)
             );

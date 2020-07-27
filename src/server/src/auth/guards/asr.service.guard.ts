@@ -18,11 +18,11 @@ export class AsrServiceGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const token = Utils.extractToken(request);
 
-        const tokenDto = await this.tokenRepo.findOne({value: token});
+        const tokenDto = await this.tokenRepo.findOne({ value: token });
         if (tokenDto) return true;
         Logger.warn('User does not have permission to call AsrService.', 'AsrServiceGuard');
         return false;

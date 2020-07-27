@@ -16,7 +16,7 @@ export class FindPermissionHandler implements IQueryHandler<FindPermissionQuery>
     async execute(query: FindPermissionQuery): Promise<any> {
         Logger.log('Async FindPermissionQuery...', 'FindPermissionQuery');
         try {
-            return await this.repository.findOne({_id: query.id});
+            return await this.repository.findOne({ _id: query.id });
         } catch (error) {
             Logger.error(error.message, '', 'FindPermissionQuery');
         }

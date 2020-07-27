@@ -63,7 +63,7 @@ export class EventStoreCoreModule {
             useFactory: async (esOptions: EventStoreModuleOptions) => {
                 return {
                     ...esOptions,
-                }
+                };
             },
             inject: [NEST_EVENTSTORE_OPTION],
         };
@@ -116,7 +116,7 @@ export class EventStoreCoreModule {
             useFactory: async (config: EventStoreOptionConfig) => {
                 return {
                     ...config,
-                }
+                };
             },
             inject: [NEST_EVENTSTORE_FEATURE_OPTION],
         };

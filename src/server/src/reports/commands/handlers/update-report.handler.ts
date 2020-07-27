@@ -18,10 +18,10 @@ export class UpdateReportHandler
 
     async execute(command: UpdateReportCommand) {
         Logger.log('Async UpdateReportHandler...', 'UpdateReportCommand');
-        const {streamId, reportDto} = command;
+        const { streamId, reportDto } = command;
 
         try {
-            const report = await getMongoRepository(ReportDto).findOne({_id: reportDto._id});
+            const report = await getMongoRepository(ReportDto).findOne({ _id: reportDto._id });
             if (!report) {
                 throw new NotFoundException(`Report with _id ${reportDto._id} does not exist.`);
             }

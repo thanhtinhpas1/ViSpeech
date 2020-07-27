@@ -5,14 +5,14 @@ import { ProjectDto } from 'projects/dtos/projects.dto';
 @Injectable()
 export class ProjectRepository {
     async createProject(streamId: string, projectDto: ProjectDto) {
-        const project = new Project(undefined);
+        const project = new Project(streamId);
         project.setData(projectDto);
         project.createProject(streamId);
         return project;
     }
 
     async updateProject(streamId: string, projectDto: ProjectDto) {
-        const project = new Project(undefined);
+        const project = new Project(streamId);
         project.setData(projectDto);
         project.updateProject(streamId);
         return project;
@@ -25,7 +25,7 @@ export class ProjectRepository {
     }
 
     async deleteProjectByUserId(streamId: string, userId: string) {
-        const project = new Project(undefined);
+        const project = new Project(streamId);
         project.deleteProjectByUserId(streamId, userId);
         return project;
     }

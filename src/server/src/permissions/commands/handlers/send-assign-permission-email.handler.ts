@@ -19,25 +19,25 @@ export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAss
 
     async execute(command: SendAssignPermissionEmailCommand) {
         Logger.log('Async SendAssignPermissionEmailHandler...', 'SendAssignPermissionEmailCommand');
-        const {streamId, permissionAssignDto} = command;
-        const {assigneeUsername, assignerId, projectId} = permissionAssignDto;
+        const { streamId, permissionAssignDto } = command;
+        const { assigneeUsername, assignerId, projectId } = permissionAssignDto;
 
         try {
-            const assignee = await getMongoRepository(UserDto).findOne({username: assigneeUsername});
+            const assignee = await getMongoRepository(UserDto).findOne({ username: assigneeUsername });
             if (!assignee) {
-                throw new NotFoundException(`Assignee with username ${assigneeUsername} does not exist.`)
+                throw new NotFoundException(`Assignee with username ${assigneeUsername} does not exist.`);
             } else if (!assignee.isActive) {
                 throw new BadRequestException(`Assignee with username ${assigneeUsername} is not active.`);
             }
 
-            const project = await getMongoRepository(ProjectDto).findOne({_id: projectId});
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: projectId });
             if (!project) {
                 throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
             } else if (!project.isValid) {
                 throw new BadRequestException(`Project with _id ${projectId} is not valid.`);
             }
 
-            const assigner = await getMongoRepository(UserDto).findOne({_id: assignerId});
+            const assigner = await getMongoRepository(UserDto).findOne({ _id: assignerId });
             if (!assigner) {
                 throw new NotFoundException(`Assigner with _id ${assignerId} does not exist.`);
             }
@@ -49,7 +49,7 @@ export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAss
             });
             if (permission || assignee._id === assignerId) {
                 throw new BadRequestException(`Permission with assignerId "${assignerId}", assigneeUsername "${assigneeUsername}", 
-                projectId "${projectId}" is existed or assignerId is not valid.`)
+                projectId "${projectId}" is existed or assignerId is not valid.`);
             }
 
             // use mergeObjectContext for dto dispatch events

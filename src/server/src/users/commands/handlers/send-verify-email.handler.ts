@@ -17,11 +17,11 @@ export class SendVerifyEmailHandler implements ICommandHandler<SendVerifyEmailCo
 
     async execute(command: SendVerifyEmailCommand) {
         Logger.log('Async SendVerifyEmailHandler...', 'SendVerifyEmailCommand');
-        const {streamId, userIdDto} = command;
+        const { streamId, userIdDto } = command;
         const userId = userIdDto._id;
 
         try {
-            const user = await getMongoRepository(UserDto).findOne({_id: userId});
+            const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }

@@ -1,4 +1,15 @@
-import { Body, Controller, HttpStatus, Logger, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    HttpStatus,
+    Logger,
+    Post,
+    Req,
+    Res,
+    UploadedFile,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -31,8 +42,8 @@ export class AsrController {
     /* Call Asr */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Request ASR ViSpeech']})
-    @ApiResponse({status: HttpStatus.OK, description: 'Request ASR ViSpeech'})
+    @ApiOperation({ tags: ['Request ASR ViSpeech'] })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Request ASR ViSpeech' })
     @ApiConsumes('multipart/form-data')
     @ApiFile('voice')
     @Post()
@@ -41,27 +52,27 @@ export class AsrController {
     )
     async requestAsr(@UploadedFile() file, @Body() requestBody: RequestBody, @Req() req, @Res() res) {
         // invalid file
-        if (!file) return res.status(HttpStatus.BAD_REQUEST).send({message: 'File is required'});
+        if (!file) return res.status(HttpStatus.BAD_REQUEST).send({ message: 'File is required' });
 
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
-        const tokenDto = await this.tokenRepository.findOne({where: {userId: payload['id'], value: token}});
+        const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
 
         // invalid token
         if (!tokenDto || !tokenDto.isValid || tokenDto.usedMinutes >= tokenDto.minutes)
-            return res.status(HttpStatus.FORBIDDEN).json({message: 'Invalid token.'});
+            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Invalid token.' });
 
         // not enough token minutes to request
         const duration = Utils.calculateDuration(file.size);
         const minutes = Number(tokenDto.minutes);
         const usedMinutes = Number(tokenDto.usedMinutes || 0);
         if (duration > (minutes - usedMinutes)) {
-            return res.status(HttpStatus.FORBIDDEN).json({message: 'Not enough token\' minutes to request.'});
+            return res.status(HttpStatus.FORBIDDEN).json({ message: 'Not enough token\' minutes to request.' });
         }
 
         // create pending request
         let requestStatus = CONSTANTS.STATUS.PENDING;
-        let asrData = ''
+        let asrData = '';
         const requestId = Utils.getUuid();
         const requestDto = new RequestDto(tokenDto._id, tokenDto.tokenTypeId, tokenDto.projectId, tokenDto.userId, file.originalname, file.encoding,
             file.size, duration, file.mimetype, requestStatus, requestBody?.assigneeId, requestBody?.audioFileUrl);
@@ -70,11 +81,11 @@ export class AsrController {
 
         // call asr
         const formData = new FormData();
-        formData.append('voice', file.buffer, {filename: file.originalname});
+        formData.append('voice', file.buffer, { filename: file.originalname });
         const url = config.ASR.PROTOCOL + '://' + config.ASR.HOST + ':' + config.ASR.PORT;
-        axios.post(url, formData, {headers: formData.getHeaders()}).then(result => {
+        axios.post(url, formData, { headers: formData.getHeaders() }).then(result => {
             requestStatus = CONSTANTS.STATUS.IN_PROGRESS;
-            asrData = result.data?.text
+            asrData = result.data?.text;
             // send back requestId, tokenId
             result.data.requestId = requestId;
             result.data.tokenId = requestDto.tokenId;
@@ -88,7 +99,7 @@ export class AsrController {
             if (requestStatus === CONSTANTS.STATUS.IN_PROGRESS) {
                 tokenDto.usedMinutes = usedMinutes + duration;
                 if (!requestBody?.audioFileUrl || !asrData) {
-                    requestDto.status = CONSTANTS.STATUS.SUCCESS
+                    requestDto.status = CONSTANTS.STATUS.SUCCESS;
                 }
             }
 

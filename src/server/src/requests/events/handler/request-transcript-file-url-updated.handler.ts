@@ -1,17 +1,17 @@
-import { Inject, Logger } from "@nestjs/common";
-import { EventBus, EventsHandler, IEventHandler } from "@nestjs/cqrs";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { Utils } from "utils";
-import { CONSTANTS } from "common/constant";
-import { config } from "../../../../config";
-import { ClientKafka } from "@nestjs/microservices";
-import { RequestDto } from "requests/dtos/requests.dto";
+import { Inject, Logger } from '@nestjs/common';
+import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Utils } from 'utils';
+import { CONSTANTS } from 'common/constant';
+import { config } from '../../../../config';
+import { ClientKafka } from '@nestjs/microservices';
+import { RequestDto } from 'requests/dtos/requests.dto';
 import {
     RequestTranscriptFileUrlUpdatedEvent,
     RequestTranscriptFileUrlUpdatedFailedEvent,
     RequestTranscriptFileUrlUpdatedSuccessEvent
-} from "../impl/request-transcript-file-url-updated.event";
+} from '../impl/request-transcript-file-url-updated.event';
 
 
 @EventsHandler(RequestTranscriptFileUrlUpdatedEvent)
@@ -25,10 +25,14 @@ export class RequestTranscriptFileUrlUpdatedHandler implements IEventHandler<Req
 
     async handle(event: RequestTranscriptFileUrlUpdatedEvent) {
         Logger.log(event.requestId, 'RequestTranscriptFileUrlUpdatedEvent'); // write here
-        const {streamId, requestId, tokenDto, url} = event;
+        const { streamId, requestId, tokenDto, url } = event;
 
         try {
-            await this.repository.update({_id: requestId}, {transcriptFileUrl: url, status: CONSTANTS.STATUS.SUCCESS, updatedDate: new Date()});
+            await this.repository.update({ _id: requestId }, {
+                transcriptFileUrl: url,
+                status: CONSTANTS.STATUS.SUCCESS,
+                updatedDate: new Date()
+            });
             this.eventBus.publish(new RequestTranscriptFileUrlUpdatedSuccessEvent(streamId, requestId, tokenDto, url));
         } catch (error) {
             this.eventBus.publish(new RequestTranscriptFileUrlUpdatedFailedEvent(streamId, requestId, tokenDto, url, error));
@@ -63,8 +67,8 @@ export class RequestTranscriptFileUrlUpdatedFailedHandler
     }
 
     handle(event: RequestTranscriptFileUrlUpdatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.REQUEST_UPDATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'RequestTranscriptFileUrlUpdatedFailedEvent');
     }

@@ -17,11 +17,11 @@ export class DeleteOrderHandler implements ICommandHandler<DeleteOrderCommand> {
 
     async execute(command: DeleteOrderCommand) {
         Logger.log('Async DeleteOrderHandler...', 'DeleteOrderCommand');
-        const {streamId, orderIdDto} = command;
+        const { streamId, orderIdDto } = command;
         const orderId = orderIdDto._id;
 
         try {
-            const order = await getMongoRepository(OrderDto).findOne({_id: orderId});
+            const order = await getMongoRepository(OrderDto).findOne({ _id: orderId });
             if (!order) {
                 throw new NotFoundException(`Order with _id ${orderId} does not exist.`);
             }

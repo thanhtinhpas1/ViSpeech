@@ -1,13 +1,13 @@
 import { Inject, Logger } from '@nestjs/common';
 import { EventBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
-import { ClientKafka } from "@nestjs/microservices";
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Repository } from 'typeorm';
 import { USER_TYPE, UserDto } from 'users/dtos/users.dto';
 import { Utils } from 'utils';
-import { config } from "../../../../config";
+import { config } from '../../../../config';
 import {
     UserCreatedEvent,
     UserCreatedFailedEvent,
@@ -34,13 +34,13 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 
     async handle(event: UserCreatedEvent) {
         Logger.log(event.userDto.username, 'UserCreatedEvent');
-        const {streamId, userDto} = event;
+        const { streamId, userDto } = event;
         const user = JSON.parse(JSON.stringify(userDto));
         try {
             user.password = Utils.hashPassword(user.password);
             user.roles = Utils.convertToArray(user.roles).map(role => {
                 if (role.name === CONSTANTS.ROLE.ADMIN) return new RoleDto(CONSTANTS.ROLE.USER);
-                return new RoleDto(role.name)
+                return new RoleDto(role.name);
             });
             user.isActive = true;
             await this.userRepository.save(user);
@@ -78,8 +78,8 @@ export class UserCreatedFailedHandler implements IEventHandler<UserCreatedFailed
     }
 
     handle(event: UserCreatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.USER_CREATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'UserCreatedFailedEvent');
     }

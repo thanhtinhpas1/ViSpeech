@@ -55,7 +55,7 @@ export const Utils = {
         return validRoles.includes(roleName);
     },
     isEmailVerified: roles => {
-        return Utils.convertToArray(roles).map(role => role.name).includes(CONSTANTS.ROLE.MANAGER_USER)
+        return Utils.convertToArray(roles).map(role => role.name).includes(CONSTANTS.ROLE.MANAGER_USER);
     },
     convertToArray: param => {
         if (!Array.isArray(param)) {
@@ -64,28 +64,28 @@ export const Utils = {
         return param;
     },
     convertToBoolean: value => {
-        return typeof value === 'boolean' ? value : value === 'true'
+        return typeof value === 'boolean' ? value : value === 'true';
     },
     getErrorObj: error => {
         const errorObj = {
             code: '',
             message: '',
-        }
-        errorObj.code = error.code || error.status
-        errorObj.message = error.errmsg || error.message
+        };
+        errorObj.code = error.code || error.status;
+        errorObj.message = error.errmsg || error.message;
         if (errorObj.message == null || errorObj.message === '') {
             errorObj.message = error?.writeErrors?.errmsg ||
-                (Array.isArray(error?.writeErrors) && error?.writeErrors.length > 0 && error?.writeErrors[0].errmsg) || ''
+                (Array.isArray(error?.writeErrors) && error?.writeErrors.length > 0 && error?.writeErrors[0].errmsg) || '';
         }
-        return errorObj
+        return errorObj;
     },
     getCorrectSortField: sortField => {
         if (sortField === 'createdDate') {
-            return 'createdDate'
+            return 'createdDate';
         }
         if (sortField === 'updatedDate') {
-            return 'updatedDate'
+            return 'updatedDate';
         }
-        return sortField
+        return sortField;
     }
 };

@@ -44,35 +44,35 @@ export class ReportsService {
     }
 
     async getStatisticsById(getStatisticsByIdQuery: GetStatisticsByIdQuery) {
-        const {id, statisticsType, timeType} = getStatisticsByIdQuery;
+        const { id, statisticsType, timeType } = getStatisticsByIdQuery;
         const query = new GetStatisticsByIdQuery(id, statisticsType, timeType);
         Object.assign(query, getStatisticsByIdQuery);
         return await this.queryBus.execute(query);
     }
 
     async getStatisticsByTokenTypeIdAndUserId(getStatisticsByTokenTypeIdAndUserIdQuery: GetStatisticsByTokenTypeIdAndUserIdQuery) {
-        const {id, userId, timeType} = getStatisticsByTokenTypeIdAndUserIdQuery;
+        const { id, userId, timeType } = getStatisticsByTokenTypeIdAndUserIdQuery;
         const query = new GetStatisticsByTokenTypeIdAndUserIdQuery(id, userId, timeType);
         Object.assign(query, getStatisticsByTokenTypeIdAndUserIdQuery);
         return await this.queryBus.execute(query);
     }
 
     async getAdminTotalStatistics(getAdminTotalStatisticsQuery: GetAdminTotalStatisticsQuery) {
-        const {statisticsType, timeType} = getAdminTotalStatisticsQuery;
+        const { statisticsType, timeType } = getAdminTotalStatisticsQuery;
         const query = new GetAdminTotalStatisticsQuery(statisticsType, timeType);
         Object.assign(query, getAdminTotalStatisticsQuery);
         return await this.queryBus.execute(query);
     }
 
     async getUserTotalStatistics(getUserTotalStatisticsQuery: GetUserTotalStatisticsQuery) {
-        const {userId, statisticsType, timeType} = getUserTotalStatisticsQuery;
+        const { userId, statisticsType, timeType } = getUserTotalStatisticsQuery;
         const query = new GetUserTotalStatisticsQuery(userId, statisticsType, timeType);
         Object.assign(query, getUserTotalStatisticsQuery);
         return await this.queryBus.execute(query);
     }
 
     async getTotalStatistics(getTotalStatisticsQuery: GetTotalStatisticsQuery) {
-        const {timeType} = getTotalStatisticsQuery;
+        const { timeType } = getTotalStatisticsQuery;
         const query = new GetTotalStatisticsQuery(timeType);
         Object.assign(query, getTotalStatisticsQuery);
         return await this.queryBus.execute(query);

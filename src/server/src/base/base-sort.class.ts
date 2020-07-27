@@ -1,5 +1,5 @@
-import { IsIn, IsNotEmpty, IsString } from "class-validator";
-import { CONSTANTS } from "common/constant";
+import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { CONSTANTS } from 'common/constant';
 
 export class BaseSortClass {
     constructor(field: string, order: string) {

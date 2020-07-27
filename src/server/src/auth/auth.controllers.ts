@@ -10,7 +10,7 @@ export class AuthController {
     @UseGuards(AuthGuard('local'))
     @Post('login')
     login(@Request() req) {
-        const {_id, username, roles} = req.user;
+        const { _id, username, roles } = req.user;
         req.user.jwtToken = this.authService.generateToken(_id, username, roles);
         return req.user;
     }
@@ -25,7 +25,7 @@ export class AuthController {
     @Post('login-facebook')
     loginWithFacebook(@Request() req) {
         if (req.user._id) {
-            const {_id, username, roles} = req.user;
+            const { _id, username, roles } = req.user;
             req.user.jwtToken = this.authService.generateToken(_id, username, roles);
         }
         return req.user;
@@ -35,7 +35,7 @@ export class AuthController {
     @Post('login-google')
     loginWithGoogle(@Request() req) {
         if (req.user._id) {
-            const {_id, username, roles} = req.user;
+            const { _id, username, roles } = req.user;
             req.user.jwtToken = this.authService.generateToken(_id, username, roles);
         }
         return req.user;

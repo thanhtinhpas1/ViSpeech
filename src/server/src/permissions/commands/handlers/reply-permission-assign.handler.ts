@@ -14,7 +14,7 @@ export class ReplyPermissionAssignHandler implements ICommandHandler<ReplyPermis
     async execute(command: ReplyPermissionAssignCommand) {
         Logger.log('Async ReplyPermissionAssignHandler...', 'ReplyPermissionAssignCommand');
 
-        const {streamId, permissionResponseDto} = command;
+        const { streamId, permissionResponseDto } = command;
         const permission = this.publisher.mergeObjectContext(
             await this.repository.replyPermissionAssign(streamId, permissionResponseDto)
         );

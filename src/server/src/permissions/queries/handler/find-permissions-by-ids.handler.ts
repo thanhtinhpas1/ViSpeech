@@ -15,11 +15,11 @@ export class FindPermissionsByIdsHandler implements IQueryHandler<FindPermission
 
     async execute(query: FindPermissionsByIdsQuery): Promise<any> {
         Logger.log('Async FindPermissionsByIdsQuery...', 'FindPermissionsByIdsQuery');
-        const {assigneeId, assignerId, projectId} = query;
+        const { assigneeId, assignerId, projectId } = query;
         try {
             if (!assigneeId && !assignerId && !projectId) return [];
 
-            const findOptions = {}
+            const findOptions = {};
             if (assigneeId) findOptions['assigneeId'] = assigneeId;
             if (assignerId) findOptions['assignerId'] = assignerId;
             if (projectId) findOptions['projectId'] = projectId;

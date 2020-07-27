@@ -24,10 +24,10 @@ export class ProjectDeletedHandler implements IEventHandler<ProjectDeletedEvent>
 
     async handle(event: ProjectDeletedEvent) {
         Logger.log(event.projectId, 'ProjectDeletedEvent');
-        const {streamId, projectId} = event;
+        const { streamId, projectId } = event;
 
         try {
-            await this.repository.update({_id: projectId}, {isValid: false, updatedDate: new Date()});
+            await this.repository.update({ _id: projectId }, { isValid: false, updatedDate: new Date() });
             this.eventBus.publish(new ProjectDeletedSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new ProjectDeletedFailedEvent(streamId, projectId, error));
@@ -62,8 +62,8 @@ export class ProjectDeletedFailedHandler
     }
 
     handle(event: ProjectDeletedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PROJECT_DELETED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'ProjectDeletedFailedEvent');
     }

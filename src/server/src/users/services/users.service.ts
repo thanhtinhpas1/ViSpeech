@@ -8,7 +8,7 @@ import { FindUserQuery } from 'users/queries/impl/find-user.query';
 import { ChangePasswordCommand } from '../commands/impl/change-password.command';
 import { VerifyEmailCommand } from 'users/commands/impl/verify-email.command';
 import { SendVerifyEmailCommand } from 'users/commands/impl/send-verify-email.command';
-import { CreateUserCommand } from "../commands/impl/create-user.command";
+import { CreateUserCommand } from '../commands/impl/create-user.command';
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { GetUsernamesQuery } from 'users/queries/impl/get-usernames.query';
 

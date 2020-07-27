@@ -13,7 +13,7 @@ export class CallAsrRequestHandler implements ICommandHandler<CallAsrRequestComm
 
     async execute(command: CallAsrRequestCommand) {
         Logger.log('Async CallAsrRequestHandler...', 'CallAsrRequestCommand');
-        const {streamId, tokenDto, requestDto} = command;
+        const { streamId, tokenDto, requestDto } = command;
         const request = this.publisher.mergeObjectContext(
             await this.repository.callAsr(streamId, requestDto, tokenDto)
         );

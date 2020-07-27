@@ -1,5 +1,5 @@
-import { FindTaskHandler } from "./find-tasks.handler";
+import { FindTaskHandler } from './find-tasks.handler';
 
 export const QueryHandlers = [
     FindTaskHandler,
-]
+];

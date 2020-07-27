@@ -17,10 +17,10 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
 
     async execute(command: UpdateUserCommand) {
         Logger.log('Async UpdateUserHandler...', 'UpdateUserCommand');
-        const {streamId, userDto} = command;
+        const { streamId, userDto } = command;
 
         try {
-            const user = await getMongoRepository(UserDto).findOne({_id: userDto._id});
+            const user = await getMongoRepository(UserDto).findOne({ _id: userDto._id });
             if (!user) {
                 throw new NotFoundException(`User with _id ${userDto._id} does not exist.`);
             }

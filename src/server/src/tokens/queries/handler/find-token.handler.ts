@@ -16,7 +16,7 @@ export class FindTokenHandler implements IQueryHandler<FindTokenQuery> {
     async execute(query: FindTokenQuery): Promise<any> {
         Logger.log('Async FindTokenQuery...', 'FindTokenQuery');
         try {
-            return await this.repository.findOne({_id: query.id});
+            return await this.repository.findOne({ _id: query.id });
         } catch (error) {
             Logger.error(error.message, '', 'FindTokenQuery');
         }

@@ -7,7 +7,10 @@ import { map } from 'rxjs/operators';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { CONSTANTS } from '../../common/constant';
 import { EventStore } from '../../core/event-store/lib';
-import { OrderedTokenCreatedFailedEvent, OrderedTokenCreatedSuccessEvent } from '../events/impl/ordered-token-created.event';
+import {
+    OrderedTokenCreatedFailedEvent,
+    OrderedTokenCreatedSuccessEvent
+} from '../events/impl/ordered-token-created.event';
 import { TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from '../events/impl/token-upgraded.event';
 
 @Injectable()

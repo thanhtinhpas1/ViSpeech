@@ -1,6 +1,6 @@
-import { KafkaOptions, Transport } from "@nestjs/microservices";
-import { config } from "../../config";
-import { logLevel } from "@nestjs/microservices/external/kafka-options.interface";
+import { KafkaOptions, Transport } from '@nestjs/microservices';
+import { config } from '../../config';
+import { logLevel } from '@nestjs/microservices/external/kafka-options.interface';
 
 export const kafkaClientOptions: KafkaOptions = {
     transport: Transport.KAFKA,
@@ -22,4 +22,4 @@ export const kafkaClientOptions: KafkaOptions = {
             transactionTimeout: 30000,
         },
     },
-}
+};

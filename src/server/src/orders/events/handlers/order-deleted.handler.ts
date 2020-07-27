@@ -20,10 +20,10 @@ export class OrderDeletedHandler implements IEventHandler<OrderDeletedEvent> {
 
     async handle(event: OrderDeletedEvent) {
         Logger.log(event.orderId, 'OrderDeletedEvent');
-        const {streamId, orderId} = event;
+        const { streamId, orderId } = event;
 
         try {
-            await this.repository.delete({_id: orderId});
+            await this.repository.delete({ _id: orderId });
             this.eventBus.publish(new OrderDeletedSuccessEvent(streamId, orderId));
         } catch (error) {
             this.eventBus.publish(new OrderDeletedFailedEvent(streamId, orderId, error));
@@ -58,8 +58,8 @@ export class OrderDeletedFailedHandler
     }
 
     handle(event: OrderDeletedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'OrderDeletedFailedEvent');
     }

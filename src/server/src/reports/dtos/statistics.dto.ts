@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Type } from 'class-transformer';
 import {
     IsIn,
     IsInt,
@@ -12,8 +12,8 @@ import {
     Max,
     Min,
     ValidateNested
-} from "class-validator";
-import { CONSTANTS } from "common/constant";
+} from 'class-validator';
+import { CONSTANTS } from 'common/constant';
 
 export class StatisticalDto {
     constructor(data: number, year: number) {

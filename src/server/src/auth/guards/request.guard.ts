@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from 'auth/auth.service';
 import { Repository } from 'typeorm';
 import { RequestDto } from 'requests/dtos/requests.dto';
-import { UserUtils } from "../../utils/user.util";
+import { UserUtils } from '../../utils/user.util';
 
 @Injectable()
 export class RequestGuard implements CanActivate {
@@ -14,7 +14,7 @@ export class RequestGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -24,7 +24,7 @@ export class RequestGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (id) {
-            const request = await this.repository.findOne({_id: id});
+            const request = await this.repository.findOne({ _id: id });
             if (request && [request.userId, request.assigneeId].includes(payload['id'])) {
                 return true;
             }
@@ -35,7 +35,7 @@ export class RequestGuard implements CanActivate {
         }
         const projectId = request.params.projectId;
         if (projectId) {
-            const request = await this.repository.findOne({projectId});
+            const request = await this.repository.findOne({ projectId });
             if (request.userId === payload['id']) {
                 return true;
             }

@@ -24,16 +24,16 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
 
     async handle(event: EmailVerifiedEvent) {
         Logger.log(event.streamId, 'EmailVerifiedEvent');
-        const {streamId, emailToken} = event;
+        const { streamId, emailToken } = event;
 
         try {
             const decodedToken = this.jwtService.decode(emailToken);
             const userId = decodedToken['id'];
-            const user = await this.repository.findOne({_id: userId});
+            const user = await this.repository.findOne({ _id: userId });
 
             const userRoles = user.roles.filter(role => role.name !== CONSTANTS.ROLE.USER);
             const updatedRoles = [...userRoles, new RoleDto(CONSTANTS.ROLE.MANAGER_USER)];
-            await this.repository.update({_id: userId}, {roles: updatedRoles, updatedDate: new Date()});
+            await this.repository.update({ _id: userId }, { roles: updatedRoles, updatedDate: new Date() });
 
             const newToken = this.authService.generateToken(userId, user.username, updatedRoles);
             this.eventBus.publish(new EmailVerifiedSuccessEvent(streamId, emailToken, newToken));
@@ -68,8 +68,8 @@ export class EmailVerifiedFailedHandler implements IEventHandler<EmailVerifiedFa
     }
 
     handle(event: EmailVerifiedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.EMAIL_VERIFIED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'EmailVerifiedFailedEvent');
     }

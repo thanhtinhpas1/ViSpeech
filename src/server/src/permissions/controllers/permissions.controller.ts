@@ -32,8 +32,8 @@ export class PermissionsController {
     }
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create Permission']})
-    @ApiResponse({status: 200, description: 'Create Permission.'})
+    @ApiOperation({ tags: ['Create Permission'] })
+    @ApiResponse({ status: 200, description: 'Create Permission.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
@@ -45,8 +45,8 @@ export class PermissionsController {
     /* Update Permission */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Update Permission']})
-    @ApiResponse({status: 200, description: 'Update Permission.'})
+    @ApiOperation({ tags: ['Update Permission'] })
+    @ApiResponse({ status: 200, description: 'Update Permission.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
@@ -64,8 +64,8 @@ export class PermissionsController {
     /* Delete Permission */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Delete Permission']})
-    @ApiResponse({status: 200, description: 'Delete Permission.'})
+    @ApiOperation({ tags: ['Delete Permission'] })
+    @ApiResponse({ status: 200, description: 'Delete Permission.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionGuard)
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Delete(':_id')
@@ -77,8 +77,8 @@ export class PermissionsController {
     /* Send Assign Permission Email */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Send Assign Permission Email']})
-    @ApiResponse({status: 200, description: 'Send Assign Permission Email.'})
+    @ApiOperation({ tags: ['Send Assign Permission Email'] })
+    @ApiResponse({ status: 200, description: 'Send Assign Permission Email.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AssignPermissionGuard)
     @Post('assign-permission')
     async sendAssignPermissionEmail(@Body() permissionAssignDto: PermissionAssignDto) {
@@ -89,8 +89,8 @@ export class PermissionsController {
     /* Reply permission assign */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Reply permission assign']})
-    @ApiResponse({status: 200, description: 'Reply permission assign.'})
+    @ApiOperation({ tags: ['Reply permission assign'] })
+    @ApiResponse({ status: 200, description: 'Reply permission assign.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReplyPermissionAssignGuard)
     @Post('reply-permission-assign')
     async replyPermissionAssign(@Body() permissionResponseDto: PermissionResponseDto) {
@@ -101,8 +101,8 @@ export class PermissionsController {
     /* List Permissions */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Permissions']})
-    @ApiResponse({status: 200, description: 'List Permissions.'})
+    @ApiOperation({ tags: ['List Permissions'] })
+    @ApiResponse({ status: 200, description: 'List Permissions.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionQueryGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
@@ -114,8 +114,8 @@ export class PermissionsController {
 
     /*--------------------------------------------*/
 
-    @ApiOperation({tags: ['Find Permission By Email Token']})
-    @ApiResponse({status: 200, description: 'Find Permission By Email Token.'})
+    @ApiOperation({ tags: ['Find Permission By Email Token'] })
+    @ApiResponse({ status: 200, description: 'Find Permission By Email Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionQueryGuard)
     @Get('email-token/:emailToken')
     async findPermissionByEmailToken(@Param() param: EmailTokenParamsDto) {
@@ -131,8 +131,8 @@ export class PermissionsController {
 
     /*--------------------------------------------*/
 
-    @ApiOperation({tags: ['Find Permission']})
-    @ApiResponse({status: 200, description: 'Find Permission.'})
+    @ApiOperation({ tags: ['Find Permission'] })
+    @ApiResponse({ status: 200, description: 'Find Permission.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionQueryGuard)
     @Get(':id')
     async findOnePermission(@Param() findPermissionQuery: FindPermissionQuery) {

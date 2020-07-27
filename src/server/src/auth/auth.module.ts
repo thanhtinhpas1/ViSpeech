@@ -19,12 +19,12 @@ import { UsersModule } from '../users/users.module';
 @Module({
     imports: [
         JwtModule.register(config.JWT),
-        TypeOrmModule.forFeature([ UserDto, RoleDto ]),
+        TypeOrmModule.forFeature([UserDto, RoleDto]),
         PassportModule,
         CqrsModule,
         forwardRef(() => UsersModule),
     ],
-    controllers: [ AuthController ],
+    controllers: [AuthController],
     providers: [
         {
             provide: APP_GUARD,
@@ -40,7 +40,7 @@ import { UsersModule } from '../users/users.module';
         EventBus,
         EventPublisher,
     ],
-    exports: [ JwtModule, AuthService, CqrsModule ]
+    exports: [JwtModule, AuthService, CqrsModule]
 })
 export class AuthModule {
 }

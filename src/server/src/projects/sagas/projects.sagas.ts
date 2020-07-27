@@ -19,8 +19,8 @@ export class ProjectsSagas {
         return events$.pipe(
             ofType(ProjectDeletedSuccessEvent),
             map(event => {
-                Logger.log("Inside [ProjectsSagas] ProjectDeletedSuccessEvent Saga", "ProjectsSagas");
-                const {streamId, projectId} = event;
+                Logger.log('Inside [ProjectsSagas] ProjectDeletedSuccessEvent Saga', 'ProjectsSagas');
+                const { streamId, projectId } = event;
                 const deleteTokenEvent = new TokenDeletedByProjectIdEvent(streamId, projectId);
                 deleteTokenEvent['eventType'] = 'TokenDeletedByProjectIdEvent';
                 this.eventStore.publish(deleteTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);

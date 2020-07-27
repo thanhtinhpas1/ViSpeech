@@ -20,14 +20,14 @@ export class TokenUpgradedHandler implements IEventHandler<TokenUpgradedEvent> {
 
     async handle(event: TokenUpgradedEvent) {
         Logger.log(event.tokenDto._id, 'TokenUpgradedEvent'); // write here
-        const {streamId, tokenDto, tokenTypeDto} = event;
+        const { streamId, tokenDto, tokenTypeDto } = event;
 
         try {
-            const upgradedToken = {...tokenDto}
+            const upgradedToken = { ...tokenDto };
             upgradedToken.minutes = Number(tokenTypeDto.minutes);
             upgradedToken.tokenTypeId = tokenTypeDto._id;
             upgradedToken.tokenType = tokenTypeDto.name;
-            await this.repository.update({_id: upgradedToken._id}, {
+            await this.repository.update({ _id: upgradedToken._id }, {
                 minutes: upgradedToken.minutes,
                 tokenTypeId: upgradedToken.tokenTypeId,
                 tokenType: upgradedToken.tokenType,
@@ -65,8 +65,8 @@ export class TokenUpgradedFailedHandler implements IEventHandler<TokenUpgradedFa
     }
 
     handle(event: TokenUpgradedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.TOKEN_UPGRADED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'TokenUpgradedFailedEvent');
     }

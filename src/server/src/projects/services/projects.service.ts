@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { ProjectDto, ProjectIdRequestParamsDto } from "../dtos/projects.dto";
-import { CreateProjectCommand } from "../commands/impl/create-project.command";
-import { UpdateProjectCommand } from "../commands/impl/update-project.command";
-import { DeleteProjectCommand } from "../commands/impl/delete-project.command";
-import { GetProjectsQuery } from "projects/queries/impl/get-projects.query";
-import { FindProjectQuery } from "projects/queries/impl/find-project.query";
-import { GetProjectsByUserIdQuery } from "projects/queries/impl/get-projects-by-userId";
-import { GetAcceptedProjectsByUserIdQuery } from "projects/queries/impl/get-accepted-projects-by-userId";
-import { GetProjectNamesQuery } from "projects/queries/impl/get-project-names.query";
+import { Injectable } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ProjectDto, ProjectIdRequestParamsDto } from '../dtos/projects.dto';
+import { CreateProjectCommand } from '../commands/impl/create-project.command';
+import { UpdateProjectCommand } from '../commands/impl/update-project.command';
+import { DeleteProjectCommand } from '../commands/impl/delete-project.command';
+import { GetProjectsQuery } from 'projects/queries/impl/get-projects.query';
+import { FindProjectQuery } from 'projects/queries/impl/find-project.query';
+import { GetProjectsByUserIdQuery } from 'projects/queries/impl/get-projects-by-userId';
+import { GetAcceptedProjectsByUserIdQuery } from 'projects/queries/impl/get-accepted-projects-by-userId';
+import { GetProjectNamesQuery } from 'projects/queries/impl/get-project-names.query';
 
 @Injectable()
 export class ProjectsService {

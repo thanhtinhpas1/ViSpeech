@@ -13,7 +13,7 @@ export class CreateRequestHandler implements ICommandHandler<CreateRequestComman
 
     async execute(command: CreateRequestCommand) {
         Logger.log('Async CreateRequestHandler...', 'CreateRequestCommand');
-        const {streamId, tokenDto, requestDto} = command;
+        const { streamId, tokenDto, requestDto } = command;
         const request = this.publisher.mergeObjectContext(
             await this.repository.createRequest(streamId, requestDto, tokenDto)
         );

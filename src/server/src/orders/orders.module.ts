@@ -19,14 +19,26 @@ import { CommandHandlers } from './commands/handlers';
 import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
 import { EventHandlers } from './events/handlers';
-import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent } from './events/impl/order-created.event';
-import { OrderDeletedEvent, OrderDeletedFailedEvent, OrderDeletedSuccessEvent } from './events/impl/order-deleted.event';
+import {
+    OrderCreatedEvent,
+    OrderCreatedFailedEvent,
+    OrderCreatedSuccessEvent
+} from './events/impl/order-created.event';
+import {
+    OrderDeletedEvent,
+    OrderDeletedFailedEvent,
+    OrderDeletedSuccessEvent
+} from './events/impl/order-deleted.event';
 import {
     OrderToUpgradeCreatedEvent,
     OrderToUpgradeCreatedFailedEvent,
     OrderToUpgradeCreatedSuccessEvent
 } from './events/impl/order-to-upgrade-created.event';
-import { OrderUpdatedEvent, OrderUpdatedFailedEvent, OrderUpdatedSuccessEvent } from './events/impl/order-updated.event';
+import {
+    OrderUpdatedEvent,
+    OrderUpdatedFailedEvent,
+    OrderUpdatedSuccessEvent
+} from './events/impl/order-updated.event';
 import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { OrderRepository } from './repository/order.repository';
@@ -100,13 +112,20 @@ export class OrdersModule implements OnModuleInit, OnModuleDestroy {
 
     async seedProjection() {
         const streamName = CONSTANTS.STREAM_NAME.ORDER;
-        const orderProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
+        const orderProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (orderProjection) {
-            await getMongoRepository(ProjectionDto).save({...orderProjection, expectedVersion: orderProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({
+                ...orderProjection,
+                expectedVersion: orderProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
-        Logger.log('Seed projection order success')
+        Logger.log('Seed projection order success');
     }
 
     public static eventHandlers = {

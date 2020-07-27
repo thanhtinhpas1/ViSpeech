@@ -24,11 +24,11 @@ export class PermissionUpdatedHandler implements IEventHandler<PermissionUpdated
 
     async handle(event: PermissionUpdatedEvent) {
         Logger.log(event.permissionDto._id, 'PermissionUpdatedEvent'); // write here
-        const {streamId, permissionDto} = event;
-        const {_id, ...permissionInfo} = permissionDto;
+        const { streamId, permissionDto } = event;
+        const { _id, ...permissionInfo } = permissionDto;
 
         try {
-            await this.repository.update({_id}, {...permissionInfo, updatedDate: new Date()});
+            await this.repository.update({ _id }, { ...permissionInfo, updatedDate: new Date() });
             this.eventBus.publish(new PermissionUpdatedSuccessEvent(streamId, permissionDto));
         } catch (error) {
             this.eventBus.publish(new PermissionUpdatedFailedEvent(streamId, permissionDto, error));
@@ -63,8 +63,8 @@ export class PermissionUpdatedFailedHandler
     }
 
     handle(event: PermissionUpdatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_UPDATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PermissionUpdatedFailedEvent');
     }

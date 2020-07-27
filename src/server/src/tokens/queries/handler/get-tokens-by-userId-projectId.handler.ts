@@ -20,31 +20,31 @@ export class GetTokensByUserIdAndProjectIdHandler
 
     async execute(query: GetTokensByUserIdAndProjectIdQuery): Promise<any> {
         Logger.log('Async GetTokensByUserIdAndProjectIdQuery...', 'GetTokensByUserIdAndProjectIdQuery');
-        const {userId, projectId, offset, limit, filters, sort} = query;
+        const { userId, projectId, offset, limit, filters, sort } = query;
         let tokens = [];
         try {
             const findOptions = {
-                where: {userId, projectId},
+                where: { userId, projectId },
                 order: {}
-            }
+            };
             if (filters) {
                 if (filters['tokenType']) {
-                    const tokenTypes = await this.tokenTypeDtoRepository.find({name: filters['tokenType']})
-                    const tokenTypeIds = tokenTypes.map(tokenType => tokenType._id)
-                    findOptions.where['tokenTypeId'] = {$in: [...tokenTypeIds]}
+                    const tokenTypes = await this.tokenTypeDtoRepository.find({ name: filters['tokenType'] });
+                    const tokenTypeIds = tokenTypes.map(tokenType => tokenType._id);
+                    findOptions.where['tokenTypeId'] = { $in: [...tokenTypeIds] };
                 }
                 if (filters['isValid']) {
-                    findOptions.where['isValid'] = Utils.convertToBoolean(filters['isValid'])
+                    findOptions.where['isValid'] = Utils.convertToBoolean(filters['isValid']);
                 }
             }
             if (sort) {
-                const sortField = Utils.getCorrectSortField(sort.field)
-                findOptions.order[sortField] = sort.order
+                const sortField = Utils.getCorrectSortField(sort.field);
+                findOptions.order[sortField] = sort.order;
             }
 
-            tokens = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
+            tokens = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             const count = await getMongoRepository(TokenDto).count(findOptions.where);
-            return {data: tokens, count};
+            return { data: tokens, count };
         } catch (error) {
             Logger.error(error, '', 'GetTokensByUserIdAndProjectIdQuery');
         }

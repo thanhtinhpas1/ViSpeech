@@ -20,20 +20,20 @@ export class TokensController {
     ) {
     }
 
-    @ApiOperation({ tags: [ 'Total Tokens' ] })
+    @ApiOperation({ tags: ['Total Tokens'] })
     @ApiResponse({ status: 200, description: 'Total Tokens.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-    @Roles([ CONSTANTS.ROLE.ADMIN ])
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get('/total')
     async getTotal(@Query() getTokensQuery: GetTokensQuery): Promise<number> {
         return await this.tokensService.getTotalTokens(getTokensQuery);
     }
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'Create Token' ] })
+    @ApiOperation({ tags: ['Create Token'] })
     @ApiResponse({ status: 200, description: 'Create Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
-    @Roles([ CONSTANTS.ROLE.ADMIN ])
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Post()
     async createToken(@Body() tokenDto: TokenDto): Promise<TokenDto> {
         const streamId = tokenDto._id;
@@ -43,10 +43,10 @@ export class TokensController {
     /* Update Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'Update Token' ] })
+    @ApiOperation({ tags: ['Update Token'] })
     @ApiResponse({ status: 200, description: 'Update Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
-    @Roles([ CONSTANTS.ROLE.ADMIN ])
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Put(':_id')
     async updateToken(
         @Param() tokenIdDto: TokenIdRequestParamsDto,
@@ -62,10 +62,10 @@ export class TokensController {
     /* Delete Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'Delete Token' ] })
+    @ApiOperation({ tags: ['Delete Token'] })
     @ApiResponse({ status: 200, description: 'Delete Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenGuard)
-    @Roles([ CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER ])
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Delete(':_id')
     async deleteToken(@Param() tokenIdDto: TokenIdRequestParamsDto) {
         const streamId = tokenIdDto._id;
@@ -75,10 +75,10 @@ export class TokensController {
     /* List Tokens */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'List Tokens' ] })
+    @ApiOperation({ tags: ['List Tokens'] })
     @ApiResponse({ status: 200, description: 'List Tokens.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
-    @Roles([ CONSTANTS.ROLE.ADMIN ])
+    @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
     async getTokens(@Query() getTokensQuery: GetTokensQuery) {
         return this.tokensService.getTokens(getTokensQuery);
@@ -87,7 +87,7 @@ export class TokensController {
     /* List Tokens By UserId */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'List Tokens By UserId' ] })
+    @ApiOperation({ tags: ['List Tokens By UserId'] })
     @ApiResponse({ status: 200, description: 'List Tokens By UserId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get('/user-tokens')
@@ -100,7 +100,7 @@ export class TokensController {
     /* List Tokens By UserId And ProjectId */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'List Tokens By UserId And ProjectId' ] })
+    @ApiOperation({ tags: ['List Tokens By UserId And ProjectId'] })
     @ApiResponse({ status: 200, description: 'List Tokens By UserId And ProjectId.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get('/project-tokens')
@@ -113,7 +113,7 @@ export class TokensController {
     /* List Token Types */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'List Token Types' ] })
+    @ApiOperation({ tags: ['List Token Types'] })
     @ApiResponse({ status: 200, description: 'List Token Types.' })
     @Get('/token-types')
     async getTokenTypes(@Query() getTokenTypesQuery: GetTokenTypesQuery) {
@@ -123,7 +123,7 @@ export class TokensController {
     /* Find Free Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'Find Free Token' ] })
+    @ApiOperation({ tags: ['Find Free Token'] })
     @ApiResponse({ status: 200, description: 'Find Free Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get('/free-token/:userId')
@@ -134,7 +134,7 @@ export class TokensController {
     /* Find Token */
 
     /*--------------------------------------------*/
-    @ApiOperation({ tags: [ 'Find Token' ] })
+    @ApiOperation({ tags: ['Find Token'] })
     @ApiResponse({ status: 200, description: 'Find Token.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), TokenQueryGuard)
     @Get(':id')

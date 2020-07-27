@@ -1,11 +1,11 @@
-import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { OrderDto } from "orders/dtos/orders.dto";
-import { PermissionDto } from "permissions/dtos/permissions.dto";
-import { TokenDto } from "tokens/dtos/tokens.dto";
-import { getMongoRepository, Repository } from "typeorm";
-import { AuthService } from "../auth.service";
-import { UserUtils } from "../../utils/user.util";
+import { CanActivate, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { OrderDto } from 'orders/dtos/orders.dto';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { getMongoRepository, Repository } from 'typeorm';
+import { AuthService } from '../auth.service';
+import { UserUtils } from '../../utils/user.util';
 
 @Injectable()
 export class OrderGuard implements CanActivate {
@@ -14,7 +14,7 @@ export class OrderGuard implements CanActivate {
     ) {
     }
 
-    async canActivate(context: import('@nestjs/common').ExecutionContext) {
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
         const request = context.switchToHttp().getRequest();
         const payload = this.authService.decode(request);
         if (!payload || !payload['id'] || !payload['roles']) {
@@ -24,7 +24,7 @@ export class OrderGuard implements CanActivate {
         if (!id) return true;
         if (UserUtils.isAdmin(payload['roles'])) return true;
 
-        const order = await getMongoRepository(OrderDto).findOne({_id: id});
+        const order = await getMongoRepository(OrderDto).findOne({ _id: id });
         if (order && order.userId === payload['id']) {
             return true;
         }
@@ -54,7 +54,7 @@ export class OrderQueryGuard implements CanActivate {
 
         const id = request.params._id || request.params.id;
         if (id) {
-            const order = await getMongoRepository(OrderDto).findOne({_id: id});
+            const order = await getMongoRepository(OrderDto).findOne({ _id: id });
             if (!order) {
                 throw new NotFoundException(`Order with _id ${id} does not exist.`);
             }
@@ -72,7 +72,7 @@ export class OrderQueryGuard implements CanActivate {
 
         const tokenId = request.params.tokenId;
         if (tokenId) {
-            const token = await getMongoRepository(TokenDto).findOne({_id: tokenId});
+            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenId });
             if (!token) {
                 throw new NotFoundException(`Token with _id ${id} does not exist.`);
             }

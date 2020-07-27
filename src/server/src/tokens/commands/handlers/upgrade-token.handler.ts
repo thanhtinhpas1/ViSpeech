@@ -18,15 +18,15 @@ export class UpgradeTokenHandler implements ICommandHandler<UpgradeTokenCommand>
 
     async execute(command: UpgradeTokenCommand) {
         Logger.log('Async UpgradeTokenHandler...', 'UpgradeTokenCommand');
-        const {streamId, tokenDto, tokenTypeDto} = command;
+        const { streamId, tokenDto, tokenTypeDto } = command;
 
         try {
-            const token = await getMongoRepository(TokenDto).findOne({_id: tokenDto._id});
+            const token = await getMongoRepository(TokenDto).findOne({ _id: tokenDto._id });
             if (!token) {
                 throw new NotFoundException(`Token with _id ${tokenDto._id} does not exist.`);
             }
 
-            const tokenType = await getMongoRepository(TokenTypeDto).findOne({name: tokenTypeDto.name});
+            const tokenType = await getMongoRepository(TokenTypeDto).findOne({ name: tokenTypeDto.name });
             if (!tokenType) {
                 throw new NotFoundException(`Token type with name ${tokenTypeDto.name} does not exist.`);
             }

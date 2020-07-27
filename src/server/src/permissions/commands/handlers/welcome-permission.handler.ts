@@ -14,7 +14,7 @@ export class WelcomePermissionHandler
 
     async execute(command: WelcomePermissionCommand) {
         Logger.log('Async WelcomePermissionHandler...', 'WelcomePermissionCommand');
-        const {streamId, permissionId} = command;
+        const { streamId, permissionId } = command;
         const permission = this.publisher.mergeObjectContext(
             await this.repository.welcomePermission(streamId, permissionId)
         );

@@ -12,7 +12,7 @@ export class GetTotalStatisticsHandler implements IQueryHandler<GetTotalStatisti
 
     async execute(query: GetTotalStatisticsQuery): Promise<any> {
         Logger.log('Async GetTotalStatisticsQuery...', 'GetTotalStatisticsQuery');
-        const {statisticsType, timeType} = query;
+        const { statisticsType, timeType } = query;
 
         try {
             const queryParams = ReportUtils.getValidStatisticalQueryParams(query);
@@ -29,16 +29,16 @@ export class GetTotalStatisticsHandler implements IQueryHandler<GetTotalStatisti
                         $lt: ReportUtils.nextDate(endDate)
                     }
                 }
-            }
+            };
             const aggregateGroup = {
                 $group: {
                     _id: {
                         dateReport: '$dateReport'
                     },
-                    usedMinutes: {$sum: '$usedMinutes'},
-                    totalRequests: {$sum: '$totalRequests'}
+                    usedMinutes: { $sum: '$usedMinutes' },
+                    totalRequests: { $sum: '$totalRequests' }
                 }
-            }
+            };
             const groupedReports = await getMongoRepository(ReportDto).aggregate([
                 aggregateMatch,
                 aggregateGroup

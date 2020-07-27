@@ -15,44 +15,44 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
 
     async execute(query: GetUsersQuery) {
         Logger.log('Async GetUsersQuery...', 'GetUsersQuery');
-        const {limit, offset, filters, sort} = query;
+        const { limit, offset, filters, sort } = query;
         let users = [];
         try {
             // Admin no need to find active users
             const findOptions = {
                 where: {},
                 order: {}
-            }
+            };
             if (filters) {
                 if (filters['firstName']) {
-                    findOptions.where['firstName'] = new RegExp(filters['firstName'], 'i')
+                    findOptions.where['firstName'] = new RegExp(filters['firstName'], 'i');
                 }
                 if (filters['lastName']) {
-                    findOptions.where['lastName'] = new RegExp(filters['lastName'], 'i')
+                    findOptions.where['lastName'] = new RegExp(filters['lastName'], 'i');
                 }
                 if (filters['username']) {
-                    findOptions.where['username'] = new RegExp(filters['username'], 'i')
+                    findOptions.where['username'] = new RegExp(filters['username'], 'i');
                 }
                 if (filters['email']) {
-                    findOptions.where['email'] = new RegExp(filters['email'], 'i')
+                    findOptions.where['email'] = new RegExp(filters['email'], 'i');
                 }
                 if (filters['roles']) {
-                    findOptions.where['roles.name'] = filters['roles']
+                    findOptions.where['roles.name'] = filters['roles'];
                 }
                 if (filters['isActive']) {
-                    findOptions.where['isActive'] = Utils.convertToBoolean(filters['isActive'])
+                    findOptions.where['isActive'] = Utils.convertToBoolean(filters['isActive']);
                 }
             }
             if (sort) {
-                const sortField = Utils.getCorrectSortField(sort.field)
-                findOptions.order[sortField] = sort.order
+                const sortField = Utils.getCorrectSortField(sort.field);
+                findOptions.order[sortField] = sort.order;
             }
 
-            users = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
+            users = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             users = Utils.removeObjPropertiesFromObjArr(users, ['password']);
             users = users.filter(user => user.username !== 'admin');
             const count = await getMongoRepository(UserDto).count(findOptions.where) - 1;
-            return {data: users, count};
+            return { data: users, count };
         } catch (error) {
             Logger.error(error, '', 'GetUsersQuery');
         }

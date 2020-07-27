@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { QueryBus } from "@nestjs/cqrs";
-import { FindTasksQuery } from "tasks/queries/impl/find-tasks.query";
+import { Injectable } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
+import { FindTasksQuery } from 'tasks/queries/impl/find-tasks.query';
 
 @Injectable()
 export class TaskService {

@@ -24,10 +24,10 @@ export class GetMonitorsHandler implements IQueryHandler<GetMonitorsQuery> {
             const findOptions = {
                 where: {},
                 order: {}
-            }
+            };
             if (sort) {
-                const sortField = Utils.getCorrectSortField(sort.field)
-                findOptions.order[`data.${sortField}`] = sort.order
+                const sortField = Utils.getCorrectSortField(sort.field);
+                findOptions.order[`data.${sortField}`] = sort.order;
             }
             snapshots = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             const count = await this.repository.count(findOptions.where);

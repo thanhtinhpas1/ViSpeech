@@ -1,6 +1,6 @@
-import { IsNumber, IsObject, IsOptional, IsPositive, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { BaseSortClass } from "./base-sort.class";
+import { IsNumber, IsObject, IsOptional, IsPositive, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { BaseSortClass } from './base-sort.class';
 
 export class BaseQuery {
     @IsOptional()

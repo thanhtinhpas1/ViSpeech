@@ -26,7 +26,11 @@ import { AsrController } from './controllers/requests.controller';
 import { RequestDto } from './dtos/requests.dto';
 import { EventHandlers } from './events/handler';
 import { AsrCalledRequestEvent } from './events/impl/asr-called-request.event';
-import { RequestCreatedEvent, RequestCreatedFailedEvent, RequestCreatedSuccessEvent } from './events/impl/request-created.event';
+import {
+    RequestCreatedEvent,
+    RequestCreatedFailedEvent,
+    RequestCreatedSuccessEvent
+} from './events/impl/request-created.event';
 import {
     RequestTranscriptFileUrlUpdatedEvent,
     RequestTranscriptFileUrlUpdatedFailedEvent,
@@ -117,13 +121,20 @@ export class RequestModule implements OnModuleInit, OnModuleDestroy {
 
     async seedProjection() {
         const streamName = CONSTANTS.STREAM_NAME.REQUEST;
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({
+                ...userProjection,
+                expectedVersion: userProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
-        Logger.log('Seed projection request success')
+        Logger.log('Seed projection request success');
     }
 
     public static eventHandlers = {

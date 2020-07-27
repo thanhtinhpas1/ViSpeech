@@ -26,15 +26,15 @@ export class PermissionAssignRepliedHandler implements IEventHandler<PermissionA
 
     async handle(event: PermissionAssignRepliedEvent) {
         Logger.log(event.streamId, 'PermissionAssignRepliedEvent'); // write here
-        const {streamId, permissionResponseDto} = event;
-        const {emailToken, status} = permissionResponseDto;
+        const { streamId, permissionResponseDto } = event;
+        const { emailToken, status } = permissionResponseDto;
 
         try {
             const decodedToken = this.jwtService.decode(emailToken);
             const assignerId = decodedToken['assignerId'];
             const assigneeId = decodedToken['assigneeId'];
             const projectId = decodedToken['projectId'];
-            await this.repository.update({assigneeId, assignerId, projectId}, {status, updatedDate: new Date()});
+            await this.repository.update({ assigneeId, assignerId, projectId }, { status, updatedDate: new Date() });
             this.eventBus.publish(new PermissionAssignRepliedSuccessEvent(streamId, permissionResponseDto));
         } catch (error) {
             this.eventBus.publish(new PermissionAssignRepliedFailedEvent(streamId, permissionResponseDto, error));
@@ -69,8 +69,8 @@ export class PermissionAssignRepliedFailedHandler
     }
 
     handle(event: PermissionAssignRepliedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_REPLIED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PermissionAssignRepliedFailedEvent');
     }

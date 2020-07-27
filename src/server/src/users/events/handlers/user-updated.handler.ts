@@ -21,22 +21,22 @@ export class UserUpdatedHandler implements IEventHandler<UserUpdatedEvent> {
 
     async handle(event: UserUpdatedEvent) {
         Logger.log(event.userDto.username, 'UserUpdatedEvent');
-        const {streamId, userDto} = event;
-        const {_id, ...userInfo} = userDto;
+        const { streamId, userDto } = event;
+        const { _id, ...userInfo } = userDto;
 
         try {
-            const user = await this.repository.findOne({_id});
+            const user = await this.repository.findOne({ _id });
 
-            let formattedInfo = Utils.removePropertiesFromObject(userInfo, [ 'password', 'isActive', 'username', 'userType', 'socialId' ]);
+            let formattedInfo = Utils.removePropertiesFromObject(userInfo, ['password', 'isActive', 'username', 'userType', 'socialId']);
             if (Utils.isEmailVerified(user.roles)) {
                 formattedInfo = Utils.removePropertyFromObject(formattedInfo, 'email');
             }
             if (formattedInfo.roles) {
                 formattedInfo.roles = Utils.convertToArray(formattedInfo.roles).map(role => {
-                    return new RoleDto(role.name)
+                    return new RoleDto(role.name);
                 });
             }
-            await this.repository.update({_id}, {...formattedInfo, updatedDate: new Date()});
+            await this.repository.update({ _id }, { ...formattedInfo, updatedDate: new Date() });
             this.eventBus.publish(new UserUpdatedSuccessEvent(streamId, { ...user, ...formattedInfo }));
         } catch (error) {
             this.eventBus.publish(new UserUpdatedFailedEvent(streamId, userDto, error));
@@ -70,8 +70,8 @@ export class UserUpdatedFailedHandler
     }
 
     handle(event: UserUpdatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.USER_UPDATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'UserUpdatedFailedEvent');
     }

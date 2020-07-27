@@ -14,7 +14,7 @@ export class WelcomeProjectHandler
 
     async execute(command: WelcomeProjectCommand) {
         Logger.log('Async WelcomeProjectHandler...', 'WelcomeProjectCommand');
-        const {streamId, projectId} = command;
+        const { streamId, projectId } = command;
         const project = this.publisher.mergeObjectContext(
             await this.repository.welcomeProject(streamId, projectId)
         );

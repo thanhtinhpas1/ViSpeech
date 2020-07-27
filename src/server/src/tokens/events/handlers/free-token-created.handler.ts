@@ -9,7 +9,11 @@ import { Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
 import { AuthService } from '../../../auth/auth.service';
-import { FreeTokenCreatedEvent, FreeTokenCreatedFailedEvent, FreeTokenCreatedSuccessEvent } from '../impl/free-token-created.event';
+import {
+    FreeTokenCreatedEvent,
+    FreeTokenCreatedFailedEvent,
+    FreeTokenCreatedSuccessEvent
+} from '../impl/free-token-created.event';
 
 @EventsHandler(FreeTokenCreatedEvent)
 export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEvent> {
@@ -36,7 +40,7 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
             token.name = CONSTANTS.FREE_TOKEN;
-            token = Utils.removePropertiesFromObject(token, [ 'orderId' ]);
+            token = Utils.removePropertiesFromObject(token, ['orderId']);
             await this.repository.save(token);
             this.eventBus.publish(new FreeTokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {

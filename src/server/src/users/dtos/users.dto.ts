@@ -2,8 +2,8 @@ import { BaseEntityDto } from 'base/base-entity.dto';
 import { IsArray, IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { RoleDto } from 'roles/dtos/roles.dto';
 import { Column, Entity } from 'typeorm';
-import { ERR } from "../../common/error";
-import { ErrorUtils } from "../../utils/errorUtils";
+import { ERR } from '../../common/error';
+import { ErrorUtils } from '../../utils/errorUtils';
 
 export class UserIdRequestParamsDto {
     constructor(userId) {
@@ -64,7 +64,7 @@ export class UserDto extends BaseEntityDto {
 
     @IsString(ErrorUtils.getMessage('username', ERR.IsString))
     @IsNotEmpty(ErrorUtils.getMessage('username', ERR.IsNotEmpty))
-    @Column({nullable: false, update: false, unique: true})
+    @Column({ nullable: false, update: false, unique: true })
     username: string;
 
     @IsOptional()
@@ -97,7 +97,7 @@ export class UserDto extends BaseEntityDto {
     @IsOptional()
     @IsString()
     @IsEnum(USER_TYPE)
-    @Column({default: USER_TYPE.NORMAL})
+    @Column({ default: USER_TYPE.NORMAL })
     userType: USER_TYPE;
 
     @IsArray(ErrorUtils.getMessage('roles', ERR.IsArray))

@@ -17,10 +17,10 @@ export class UpdateProjectHandler implements ICommandHandler<UpdateProjectComman
 
     async execute(command: UpdateProjectCommand) {
         Logger.log('Async UpdateProjectHandler...', 'UpdateProjectCommand');
-        const {streamId, projectDto} = command;
+        const { streamId, projectDto } = command;
 
         try {
-            const project = await getMongoRepository(ProjectDto).findOne({_id: projectDto._id});
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: projectDto._id });
             if (!project) {
                 throw new NotFoundException(`Project with _id ${projectDto._id} does not exist.`);
             }

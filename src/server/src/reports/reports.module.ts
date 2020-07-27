@@ -18,9 +18,21 @@ import { CommandHandlers } from './commands/handlers';
 import { ReportsController } from './controllers/reports.controller';
 import { ReportDto } from './dtos/reports.dto';
 import { EventHandlers } from './events/handlers';
-import { ReportCreatedEvent, ReportCreatedFailedEvent, ReportCreatedSuccessEvent } from './events/impl/report-created.event';
-import { ReportDeletedEvent, ReportDeletedFailedEvent, ReportDeletedSuccessEvent } from './events/impl/report-deleted.event';
-import { ReportUpdatedEvent, ReportUpdatedFailedEvent, ReportUpdatedSuccessEvent } from './events/impl/report-updated.event';
+import {
+    ReportCreatedEvent,
+    ReportCreatedFailedEvent,
+    ReportCreatedSuccessEvent
+} from './events/impl/report-created.event';
+import {
+    ReportDeletedEvent,
+    ReportDeletedFailedEvent,
+    ReportDeletedSuccessEvent
+} from './events/impl/report-deleted.event';
+import {
+    ReportUpdatedEvent,
+    ReportUpdatedFailedEvent,
+    ReportUpdatedSuccessEvent
+} from './events/impl/report-updated.event';
 import { ReportWelcomedEvent } from './events/impl/report-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';
@@ -97,13 +109,20 @@ export class ReportsModule implements OnModuleInit, OnModuleDestroy {
 
     async seedProjection() {
         const streamName = CONSTANTS.STREAM_NAME.REPORT;
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({
+                ...userProjection,
+                expectedVersion: userProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
-        Logger.log('Seed projection report success')
+        Logger.log('Seed projection report success');
     }
 
     public static eventHandlers = {

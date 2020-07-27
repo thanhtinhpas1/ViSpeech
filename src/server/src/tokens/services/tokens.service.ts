@@ -50,7 +50,7 @@ export class TokensService {
     }
 
     async getTokensByUserIdAndProjectId(getTokensByUserIdAndProjectIdQuery: GetTokensByUserIdAndProjectIdQuery) {
-        const {userId, projectId} = getTokensByUserIdAndProjectIdQuery;
+        const { userId, projectId } = getTokensByUserIdAndProjectIdQuery;
         const query = new GetTokensByUserIdAndProjectIdQuery(userId, projectId);
         Object.assign(query, getTokensByUserIdAndProjectIdQuery);
         return await this.queryBus.execute(query);

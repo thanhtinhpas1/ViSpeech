@@ -20,15 +20,15 @@ export class CreateTokenHandler implements ICommandHandler<CreateTokenCommand> {
 
     async execute(command: CreateTokenCommand) {
         Logger.log('Async CreateTokenHandler...', 'CreateTokenCommand');
-        const {streamId, tokenDto} = command;
+        const { streamId, tokenDto } = command;
 
         try {
             if (!tokenDto.tokenType && !tokenDto.tokenTypeId) {
-                throw new BadRequestException('Token type or token type id must not be empty.')
+                throw new BadRequestException('Token type or token type id must not be empty.');
             }
 
             if (tokenDto.tokenTypeId) {
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: tokenDto.tokenType});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ name: tokenDto.tokenType });
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with name ${tokenDto.tokenType} does not exist.`);
                 }
@@ -59,7 +59,7 @@ export class CreateFreeTokenHandler implements ICommandHandler<CreateFreeTokenCo
     async execute(command: CreateFreeTokenCommand) {
         Logger.log('Async CreateFreeTokenHandler...', 'CreateFreeTokenCommand');
 
-        const {streamId, tokenDto} = command;
+        const { streamId, tokenDto } = command;
         // use mergeObjectContext for dto dispatch events
         const token = this.publisher.mergeObjectContext(
             await this.repository.createFreeToken(streamId, tokenDto)
@@ -80,11 +80,11 @@ export class CreateOrderedTokenHandler
 
     async execute(command: CreateOrderedTokenCommand) {
         Logger.log('Async CreateOrderedTokenHandler...', 'CreateOrderedTokenCommand');
-        const {streamId, tokenDto} = command;
+        const { streamId, tokenDto } = command;
 
         try {
             if (tokenDto.tokenTypeId) {
-                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({name: tokenDto.tokenType});
+                const tokenTypeDto = await getMongoRepository(TokenTypeDto).findOne({ name: tokenDto.tokenType });
                 if (!tokenTypeDto) {
                     throw new NotFoundException(`Token type with name ${tokenDto.tokenType} does not exist.`);
                 }

@@ -17,32 +17,32 @@ export class GetOrdersByUserIdHandler
 
     async execute(query: GetOrdersByUserIdQuery): Promise<any> {
         Logger.log('Async GetOrdersByUserIdQuery...', 'GetOrdersByUserIdQuery');
-        const {userId, offset, limit, filters, sort} = query;
+        const { userId, offset, limit, filters, sort } = query;
         let orders = [];
         try {
             const findOptions = {
-                where: {userId},
+                where: { userId },
                 order: {}
-            }
+            };
             if (filters) {
                 if (filters['status']) {
-                    findOptions.where['status'] = filters['status']
+                    findOptions.where['status'] = filters['status'];
                 }
                 if (filters['tokenType']) {
-                    findOptions.where['tokenType.name'] = filters['tokenType']
+                    findOptions.where['tokenType.name'] = filters['tokenType'];
                 }
                 if (filters['tokenName']) {
-                    findOptions.where['token.name'] = filters['tokenName']
+                    findOptions.where['token.name'] = filters['tokenName'];
                 }
             }
             if (sort) {
-                const sortField = Utils.getCorrectSortField(sort.field)
-                findOptions.order[sortField] = sort.order
+                const sortField = Utils.getCorrectSortField(sort.field);
+                findOptions.order[sortField] = sort.order;
             }
 
-            orders = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
+            orders = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             const count = await getMongoRepository(OrderDto).count(findOptions.where);
-            return {data: orders, count};
+            return { data: orders, count };
         } catch (error) {
             Logger.error(error.message, '', 'GetOrdersByUserIdQuery');
         }

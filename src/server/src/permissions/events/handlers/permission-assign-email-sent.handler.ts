@@ -30,13 +30,13 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 
     async handle(event: PermissionAssignEmailSentEvent) {
         Logger.log(event.streamId, 'PermissionAssignEmailSentEvent');
-        const {streamId, permissionAssignDto} = event;
-        const {assigneeUsername, projectId, permissions, assignerId} = permissionAssignDto;
+        const { streamId, permissionAssignDto } = event;
+        const { assigneeUsername, projectId, permissions, assignerId } = permissionAssignDto;
 
         try {
-            const project = await this.projectRepository.findOne({_id: projectId});
-            const assigner = await this.userRepository.findOne({_id: assignerId});
-            const assignee = await this.userRepository.findOne({username: assigneeUsername});
+            const project = await this.projectRepository.findOne({ _id: projectId });
+            const assigner = await this.userRepository.findOne({ _id: assignerId });
+            const assignee = await this.userRepository.findOne({ username: assigneeUsername });
             permissionAssignDto.assigneeId = assignee._id;
 
             const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions,
@@ -76,8 +76,8 @@ export class PermissionAssignEmailSentFailedHandler
     }
 
     handle(event: PermissionAssignEmailSentFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_ASSIGN_EMAIL_SENT_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PermissionAssignEmailSentFailedEvent');
     }

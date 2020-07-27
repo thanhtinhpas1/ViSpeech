@@ -15,26 +15,26 @@ export class GetUsernamesHandler implements IQueryHandler<GetUsernamesQuery> {
 
     async execute(query: GetUsernamesQuery) {
         Logger.log('Async GetUsernamesQuery...', 'GetUsernamesQuery');
-        const {limit, offset, filters} = query;
+        const { limit, offset, filters } = query;
         try {
             const findOptions = {
                 where: {},
                 order: {}
-            }
+            };
             if (filters) {
                 if (filters['isActive']) {
-                    findOptions.where['isActive'] = Utils.convertToBoolean(filters['isActive'])
+                    findOptions.where['isActive'] = Utils.convertToBoolean(filters['isActive']);
                 }
             }
-            const users = await this.repository.find({skip: offset || 0, take: limit || 0, ...findOptions});
+            const users = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             const data = users.map(user => {
                 return {
                     _id: user._id,
                     username: user.username
-                }
+                };
             }).filter(user => user.username !== 'admin');
             const count = await getMongoRepository(UserDto).count(findOptions.where) - 1;
-            return {data, count};
+            return { data, count };
         } catch (error) {
             Logger.error(error, '', 'GetUsernamesQuery');
         }

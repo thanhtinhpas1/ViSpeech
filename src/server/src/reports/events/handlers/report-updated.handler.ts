@@ -20,11 +20,11 @@ export class ReportUpdatedHandler implements IEventHandler<ReportUpdatedEvent> {
 
     async handle(event: ReportUpdatedEvent) {
         Logger.log(event.reportDto._id, 'ReportUpdatedEvent'); // write here
-        const {streamId, reportDto} = event;
-        const {_id, ...reportInfo} = reportDto;
+        const { streamId, reportDto } = event;
+        const { _id, ...reportInfo } = reportDto;
 
         try {
-            await this.repository.update({_id}, {...reportInfo, updatedDate: new Date()});
+            await this.repository.update({ _id }, { ...reportInfo, updatedDate: new Date() });
             this.eventBus.publish(new ReportUpdatedSuccessEvent(streamId, reportDto));
         } catch (error) {
             this.eventBus.publish(new ReportUpdatedFailedEvent(streamId, reportDto, error));
@@ -59,8 +59,8 @@ export class ReportUpdatedFailedHandler
     }
 
     handle(event: ReportUpdatedFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.REPORT_UPDATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'ReportUpdatedFailedEvent');
     }

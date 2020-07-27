@@ -24,10 +24,15 @@ export class PermissionDeletedByProjectIdHandler implements IEventHandler<Permis
 
     async handle(event: PermissionDeletedByProjectIdEvent) {
         Logger.log(event.projectId, 'PermissionDeletedByProjectIdEvent');
-        const {streamId, projectId} = event;
+        const { streamId, projectId } = event;
 
         try {
-            await getMongoRepository(PermissionDto).updateMany({projectId}, {$set: {status: CONSTANTS.STATUS.INVALID, updatedDate: new Date()}});
+            await getMongoRepository(PermissionDto).updateMany({ projectId }, {
+                $set: {
+                    status: CONSTANTS.STATUS.INVALID,
+                    updatedDate: new Date()
+                }
+            });
             this.eventBus.publish(new PermissionDeletedByProjectIdSuccessEvent(streamId, projectId));
         } catch (error) {
             this.eventBus.publish(new PermissionDeletedByProjectIdFailedEvent(streamId, projectId, error));
@@ -62,8 +67,8 @@ export class PermissionDeletedByProjectIdFailedHandler
     }
 
     handle(event: PermissionDeletedByProjectIdFailedEvent) {
-        const errorObj = Utils.getErrorObj(event.error)
-        event['errorObj'] = errorObj
+        const errorObj = Utils.getErrorObj(event.error);
+        event['errorObj'] = errorObj;
         this.clientKafka.emit(CONSTANTS.TOPICS.PERMISSION_DELETED_BY_PROJECTID_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'PermissionDeletedByProjectIdFailedEvent');
     }

@@ -2,8 +2,11 @@ import { OrderCreatedFailedHandler, OrderCreatedHandler, OrderCreatedSuccessHand
 import { OrderUpdatedFailedHandler, OrderUpdatedHandler, OrderUpdatedSuccessHandler } from './order-updated.handler';
 import { OrderDeletedFailedHandler, OrderDeletedHandler, OrderDeletedSuccessHandler } from './order-deleted.handler';
 import { OrderWelcomedHandler } from './order-welcomed.handler';
-import { OrderToUpgradeCreatedHandler, OrderToUpgradeCreatedSuccessHandler, 
-    OrderToUpgradeCreatedFailedHandler } from './order-to-upgrade-created.handler';
+import {
+    OrderToUpgradeCreatedFailedHandler,
+    OrderToUpgradeCreatedHandler,
+    OrderToUpgradeCreatedSuccessHandler
+} from './order-to-upgrade-created.handler';
 
 export const EventHandlers = [
     // create

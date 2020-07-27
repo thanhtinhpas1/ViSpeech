@@ -26,7 +26,11 @@ import {
     PermissionAssignRepliedFailedEvent,
     PermissionAssignRepliedSuccessEvent
 } from './events/impl/permission-assign-replied.event';
-import { PermissionCreatedEvent, PermissionCreatedFailedEvent, PermissionCreatedSuccessEvent } from './events/impl/permission-created.event';
+import {
+    PermissionCreatedEvent,
+    PermissionCreatedFailedEvent,
+    PermissionCreatedSuccessEvent
+} from './events/impl/permission-created.event';
 import {
     PermissionDeletedByProjectIdEvent,
     PermissionDeletedByProjectIdFailedEvent,
@@ -37,8 +41,16 @@ import {
     PermissionDeletedByUserIdFailedEvent,
     PermissionDeletedByUserIdSuccessEvent
 } from './events/impl/permission-deleted-by-userId.event';
-import { PermissionDeletedEvent, PermissionDeletedFailedEvent, PermissionDeletedSuccessEvent } from './events/impl/permission-deleted.event';
-import { PermissionUpdatedEvent, PermissionUpdatedFailedEvent, PermissionUpdatedSuccessEvent } from './events/impl/permission-updated.event';
+import {
+    PermissionDeletedEvent,
+    PermissionDeletedFailedEvent,
+    PermissionDeletedSuccessEvent
+} from './events/impl/permission-deleted.event';
+import {
+    PermissionUpdatedEvent,
+    PermissionUpdatedFailedEvent,
+    PermissionUpdatedSuccessEvent
+} from './events/impl/permission-updated.event';
 import { PermissionWelcomedEvent } from './events/impl/permission-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { PermissionRepository } from './repository/permission.repository';
@@ -109,13 +121,20 @@ export class PermissionsModule implements OnModuleInit {
 
     async seedProjection() {
         const streamName = CONSTANTS.STREAM_NAME.PERMISSION;
-        const userProjection = await getMongoRepository(ProjectionDto).findOne({streamName});
+        const userProjection = await getMongoRepository(ProjectionDto).findOne({ streamName });
         if (userProjection) {
-            await getMongoRepository(ProjectionDto).save({...userProjection, expectedVersion: userProjection.eventNumber});
+            await getMongoRepository(ProjectionDto).save({
+                ...userProjection,
+                expectedVersion: userProjection.eventNumber
+            });
         } else {
-            await getMongoRepository(ProjectionDto).save({streamName, eventNumber: 0, expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION});
+            await getMongoRepository(ProjectionDto).save({
+                streamName,
+                eventNumber: 0,
+                expectedVersion: CONSTANTS.INIT_EXPECTED_VERSION
+            });
         }
-        Logger.log('Seed projection permission success')
+        Logger.log('Seed projection permission success');
     }
 
     public static eventHandlers = {

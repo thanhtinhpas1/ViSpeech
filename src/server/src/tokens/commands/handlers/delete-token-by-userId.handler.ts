@@ -17,10 +17,10 @@ export class DeleteTokenByUserIdHandler implements ICommandHandler<DeleteTokenBy
 
     async execute(command: DeleteTokenByUserIdCommand) {
         Logger.log('Async DeleteTokenByUserIdHandler...', 'DeleteTokenByUserIdCommand');
-        const {streamId, userId} = command;
+        const { streamId, userId } = command;
 
         try {
-            const tokens = await getMongoRepository(TokenDto).find({userId});
+            const tokens = await getMongoRepository(TokenDto).find({ userId });
             if (tokens.length === 0) {
                 throw new NotFoundException(`Token with userId ${userId} does not exist.`);
             }

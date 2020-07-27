@@ -11,7 +11,7 @@ export const CronUtils = {
         const options = {
             currentDate,
             tz: 'Asia/Ho_Chi_Minh'
-        }
+        };
         try {
             const interval = parser.parseExpression(cron, options);
             return new Date(interval.prev().toString());
@@ -25,7 +25,7 @@ export const CronUtils = {
         const options = {
             currentDate,
             tz: 'Asia/Ho_Chi_Minh'
-        }
+        };
         try {
             const interval = parser.parseExpression(cron, options);
             return new Date(interval.next().toString());
@@ -38,10 +38,10 @@ export const CronUtils = {
         return {
             $group: {
                 _id: {},
-                duration: {$sum: '$duration'},
-                totalRequests: {$sum: 1}
+                duration: { $sum: '$duration' },
+                totalRequests: { $sum: 1 }
             }
-        }
+        };
     },
     aggregateMatchDates: (startDate, endDate) => {
         return {
@@ -51,6 +51,6 @@ export const CronUtils = {
                     $lt: endDate
                 }
             }
-        }
+        };
     }
-}
+};

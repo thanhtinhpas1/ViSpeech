@@ -98,7 +98,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     }
 
     async publish(event: IEvent, stream?: string) {
-        if ([ null, undefined ].includes(event)) {
+        if ([null, undefined].includes(event)) {
             return;
         }
 
@@ -109,30 +109,25 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             event['eventType'] || stream,
         );
         // it's hack for find out streamId by include stream
-        const streams = [ 'Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task', 'Monitor' ];
+        const streams = ['Token', 'Order', 'Permission', 'Report', 'User', 'Request', 'Project', 'Role', 'Task', 'Monitor'];
         const streamName = streams.map(stream => eventPayload.type.includes(stream) ? stream : null)
             .filter(event => event != null)[0];
-        let streamId = stream ? stream : `$ce-${ streamName?.toLowerCase() ?? 'user' }`;
-        //if (streamName === 'Monitor') {
-            // replace with sheep array when have cluster
-            //streamId = '$stats-0.0.0.0:2113';
-        //}
-
+        const streamId = stream ? stream : `$ce-${streamName?.toLowerCase() ?? 'user'}`;
         try {
-            // let version = await this.store.readExpectedVersion(streamId);
+            let version = await this.store.readExpectedVersion(streamId);
             const lcp = await this.store.read(streamId);
             // case when does not exist stream => expected version will be overlap with case start event  = 0
             // so in this case we accept for all event have event number less than 1
-            // if (version === 0) {
-            //     version = expectedVersion.any;
-            //     await this.store.writeExpectedVersion(streamId, 1);
-            // } else if (version < lcp && version !== -1) {
-            //     version = lcp;
-            //     await this.store.writeExpectedVersion(streamId, version + 1);
-            // } else {
-            //     await this.store.writeExpectedVersion(streamId, version + 1);
-            // }
-            await this.eventStore.getConnection().appendToStream(streamId, expectedVersion.any, [ eventPayload ]);
+            if (version === 0) {
+                version = expectedVersion.any;
+                await this.store.writeExpectedVersion(streamId, 1);
+            } else if (version < lcp && version !== -1) {
+                version = lcp;
+                await this.store.writeExpectedVersion(streamId, version + 1);
+            } else {
+                await this.store.writeExpectedVersion(streamId, version + 1);
+            }
+            await this.eventStore.getConnection().appendToStream(streamId, expectedVersion.any, [eventPayload]);
         } catch (err) {
             if (err.name === 'WrongExpectedVersionError') {
                 this.logger.warn('Detect duplicate event ' + eventPayload.type + ' ' + err.message);
@@ -186,7 +181,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         lastCheckpoint: number | Long | null = 0,
         isLive: boolean,
     ): ExtendedCatchUpSubscription {
-        this.logger.log(`Catching up and subscribing to stream ${ stream }!`);
+        this.logger.log(`Catching up and subscribing to stream ${stream}!`);
         try {
             return this.eventStore.getConnection().subscribeToStreamFrom(
                 stream,
@@ -209,7 +204,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     }
 
     async subscribeToVolatileSubscription(stream: string, resolveLinkTos: boolean = true): Promise<ExtendedVolatileSubscription> {
-        this.logger.log(`Volatile and subscribing to stream ${ stream }!`);
+        this.logger.log(`Volatile and subscribing to stream ${stream}!`);
         try {
             const resolved = await this.eventStore.getConnection().subscribeToStream(
                 stream,
@@ -267,7 +262,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     ): Promise<ExtendedPersistentSubscription> {
         try {
             this.logger.log(`
-       Connecting to persistent subscription ${ subscriptionName } on stream ${ stream }!`);
+       Connecting to persistent subscription ${subscriptionName} on stream ${stream}!`);
 
             const resolved = await this.eventStore.getConnection().connectToPersistentSubscription(
                 stream,
@@ -303,12 +298,12 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         let eventType;
         const handler = this.eventHandlers[eventType = rawData.eventType] || this.eventHandlers[eventType = event.eventType];
         if (!handler) {
-            this.logger.warn(`Received event that could not be handled! ${ eventType }`);
+            this.logger.warn(`Received event that could not be handled! ${eventType}`);
             return;
         }
 
         if (this.eventHandlers && this.eventHandlers[eventType]) {
-            Logger.log(`EventStore write event ${ eventType }`);
+            Logger.log(`EventStore write event ${eventType}`);
             // monitor log case event
             if (eventType === '$statsCollected') {
                 this.subject$.next(this.eventHandlers[eventType](v4(), rawData));
@@ -327,7 +322,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 }
             }
         } else {
-            Logger.warn(`Event of type ${ eventType } not handled`, this.constructor.name);
+            Logger.warn(`Event of type ${eventType} not handled`, this.constructor.name);
         }
     }
 

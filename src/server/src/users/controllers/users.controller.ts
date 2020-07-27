@@ -40,8 +40,8 @@ export class UsersController {
 
     /* Create user
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Create User']})
-    @ApiResponse({status: 200, description: 'Create User.'})
+    @ApiOperation({ tags: ['Create User'] })
+    @ApiResponse({ status: 200, description: 'Create User.' })
     @Post()
     async createUser(@Body() userDto: UserDto, @Req() request): Promise<UserDto> {
         if (!request.body.roles || !Array.isArray(request.body.roles)) {
@@ -59,8 +59,8 @@ export class UsersController {
     /* Change password */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Change password']})
-    @ApiResponse({status: 200, description: 'Change password.'})
+    @ApiOperation({ tags: ['Change password'] })
+    @ApiResponse({ status: 200, description: 'Change password.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Put('change-password')
     async changePassword(@Body() changePasswordBody: ChangePasswordBody, @Req() request) {
@@ -76,13 +76,13 @@ export class UsersController {
         return this.usersService.changePassword(streamId, changePasswordBody);
     }
 
-    local
+    local;
 
     /* Update User */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Update User']})
-    @ApiResponse({status: 200, description: 'Update User.'})
+    @ApiOperation({ tags: ['Update User'] })
+    @ApiResponse({ status: 200, description: 'Update User.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
     @Put(':_id')
     async updateUser(
@@ -102,8 +102,8 @@ export class UsersController {
     /* Delete User */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Delete User']})
-    @ApiResponse({status: 200, description: 'Delete User.'})
+    @ApiOperation({ tags: ['Delete User'] })
+    @ApiResponse({ status: 200, description: 'Delete User.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Delete(':_id')
@@ -122,8 +122,8 @@ export class UsersController {
     /* Send Verify email */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Send Verify Email']})
-    @ApiResponse({status: 200, description: 'Send Verify Email.'})
+    @ApiOperation({ tags: ['Send Verify Email'] })
+    @ApiResponse({ status: 200, description: 'Send Verify Email.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Roles([CONSTANTS.ROLE.USER])
     @Post('send-verify-email')
@@ -135,8 +135,8 @@ export class UsersController {
     /* Verify email */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Verify Email']})
-    @ApiResponse({status: 200, description: 'Verify Email.'})
+    @ApiOperation({ tags: ['Verify Email'] })
+    @ApiResponse({ status: 200, description: 'Verify Email.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), VerifyEmailGuard)
     @Roles([CONSTANTS.ROLE.USER])
     @Post('verify-email')
@@ -149,8 +149,8 @@ export class UsersController {
     /* List Users */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['List Users']})
-    @ApiResponse({status: 200, description: 'List Users.'})
+    @ApiOperation({ tags: ['List Users'] })
+    @ApiResponse({ status: 200, description: 'List Users.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Roles([CONSTANTS.ROLE.ADMIN])
     @Get()
@@ -161,8 +161,8 @@ export class UsersController {
     /* Get Usernames */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Get Usernames']})
-    @ApiResponse({status: 200, description: 'Get Usernames.'})
+    @ApiOperation({ tags: ['Get Usernames'] })
+    @ApiResponse({ status: 200, description: 'Get Usernames.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
     @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
     @Get('usernames')
@@ -172,8 +172,8 @@ export class UsersController {
 
     /* Get Users assignee by project id */
 
-    @ApiOperation({tags: ['List Users in project']})
-    @ApiResponse({status: 200, description: 'List Users in project'})
+    @ApiOperation({ tags: ['List Users in project'] })
+    @ApiResponse({ status: 200, description: 'List Users in project' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
     @Get('assignees/:projectId')
     async getProjectAssignees(@Param() query: GetProjectAssigneesQuery) {
@@ -183,8 +183,8 @@ export class UsersController {
     /* Find User */
 
     /*--------------------------------------------*/
-    @ApiOperation({tags: ['Find User']})
-    @ApiResponse({status: 200, description: 'Find User.'})
+    @ApiOperation({ tags: ['Find User'] })
+    @ApiResponse({ status: 200, description: 'Find User.' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UserGuard)
     @Get(':id')
     async findOneUser(@Param() findUserQuery: FindUserQuery) {

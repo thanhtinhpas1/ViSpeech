@@ -21,7 +21,7 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
 
     async execute(query: GetAdminTotalStatisticsQuery): Promise<any> {
         Logger.log('Async GetAdminTotalStatisticsQuery...', 'GetAdminTotalStatisticsQuery');
-        const {statisticsType, timeType} = query;
+        const { statisticsType, timeType } = query;
         const data = [];
 
         try {
@@ -38,15 +38,15 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
                         $lt: ReportUtils.nextDate(endDate)
                     }
                 }
-            }
+            };
             const aggregateGroup = {
                 $group: {
                     _id: {},
-                    usedMinutes: {$sum: '$usedMinutes'},
-                    totalRequests: {$sum: '$totalRequests'}
+                    usedMinutes: { $sum: '$usedMinutes' },
+                    totalRequests: { $sum: '$totalRequests' }
                 }
-            }
-            aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`
+            };
+            aggregateGroup.$group._id[`${statisticsType}Id`] = `$${statisticsType}Id`;
             const groupedReports = await getMongoRepository(ReportDto).aggregate([
                 aggregateMatch,
                 aggregateGroup
@@ -55,12 +55,12 @@ export class GetAdminTotalStatisticsHandler implements IQueryHandler<GetAdminTot
             if (statisticsType === CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE) {
                 const tokenTypes = await this.tokenTypeRepository.find();
                 for (const tokenType of tokenTypes) {
-                    data.push({data: tokenType, usedMinutes: 0, totalRequests: 0});
+                    data.push({ data: tokenType, usedMinutes: 0, totalRequests: 0 });
                 }
             } else if (statisticsType === CONSTANTS.STATISTICS_TYPE.USER) {
                 const users = await this.userRepository.find();
                 for (const user of users) {
-                    data.push({data: user, usedMinutes: 0, totalRequests: 0});
+                    data.push({ data: user, usedMinutes: 0, totalRequests: 0 });
                 }
             }
 
