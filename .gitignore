@@ -97,4 +97,4 @@ api/swagger-spec/swagger.json
 
 .vscode/
 
-*/.env
+src/server/.env
