@@ -24,7 +24,10 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
         const { _id, ...orderInfo } = orderDto;
 
         try {
-            const formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['tokenType', 'upgradeToken']);
+            let formattedOrderInfo = Utils.removePropertiesFromObject(orderInfo, ['userId', 'tokenType', 'upgradeToken']);
+            if (orderInfo.upgradeToken) {
+                formattedOrderInfo = Utils.removePropertyFromObject(formattedOrderInfo, 'token');
+            }
             await this.repository.update({ _id }, { ...formattedOrderInfo, updatedDate: new Date() });
             this.eventBus.publish(new OrderUpdatedSuccessEvent(streamId, orderDto));
         } catch (error) {

@@ -60,7 +60,7 @@ export class TokensSagas {
                 Logger.log('Inside [TokensSagas] tokenUpgradedSuccess Saga', 'TokensSagas');
                 const { streamId, tokenDto, tokenTypeDto } = event;
                 const { userId, orderId } = tokenDto;
-                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS);
+                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.SUCCESS, true);
                 orderDto._id = orderId;
                 this.publishOrderUpdatedEvent(streamId, orderDto);
             })
@@ -75,7 +75,7 @@ export class TokensSagas {
                 Logger.log('Inside [TokensSagas] tokenUpgradedFailed Saga', 'TokensSagas');
                 const { streamId, tokenDto, tokenTypeDto } = event;
                 const { userId, orderId } = tokenDto;
-                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE);
+                const orderDto = new OrderDto(userId, tokenTypeDto, tokenDto, CONSTANTS.STATUS.FAILURE, true);
                 orderDto._id = orderId;
                 this.publishOrderUpdatedEvent(streamId, orderDto);
             })

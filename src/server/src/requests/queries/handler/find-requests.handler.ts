@@ -35,9 +35,7 @@ export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
             const findOptions = {
                 where: {},
                 order: {}
-            };
-            console.log(`ADVANCED ${JSON.stringify(advancedFilters)}`);
-            console.log(`FILTER ${JSON.stringify(filters)}`);
+            }
             if (advancedFilters) {
                 if (advancedFilters['userIds']) {
                     findOptions.where['userId'] = { $in: [...advancedFilters['userIds']] };

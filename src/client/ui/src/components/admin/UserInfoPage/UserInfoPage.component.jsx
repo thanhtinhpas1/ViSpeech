@@ -92,11 +92,11 @@ const UserInfoPage = ({
       if (deleteUserObj.isSuccess === true) {
         setInfoModal({
           visible: true,
-          title: 'Xoá khách hàng',
+          title: 'Xoá người dùng',
           message: 'Thành công',
           icon: { isSuccess: true },
           button: {
-            content: 'Về danh sách khách hàng',
+            content: 'Về danh sách người dùng',
             clickFunc: () => {
               closeInfoModal()
               history.push(`${ADMIN_PATH}/users`)
@@ -110,7 +110,7 @@ const UserInfoPage = ({
       } else {
         setInfoModal({
           visible: true,
-          title: 'Xoá khách hàng',
+          title: 'Xoá người dùng',
           message: Utils.buildFailedMessage(deleteUserObj.message, 'Thất bại'),
           icon: { isSuccess: false },
           button: {
@@ -133,13 +133,13 @@ const UserInfoPage = ({
 
     setConfirmModal({
       visible: true,
-      message: 'Bạn có chắc muốn xoá khách hàng?',
+      message: 'Bạn có chắc muốn xoá người dùng?',
       onCancel: () => closeConfirmModal(),
       onOk: async () => {
         closeConfirmModal()
         setInfoModal({
           visible: true,
-          title: 'Xoá khách hàng',
+          title: 'Xoá người dùng',
           message: 'Vui lòng chờ giây lát...',
           icon: {
             isLoading: true,
@@ -148,6 +148,9 @@ const UserInfoPage = ({
         })
 
         deleteUser(userId)
+        let tokenDeleted = false
+        let projectDeleted = false
+        let permissionDeleted = false
         try {
           await UserService.deleteUser(userId)
           invokeCheckSubject.UserDeleted.subscribe(data => {
@@ -158,18 +161,31 @@ const UserInfoPage = ({
           invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
+            } else {
+              tokenDeleted = true
+              if (tokenDeleted && projectDeleted && permissionDeleted) {
+                deleteUserSuccess()
+              }
             }
           })
           invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
+            } else {
+              projectDeleted = true
+              if (tokenDeleted && projectDeleted && permissionDeleted) {
+                deleteUserSuccess()
+              }
             }
           })
           invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
-              deleteUserSuccess()
+              permissionDeleted = true
+              if (tokenDeleted && projectDeleted && permissionDeleted) {
+                deleteUserSuccess()
+              }
             }
           })
         } catch (err) {
@@ -185,12 +201,12 @@ const UserInfoPage = ({
         <div className="card" id="profile-main">
           <div className="card-header">
             <h4 className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Thông tin chi tiết khách hàng</span>
+              <span>Thông tin chi tiết người dùng</span>
               {userInfoObj.isLoading === false && userInfoObj.isSuccess === true && (
                 <button
                   className="btn btn-just-icon btn-simple btn-danger m-0"
                   rel="tooltip"
-                  title="Xoá khách hàng"
+                  title="Xoá người dùng"
                   onClick={e => onDeleteUser(e, userInfoObj.user._id)}
                 >
                   <i className="fas fa-times" />

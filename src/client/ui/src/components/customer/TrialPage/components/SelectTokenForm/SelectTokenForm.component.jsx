@@ -36,12 +36,14 @@ const SelectTokenForm = ({
   }, [currentUser._id, getFreeToken])
 
   useEffect(() => {
-    if (currentUser._id && Utils.isEmailVerified(currentUser.roles)) {
+    if (currentUser._id) {
       const filters = {
         isValid: ['true'],
         status: [STATUS.ACCEPTED.name],
       }
-      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
+      if (Utils.isEmailVerified(currentUser.roles)) {
+        getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
+      }
       getAcceptedProjectList({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
     }
   }, [currentUser._id, currentUser.roles, getMyProjects, getAcceptedProjectList])
@@ -158,8 +160,8 @@ const SelectTokenForm = ({
       )}
       {!getFreeTokenObj.isLoading &&
         getFreeTokenObj.isSuccess != null &&
-        !getMyProjectListObj.isLoading &&
-        getMyProjectListObj.isSuccess != null &&
+        // !getMyProjectListObj.isLoading &&
+        // getMyProjectListObj.isSuccess != null &&
         !getAcceptedProjectListObj.isLoading &&
         getAcceptedProjectListObj.isSuccess != null && (
           // !getProjectTokenListObj.isLoading &&

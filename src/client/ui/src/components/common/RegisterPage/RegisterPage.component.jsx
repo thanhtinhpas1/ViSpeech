@@ -146,7 +146,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
               <li>
                 <a href="#">Tài liệu</a>
               </li>
-              <li>© 2020 ASR VietSpeech.</li>
+              <li>© 2020 VietSpeech.</li>
             </ul>
           </div>
         </div>

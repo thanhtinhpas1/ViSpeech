@@ -121,7 +121,7 @@ const InfoTab = ({
             rules={[
               {
                 required: true,
-                message: 'Vui lòng nhập họ khách hàng!',
+                message: 'Vui lòng nhập họ người dùng!',
               },
             ]}
           >
@@ -135,7 +135,7 @@ const InfoTab = ({
             rules={[
               {
                 required: true,
-                message: 'Vui lòng nhập tên khách hàng!',
+                message: 'Vui lòng nhập tên người dùng!',
               },
             ]}
           >
@@ -161,13 +161,15 @@ const InfoTab = ({
             rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
           >
             <Radio.Group>
-              {Object.values(ROLES).map(role => {
-                return (
-                  <Radio value={role} key={role}>
-                    {role}
-                  </Radio>
-                )
-              })}
+              {Object.values(ROLES)
+                .filter(role => role !== ROLES.ADMIN)
+                .map(role => {
+                  return (
+                    <Radio value={role} key={role}>
+                      {role}
+                    </Radio>
+                  )
+                })}
             </Radio.Group>
           </Form.Item>
           {!updateInfoObj.isLoading && updateInfoObj.isSuccess === false && (

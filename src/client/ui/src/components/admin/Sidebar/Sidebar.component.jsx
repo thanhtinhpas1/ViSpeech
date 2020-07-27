@@ -74,7 +74,7 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
             <a data-toggle="collapse" href="#layouts" className="collapsed" aria-expanded="false">
               <i className="fas fa-users" />
               <p>
-                Khách hàng
+                Người dùng
                 <b className="caret" />
               </p>
             </a>

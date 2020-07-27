@@ -237,110 +237,133 @@ const TrialPage = ({
     refreshRequestList,
   ])
 
-  const callAsr = async (file, url) => {
-    createRequest()
-    setAsrData(null)
-    invokeCheckSubject.RequestCreated.subscribe(data => {
-      if (data.error != null) {
-        createRequestFailure(data.errorObj)
-      } else {
-        createRequestSuccess()
+  const callAsr = useCallback(
+    async (file, url) => {
+      createRequest()
+      setAsrData(null)
+      invokeCheckSubject.RequestCreated.subscribe(data => {
+        if (data.error != null) {
+          createRequestFailure(data.errorObj)
+        } else {
+          createRequestSuccess()
+        }
+      })
+      try {
+        const isAcceptedProject =
+          getAcceptedProjectListObj.acceptedProjectList.data.findIndex(project => project.name === projectName) > -1
+        const data =
+          isAcceptedProject && currentUser._id
+            ? await SpeechService.callAsr(file, url, tokenValue, currentUser._id)
+            : await SpeechService.callAsr(file, url, tokenValue)
+        setAsrData(data)
+      } catch (err) {
+        createRequestFailure({ message: err.message })
+        console.log(`Error while calling asr: ${err.message}`)
       }
-    })
-    try {
-      const isAcceptedProject =
-        getAcceptedProjectListObj.acceptedProjectList.data.findIndex(project => project.name === projectName) > -1
-      const data =
-        isAcceptedProject && currentUser._id
-          ? await SpeechService.callAsr(file, url, tokenValue, currentUser._id)
-          : await SpeechService.callAsr(file, url, tokenValue)
-      setAsrData(data)
-    } catch (err) {
-      createRequestFailure({ message: err.message })
-      console.log(`Error while calling asr: ${err.message}`)
-    }
-  }
-
-  const handleUpload = useCallback(async ({ file, onProgress, onSuccess, onError }) => {
-    clearCreateRequestState()
-    clearUpdateRequestInfo()
-
-    setInfoModal({
-      visible: true,
-      title: 'Tải tập tin âm thanh',
-      message: 'Đang tải...',
-      icon: { isLoading: true },
-      onCancel: () => closeInfoModal(),
-    })
-
-    if (!file) {
-      openInfoModal('Tải tập tin âm thanh', 'Tập tin không tồn tại. Vui lòng chọn lại!', false)
-      return
-    }
-
-    if (!tokenValue) {
-      return
-    }
-
-    const request = {
-      _id: 'vispeech',
-      createdDate: Date.now(),
-      duration: 0,
-      fileName: file.name,
+    },
+    [
+      currentUser._id,
       projectName,
-      status: {
-        value: 'PENDING',
-        name: STATUS.PENDING.viText,
-        class: STATUS.PENDING.cssClass,
-      },
-      tokenName,
-    }
-    setNewRequest(request)
-    setUploading(true)
+      tokenValue,
+      getAcceptedProjectListObj.acceptedProjectList.data,
+      createRequest,
+      createRequestFailure,
+      createRequestSuccess,
+    ]
+  )
 
-    const firebaseFileName = `audio-${file.name}`
-    const folder = `${Date.now()}`
-    setFirebaseFolder(folder)
-    const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${firebaseFileName}`).put(file)
-    uploadTask.on(
-      'state_changed',
-      snapshot => {
-        const progressValue = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        if (onProgress) {
-          onProgress({ percent: progressValue })
-        }
-      },
-      error => {
-        setUploading(false)
-        if (onError) {
-          onError(error)
-        }
-        openInfoModal('Tải tập tin âm thanh', 'Đã có lỗi xảy ra khi tải tập tin. Vui lòng thử lại sau!', false)
-      },
-      () => {
-        storage
-          .ref(`${FILE_PATH}/${folder}`)
-          .child(firebaseFileName)
-          .getDownloadURL()
-          .then(async url => {
-            if (onSuccess) {
-              onSuccess()
-            }
-            openInfoModal('Tải tập tin âm thanh', 'Tải lên tập tin thành công!', true)
-            setTimeout(() => {
-              setInfoModal({
-                visible: true,
-                title: 'Yêu cầu dùng thử',
-                message: 'Đang xử lí yêu cầu...',
-                icon: { isLoading: true },
-                onCancel: () => closeInfoModal(),
-              })
-            }, 1500)
-            callAsr(file, url)
-          })
+  const handleUpload = useCallback(
+    async ({ file, onProgress, onSuccess, onError }) => {
+      clearCreateRequestState()
+      clearUpdateRequestInfo()
+
+      setInfoModal({
+        visible: true,
+        title: 'Tải tập tin âm thanh',
+        message: 'Đang tải...',
+        icon: { isLoading: true },
+        onCancel: () => closeInfoModal(),
+      })
+
+      if (!file) {
+        openInfoModal('Tải tập tin âm thanh', 'Tập tin không tồn tại. Vui lòng chọn lại!', false)
+        return
       }
-    )
-  })
+
+      if (!tokenValue) {
+        return
+      }
+
+      const request = {
+        _id: 'vispeech',
+        createdDate: Date.now(),
+        duration: 0,
+        fileName: file.name,
+        projectName,
+        status: {
+          value: 'PENDING',
+          name: STATUS.PENDING.viText,
+          class: STATUS.PENDING.cssClass,
+        },
+        tokenName,
+      }
+      setNewRequest(request)
+      setUploading(true)
+
+      const firebaseFileName = `audio-${file.name}`
+      const folder = `${Date.now()}`
+      setFirebaseFolder(folder)
+      const uploadTask = storage.ref(`${FILE_PATH}/${folder}/${firebaseFileName}`).put(file)
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          const progressValue = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          if (onProgress) {
+            onProgress({ percent: progressValue })
+          }
+        },
+        error => {
+          setUploading(false)
+          if (onError) {
+            onError(error)
+          }
+          openInfoModal('Tải tập tin âm thanh', 'Đã có lỗi xảy ra khi tải tập tin. Vui lòng thử lại sau!', false)
+        },
+        () => {
+          storage
+            .ref(`${FILE_PATH}/${folder}`)
+            .child(firebaseFileName)
+            .getDownloadURL()
+            .then(async url => {
+              if (onSuccess) {
+                onSuccess()
+              }
+              openInfoModal('Tải tập tin âm thanh', 'Tải lên tập tin thành công!', true)
+              setTimeout(() => {
+                setInfoModal({
+                  visible: true,
+                  title: 'Yêu cầu dùng thử',
+                  message: 'Đang xử lí yêu cầu...',
+                  icon: { isLoading: true },
+                  onCancel: () => closeInfoModal(),
+                })
+              }, 1500)
+              callAsr(file, url)
+            })
+        }
+      )
+    },
+    [
+      callAsr,
+      openInfoModal,
+      closeInfoModal,
+      clearCreateRequestState,
+      clearUpdateRequestInfo,
+      projectName,
+      tokenName,
+      tokenValue,
+    ]
+  )
 
   useEffect(() => {
     if (audioFile) {

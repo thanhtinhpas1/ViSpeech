@@ -72,7 +72,7 @@ const TransactionsPage = ({ getOrderListObj, getOrderList }) => {
       align: 'center',
     },
     {
-      title: 'Khách hàng',
+      title: 'Người dùng',
       dataIndex: 'username',
       headerClassName: 'dt-amount',
       className: 'dt-amount',
