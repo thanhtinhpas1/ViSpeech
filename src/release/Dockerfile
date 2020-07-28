@@ -1,5 +1,5 @@
 ### BASE
-FROM node:dubnium-alpine AS base
+FROM node:14-alpine AS base
 
 # Set the working directory
 WORKDIR /user/src/app/release

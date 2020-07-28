@@ -1,5 +1,5 @@
 ### BASE
-FROM node:dubnium-alpine AS base
+FROM node:14-alpine AS base
 
 LABEL maintainer="Vispeech <vispeech@hcmus.edu.vn>"
 
