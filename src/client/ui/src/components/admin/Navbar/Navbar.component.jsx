@@ -7,8 +7,8 @@ const Navbar = ({ currentUser, logout }) => {
       <div className="container-fluid">
         <div className="navbar-minimize">
           <button type="button" id="minimizeSidebar" className="btn btn-round btn-white btn-fill btn-just-icon">
-            <i className="material-icons visible-on-sidebar-regular f-26">keyboard_arrow_left</i>
-            <i className="material-icons visible-on-sidebar-mini f-26">keyboard_arrow_right</i>
+            <i className="fas fa-chevron-left visible-on-sidebar-regular f-20" />
+            <i className="fas fa-chevron-right visible-on-sidebar-mini f-20" />
           </button>
         </div>
         <div className="navbar-header">
@@ -26,7 +26,7 @@ const Navbar = ({ currentUser, logout }) => {
           <ul className="nav navbar-nav navbar-right">
             <li className="dropdown">
               <a href="#!" className="dropdown-toggle" data-toggle="dropdown">
-                <i className="material-icons">person</i>
+                <i className="fas fa-user" />
                 <p className="hidden-lg hidden-md">
                   Trang cá nhân
                   <b className="caret" />

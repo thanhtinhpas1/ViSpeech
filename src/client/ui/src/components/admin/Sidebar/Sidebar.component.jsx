@@ -28,7 +28,7 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
         <ul className="nav nav-mobile-menu" style={{ marginTop: '15px' }}>
           <li className="dropdown">
             <a href="#!" className="dropdown-toggle" data-toggle="dropdown">
-              <i className="material-icons">person</i>
+              <i className="fas fa-user" />
               <p className="hidden-lg hidden-md">
                 Trang cá nhân
                 <b className="caret" />
@@ -60,7 +60,7 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
         <ul className="nav">
           <li className={`${location.pathname === ADMIN_PATH ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}`}>
-              <i className="material-icons">dashboard</i>
+              <i className="fab fa-delicious" />
               <p>Trang chủ</p>
             </a>
           </li>
@@ -91,37 +91,37 @@ const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/projects` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/projects`}>
-              <i className="material-icons">business</i>
+              <i className="fas fa-project-diagram" />
               <p>Danh sách dự án</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/tokens` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/tokens`}>
-              <i className="material-icons">vpn_key</i>
+              <i className="fas fa-key" />
               <p>Danh sách API key</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/transactions` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/transactions`}>
-              <i className="material-icons">history</i>
+              <i className="fas fa-history" />
               <p>Lịch sử giao dịch</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/reports` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/reports`}>
-              <i className="material-icons">bar_chart</i>
+              <i className="fas fa-chart-bar" />
               <p>Thống kê</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/histories` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/histories`}>
-              <i className="material-icons">audiotrack</i>
+              <i className="fas fa-layer-group" />
               <p>Lịch sử sử dụng dịch vụ</p>
             </a>
           </li>
           <li className={`${location.pathname === `${ADMIN_PATH}/tasks` ? 'active' : ''} `}>
             <a href={`${ADMIN_PATH}/tasks`}>
-              <i className="material-icons">admin_panel_settings</i>
+              <i className="fas fa-list-ol" />
               <p>Danh sách thực thi</p>
             </a>
           </li>

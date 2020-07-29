@@ -44,6 +44,20 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         if (currentPath !== '/login' && currentPath !== '/register') {
           // load link
           link = await loadLink(
+            `${process.env.PUBLIC_URL}/assets/css/customer/color/default.css`,
+            'customer-default.css',
+            'on'
+          )
+          console.log(`${link.id} is loaded`)
+          // load link
+          link = await loadLink(
+            `${process.env.PUBLIC_URL}/assets/css/customer/owl-carousel/owl.carousel.min.css`,
+            'customer-owl.carousel.min.css',
+            'on'
+          )
+          console.log(`${link.id} is loaded`)
+          // load link
+          link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/style-2.css`,
             'customer-style-2.css',
             'on'
@@ -60,7 +74,6 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           console.log(`${link.id} is loaded`)
           setIsCssLoaded(true)
         }
-        // if (isCssLoaded) {
         // load script
         let script = await loadScript(
           `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
@@ -69,6 +82,20 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         )
         console.log(`${script.id} is loaded`)
         if (currentPath !== '/login' && currentPath !== '/register') {
+          // load script
+          script = await loadScript(
+            `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
+            'customer-particles.min.js',
+            'on'
+          )
+          console.log(`${script.id} is loaded`)
+          // load script
+          script = await loadScript(
+            `${process.env.PUBLIC_URL}/assets/js/customer/owl-carousel/owl.carousel.min.js`,
+            'customer-owl.carousel.min.js',
+            'on'
+          )
+          console.log(`${script.id} is loaded`)
           // load script
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/custom.js`,
@@ -84,7 +111,6 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           )
           console.log(`${script.id} is loaded`)
         }
-        // }
       }
 
       if (currentUser) {
@@ -93,6 +119,20 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           let link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/bootstrap.min.css`,
             'customer-bootstrap.min.css',
+            'on'
+          )
+          console.log(`${link.id} is loaded`)
+          // load link
+          link = await loadLink(
+            `${process.env.PUBLIC_URL}/assets/css/customer/themify-icons/themify-icons.css`,
+            'customer-themify-icons.css',
+            'on'
+          )
+          console.log(`${link.id} is loaded`)
+          // load link
+          link = await loadLink(
+            `${process.env.PUBLIC_URL}/assets/css/customer/vendor.bundlea5f5.css?ver=102`,
+            'customer-vendor.bundlea5f5.css?ver=102',
             'on'
           )
           console.log(`${link.id} is loaded`)
@@ -113,26 +153,11 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           // load link
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/quill-editor.css`,
-            'customer/quill-editor.css',
+            'customer-quill-editor.css',
             'on'
           )
           console.log(`${link.id} is loaded`)
           setIsCssLoaded(true)
-          // if (isCssLoaded) {
-          // load script
-          // let script = await loadScript(
-          //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/jquery.dataTables.min.js`,
-          //   'customer-jquery.dataTables.min.js',
-          //   'on'
-          // )
-          // console.log(`${script.id} is loaded`)
-          // // load script
-          // script = await loadScript(
-          //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/dataTables.bootstrap4.min.js`,
-          //   'customer-dataTables.bootstrap4.min.js',
-          //   'on'
-          // )
-          // console.log(`${script.id} is loaded`)
           // load script
           let script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
@@ -141,13 +166,15 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           )
           console.log(`${script.id} is loaded`)
           // load script
+          script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', 'on')
+          console.log(`${script.id} is loaded`)
+          // load script
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
             'customer-scripta5f5.js',
             'on'
           )
           console.log(`${script.id} is loaded`)
-          // }
         }
 
         if (isAdminRole) {
@@ -164,36 +191,30 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           // load link
           link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/admin/turbo.css`, 'admin-turbo.css', 'on')
           console.log(`${link.id} is loaded`)
-          // setIsCssLoaded(true)
           // load link
           link = await loadLink(
-            `${process.env.PUBLIC_URL}/assets/css/admin/material-design-iconic-font/dist/css/material-design-iconic-font.min.css`,
-            'admin-material-design-iconic-font.min.css',
-            'on'
-          )
-          console.log(`${link.id} is loaded`)
-          // load link
-          link = await loadLink(
-            `https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons`,
-            'admin-fonts.googleapis.com',
+            `${process.env.PUBLIC_URL}/assets/css/customer/themify-icons/themify-icons.css`,
+            'customer-themify-icons.css',
             'on'
           )
           console.log(`${link.id} is loaded`)
           setIsCssLoaded(true)
-          // if (isCssLoaded) {
-          // load script
-          // let script = await loadScript(
-          //   `${process.env.PUBLIC_URL}/assets/vendors/jquery.datatables.js`,
-          //   'admin-jquery.datatables.js',
-          //   'on'
-          // )
-          // console.log(`${script.id} is loaded`)
           // load script
           let script = await loadScript(
+            `${process.env.PUBLIC_URL}/assets/vendors/perfect-scrollbar.jquery.min.js`,
+            'admin-perfect-scrollbar.jquery.min.js',
+            'on'
+          )
+          console.log(`${script.id} is loaded`)
+          // load script
+          script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/vendors/bootstrap.min.js`,
             'admin-bootstrap.min.js',
             'on'
           )
+          console.log(`${script.id} is loaded`)
+          // load script
+          script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', 'on')
           console.log(`${script.id} is loaded`)
           // load script
           script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`, 'admin-turbo.js', 'on')
@@ -205,28 +226,6 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
             'on'
           )
           console.log(`${script.id} is loaded`)
-          // load script
-          // script = await loadScript(
-          //   `${process.env.PUBLIC_URL}/assets/vendors/charts/flot/jquery.flot.js`,
-          //   'admin-jquery.flot.js',
-          //   'on'
-          // )
-          // console.log(`${script.id} is loaded`)
-          // load script
-          // script = await loadScript(
-          //   `${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`,
-          //   'admin-flot-charts.js',
-          //   'on'
-          // )
-          // console.log(`${script.id} is loaded`)
-          // load script
-          // script = await loadScript(
-          //   `${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`,
-          //   'admin-chartjs-charts.js',
-          //   'on'
-          // )
-          // console.log(`${script.id} is loaded`)
-          // }
         }
       }
     }
@@ -242,6 +241,20 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       )
       console.log(`${script.id} is ${status}`)
 
+      script = await loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
+        'customer-particles.min.js',
+        action
+      )
+      console.log(`${script.id} is ${status}`)
+
+      script = await loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/owl-carousel/owl.carousel.min.js`,
+        'customer-owl.carousel.min.js',
+        action
+      )
+      console.log(`${script.id} is ${status}`)
+
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`, 'customer-custom.js', action)
       console.log(`${script.id} is ${status}`)
 
@@ -252,26 +265,22 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       )
       console.log(`${script.id} is ${status}`)
 
-      // script = await loadScript(
-      //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/jquery.dataTables.min.js`,
-      //   'customer-jquery.dataTables.min.js',
-      //   action
-      // )
-      // console.log(`${script.id} is ${status}`)
+      script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', action)
+      console.log(`${script.id} is ${status}`)
 
-      // script = await loadScript(
-      //   `${process.env.PUBLIC_URL}/assets/js/customer/DataTables/dataTables.bootstrap4.min.js`,
-      //   'customer-dataTables.bootstrap4.min.js',
-      //   action
-      // )
-      // console.log(`${script.id} is ${status}`)
+      script = await loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
+        'customer-scripta5f5.js',
+        action
+      )
+      console.log(`${script.id} is ${status}`)
 
-      // script = await loadScript(
-      //   `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
-      //   'customer-scripta5f5.js',
-      //   action
-      // )
-      // console.log(`${script.id} is ${status}`)
+      script = await loadScript(
+        `${process.env.PUBLIC_URL}/assets/vendors/perfect-scrollbar.jquery.min.js`,
+        'admin-perfect-scrollbar.jquery.min.js',
+        action
+      )
+      console.log(`${script.id} is ${status}`)
 
       script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/vendors/bootstrap.min.js`,
@@ -282,34 +291,6 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
 
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`, 'admin-turbo.js', action)
       console.log(`${script.id} is ${status}`)
-
-      // script = await loadScript(
-      //   `${process.env.PUBLIC_URL}/assets/vendors/jquery.datatables.js`,
-      //   'admin-jquery.datatables.js',
-      //   action
-      // )
-      // console.log(`${script.id} is ${status}`)
-
-      // script = await loadScript(
-      //   `${process.env.PUBLIC_URL}/assets/vendors/charts/flot/jquery.flot.js`,
-      //   'admin-jquery.flot.js',
-      //   action
-      // )
-      // console.log(`${script.id} is ${status}`)
-
-      // script = await loadScript(
-      //   `${process.env.PUBLIC_URL}/assets/js/admin/charts/flot-charts.js`,
-      //   'admin-flot-charts.js',
-      //   action
-      // )
-      // console.log(`${script.id} is ${status}`)
-
-      // script = await loadScript(
-      //   `${process.env.PUBLIC_URL}/assets/js/admin/charts/chartjs-charts.js`,
-      //   'admin-chartjs-charts.js',
-      //   action
-      // )
-      // console.log(`${script.id} is ${status}`)
 
       loadAllLibraries()
     }
@@ -324,7 +305,35 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       )
       console.log(`${link.id} is ${status}`)
 
+      link = await loadLink(
+        `${process.env.PUBLIC_URL}/assets/css/customer/color/default.css`,
+        'customer-default.css',
+        action
+      )
+      console.log(`${link.id} is ${status}`)
+
+      link = await loadLink(
+        `${process.env.PUBLIC_URL}/assets/css/customer/owl-carousel/owl.carousel.min.css`,
+        'customer-owl.carousel.min.css',
+        action
+      )
+      console.log(`${link.id} is ${status}`)
+
       link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/customer/style-1.css`, 'customer-style-1.css', action)
+      console.log(`${link.id} is ${status}`)
+
+      link = await loadLink(
+        `${process.env.PUBLIC_URL}/assets/css/customer/themify-icons/themify-icons.css`,
+        'customer-themify-icons.css',
+        action
+      )
+      console.log(`${link.id} is ${status}`)
+
+      link = await loadLink(
+        `${process.env.PUBLIC_URL}/assets/css/customer/vendor.bundlea5f5.css?ver=102`,
+        'customer-vendor.bundlea5f5.css?ver=102',
+        action
+      )
       console.log(`${link.id} is ${status}`)
 
       link = await loadLink(
@@ -336,7 +345,7 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/customer/quill-editor.css`,
-        'customer/quill-editor.css',
+        'customer-quill-editor.css',
         action
       )
       console.log(`${link.id} is ${status}`)
@@ -351,21 +360,14 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       )
       console.log(`${link.id} is ${status}`)
 
+      link = await loadLink(
+        `${process.env.PUBLIC_URL}/assets/css/admin/react-table.css`,
+        'admin-react-table.css',
+        action
+      )
+      console.log(`${link.id} is ${status}`)
+
       link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/admin/turbo.css`, 'admin-turbo.css', action)
-      console.log(`${link.id} is ${status}`)
-
-      link = await loadLink(
-        `${process.env.PUBLIC_URL}/assets/css/admin/material-design-iconic-font/dist/css/material-design-iconic-font.min.css`,
-        'admin-material-design-iconic-font.min.css',
-        action
-      )
-      console.log(`${link.id} is ${status}`)
-
-      link = await loadLink(
-        `https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons`,
-        'admin-fonts.googleapis.com',
-        action
-      )
       console.log(`${link.id} is ${status}`)
 
       loadJsFiles(false)

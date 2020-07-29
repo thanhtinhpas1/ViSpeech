@@ -74,7 +74,7 @@ const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
   }
   metaObj[TOTAL_REQUESTS] = {
     formatter: v => {
-      return `${v} lần`
+      return Number.isNaN(v) ? '0 lần' : `${v} lần`
     },
     style: DEFAULT_STYLE,
   }

@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import { Tabs } from 'antd'
 import MonacoEditor from 'react-monaco-editor'
+import './DocumentsPage.style.scss'
 
 const { TabPane } = Tabs
+
 const jsCode =
   "const ViSpeech = require('asr-vietspeech');\n" +
   "const fs = require('fs');\n" +
@@ -80,25 +82,35 @@ const csharpCode =
   '            }\n' +
   '        }\n' +
   '    }'
+
+const monacoOptions = {
+  selectOnLineNumbers: true,
+  roundedSelection: false,
+  readOnly: false,
+  cursorStyle: 'line',
+  automaticLayout: false,
+}
+
 const DocumentsPage = () => {
   useEffect(() => {}, [])
+
   return (
-    <div className="row container-fluid mt-0">
-      <div className="col-md-12 pl-5 pr-5">
-        <div className="card" id="profile-main">
-          <div className="card-header">
-            <h4 className="card-title" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              Tài liệu: Hướng dẫn sử dụng thư viện SDK
-            </h4>
-            <hr />
+    <div className="page-content documents-page">
+      <div className="container">
+        <div className="content-area card">
+          <div className="card-innr card-innr-fix">
+            <div className="card-head d-flex justify-content-between align-items-center">
+              <h4 className="card-title mb-0">Hướng dẫn sử dụng thư viện SDK</h4>
+            </div>
             <p>
-              Tài liệu này sẽ hướng dẫn gửi <b>request</b> đến Speech-To-Text API trong ngôn môt số ngôn ngữ
-              <code> C#, JavaScript, Java</code> sử dụng các thư viện SDK.
+              Tài liệu này sẽ hướng dẫn gửi <b>request</b> đến Speech-To-Text API bằng ngôn môt số ngôn ngữ như
+              <code>C#, JavaScript, Java</code>, sử dụng các thư viện SDK.
             </p>
             <br />
             <p>
-              Thư viện SDK Speech-To-Text giúp dễ dàng sử dụng API key nhận dạng âm thanh tiếng Việt. Bạn có thể dễ dàng
-              gửi một <code>file</code> âm thanh đến Speech-To-Text API, để nhận về kết quả dịch của file này.
+              Thư viện SDK Speech-To-Text hỗ trợ ngời dùng dễ dàng sử dụng API key để nhận dạng âm thanh tiếng Việt. Bạn
+              có thể dễ dàng gửi một <code>file</code> âm thanh đến Speech-To-Text API và nhận về dữ liệu dạng văn bản
+              được dịch từ file âm thanh này.
             </p>
             <br />
             <h4>Cài đặt thư viện SDK</h4>
@@ -153,39 +165,54 @@ const DocumentsPage = () => {
             <br />
             <h4>Sử dụng API</h4>
             <p>
-              Bây giờ chúng ta có thể sử dụng <b>Speech-To-Text API</b> để dịch một tập tin âm thanh thành văn bản. Sử
-              dụng dựa theo những mã nguồn mẫu sau đây để gửi request.
+              Bây giờ chúng ta có thể sử dụng <b>Speech-To-Text API</b> để dịch một tập tin âm thanh thành văn bản. Dưới
+              đây là những mã nguồn mẫu người dùng có thể tham khảo để gửi request.
             </p>
             <Tabs className="ml-5 doc-tab" type="card">
               <TabPane tab="JavaScript" key="1">
-                <div style={{ textAlign: 'left' }}>
-                  <a target="blank" className="button" href="https://github.com/trankhanhlinh/vispeech-asr">
-                    Xem GitHub
-                  </a>
-                  <MonacoEditor width="60%" height="350" language="javascript" theme="vs-dark" value={jsCode} />
-                </div>
+                <a target="blank" className="button" href="https://github.com/trankhanhlinh/vispeech-asr">
+                  Xem GitHub
+                </a>
+                <MonacoEditor
+                  width="80%"
+                  height="400"
+                  language="javascript"
+                  theme="vs-dark"
+                  options={monacoOptions}
+                  value={jsCode}
+                />
               </TabPane>
               <TabPane tab="Java" key="2">
-                <div style={{ textAlign: 'left' }}>
-                  <a target="blank" className="button" href="https://github.com/thanhtinhpas1/asr-sdk-java">
-                    Xem GitHub
-                  </a>
-                  <MonacoEditor width="60%" height="350" language="java" theme="vs-dark" value={javaCode} />
-                </div>
+                <a target="blank" className="button" href="https://github.com/thanhtinhpas1/asr-sdk-java">
+                  Xem GitHub
+                </a>
+                <MonacoEditor
+                  width="80%"
+                  height="400"
+                  language="java"
+                  theme="vs-dark"
+                  options={monacoOptions}
+                  value={javaCode}
+                />
               </TabPane>
               <TabPane tab="C#" key="3">
-                <div style={{ textAlign: 'left' }}>
-                  <a target="blank" className="button" href="https://github.com/thanhtinhpas1/asr-sdk-csharp">
-                    Xem GitHub
-                  </a>
-                  <MonacoEditor width="60%" height="350" language="csharp" theme="vs-dark" value={csharpCode} />
-                </div>
+                <a target="blank" className="button" href="https://github.com/thanhtinhpas1/asr-sdk-csharp">
+                  Xem GitHub
+                </a>
+                <MonacoEditor
+                  width="80%"
+                  height="400"
+                  language="csharp"
+                  theme="vs-dark"
+                  options={monacoOptions}
+                  value={csharpCode}
+                />
               </TabPane>
             </Tabs>
             <br />
             <p>
               Như vậy là bạn đã gửi thành công request đến Speech-To-Text API. Nếu bạn nhận được bất kỳ lỗi nào thì có
-              thể do tập tin âm thanh chưa được đính kèm, hoặc api key không hợp lệ.
+              thể do tập tin âm thanh chưa được đính kèm, hoặc API key không hợp lệ.
             </p>
             <br />
           </div>

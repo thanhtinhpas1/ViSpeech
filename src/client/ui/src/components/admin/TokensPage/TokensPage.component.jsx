@@ -262,7 +262,7 @@ const TokensPage = ({
       title: '',
       dataIndex: '_id',
       render: (_id, record) => {
-        const isFreeToken = record.tokenType.name === TOKEN_TYPE.FREE.viText
+        const isFreeToken = record.tokenType.viText === TOKEN_TYPE.FREE.viText
         const isValid = record.isValid.name === STATUS.VALID.name
         return (
           !isFreeToken && (

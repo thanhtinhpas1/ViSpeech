@@ -15,10 +15,10 @@ const TokenTransaction = ({ userOrderListObj }) => {
     const transactionsArray = userOrderListObj.userOrderList.data.map(item => {
       return {
         id: item._id,
-        name: item.tokenName || 'API key miễn phí',
+        name: item.tokenName,
         state: item.status,
         date: moment(item.createdDate).format('YYYY-MM-DD HH:mm'),
-        type: { name: item.tokenType.name, class: 'badge-success' },
+        type: { name: item.tokenType.name, class: item.tokenType.class },
       }
     })
     setTableData(transactionsArray)

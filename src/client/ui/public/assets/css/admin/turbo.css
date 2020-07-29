@@ -7733,7 +7733,7 @@ h2.title {
 
 .off-canvas-sidebar .nav i,
 .sidebar .nav i {
-    font-size: 24px;
+    font-size: 20px;
     float: left;
     margin-right: 15px;
     line-height: 30px;
@@ -13126,7 +13126,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
     padding-top: 15px;
     padding-bottom: 15px;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 18px;
     text-transform: uppercase;
     border-radius: 3px;
 }
@@ -16606,7 +16606,7 @@ footer .btn {
  */
 
 .navbar .navbar-minimize button.btn-just-icon {
-    padding: 10px 10px;
+    padding: 10px 15px;
     color: #FFFFFF;
     background-color: rgba(0, 0, 0, 0.09);
 }
