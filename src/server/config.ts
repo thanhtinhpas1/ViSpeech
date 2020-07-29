@@ -64,6 +64,9 @@ const configs = {
         },
         STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
         SEND_GRID_API_KEY: process.env.SENDGRID_API_KEY || '',
+        SMTP: {
+            SEND_FROM: process.env.SEND_FROM || 'https://asr.vietspeech.com'
+        },
         NODEMAILER: {
             userEmail: process.env.EMAIL,
             clientId: process.env.EMAIL_CLIENT_ID,

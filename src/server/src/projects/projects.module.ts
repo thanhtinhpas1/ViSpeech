@@ -64,7 +64,13 @@ import { CONSTANTS } from 'common/constant';
                     stream: CONSTANTS.STREAM_NAME.PROJECT,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                }
+                },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: CONSTANTS.STREAM_NAME.PROJECT,
+                    persistentSubscriptionName: 'steamName',
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
             ],
             eventHandlers: {
                 ...ProjectsModule.eventHandlers,

@@ -70,6 +70,12 @@ import { UserDto } from 'users/dtos/users.dto';
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: CONSTANTS.STREAM_NAME.REQUEST,
+                    persistentSubscriptionName: 'steamName',
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
             ],
             eventHandlers: {
                 ...RequestModule.eventHandlers

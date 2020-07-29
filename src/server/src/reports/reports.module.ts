@@ -64,6 +64,12 @@ import { CONSTANTS } from 'common/constant';
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: CONSTANTS.STREAM_NAME.REPORT,
+                    persistentSubscriptionName: 'steamName',
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
             ],
             eventHandlers: {
                 ...ReportsModule.eventHandlers,
