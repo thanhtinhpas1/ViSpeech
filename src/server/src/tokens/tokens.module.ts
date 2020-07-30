@@ -202,21 +202,25 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
         try {
             const tokenTypeFree = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.FREE, config.TOKEN_TYPE.TYPE_FREE_MINUTES,
                 config.TOKEN_TYPE.TYPE_FREE_PRICE);
+            tokenTypeFree._id = 'dc993050-ce94-11ea-a357-910a762c9e81';
             const tokenType50 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_50_MINUTES, config.TOKEN_TYPE.TYPE_50_MINUTES,
                 config.TOKEN_TYPE.TYPE_50_PRICE);
+            tokenType50._id = 'dc993051-ce94-11ea-a357-910a762c9e81';
             const tokenType200 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_200_MINUTES, config.TOKEN_TYPE.TYPE_200_MINUTES,
                 config.TOKEN_TYPE.TYPE_200_PRICE);
+            tokenType200._id = 'dc993052-ce94-11ea-a357-910a762c9e81';
             const tokenType500 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_MINUTES,
                 config.TOKEN_TYPE.TYPE_500_PRICE);
+            tokenType500._id = 'dc993053-ce94-11ea-a357-910a762c9e81';
             await getMongoRepository(TokenTypeDto).insert(tokenTypeFree);
             await getMongoRepository(TokenTypeDto).insert(tokenType50);
             await getMongoRepository(TokenTypeDto).insert(tokenType200);
             await getMongoRepository(TokenTypeDto).insert(tokenType500);
         } catch (e) {
-            if ('duplicate'.includes(e.message)) {
+            if (e.message.includes('duplicate')) {
                 Logger.log('Token types existed.');
             }
-            Logger.warn('Something went wrong when seed token types.');
+            Logger.warn('Something went wrong when seeding token types.');
         }
     }
 }
