@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ChangePasswordBody, UserDto } from 'users/dtos/users.dto';
 import { User } from '../models/user.model';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 @Injectable()
 export class UserRepository {
-    async createUser(streamId: string, userDto: UserDto) {
+    async createUser(streamId: string, userDto: UserDto, freeToken: TokenDto) {
         const user = new User(streamId);
         user.setData(userDto);
-        user.createUser(streamId);
+        user.createUser(streamId, freeToken);
         return user;
     }
 

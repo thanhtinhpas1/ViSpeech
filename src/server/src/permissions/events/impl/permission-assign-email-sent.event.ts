@@ -4,7 +4,8 @@ import { PermissionAssignDto } from 'permissions/dtos/permissions.dto';
 export class PermissionAssignEmailSentEvent implements IEvent {
     constructor(
         public readonly streamId: string,
-        public readonly permissionAssignDto: PermissionAssignDto
+        public readonly permissionAssignDto: PermissionAssignDto,
+        public readonly permissionId: string,
     ) {
     }
 }
@@ -12,7 +13,8 @@ export class PermissionAssignEmailSentEvent implements IEvent {
 export class PermissionAssignEmailSentSuccessEvent implements IEvent {
     constructor(
         public readonly streamId: string,
-        public readonly permissionAssignDto: PermissionAssignDto
+        public readonly permissionAssignDto: PermissionAssignDto,
+        public readonly permissionId: string,
     ) {
     }
 }

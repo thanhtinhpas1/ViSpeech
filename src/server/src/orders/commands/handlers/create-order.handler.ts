@@ -9,6 +9,7 @@ import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { UserDto } from 'users/dtos/users.dto';
+import { AuthService } from 'auth/auth.service';
 
 import Stripe from 'stripe';
 
@@ -19,7 +20,8 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
     constructor(
         private readonly repository: OrderRepository,
         private readonly publisher: EventPublisher,
-        private readonly eventBus: EventBus
+        private readonly eventBus: EventBus,
+        private readonly authService: AuthService
     ) {
     }
 
@@ -62,9 +64,14 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                     throw new BadRequestException('Token name is existed.');
                 }
 
+                // create new ordered token
+                const { userId, tokenType, _id, token } = orderDto;
+                const tokenValue = this.authService.generateTokenWithUserId(userId);
+                const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
+
                 // use mergeObjectContext for dto dispatch events
                 const order = this.publisher.mergeObjectContext(
-                    await this.repository.createOrder(streamId, orderDto)
+                    await this.repository.createOrder(streamId, orderDto, tokenDto)
                 );
                 order.commit();
                 return;

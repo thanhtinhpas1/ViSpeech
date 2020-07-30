@@ -6,7 +6,6 @@ import { OrderedTokenCreatedEvent } from 'tokens/events/impl/ordered-token-creat
 import { TokenUpgradedEvent } from 'tokens/events/impl/token-upgraded.event';
 import { OrderCreatedSuccessEvent } from 'orders/events/impl/order-created.event';
 import { EventStore } from 'core/event-store/lib';
-import { AuthService } from 'auth/auth.service';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { OrderToUpgradeCreatedSuccessEvent } from 'orders/events/impl/order-to-upgrade-created.event';
 import { CONSTANTS } from 'common/constant';
@@ -14,8 +13,7 @@ import { CONSTANTS } from 'common/constant';
 @Injectable()
 export class OrdersSagas {
     constructor(
-        private readonly eventStore: EventStore,
-        private readonly authService: AuthService,
+        private readonly eventStore: EventStore
     ) {
     }
 
@@ -25,10 +23,7 @@ export class OrdersSagas {
             ofType(OrderCreatedSuccessEvent),
             map((event: OrderCreatedSuccessEvent) => {
                 Logger.log('Inside [OrdersSagas] orderCreatedSuccess Saga', 'OrdersSagas');
-                const { streamId, orderDto } = event;
-                const { userId, tokenType, _id, token } = orderDto;
-                const tokenValue = this.authService.generateTokenWithUserId(userId);
-                const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
+                const { streamId, tokenDto } = event;
                 const tokenCreatedEvent = new OrderedTokenCreatedEvent(streamId, tokenDto);
                 tokenCreatedEvent['eventType'] = 'OrderedTokenCreatedEvent';
                 this.eventStore.publish(tokenCreatedEvent, CONSTANTS.STREAM_NAME.TOKEN);

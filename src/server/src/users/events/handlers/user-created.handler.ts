@@ -34,7 +34,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
 
     async handle(event: UserCreatedEvent) {
         Logger.log(event.userDto.username, 'UserCreatedEvent');
-        const { streamId, userDto } = event;
+        const { streamId, userDto, freeToken } = event;
         const user = JSON.parse(JSON.stringify(userDto));
         try {
             user.password = Utils.hashPassword(user.password);
@@ -47,7 +47,7 @@ export class UserCreatedHandler implements IEventHandler<UserCreatedEvent> {
             if ([USER_TYPE.FACEBOOK, USER_TYPE.GOOGLE].includes(user.userType)) {
                 userDto['jwtToken'] = this.authService.generateToken(user._id, user.username, user.roles);
             }
-            this.eventBus.publish(new UserCreatedSuccessEvent(streamId, userDto));
+            this.eventBus.publish(new UserCreatedSuccessEvent(streamId, userDto, freeToken));
         } catch (error) {
             this.eventBus.publish(new UserCreatedFailedEvent(streamId, userDto, error));
         }

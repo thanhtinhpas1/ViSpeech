@@ -28,14 +28,14 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
         let tokenTypeDto = null;
 
         try {
-            if (token.tokenTypeId) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
-            } else if (token.tokenType) {
+            if (token.tokenType) {
                 tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
+            } else if (token.tokenTypeId) {
+                tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
             }
-            token.tokenTypeId = tokenTypeDto._id;
-            token.tokenType = tokenTypeDto.name;
-            token.minutes = Number(tokenTypeDto.minutes);
+            token.tokenTypeId = tokenTypeDto?._id;
+            token.tokenType = tokenTypeDto?.name;
+            token.minutes = Number(tokenTypeDto?.minutes);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
             token = Utils.removePropertiesFromObject(token, ['orderId']);

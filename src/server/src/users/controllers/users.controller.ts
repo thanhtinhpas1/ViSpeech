@@ -76,8 +76,6 @@ export class UsersController {
         return this.usersService.changePassword(streamId, changePasswordBody);
     }
 
-    local;
-
     /* Update User */
 
     /*--------------------------------------------*/

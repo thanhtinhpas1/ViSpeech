@@ -7,6 +7,7 @@ import { UserDto } from 'users/dtos/users.dto';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { PermissionAssignEmailSentFailedEvent } from 'permissions/events/impl/permission-assign-email-sent.event';
 import { ProjectDto } from 'projects/dtos/projects.dto';
+import { Utils } from 'utils';
 
 @CommandHandler(SendAssignPermissionEmailCommand)
 export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAssignPermissionEmailCommand> {
@@ -52,9 +53,10 @@ export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAss
                 projectId "${projectId}" is existed or assignerId is not valid.`);
             }
 
+            const permissionId = Utils.getUuid();
             // use mergeObjectContext for dto dispatch events
             const permissionModel = this.publisher.mergeObjectContext(
-                await this.repository.sendAssignPermissionEmail(streamId, permissionAssignDto)
+                await this.repository.sendAssignPermissionEmail(streamId, permissionAssignDto, permissionId)
             );
             permissionModel.commit();
         } catch (error) {

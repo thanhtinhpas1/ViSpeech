@@ -110,14 +110,14 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
               <div className="input-item">
                 <input type="password" placeholder="Mật khẩu" className="input-bordered" name="password" required />
               </div>
-              <div className="input-item text-left">
-                <input className="input-checkbox input-checkbox-md" id="term-condition" type="checkbox" required />
+              {/* <div className="input-item text-left"> */}
+              {/* <input className="input-checkbox input-checkbox-md" id="term-condition" type="checkbox" required />
                 <label htmlFor="term-condition">
                   Tôi đồng ý với
                   <a href="#"> Điều khoản và</a> &amp;
                   <a href="#"> Quy định.</a>
-                </label>
-              </div>
+                </label> */}
+              {/* </div> */}
               <Button
                 htmlType="submit"
                 loading={registerObj.isLoading}

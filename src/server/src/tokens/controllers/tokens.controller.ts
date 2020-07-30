@@ -20,14 +20,7 @@ export class TokensController {
     ) {
     }
 
-    @ApiOperation({ tags: ['Total Tokens'] })
-    @ApiResponse({ status: 200, description: 'Total Tokens.' })
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
-    @Roles([CONSTANTS.ROLE.ADMIN])
-    @Get('/total')
-    async getTotal(@Query() getTokensQuery: GetTokensQuery): Promise<number> {
-        return await this.tokensService.getTotalTokens(getTokensQuery);
-    }
+    /* Create Token */
 
     /*--------------------------------------------*/
     @ApiOperation({ tags: ['Create Token'] })
@@ -129,6 +122,18 @@ export class TokensController {
     @Get('/free-token/:userId')
     async findFreeToken(@Param() findFreeTokenQuery: FindFreeTokenQuery) {
         return this.tokensService.findFreeToken(findFreeTokenQuery);
+    }
+
+    /* Total Tokens */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Total Tokens'] })
+    @ApiResponse({ status: 200, description: 'Total Tokens.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
+    @Roles([CONSTANTS.ROLE.ADMIN])
+    @Get('/total')
+    async getTotal(@Query() getTokensQuery: GetTokensQuery): Promise<number> {
+        return await this.tokensService.getTotalTokens(getTokensQuery);
     }
 
     /* Find Token */

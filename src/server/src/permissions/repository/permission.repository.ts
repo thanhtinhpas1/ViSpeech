@@ -42,10 +42,10 @@ export class PermissionRepository {
         return permission;
     }
 
-    async sendAssignPermissionEmail(streamId: string, permissionAssignDto: PermissionAssignDto) {
+    async sendAssignPermissionEmail(streamId: string, permissionAssignDto: PermissionAssignDto, permissionId: string) {
         const permission = new Permission(streamId);
         permission.setData(permissionAssignDto);
-        permission.sendAssignPermissionEmail(streamId);
+        permission.sendAssignPermissionEmail(streamId, permissionId);
         return permission;
     }
 

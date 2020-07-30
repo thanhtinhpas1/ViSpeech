@@ -8,7 +8,6 @@ import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
-import { AuthService } from '../../../auth/auth.service';
 import {
     FreeTokenCreatedEvent,
     FreeTokenCreatedFailedEvent,
@@ -23,7 +22,6 @@ export class FreeTokenCreatedHandler implements IEventHandler<FreeTokenCreatedEv
         @InjectRepository(TokenTypeDto)
         private readonly repositoryTokenType: Repository<TokenTypeDto>,
         private readonly eventBus: EventBus,
-        private readonly authService: AuthService,
     ) {
     }
 

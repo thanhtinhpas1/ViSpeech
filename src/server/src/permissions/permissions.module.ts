@@ -166,8 +166,9 @@ export class PermissionsModule implements OnModuleInit {
         PermissionUpdatedFailedEvent: (streamId, data, error) => new PermissionUpdatedFailedEvent(streamId, data, error),
         PermissionWelcomedEvent: (streamId, data) => new PermissionWelcomedEvent(streamId, data),
         // send email assign permission
-        PermissionAssignEmailSentEvent: (streamId, data) => new PermissionAssignEmailSentEvent(streamId, data),
-        PermissionAssignEmailSentSuccessEvent: (streamId, data) => new PermissionAssignEmailSentSuccessEvent(streamId, data),
+        PermissionAssignEmailSentEvent: (streamId, data, permissionId) => new PermissionAssignEmailSentEvent(streamId, data, permissionId),
+        PermissionAssignEmailSentSuccessEvent: (streamId, data, permissionId) =>
+            new PermissionAssignEmailSentSuccessEvent(streamId, data, permissionId),
         PermissionAssignEmailSentFailedEvent: (streamId, data, error) => new PermissionAssignEmailSentFailedEvent(streamId, data, error),
         PermissionAssignRepliedEvent: (streamId, data) => new PermissionAssignRepliedEvent(streamId, data),
         PermissionAssignRepliedSuccessEvent: (streamId, data) => new PermissionAssignRepliedSuccessEvent(streamId, data),

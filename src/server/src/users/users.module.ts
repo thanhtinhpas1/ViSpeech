@@ -147,16 +147,21 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
             Utils.hashPassword('admin'), config.APPLICATION.ADMIN_EMAIL,
             [new RoleDto(CONSTANTS.ROLE.ADMIN)], USER_TYPE.NORMAL);
         admin._id = '75971bc0-ce34-11ea-b053-b99c52bf0172';
-        await getMongoRepository(UserDto).save(admin).then(() => {
+        await getMongoRepository(UserDto).insert(admin).then(() => {
             Logger.log('Seed admin account success.', 'UserModule');
-        }).catch(err => Logger.warn('User admin existed.', err.message));
+        }).catch(err => {
+            if (err.message.includes('duplicate key error')) {
+                Logger.log('User admin existed.');
+            }
+            Logger.warn('Something went wrong when seeding user admin.');
+        });
     }
 
     public static eventHandlers = {
         // create
         UserCreationStartedEvent: (streamId, data) => new UserCreationStartedEvent(streamId, data),
-        UserCreatedEvent: (streamId, data) => new UserCreatedEvent(streamId, data),
-        UserCreatedSuccessEvent: (streamId, data) => new UserCreatedSuccessEvent(streamId, data),
+        UserCreatedEvent: (streamId, data, freeToken) => new UserCreatedEvent(streamId, data, freeToken),
+        UserCreatedSuccessEvent: (streamId, data, freeToken) => new UserCreatedSuccessEvent(streamId, data, freeToken),
         UserCreatedFailedEvent: (streamId, data, error) => new UserCreatedFailedEvent(streamId, data, error),
         // update
         UserUpdatedEvent: (streamId, data) => new UserUpdatedEvent(streamId, data),

@@ -47,9 +47,7 @@ const PersonalDataTab = ({
     ) {
       for (let i = 0; i < roleInputs.length; i += 1) {
         const isChecked = Utils.getRolesInArray(currentUser.roles).includes(roleInputs[i].name)
-        if (isChecked) {
-          window.$('.role-inputs')[i].checked = true
-        }
+        window.$('.role-inputs')[i].checked = isChecked
       }
     }
   }, [currentUser.roles])

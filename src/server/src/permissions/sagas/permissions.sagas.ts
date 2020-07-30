@@ -14,9 +14,10 @@ export class PermissionsSagas {
             ofType(PermissionAssignEmailSentSuccessEvent),
             map(event => {
                 Logger.log('Inside [PermissionsSagas] permissionAssignEmailSentSuccess Saga', 'PermissionsSagas');
-                const { streamId, permissionAssignDto } = event;
+                const { streamId, permissionAssignDto, permissionId } = event;
                 const { permissions, assignerId, projectId, assigneeId } = permissionAssignDto;
                 const permissionDto = new PermissionDto(permissions, assigneeId, assignerId, projectId);
+                permissionDto._id = permissionId;
                 return new CreatePermissionCommand(streamId, permissionDto);
             })
         );

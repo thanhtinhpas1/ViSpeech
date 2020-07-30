@@ -43,8 +43,8 @@ export class Permission extends AggregateRoot {
         this.apply(new PermissionDeletedByProjectIdEvent(streamId, projectId));
     }
 
-    sendAssignPermissionEmail(streamId: string) {
-        this.apply(new PermissionAssignEmailSentEvent(streamId, this.data));
+    sendAssignPermissionEmail(streamId: string, permissionId: string) {
+        this.apply(new PermissionAssignEmailSentEvent(streamId, this.data, permissionId));
     }
 
     replyPermissionAssign(streamId: string) {

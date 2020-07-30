@@ -26,7 +26,7 @@ export class TokensSagas {
             ofType(OrderedTokenCreatedSuccessEvent),
             map((event: OrderedTokenCreatedSuccessEvent) => {
                 Logger.log('Inside [TokensSagas] orderedTokenCreatedSuccess Saga', 'TokensSagas');
-                const { streamId, updatedToken , tokenDto } = event;
+                const { streamId, updatedToken, tokenDto } = event;
                 const { userId, orderId } = tokenDto;
                 const tempTokenTypeDto = TokenTypeDto.createTempInstance();
                 const orderDto = new OrderDto(userId, tempTokenTypeDto, updatedToken, CONSTANTS.STATUS.SUCCESS);

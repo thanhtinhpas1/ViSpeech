@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Order } from '../models/order.model';
 import { OrderDto } from 'orders/dtos/orders.dto';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
 
 @Injectable()
 export class OrderRepository {
-    async createOrder(streamId: string, orderDto: OrderDto) {
+    async createOrder(streamId: string, orderDto: OrderDto, tokenDto: TokenDto) {
         const order = new Order(streamId);
         order.setData(orderDto);
-        order.createOrder(streamId);
+        order.createOrder(streamId, tokenDto);
         return order;
     }
 

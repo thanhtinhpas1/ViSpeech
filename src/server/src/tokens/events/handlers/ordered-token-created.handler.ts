@@ -5,11 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
-import { getMongoRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Utils } from 'utils';
 import { config } from '../../../../config';
-import { AuthService } from '../../../auth/auth.service';
-import { UserDto } from '../../../users/dtos/users.dto';
 import {
     OrderedTokenCreatedEvent,
     OrderedTokenCreatedFailedEvent,
@@ -24,7 +22,6 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
         @InjectRepository(TokenTypeDto)
         private readonly repositoryTokenType: Repository<TokenTypeDto>,
         private readonly eventBus: EventBus,
-        private readonly authService: AuthService,
     ) {
     }
 
@@ -35,10 +32,10 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
         let tokenTypeDto = null;
 
         try {
-            if (token.tokenTypeId) {
-                tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
-            } else if (token.tokenType) {
+            if (token.tokenType) {
                 tokenTypeDto = await this.repositoryTokenType.findOne({ name: token.tokenType });
+            } else if (token.tokenTypeId) {
+                tokenTypeDto = await this.repositoryTokenType.findOne({ _id: token.tokenTypeId });
             }
             token.tokenTypeId = tokenTypeDto?._id;
             token.tokenType = tokenTypeDto?.name;
@@ -46,12 +43,10 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
             token = Utils.removePropertiesFromObject(token, ['orderId']);
-            const user = await getMongoRepository(UserDto).findOne({ _id: tokenDto.userId });
-            token.value = this.authService.generateToken(user._id, user.username, user.roles);
             await this.repository.save(token);
             this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, token));
         } catch (error) {
-            Logger.error('Ordered create token failed', error.message);
+            Logger.error('Create ordered token failed', error.message);
             this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));
         }
     }

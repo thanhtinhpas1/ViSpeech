@@ -1,10 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { AuthService } from 'auth/auth.service';
 import { CONSTANTS } from 'common/constant';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { FreeTokenCreatedEvent } from 'tokens/events/impl/free-token-created.event';
 import { EventStore } from '../../core/event-store/lib';
 import { PermissionDeletedByUserIdEvent } from '../../permissions/events/impl/permission-deleted-by-userId.event';
@@ -16,8 +14,7 @@ import { UserDeletedSuccessEvent } from '../events/impl/user-deleted.event';
 @Injectable()
 export class UsersSagas {
     constructor(
-        private readonly eventStore: EventStore,
-        private readonly authService: AuthService
+        private readonly eventStore: EventStore
     ) {
     }
 
@@ -27,11 +24,8 @@ export class UsersSagas {
             ofType(UserCreatedSuccessEvent),
             map((event: UserCreatedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] userCreatedSuccess Saga', 'UsersSagas');
-                const { streamId, userDto } = event;
-                const userId = userDto._id;
-                const tokenValue = this.authService.generateTokenWithUserId(userId);
-                const tokenDto = new TokenDto(tokenValue, userId, '', CONSTANTS.TOKEN_TYPE.FREE); // free token
-                const freeTokenCreatedEvent = new FreeTokenCreatedEvent(streamId, tokenDto);
+                const { streamId, freeToken } = event;
+                const freeTokenCreatedEvent = new FreeTokenCreatedEvent(streamId, freeToken);
                 freeTokenCreatedEvent['eventType'] = 'FreeTokenCreatedEvent';
                 this.eventStore.publish(freeTokenCreatedEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
