@@ -74,7 +74,7 @@ import { UsersService } from './services/users.service';
                 {
                     type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.USER,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.USER,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.USER + '-' + config.HOST,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],

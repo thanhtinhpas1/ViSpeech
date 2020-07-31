@@ -72,7 +72,7 @@ import { CONSTANTS } from 'common/constant';
                 {
                     type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.PROJECT,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.PROJECT,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.PROJECT + '-' + config.HOST,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],

@@ -73,7 +73,7 @@ import { CONSTANTS } from 'common/constant';
                 {
                     type: EventStoreSubscriptionType.Persistent,
                     stream:  CONSTANTS.STREAM_NAME.ORDER,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.ORDER,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.ORDER + '-' + config.HOST,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],

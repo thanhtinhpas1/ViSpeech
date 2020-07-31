@@ -82,7 +82,11 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
 
         const volatileSubscriptions = esStreamConfig.subscriptions.filter((sub) => {
             return sub.type === EventStoreSubscriptionType.Volatile;
-        });
+        })
+
+        this.createPersistentSubscriptions(
+            persistentSubscriptions as ESPersistentSubscription[],
+        );
 
         this.subscribeToCatchUpSubscriptions(
             catchupSubscriptions as ESCatchUpSubscription[],
@@ -133,6 +137,19 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 this.logger.warn('Detect duplicate event ' + eventPayload.type + ' ' + err.message);
             } else this.logger.error(err);
         }
+    }
+
+    async createPersistentSubscriptions(
+        subscriptions: ESPersistentSubscription[],
+    ) {
+        await Promise.all(
+            subscriptions.map(async (subscription) => {
+                return await this.createPersistentSubscription(
+                    subscription.stream,
+                    subscription.persistentSubscriptionName,
+                );
+            }),
+        );
     }
 
     async subscribeToPersistentSubscriptions(
@@ -256,6 +273,26 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         );
     }
 
+    async createPersistentSubscription(
+        stream: string,
+        subscriptionName: string,
+    ): Promise<string> {
+        try {
+            this.logger.log(`
+       Created persistent subscription ${subscriptionName} on stream ${stream}!`);
+
+            const result = await this.eventStore.getConnection().createPersistentSubscription(
+                stream,
+                subscriptionName,
+                {},
+            );
+
+            return result.status;
+        } catch (err) {
+            this.logger.error(err.message);
+        }
+    }
+
     async subscribeToPersistentSubscription(
         stream: string,
         subscriptionName: string,
@@ -312,7 +349,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             }
             if (this.store) {
                 if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
-                    await this.store.write(this.store.storeKey, payload.event.eventNumber.toInt());
+                    await this.store.write(event.eventStreamId, payload.event.eventNumber.toInt());
                 }
                 const lcp = (await this.store.read(event.eventStreamId)) || 0;
                 if (lcp === (payload.event.eventNumber.toInt() - 1) && this.isReplayed) {

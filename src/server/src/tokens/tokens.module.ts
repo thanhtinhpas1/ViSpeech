@@ -98,7 +98,7 @@ import { TokensService } from './services/tokens.service';
                 {
                     type: EventStoreSubscriptionType.Persistent,
                     stream:  CONSTANTS.STREAM_NAME.TOKEN,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.TOKEN,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.TOKEN + '-' + config.HOST,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
