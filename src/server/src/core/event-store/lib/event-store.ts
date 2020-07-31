@@ -311,8 +311,10 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 this.subject$.next(this.eventHandlers[eventType](...data));
             }
             if (this.store) {
+                if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
+                    await this.store.write(this.store.storeKey, payload.event.eventNumber.toInt());
+                }
                 const lcp = (await this.store.read(event.eventStreamId)) || 0;
-                await this.store.write(event.eventStreamId, payload.event.eventNumber.toInt());
                 if (lcp === (payload.event.eventNumber.toInt() - 1) && this.isReplayed) {
                     this.isReplayed = true;
                     this.subscribeToCatchUpSubscriptions(

@@ -67,9 +67,13 @@ import { CONSTANTS } from 'common/constant';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: CONSTANTS.STREAM_NAME.ORDER,
+                },
+                {
                     type: EventStoreSubscriptionType.Persistent,
                     stream:  CONSTANTS.STREAM_NAME.ORDER,
-                    persistentSubscriptionName: 'steamName',
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.ORDER,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],

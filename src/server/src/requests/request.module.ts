@@ -71,9 +71,13 @@ import { UserDto } from 'users/dtos/users.dto';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: CONSTANTS.STREAM_NAME.REQUEST,
+                },
+                {
                     type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.REQUEST,
-                    persistentSubscriptionName: 'steamName',
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.PERMISSION,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],

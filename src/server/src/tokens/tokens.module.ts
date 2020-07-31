@@ -92,9 +92,13 @@ import { TokensService } from './services/tokens.service';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: CONSTANTS.STREAM_NAME.TOKEN,
+                },
+                {
                     type: EventStoreSubscriptionType.Persistent,
                     stream:  CONSTANTS.STREAM_NAME.TOKEN,
-                    persistentSubscriptionName: 'steamName',
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.TOKEN,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
