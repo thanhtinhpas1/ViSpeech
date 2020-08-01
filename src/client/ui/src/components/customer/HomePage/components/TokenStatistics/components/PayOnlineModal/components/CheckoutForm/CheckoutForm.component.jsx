@@ -273,7 +273,7 @@ const CheckoutForm = ({
           </Button>
         </li>
       </ul>
-      <div className="gaps-1x d-none d-sm-block" />
+      <div className="gaps-1x" />
       <div className="note note-plane note-light mgb-1x">
         <em className="fas fa-info-circle" />
         <p className="text-light">Sau khi giao dịch thành công, trang web sẽ hiển thị API key cho bạn.</p>

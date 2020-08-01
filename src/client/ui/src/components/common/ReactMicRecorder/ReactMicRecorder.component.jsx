@@ -69,18 +69,20 @@ const ReactMicRecorder = ({ setAudioFile, disabled }) => {
   }
 
   return (
-    <div className="react-mic">
-      <ReactMic
-        record={record}
-        className="react-mic__sound-wave"
-        onStop={onStop}
-        onData={onData}
-        strokeColor="#40a9ff"
-        backgroundColor="#fafafa"
-        mimeType="audio/wav"
-        channelCount={1}
-      />
-      <div className="react-mic__buttons">
+    <div className="react-mic row guttar-15px">
+      <div className="col-12 col-lg-10 mt-2">
+        <ReactMic
+          record={record}
+          className="react-mic__sound-wave"
+          onStop={onStop}
+          onData={onData}
+          strokeColor="#40a9ff"
+          backgroundColor="#fafafa"
+          mimeType="audio/wav"
+          channelCount={1}
+        />
+      </div>
+      <div className="react-mic__buttons col-12 col-lg-2 mt-2">
         <Button type="primary" disabled={record || disabled} onClick={startRecording} icon={<CaretRightOutlined />}>
           Ghi âm
         </Button>

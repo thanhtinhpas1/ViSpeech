@@ -145,7 +145,7 @@ const StatisticsPage = () => {
   // }
 
   return (
-    <div className="page-content statistics-page">
+    <div className="page-content customer-statistics-page">
       <div className="container">
         <div className="card content-area">
           <div className="card-innr">

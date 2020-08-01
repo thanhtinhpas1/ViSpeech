@@ -394,16 +394,17 @@ const StatisticsTemplate = ({
   return (
     <div style={{ position: 'relative' }}>
       {getStatisticsByIdObj.isLoading && (
-        <div className="statistics-page__loading">
+        <div className="customer-statistics-page__loading">
           <LoadingIcon />
         </div>
       )}
-      <Row>
-        <div className="statistics-page__select-type">
+
+      <div className="customer-statistics-page__select-type row guttar-15px">
+        <div className="col-12 col-md-6 col-lg-3 mt-2">
           {data.length > 0 && data[0]._id && (
             <Select
               defaultValue={data[0]._id}
-              style={{ minWidth: 220 }}
+              style={{ width: '100%' }}
               onChange={onChangeIdData}
               placeholder={placeHolderSelectId.found}
             >
@@ -419,16 +420,20 @@ const StatisticsTemplate = ({
                 })}
             </Select>
           )}
-          {data.length === 0 && <Select style={{ minWidth: 180 }} placeholder={placeHolderSelectId.notFound} />}
-          <Select defaultValue={pickerType} style={{ minWidth: 180 }} onChange={onChangePickerType}>
+        </div>
+        <div className="col-12 col-md-6 col-lg-3 mt-2">
+          {data.length === 0 && <Select style={{ width: '100%' }} placeholder={placeHolderSelectId.notFound} />}
+          <Select defaultValue={pickerType} style={{ width: '100%' }} onChange={onChangePickerType}>
             <Option value={TIME_TYPE.DATE}>Theo ngày</Option>
             <Option value={TIME_TYPE.WEEK}>Theo tuần</Option>
             <Option value={TIME_TYPE.MONTH}>Theo tháng</Option>
             <Option value={TIME_TYPE.QUARTER}>Theo quý</Option>
             <Option value={TIME_TYPE.YEAR}>Theo năm</Option>
           </Select>
+        </div>
+        <div className="col-12 col-md-6 col-lg-4 mt-2">
           {pickerType === TIME_TYPE.QUARTER ? (
-            <>
+            <div style={{ width: '100%' }}>
               <DatePicker
                 picker="quarter"
                 onChange={onChangeFromQuarter}
@@ -442,9 +447,10 @@ const StatisticsTemplate = ({
                 format="quý 0Q/YYYY"
                 placeholder="Quý kết thúc"
               />
-            </>
+            </div>
           ) : (
             <RangePicker
+              style={{ width: '100%' }}
               picker={pickerType}
               onChange={onChangeRangePicker}
               format={formatRangePicker}
@@ -452,13 +458,16 @@ const StatisticsTemplate = ({
               value={valueRangePicker}
             />
           )}
-          <Button onClick={onClickGetStatistics} disabled={isButtonDisabled} type="primary">
+        </div>
+        <div className="col-12 col-md-6 col-lg-2 mt-2">
+          <Button onClick={onClickGetStatistics} disabled={isButtonDisabled} type="primary" style={{ width: '100%' }}>
             Thống kê
           </Button>
         </div>
-      </Row>
-      <Row>
-        <div className="statistics-page__chart">
+      </div>
+
+      <Row justify="center">
+        <div className="customer-statistics-page__chart">
           {(chartData.length === 0 || getStatisticsByIdObj.isLoading) && <Empty />}
           {getStatisticsByIdObj.isLoading === false &&
             getStatisticsByIdObj.isSuccess === true &&

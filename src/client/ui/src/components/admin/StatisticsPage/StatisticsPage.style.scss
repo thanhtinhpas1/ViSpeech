@@ -1,29 +1,24 @@
-.statistics-page {
+.admin-statistics-page {
   width: 100%;
   margin: 0px auto;
   min-height: 100vh;
   position: relative;
-  .ant-row {
-    justify-content: center;
-  }
-  .ant-col .card-title {
-    text-align: center;
-  }
-  .tab-content {
+  .ant-tabs-tabpane {
     .card-title {
       text-align: center;
     }
   }
   &__select-type {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     text-align: center;
     .ant-select {
-      margin-right: 20px;
+      // margin-right: 20px;
     }
     .ant-btn {
-      margin-left: 20px;
+      // margin-left: 20px;
     }
     .ant-picker {
       .ant-picker-input {
@@ -58,6 +53,22 @@
       i {
         font-size: 40px;
       }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .admin-statistics-page {
+    &__select-type {
+      padding: 0 5%;
+    }
+  }
+}
+
+@media (max-width: 1199px) {
+  .admin-statistics-page {
+    &__select-type {
+      padding: 0;
     }
   }
 }

@@ -341,21 +341,23 @@ const TotalStatisticsTemplate = ({
   return (
     <div style={{ position: 'relative' }}>
       {getUserTotalStatisticsObj.isLoading && (
-        <div className="statistics-page__loading">
+        <div className="customer-statistics-page__loading">
           <LoadingIcon />
         </div>
       )}
-      <Row>
-        <div className="statistics-page__select-type">
-          <Select defaultValue={pickerType} style={{ minWidth: 180 }} onChange={onChangePickerType}>
+      <div className="customer-statistics-page__select-type row guttar-15px">
+        <div className="col-12 col-md-4 mt-2">
+          <Select defaultValue={pickerType} style={{ width: '100%' }} onChange={onChangePickerType}>
             <Option value={TIME_TYPE.DATE}>Theo ngày</Option>
             <Option value={TIME_TYPE.WEEK}>Theo tuần</Option>
             <Option value={TIME_TYPE.MONTH}>Theo tháng</Option>
             <Option value={TIME_TYPE.QUARTER}>Theo quý</Option>
             <Option value={TIME_TYPE.YEAR}>Theo năm</Option>
           </Select>
+        </div>
+        <div className="col-12 col-md-6 mt-2">
           {pickerType === TIME_TYPE.QUARTER ? (
-            <>
+            <div style={{ width: '100%' }}>
               <DatePicker
                 picker="quarter"
                 onChange={onChangeFromQuarter}
@@ -369,9 +371,10 @@ const TotalStatisticsTemplate = ({
                 format="quý 0Q/YYYY"
                 placeholder="Quý kết thúc"
               />
-            </>
+            </div>
           ) : (
             <RangePicker
+              style={{ width: '100%' }}
               picker={pickerType}
               onChange={onChangeRangePicker}
               format={formatRangePicker}
@@ -379,13 +382,15 @@ const TotalStatisticsTemplate = ({
               value={valueRangePicker}
             />
           )}
-          <Button onClick={onClickGetStatistics} disabled={isButtonDisabled} type="primary">
+        </div>
+        <div className="col-12 col-md-2 mt-2">
+          <Button onClick={onClickGetStatistics} disabled={isButtonDisabled} type="primary" style={{ width: '100%' }}>
             Thống kê
           </Button>
         </div>
-      </Row>
-      <Row>
-        <div className="statistics-page__total-chart">
+      </div>
+      <Row justify="center">
+        <div className="customer-statistics-page__total-chart">
           {(chartData.length === 0 || getUserTotalStatisticsObj.isLoading) && <Empty />}
           {getUserTotalStatisticsObj.isLoading === false &&
             getUserTotalStatisticsObj.isSuccess === true &&

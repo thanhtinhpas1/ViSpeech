@@ -197,7 +197,7 @@ const TokenStatistics = ({ currentUser, getTokenTypeListObj, getMyProjectListObj
                     'price'
                   ).map(tokenType => {
                     return (
-                      <div className="col-3" key={tokenType._id}>
+                      <div className="col-12 col-md-6 col-lg-3 mt-3" key={tokenType._id}>
                         <TokenType tokenType={tokenType} />
                       </div>
                     )

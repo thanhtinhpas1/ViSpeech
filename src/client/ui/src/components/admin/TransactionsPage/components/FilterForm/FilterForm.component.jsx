@@ -1,7 +1,7 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect } from 'react'
-import { Form, Select, Row, Button, DatePicker } from 'antd'
+import { Form, Select, Button, DatePicker } from 'antd'
 import ReportUtils from 'utils/report.util'
 import { DEFAULT_PAGINATION, TOKEN_TYPE, ORDER_STATUS } from 'utils/constant'
 
@@ -53,13 +53,13 @@ const FilterForm = ({
   }
 
   return (
-    <Row style={{ marginBottom: 20, marginTop: 20 }}>
-      <Form form={form} layout="inline" onFinish={onFinish}>
-        <Row>
-          <Form.Item name="users">
+    <div style={{ marginBottom: 20 }}>
+      <Form form={form} layout="inline" onFinish={onFinish} className="row">
+        <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3 mt-2">
+          <Form.Item name="users" style={{ marginRight: '0' }}>
             <Select
               mode="multiple"
-              style={{ minWidth: 180, maxWidth: 250 }}
+              style={{ width: '100%' }}
               placeholder={
                 (getUsernameListObj.usernameList.data || []).length > 0 ? 'Chọn tài khoản' : 'Không tìm thấy tài khoản'
               }
@@ -73,10 +73,12 @@ const FilterForm = ({
               })}
             </Select>
           </Form.Item>
-          <Form.Item name="projects">
+        </div>
+        <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3 mt-2">
+          <Form.Item name="projects" style={{ marginRight: '0' }}>
             <Select
               mode="multiple"
-              style={{ minWidth: 180, maxWidth: 250 }}
+              style={{ width: '100%' }}
               placeholder={
                 (getProjectNameListObj.projectNameList.data || []).length > 0 ? 'Chọn dự án' : 'Không tìm thấy dự án'
               }
@@ -90,8 +92,10 @@ const FilterForm = ({
               })}
             </Select>
           </Form.Item>
-          <Form.Item name="tokenTypes">
-            <Select mode="multiple" style={{ minWidth: 180, maxWidth: 200 }} placeholder="Chọn loại API key">
+        </div>
+        <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3 mt-2">
+          <Form.Item name="tokenTypes" style={{ marginRight: '0' }}>
+            <Select mode="multiple" style={{ width: '100%' }} placeholder="Chọn loại API key">
               {[TOKEN_TYPE['50-MINUTES'], TOKEN_TYPE['200-MINUTES'], TOKEN_TYPE['500-MINUTES']].map(type => {
                 return (
                   <Option key={type.name} value={type.name}>
@@ -101,8 +105,10 @@ const FilterForm = ({
               })}
             </Select>
           </Form.Item>
-          <Form.Item name="statuses">
-            <Select mode="multiple" style={{ minWidth: 180, maxWidth: 200 }} placeholder="Chọn trạng thái">
+        </div>
+        <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3 mt-2">
+          <Form.Item name="statuses" style={{ marginRight: '0' }}>
+            <Select mode="multiple" style={{ width: '100%' }} placeholder="Chọn trạng thái">
               {[ORDER_STATUS.PENDING, ORDER_STATUS.SUCCESS, ORDER_STATUS.FAILURE].map(status => {
                 return (
                   <Option key={status.name} value={status.name}>
@@ -112,23 +118,26 @@ const FilterForm = ({
               })}
             </Select>
           </Form.Item>
-          <Form.Item name="rangePicker">
+        </div>
+        <div className="col-xs-12 col-sm-6 col-md-8 col-lg-6 mt-2">
+          <Form.Item name="rangePicker" style={{ marginRight: '0' }}>
             <RangePicker
+              style={{ width: '100%' }}
               picker={ReportUtils.TIME_TYPE.DATE}
               format="DD/MM/YYYY"
               placeholder={['Ngày bắt đầu', 'Ngày kết thúc']}
             />
           </Form.Item>
-        </Row>
-        <Row style={{ marginTop: 10, width: '100%', justifyContent: 'center' }}>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
+        </div>
+        <div className="col-xs-12 col-sm-6 col-md-4 col-lg-3 mt-2">
+          <Form.Item style={{ marginRight: '0' }}>
+            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
               Lọc kết quả
             </Button>
           </Form.Item>
-        </Row>
+        </div>
       </Form>
-    </Row>
+    </div>
   )
 }
 
