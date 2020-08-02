@@ -8,7 +8,7 @@ export default class SpeechService {
     if (assigneeId) {
       formData.append('assigneeId', assigneeId)
     }
-    const api = `http://localhost:7070/v1/speech` || `http://asr.vietspeech.com:7070/v1/speech`
+    const api = `https://asr.vietspeech.com/speech`
 
     return axios
       .post(api, formData, {
