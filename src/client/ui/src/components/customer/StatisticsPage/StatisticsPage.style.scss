@@ -1,14 +1,8 @@
-.statistics-page {
+.customer-statistics-page {
   width: 100%;
   margin: 0px auto;
   min-height: 100vh;
   position: relative;
-  .ant-row {
-    justify-content: center;
-  }
-  .ant-col .card-head {
-    text-align: center;
-  }
   .tab-content {
     .card-head {
       text-align: center;
@@ -20,10 +14,10 @@
     align-items: center;
     text-align: center;
     .ant-select {
-      margin-right: 20px;
+      // margin-right: 20px;
     }
     .ant-btn {
-      margin-left: 20px;
+      // margin-left: 20px;
     }
     .ant-picker {
       .ant-picker-input {
@@ -58,6 +52,22 @@
       i {
         font-size: 40px;
       }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .customer-statistics-page {
+    &__select-type {
+      padding: 0 10%;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .customer-statistics-page {
+    &__select-type {
+      padding: 0;
     }
   }
 }

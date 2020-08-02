@@ -5,9 +5,10 @@
     align-items: center;
     &__sound-wave {
         border: 2px solid #d9d9d9;
+        width: 100% !important;
     }
     &__buttons {
-        margin-left: 20px;
+        // margin-left: 20px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -19,3 +20,19 @@
         }
     }
 }
+
+@media (min-width: 992px) {
+    .react-mic {
+        &__sound-wave {
+            height: unset;
+        }
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .react-mic {
+        &__sound-wave {
+            height: 120px;
+        }
+    }
+  }

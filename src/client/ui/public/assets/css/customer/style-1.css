@@ -1239,7 +1239,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 }
 .user-tnx .dt-type-text,
 .user-tnx .dt-type-md {
-  display: none;
+  /* display: none; */
 }
 .kyc-list .dt-doc-type,
 .kyc-list .dt-doc-front,
@@ -1259,7 +1259,7 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
 }
 .admin-tnx .dt-type-text,
 .admin-tnx .dt-type-md {
-  display: none;
+  /* display: none; */
 }
 @media (min-width: 420px) {
   .user-list .dt-status-sm {

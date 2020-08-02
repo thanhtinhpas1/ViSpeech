@@ -1,7 +1,7 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useCallback, useState } from 'react'
-import { Form, Select, Row } from 'antd'
+import { Form, Select } from 'antd'
 import { DEFAULT_PAGINATION, TOKEN_TYPE } from 'utils/constant'
 import Utils from 'utils'
 import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
@@ -117,7 +117,7 @@ const SelectTokenForm = ({
   }
 
   return (
-    <Row style={{ marginBottom: 20, marginTop: 20 }} className="select-token-form">
+    <div style={{ marginBottom: 20, marginTop: 20 }} className="select-token-form">
       {(getMyProjectListObj.isLoading || getProjectTokenListObj.isLoading) && (
         <div className="select-token-form__loading">
           <LoadingIcon />
@@ -131,17 +131,18 @@ const SelectTokenForm = ({
         layout="inline"
         form={form}
         onValuesChange={onFormValuesChange}
+        className="row gutter-15px"
         // initialValues={{
         //   projectId: getMyProjectListObj.myProjectList.data[0] && getMyProjectListObj.myProjectList.data[0]._id,
         //   tokenId:
         //     getProjectTokenListObj.projectTokenList.data[0] && getProjectTokenListObj.projectTokenList.data[0]._id,
         // }}
       >
-        <div>
+        <div className="col-12 col-md-4 mt-2">
           <h5 className="font-mid">Dự án</h5>
           <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
             <Select
-              style={{ minWidth: 200 }}
+              style={{ width: '100%' }}
               placeholder={
                 (getMyProjectListObj.myProjectList.data || []).length > 0 ? 'Chọn một dự án' : 'Không tìm thấy dự án'
               }
@@ -157,7 +158,7 @@ const SelectTokenForm = ({
             </Select>
           </Form.Item>
         </div>
-        <div>
+        <div className="col-12 col-md-4 mt-2">
           <h5 className="font-mid">Tên API key</h5>
           <Form.Item
             name="tokenId"
@@ -176,7 +177,7 @@ const SelectTokenForm = ({
             ]}
           >
             <Select
-              style={{ minWidth: 200 }}
+              style={{ width: '100%' }}
               placeholder={
                 (getProjectTokenListObj.projectTokenList.data || []).length > 0
                   ? 'Chọn một API key'
@@ -193,13 +194,13 @@ const SelectTokenForm = ({
             </Select>
           </Form.Item>
         </div>
-        <div>
+        <div className="col-12 col-md-4 mt-2">
           <h5 className="font-mid">Gói API key hiện tại</h5>
-          <div style={{ minWidth: 180 }}>{currentTokenType}</div>
+          <div style={{ width: '100%' }}>{currentTokenType}</div>
         </div>
       </Form>
       {/* )} */}
-    </Row>
+    </div>
   )
 }
 

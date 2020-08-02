@@ -3,12 +3,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React from 'react'
-import { Divider } from 'antd'
+import { Divider, Tabs } from 'antd'
 import './StatisticsPage.style.scss'
 import StatisticsTokenType from './components/StatisticsTokenType/StatisticsTokenType.container'
 import StatisticsUser from './components/StatisticsUser/StatisticsUser.container'
 import TotalStatisticsUser from './components/TotalStatisticsUser/TotalStatisticsUser.container'
 import TotalStatisticsTokenType from './components/TotalStatisticsTokenType/TotalStatisticsTokenType.container'
+
+const { TabPane } = Tabs
 
 const StatisticsPage = () => {
   const twoYAxisOptions = {
@@ -116,7 +118,7 @@ const StatisticsPage = () => {
   }
 
   return (
-    <div className="row statistics-page">
+    <div className="row admin-statistics-page">
       <div className="col-md-12">
         <div className="card" id="profile-main">
           <div className="card-header">
@@ -126,20 +128,8 @@ const StatisticsPage = () => {
           </div>
           <div className="card-content">
             <div role="tabpanel">
-              <ul className="nav nav-pills">
-                <li className="active">
-                  <a href="#total-statistics" aria-controls="total-statistics" role="tab" data-toggle="tab">
-                    Thống kê tổng
-                  </a>
-                </li>
-                <li>
-                  <a href="#statistics-by-id" aria-controls="statistics-by-id" role="tab" data-toggle="tab">
-                    Thống kê chi tiết
-                  </a>
-                </li>
-              </ul>
-              <div className="tab-content">
-                <div role="tabpanel" className="tab-pane active" id="total-statistics">
+              <Tabs size="large">
+                <TabPane tab="Thống kê tổng" key="1">
                   <div className="gaps-1x" />
                   <h4 className="card-title">
                     <span>Thống kê theo người dùng</span>
@@ -152,8 +142,8 @@ const StatisticsPage = () => {
                   </h4>
                   <div className="gaps-1x" />
                   <TotalStatisticsTokenType chartOptions={twoXAxisOptions} />
-                </div>
-                <div role="tabpanel" className="tab-pane" id="statistics-by-id">
+                </TabPane>
+                <TabPane tab="Thống kê chi tiết" key="2">
                   <div className="gaps-1x" />
                   <h4 className="card-title">
                     <span>Thống kê theo người dùng</span>
@@ -166,8 +156,8 @@ const StatisticsPage = () => {
                   </h4>
                   <div className="gaps-1x" />
                   <StatisticsTokenType chartOptions={twoYAxisOptions} />
-                </div>
-              </div>
+                </TabPane>
+              </Tabs>
             </div>
           </div>
         </div>

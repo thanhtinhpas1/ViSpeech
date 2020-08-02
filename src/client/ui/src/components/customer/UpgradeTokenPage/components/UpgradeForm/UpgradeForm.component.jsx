@@ -259,7 +259,7 @@ const UpgradeForm = ({
                   <div className="row guttar-15px" style={{ display: 'flex' }}>
                     {tokenTypeToUpgradeList.map(tokenType => {
                       return (
-                        <div className="col-3" key={tokenType._id}>
+                        <div className="col-12 col-md-6 col-lg-4 mt-2" key={tokenType._id}>
                           <TokenType tokenType={tokenType} />
                         </div>
                       )

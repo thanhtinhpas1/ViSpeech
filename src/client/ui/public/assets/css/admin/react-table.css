@@ -1,3 +1,10 @@
+.mt-2, .my-2 {
+    margin-top: .5rem !important
+}
+.mt-3, .my-3 {
+    margin-top: 1rem !important
+}
+
 .ant-modal-body {
     font-size: 16px;
 }
@@ -289,12 +296,12 @@ table {
 .user-tnx .dt-amount,
 .user-tnx .dt-usd-amount,
 .user-tnx .dt-account {
-    display: none;
+    /* display: none; */
 }
 
 .user-tnx .dt-type-text,
 .user-tnx .dt-type-md {
-    display: none;
+    /* display: none; */
 }
 
 div.dataTables_wrapper div.dataTables_paginate {
