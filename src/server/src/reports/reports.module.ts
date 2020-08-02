@@ -71,7 +71,7 @@ import { CONSTANTS } from 'common/constant';
                 {
                     type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.REPORT,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.PERMISSION + '-' + config.HOST,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.REPORT + '-' + config.HOST,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],

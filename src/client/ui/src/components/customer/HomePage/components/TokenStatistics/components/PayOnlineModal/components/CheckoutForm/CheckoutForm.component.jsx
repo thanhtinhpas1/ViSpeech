@@ -117,8 +117,6 @@ const CheckoutForm = ({
             if (data.error != null) {
               createOrderFailure(data.errorObj)
             }
-            unsubscribe$.unsubscribe()
-            unsubscribe$.complete()
           })
           const unsubscribe1$ = invokeCheckSubject.OrderedTokenCreated.subscribe(data => {
             if (data.error != null) {
@@ -126,6 +124,8 @@ const CheckoutForm = ({
             } else {
               createOrderSuccess({ order, token: data.updatedToken })
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
             unsubscribe1$.unsubscribe()
             unsubscribe1$.complete()
           })

@@ -51,6 +51,12 @@ import { CONSTANTS } from 'common/constant';
                     type: EventStoreSubscriptionType.Volatile,
                     stream: '$stats-0.0.0.0:2113',
                 },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: CONSTANTS.STREAM_NAME.MONITOR,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.MONITOR + '-' + config.HOST,
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
             ],
             eventHandlers: {
                 ...MonitorsModule.eventHandlers,
