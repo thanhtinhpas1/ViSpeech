@@ -34,198 +34,188 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       setIsAdmin(isAdminRole)
 
       if (!currentUser || invalidUser) {
-        // loadLink
+        // load bootstrap css
         let link = await loadLink(
           `${process.env.PUBLIC_URL}/assets/css/customer/bootstrap.min.css`,
           'customer-bootstrap.min.css',
           'on'
         )
-        console.log(`${link.id} is loaded`)
+        console.debug(`${link.id} is loaded`)
+        // Load resource except login and register
         if (currentPath !== '/login' && currentPath !== '/register') {
-          // load link
+          // load customer css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/color/default.css`,
             'customer-default.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
-          // load link
-          link = await loadLink(
-            `${process.env.PUBLIC_URL}/assets/css/customer/owl-carousel/owl.carousel.min.css`,
-            'customer-owl.carousel.min.css',
-            'on'
-          )
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load customer css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/style-2.css`,
             'customer-style-2.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
+          console.debug(`${link.id} is loaded`)
           setIsCssLoaded(true)
         } else {
-          // load link
+          // load customer customer css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/style-1.css`,
             'customer-style-1.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
+          console.debug(`${link.id} is loaded`)
           setIsCssLoaded(true)
         }
-        // load script
+        // load bootstrap min js
         let script = await loadScript(
           `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
           'customer-bootstrap.min.js',
           'on'
         )
-        console.log(`${script.id} is loaded`)
+        console.debug(`${script.id} is loaded`)
         if (currentPath !== '/login' && currentPath !== '/register') {
-          // load script
+          // TODO: verify unused import particles
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
             'customer-particles.min.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
-          // load script
-          script = await loadScript(
-            `${process.env.PUBLIC_URL}/assets/js/customer/owl-carousel/owl.carousel.min.js`,
-            'customer-owl.carousel.min.js',
-            'on'
-          )
-          console.log(`${script.id} is loaded`)
-          // load script
+          console.debug(`${script.id} is loaded`)
+          // load customer js
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/custom.js`,
             'customer-custom.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
-          // load script
+          console.debug(`${script.id} is loaded`)
+          // TODO: verify unused
+          // load paritcle
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
             'customer-particles-app.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
+          console.debug(`${script.id} is loaded`)
         }
       }
-
+      // Load when authorized
       if (currentUser) {
         if (isUserRole) {
-          // load link
+          // load bootstrap css
           let link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/bootstrap.min.css`,
             'customer-bootstrap.min.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load icons css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/themify-icons/themify-icons.css`,
             'customer-themify-icons.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load bundle css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/vendor.bundlea5f5.css?ver=102`,
             'customer-vendor.bundlea5f5.css?ver=102',
             'on'
           )
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load customer style css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/style-1.css`,
             'customer-style-1.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load style mail css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/style-emaila5f5.css`,
             'customer-style-emaila5f5.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load quill editor css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/quill-editor.css`,
             'customer-quill-editor.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
+          console.debug(`${link.id} is loaded`)
           setIsCssLoaded(true)
-          // load script
+          // load bootstrap js
           let script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
             'customer-bootstrap.min.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
-          // load script
+          console.debug(`${script.id} is loaded`)
+          // load clipboard js
           script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', 'on')
-          console.log(`${script.id} is loaded`)
-          // load script
+          console.debug(`${script.id} is loaded`)
+          // TODO: verify this js for waht
+          // load script ?? js
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
             'customer-scripta5f5.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
+          console.debug(`${script.id} is loaded`)
         }
 
         if (isAdminRole) {
-          // load link
+          // load bootstrap css
           let link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/admin/bootstrap.min.css`,
             'admin-bootstrap.min.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load table css
           link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/admin/react-table.css`, 'react-table.css', 'on')
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load turbo css
           link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/admin/turbo.css`, 'admin-turbo.css', 'on')
-          console.log(`${link.id} is loaded`)
-          // load link
+          console.debug(`${link.id} is loaded`)
+          // load icon css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/themify-icons/themify-icons.css`,
             'customer-themify-icons.css',
             'on'
           )
-          console.log(`${link.id} is loaded`)
+          console.debug(`${link.id} is loaded`)
           setIsCssLoaded(true)
-          // load script
+          // load scrollbar js
           let script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/vendors/perfect-scrollbar.jquery.min.js`,
             'admin-perfect-scrollbar.jquery.min.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
-          // load script
+          console.debug(`${script.id} is loaded`)
+          // load bootstrap minjs
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/vendors/bootstrap.min.js`,
             'admin-bootstrap.min.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
-          // load script
+          console.debug(`${script.id} is loaded`)
+          // load clipboard js
           script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', 'on')
-          console.log(`${script.id} is loaded`)
-          // load script
+          console.debug(`${script.id} is loaded`)
+          // load turbo js
           script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`, 'admin-turbo.js', 'on')
-          console.log(`${script.id} is loaded`)
+          console.debug(`${script.id} is loaded`)
+          // TODO: verify this js for what
           // load script because of ClipboardJS
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
             'customer-scripta5f5.js',
             'on'
           )
-          console.log(`${script.id} is loaded`)
+          console.debug(`${script.id} is loaded`)
         }
       }
     }
@@ -233,64 +223,58 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
     async function loadJsFiles(isLoadJsFiles) {
       const action = isLoadJsFiles ? 'on' : 'off'
       const status = isLoadJsFiles ? 'loaded' : 'unloaded'
-
+      // load bootstrap js
       let script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/js/customer/bootstrap.min.js`,
         'customer-bootstrap.min.js',
         action
       )
-      console.log(`${script.id} is ${status}`)
-
+      console.debug(`${script.id} is ${status}`)
+      // TODO: verify unused import
       script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
         'customer-particles.min.js',
         action
       )
-      console.log(`${script.id} is ${status}`)
-
-      script = await loadScript(
-        `${process.env.PUBLIC_URL}/assets/js/customer/owl-carousel/owl.carousel.min.js`,
-        'customer-owl.carousel.min.js',
-        action
-      )
-      console.log(`${script.id} is ${status}`)
-
+      console.debug(`${script.id} is ${status}`)
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`, 'customer-custom.js', action)
-      console.log(`${script.id} is ${status}`)
-
+      console.debug(`${script.id} is ${status}`)
+      // TODO: verify unused import
       script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
         'customer-particles-app.js',
         action
       )
-      console.log(`${script.id} is ${status}`)
+      console.debug(`${script.id} is ${status}`)
+      // TODO: verify unused import
 
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', action)
-      console.log(`${script.id} is ${status}`)
+      console.debug(`${script.id} is ${status}`)
 
       script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
         'customer-scripta5f5.js',
         action
       )
-      console.log(`${script.id} is ${status}`)
+      console.debug(`${script.id} is ${status}`)
+      // TODO: verify unused import
 
       script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/vendors/perfect-scrollbar.jquery.min.js`,
         'admin-perfect-scrollbar.jquery.min.js',
         action
       )
-      console.log(`${script.id} is ${status}`)
+      console.debug(`${script.id} is ${status}`)
 
       script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/vendors/bootstrap.min.js`,
         'admin-bootstrap.min.js',
         action
       )
-      console.log(`${script.id} is ${status}`)
+      console.debug(`${script.id} is ${status}`)
 
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`, 'admin-turbo.js', action)
-      console.log(`${script.id} is ${status}`)
+      console.debug(`${script.id} is ${status}`)
 
       loadAllLibraries()
     }
@@ -303,72 +287,64 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         'customer-bootstrap.min.css',
         action
       )
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/customer/color/default.css`,
         'customer-default.css',
         action
       )
-      console.log(`${link.id} is ${status}`)
-
-      link = await loadLink(
-        `${process.env.PUBLIC_URL}/assets/css/customer/owl-carousel/owl.carousel.min.css`,
-        'customer-owl.carousel.min.css',
-        action
-      )
-      console.log(`${link.id} is ${status}`)
-
+      console.debug(`${link.id} is ${status}`)
       link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/customer/style-1.css`, 'customer-style-1.css', action)
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/customer/themify-icons/themify-icons.css`,
         'customer-themify-icons.css',
         action
       )
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/customer/vendor.bundlea5f5.css?ver=102`,
         'customer-vendor.bundlea5f5.css?ver=102',
         action
       )
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/customer/style-emaila5f5.css`,
         'customer-style-emaila5f5.css',
         action
       )
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/customer/quill-editor.css`,
         'customer-quill-editor.css',
         action
       )
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/customer/style-2.css`, 'customer-style-2.css', action)
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/admin/bootstrap.min.css`,
         'admin-bootstrap.min.css',
         action
       )
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(
         `${process.env.PUBLIC_URL}/assets/css/admin/react-table.css`,
         'admin-react-table.css',
         action
       )
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/admin/turbo.css`, 'admin-turbo.css', action)
-      console.log(`${link.id} is ${status}`)
+      console.debug(`${link.id} is ${status}`)
 
       loadJsFiles(false)
     }
