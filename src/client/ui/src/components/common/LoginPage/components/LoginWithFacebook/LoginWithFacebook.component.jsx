@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
-import { FB_APP_ID, USER_TYPE } from 'utils/constant'
+import { FB_APP_ID, USER_TYPE } from '../../../../../utils/constant'
 
 const LoginWithFacebook = ({ loginWithSocialObj, loginWithSocial }) => {
   const responseFacebook = response => {

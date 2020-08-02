@@ -3,8 +3,8 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
+import AntdTable from '../../../../../components/common/AntdTable/AntdTable.component'
+import { CUSTOMER_PATH, DEFAULT_PAGINATION, SORT_ORDER, STATUS } from '../../../../../utils/constant'
 import * as moment from 'moment'
 
 const RequestTable = ({ currentUser, uploading, newRequest, getRequestListByUserIdObj, getRequestListByUserId }) => {

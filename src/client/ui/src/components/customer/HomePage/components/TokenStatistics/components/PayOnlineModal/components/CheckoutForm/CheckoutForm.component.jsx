@@ -3,11 +3,15 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Alert, Button, Checkbox, Form, Input, Select } from 'antd'
-import Utils from 'utils'
-import SocketService from 'services/socket.service'
-import OrderService from 'services/order.service'
-import SocketUtils from 'utils/socket.util'
-import { DEFAULT_PAGINATION, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
+import Utils from '../../../../../../../../../utils'
+import SocketService from '../../../../../../../../../services/socket.service'
+import OrderService from '../../../../../../../../../services/order.service'
+import SocketUtils from '../../../../../../../../../utils/socket.util'
+import {
+  DEFAULT_PAGINATION,
+  DEFAULT_ERR_MESSAGE,
+  TIMEOUT_MILLISECONDS,
+} from '../../../../../../../../../utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -72,20 +76,6 @@ const CheckoutForm = ({
         usd = usd < 0.5 ? 0.5 : usd // Amount must be at least $0.50 usd
         result = await OrderService.createPaymentIntent(usd * 100)
 
-        // paymentMethodReq = await stripe.createPaymentMethod({
-        //   type: 'card',
-        //   card: cardElement,
-        //   billing_details: {
-        //     name: `${user.firstName} ${user.lastName}`,
-        //     email: user.email,
-        //   },
-        // })
-        // if (paymentMethodReq.error) {
-        //   setErrorMessage(paymentMethodReq.error.message)
-        //   setIsLoading(false)
-        //   return
-        // }
-
         confirmedCardPayment = await stripe.confirmCardPayment(result.clientSecret, {
           payment_method: {
             card: cardElement,
@@ -123,17 +113,21 @@ const CheckoutForm = ({
         createOrder(order, paymentIntent)
         try {
           await OrderService.createOrder(order, paymentIntent)
-          invokeCheckSubject.OrderCreated.subscribe(data => {
+          const unsubscribe$ = invokeCheckSubject.OrderCreated.subscribe(data => {
             if (data.error != null) {
               createOrderFailure(data.errorObj)
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
           })
-          invokeCheckSubject.OrderedTokenCreated.subscribe(data => {
+          const unsubscribe1$ = invokeCheckSubject.OrderedTokenCreated.subscribe(data => {
             if (data.error != null) {
               createOrderFailure(data.errorObj)
             } else {
               createOrderSuccess({ order, token: data.updatedToken })
             }
+            unsubscribe1$.unsubscribe()
+            unsubscribe1$.complete()
           })
         } catch (err) {
           createOrderFailure({ message: err.message })

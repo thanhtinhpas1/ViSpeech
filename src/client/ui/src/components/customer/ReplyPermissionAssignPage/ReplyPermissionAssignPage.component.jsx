@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, JWT_TOKEN, STATUS, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import STORAGE from 'utils/storage'
-import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
-import SocketUtils from 'utils/socket.util'
-import SocketService from 'services/socket.service'
-import PermissionService from 'services/permission.service'
-import Utils from 'utils'
+import { CUSTOMER_PATH, JWT_TOKEN, STATUS, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../utils/constant'
+import STORAGE from '../../../utils/storage'
+import InfoTemplatePage from '../InfoTemplatePage/InfoTemplatePage.component'
+import SocketUtils from '../../../utils/socket.util'
+import SocketService from '../../../services/socket.service'
+import PermissionService from '../../../services/permission.service'
+import Utils from '../../../utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PERMISSION_ASSIGN_REPLIED_SUCCESS_EVENT, PERMISSION_ASSIGN_REPLIED_FAILED_EVENT } = KAFKA_TOPIC
@@ -102,12 +102,14 @@ const ReplyPermissionAssignPage = ({
       replyPermissionAssign({ emailToken, status })
       try {
         await PermissionService.replyPermissionAssign({ emailToken, status })
-        invokeCheckSubject.PermissionAssignReplied.subscribe(data => {
+        const unsubscribe$ = invokeCheckSubject.PermissionAssignReplied.subscribe(data => {
           if (data.error != null) {
             replyPermissionAssignFailure(data.errorObj)
           } else {
             replyPermissionAssignSuccess({ emailToken, status })
           }
+          unsubscribe$.unsubscribe()
+          unsubscribe$.complete()
         })
       } catch (err) {
         replyPermissionAssignFailure({ message: err.message })

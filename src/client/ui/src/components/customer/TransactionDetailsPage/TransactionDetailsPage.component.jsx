@@ -4,9 +4,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import Utils from 'utils'
+import Utils from '../../../utils'
 import * as moment from 'moment'
-import { MONETARY_UNIT } from 'utils/constant'
+import { MONETARY_UNIT } from '../../../utils/constant'
 
 const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
   const history = useHistory()

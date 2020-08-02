@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState, useCallback } from 'react'
-import ReportUtils from 'utils/report.util'
+import ReportUtils from '../../../../../utils/report.util'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsUser = ({

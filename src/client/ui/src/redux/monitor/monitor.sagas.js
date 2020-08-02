@@ -1,6 +1,6 @@
 import { call, all, takeLatest, put } from 'redux-saga/effects'
-import MonitorService from 'services/monitor.service'
-import MonitorUtils from 'utils/monitor.util'
+import MonitorService from '../../services/monitor.service'
+import MonitorUtils from '../../utils/monitor.util'
 import MonitorTypes from './monitor.types'
 import { getMonitorListSuccess, getMonitorListFailure } from './monitor.actions'
 

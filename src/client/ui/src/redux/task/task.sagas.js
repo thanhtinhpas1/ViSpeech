@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
-import { ORDER_STATUS } from 'utils/constant'
-import TaskService from 'services/task.service'
+import { ORDER_STATUS } from '../../utils/constant'
+import TaskService from '../../services/task.service'
 import TaskTypes from './task.types'
 import { getTaskListSuccess, getTaskListFailure } from './task.actions'
 

@@ -7,12 +7,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef } from 'react'
 import { Alert, Button, Empty, Form, Input, Radio } from 'antd'
-import { ROLES, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
-import Utils from 'utils'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import { ROLES, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../../../utils/constant'
+import Utils from '../../../../../utils'
+import SocketService from '../../../../../services/socket.service'
+import UserService from '../../../../../services/user.service'
+import SocketUtils from '../../../../../utils/socket.util'
+import LoadingIcon from '../../../../common/LoadingIcon/LoadingIcon.component'
 import './InfoTab.style.scss'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
@@ -82,12 +82,14 @@ const InfoTab = ({
     updateUserInfo(userId, user)
     try {
       await UserService.updateUserInfo(userId, user)
-      invokeCheckSubject.UserUpdated.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.UserUpdated.subscribe(data => {
         if (data.error != null) {
           updateUserInfoFailure(data.errorObj)
         } else {
           updateUserInfoSuccess()
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       updateUserInfoFailure({ message: err.message })

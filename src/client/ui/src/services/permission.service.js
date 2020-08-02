@@ -1,5 +1,5 @@
-import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import STORAGE from '../utils/storage'
+import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from '../utils/constant'
 import { apiUrl } from './api-url'
 
 export default class PermissionService {

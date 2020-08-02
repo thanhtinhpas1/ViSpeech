@@ -1,6 +1,6 @@
-import STORAGE from 'utils/storage'
-import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from 'utils/constant'
-import Utils from 'utils'
+import STORAGE from '../utils/storage'
+import { DEFAULT_ERR_MESSAGE, JWT_TOKEN } from '../utils/constant'
+import Utils from '../utils'
 import { apiUrl } from './api-url'
 
 export default class TokenService {

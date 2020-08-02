@@ -2,7 +2,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Modal } from 'antd'
-import { CUSTOMER_PATH } from 'utils/constant'
+import { CUSTOMER_PATH } from '../../../../../../../utils/constant'
 
 const PayReviewModal = ({ payReviewModal }) => {
   return (

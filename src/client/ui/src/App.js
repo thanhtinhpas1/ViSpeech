@@ -4,19 +4,19 @@
 import 'antd/dist/antd.css'
 import React, { useEffect, useState } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import RouteCustomer from 'routes/customer.route'
-import RouteAdmin from 'routes/admin.route'
-import loadScript from 'utils/loadScript'
-import loadLink from 'utils/loadLink'
 import { connect } from 'react-redux'
-import Utils from 'utils'
-import { CUSTOMER_PATH, ADMIN_PATH, LOADING_LARGE_SIZE } from 'utils/constant'
+import RouteCustomer from './routes/customer.route'
+import RouteAdmin from './routes/admin.route'
+import loadScript from './utils/loadScript'
+import loadLink from './utils/loadLink'
+import Utils from './utils'
+import { CUSTOMER_PATH, ADMIN_PATH, LOADING_LARGE_SIZE } from './utils/constant'
 
-import LandingPage from 'components/common/LandingPage/LandingPage.container'
-import LoginPage from 'components/common/LoginPage/LoginPage.container'
-import RegisterPage from 'components/common/RegisterPage/RegisterPage.container'
-import NotFound404 from 'components/common/NotFound404/NotFound404.component'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import LandingPage from './components/common/LandingPage/LandingPage.container'
+import LoginPage from './components/common/LoginPage/LoginPage.container'
+import RegisterPage from './components/common/RegisterPage/RegisterPage.container'
+import NotFound404 from './components/common/NotFound404/NotFound404.component'
+import LoadingIcon from './components/common/LoadingIcon/LoadingIcon.component'
 import './App.css'
 
 const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
@@ -76,25 +76,25 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         )
         console.debug(`${script.id} is loaded`)
         if (currentPath !== '/login' && currentPath !== '/register') {
-          // TODO: verify unused import particles
-          script = await loadScript(
-            `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
-            'customer-particles.min.js',
-            'on'
-          )
+          if (currentPath === '/') {
+            script = await loadScript(
+              `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
+              'customer-particles.min.js',
+              'on'
+            )
+            console.debug(`${script.id} is loaded`)
+            script = await loadScript(
+              `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
+              'customer-particles-app.js',
+              'on'
+            )
+            console.debug(`${script.id} is loaded`)
+          }
           console.debug(`${script.id} is loaded`)
           // load customer js
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/custom.js`,
             'customer-custom.js',
-            'on'
-          )
-          console.debug(`${script.id} is loaded`)
-          // TODO: verify unused
-          // load paritcle
-          script = await loadScript(
-            `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
-            'customer-particles-app.js',
             'on'
           )
           console.debug(`${script.id} is loaded`)
@@ -230,23 +230,9 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         action
       )
       console.debug(`${script.id} is ${status}`)
-      // TODO: verify unused import
-      script = await loadScript(
-        `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
-        'customer-particles.min.js',
-        action
-      )
-      console.debug(`${script.id} is ${status}`)
+
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`, 'customer-custom.js', action)
       console.debug(`${script.id} is ${status}`)
-      // TODO: verify unused import
-      script = await loadScript(
-        `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
-        'customer-particles-app.js',
-        action
-      )
-      console.debug(`${script.id} is ${status}`)
-      // TODO: verify unused import
 
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', action)
       console.debug(`${script.id} is ${status}`)
@@ -257,7 +243,6 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         action
       )
       console.debug(`${script.id} is ${status}`)
-      // TODO: verify unused import
 
       script = await loadScript(
         `${process.env.PUBLIC_URL}/assets/vendors/perfect-scrollbar.jquery.min.js`,

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getMonitorList } from 'redux/monitor/monitor.actions'
+import { getMonitorList } from '../../../../../redux/monitor/monitor.actions'
 import MonitorBeatTimeChart from './MonitorBeatTimeChart.component'
 
 const mapStateToProps = state => ({

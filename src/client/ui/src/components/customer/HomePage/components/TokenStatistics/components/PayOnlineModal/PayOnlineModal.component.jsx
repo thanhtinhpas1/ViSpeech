@@ -4,8 +4,8 @@
 import React from 'react'
 import { Elements } from '@stripe/react-stripe-js'
 import { Modal } from 'antd'
-import { MONETARY_UNIT } from 'utils/constant'
-import Utils from 'utils'
+import { MONETARY_UNIT } from '../../../../../../../utils/constant'
+import Utils from '../../../../../../../utils'
 import CheckoutForm from './components/CheckoutForm/CheckoutForm.container'
 
 const PayOnlineModal = ({ stripePromise, payOnlineModal, myProjectList, onOrderSuccess }) => {

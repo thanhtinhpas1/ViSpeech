@@ -5,7 +5,7 @@ import {
   deleteUserFailure,
   deleteUserSuccess,
   onClearDeleteUserState,
-} from 'redux/user/user.actions'
+} from '../../../redux/user/user.actions'
 import UserInfoPage from './UserInfoPage.component'
 
 const mapStateToProps = state => ({

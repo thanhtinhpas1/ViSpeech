@@ -4,11 +4,11 @@
 import React, { useEffect, useCallback, useRef } from 'react'
 import { Form, Input, Button, Alert } from 'antd'
 import { useHistory } from 'react-router-dom'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
-import Utils from 'utils'
-import { TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
+import SocketService from '../../../../../services/socket.service'
+import UserService from '../../../../../services/user.service'
+import SocketUtils from '../../../../../utils/socket.util'
+import Utils from '../../../../../utils'
+import { TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../../../utils/constant'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PASSWORD_CHANGED_SUCCESS_EVENT, PASSWORD_CHANGED_FAILED_EVENT } = KAFKA_TOPIC
@@ -67,7 +67,7 @@ const PasswordTab = ({
     changePassword({ userId, oldPassword, newPassword })
     try {
       await UserService.changePassword({ userId, oldPassword, newPassword })
-      invokeCheckSubject.PasswordChanged.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.PasswordChanged.subscribe(data => {
         if (data.error != null) {
           if (data.errorObj.message.indexOf('Passwords do not match') >= 0) {
             data.errorObj.message = 'Mật khẩu cũ không chính xác'
@@ -77,6 +77,8 @@ const PasswordTab = ({
           changePasswordSuccess()
         }
         form.resetFields()
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       changePasswordFailure({ message: err.message })

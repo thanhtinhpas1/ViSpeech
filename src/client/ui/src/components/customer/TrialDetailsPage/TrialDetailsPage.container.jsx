@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getRequestInfo, onClearRequestInfo } from 'redux/request/request.actions'
+import { getRequestInfo, onClearRequestInfo } from '../../../redux/request/request.actions'
 import TrialDetailsPage from './TrialDetailsPage.component'
 
 const mapStateToProps = state => ({

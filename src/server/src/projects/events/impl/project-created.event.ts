@@ -12,7 +12,7 @@ export class ProjectCreatedEvent implements IEvent {
 export class ProjectCreatedSuccessEvent implements IEvent {
     constructor(
         public readonly streamId: string,
-        public readonly projectDto: any
+        public readonly projectDto: ProjectDto,
     ) {
     }
 }

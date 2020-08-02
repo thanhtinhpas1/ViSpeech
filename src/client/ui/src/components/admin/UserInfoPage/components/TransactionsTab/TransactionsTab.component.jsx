@@ -6,8 +6,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useEffect } from 'react'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from 'utils/constant'
+import AntdTable from '../../../../../components/common/AntdTable/AntdTable.component'
+import { ADMIN_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from '../../../../../utils/constant'
 
 const TransactionsTab = ({ userInfoObj, getUserOrderListObj, getUserOrderList }) => {
   const columns = [

@@ -4,6 +4,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
+import * as moment from 'moment'
 import {
   ADMIN_PATH,
   ROLES,
@@ -11,15 +12,14 @@ import {
   STATUS,
   DEFAULT_ERR_MESSAGE,
   TIMEOUT_MILLISECONDS,
-} from 'utils/constant'
-import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
-import Utils from 'utils'
+} from '../../../utils/constant'
+import AntdTable from '../../common/AntdTable/AntdTable.component'
+import SocketService from '../../../services/socket.service'
+import UserService from '../../../services/user.service'
+import SocketUtils from '../../../utils/socket.util'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
+import ConfirmModal from '../../common/ConfirmModal/ConfirmModal.component'
+import Utils from '../../../utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -146,12 +146,14 @@ const UserListPage = ({
         let permissionDeleted = false
         try {
           await UserService.deleteUser(userId)
-          invokeCheckSubject.UserDeleted.subscribe(data => {
+          const unsubscribe$ = invokeCheckSubject.UserDeleted.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
           })
-          invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
+          const unsubscribe1$ = invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
@@ -160,8 +162,10 @@ const UserListPage = ({
                 deleteUserSuccess()
               }
             }
+            unsubscribe1$.unsubscribe()
+            unsubscribe1$.complete()
           })
-          invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
+          const unsubscribe2$ = invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
@@ -170,8 +174,10 @@ const UserListPage = ({
                 deleteUserSuccess()
               }
             }
+            unsubscribe2$.unsubscribe()
+            unsubscribe2$.complete()
           })
-          invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
+          const unsubscribe3$ = invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
@@ -180,6 +186,8 @@ const UserListPage = ({
                 deleteUserSuccess()
               }
             }
+            unsubscribe3$.unsubscribe()
+            unsubscribe3$.complete()
           })
         } catch (err) {
           deleteUserFailure({ message: err.message })

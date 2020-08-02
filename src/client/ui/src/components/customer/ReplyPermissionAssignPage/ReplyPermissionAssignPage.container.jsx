@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
-import { authenticate } from 'redux/user/user.actions'
+import { authenticate } from '../../../redux/user/user.actions'
 import {
   replyPermissionAssign,
   replyPermissionAssignSuccess,
   replyPermissionAssignFailure,
   findPermissionByEmailToken,
-} from 'redux/permission/permission.actions'
+} from '../../../redux/permission/permission.actions'
 import ReplyPermissionAssignPage from './ReplyPermissionAssignPage.component'
 
 const mapStateToProps = state => ({

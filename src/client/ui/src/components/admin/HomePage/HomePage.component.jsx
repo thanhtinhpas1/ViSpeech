@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { DEFAULT_PAGINATION, ADMIN_PATH } from 'utils/constant'
+import { DEFAULT_PAGINATION, ADMIN_PATH } from '../../../utils/constant'
 // import MonitorBeatRateChart from './components/MonitorBeatRateChart/MonitorBeatRateChart.container'
 import MonitorBeatTimeChart from './components/MonitorBeatTimeChart/MonitorBeatTimeChart.container'
 import TotalChart from './components/TotalChart/TotalChart.container'

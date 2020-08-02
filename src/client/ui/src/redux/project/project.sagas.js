@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
-import { STATUS } from 'utils/constant'
-import ProjectService from 'services/project.service'
+import { STATUS } from '../../utils/constant'
+import ProjectService from './../../services/project.service'
 import ProjectTypes from './project.types'
 import {
   getMyProjectListSuccess,

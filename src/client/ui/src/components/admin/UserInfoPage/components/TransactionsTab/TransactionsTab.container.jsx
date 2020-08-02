@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getUserOrderList } from 'redux/order/order.actions'
+import { getUserOrderList } from '../../../../../redux/order/order.actions'
 import TransactionsTab from './TransactionsTab.component'
 
 const mapStateToProps = state => ({

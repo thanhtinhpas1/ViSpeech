@@ -9,9 +9,9 @@ import ReactQuill from 'react-quill'
 import { saveAs } from 'file-saver'
 import './TrialDetailsPage.style.scss'
 import * as moment from 'moment'
-import RequestService from 'services/request.service'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
-import { CUSTOMER_PATH } from 'utils/constant'
+import RequestService from '../../../services/request.service'
+import LoadingIcon from '../../common/LoadingIcon/LoadingIcon.component'
+import { CUSTOMER_PATH } from '../../../utils/constant'
 
 const juice = require('juice')
 

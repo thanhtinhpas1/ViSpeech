@@ -5,7 +5,7 @@ import {
   loginWithSocial,
   loginWithSocialSuccess,
   loginWithSocialFailure,
-} from 'redux/user/user.actions'
+} from '../../../redux/user/user.actions'
 import LoginPage from './LoginPage.component'
 
 const mapStateToProps = state => ({

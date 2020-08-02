@@ -2,9 +2,9 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useCallback } from 'react'
 import { Form, Select, Row } from 'antd'
-import { DEFAULT_PAGINATION, STATUS } from 'utils/constant'
-import Utils from 'utils'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import { DEFAULT_PAGINATION, STATUS } from '../../../../../utils/constant'
+import Utils from '../../../../../utils'
+import LoadingIcon from '../../../../common/LoadingIcon/LoadingIcon.component'
 import './SelectTokenForm.style.scss'
 
 const { Option } = Select

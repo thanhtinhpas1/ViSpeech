@@ -5,8 +5,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback } from 'react'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { DEFAULT_PAGINATION, STATUS, TOKEN_TYPE } from 'utils/constant'
+import AntdTable from '../../../components/common/AntdTable/AntdTable.component'
+import { DEFAULT_PAGINATION, STATUS, TOKEN_TYPE } from '../../../utils/constant'
 import FilterForm from './components/FilterForm/FilterForm.container'
 
 const HistoriesPage = ({ requestListObj, getRequestList }) => {

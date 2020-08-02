@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getRequestListByUserId } from 'redux/request/request.actions'
+import { getRequestListByUserId } from '../../../../../redux/request/request.actions'
 import RequestTable from './RequestTable.component'
 
 const mapStateToProps = state => ({

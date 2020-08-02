@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { createOrder, createOrderSuccess, createOrderFailure, onClearCreateOrderState } from 'redux/order/order.actions'
-import { getProjectTokenList, onClearGetProjectTokenState } from 'redux/token/token.actions'
+import { createOrder, createOrderSuccess, createOrderFailure, onClearCreateOrderState } from '../../../../../../../../../redux/order/order.actions'
+import { getProjectTokenList, onClearGetProjectTokenState } from '../../../../../../../../../redux/token/token.actions'
 import CheckoutForm from './CheckoutForm.component'
 
 const mapStateToProps = state => ({

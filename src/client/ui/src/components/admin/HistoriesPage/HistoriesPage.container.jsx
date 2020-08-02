@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getRequestList } from 'redux/request/request.actions'
+import { getRequestList } from '../../../redux/request/request.actions'
 import HistoriesPage from './HistoriesPage.component'
 
 const mapStateToProps = state => ({

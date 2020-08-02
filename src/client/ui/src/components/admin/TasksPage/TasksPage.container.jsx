@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getTaskList } from 'redux/task/task.actions'
+import { getTaskList } from '../../../redux/task/task.actions'
 import TasksPage from './TasksPage.component'
 
 const mapStateToProps = state => ({

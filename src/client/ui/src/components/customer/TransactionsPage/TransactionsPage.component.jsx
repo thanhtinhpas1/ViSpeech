@@ -6,8 +6,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from 'utils/constant'
+import AntdTable from '../../../components/common/AntdTable/AntdTable.component'
+import { CUSTOMER_PATH, TOKEN_TYPE, DEFAULT_PAGINATION, ORDER_STATUS } from '../../../utils/constant'
 import * as moment from 'moment'
 
 const TransactionsPage = ({ currentUser, getUserOrderListObj, getUserOrderList }) => {

@@ -4,12 +4,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useRef } from 'react'
 import { Alert, Button } from 'antd'
-import Utils from 'utils'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
-import STORAGE from 'utils/storage'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
+import Utils from '../../../utils'
+import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../utils/constant'
+import STORAGE from '../../../utils/storage'
+import SocketService from '../../../services/socket.service'
+import UserService from '../../../services/user.service'
+import SocketUtils from '../../../utils/socket.util'
 import LoginWithGoogle from './components/LoginWithGoogle/LoginWithGoogle.container'
 import LoginWithFacebook from './components/LoginWithFacebook/LoginWithFacebook.container'
 
@@ -71,7 +71,7 @@ const LoginPage = ({
         STORAGE.setPreferences(JWT_TOKEN, socialUser.jwtToken)
       } else {
         // create new user with social account
-        invokeCheckSubject.UserCreated.subscribe(data => {
+        const unsubscribe$ = invokeCheckSubject.UserCreated.subscribe(data => {
           if (data.error != null) {
             loginWithSocialFailure(data.errorObj)
           } else {
@@ -82,6 +82,8 @@ const LoginPage = ({
             loginWithSocialSuccess(user)
             STORAGE.setPreferences(JWT_TOKEN, user.jwtToken)
           }
+          unsubscribe$.unsubscribe()
+          unsubscribe$.complete()
         })
       }
     } catch (err) {

@@ -4,7 +4,7 @@ import {
   updateCurrentUserSuccess,
   updateCurrentUserFailure,
   onClearUpdateCurrentUserState,
-} from 'redux/user/user.actions'
+} from '../../../../../redux/user/user.actions'
 import PersonalDataTab from './PersonalDataTab.component'
 
 const mapStateToProps = state => ({

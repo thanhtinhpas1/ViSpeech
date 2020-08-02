@@ -9,7 +9,7 @@ import {
   createRequestSuccess,
   createRequestFailure,
   onClearCreateRequestState,
-} from 'redux/request/request.actions'
+} from '../../../redux/request/request.actions'
 import TrialPage from './TrialPage.component'
 
 const mapStateToProps = state => ({

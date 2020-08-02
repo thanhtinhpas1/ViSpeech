@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { getStatisticsById } from 'redux/report/report.actions'
-import { getUserList } from 'redux/user/user.actions'
+import { getStatisticsById } from '../../../../../redux/report/report.actions'
+import { getUserList } from '../../../../../redux/user/user.actions'
 import StatisticsUser from './StatisticsUser.component'
 
 const mapStateToProps = state => ({

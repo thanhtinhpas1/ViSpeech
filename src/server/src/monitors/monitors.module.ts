@@ -43,6 +43,14 @@ import { CONSTANTS } from 'common/constant';
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
+                {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: CONSTANTS.STREAM_NAME.MONITOR,
+                },
+                {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: '$stats-0.0.0.0:2113',
+                },
             ],
             eventHandlers: {
                 ...MonitorsModule.eventHandlers,

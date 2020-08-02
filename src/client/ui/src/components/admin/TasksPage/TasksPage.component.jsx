@@ -5,8 +5,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { STATUS, DEFAULT_PAGINATION } from 'utils/constant'
+import AntdTable from '../../../components/common/AntdTable/AntdTable.component'
+import { STATUS, DEFAULT_PAGINATION } from '../../../utils/constant'
 
 const TasksPage = ({ taskListObj, getTaskList }) => {
   const columns = [

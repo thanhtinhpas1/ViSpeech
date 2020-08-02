@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react'
 import { Radio } from 'antd'
-import Utils from 'utils'
-import { MONETARY_UNIT } from 'utils/constant'
+import Utils from '../../../../../../../utils'
+import { MONETARY_UNIT } from '../../../../../../../utils/constant'
 
 const TokenType = ({ tokenType }) => (
   <div className="pay-option h-100">

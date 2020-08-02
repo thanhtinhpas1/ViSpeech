@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { getTokenTypes } from 'redux/token/token.actions'
-import { getMyProjectList } from 'redux/project/project.actions'
+import { getTokenTypes } from '../../../../../redux/token/token.actions'
+import { getMyProjectList } from '../../../../../redux/project/project.actions'
 import TokenStatistics from './TokenStatistics.component'
 
 const mapStateToProps = state => ({

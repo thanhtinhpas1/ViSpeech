@@ -7,13 +7,13 @@
 import React, { useEffect, useCallback, useState, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Tabs } from 'antd'
-import { ADMIN_PATH, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
-import Utils from 'utils'
+import { ADMIN_PATH, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../utils/constant'
+import InfoModal from '../../../components/common/InfoModal/InfoModal.component'
+import ConfirmModal from '../../../components/common/ConfirmModal/ConfirmModal.component'
+import SocketService from '../../../services/socket.service'
+import UserService from '../../../services/user.service'
+import SocketUtils from '../../../utils/socket.util'
+import Utils from '../../../utils'
 import InfoTab from './components/InfoTab/InfoTab.container'
 import TransactionsTab from './components/TransactionsTab/TransactionsTab.container'
 import ProjectsTab from './components/ProjectsTab/ProjectsTab.container'
@@ -153,12 +153,14 @@ const UserInfoPage = ({
         let permissionDeleted = false
         try {
           await UserService.deleteUser(userId)
-          invokeCheckSubject.UserDeleted.subscribe(data => {
+          const unsubscribe$ = invokeCheckSubject.UserDeleted.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
           })
-          invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
+          const unsubscribe1$ = invokeCheckSubject.TokenDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
@@ -167,8 +169,10 @@ const UserInfoPage = ({
                 deleteUserSuccess()
               }
             }
+            unsubscribe1$.unsubscribe()
+            unsubscribe1$.complete()
           })
-          invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
+          const unsubscribe3$ = invokeCheckSubject.ProjectDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
@@ -177,8 +181,10 @@ const UserInfoPage = ({
                 deleteUserSuccess()
               }
             }
+            unsubscribe3$.unsubscribe()
+            unsubscribe3$.complete()
           })
-          invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
+          const unsubscribe4$ = invokeCheckSubject.PermissionDeletedByUserId.subscribe(data => {
             if (data.error != null) {
               deleteUserFailure(data.errorObj)
             } else {
@@ -187,6 +193,8 @@ const UserInfoPage = ({
                 deleteUserSuccess()
               }
             }
+            unsubscribe4$.unsubscribe()
+            unsubscribe4$.complete()
           })
         } catch (err) {
           deleteUserFailure({ message: err.message })

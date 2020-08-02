@@ -5,10 +5,10 @@
 import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { Row, Select, DatePicker, Button, Empty } from 'antd'
-import STORAGE from 'utils/storage'
+import STORAGE from '../../../../../utils/storage'
 import * as moment from 'moment'
-import ReportUtils from 'utils/report.util'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import ReportUtils from '../../../../../utils/report.util'
+import LoadingIcon from '../../../../../components/common/LoadingIcon/LoadingIcon.component'
 
 const { Option } = Select
 const { RangePicker } = DatePicker

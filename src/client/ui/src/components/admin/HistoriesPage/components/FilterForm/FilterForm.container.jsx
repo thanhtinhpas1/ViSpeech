@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { getUsernameList } from 'redux/user/user.actions'
-import { getProjectNameList } from 'redux/project/project.actions'
+import { getUsernameList } from '../../../../../redux/user/user.actions'
+import { getProjectNameList } from '../../../../../redux/project/project.actions'
 import FilterForm from './FilterForm.component'
 
 const mapStateToProps = state => ({

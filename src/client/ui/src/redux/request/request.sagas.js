@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
-import RequestService from 'services/request.service'
-import { STATUS, TOKEN_TYPE } from 'utils/constant'
+import RequestService from './../../services/request.service'
+import { STATUS, TOKEN_TYPE } from '../../utils/constant'
 import RequestTypes from './request.types'
 import {
   getRequestListSuccess,

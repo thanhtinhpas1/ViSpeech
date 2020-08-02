@@ -34,7 +34,7 @@ const Main = () => {
               <div className="section-title">
                 <span className="theme-g-bg" />
                 <h2 id="introduce">VietSpeech giúp gì cho bạn?</h2>
-                <p>
+                <p style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
                   VietSpeech là hệ thống hỗ trợ chuyển đổi file âm thanh thành văn bản một cách hiệu quả và nhanh chóng.
                   Thay vì mất hàng giờ ngồi nghe và gõ lại văn bản, giờ đây với VietSpeech, chỉ cần một vài thao tác,
                   bạn đã có ngay văn bản. Hệ thống cung cấp những tính năng như cung cấp các báo cáo sử dụng dịch vụ của
@@ -137,91 +137,6 @@ const Main = () => {
                 <li>Đáp ứng dịch vụ kịp thời.</li>
                 <li>Dễ dàng nâng cấp dịch vụ.</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="p-60px-tb sm-p-40px-tb testimonial-section">
-        <div className="container">
-          <div className="row m-25px-b sm-m-15px-b">
-            <div className="col-md-12 text-center">
-              <div className="section-title white">
-                <h2>Khách hàng của chúng tôi.</h2>
-              </div>
-            </div>
-          </div>
-          <div className="row justify-content-center">
-            <div className="col-md-10">
-              <div id="client-slider-single" className="owl-carousel">
-                <div className="testimonial-col">
-                  <div className="d-flex">
-                    <div className="img">
-                      <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
-                      </span>
-                    </div>
-                    <div className="speac">
-                      <p />
-                      <h6>
-                        <strong>
-                          Maria - <span className="theme-color">Owner</span>
-                        </strong>
-                      </h6>
-                    </div>
-                  </div>
-                </div>
-                <div className="testimonial-col">
-                  <div className="d-flex">
-                    <div className="img">
-                      <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
-                      </span>
-                    </div>
-                    <div className="speac">
-                      <p />
-                      <h6>
-                        <strong>
-                          Maria - <span className="theme-color">Owner</span>
-                        </strong>
-                      </h6>
-                    </div>
-                  </div>
-                </div>
-                <div className="testimonial-col">
-                  <div className="d-flex">
-                    <div className="img">
-                      <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
-                      </span>
-                    </div>
-                    <div className="speac">
-                      <p />
-                      <h6>
-                        <strong>
-                          Maria - <span className="theme-color">Owner</span>
-                        </strong>
-                      </h6>
-                    </div>
-                  </div>
-                </div>
-                <div className="testimonial-col">
-                  <div className="d-flex">
-                    <div className="img">
-                      <span>
-                        <img src={`${process.env.PUBLIC_URL}/images/customer/avtar1.jpg`} alt="Shark" title="Shark" />
-                      </span>
-                    </div>
-                    <div className="speac">
-                      <p />
-                      <h6>
-                        <strong>
-                          Maria - <span className="theme-color">Owner</span>
-                        </strong>
-                      </h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

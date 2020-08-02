@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { ADMIN_PATH, JWT_TOKEN } from 'utils/constant'
-import STORAGE from 'utils/storage'
+import { ADMIN_PATH, JWT_TOKEN } from '../../../utils/constant'
+import STORAGE from '../../../utils/storage'
 
 const Sidebar = ({ currentUser, onAuthenticate, logout }) => {
   const location = useLocation()

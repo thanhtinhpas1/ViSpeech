@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getUserTotalStatistics } from 'redux/report/report.actions'
+import { getUserTotalStatistics } from '../../../../../redux/report/report.actions'
 import TotalStatisticsProject from './TotalStatisticsProject.component'
 
 const mapStateToProps = state => ({

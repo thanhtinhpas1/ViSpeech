@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-globals */
 import { all, call, put, takeLatest } from 'redux-saga/effects'
-import { ORDER_STATUS, TOKEN_TYPE } from 'utils/constant'
-import OrderService from 'services/order.service'
+import { ORDER_STATUS, TOKEN_TYPE } from '../../utils/constant'
+import OrderService from './../../services/order.service'
 import OrderTypes from './order.types'
 import {
   getOrderInfoFailure,

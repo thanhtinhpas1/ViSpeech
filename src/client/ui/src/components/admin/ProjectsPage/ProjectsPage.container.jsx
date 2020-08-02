@@ -5,7 +5,7 @@ import {
   deleteProjectSuccess,
   deleteProjectFailure,
   onClearDeleteProjectState,
-} from 'redux/project/project.actions'
+} from '../../../redux/project/project.actions'
 import ProjectsPage from './ProjectsPage.component'
 
 const mapStateToProps = state => ({

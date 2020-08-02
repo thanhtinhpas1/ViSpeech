@@ -5,14 +5,20 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
-import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import SocketService from 'services/socket.service'
-import ProjectService from 'services/project.service'
-import SocketUtils from 'utils/socket.util'
-import Utils from 'utils'
+import AntdTable from '../../common/AntdTable/AntdTable.component'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
+import ConfirmModal from '../../common/ConfirmModal/ConfirmModal.component'
+import {
+  ADMIN_PATH,
+  STATUS,
+  DEFAULT_PAGINATION,
+  TIMEOUT_MILLISECONDS,
+  DEFAULT_ERR_MESSAGE,
+} from '../../../utils/constant'
+import SocketService from '../../../services/socket.service'
+import ProjectService from '../../../services/project.service'
+import SocketUtils from '../../../utils/socket.util'
+import Utils from '../../../utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const {
@@ -130,17 +136,21 @@ const ProjectsPage = ({
         deleteProject(projectId)
         try {
           await ProjectService.deleteProject(projectId)
-          invokeCheckSubject.ProjectDeleted.subscribe(data => {
+          const unsubscribe$ = invokeCheckSubject.ProjectDeleted.subscribe(data => {
             if (data.error != null) {
               deleteProjectFailure(data.errorObj)
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
           })
-          invokeCheckSubject.TokenDeletedByProjectId.subscribe(data => {
+          const unsubscribe1$ = invokeCheckSubject.TokenDeletedByProjectId.subscribe(data => {
             if (data.error != null) {
               deleteProjectFailure(data.errorObj)
             } else {
               deleteProjectSuccess()
             }
+            unsubscribe1$.unsubscribe()
+            unsubscribe1$.complete()
           })
         } catch (err) {
           deleteProjectFailure({ message: err.message })

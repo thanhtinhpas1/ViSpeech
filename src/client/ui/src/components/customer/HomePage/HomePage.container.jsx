@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { getFreeToken } from 'redux/token/token.actions'
-import { getUserOrderList } from 'redux/order/order.actions'
+import { getFreeToken } from '../../../redux/token/token.actions'
+import { getUserOrderList } from '../../../redux/order/order.actions'
 import HomePage from './HomePage.component'
 
 const mapStateToProps = state => ({

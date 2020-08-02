@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
 import React, { useEffect } from 'react'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
-import { SORT_ORDER, TOKEN_TYPE, DEFAULT_PAGINATION } from 'utils/constant'
+import LoadingIcon from '../../../components/common/LoadingIcon/LoadingIcon.component'
+import { SORT_ORDER, TOKEN_TYPE, DEFAULT_PAGINATION } from '../../../utils/constant'
 import TokenStatistics from './components/TokenStatistics/TokenStatistics.container'
 import TokenTransaction from './components/TokenTransaction/TokenTransaction.container'
 import TokenCalculator from './components/TokenCalculator/TokenCalculator.component'

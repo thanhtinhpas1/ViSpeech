@@ -4,7 +4,7 @@ import {
   registerSuccess,
   registerFailure,
   onClearUserState,
-} from 'redux/user/user.actions'
+} from '../../../redux/user/user.actions'
 import RegisterPage from './RegisterPage.component'
 
 const mapStateToProps = state => ({

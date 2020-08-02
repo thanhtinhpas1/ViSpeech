@@ -3,9 +3,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react'
 import { Pie } from '@ant-design/charts'
-import ReportUtils from 'utils/report.util'
-import Utils from 'utils'
-import { MONETARY_UNIT } from 'utils/constant'
+import ReportUtils from '../../../../../utils/report.util'
+import Utils from '../../../../../utils'
+import { MONETARY_UNIT } from '../../../../../utils/constant'
 
 const TokenTypeChart = ({ getAdminTotalStatisticsBytokenTypeObj, getAdminTotalStatistics }) => {
   const [data, setData] = useState([])

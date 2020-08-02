@@ -5,9 +5,9 @@
 import React, { useEffect, useState } from 'react'
 import { HorizontalBar } from 'react-chartjs-2'
 import { Row, Select, DatePicker, Button, Empty } from 'antd'
-import STORAGE from 'utils/storage'
-import ReportUtils from 'utils/report.util'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import STORAGE from '../../../../../utils/storage'
+import ReportUtils from '../../../../../utils/report.util'
+import LoadingIcon from "../../../../common/LoadingIcon/LoadingIcon.component"
 
 const { Option } = Select
 const { RangePicker } = DatePicker

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getMyProjectList, getAcceptedProjectList } from 'redux/project/project.actions'
+import { getMyProjectList, getAcceptedProjectList } from '../../../redux/project/project.actions'
 import ProjectPage from './ProjectPage.component'
 
 const mapStateToProps = state => ({

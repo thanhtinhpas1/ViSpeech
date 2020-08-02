@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
-import PermissionService from 'services/permission.service'
+import PermissionService from './../../services/permission.service'
 import PermissionTypes from './permission.types'
 import { findPermissionByEmailTokenSuccess, findPermissionByEmailTokenFailure } from './permission.actions'
 

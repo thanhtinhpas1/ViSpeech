@@ -5,7 +5,7 @@ import {
   deleteTokenSuccess,
   deleteTokenFailure,
   onClearDeleteTokenState,
-} from 'redux/token/token.actions'
+} from '../../../redux/token/token.actions'
 import TokensPage from './TokensPage.component'
 
 const mapStateToProps = state => ({

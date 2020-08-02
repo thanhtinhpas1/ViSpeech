@@ -7,12 +7,12 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Select, Button } from 'antd'
-import { PERMISSIONS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import Utils from 'utils'
-import SocketService from 'services/socket.service'
-import PermissionService from 'services/permission.service'
-import SocketUtils from 'utils/socket.util'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import { PERMISSIONS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../utils/constant'
+import Utils from '../../../utils'
+import SocketService from '../../../services/socket.service'
+import PermissionService from '../../../services/permission.service'
+import SocketUtils from '../../../utils/socket.util'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PERMISSION_ASSIGN_EMAIL_SENT_SUCCESS_EVENT, PERMISSION_ASSIGN_EMAIL_SENT_FAILED_EVENT } = KAFKA_TOPIC
@@ -144,13 +144,15 @@ const AssignPermissionPage = ({
     assignPermission(permission)
     try {
       await PermissionService.sendAssignPermissionEmail(permission)
-      invokeCheckSubject.PermissionAssignEmailSent.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.PermissionAssignEmailSent.subscribe(data => {
         if (data.error != null) {
           assignPermissionFailure(data.errorObj)
         } else {
           assignPermissionSuccess(permission)
           form.resetFields()
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       assignPermissionFailure({ message: err.message })

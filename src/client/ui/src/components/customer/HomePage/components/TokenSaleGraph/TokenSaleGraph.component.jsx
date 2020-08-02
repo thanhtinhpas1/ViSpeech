@@ -6,8 +6,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import moment from 'moment'
-import { MONETARY_UNIT } from 'utils/constant'
-import Utils from 'utils'
+import { MONETARY_UNIT } from '../../../../../utils/constant'
+import Utils from '../../../../../utils'
 
 const TokenSaleGraph = ({ userOrderListObj }) => {
   useEffect(() => {

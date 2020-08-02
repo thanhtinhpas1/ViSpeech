@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
-import STORAGE from 'utils/storage'
-import Utils from 'utils'
-import InfoTemplatePage from 'components/customer/InfoTemplatePage/InfoTemplatePage.component'
-import SocketUtils from 'utils/socket.util'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
+import { CUSTOMER_PATH, JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../utils/constant'
+import STORAGE from '../../../utils/storage'
+import Utils from '../../../utils'
+import InfoTemplatePage from '../InfoTemplatePage/InfoTemplatePage.component'
+import SocketUtils from '../../../utils/socket.util'
+import SocketService from '../../../services/socket.service'
+import UserService from '../../../services/user.service'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { EMAIL_VERIFIED_SUCCESS_EVENT, EMAIL_VERIFIED_FAILED_EVENT } = KAFKA_TOPIC
@@ -82,7 +82,7 @@ const VerifyEmailPage = ({
     verifyEmail(emailToken)
     try {
       await UserService.verifyEmail(emailToken)
-      invokeCheckSubject.EmailVerified.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.EmailVerified.subscribe(data => {
         if (data.error != null) {
           verifyEmailFailure(data.errorObj)
         } else {
@@ -91,6 +91,8 @@ const VerifyEmailPage = ({
             STORAGE.setPreferences(JWT_TOKEN, data.newToken)
           }
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       verifyEmailFailure({ message: err.message })

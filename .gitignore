@@ -98,3 +98,4 @@ api/swagger-spec/swagger.json
 .vscode/
 
 src/server/.env
+src/client/.env

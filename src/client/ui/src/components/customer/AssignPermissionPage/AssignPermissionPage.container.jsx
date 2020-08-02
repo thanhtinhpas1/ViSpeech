@@ -1,12 +1,12 @@
 import { connect } from 'react-redux'
-import { getMyProjectList } from 'redux/project/project.actions'
+import { getMyProjectList } from '../../../redux/project/project.actions'
 import {
   assignPermission,
   assignPermissionSuccess,
   assignPermissionFailure,
   onClearAssignPermissionState,
-} from 'redux/permission/permission.actions'
-import { getUsernameList } from 'redux/user/user.actions'
+} from '../../../redux/permission/permission.actions'
+import { getUsernameList } from '../../../redux/user/user.actions'
 import AssignPermissionPage from './AssignPermissionPage.component'
 
 const mapStateToProps = state => ({

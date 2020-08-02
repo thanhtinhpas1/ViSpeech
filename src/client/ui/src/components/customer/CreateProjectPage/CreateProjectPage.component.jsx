@@ -3,14 +3,14 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { CUSTOMER_PATH, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
-import SocketService from 'services/socket.service'
-import ProjectService from 'services/project.service'
-import SocketUtils from 'utils/socket.util'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import Utils from 'utils'
+import { CUSTOMER_PATH, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../utils/constant'
+import SocketService from '../../../services/socket.service'
+import ProjectService from '../../../services/project.service'
+import SocketUtils from '../../../utils/socket.util'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
+import Utils from '../../../utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PROJECT_CREATED_SUCCESS_EVENT, PROJECT_CREATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -114,12 +114,14 @@ const CreateProjectPage = ({
     createProject(project)
     try {
       await ProjectService.createProject(project)
-      invokeCheckSubject.ProjectCreated.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.ProjectCreated.subscribe(data => {
         if (data.error != null) {
           createProjectFailure(data.errorObj)
         } else {
           createProjectSuccess(project)
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       createProjectFailure({ message: err.message })

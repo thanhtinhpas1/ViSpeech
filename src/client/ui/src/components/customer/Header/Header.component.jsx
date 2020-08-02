@@ -3,8 +3,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react'
 import { Link, withRouter } from 'react-router-dom'
-import { CUSTOMER_PATH, JWT_TOKEN } from 'utils/constant'
-import STORAGE from 'utils/storage'
+import { CUSTOMER_PATH, JWT_TOKEN } from '../../../utils/constant'
+import STORAGE from '../../../utils/storage'
 
 const Header = ({ currentUser, authenticate, logout }) => {
   const [userLinks, setUserLinks] = useState([])

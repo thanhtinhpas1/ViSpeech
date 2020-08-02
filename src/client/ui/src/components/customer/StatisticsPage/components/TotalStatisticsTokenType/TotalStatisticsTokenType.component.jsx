@@ -3,9 +3,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
-import ReportUtils from 'utils/report.util'
-import { MONETARY_UNIT } from 'utils/constant'
-import Utils from 'utils'
+import ReportUtils from '../../../../../utils/report.util'
+import { MONETARY_UNIT } from '../../../../../utils/constant'
+import Utils from '../../../../../utils'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsTokenType = ({

@@ -6,8 +6,8 @@ import React, { useState, useEffect } from 'react'
 import { Row } from 'antd'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { STRIPE_PUBLIC_KEY } from 'utils/constant'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import { STRIPE_PUBLIC_KEY } from '../../../utils/constant'
+import LoadingIcon from '../../../components/common/LoadingIcon/LoadingIcon.component'
 import UpgradeForm from './components/UpgradeForm/UpgradeForm.container'
 
 const UpgradeTokenPage = () => {

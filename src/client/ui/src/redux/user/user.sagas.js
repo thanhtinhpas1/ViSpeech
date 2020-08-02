@@ -1,9 +1,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
 import { all, call, put, takeLatest } from 'redux-saga/effects'
-import UserService from 'services/user.service'
-import { JWT_TOKEN, STATUS } from 'utils/constant'
-import STORAGE from 'utils/storage'
+import UserService from '../../services/user.service'
+import { JWT_TOKEN, STATUS } from '../../utils/constant'
+import STORAGE from '../../utils/storage'
 import UserTypes from './user.types'
 import {
   authenticateFailure,

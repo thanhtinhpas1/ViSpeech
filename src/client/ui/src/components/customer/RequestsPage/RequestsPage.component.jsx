@@ -5,8 +5,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useCallback } from 'react'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { DEFAULT_PAGINATION, SORT_ORDER, STATUS } from 'utils/constant'
+import AntdTable from '../../../components/common/AntdTable/AntdTable.component'
+import { DEFAULT_PAGINATION, SORT_ORDER, STATUS } from '../../../utils/constant'
 
 const RequestsPage = ({ currentUser, getRequestListByUserIdObj, getRequestListByUserId }) => {
   const columns = [

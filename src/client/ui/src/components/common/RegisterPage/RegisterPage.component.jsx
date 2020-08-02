@@ -4,11 +4,11 @@
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Alert, Button } from 'antd'
-import { ROLES, USER_TYPE, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
-import Utils from 'utils'
+import { ROLES, USER_TYPE, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../utils/constant'
+import SocketService from '../../../services/socket.service'
+import UserService from '../../../services/user.service'
+import SocketUtils from '../../../utils/socket.util'
+import Utils from '../../../utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -62,12 +62,14 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
     registerStart()
     try {
       await UserService.register(user)
-      invokeCheckSubject.UserCreated.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.UserCreated.subscribe(data => {
         if (data.error != null) {
           registerFailure(data.errorObj)
         } else {
           registerSuccess(user)
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       registerFailure({ message: DEFAULT_ERR_MESSAGE })

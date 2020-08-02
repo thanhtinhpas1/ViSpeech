@@ -4,7 +4,7 @@ import {
   createProjectSuccess,
   createProjectFailure,
   onClearCreateProjectState,
-} from 'redux/project/project.actions'
+} from '../../../redux/project/project.actions'
 import CreateProjectPage from './CreateProjectPage.component'
 
 const mapStateToProps = state => ({

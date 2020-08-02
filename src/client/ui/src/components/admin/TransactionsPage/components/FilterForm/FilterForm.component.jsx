@@ -2,8 +2,8 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect } from 'react'
 import { Form, Select, Button, DatePicker } from 'antd'
-import ReportUtils from 'utils/report.util'
-import { DEFAULT_PAGINATION, TOKEN_TYPE, ORDER_STATUS } from 'utils/constant'
+import ReportUtils from '../../../../../utils/report.util'
+import { DEFAULT_PAGINATION, TOKEN_TYPE, ORDER_STATUS } from '../../../../../utils/constant'
 
 const { Option } = Select
 const { RangePicker } = DatePicker

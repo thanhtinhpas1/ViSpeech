@@ -117,33 +117,6 @@ const StatisticsPage = () => {
     maintainAspectRatio: false,
   }
 
-  // const options = {
-  //   scales: {
-  //     yAxes: [
-  //       {
-  //         gridLines: {
-  //           display: false,
-  //         },
-  //         ticks: {
-  //           beginAtZero: true,
-  //         },
-  //       },
-  //     ],
-  //     xAxes: [
-  //       {
-  //         gridLines: {
-  //           display: true,
-  //         },
-  //         ticks: {
-  //           beginAtZero: true,
-  //         },
-  //       },
-  //     ],
-  //   },
-  //   maintainAspectRatio: false,
-  //   responsive: true,
-  // }
-
   return (
     <div className="page-content customer-statistics-page">
       <div className="container">

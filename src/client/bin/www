@@ -34,17 +34,12 @@ var io = require('socket.io').listen(server);
 var consumerUtil = require('../kafka/consumer');
 app.set('socket', io);
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', async socket => {
   const consumer = kafka.consumer({ groupId: socket.id })
-  consumer.connect()
-
-  console.log('Socket connected');
-  socket.emit('CONNECTED', "Connect socket success");
+  await consumer.connect()
 
   const topicNames = Object.values(TOPICS)
-  topicNames.forEach(name => {
-      consumerUtil.run(consumer, name, socket);
-  })
+  await Promise.all(topicNames.map(topic => consumerUtil.run(consumer, topic, socket)))
 
   consumer.run({
     eachMessage: async ({ topic, partition, message }) => {

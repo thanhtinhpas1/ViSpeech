@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import { getMyProjectList, getAcceptedProjectList } from 'redux/project/project.actions'
-import { getProjectTokenList, onClearGetProjectTokenState, getFreeToken } from 'redux/token/token.actions'
+import { getMyProjectList, getAcceptedProjectList } from '../../../../../redux/project/project.actions'
+import { getProjectTokenList, onClearGetProjectTokenState, getFreeToken } from '../../../../../redux/token/token.actions'
 import SelectTokenForm from './SelectTokenForm.component'
 
 const mapStateToProps = state => ({

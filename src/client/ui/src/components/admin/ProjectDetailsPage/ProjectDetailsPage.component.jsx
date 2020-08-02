@@ -5,7 +5,7 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
+import AntdTable from '../../common/AntdTable/AntdTable.component'
 import {
   ADMIN_PATH,
   STATUS,
@@ -13,13 +13,13 @@ import {
   DEFAULT_PAGINATION,
   TIMEOUT_MILLISECONDS,
   DEFAULT_ERR_MESSAGE,
-} from 'utils/constant'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
-import ProjectService from 'services/project.service'
-import SocketUtils from 'utils/socket.util'
-import SocketService from 'services/socket.service'
-import Utils from 'utils'
+} from '../../../utils/constant'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
+import ConfirmModal from '../../common/ConfirmModal/ConfirmModal.component'
+import ProjectService from '../../../services/project.service'
+import SocketUtils from '../../../utils/socket.util'
+import SocketService from '../../../services/socket.service'
+import Utils from '../../../utils'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PROJECT_UPDATED_SUCCESS_EVENT, PROJECT_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -270,12 +270,14 @@ const ProjectDetailsPage = ({
         updateProjectInfo(projectId, projectInfo)
         try {
           await ProjectService.updateProjectInfo(projectId, projectInfo)
-          invokeCheckSubject.ProjectUpdated.subscribe(data => {
+          const unsubscribe$ = invokeCheckSubject.ProjectUpdated.subscribe(data => {
             if (data.error != null) {
               updateProjectInfoFailure(data.errorObj)
             } else {
               updateProjectInfoSuccess()
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
           })
         } catch (err) {
           updateProjectInfoFailure({ message: err.message })

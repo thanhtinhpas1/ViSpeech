@@ -3,7 +3,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react'
 import { ColumnLine } from '@ant-design/charts'
-import ReportUtils from 'utils/report.util'
+import ReportUtils from '../../../../../utils/report.util'
 
 const TotalChart = ({ getTotalStatisticsObj, getTotalStatistics }) => {
   const [data, setData] = useState([])

@@ -6,11 +6,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef } from 'react'
 import { Alert, Button, Form, Input, Radio, Row } from 'antd'
-import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import Utils from 'utils'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
+import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../utils/constant'
+import Utils from '../../../utils'
+import SocketService from '../../../services/socket.service'
+import UserService from '../../../services/user.service'
+import SocketUtils from '../../../utils/socket.util'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -68,13 +68,15 @@ const UserCreatePage = ({ createUserObj, clearCreateUserState, createUser, creat
     createUser(user)
     try {
       await UserService.createUser(user)
-      invokeCheckSubject.UserCreated.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.UserCreated.subscribe(data => {
         if (data.error != null) {
           createUserFailure(data.errorObj)
         } else {
           createUserSuccess()
           form.resetFields()
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       createUserFailure({ message: err.message })

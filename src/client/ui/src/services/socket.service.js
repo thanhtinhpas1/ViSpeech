@@ -1,5 +1,5 @@
 import * as io from 'socket.io-client'
-import SocketUtils from 'utils/socket.util'
+import SocketUtils from '../utils/socket.util'
 import { socketUrl } from './api-url'
 
 const { invokeCheckSubject, getSubjectName } = SocketUtils

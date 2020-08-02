@@ -7,8 +7,8 @@
 import React, { useCallback, useEffect } from 'react'
 import { Tabs } from 'antd'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
+import AntdTable from '../../../../../components/common/AntdTable/AntdTable.component'
+import { ADMIN_PATH, STATUS, DEFAULT_PAGINATION } from '../../../../../utils/constant'
 
 const { TabPane } = Tabs
 

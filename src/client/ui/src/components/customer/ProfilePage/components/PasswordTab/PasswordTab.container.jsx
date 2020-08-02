@@ -5,7 +5,7 @@ import {
   changePasswordFailure,
   logout,
   onClearChangePasswordState,
-} from 'redux/user/user.actions'
+} from '../../../../../redux/user/user.actions'
 import PasswordTab from './PasswordTab.component'
 
 const mapStateToProps = state => ({

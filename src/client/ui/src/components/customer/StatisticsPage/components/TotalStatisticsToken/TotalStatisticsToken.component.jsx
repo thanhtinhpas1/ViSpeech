@@ -3,8 +3,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
-import ReportUtils from 'utils/report.util'
-import { FREE_TOKEN } from 'utils/constant'
+import ReportUtils from '../../../../../utils/report.util'
+import { FREE_TOKEN } from '../../../../../utils/constant'
 import TotalStatisticsTemplate from '../TotalStatisticsTemplate/TotalStatisticsTemplate.component'
 
 const TotalStatisticsToken = ({

@@ -1,12 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import Utils from 'utils'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import SocketUtils from 'utils/socket.util'
+import InfoModal from '../../../../common/InfoModal/InfoModal.component'
+import { ROLES, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../../../utils/constant'
+import Utils from '../../../../../utils'
+import SocketService from '../../../../../services/socket.service'
+import UserService from '../../../../../services/user.service'
+import SocketUtils from '../../../../../utils/socket.util'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_UPDATED_SUCCESS_EVENT, USER_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -122,12 +122,14 @@ const PersonalDataTab = ({
     updateCurrentUser(currentUser._id, user)
     try {
       await UserService.updateUserInfo(currentUser._id, user)
-      invokeCheckSubject.UserUpdated.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.UserUpdated.subscribe(data => {
         if (data.error != null) {
           updateCurrentUserFailure(data.errorObj)
         } else {
           updateCurrentUserSuccess(data.userDto)
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       updateCurrentUserFailure({ message: err.message })

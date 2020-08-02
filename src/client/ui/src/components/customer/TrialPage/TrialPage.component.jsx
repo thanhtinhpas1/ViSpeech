@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Upload } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
-import storage from 'firebaseStorage'
+import storage from '../../../firebaseStorage'
 import {
   FILE_PATH,
   DEFAULT_PAGINATION,
@@ -16,13 +16,13 @@ import {
   TIMEOUT_MILLISECONDS,
   DEFAULT_ERR_MESSAGE,
   FREE_TOKEN,
-} from 'utils/constant'
-import SpeechService from 'services/speech.service'
-import SocketService from 'services/socket.service'
-import RequestService from 'services/request.service'
-import SocketUtils from 'utils/socket.util'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import ReactMicRecorder from 'components/common/ReactMicRecorder/ReactMicRecorder.component'
+} from '../../../utils/constant'
+import SpeechService from '../../../services/speech.service'
+import SocketService from '../../../services/socket.service'
+import RequestService from '../../../services/request.service'
+import SocketUtils from '../../../utils/socket.util'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
+import ReactMicRecorder from '../../common/ReactMicRecorder/ReactMicRecorder.component'
 import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
 import RequestTable from './components/RequestTable/RequestTable.container'
 
@@ -153,7 +153,7 @@ const TrialPage = ({
       updateRequestInfo(requestId)
       try {
         await RequestService.updateRequest(requestId, tokenId, transcriptFileUrl)
-        invokeCheckSubject.RequestUpdated.subscribe(data => {
+        const unsubscribe$ = invokeCheckSubject.RequestUpdated.subscribe(data => {
           if (isMounted.current) {
             if (data.error != null) {
               updateRequestInfoFailure(data.errorObj)
@@ -161,6 +161,8 @@ const TrialPage = ({
               updateRequestInfoSuccess()
             }
           }
+          unsubscribe$.unsubscribe()
+          unsubscribe$.complete()
         })
       } catch (err) {
         updateRequestInfoFailure({ message: err.message })
@@ -241,12 +243,14 @@ const TrialPage = ({
     async (file, url) => {
       createRequest()
       setAsrData(null)
-      invokeCheckSubject.RequestCreated.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.RequestCreated.subscribe(data => {
         if (data.error != null) {
           createRequestFailure(data.errorObj)
         } else {
           createRequestSuccess()
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
       try {
         const isAcceptedProject =

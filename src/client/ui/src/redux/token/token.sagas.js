@@ -1,9 +1,9 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
 import { all, call, put, takeLatest } from 'redux-saga/effects'
-import TokenService from 'services/token.service'
-import { STATUS, TOKEN_TYPE } from 'utils/constant'
-import Utils from 'utils'
+import TokenService from '../../services/token.service'
+import { STATUS, TOKEN_TYPE } from '../../utils/constant'
+import Utils from '../../utils'
 import TokenTypes from './token.types'
 import {
   getFreeTokenFailure,

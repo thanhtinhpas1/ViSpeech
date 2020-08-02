@@ -4,7 +4,7 @@ import {
   updateUserInfoSuccess,
   updateUserInfoFailure,
   onClearUpdateUserInfoState,
-} from 'redux/user/user.actions'
+} from '../../../../../redux/user/user.actions'
 import InfoTab from './InfoTab.component'
 
 const mapStateToProps = state => ({

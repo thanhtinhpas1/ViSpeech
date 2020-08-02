@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { CUSTOMER_PATH } from 'utils/constant'
+import { CUSTOMER_PATH } from '../../../../../utils/constant'
 
 const TokenCalculator = ({ keyQuantity }) => {
   return (

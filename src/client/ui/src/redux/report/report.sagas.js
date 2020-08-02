@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put, takeEvery } from 'redux-saga/effects'
-import ReportService from 'services/report.service'
+import ReportService from './../../services/report.service'
 import ReportTypes from './report.types'
 import {
   getUserTotalStatisticsSuccess,

@@ -3,7 +3,7 @@
 /* eslint-disable no-undef */
 import React from 'react'
 import GoogleLogin from 'react-google-login'
-import { GOOGLE_CLIENT_ID, USER_TYPE } from 'utils/constant'
+import { GOOGLE_CLIENT_ID, USER_TYPE } from '../../../../../utils/constant'
 
 const LoginWithGoogle = ({ loginWithSocialObj, loginWithSocial }) => {
   const responseGoogle = response => {

@@ -5,11 +5,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import * as moment from 'moment'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
-import ConfirmModal from 'components/common/ConfirmModal/ConfirmModal.component'
-import SocketService from 'services/socket.service'
-import SocketUtils from 'utils/socket.util'
+import AntdTable from '../../common/AntdTable/AntdTable.component'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
+import ConfirmModal from '../../common/ConfirmModal/ConfirmModal.component'
+import SocketService from '../../../services/socket.service'
+import SocketUtils from '../../../utils/socket.util'
 import {
   ADMIN_PATH,
   STATUS,
@@ -17,9 +17,9 @@ import {
   DEFAULT_PAGINATION,
   TIMEOUT_MILLISECONDS,
   DEFAULT_ERR_MESSAGE,
-} from 'utils/constant'
-import Utils from 'utils'
-import TokenService from 'services/token.service'
+} from '../../../utils/constant'
+import Utils from '../../../utils'
+import TokenService from '../../../services/token.service'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { TOKEN_DELETED_SUCCESS_EVENT, TOKEN_DELETED_FAILED_EVENT } = KAFKA_TOPIC
@@ -130,12 +130,14 @@ const TokensPage = ({
         deleteToken(tokenId)
         try {
           await TokenService.deleteToken(tokenId)
-          invokeCheckSubject.TokenDeleted.subscribe(data => {
+          const unsubscribe$ = invokeCheckSubject.TokenDeleted.subscribe(data => {
             if (data.error != null) {
               deleteTokenFailure(data.errorObj)
             } else {
               deleteTokenSuccess()
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
           })
         } catch (err) {
           deleteTokenFailure({ message: err.message })

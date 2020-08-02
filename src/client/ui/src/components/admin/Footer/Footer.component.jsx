@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
-import { ADMIN_PATH } from 'utils/constant'
+import { ADMIN_PATH } from '../../../utils/constant'
 
 const Footer = () => {
   return (

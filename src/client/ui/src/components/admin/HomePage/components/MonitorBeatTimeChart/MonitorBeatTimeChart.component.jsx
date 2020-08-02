@@ -2,11 +2,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect, useRef } from 'react'
 import { Line } from '@ant-design/charts'
-import SocketService from 'services/socket.service'
-import SocketUtils from 'utils/socket.util'
-import { DEFAULT_PAGINATION, SORT_ORDER } from 'utils/constant'
-import MonitorUtils from 'utils/monitor.util'
 import * as moment from 'moment'
+import SocketService from '../../../../../services/socket.service'
+import SocketUtils from '../../../../../utils/socket.util'
+import { DEFAULT_PAGINATION, SORT_ORDER } from '../../../../../utils/constant'
+import MonitorUtils from '../../../../../utils/monitor.util'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { MONITOR_BEAT_SUCCESS_EVENT, MONITOR_BEAT_FAILED_EVENT } = KAFKA_TOPIC
@@ -32,7 +32,7 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
   }, [getMonitorListObj])
 
   useEffect(() => {
-    invokeCheckSubject.MonitorBeat.subscribe(event => {
+    const unsubscribe$ = invokeCheckSubject.MonitorBeat.subscribe(event => {
       if (isMounted.current && event.error == null) {
         const mappedData = MonitorUtils.mapMonitorDataFunc(event.data)
         const convertedData = MonitorUtils.convertToChartData(mappedData)
@@ -41,6 +41,8 @@ const MonitorBeatTimeChart = ({ getMonitorListObj, getMonitorList }) => {
           return [...data, ...convertedData]
         })
       }
+      unsubscribe$.unsubscribe()
+      unsubscribe$.complete()
     })
     return () => {
       isMounted.current = false

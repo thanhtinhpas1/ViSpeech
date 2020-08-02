@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 import React from 'react'
 import { Modal } from 'antd'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import LoadingIcon from '../../../components/common/LoadingIcon/LoadingIcon.component'
 
 const InfoModal = ({ infoModal }) => {
   return (

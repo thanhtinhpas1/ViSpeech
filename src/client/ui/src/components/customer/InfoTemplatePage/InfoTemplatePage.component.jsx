@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import React from 'react'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import InfoModal from '../../../components/common/InfoModal/InfoModal.component'
 
 const InfoTemplatePage = ({ infoTemplate, infoModal }) => {
   return (

@@ -5,10 +5,10 @@
 import React, { useEffect, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
 import { Row, Select, DatePicker, Button, Empty } from 'antd'
-import STORAGE from 'utils/storage'
 import * as moment from 'moment'
-import ReportUtils from 'utils/report.util'
-import LoadingIcon from 'components/common/LoadingIcon/LoadingIcon.component'
+import STORAGE from '../../../../../utils/storage'
+import ReportUtils from '../../../../../utils/report.util'
+import LoadingIcon from '../../../../common/LoadingIcon/LoadingIcon.component'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -401,6 +401,7 @@ const StatisticsTemplate = ({
 
       <div className="customer-statistics-page__select-type row guttar-15px">
         <div className="col-12 col-md-6 col-lg-3 mt-2">
+          {data.length === 0 && <Select style={{ width: '100%' }} placeholder={placeHolderSelectId.notFound} />}
           {data.length > 0 && data[0]._id && (
             <Select
               defaultValue={data[0]._id}
@@ -422,7 +423,6 @@ const StatisticsTemplate = ({
           )}
         </div>
         <div className="col-12 col-md-6 col-lg-3 mt-2">
-          {data.length === 0 && <Select style={{ width: '100%' }} placeholder={placeHolderSelectId.notFound} />}
           <Select defaultValue={pickerType} style={{ width: '100%' }} onChange={onChangePickerType}>
             <Option value={TIME_TYPE.DATE}>Theo ngày</Option>
             <Option value={TIME_TYPE.WEEK}>Theo tuần</Option>

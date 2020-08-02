@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { authenticate, logout } from 'redux/user/user.actions'
+import { authenticate, logout } from '../../../redux/user/user.actions'
 import Sidebar from './Sidebar.component'
 
 const mapStateToProps = state => ({

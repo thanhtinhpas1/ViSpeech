@@ -3,12 +3,12 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd'
-import Utils from 'utils'
-import { TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from 'utils/constant'
-import TokenType from 'components/customer/HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
-import SocketService from 'services/socket.service'
-import OrderService from 'services/order.service'
-import SocketUtils from 'utils/socket.util'
+import Utils from '../../../../../utils'
+import { TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../../../utils/constant'
+import TokenType from '../../../HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
+import SocketService from '../../../../../services/socket.service'
+import OrderService from '../../../../../services/order.service'
+import SocketUtils from '../../../../../utils/socket.util'
 import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
@@ -120,20 +120,6 @@ const UpgradeForm = ({
         usd = usd < 0.5 ? 0.5 : usd // Amount must be at least $0.50 usd
         result = await OrderService.createPaymentIntent(usd * 100)
 
-        // paymentMethodReq = await stripe.createPaymentMethod({
-        //   type: 'card',
-        //   card: cardElement,
-        //   billing_details: {
-        //     name: `${user.firstName} ${user.lastName}`,
-        //     email: user.email,
-        //   },
-        // })
-        // if (paymentMethodReq.error) {
-        //   setErrorMessage(paymentMethodReq.error.message)
-        //   setIsLoading(false)
-        //   return
-        // }
-
         confirmedCardPayment = await stripe.confirmCardPayment(result.clientSecret, {
           payment_method: {
             card: cardElement,
@@ -171,18 +157,22 @@ const UpgradeForm = ({
         createOrderToUpgrade(order)
         try {
           await OrderService.createOrderToUpgradeToken(order, paymentIntent)
-          invokeCheckSubject.OrderToUpgradeCreated.subscribe(data => {
+          const unsubscribe$ = invokeCheckSubject.OrderToUpgradeCreated.subscribe(data => {
             if (data.error != null) {
               createOrderToUpgradeFailure(data.errorObj)
             }
+            unsubscribe$.unsubscribe()
+            unsubscribe$.complete()
           })
-          invokeCheckSubject.TokenUpgraded.subscribe(data => {
+          const unsubscribe1$ = invokeCheckSubject.TokenUpgraded.subscribe(data => {
             if (data.error != null) {
               createOrderToUpgradeFailure(data.errorObj)
             } else {
               createOrderToUpgradeSuccess({ order })
               form.resetFields()
             }
+            unsubscribe1$.unsubscribe()
+            unsubscribe1$.complete()
           })
         } catch (err) {
           createOrderToUpgradeFailure({ message: err.message })

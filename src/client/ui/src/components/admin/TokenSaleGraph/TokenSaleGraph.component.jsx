@@ -1,8 +1,8 @@
 /* eslint-disable no-new */
 import React, { useEffect } from 'react'
 import moment from 'moment'
-import { MONETARY_UNIT } from 'utils/constant'
-import Utils from 'utils'
+import { MONETARY_UNIT } from '../../../utils/constant'
+import Utils from '../../../utils'
 
 const TokenSaleGraph = ({ orderListObj }) => {
   useEffect(() => {

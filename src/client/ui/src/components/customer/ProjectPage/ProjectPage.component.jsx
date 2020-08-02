@@ -4,11 +4,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useCallback, useState, useEffect } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import { CUSTOMER_PATH, STATUS, DEFAULT_PAGINATION } from 'utils/constant'
-import AntdTable from 'components/common/AntdTable/AntdTable.component'
+import { CUSTOMER_PATH, STATUS, DEFAULT_PAGINATION } from '../../../utils/constant'
+import AntdTable from '../../../components/common/AntdTable/AntdTable.component'
 import * as moment from 'moment'
-import Utils from 'utils'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import Utils from '../../../utils'
+import InfoModal from '../../../components/common/InfoModal/InfoModal.component'
 
 const ProjectPage = ({
   currentUser,

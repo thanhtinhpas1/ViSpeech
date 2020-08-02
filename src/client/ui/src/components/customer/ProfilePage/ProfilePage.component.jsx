@@ -4,13 +4,13 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
-import Utils from 'utils'
-import STORAGE from 'utils/storage'
-import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from 'utils/constant'
-import SocketUtils from 'utils/socket.util'
-import SocketService from 'services/socket.service'
-import UserService from 'services/user.service'
-import InfoModal from 'components/common/InfoModal/InfoModal.component'
+import Utils from '../../../utils'
+import STORAGE from '../../../utils/storage'
+import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../utils/constant'
+import SocketUtils from '../../../utils/socket.util'
+import SocketService from '../../../services/socket.service'
+import UserService from '../../../services/user.service'
+import InfoModal from '../../common/InfoModal/InfoModal.component'
 import PersonalDataTab from './components/PersonalDataTab/PersonalDataTab.container'
 import PasswordTab from './components/PasswordTab/PasswordTab.container'
 
@@ -105,12 +105,14 @@ const ProfilePage = ({
     sendVerifyEmail(currentUser._id)
     try {
       await UserService.sendVerifyEmail(currentUser._id)
-      invokeCheckSubject.VerifyEmailSent.subscribe(data => {
+      const unsubscribe$ = invokeCheckSubject.VerifyEmailSent.subscribe(data => {
         if (data.error != null) {
           sendVerifyEmailFailure(data.errorObj)
         } else {
           sendVerifyEmailSuccess()
         }
+        unsubscribe$.unsubscribe()
+        unsubscribe$.complete()
       })
     } catch (err) {
       sendVerifyEmailFailure({ message: err.message })
