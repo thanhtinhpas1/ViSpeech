@@ -4,7 +4,6 @@ import { Utils } from '../utils';
 import { ErrorUtils } from '../utils/errorUtils';
 import { ERR } from '../common/error';
 import { Optional } from '@nestjs/common';
-import { MetaData } from './meta-data';
 
 export class BaseEntityDto {
     constructor() {
@@ -25,7 +24,4 @@ export class BaseEntityDto {
         name: 'updatedDate',
     })
     updatedDate: Date;
-
-    @Optional()
-    metadata: MetaData;
 }
