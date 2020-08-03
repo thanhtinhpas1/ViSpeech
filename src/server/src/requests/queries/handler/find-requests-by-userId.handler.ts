@@ -24,7 +24,7 @@ export class FindRequestsByUserIdHandler implements IQueryHandler<FindRequestsBy
     async execute(query: FindRequestsByUserIdQuery) {
         Logger.log('Async FindRequestsByUserIdHandler', 'FindRequestsByUserIdQuery');
         const { limit, offset, userId, filters, sort } = query;
-        let result = [];
+        const result = [];
 
         try {
             const findOptions = {
@@ -74,7 +74,7 @@ export class FindRequestsByUserIdHandler implements IQueryHandler<FindRequestsBy
                 const token = await this.tokenRepository.findOne({ _id: request.tokenId });
                 const project = request.projectId !== '' ? await this.projectRepository.findOne({ _id: request.projectId }) : null;
                 const projectName = project ? project.name : '';
-                result.push({ ...request, tokenName: token.name, projectName });
+                result.push({ ...request, tokenName: token ? token?.name : '', projectName });
             }
 
             const count = await getMongoRepository(RequestDto).count(findOptions.where);

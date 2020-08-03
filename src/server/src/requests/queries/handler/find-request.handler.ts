@@ -26,7 +26,7 @@ export class FindRequestHandler implements IQueryHandler<FindRequestQuery> {
             const token = await this.tokenRepository.findOne({ _id: request.tokenId });
             const project = await this.projectRepository.findOne({ _id: request.projectId });
             const projectName = project ? project?.name : '';
-            return { ...request, tokenName: token?.name, projectName };
+            return { ...request, tokenName: token ? token?.name : '', projectName };
         } catch (error) {
             Logger.error(error, '', 'FindRequestQuery');
         }
