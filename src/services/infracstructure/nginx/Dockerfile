@@ -1,5 +1,4 @@
-############################################################
-# Dockerfile to build Nginx Installed Containers
+
 # Based on Ubuntu
 ############################################################
 
@@ -18,13 +17,15 @@ RUN apt-get update
 RUN apt-get install -y nano wget dialog net-tools
 
 # Download and Install Nginx
-RUN apt-get install -y nginx  
+RUN apt-get install -y nginx
 
 # Remove the default Nginx configuration file
 RUN rm -v /etc/nginx/nginx.conf
 
 # Copy a configuration file
 ADD nginx.conf /etc/nginx
+ADD private.key /etc/nginx/
+ADD certificate.crt /etc/nginx/
 
 # Append "daemon off;" to the beginning of the configuration
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf

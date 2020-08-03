@@ -29,9 +29,9 @@ const configs = {
                 port: process.env.EVENT_STORE_PORT || 1113,
             },
             options: {
-                maxRetries: 1000, // Optional
-                maxReconnections: 1000,  // Optional
-                reconnectionDelay: 1000,  // Optional
+                maxRetries: 100, // Optional
+                maxReconnections: 100,  // Optional
+                reconnectionDelay: 100,  // Optional
                 heartbeatInterval: 1000,  // Optional
                 heartbeatTimeout: 1000,  // Optional
                 defaultUserCredentials: {
