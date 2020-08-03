@@ -29,7 +29,7 @@ import { CONSTANTS } from 'common/constant';
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: CONSTANTS.STREAM_NAME.MONITOR,
+            featureStreamName: '$stats-0.0.0.0:2113',
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
@@ -38,24 +38,16 @@ import { CONSTANTS } from 'common/constant';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$stats-0.0.0.0:2113',
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: '$stats-0.0.0.0:2113',
-                    persistentSubscriptionName: '$stats-0.0.0.0:2113' + '-' + config.HOST,
-                    resolveLinkTos: true,  // Default is true (Optional)
+                    type: EventStoreSubscriptionType.CatchUp,
+                    stream: '$stats-127.0.0.1:2113',
+                    resolveLinkTos: true, // Default is true (Optional)
+                    lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: CONSTANTS.STREAM_NAME.MONITOR,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: CONSTANTS.STREAM_NAME.MONITOR,
                 },
                 {
                     type: EventStoreSubscriptionType.Persistent,
