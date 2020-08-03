@@ -29,7 +29,7 @@ import { CONSTANTS } from 'common/constant';
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({
-            featureStreamName: '$stats-0.0.0.0:2113',
+            featureStreamName: CONSTANTS.STREAM_NAME.MONITOR,
             subscriptions: [
                 {
                     type: EventStoreSubscriptionType.CatchUp,
