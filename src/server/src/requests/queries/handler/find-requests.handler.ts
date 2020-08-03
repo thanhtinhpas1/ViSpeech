@@ -134,8 +134,8 @@ export class FindRequestsHandler implements IQueryHandler<FindRequestsQuery> {
                 result.push({
                     ...request,
                     username: user.username,
-                    tokenName: token.name,
-                    tokenTypeName: tokenType.name,
+                    tokenName: token?.name,
+                    tokenTypeName: tokenType?.name,
                     projectName
                 });
             }
