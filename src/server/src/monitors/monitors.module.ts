@@ -38,6 +38,16 @@ import { CONSTANTS } from 'common/constant';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
+                    type: EventStoreSubscriptionType.Volatile,
+                    stream: '$stats-0.0.0.0:2113',
+                },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: '$stats-0.0.0.0:2113',
+                    persistentSubscriptionName: '$stats-0.0.0.0:2113' + '-' + config.HOST,
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
+                {
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: CONSTANTS.STREAM_NAME.MONITOR,
                     resolveLinkTos: true, // Default is true (Optional)
@@ -46,10 +56,6 @@ import { CONSTANTS } from 'common/constant';
                 {
                     type: EventStoreSubscriptionType.Volatile,
                     stream: CONSTANTS.STREAM_NAME.MONITOR,
-                },
-                {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: '$stats-0.0.0.0:2113',
                 },
                 {
                     type: EventStoreSubscriptionType.Persistent,

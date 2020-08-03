@@ -77,7 +77,7 @@ import { UserDto } from 'users/dtos/users.dto';
                 {
                     type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.REQUEST,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.PERMISSION + '-' + config.HOST,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.REQUEST + '-' + config.HOST,
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
