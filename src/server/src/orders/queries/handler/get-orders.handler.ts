@@ -109,7 +109,7 @@ export class GetOrdersHandler implements IQueryHandler<GetOrdersQuery> {
             for (const order of orders) {
                 const user = await this.userDtoRepository.findOne({ _id: order.userId?.toString() });
                 const project = await this.projectDtoRepository.findOne({ _id: order.token.projectId?.toString() });
-                const token = await this.tokenDtoRepository.findOne({ _id: order.token._id.toString() });
+                const token = await this.tokenDtoRepository.findOne({ _id: order.token._id?.toString() });
                 result.push({ ...order, username: user?.username, projectName: project?.name, tokenName: token?.name });
             }
 
