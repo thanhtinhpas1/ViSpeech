@@ -53,7 +53,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
             projects = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
             for (const project of projects) {
                 const user = await this.userDtoRepository.findOne({ _id: project.userId.toString() });
-                result.push({ ...project, ownerName: user.username });
+                result.push({ ...project, ownerName: user?.username });
             }
 
             const count = await getMongoRepository(ProjectDto).count(findOptions.where);
