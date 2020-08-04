@@ -128,13 +128,13 @@ const DocumentsPage = () => {
                   <code>
                     <span className="tag main-color">&lt;dependency&gt;</span>
                     <br />
-                    <span className="tag ml-4">&lt;groupId&gt;</span>com.asr.vietspeech
+                    <span className="tag ml-4">&lt;groupId&gt;</span>com.github.thanhtinhpas1
                     <span className="tag">&lt;&#47;groupId&gt;</span>
                     <br />
                     <span className="tag ml-4">&lt;artifactId&gt;</span>asr-vietspeech
                     <span className="tag">&lt;&#47;artifactId&gt;</span>
                     <br />
-                    <span className="tag ml-4">&lt;version&gt;</span>0.0.1
+                    <span className="tag ml-4">&lt;version&gt;</span>0.0.2
                     <span className="tag">&lt;&#47;version&gt;</span>
                     <br />
                     <span className="tag">&lt;&#47;dependency&gt;</span>
