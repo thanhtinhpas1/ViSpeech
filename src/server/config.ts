@@ -31,9 +31,11 @@ const configs = {
             options: {
                 maxRetries: 100, // Optional
                 maxReconnections: 100,  // Optional
-                reconnectionDelay: 100,  // Optional
+                reconnectionDelay: 5000,  // Optional
                 heartbeatInterval: 1000,  // Optional
-                heartbeatTimeout: 1000,  // Optional
+                heartbeatTimeout: 500,  // Optional
+                verboseLogging: true,
+                MaxDiscoverAttempts: 100000,
                 defaultUserCredentials: {
                     username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
                     password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
