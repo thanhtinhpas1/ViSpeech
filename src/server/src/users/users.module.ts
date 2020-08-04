@@ -68,10 +68,6 @@ import { UsersService } from './services/users.service';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: CONSTANTS.STREAM_NAME.USER,
-                },
-                {
                     type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.USER,
                     persistentSubscriptionName: CONSTANTS.STREAM_NAME.USER + '-' + config.HOST,
