@@ -65,10 +65,6 @@ import { CONSTANTS } from 'common/constant';
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
                 {
-                    type: EventStoreSubscriptionType.Volatile,
-                    stream: CONSTANTS.STREAM_NAME.REPORT,
-                },
-                {
                     type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.REPORT,
                     persistentSubscriptionName: CONSTANTS.STREAM_NAME.REPORT + '-' + config.HOST,

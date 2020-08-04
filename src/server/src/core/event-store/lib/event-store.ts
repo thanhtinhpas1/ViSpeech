@@ -406,12 +406,4 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     async bridgeEventsTo<T extends IEvent>(subject: Subject<T>): Promise<any> {
         this.subject$ = subject;
     }
-
-    addEventStore(mongoStore: MongoStore, catchupSubscriptions: any) {
-        this.store = mongoStore;
-        this.subscribeToCatchUpSubscriptions(
-            catchupSubscriptions as ESCatchUpSubscription[],
-            false,
-        );
-    }
 }
