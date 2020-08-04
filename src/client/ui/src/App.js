@@ -41,12 +41,19 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           'on'
         )
         console.debug(`${link.id} is loaded`)
-        // Load resource except login and register
+        // Load resources for landing page
         if (currentPath !== '/login' && currentPath !== '/register') {
           // load customer css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/color/default.css`,
             'customer-default.css',
+            'on'
+          )
+          console.debug(`${link.id} is loaded`)
+          // load customer css
+          link = await loadLink(
+            `${process.env.PUBLIC_URL}/assets/css/customer/owl-carousel/owl.carousel.min.css`,
+            'customer-owl.carousel.min.css',
             'on'
           )
           console.debug(`${link.id} is loaded`)
@@ -59,7 +66,7 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           console.debug(`${link.id} is loaded`)
           setIsCssLoaded(true)
         } else {
-          // load customer customer css
+          // load customer css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/style-1.css`,
             'customer-style-1.css',
@@ -76,31 +83,33 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         )
         console.debug(`${script.id} is loaded`)
         if (currentPath !== '/login' && currentPath !== '/register') {
-          if (currentPath === '/') {
-            script = await loadScript(
-              `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
-              'customer-particles.min.js',
-              'on'
-            )
-            console.debug(`${script.id} is loaded`)
-            script = await loadScript(
-              `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
-              'customer-particles-app.js',
-              'on'
-            )
-            console.debug(`${script.id} is loaded`)
-          }
-          console.debug(`${script.id} is loaded`)
-          // load customer js
+          // load script
           script = await loadScript(
-            `${process.env.PUBLIC_URL}/assets/js/customer/custom.js`,
-            'customer-custom.js',
+            `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
+            'customer-particles.min.js',
+            'on'
+          )
+          console.debug(`${script.id} is loaded`)
+          // load script
+          script = await loadScript(
+            `${process.env.PUBLIC_URL}/assets/js/customer/owl-carousel/owl.carousel.min.js`,
+            'customer-owl.carousel.min.js',
             'on'
           )
           console.debug(`${script.id} is loaded`)
         }
+        // load customer js
+        script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`, 'customer-custom.js', 'on')
+        console.debug(`${script.id} is loaded`)
+        // load script
+        script = await loadScript(
+          `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
+          'customer-particles-app.js',
+          'on'
+        )
+        console.debug(`${script.id} is loaded`)
       }
-      // Load when authorized
+
       if (currentUser) {
         if (isUserRole) {
           // load bootstrap css
@@ -156,8 +165,7 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           // load clipboard js
           script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', 'on')
           console.debug(`${script.id} is loaded`)
-          // TODO: verify this js for waht
-          // load script ?? js
+          // load script because of ClipboardJS
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
             'customer-scripta5f5.js',
@@ -208,7 +216,6 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           // load turbo js
           script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/admin/turbo.js`, 'admin-turbo.js', 'on')
           console.debug(`${script.id} is loaded`)
-          // TODO: verify this js for what
           // load script because of ClipboardJS
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/scripta5f5.js`,
@@ -231,7 +238,28 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       )
       console.debug(`${script.id} is ${status}`)
 
+      script = await loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
+        'customer-particles.min.js',
+        action
+      )
+      console.debug(`${script.id} is ${status}`)
+
+      script = await loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/owl-carousel/owl.carousel.min.js`,
+        'customer-owl.carousel.min.js',
+        action
+      )
+      console.debug(`${script.id} is ${status}`)
+
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`, 'customer-custom.js', action)
+      console.debug(`${script.id} is ${status}`)
+
+      script = await loadScript(
+        `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
+        'customer-particles-app.js',
+        action
+      )
       console.debug(`${script.id} is ${status}`)
 
       script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/all/clipboard.js`, 'all-clipboard.js', action)
@@ -280,6 +308,14 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         action
       )
       console.debug(`${link.id} is ${status}`)
+
+      link = await loadLink(
+        `${process.env.PUBLIC_URL}/assets/css/customer/owl-carousel/owl.carousel.min.css`,
+        'customer-owl.carousel.min.css',
+        action
+      )
+      console.debug(`${link.id} is ${status}`)
+
       link = await loadLink(`${process.env.PUBLIC_URL}/assets/css/customer/style-1.css`, 'customer-style-1.css', action)
       console.debug(`${link.id} is ${status}`)
 
