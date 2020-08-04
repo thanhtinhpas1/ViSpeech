@@ -39,21 +39,9 @@ import { CONSTANTS } from 'common/constant';
                 },
                 {
                     type: EventStoreSubscriptionType.CatchUp,
-                    stream: '$stats-127.0.0.1:2113',
-                    resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.CatchUp,
                     stream: CONSTANTS.STREAM_NAME.MONITOR,
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
-                },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: CONSTANTS.STREAM_NAME.MONITOR,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.MONITOR + '-' + config.HOST,
-                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {
