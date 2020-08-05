@@ -5,7 +5,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Form, Input, Button, Alert } from 'antd'
-import SocketService from '../../../../../services/socket.service'
+import SocketService from '../../../services/socket.service'
 import SocketUtils from '../../../utils/socket.util'
 import Utils from '../../../utils'
 import UserService from '../../../services/user.service'

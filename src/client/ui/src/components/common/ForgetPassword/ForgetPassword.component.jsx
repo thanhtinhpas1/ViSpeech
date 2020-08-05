@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Input, Button, Alert } from 'antd'
 import UserService from '../../../services/user.service'
-import SocketService from '../../../../../services/socket.service'
+import SocketService from '../../../services/socket.service'
 import SocketUtils from '../../../utils/socket.util'
 import Utils from '../../../utils'
 
