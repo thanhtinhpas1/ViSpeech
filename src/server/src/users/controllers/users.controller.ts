@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import {
     BadRequestException,
     Body,
@@ -23,7 +24,7 @@ import { FindUserQuery } from 'users/queries/impl/find-user.query';
 import { GetUsersQuery } from 'users/queries/impl/get-users.query';
 import { Utils } from 'utils';
 import { ProjectGuard } from '../../auth/guards/project.guard';
-import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
+import { ChangePasswordBody, UserDto, UserIdRequestParamsDto, ResetPasswordBody } from '../dtos/users.dto';
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { UsersService } from '../services/users.service';
 import { UserUtils } from 'utils/user.util';
@@ -34,6 +35,7 @@ import { GetUsernamesQuery } from 'users/queries/impl/get-usernames.query';
 export class UsersController {
     constructor(
         private readonly authService: AuthService,
+        private readonly jwtService: JwtService,
         private readonly usersService: UsersService,
     ) {
     }
@@ -142,6 +144,34 @@ export class UsersController {
         const streamId = Utils.getUuid();
         const emailToken = body.emailToken;
         return this.usersService.verifyEmail(streamId, emailToken);
+    }
+
+    /* Send Reset Password Email */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Send Reset Password Email'] })
+    @ApiResponse({ status: 200, description: 'Send Reset Password Email.' })
+    @Post('send-reset-password-email')
+    async sendResetPasswordEmail(@Body() body) {
+        const streamId = Utils.getUuid();
+        const email = body.email;
+        return this.usersService.sendResetPasswordEmail(streamId, email);
+    }
+
+    /* Reset Password */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Reset Password'] })
+    @ApiResponse({ status: 200, description: 'Reset Password.' })
+    @Post('reset-password')
+    async resetPassword(@Body() body: ResetPasswordBody) {
+        const streamId = Utils.getUuid();
+        const decodedEmailToken = this.jwtService.decode(body.emailToken);
+        if (!decodedEmailToken['id']) {
+            throw new NotAcceptableException();
+        }
+        body.userId = decodedEmailToken['id']
+        return this.usersService.resetPassword(streamId, body);
     }
 
     /* List Users */

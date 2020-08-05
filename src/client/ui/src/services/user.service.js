@@ -427,8 +427,9 @@ export default class UserService {
       })
   }
 
-  static sendEmailResetPassword = email => {
-    const api = `${apiUrl}/user/send-email-reset-password`
+  static sendResetPasswordEmail = email => {
+    const api = `${apiUrl}/users/send-reset-password-email`
+
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
@@ -446,7 +447,7 @@ export default class UserService {
       })
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
-        if (status !== 200) {
+        if (status !== 201) {
           throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
@@ -457,15 +458,16 @@ export default class UserService {
       })
   }
 
-  static resetPassword = ({ password, userId }) => {
-    const api = `${apiUrl}/user/reset-password`
+  static resetPassword = ({ password, resetPasswordToken }) => {
+    const api = `${apiUrl}/users/reset-password`
+
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
       method: 'POST',
       body: JSON.stringify({
         password,
-        userId,
+        emailToken: resetPasswordToken,
       }),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -477,7 +479,7 @@ export default class UserService {
       })
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
-        if (status !== 200) {
+        if (status !== 201) {
           throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
@@ -521,33 +523,4 @@ export default class UserService {
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
-
-  // static updateAvatar = ({ avatar, token }) => {
-  //   const api = `${apiUrl}/user/update-avatar`
-  //   let status = 400
-  //   // eslint-disable-next-line no-undef
-  //   return fetch(api, {
-  //     method: 'POST',
-  //     body: JSON.stringify({
-  //       avatar,
-  //     }),
-  //     headers: {
-  //       'Content-type': 'application/json; charset=UTF-8',
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then(response => {
-  //       status = response.status
-  //       return response.json()
-  //     })
-  //     .then(result => {
-  //       if (status !== 200) {
-  //         throw new Error(result.message)
-  //       }
-  //       return result
-  //     })
-  //     .catch(err => {
-  //       throw err
-  //     })
-  // }
 }

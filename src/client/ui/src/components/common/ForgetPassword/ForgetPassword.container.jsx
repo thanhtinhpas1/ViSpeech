@@ -1,16 +1,23 @@
-// import { connect } from 'react-redux'
-// import FogetPasswordComponent from './ForgetPassword.component'
-// import { onClearUserState, sendEmailResetPassword } from '../../../redux/user/user.actions'
+import { connect } from 'react-redux'
+import ForgetPassword from './ForgetPassword.component'
+import {
+  onClearUserState,
+  sendResetPasswordEmail,
+  sendResetPasswordEmailSuccess,
+  sendResetPasswordEmailFailure,
+} from '../../../redux/user/user.actions'
 
-// const mapStateToProps = state => ({
-//   resetPassword: state.user.resetPassword,
-// })
+const mapStateToProps = state => ({
+  sendResetPasswordEmailObj: state.user.sendResetPasswordEmail,
+})
 
-// const mapDispatchToProps = dispath => ({
-//   onClearUserState: () => dispath(onClearUserState()),
-//   sendEmailResetPassword: email => dispath(sendEmailResetPassword(email)),
-// })
+const mapDispatchToProps = dispatch => ({
+  onClearUserState: () => dispatch(onClearUserState()),
+  sendResetPasswordEmail: email => dispatch(sendResetPasswordEmail(email)),
+  sendResetPasswordEmailSuccess: () => dispatch(sendResetPasswordEmailSuccess()),
+  sendResetPasswordEmailFailure: message => dispatch(sendResetPasswordEmailFailure(message)),
+})
 
-// const ForgetPasswordContainer = connect(mapStateToProps, mapDispatchToProps)(FogetPasswordComponent)
+const ForgetPasswordContainer = connect(mapStateToProps, mapDispatchToProps)(ForgetPassword)
 
-// export default ForgetPasswordContainer
+export default ForgetPasswordContainer

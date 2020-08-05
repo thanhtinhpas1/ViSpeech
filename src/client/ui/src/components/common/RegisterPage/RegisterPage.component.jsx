@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Alert, Button } from 'antd'
+import { Alert, Button, Form, Input } from 'antd'
 import { ROLES, USER_TYPE, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../utils/constant'
 import SocketService from '../../../services/socket.service'
 import UserService from '../../../services/user.service'
@@ -14,6 +14,7 @@ const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSuccess, registerFailure }) => {
+  const [form] = Form.useForm()
   const history = useHistory()
   const loadingRef = useRef(registerObj.isLoading)
   loadingRef.current = registerObj.isLoading
@@ -45,16 +46,14 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
     return () => clearTimeout(timer)
   }, [registerObj, registerFailure])
 
-  const handleOnSubmit = async e => {
-    e.preventDefault()
-
-    const form = e.target
+  const onSubmit = async values => {
+    const { username, email, lastName, firstName, password } = values
     const user = {
-      username: form.elements.username.value,
-      email: form.elements.email.value,
-      lastName: form.elements.lastName.value,
-      firstName: form.elements.firstName.value,
-      password: form.elements.password.value,
+      username,
+      email,
+      lastName,
+      firstName,
+      password,
       roles: [{ name: ROLES.USER }],
       userType: USER_TYPE.NORMAL,
     }
@@ -96,40 +95,96 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                 style={{ marginBottom: '20px' }}
               />
             )}
-            <form onSubmit={e => handleOnSubmit(e)}>
-              <div className="input-item">
-                <input type="text" placeholder="Tên đăng nhập" className="input-bordered" name="username" required />
-              </div>
-              <div className="input-item">
-                <input type="email" placeholder="Email" className="input-bordered" name="email" required />
-              </div>
-              <div className="input-item">
-                <input type="text" placeholder="Họ" className="input-bordered" name="lastName" />
-              </div>
-              <div className="input-item">
-                <input type="text" placeholder="Tên" className="input-bordered" name="firstName" required />
-              </div>
-              <div className="input-item">
-                <input type="password" placeholder="Mật khẩu" className="input-bordered" name="password" required />
-              </div>
-              {/* <div className="input-item text-left"> */}
-              {/* <input className="input-checkbox input-checkbox-md" id="term-condition" type="checkbox" required />
-                <label htmlFor="term-condition">
-                  Tôi đồng ý với
-                  <a href="#"> Điều khoản và</a> &amp;
-                  <a href="#"> Quy định.</a>
-                </label> */}
-              {/* </div> */}
-              <Button
-                htmlType="submit"
-                loading={registerObj.isLoading}
-                type="primary"
-                size="large"
-                className="btn-block"
+            <Form form={form} onFinish={onSubmit}>
+              <Form.Item
+                name="username"
+                placeholder="Tên đăng nhập"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập tên đăng nhập!',
+                  },
+                ]}
               >
-                Đăng ký
-              </Button>
-            </form>
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                placeholder="Email"
+                hasFeedback
+                rules={[
+                  { type: 'email', message: 'Email không hợp lệ!' },
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập email!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item name="lastName" placeholder="Họ" hasFeedback rules={[]}>
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="firstName"
+                placeholder="Tên"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập tên!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập mật khẩu!',
+                  },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                name="confirmedPassword"
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng xác nhận mật khẩu!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(rule, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve()
+                      }
+                      // eslint-disable-next-line prefer-promise-reject-errors
+                      return Promise.reject('Mật khẩu không khớp. Vui lòng nhập lại!')
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  loading={registerObj.isLoading}
+                  type="primary"
+                  size="large"
+                  className="btn-block"
+                >
+                  Cập nhật
+                </Button>
+              </Form.Item>
+            </Form>
             <div className="gaps-2x" />
             <div className="gaps-2x" />
             <div className="form-note">

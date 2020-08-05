@@ -73,13 +73,15 @@ const INITIAL_STATE = {
     isLoading: false,
     message: null,
   },
-  // reducer for send email reset password + check token in email + reset password
+  sendResetPasswordEmail: {
+    isSuccess: null,
+    isLoading: false,
+    message: null,
+  },
   resetPassword: {
     isSuccess: null,
-    isLoading: null,
+    isLoading: false,
     message: null,
-    isTokenTrue: null,
-    userId: null,
   },
   changePassword: {
     isSuccess: null,
@@ -500,63 +502,35 @@ const userReducer = (state = INITIAL_STATE, action) => {
           message: action.payload,
         },
       }
-    // reset password
-    case UserTypes.SEND_EMAIL_RESET_PASSWORD:
+    // SEND RESET PASSWORD EMAIL
+    case UserTypes.SEND_RESET_PASSWORD_EMAIL:
       return {
         ...state,
-        resetPassword: {
-          ...INITIAL_STATE.resetPassword,
+        sendResetPasswordEmail: {
+          ...INITIAL_STATE.sendResetPasswordEmail,
           isLoading: true,
         },
       }
-    case UserTypes.SEND_EMAIL_RESET_PASSWORD_SUCCESS:
+    case UserTypes.SEND_RESET_PASSWORD_EMAIL_SUCCESS:
       return {
         ...state,
-        resetPassword: {
-          ...INITIAL_STATE.resetPassword,
+        sendResetPasswordEmail: {
+          ...INITIAL_STATE.sendResetPasswordEmail,
           isLoading: false,
           isSuccess: true,
         },
       }
-    case UserTypes.SEND_EMAIL_RESET_PASSWORD_FAILURE:
+    case UserTypes.SEND_RESET_PASSWORD_EMAIL_FAILURE:
       return {
         ...state,
-        resetPassword: {
-          ...INITIAL_STATE.resetPassword,
+        sendResetPasswordEmail: {
+          ...INITIAL_STATE.sendResetPasswordEmail,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
         },
       }
-    // Verify token reset password
-    case UserTypes.VERIFY_TOKEN_RESET_PASSWORD:
-      return {
-        ...state,
-        resetPassword: {
-          ...INITIAL_STATE.resetPassword,
-          isLoading: true,
-        },
-      }
-    case UserTypes.VERIFY_TOKEN_RESET_PASSWORD_SUCCESS:
-      return {
-        ...state,
-        resetPassword: {
-          ...INITIAL_STATE.resetPassword,
-          isLoading: false,
-          isTokenTrue: true,
-          userId: action.payload,
-        },
-      }
-    case UserTypes.VERIFY_TOKEN_RESET_PASSWORD_FAILURE:
-      return {
-        ...state,
-        resetPassword: {
-          ...INITIAL_STATE.resetPassword,
-          isLoading: false,
-          isTokenTrue: false,
-        },
-      }
-    // reset password
+    // RESET PASSWORD
     case UserTypes.RESET_PASSWORD:
       return {
         ...state,

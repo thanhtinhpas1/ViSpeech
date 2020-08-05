@@ -1,21 +1,23 @@
-// import { connect } from 'react-redux'
-// import {
-//   onClearUserState,
-//   verifyTokenResetPassword,
-//   resetPasswordStart,
-// } from '../../../redux/user/user.actions'
-// import ResetPasswordComponent from './ResetPassword.component'
+import { connect } from 'react-redux'
+import {
+  onClearUserState,
+  resetPassword,
+  resetPasswordSuccess,
+  resetPasswordFailure,
+} from '../../../redux/user/user.actions'
+import ResetPassword from './ResetPassword.component'
 
-// const mapStateToProps = state => ({
-//   resetPassword: state.user.resetPassword,
-// })
+const mapStateToProps = state => ({
+  resetPasswordObj: state.user.resetPassword,
+})
 
-// const mapDispatchToProps = dispath => ({
-//   onClearUserState: () => dispath(onClearUserState()),
-//   verifyTokenResetPassword: token => dispath(verifyTokenResetPassword(token)),
-//   resetPasswordStart: (password, userId) => dispath(resetPasswordStart(password, userId)),
-// })
+const mapDispatchToProps = dispatch => ({
+  onClearUserState: () => dispatch(onClearUserState()),
+  resetPassword: (userId, password, token) => dispatch(resetPassword(userId, password, token)),
+  resetPasswordSuccess: () => dispatch(resetPasswordSuccess()),
+  resetPasswordFailure: message => dispatch(resetPasswordFailure(message)),
+})
 
-// const ResetPasswordContainer = connect(mapStateToProps, mapDispatchToProps)(ResetPasswordComponent)
+const ResetPasswordContainer = connect(mapStateToProps, mapDispatchToProps)(ResetPassword)
 
-// export default ResetPasswordContainer
+export default ResetPasswordContainer

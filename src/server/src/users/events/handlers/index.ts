@@ -17,6 +17,12 @@ import {
     EmailVerifiedHandler,
     EmailVerifiedSuccessHandler
 } from './email-verified.handler';
+import {
+    ResetPasswordEmailSentHandler,
+    ResetPasswordEmailSentSuccessHandler,
+    ResetPasswordEmailSentFailedHandler
+} from './reset-password-email-sent.handler';
+import { PasswordResetHandler, PasswordResetSuccessHandler, PasswordResetFailedHandler } from './password-reset.handler';
 
 export const EventHandlers = [
     // create
@@ -50,5 +56,15 @@ export const EventHandlers = [
     // verify email
     EmailVerifiedHandler,
     EmailVerifiedSuccessHandler,
-    EmailVerifiedFailedHandler
+    EmailVerifiedFailedHandler,
+
+    // send reset password email
+    ResetPasswordEmailSentHandler,
+    ResetPasswordEmailSentSuccessHandler,
+    ResetPasswordEmailSentFailedHandler,
+
+    // reset password
+    PasswordResetHandler,
+    PasswordResetSuccessHandler,
+    PasswordResetFailedHandler,
 ];

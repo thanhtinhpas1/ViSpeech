@@ -7,6 +7,8 @@ import { UserWelcomedEvent } from 'users/events/impl/user-welcomed.event';
 import { VerifyEmailSentEvent } from 'users/events/impl/verify-email-sent.event';
 import { EmailVerifiedEvent } from 'users/events/impl/email-verified.event';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { ResetPasswordEmailSentEvent } from 'users/events/impl/reset-password-email-sent.event';
+import { PasswordResetEvent } from 'users/events/impl/password-reset.event';
 
 export class User extends AggregateRoot {
     [x: string]: any;
@@ -41,6 +43,14 @@ export class User extends AggregateRoot {
 
     verifyEmail(streamId: string) {
         this.apply(new EmailVerifiedEvent(streamId, this.data));
+    }
+
+    sendResetPasswordEmail(streamId: string) {
+        this.apply(new ResetPasswordEmailSentEvent(streamId, this.data));
+    }
+
+    resetPassword(streamId: string) {
+        this.apply(new PasswordResetEvent(streamId, this.data));
     }
 
     welcomeUser(streamId: string) {

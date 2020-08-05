@@ -27,6 +27,12 @@ import {
     PasswordChangedFailedEvent,
     PasswordChangedSuccessEvent,
 } from './events/impl/password-changed.event';
+import { PasswordResetEvent, PasswordResetSuccessEvent, PasswordResetFailedEvent } from './events/impl/password-reset.event';
+import {
+    ResetPasswordEmailSentEvent,
+    ResetPasswordEmailSentSuccessEvent,
+    ResetPasswordEmailSentFailedEvent
+} from './events/impl/reset-password-email-sent.event';
 import {
     UserCreatedEvent,
     UserCreatedFailedEvent,
@@ -184,5 +190,13 @@ export class UsersModule implements OnModuleInit, OnModuleDestroy {
         EmailVerifiedEvent: (streamId, data) => new EmailVerifiedEvent(streamId, data),
         EmailVerifiedSuccessEvent: (streamId, emailToken, newToken) => new EmailVerifiedSuccessEvent(streamId, emailToken, newToken),
         EmailVerifiedFailedEvent: (streamId, data, error) => new EmailVerifiedFailedEvent(streamId, data, error),
+        // send reset password email
+        ResetPasswordEmailSentEvent: (streamId, data) => new ResetPasswordEmailSentEvent(streamId, data),
+        ResetPasswordEmailSentSuccessEvent: (streamId, data) => new ResetPasswordEmailSentSuccessEvent(streamId, data),
+        ResetPasswordEmailSentFailedEvent: (streamId, data, error) => new ResetPasswordEmailSentFailedEvent(streamId, data, error),
+        // reset password
+        PasswordResetEvent: (streamId, data) => new PasswordResetEvent(streamId, data),
+        PasswordResetSuccessEvent: (streamId, data) => new PasswordResetSuccessEvent(streamId, data),
+        PasswordResetFailedEvent: (streamId, data, error) => new PasswordResetFailedEvent(streamId, data, error),
     };
 }

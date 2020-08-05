@@ -29,6 +29,20 @@ export class ChangePasswordBody {
     readonly newPassword;
 }
 
+export class ResetPasswordBody {
+    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
+    userId: string;
+
+    @IsNotEmpty(ErrorUtils.getMessage('password', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('password', ERR.IsString))
+    readonly password;
+
+    @IsNotEmpty(ErrorUtils.getMessage('emailToken', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('emailToken', ERR.IsString))
+    readonly emailToken;
+}
+
 export enum USER_TYPE {
     NORMAL = 'NORMAL',
     FACEBOOK = 'FACEBOOK',

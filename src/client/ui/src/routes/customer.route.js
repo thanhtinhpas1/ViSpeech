@@ -23,6 +23,8 @@ import TrialDetailsPage from '../components/customer/TrialDetailsPage/TrialDetai
 import UpgradeTokenPage from '../components/customer/UpgradeTokenPage/UpgradeTokenPage.container'
 import RequestsPage from '../components/customer/RequestsPage/RequestsPage.container'
 import DocumentsPage from '../components/customer/DocumentsPage/DocumentsPage.component'
+import ForgetPasswordPage from '../components/common/ForgetPassword/ForgetPassword.container'
+import ResetPasswordPage from '../components/common/ResetPassword/ResetPassword.container'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -78,6 +80,12 @@ const RouteCustomer = ({ currentUser }) => {
             </Route>
             <Route path={`${CUSTOMER_PATH}/requests`}>
               <RequestsPage />
+            </Route>
+            <Route path={`${CUSTOMER_PATH}/forget-password`}>
+              <ForgetPasswordPage />
+            </Route>
+            <Route path={`${CUSTOMER_PATH}/reset-password`}>
+              <ResetPasswordPage />
             </Route>
             <Route exact path={CUSTOMER_PATH}>
               <CustomerHomePage />

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ChangePasswordBody, UserDto } from 'users/dtos/users.dto';
+import { ChangePasswordBody, UserDto, ResetPasswordBody } from 'users/dtos/users.dto';
 import { User } from '../models/user.model';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 
@@ -48,6 +48,20 @@ export class UserRepository {
         const user = new User(streamId);
         user.setData(emailToken);
         user.verifyEmail(streamId);
+        return user;
+    }
+
+    async sendResetPasswordEmail(streamId: string, email: string) {
+        const user = new User(undefined);
+        user.setData(email);
+        user.sendResetPasswordEmail(streamId);
+        return user;
+    }
+
+    async resetPassword(streamId: string, resetPasswordBody: ResetPasswordBody) {
+        const user = new User(undefined);
+        user.setData(resetPasswordBody);
+        user.resetPassword(streamId);
         return user;
     }
 }

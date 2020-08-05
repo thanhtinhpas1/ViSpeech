@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ChangePasswordBody, UserDto, UserIdRequestParamsDto } from '../dtos/users.dto';
+import { ChangePasswordBody, UserDto, UserIdRequestParamsDto, ResetPasswordBody } from '../dtos/users.dto';
 import { UpdateUserCommand } from '../commands/impl/update-user.command';
 import { DeleteUserCommand } from '../commands/impl/delete-user.command';
 import { GetUsersQuery } from 'users/queries/impl/get-users.query';
@@ -11,6 +11,8 @@ import { SendVerifyEmailCommand } from 'users/commands/impl/send-verify-email.co
 import { CreateUserCommand } from '../commands/impl/create-user.command';
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { GetUsernamesQuery } from 'users/queries/impl/get-usernames.query';
+import { SendResetPasswordEmailCommand } from 'users/commands/impl/send-reset-password-email.command';
+import { ResetPasswordCommand } from 'users/commands/impl/reset-password.command';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +44,14 @@ export class UsersService {
 
     async changePassword(streamId: string, changePasswordBody: ChangePasswordBody) {
         return await this.commandBus.execute(new ChangePasswordCommand(streamId, changePasswordBody));
+    }
+
+    async sendResetPasswordEmail(streamId: string, email: string) {
+        return await this.commandBus.execute(new SendResetPasswordEmailCommand(streamId, email));
+    }
+
+    async resetPassword(streamId: string, resetPasswordBody: ResetPasswordBody) {
+        return await this.commandBus.execute(new ResetPasswordCommand(streamId, resetPasswordBody));
     }
 
     async getUsers(getUsersQuery: GetUsersQuery) {

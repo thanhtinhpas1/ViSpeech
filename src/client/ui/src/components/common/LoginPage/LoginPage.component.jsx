@@ -133,7 +133,7 @@ const LoginPage = ({
                   <label htmlFor="remember-me">Ghi nhớ tài khoản</label>
                 </div>
                 <div>
-                  <a href="/customer/forgot.html">Quên mật khẩu?</a>
+                  <a href="/forget-password">Quên mật khẩu?</a>
                   <div className="gaps-2x" />
                 </div>
               </div>

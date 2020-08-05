@@ -71,7 +71,7 @@ ${hostUrl}/verify-email/${token}`;
     },
     sendResetPasswordEmail: (name, to, token) => {
         const subject = 'Lấy lại mật khẩu';
-        const content = `Mời bạn truy cập đường dẫn dưới đây để thay đổi mật khẩu:<br>
+        const content = `Mời bạn truy cập đường dẫn dưới đây để lấy lại mật khẩu:<br>
 ${hostUrl}/reset-password/${token}`;
         return sendEmail(to, subject, getHtmlEmailContent(name, content, 'yêu cầu lấy lại mật khẩu',
             CONSTANTS.TOKEN_EXPIRATION.RESET_PASSWORD));

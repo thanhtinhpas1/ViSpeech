@@ -32,6 +32,10 @@ const SocketUtils = {
     USER_UPDATED_FAILED_EVENT: 'UserUpdatedFailedEvent',
     VERIFY_EMAIL_SENT_SUCCESS_EVENT: 'VerifyEmailSentSuccessEvent',
     VERIFY_EMAIL_SENT_FAILED_EVENT: 'VerifyEmailSentFailedEvent',
+    RESET_PASSWORD_EMAIL_SENT_SUCCESS_EVENT: 'ResetPasswordEmailSentSuccessEvent',
+    RESET_PASSWORD_EMAIL_SENT_FAILED_EVENT: 'ResetPasswordEmailSentFailedEvent',
+    PASSWORD_RESET_SUCCESS_EVENT: 'PasswordResetSuccessEvent',
+    PASSWORD_RESET_FAILED_EVENT: 'PasswordResetFailedEvent',
     // TOKEN
     FREE_TOKEN_CREATED_SUCCESS_EVENT: 'FreeTokenCreatedSuccessEvent',
     FREE_TOKEN_CREATED_FAILED_EVENT: 'FreeTokenCreatedFailedEvent',
