@@ -24,7 +24,26 @@ import { UsersModule } from './users/users.module';
             useUnifiedTopology: true,
             entities: [__dirname + '/../**/*.dto{.ts,.js}'],
         }),
-        EventStoreModule.register(config.EVENTSTORE),
+        EventStoreModule.register({
+            tcpEndpoint: {
+                host: process.env.EVENT_STORE_HOSTNAME || '0.0.0.0',
+                port: 1113,
+            },
+            options: {
+                maxRetries: 100, // Optional
+                maxReconnections: 10,  // Optional
+                reconnectionDelay: 5000,  // Optional
+                heartbeatInterval: 1000,  // Optional
+                heartbeatTimeout: 500,  // Optional
+                verboseLogging: true,
+                maxDiscoverAttempts: 100000,
+                failOnNoServerResponse: true,
+                defaultUserCredentials: {
+                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
+                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+                },
+            },
+        }),
         UsersModule,
         AuthModule,
         ProjectsModule,

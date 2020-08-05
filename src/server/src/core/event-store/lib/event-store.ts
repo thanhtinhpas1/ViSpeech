@@ -30,6 +30,7 @@ import {
     ProvidersConstants,
 } from './contract';
 import { NestjsEventStore } from './nestjs-event-store.class';
+import { PersistentSubscriptionOptions } from 'geteventstore-promise';
 
 /**
  * @class EventStore
@@ -82,11 +83,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
 
         const volatileSubscriptions = esStreamConfig.subscriptions.filter((sub) => {
             return sub.type === EventStoreSubscriptionType.Volatile;
-        })
-
-        this.createPersistentSubscriptions(
-            persistentSubscriptions as ESPersistentSubscription[],
-        );
+        });
 
         this.subscribeToCatchUpSubscriptions(
             catchupSubscriptions as ESCatchUpSubscription[],
@@ -280,11 +277,22 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         try {
             this.logger.log(`
        Created persistent subscription ${subscriptionName} on stream ${stream}!`);
-
             const result = await this.eventStore.getConnection().createPersistentSubscription(
                 stream,
                 subscriptionName,
-                {},
+                {
+                    readBatchSize: 10024,
+                    historyBufferSize: 100024,
+                    liveBufferSize: 100024,
+                    maxRetryCount: 10,
+                    checkPointAfter: 0,
+                    startFrom: 0,
+                    resolveLinkTo: true,
+                    minCheckPointCount: 10,
+                    maxCheckPointCount: 10000,
+                    maxSubscriberCount: 10,
+                    messageTimeout: 10000,
+                } as PersistentSubscriptionOptions,
             );
 
             return result.status;
@@ -343,9 +351,9 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             Logger.log(`EventStore write event ${eventType}`);
             // monitor log case event
             if (eventType === '$statsCollected') {
-                this.subject$.next(this.eventHandlers[eventType](v4(), rawData));
+                this.subject$?.next(this.eventHandlers[eventType](v4(), rawData));
             } else {
-                this.subject$.next(this.eventHandlers[eventType](...data));
+                this.subject$?.next(this.eventHandlers[eventType](...data));
             }
             if (this.store) {
                 if (this.store && _subscription.constructor.name === 'EventStoreStreamCatchUpSubscription') {
