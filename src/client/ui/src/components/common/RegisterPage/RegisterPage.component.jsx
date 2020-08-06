@@ -98,7 +98,6 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
             <Form form={form} onFinish={onSubmit}>
               <Form.Item
                 name="username"
-                placeholder="Tên đăng nhập"
                 hasFeedback
                 rules={[
                   {
@@ -107,11 +106,10 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input />
+                <Input size="large" placeholder="Tên đăng nhập" />
               </Form.Item>
               <Form.Item
                 name="email"
-                placeholder="Email"
                 hasFeedback
                 rules={[
                   { type: 'email', message: 'Email không hợp lệ!' },
@@ -121,14 +119,13 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input />
+                <Input size="large" placeholder="Email" />
               </Form.Item>
-              <Form.Item name="lastName" placeholder="Họ" hasFeedback rules={[]}>
-                <Input />
+              <Form.Item name="lastName" hasFeedback rules={[]}>
+                <Input size="large" placeholder="Họ" />
               </Form.Item>
               <Form.Item
                 name="firstName"
-                placeholder="Tên"
                 hasFeedback
                 rules={[
                   {
@@ -137,7 +134,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input />
+                <Input size="large" placeholder="Tên" />
               </Form.Item>
               <Form.Item
                 name="password"
@@ -149,7 +146,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input.Password />
+                <Input.Password size="large" placeholder="Mật khẩu" />
               </Form.Item>
               <Form.Item
                 name="confirmedPassword"
@@ -158,7 +155,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                 rules={[
                   {
                     required: true,
-                    message: 'Vui lòng xác nhận mật khẩu!',
+                    message: 'Vui lòng nhập lại mật khẩu!',
                   },
                   ({ getFieldValue }) => ({
                     validator(rule, value) {
@@ -171,7 +168,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   }),
                 ]}
               >
-                <Input.Password />
+                <Input.Password size="large" placeholder="Nhập lại mật khẩu" />
               </Form.Item>
               <Form.Item>
                 <Button
@@ -181,11 +178,10 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   size="large"
                   className="btn-block"
                 >
-                  Cập nhật
+                  Đăng ký
                 </Button>
               </Form.Item>
             </Form>
-            <div className="gaps-2x" />
             <div className="gaps-2x" />
             <div className="form-note">
               Đã có tài khoản?

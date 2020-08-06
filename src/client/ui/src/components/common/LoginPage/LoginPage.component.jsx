@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useRef } from 'react'
-import { Alert, Button } from 'antd'
+import { Alert, Button, Form, Input } from 'antd'
 import Utils from '../../../utils'
 import { JWT_TOKEN, DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS } from '../../../utils/constant'
 import STORAGE from '../../../utils/storage'
@@ -12,6 +12,7 @@ import UserService from '../../../services/user.service'
 import SocketUtils from '../../../utils/socket.util'
 import LoginWithGoogle from './components/LoginWithGoogle/LoginWithGoogle.container'
 import LoginWithFacebook from './components/LoginWithFacebook/LoginWithFacebook.container'
+import './LoginPage.style.scss'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { USER_CREATED_SUCCESS_EVENT, USER_CREATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -25,6 +26,7 @@ const LoginPage = ({
   loginWithSocialFailure,
   onClearUserState,
 }) => {
+  const [form] = Form.useForm()
   const loadingRef = useRef(loginWithSocialObj.isLoading)
   loadingRef.current = loginWithSocialObj.isLoading
 
@@ -37,13 +39,11 @@ const LoginPage = ({
     onClearUserState()
   }, [onClearUserState])
 
-  const handleOnSubmit = e => {
-    e.preventDefault()
-
-    const form = e.target
+  const onSubmit = values => {
+    const { username, password } = values
     const user = {
-      username: form.elements.username.value,
-      password: form.elements.password.value,
+      username,
+      password,
     }
 
     login(user)
@@ -93,7 +93,7 @@ const LoginPage = ({
 
   return (
     <>
-      <div className="page-ath-wrap">
+      <div className="page-ath-wrap login-page">
         <div className="page-ath-content">
           <div className="page-ath-header">
             <a href="/" className="page-ath-logo" style={{ fontSize: '2em', fontWeight: 'bold', letterSpacing: '1px' }}>
@@ -120,27 +120,55 @@ const LoginPage = ({
                 style={{ marginBottom: '20px' }}
               />
             )}
-            <form onSubmit={e => handleOnSubmit(e)}>
-              <div className="input-item">
-                <input type="text" placeholder="Tên đăng nhập" className="input-bordered" name="username" required />
-              </div>
-              <div className="input-item">
-                <input type="password" placeholder="Mật khẩu" className="input-bordered" name="password" required />
-              </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="input-item text-left">
+            <Form form={form} onFinish={onSubmit}>
+              <Form.Item
+                name="username"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập tên đăng nhập!',
+                  },
+                ]}
+              >
+                <Input size="large" placeholder="Tên đăng nhập" />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập mật khẩu!',
+                  },
+                ]}
+              >
+                <Input.Password size="large" placeholder="Mật khẩu" />
+              </Form.Item>
+              <div className="d-flex justify-content-end align-items-center">
+                {/* <div className="input-item text-left">
                   <input className="input-checkbox input-checkbox-md" id="remember-me" type="checkbox" />
                   <label htmlFor="remember-me">Ghi nhớ tài khoản</label>
-                </div>
+                </div> */}
                 <div>
-                  <a href="/forget-password">Quên mật khẩu?</a>
+                  <a href="/forget-password" style={{ fontSize: '15px' }}>
+                    Quên mật khẩu?
+                  </a>
                   <div className="gaps-2x" />
                 </div>
               </div>
-              <Button htmlType="submit" loading={loginObj.isLoading} type="primary" size="large" className="btn-block">
-                Đăng nhập
-              </Button>
-            </form>
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  loading={loginObj.isLoading}
+                  type="primary"
+                  size="large"
+                  className="btn-block"
+                >
+                  Đăng nhập
+                </Button>
+              </Form.Item>
+            </Form>
             <div className="sap-text">
               <span>Hoặc đăng nhập với</span>
             </div>

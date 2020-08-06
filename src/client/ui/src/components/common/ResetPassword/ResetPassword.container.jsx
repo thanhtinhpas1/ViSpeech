@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onClearUserState: () => dispatch(onClearUserState()),
-  resetPassword: (userId, password, token) => dispatch(resetPassword(userId, password, token)),
+  resetPassword: (password, token) => dispatch(resetPassword(password, token)),
   resetPasswordSuccess: () => dispatch(resetPasswordSuccess()),
   resetPasswordFailure: message => dispatch(resetPasswordFailure(message)),
 })

@@ -3,7 +3,8 @@ import { CONSTANTS } from 'common/constant';
 import nodemailer from 'nodemailer';
 import { config } from '../../config';
 
-const hostUrl = `${config.SMTP.SEND_FROM}/customer`;
+const hostUrl = `${config.SMTP.SEND_FROM}`;
+const hostCustomerUrl = `${hostUrl}/customer`;
 // const transport = nodemailer.createTransport({
 //     host: "smtp.gmail.com",
 //     port: 465,
@@ -48,7 +49,7 @@ const getHtmlEmailContent = (user, content, expireText, expiresIn) => {
 
 const sendEmail = (to, subject, contentEmail) => {
     const mailOptions = {
-        from: '"ViSpeech Team" <vispeech2020@gmail.com>',
+        from: '"VietSpeech Team" <vispeech2020@gmail.com>',
         to,
         subject,
         html: contentEmail
@@ -65,7 +66,7 @@ export const EmailUtils = {
     sendVerifyEmail: (name, to, token) => {
         const subject = 'Kích hoạt tài khoản';
         const content = `Mời bạn truy cập đường dẫn dưới đây để kích hoạt tài khoản:<br>
-${hostUrl}/verify-email/${token}`;
+${hostCustomerUrl}/verify-email/${token}`;
         return sendEmail(to, subject, getHtmlEmailContent(name, content, 'yêu cầu kích hoạt tài khoản',
             CONSTANTS.TOKEN_EXPIRATION.VERIFY_EMAIL));
     },
@@ -77,9 +78,9 @@ ${hostUrl}/reset-password/${token}`;
             CONSTANTS.TOKEN_EXPIRATION.RESET_PASSWORD));
     },
     sendInviteToJoinProjectEmail: (assigner, assignee, project, to, token) => {
-        const subject = 'Lời mời tham gia project';
+        const subject = 'Lời mời tham gia dự án';
         const content = `Người dùng có username <strong>${assigner}</strong>
- mời bạn tham gia dự án "${project}". Truy cập đường dẫn dưới đây để phản hồi:<br>${hostUrl}/reply-permission-assign/${token}`;
+ mời bạn tham gia dự án "${project}". Truy cập đường dẫn dưới đây để phản hồi:<br>${hostCustomerUrl}/reply-permission-assign/${token}`;
         return sendEmail(to, subject, getHtmlEmailContent(assignee, content,
             'lời mời tham gia dự án', CONSTANTS.TOKEN_EXPIRATION.REPLY_PERMISSION_ASSIGN));
     },

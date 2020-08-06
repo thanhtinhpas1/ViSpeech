@@ -30,7 +30,7 @@ export class ChangePasswordBody {
 }
 
 export class ResetPasswordBody {
-    @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
+    @IsOptional()
     @IsString(ErrorUtils.getMessage('userId', ERR.IsString))
     userId: string;
 

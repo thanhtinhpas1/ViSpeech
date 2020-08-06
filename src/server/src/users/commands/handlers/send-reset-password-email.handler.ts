@@ -5,6 +5,7 @@ import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
 import { VerifyEmailSentFailedEvent } from 'users/events/impl/verify-email-sent.event';
 import { SendResetPasswordEmailCommand } from '../impl/send-reset-password-email.command';
+import { ResetPasswordEmailSentFailedEvent } from 'users/events/impl/reset-password-email-sent.event';
 
 @CommandHandler(SendResetPasswordEmailCommand)
 export class SendResetPasswordEmailHandler implements ICommandHandler<SendResetPasswordEmailCommand> {
@@ -30,7 +31,7 @@ export class SendResetPasswordEmailHandler implements ICommandHandler<SendResetP
             );
             userModel.commit();
         } catch (error) {
-            this.eventBus.publish(new VerifyEmailSentFailedEvent(streamId, email, error));
+            this.eventBus.publish(new ResetPasswordEmailSentFailedEvent(streamId, email, error));
         }
     }
 }

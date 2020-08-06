@@ -78,6 +78,22 @@ export class UsersController {
         return this.usersService.changePassword(streamId, changePasswordBody);
     }
 
+    /* Reset Password */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Reset Password'] })
+    @ApiResponse({ status: 200, description: 'Reset Password.' })
+    @Put('reset-password')
+    async resetPassword(@Body() body: ResetPasswordBody) {
+        const streamId = Utils.getUuid();
+        const decodedEmailToken = this.jwtService.decode(body.emailToken);
+        if (!decodedEmailToken['id']) {
+            throw new NotAcceptableException();
+        }
+        body.userId = decodedEmailToken['id']
+        return this.usersService.resetPassword(streamId, body);
+    }
+
     /* Update User */
 
     /*--------------------------------------------*/
@@ -155,23 +171,10 @@ export class UsersController {
     async sendResetPasswordEmail(@Body() body) {
         const streamId = Utils.getUuid();
         const email = body.email;
-        return this.usersService.sendResetPasswordEmail(streamId, email);
-    }
-
-    /* Reset Password */
-
-    /*--------------------------------------------*/
-    @ApiOperation({ tags: ['Reset Password'] })
-    @ApiResponse({ status: 200, description: 'Reset Password.' })
-    @Post('reset-password')
-    async resetPassword(@Body() body: ResetPasswordBody) {
-        const streamId = Utils.getUuid();
-        const decodedEmailToken = this.jwtService.decode(body.emailToken);
-        if (!decodedEmailToken['id']) {
-            throw new NotAcceptableException();
+        if (!email) {
+            throw new BadRequestException();
         }
-        body.userId = decodedEmailToken['id']
-        return this.usersService.resetPassword(streamId, body);
+        return this.usersService.sendResetPasswordEmail(streamId, email);
     }
 
     /* List Users */

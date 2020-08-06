@@ -458,13 +458,13 @@ export default class UserService {
       })
   }
 
-  static resetPassword = ({ password, resetPasswordToken }) => {
+  static resetPassword = (password, resetPasswordToken) => {
     const api = `${apiUrl}/users/reset-password`
 
     let status = 400
     // eslint-disable-next-line no-undef
     return fetch(api, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify({
         password,
         emailToken: resetPasswordToken,
@@ -479,7 +479,7 @@ export default class UserService {
       })
       .then(result => {
         const resultObj = result ? JSON.parse(result) : {}
-        if (status !== 201) {
+        if (status !== 200) {
           throw new Error(DEFAULT_ERR_MESSAGE)
         }
         return resultObj
