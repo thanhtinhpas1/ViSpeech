@@ -36,6 +36,7 @@ export class TokenUpgradedHandler implements IEventHandler<TokenUpgradedEvent> {
             });
             this.eventBus.publish(new TokenUpgradedSuccessEvent(streamId, upgradedToken, tokenTypeDto));
         } catch (error) {
+            Logger.error(error.message)
             this.eventBus.publish(new TokenUpgradedFailedEvent(streamId, tokenDto, tokenTypeDto, error));
         }
     }

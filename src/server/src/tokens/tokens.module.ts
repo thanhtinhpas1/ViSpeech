@@ -212,15 +212,15 @@ export class TokensModule implements OnModuleInit, OnModuleDestroy {
             const tokenType500 = new TokenTypeDto(CONSTANTS.TOKEN_TYPE.TYPE_500_MINUTES, config.TOKEN_TYPE.TYPE_500_MINUTES,
                 config.TOKEN_TYPE.TYPE_500_PRICE);
             tokenType500._id = 'dc993053-ce94-11ea-a357-910a762c9e81';
-            await getMongoRepository(TokenTypeDto).insert(tokenTypeFree);
-            await getMongoRepository(TokenTypeDto).insert(tokenType50);
-            await getMongoRepository(TokenTypeDto).insert(tokenType200);
-            await getMongoRepository(TokenTypeDto).insert(tokenType500);
+            await getMongoRepository(TokenTypeDto).save(tokenTypeFree);
+            await getMongoRepository(TokenTypeDto).save(tokenType50);
+            await getMongoRepository(TokenTypeDto).save(tokenType200);
+            await getMongoRepository(TokenTypeDto).save(tokenType500);
         } catch (e) {
             if (e.message.includes('duplicate')) {
                 Logger.log('Token types existed.');
             }
-            Logger.warn('Something went wrong when seeding token types.');
+            Logger.warn('Something went wrong when seeding token types.', e.message);
         }
     }
 }

@@ -379,6 +379,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         error: Error,
     ) {
         subscription.isLive = false;
+        this.logger.error(_reason);
         this.logger.error('onDropped => ' + error);
     }
 

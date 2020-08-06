@@ -34,14 +34,13 @@ import { CONSTANTS } from 'common/constant';
                 {
                     type: EventStoreSubscriptionType.CatchUp,
                     stream: '$stats-0.0.0.0:2113',
-                    resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 0, // Default is 0 (Optional)
+                    resolveLinkTos: true,  // Default is true (Optional)
                 },
                 {
-                    type: EventStoreSubscriptionType.CatchUp,
+                    type: EventStoreSubscriptionType.Persistent,
                     stream: CONSTANTS.STREAM_NAME.MONITOR,
-                    resolveLinkTos: true, // Default is true (Optional)
-                    lastCheckpoint: 0, // Default is 0 (Optional)
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.MONITOR + '-' + config.HOST,
+                    resolveLinkTos: true,  // Default is true (Optional)
                 },
             ],
             eventHandlers: {

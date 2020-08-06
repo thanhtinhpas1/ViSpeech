@@ -30,12 +30,13 @@ const configs = {
             },
             options: {
                 maxRetries: 100, // Optional
-                maxReconnections: 100,  // Optional
+                maxReconnections: 10,  // Optional
                 reconnectionDelay: 5000,  // Optional
                 heartbeatInterval: 1000,  // Optional
                 heartbeatTimeout: 500,  // Optional
                 verboseLogging: true,
                 MaxDiscoverAttempts: 100000,
+                failOnNoServerResponse: true,
                 defaultUserCredentials: {
                     username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
                     password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
@@ -97,7 +98,7 @@ const configs = {
             TYPE_50_PRICE: process.env.TOKEN_50_PRICE || 5,
             TYPE_200_PRICE: process.env.TOKEN_200_PRICE || 10,
             TYPE_500_PRICE: process.env.TOKEN_500_PRICE || 20,
-            TYPE_FREE_MINUTES: process.env.TOKEN_FREE_MINUTES || 10,
+            TYPE_FREE_MINUTES: process.env.TOKEN_FREE_MINUTES || 50,
             TYPE_50_MINUTES: process.env.TOKEN_50_MINUTES || 50,
             TYPE_200_MINUTES: process.env.TOKEN_200_MINUTES || 200,
             TYPE_500_MINUTES: process.env.TOKEN_500_MINUTES || 500,
