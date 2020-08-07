@@ -43,9 +43,8 @@ io.sockets.on('connection', async socket => {
 
   consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log(`====== start ======`)
+      console.log(`======================`)
       console.log(`RECEIVE TOPIC ${topic}`)
-      console.log(`======= end =======`)
       socket.emit(topic, message.value);
     },
   }).catch(err => console.error(err.message));

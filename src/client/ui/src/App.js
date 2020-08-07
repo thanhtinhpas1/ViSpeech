@@ -17,6 +17,8 @@ import LoginPage from './components/common/LoginPage/LoginPage.container'
 import RegisterPage from './components/common/RegisterPage/RegisterPage.container'
 import NotFound404 from './components/common/NotFound404/NotFound404.component'
 import LoadingIcon from './components/common/LoadingIcon/LoadingIcon.component'
+import ForgetPasswordPage from './components/common/ForgetPassword/ForgetPassword.container'
+import ResetPasswordPage from './components/common/ResetPassword/ResetPassword.container'
 import './App.css'
 
 const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
@@ -34,6 +36,8 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
       setIsAdmin(isAdminRole)
 
       if (!currentUser || invalidUser) {
+        const isLandingPage =
+          !['/login', '/register', '/forget-password'].includes(currentPath) && !currentPath.includes('/reset-password')
         // load bootstrap css
         let link = await loadLink(
           `${process.env.PUBLIC_URL}/assets/css/customer/bootstrap.min.css`,
@@ -42,7 +46,7 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
         )
         console.debug(`${link.id} is loaded`)
         // Load resources for landing page
-        if (currentPath !== '/login' && currentPath !== '/register') {
+        if (isLandingPage) {
           // load customer css
           link = await loadLink(
             `${process.env.PUBLIC_URL}/assets/css/customer/color/default.css`,
@@ -82,7 +86,7 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
           'on'
         )
         console.debug(`${script.id} is loaded`)
-        if (currentPath !== '/login' && currentPath !== '/register') {
+        if (isLandingPage) {
           // load script
           script = await loadScript(
             `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles.min.js`,
@@ -97,17 +101,21 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
             'on'
           )
           console.debug(`${script.id} is loaded`)
+          // load script
+          script = await loadScript(
+            `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
+            'customer-particles-app.js',
+            'on'
+          )
+          console.debug(`${script.id} is loaded`)
+          // load customer js
+          script = await loadScript(
+            `${process.env.PUBLIC_URL}/assets/js/customer/custom.js`,
+            'customer-custom.js',
+            'on'
+          )
+          console.debug(`${script.id} is loaded`)
         }
-        // load customer js
-        script = await loadScript(`${process.env.PUBLIC_URL}/assets/js/customer/custom.js`, 'customer-custom.js', 'on')
-        console.debug(`${script.id} is loaded`)
-        // load script
-        script = await loadScript(
-          `${process.env.PUBLIC_URL}/assets/js/customer/particles/particles-app.js`,
-          'customer-particles-app.js',
-          'on'
-        )
-        console.debug(`${script.id} is loaded`)
       }
 
       if (currentUser) {
@@ -419,6 +427,12 @@ const App = ({ currentUser, updateCurrentUserOnAuthenticate }) => {
               </Route>
               <Route path="/register">
                 <RegisterPage />
+              </Route>
+              <Route path="/forget-password">
+                <ForgetPasswordPage />
+              </Route>
+              <Route path="/reset-password/:emailToken">
+                <ResetPasswordPage />
               </Route>
               <Route path="*">
                 <Redirect to="/404" />

@@ -42,7 +42,7 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
 
     resetPassword({ newPassword, emailToken })
     try {
-      await UserService.resetPassword({ newPassword, emailToken })
+      await UserService.resetPassword(newPassword, emailToken)
       const unsubscribe$ = invokeCheckSubject.PasswordReset.subscribe(data => {
         if (data.error != null) {
           resetPasswordFailure(data.errorObj)
@@ -91,9 +91,6 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
               )}
               <div className="row">
                 <div className="col-md-12">
-                  <label htmlFor="newPassword" className="input-item-label">
-                    Mật khẩu mới
-                  </label>
                   <Form.Item
                     name="newPassword"
                     hasFeedback
@@ -104,13 +101,10 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
                       },
                     ]}
                   >
-                    <Input.Password />
+                    <Input.Password placeholder="Nhập mật khẩu mới" size="large" />
                   </Form.Item>
                 </div>
                 <div className="col-md-12">
-                  <label htmlFor="confirmedNewPassword" className="input-item-label">
-                    Xác nhận mật khẩu mới
-                  </label>
                   <Form.Item
                     name="confirmedNewPassword"
                     dependencies={['newPassword']}
@@ -131,7 +125,7 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
                       }),
                     ]}
                   >
-                    <Input.Password />
+                    <Input.Password placeholder="Xác nhận mật khẩu mới" size="large" />
                   </Form.Item>
                 </div>
                 <div className="col-md-12 d-sm-flex justify-content-between align-items-center">
@@ -143,19 +137,23 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
                 </div>
               </div>
             </Form>
+            <div>
+              <div className="gaps-4x" />
+              <a href="/login">Về trang đăng nhập</a>
+            </div>
+          </div>
+          <div className="page-ath-footer">
+            <ul className="footer-links">
+              <li>© 2020 VietSpeech.</li>
+              <li>Sponsored by SendGrid</li>
+            </ul>
           </div>
         </div>
-        <div className="page-ath-footer">
-          <ul className="footer-links">
-            <li>© 2020 VietSpeech.</li>
-            <li>Sponsored by SendGrid</li>
-          </ul>
-        </div>
-      </div>
-      <div className="page-ath-gfx">
-        <div className="w-100 d-flex justify-content-center">
-          <div className="col-md-8 col-xl-5">
-            <img src={`${process.env.PUBLIC_URL}/images/all/ath-gfx.png`} alt="" />
+        <div className="page-ath-gfx">
+          <div className="w-100 d-flex justify-content-center">
+            <div className="col-md-8 col-xl-5">
+              <img src={`${process.env.PUBLIC_URL}/images/all/ath-gfx.png`} alt="" />
+            </div>
           </div>
         </div>
       </div>
