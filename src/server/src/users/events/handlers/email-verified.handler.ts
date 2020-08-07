@@ -38,6 +38,7 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
             const newToken = this.authService.generateToken(userId, user.username, updatedRoles);
             this.eventBus.publish(new EmailVerifiedSuccessEvent(streamId, emailToken, newToken));
         } catch (error) {
+            Logger.error(this.constructor.name, error.message);
             this.eventBus.publish(new EmailVerifiedFailedEvent(streamId, emailToken, error));
         }
     }

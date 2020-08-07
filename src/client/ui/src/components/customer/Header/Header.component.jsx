@@ -20,7 +20,7 @@ const Header = ({ currentUser, authenticate, logout }) => {
       {
         href: `${CUSTOMER_PATH}/requests`,
         iconClass: 'ti-book',
-        name: 'Lịch sử sử dụng dịch vụ',
+        name: 'Lịch sử sử dụng',
       },
       {
         href: `${CUSTOMER_PATH}/transactions`,
@@ -50,6 +50,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
         name: 'Thống kê',
       },
       {
+        href: `${CUSTOMER_PATH}/transactions`,
+        emClass: 'ikon-transactions',
+        name: 'Giao dịch',
+      },
+      {
         href: `${CUSTOMER_PATH}/trial`,
         emClass: 'ikon-distribution',
         name: 'Dùng thử',
@@ -57,11 +62,11 @@ const Header = ({ currentUser, authenticate, logout }) => {
       {
         href: `${CUSTOMER_PATH}/upgrade-token`,
         emClass: 'ikon-wallet',
-        name: 'Nâng cấp API key',
+        name: 'Nâng cấp Key',
       },
       {
         href: `${CUSTOMER_PATH}/documents`,
-        emClass: 'ikon-settings',
+        emClass: 'ikon-user',
         name: 'Tài liệu',
       },
     ]

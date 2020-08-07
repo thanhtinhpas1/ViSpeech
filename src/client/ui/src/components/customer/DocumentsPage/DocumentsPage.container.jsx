@@ -8,3 +8,4 @@ const mapDispatchToProps = () => ({})
 const DocumentsPageContainer = connect(mapStateToProps, mapDispatchToProps)(DocumentsPage)
 
 export default DocumentsPageContainer
+    
