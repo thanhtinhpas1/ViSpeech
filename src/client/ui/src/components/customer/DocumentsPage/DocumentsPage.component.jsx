@@ -272,7 +272,8 @@ const DocumentsPage = () => {
       <h2>Tài nguyên</h2>
       <p>Github: <a href="https://github.com/trankhanhlinh/vispeech-asr">https://github.com/trankhanhlinh/vispeech-asr</a></p>
       <p>NPM Package: <a href="https://www.npmjs.com/package/asr-vietspeech">https://www.npmjs.com/package/asr-vietspeech</a></p>
-
+      <p>Ngoài ra, nếu bạn khởi tạo dự án từ đầu thì có thể sử dụng mã nguồn dự án mẫu chúng tôi đã tạo từ <code>create-react-app</code> và tích hợp SDK Asr-ViSpeech tại <a href="https://github.com/trankhanhlinh/vispeech-asr/tree/master/samples/node">https://github.com/trankhanhlinh/vispeech-asr/tree/master/samples/node</a></p>
+      <p>Hoặc có thể tải về bằng Git bằng lệnh <code>git clone https://github.com/trankhanhlinh/vispeech-asr</code></p>
     </Content>
   </>
   const csharpSDK = <>
@@ -315,7 +316,8 @@ const DocumentsPage = () => {
       <h2>Tài nguyên</h2>
       <p>Github: <a href="https://github.com/thanhtinhpas1/asr-sdk-csharp">https://github.com/thanhtinhpas1/asr-sdk-csharp</a></p>
       <p>NuGet Package: <a href="https://www.nuget.org/packages/asr-vietspeech/">https://www.nuget.org/packages/asr-vietspeech/</a></p>
-
+      <p>Ngoài ra, nếu bạn khởi tạo dự án từ đầu thì có thể sử dụng mã nguồn dự án mẫu chúng tôi đã tạo và tích hợp SDK Asr-ViSpeech tại <a href="https://github.com/thanhtinhpas1/asr-sdk-csharp/tree/master/samples/AppSample">https://github.com/thanhtinhpas1/asr-sdk-csharp/tree/master/samples/AppSample</a></p>
+      <p>Hoặc có thể tải về bằng Git bằng lệnh <code>git clone https://github.com/thanhtinhpas1/asr-sdk-csharp</code></p>
     </Content>
   </>
   const javaSDK = <>
@@ -389,6 +391,8 @@ const DocumentsPage = () => {
       <h2>Tài nguyên</h2>
       <p>Github: <a href="https://github.com/thanhtinhpas1/asr-sdk-java">https://github.com/thanhtinhpas1/asr-sdk-java</a></p>
       <p>Maven Package: <a href="https://search.maven.org/artifact/com.github.thanhtinhpas1/asr-vietspeech/0.0.2/jar">https://search.maven.org/artifact/com.github.thanhtinhpas1/asr-vietspeech/0.0.2/jar</a></p>
+      <p>Ngoài ra, nếu bạn khởi tạo dự án từ đầu thì có thể sử dụng mã nguồn dự án mẫu chúng tôi đã tạo và tích hợp SDK Asr-ViSpeech tại <a href="https://github.com/thanhtinhpas1/asr-sdk-java/tree/master/samples/maven">https://github.com/thanhtinhpas1/asr-sdk-java/tree/master/samples/maven</a></p>
+      <p>Hoặc có thể tải về bằng Git bằng lệnh <code>git clone https://github.com/thanhtinhpas1/asr-sdk-java</code></p>
     </Content>
   </>
   const envNodejs = <>
