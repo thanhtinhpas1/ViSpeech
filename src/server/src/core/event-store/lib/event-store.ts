@@ -30,7 +30,7 @@ import {
     ProvidersConstants,
 } from './contract';
 import { NestjsEventStore } from './nestjs-event-store.class';
-import { PersistentSubscriptionOptions } from 'geteventstore-promise';
+import { PersistentSubscriptionOptions, UserCredentials } from 'geteventstore-promise';
 
 /**
  * @class EventStore
@@ -197,6 +197,10 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
     ): ExtendedCatchUpSubscription {
         this.logger.log(`Catching up and subscribing to stream ${stream}!`);
         try {
+            // there some issue when multiple consumers subsribe on the same tcp stream
+            // or overload buffer size will solved by decreasing readBatchSize or increase pendingBufferSize setup in eventStore
+            // https://github.com/EventStore/EventStore/issues/1392
+            this.logger.log(`EventStore subcribe to stream ${stream} from ${lastCheckpoint}`)
             return this.eventStore.getConnection().subscribeToStreamFrom(
                 stream,
                 lastCheckpoint,
@@ -211,9 +215,14 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 },
                 (sub, reason, error) =>
                     this.onDropped(sub as ExtendedCatchUpSubscription, reason, error),
+                {
+                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
+                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+                } as UserCredentials,
+                10,
             ) as ExtendedCatchUpSubscription;
         } catch (err) {
-            this.logger.error(err);
+            this.logger.error('Something went wrong when subscribe catchup stream', err);
         }
     }
 
@@ -315,6 +324,12 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 (sub, payload) => this.onEvent(sub, payload),
                 (sub, reason, error) =>
                     this.onDropped(sub as ExtendedPersistentSubscription, reason, error),
+                {
+                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
+                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+                } as UserCredentials,
+                102400,
+                true,
             ) as ExtendedPersistentSubscription;
 
             resolved.isLive = true;
@@ -378,9 +393,8 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
         _reason: string,
         error: Error,
     ) {
+        this.logger.warn(`Subscription to dropped with reason ${_reason}`, error.message)
         subscription.isLive = false;
-        this.logger.error(_reason);
-        this.logger.error('onDropped => ' + error);
     }
 
     onLiveProcessingStarted(subscription: ExtendedCatchUpSubscription) {

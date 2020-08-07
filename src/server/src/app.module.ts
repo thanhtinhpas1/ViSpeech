@@ -30,8 +30,8 @@ import { UsersModule } from './users/users.module';
                 port: 1113,
             },
             options: {
-                maxRetries: 100, // Optional
-                maxReconnections: 10,  // Optional
+                maxRetries: 10, // Optional
+                maxReconnections: 100,  // Optional
                 reconnectionDelay: 5000,  // Optional
                 heartbeatInterval: 1000,  // Optional
                 heartbeatTimeout: 500,  // Optional
