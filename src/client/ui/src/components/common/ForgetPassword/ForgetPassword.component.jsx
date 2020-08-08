@@ -156,7 +156,7 @@ const ForgetPassword = ({
             )}
 
             {!userEmail && sendResetPasswordEmailObj.isSuccess !== true && (
-              <Form form={form} onFinish={onSubmit}>
+              <Form form={form} onFinish={onSubmit} size="large">
                 {!sendResetPasswordEmailObj.isLoading && sendResetPasswordEmailObj.isSuccess === false && (
                   <Alert
                     message={Utils.buildFailedMessage(sendResetPasswordEmailObj.message)}
@@ -177,10 +177,10 @@ const ForgetPassword = ({
                     },
                   ]}
                 >
-                  <Input placeholder="Email của bạn" size="large" />
+                  <Input placeholder="Email của bạn" />
                 </Form.Item>
                 <Form.Item>
-                  <Button htmlType="submit" loading={sendResetPasswordEmailObj.isLoading} type="primary" size="large">
+                  <Button htmlType="submit" loading={sendResetPasswordEmailObj.isLoading} type="primary">
                     Gửi mã xác nhận
                   </Button>
                 </Form.Item>

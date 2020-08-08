@@ -1,5 +1,5 @@
 import { BaseEntityDto } from 'base/base-entity.dto';
-import { IsArray, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, IsPositive, IsNumber } from 'class-validator';
 import { CONSTANTS } from 'common/constant';
 import { ObjectID } from 'mongodb';
 import { Column, Entity } from 'typeorm';
@@ -7,33 +7,37 @@ import { ErrorUtils } from '../../utils/errorUtils';
 import { ERR } from '../../common/error';
 
 export class PermissionAssignDto {
-    constructor(assigneeUsername: string, projectId, permissions: string[], assignerId) {
-        this.assigneeUsername = assigneeUsername;
+    constructor(assigneeUsernames: string[], projectId, expiresIn: number, assignerId) {
+        this.assigneeUsernames = assigneeUsernames;
         this.projectId = projectId;
-        this.permissions = permissions;
+        this.expiresIn = expiresIn;
         this.assignerId = assignerId;
     }
 
-    @IsString(ErrorUtils.getMessage('assigneeUsername', ERR.IsString))
-    @IsNotEmpty(ErrorUtils.getMessage('assigneeUsername', ERR.IsNotEmpty))
-    assigneeUsername: string;
+    @IsArray(ErrorUtils.getMessage('assigneeUsernames', ERR.IsArray))
+    @IsNotEmpty(ErrorUtils.getMessage('assigneeUsernames', ERR.IsNotEmpty))
+    assigneeUsernames: string[];
 
     @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
     @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
     projectId: ObjectID;
 
-    @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
-    @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
-    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true, message: ErrorUtils.getMessage('permissions', ERR.IsIn).message })
-    permissions: string[];
+    @IsNotEmpty(ErrorUtils.getMessage('expiresIn', ERR.IsNotEmpty))
+    @IsNumber({}, ErrorUtils.getMessage('expiresIn', ERR.IsNumber))
+    @IsPositive(ErrorUtils.getMessage('expiresIn', ERR.IsPositive))
+    expiresIn: number;
 
     @IsNotEmpty(ErrorUtils.getMessage('assignerId', ERR.IsNotEmpty))
     @IsUUID('all', ErrorUtils.getMessage('assignerId', ERR.IsUUID))
     assignerId: ObjectID;
 
     @IsOptional()
-    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
-    assigneeId: ObjectID;
+    @IsArray(ErrorUtils.getMessage('assigneeIds', ERR.IsArray))
+    assigneeIds: ObjectID[];
+
+    @IsOptional()
+    @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
+    permissions: Permission[];
 }
 
 export class PermissionResponseDto {
@@ -74,22 +78,61 @@ export class EmailTokenParamsDto {
     emailToken: string;
 }
 
+export class PermissionId {
+    constructor(assigneeId: string, id: string) {
+        this.assigneeId = assigneeId;
+        this.id = id;
+    }
+
+    @IsNotEmpty(ErrorUtils.getMessage('assigneeId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
+    assigneeId: ObjectID;
+
+    @IsNotEmpty(ErrorUtils.getMessage('id', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('id', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('id', ERR.IsUUID))
+    id: ObjectID;
+}
+
+export class Permission {
+    constructor(assigneeId: string, tokenId: string, assigneeToken: string) {
+        this.assigneeId = assigneeId;
+        this.tokenId = tokenId;
+        this.assigneeToken = assigneeToken;
+    }
+
+    @IsNotEmpty(ErrorUtils.getMessage('assigneeId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
+    assigneeId: ObjectID;
+
+    @IsNotEmpty(ErrorUtils.getMessage('tokenId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('tokenId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('tokenId', ERR.IsUUID))
+    tokenId: ObjectID;
+
+    @IsNotEmpty(ErrorUtils.getMessage('assigneeToken', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('assigneeToken', ERR.IsString))
+    assigneeToken: string;
+}
+
 @Entity('permissions')
 export class PermissionDto extends BaseEntityDto {
-    constructor(permissions: string[], assigneeId, assignerId, projectId, status: string = CONSTANTS.STATUS.PENDING) {
+    constructor(permissions: Permission[], assigneeId, assignerId, projectId, expiresIn: number, status: string = CONSTANTS.STATUS.PENDING) {
         super();
         this.permissions = permissions;
         this.assigneeId = assigneeId;
         this.assignerId = assignerId;
         this.projectId = projectId;
+        this.expiresIn = expiresIn;
         this.status = status;
     }
 
     @IsNotEmpty(ErrorUtils.getMessage('permissions', ERR.IsNotEmpty))
     @IsArray(ErrorUtils.getMessage('permissions', ERR.IsArray))
-    @IsIn([CONSTANTS.PERMISSION.CSR_USER], { each: true, message: ErrorUtils.getMessage('permissions', ERR.IsIn).message })
     @Column()
-    permissions: string[];
+    permissions: Permission[];
 
     @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
     @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
@@ -115,6 +158,12 @@ export class PermissionDto extends BaseEntityDto {
         type: 'uuid',
     })
     projectId: ObjectID;
+
+    @IsNotEmpty(ErrorUtils.getMessage('expiresIn', ERR.IsNotEmpty))
+    @IsNumber({}, ErrorUtils.getMessage('expiresIn', ERR.IsNumber))
+    @IsPositive(ErrorUtils.getMessage('expiresIn', ERR.IsPositive))
+    @Column()
+    expiresIn: number;
 
     @IsOptional()
     @IsString(ErrorUtils.getMessage('status', ERR.IsString))

@@ -32,6 +32,8 @@ export const STATUS = {
   INVALID: { name: false, viText: 'Có vấn đề', cssClass: 'data-state-canceled' },
   ACTIVE: { name: true, viText: 'Đang hoạt động', cssClass: 'data-state-approved' },
   INACTIVE: { name: false, viText: 'Đã bị xoá', cssClass: 'data-state-canceled' },
+  UNEXPIRED: { name: 'UNEXPIRED', viText: 'Có thể sử dụng', cssClass: 'data-state-approved' },
+  EXPIRED: { name: 'EXPIRED', viText: 'Hết hạn sử dụng', cssClass: 'data-state-canceled' },
   // -canceled -missing
 }
 export const ORDER_STATUS = {

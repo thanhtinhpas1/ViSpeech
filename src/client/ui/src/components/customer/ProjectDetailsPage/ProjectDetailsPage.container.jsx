@@ -12,8 +12,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   clearGetProjectTokenState: () => dispatch(onClearGetProjectTokenState()),
   getProjectInfo: projectId => dispatch(getProjectInfo(projectId)),
-  getProjectTokens: ({ userId, projectId, pagination, sortField, sortOrder, filters }) =>
-    dispatch(getProjectTokenList({ userId, projectId, pagination, sortField, sortOrder, filters })),
+  getProjectTokens: ({ userId, projectId, assigneeId, pagination, sortField, sortOrder, filters }) =>
+    dispatch(getProjectTokenList({ userId, projectId, assigneeId, pagination, sortField, sortOrder, filters })),
 })
 
 const ProjectDetailsPageContainer = connect(mapStateToProps, mapDispatchToProps)(ProjectDetailsPage)

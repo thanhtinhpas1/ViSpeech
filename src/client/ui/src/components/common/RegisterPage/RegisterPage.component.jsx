@@ -49,10 +49,10 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
   const onSubmit = async values => {
     const { username, email, lastName, firstName, password } = values
     const user = {
-      username,
-      email,
-      lastName,
-      firstName,
+      username: username.trim(),
+      email: email.trim(),
+      lastName: lastName.trim(),
+      firstName: firstName.trim(),
       password,
       roles: [{ name: ROLES.USER }],
       userType: USER_TYPE.NORMAL,
@@ -95,7 +95,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                 style={{ marginBottom: '20px' }}
               />
             )}
-            <Form form={form} onFinish={onSubmit}>
+            <Form form={form} onFinish={onSubmit} size="large">
               <Form.Item
                 name="username"
                 hasFeedback
@@ -106,7 +106,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input size="large" placeholder="Tên đăng nhập" />
+                <Input placeholder="Tên đăng nhập" />
               </Form.Item>
               <Form.Item
                 name="email"
@@ -119,10 +119,10 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input size="large" placeholder="Email" />
+                <Input placeholder="Email" />
               </Form.Item>
               <Form.Item name="lastName" hasFeedback rules={[]}>
-                <Input size="large" placeholder="Họ" />
+                <Input placeholder="Họ" />
               </Form.Item>
               <Form.Item
                 name="firstName"
@@ -134,7 +134,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input size="large" placeholder="Tên" />
+                <Input placeholder="Tên" />
               </Form.Item>
               <Form.Item
                 name="password"
@@ -146,7 +146,7 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   },
                 ]}
               >
-                <Input.Password size="large" placeholder="Mật khẩu" />
+                <Input.Password placeholder="Mật khẩu" />
               </Form.Item>
               <Form.Item
                 name="confirmedPassword"
@@ -168,16 +168,10 @@ const RegisterPage = ({ registerObj, onClearUserState, registerStart, registerSu
                   }),
                 ]}
               >
-                <Input.Password size="large" placeholder="Nhập lại mật khẩu" />
+                <Input.Password placeholder="Nhập lại mật khẩu" />
               </Form.Item>
               <Form.Item>
-                <Button
-                  htmlType="submit"
-                  loading={registerObj.isLoading}
-                  type="primary"
-                  size="large"
-                  className="btn-block"
-                >
+                <Button htmlType="submit" loading={registerObj.isLoading} type="primary" className="btn-block">
                   Đăng ký
                 </Button>
               </Form.Item>

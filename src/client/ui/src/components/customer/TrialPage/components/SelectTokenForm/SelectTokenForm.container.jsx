@@ -1,6 +1,10 @@
 import { connect } from 'react-redux'
 import { getMyProjectList, getAcceptedProjectList } from '../../../../../redux/project/project.actions'
-import { getProjectTokenList, onClearGetProjectTokenState, getFreeToken } from '../../../../../redux/token/token.actions'
+import {
+  getProjectTokenList,
+  onClearGetProjectTokenState,
+  getFreeToken,
+} from '../../../../../redux/token/token.actions'
 import SelectTokenForm from './SelectTokenForm.component'
 
 const mapStateToProps = state => ({
@@ -17,8 +21,8 @@ const mapDispatchToProps = dispatch => ({
   getMyProjects: ({ userId, pagination, filters }) => dispatch(getMyProjectList({ userId, pagination, filters })),
   getAcceptedProjectList: ({ userId, pagination, filters }) =>
     dispatch(getAcceptedProjectList({ userId, pagination, filters })),
-  getProjectTokenList: ({ userId, projectId, pagination, filters }) =>
-    dispatch(getProjectTokenList({ userId, projectId, pagination, filters })),
+  getProjectTokenList: ({ userId, projectId, assigneeId, pagination, filters }) =>
+    dispatch(getProjectTokenList({ userId, projectId, assigneeId, pagination, filters })),
 })
 
 const SelectTokenFormContainer = connect(mapStateToProps, mapDispatchToProps)(SelectTokenForm)

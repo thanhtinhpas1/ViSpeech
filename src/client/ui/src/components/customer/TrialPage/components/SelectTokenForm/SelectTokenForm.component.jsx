@@ -56,14 +56,22 @@ const SelectTokenForm = ({
       if (projectOwnerId) {
         getProjectTokenList({ userId: projectOwnerId, projectId, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
       } else {
-        const project =
-          myProjectList.find(item => item._id === projectId) || acceptedProjectList.find(item => item._id === projectId)
-        if (project != null) {
-          getProjectTokenList({ userId: project.userId, projectId, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
+        const filterConditions = { userId: null, projectId, pagination: DEFAULT_PAGINATION.SIZE_100, filters }
+        let project = myProjectList.find(item => item._id === projectId)
+        if (project) {
+          filterConditions.userId = project.userId
+          getProjectTokenList(filterConditions)
+        } else {
+          project = acceptedProjectList.find(item => item._id === projectId)
+          if (project) {
+            filterConditions.assigneeId = currentUser._id
+            filterConditions.userId = project.userId
+            getProjectTokenList(filterConditions)
+          }
         }
       }
     },
-    [getProjectTokenList]
+    [currentUser._id, getProjectTokenList]
   )
 
   const onChangeTokenValue = tokenValue => {

@@ -70,7 +70,7 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
           </div>
           <div className="page-ath-form">
             <h2 className="page-ath-heading">Đặt lại mật khẩu</h2>
-            <Form form={form} onFinish={onSubmit}>
+            <Form form={form} onFinish={onSubmit} size="large">
               {!resetPasswordObj.isLoading && resetPasswordObj.isSuccess === false && (
                 <Alert
                   message={Utils.buildFailedMessage(resetPasswordObj.message)}
@@ -101,7 +101,7 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
                       },
                     ]}
                   >
-                    <Input.Password placeholder="Nhập mật khẩu mới" size="large" />
+                    <Input.Password placeholder="Nhập mật khẩu mới" />
                   </Form.Item>
                 </div>
                 <div className="col-md-12">
@@ -125,12 +125,12 @@ const ResetPassword = ({ resetPasswordObj, resetPassword, resetPasswordSuccess, 
                       }),
                     ]}
                   >
-                    <Input.Password placeholder="Xác nhận mật khẩu mới" size="large" />
+                    <Input.Password placeholder="Xác nhận mật khẩu mới" />
                   </Form.Item>
                 </div>
                 <div className="col-md-12 d-sm-flex justify-content-between align-items-center">
                   <Form.Item>
-                    <Button htmlType="submit" loading={resetPasswordObj.isLoading} type="primary" size="large">
+                    <Button htmlType="submit" loading={resetPasswordObj.isLoading} type="primary">
                       Thay đổi
                     </Button>
                   </Form.Item>

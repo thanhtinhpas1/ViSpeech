@@ -58,8 +58,13 @@ export class AuthService {
         return this.jwtService.sign(payload);
     }
 
-    generateEmailToken(assignerId, projectId, assigneeId, permissions, expiresIn = null) {
-        const payload = { assignerId, projectId, assigneeId, permissions };
+    generateAssigneeToken(assignerId, projectId, assigneeId, tokenId) {
+        const payload = {  assignerId, projectId, assigneeId, tokenId };
+        return this.jwtService.sign(payload);
+    }
+
+    generateEmailToken(assignerId, projectId, assigneeId, expiresIn = null) {
+        const payload = { assignerId, projectId, assigneeId };
         return this.jwtService.sign(payload, { expiresIn: expiresIn || '2 days' });
     }
 

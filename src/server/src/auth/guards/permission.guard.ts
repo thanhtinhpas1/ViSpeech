@@ -12,6 +12,7 @@ import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { getMongoRepository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { UserUtils } from '../../utils/user.util';
+import { Utils } from 'utils';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -54,10 +55,11 @@ export class AssignPermissionGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const { assignerId } = request.body;
+        const { assignerId, expiresIn } = request.body;
         const isAdmin = UserUtils.isAdmin(payload['roles']);
         const isManagerUser = UserUtils.isManagerUser(payload['roles']);
-        return isAdmin || (isManagerUser && assignerId === payload['id']);
+        const isValidExpirationDate = Utils.validDate(expiresIn) && expiresIn > Date.now();
+        return isValidExpirationDate && (isAdmin || (isManagerUser && assignerId === payload['id']));
     }
 }
 
@@ -81,12 +83,11 @@ export class ReplyPermissionAssignGuard implements CanActivate {
         const assignerId = decodedEmailToken['assignerId'];
         const assigneeId = decodedEmailToken['assigneeId'];
         const projectId = decodedEmailToken['projectId'];
-        const permissions = decodedEmailToken['permissions'];
         const exp = decodedEmailToken['exp'];
-        if (!decodedEmailToken || !assignerId || !assigneeId || !projectId || !permissions || !exp) {
+        if (!decodedEmailToken || !assignerId || !assigneeId || !projectId || !exp) {
             throw new BadRequestException('Token is invalid.');
         }
-        if (Number(`${exp}000`) < Date.now()) {
+        if (Utils.tokenExpired(`${exp}000`)) {
             throw new BadRequestException('Token is expired.');
         }
 

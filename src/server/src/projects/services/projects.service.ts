@@ -44,6 +44,7 @@ export class ProjectsService {
 
     async findOne(findProjectQuery: FindProjectQuery): Promise<ProjectDto> {
         const query = new FindProjectQuery(findProjectQuery.id);
+        Object.assign(query, findProjectQuery);
         return await this.queryBus.execute(query);
     }
 

@@ -21,7 +21,7 @@ export class GetProjectsHandler implements IQueryHandler<GetProjectsQuery> {
         Logger.log('Async GetProjectsHandler...', 'GetProjectsQuery');
         const { offset, limit, filters, sort } = query;
         let projects = [];
-        let result = [];
+        const result = [];
         try {
             const findOptions = {
                 where: {},

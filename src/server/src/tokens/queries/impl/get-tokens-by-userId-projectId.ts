@@ -17,6 +17,10 @@ export class GetTokensByUserIdAndProjectIdQuery {
     projectId: string;
 
     @IsOptional()
+    @IsString()
+    assigneeId: string;
+
+    @IsOptional()
     @Type(() => Number)
     @IsNumber()
     @Min(0)

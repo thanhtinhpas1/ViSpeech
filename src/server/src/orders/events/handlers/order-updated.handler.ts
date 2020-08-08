@@ -47,7 +47,7 @@ export class OrderUpdatedSuccessHandler
     }
 
     handle(event: OrderUpdatedSuccessEvent) {
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_SUCCESS_EVENT, JSON.stringify(event));
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_UPDATED_SUCCESS_EVENT, JSON.stringify(event));
         Logger.log(event.orderDto._id, 'OrderUpdatedSuccessEvent');
     }
 }
@@ -65,7 +65,7 @@ export class OrderUpdatedFailedHandler
     handle(event: OrderUpdatedFailedEvent) {
         const errorObj = Utils.getErrorObj(event.error);
         event['errorObj'] = errorObj;
-        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_DELETED_FAILED_EVENT, JSON.stringify(event));
+        this.clientKafka.emit(CONSTANTS.TOPICS.ORDER_UPDATED_FAILED_EVENT, JSON.stringify(event));
         Logger.log(errorObj, 'OrderUpdatedFailedEvent');
     }
 }

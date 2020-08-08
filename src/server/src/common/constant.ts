@@ -21,6 +21,8 @@ export const CONSTANTS = {
         ACCEPTED: 'ACCEPTED',
         REJECTED: 'REJECTED',
         INVALID: 'INVALID',
+        UNEXPIRED: 'UNEXPIRED',
+        EXPIRED: 'EXPIRED',
     },
     TIME_TYPE: {
         DATE: 'date',

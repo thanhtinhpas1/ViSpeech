@@ -42,7 +42,7 @@ const LoginPage = ({
   const onSubmit = values => {
     const { username, password } = values
     const user = {
-      username,
+      username: username.trim(),
       password,
     }
 
@@ -120,7 +120,7 @@ const LoginPage = ({
                 style={{ marginBottom: '20px' }}
               />
             )}
-            <Form form={form} onFinish={onSubmit}>
+            <Form form={form} onFinish={onSubmit} size="large">
               <Form.Item
                 name="username"
                 hasFeedback
@@ -131,7 +131,7 @@ const LoginPage = ({
                   },
                 ]}
               >
-                <Input size="large" placeholder="Tên đăng nhập" />
+                <Input placeholder="Tên đăng nhập" />
               </Form.Item>
               <Form.Item
                 name="password"
@@ -143,7 +143,7 @@ const LoginPage = ({
                   },
                 ]}
               >
-                <Input.Password size="large" placeholder="Mật khẩu" />
+                <Input.Password placeholder="Mật khẩu" />
               </Form.Item>
               <div className="d-flex justify-content-end align-items-center">
                 {/* <div className="input-item text-left">
@@ -158,13 +158,7 @@ const LoginPage = ({
                 </div>
               </div>
               <Form.Item>
-                <Button
-                  htmlType="submit"
-                  loading={loginObj.isLoading}
-                  type="primary"
-                  size="large"
-                  className="btn-block"
-                >
+                <Button htmlType="submit" loading={loginObj.isLoading} type="primary" className="btn-block">
                   Đăng nhập
                 </Button>
               </Form.Item>

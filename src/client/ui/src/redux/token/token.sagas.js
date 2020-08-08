@@ -52,6 +52,7 @@ const formatTokenList = tokenList => {
         ...(TOKEN_TYPE[token.tokenType] || { viText: '', cssClass: 'badge-success' }),
       },
       isValid: token.isValid ? STATUS.VALID : STATUS.INVALID,
+      status: STATUS[token.status], // status of expiration showed for assignees
       minutesLeft: Number(token.minutes) - Number(token.usedMinutes || 0),
     }
   }

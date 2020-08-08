@@ -79,13 +79,6 @@ export class OrderQueryGuard implements CanActivate {
             if (token.userId === payload['id']) {
                 return true;
             }
-            const permission = await this.permissionRepo.findOne({
-                where: {
-                    projectId: token.projectId,
-                    assigneeId: payload['id']
-                }
-            });
-            if (permission) return true;
         }
 
         const userId = request.query.userId;

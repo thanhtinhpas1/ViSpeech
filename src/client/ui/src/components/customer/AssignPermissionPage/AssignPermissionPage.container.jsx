@@ -21,10 +21,10 @@ const mapDispatchToProps = dispatch => ({
   getUsernameList: ({ pagination, sortField, sortOrder, filters }) =>
     dispatch(getUsernameList({ pagination, sortField, sortOrder, filters })),
   getMyProjects: ({ userId }) => dispatch(getMyProjectList({ userId })),
-  assignPermission: ({ assigneeUsername, projectId, permissions, assignerId }) =>
-    dispatch(assignPermission({ assigneeUsername, projectId, permissions, assignerId })),
-  assignPermissionSuccess: ({ assigneeUsername, projectId, permissions, assignerId }) =>
-    dispatch(assignPermissionSuccess({ assigneeUsername, projectId, permissions, assignerId })),
+  assignPermission: ({ assigneeUsernames, projectId, permissions, assignerId }) =>
+    dispatch(assignPermission({ assigneeUsernames, projectId, permissions, assignerId })),
+  assignPermissionSuccess: ({ assigneeUsernames, projectId, permissions, assignerId }) =>
+    dispatch(assignPermissionSuccess({ assigneeUsernames, projectId, permissions, assignerId })),
   assignPermissionFailure: message => dispatch(assignPermissionFailure(message)),
 })
 

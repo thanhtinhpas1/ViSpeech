@@ -144,12 +144,15 @@ export default class TokenService {
   }
 
   static getProjectTokenList = filterConditions => {
-    const { userId, projectId, pagination, sortField, sortOrder, filters } = filterConditions
+    const { userId, projectId, assigneeId, pagination, sortField, sortOrder, filters } = filterConditions
     const { current, pageSize } = pagination
     const offset = (current - 1) * pageSize || 0
     const limit = pageSize || 0
 
     let query = `${Utils.parameterizeObject({ userId, projectId, offset, limit })}`
+    if (assigneeId) {
+      query += `&${Utils.parameterizeObject({ assigneeId })}`
+    }
     query += Utils.buildSortQuery(sortField, sortOrder)
     query += Utils.buildFiltersQuery(filters)
     query = Utils.trimByChar(query, '&')

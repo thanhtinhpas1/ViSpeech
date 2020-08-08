@@ -9,14 +9,14 @@ export const onClearAssignPermissionState = () => ({
   type: PermissionTypes.CLEAR_ASSIGN_PERMISSION_STATE,
 })
 
-export const assignPermission = ({ assigneeUsername, projectId, permissions, assignerId }) => ({
+export const assignPermission = ({ assigneeUsernames, projectId, permissions, assignerId }) => ({
   type: PermissionTypes.ASSIGN_PERMISSION,
-  payload: { assigneeUsername, projectId, permissions, assignerId },
+  payload: { assigneeUsernames, projectId, permissions, assignerId },
 })
 
-export const assignPermissionSuccess = ({ assigneeUsername, projectId, permissions, assignerId }) => ({
+export const assignPermissionSuccess = ({ assigneeUsernames, projectId, permissions, assignerId }) => ({
   type: PermissionTypes.ASSIGN_PERMISSION_SUCCESS,
-  payload: { assigneeUsername, projectId, permissions, assignerId },
+  payload: { assigneeUsernames, projectId, permissions, assignerId },
 })
 
 export const assignPermissionFailure = message => ({

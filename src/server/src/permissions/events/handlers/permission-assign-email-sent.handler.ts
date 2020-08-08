@@ -30,19 +30,20 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 
     async handle(event: PermissionAssignEmailSentEvent) {
         Logger.log(event.streamId, 'PermissionAssignEmailSentEvent');
-        const { streamId, permissionAssignDto, permissionId } = event;
-        const { assigneeUsername, projectId, permissions, assignerId } = permissionAssignDto;
+        const { streamId, permissionAssignDto, permissionIds } = event;
+        const { assigneeUsernames, projectId, assignerId } = permissionAssignDto;
 
         try {
             const project = await this.projectRepository.findOne({ _id: projectId });
             const assigner = await this.userRepository.findOne({ _id: assignerId });
-            const assignee = await this.userRepository.findOne({ username: assigneeUsername });
-            permissionAssignDto.assigneeId = assignee._id;
+            for (const assigneeUsername of assigneeUsernames) {
+                const assignee = await this.userRepository.findOne({ username: assigneeUsername });
+                const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id,
+                    `${CONSTANTS.TOKEN_EXPIRATION.REPLY_PERMISSION_ASSIGN} days`);
+                await EmailUtils.sendInviteToJoinProjectEmail(assigner.username, assignee.username, project.name, assignee.email, joinProjectToken);
+            }
 
-            const joinProjectToken = this.authService.generateEmailToken(assigner._id, project._id, assignee._id, permissions,
-                `${CONSTANTS.TOKEN_EXPIRATION.REPLY_PERMISSION_ASSIGN} days`);
-            await EmailUtils.sendInviteToJoinProjectEmail(assigner.username, assignee.username, project.name, assignee.email, joinProjectToken);
-            this.eventBus.publish(new PermissionAssignEmailSentSuccessEvent(streamId, permissionAssignDto, permissionId));
+            this.eventBus.publish(new PermissionAssignEmailSentSuccessEvent(streamId, permissionAssignDto, permissionIds));
         } catch (error) {
             this.eventBus.publish(new PermissionAssignEmailSentFailedEvent(streamId, permissionAssignDto, error));
         }

@@ -4,32 +4,41 @@ import { BadRequestException, Logger, NotFoundException } from '@nestjs/common';
 import { SendAssignPermissionEmailCommand } from '../impl/send-assign-permission-email.command';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { PermissionDto, Permission, PermissionId } from 'permissions/dtos/permissions.dto';
 import { PermissionAssignEmailSentFailedEvent } from 'permissions/events/impl/permission-assign-email-sent.event';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { Utils } from 'utils';
+import { CONSTANTS } from 'common/constant';
+import { TokenDto } from 'tokens/dtos/tokens.dto';
+import { AuthService } from 'auth/auth.service';
 
 @CommandHandler(SendAssignPermissionEmailCommand)
 export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAssignPermissionEmailCommand> {
     constructor(
         private readonly repository: PermissionRepository,
         private readonly publisher: EventPublisher,
-        private readonly eventBus: EventBus
+        private readonly eventBus: EventBus,
+        private readonly authService: AuthService
     ) {
     }
 
     async execute(command: SendAssignPermissionEmailCommand) {
         Logger.log('Async SendAssignPermissionEmailHandler...', 'SendAssignPermissionEmailCommand');
         const { streamId, permissionAssignDto } = command;
-        const { assigneeUsername, assignerId, projectId } = permissionAssignDto;
+        const { assigneeUsernames, assignerId, projectId } = permissionAssignDto;
 
         try {
-            const assignee = await getMongoRepository(UserDto).findOne({ username: assigneeUsername });
-            if (!assignee) {
-                throw new NotFoundException(`Assignee with username ${assigneeUsername} does not exist.`);
-            } else if (!assignee.isActive) {
-                throw new BadRequestException(`Assignee with username ${assigneeUsername} is not active.`);
+            const assignees = await getMongoRepository(UserDto).find({ where: { username: { $in: [...assigneeUsernames] } } });
+            if (assignees.length !== assigneeUsernames.length) {
+                throw new BadRequestException(`At least one assignee's username is invalid.`);
             }
+            const inactiveAssignees = assignees.filter(assignee => assignee.isActive === false);
+            if (inactiveAssignees.length > 0) {
+                throw new BadRequestException(`At least one assignee is inactive.`);
+            }
+
+            const assigneeIds = assignees.map(assignee => assignee._id);
+            permissionAssignDto.assigneeIds = assigneeIds;
 
             const project = await getMongoRepository(ProjectDto).findOne({ _id: projectId });
             if (!project) {
@@ -43,20 +52,33 @@ export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAss
                 throw new NotFoundException(`Assigner with _id ${assignerId} does not exist.`);
             }
 
-            const permission = await getMongoRepository(PermissionDto).findOne({
-                assignerId,
-                assigneeId: assignee._id,
-                projectId
+            const permissions = await getMongoRepository(PermissionDto).find({
+                where: {
+                    assignerId,
+                    assigneeId: { $in: [...assigneeIds] },
+                    projectId,
+                    status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED, CONSTANTS.STATUS.INVALID] }
+                }
             });
-            if (permission || assignee._id === assignerId) {
-                throw new BadRequestException(`Permission with assignerId "${assignerId}", assigneeUsername "${assigneeUsername}", 
-                projectId "${projectId}" is existed or assignerId is not valid.`);
+            if (permissions.length > 0) {
+                throw new BadRequestException(`At least one permission is replied or invalid`);
             }
 
-            const permissionId = Utils.getUuid();
+            const permissionIds = assigneeIds.map(p => new PermissionId(p, Utils.getUuid()));
+            // generate assigneeTokens
+            const projectTokens = await getMongoRepository(TokenDto).find({ projectId });
+            permissionAssignDto.permissions = [];
+            for (const assigneeId of assigneeIds) {
+                const permissions = projectTokens.map(token => {
+                    const assigneeToken = this.authService.generateAssigneeToken(assignerId, projectId, assigneeId, token._id)
+                    return new Permission(assigneeId, token._id, assigneeToken);
+                })
+                permissionAssignDto.permissions.push(...permissions);
+            }
+
             // use mergeObjectContext for dto dispatch events
             const permissionModel = this.publisher.mergeObjectContext(
-                await this.repository.sendAssignPermissionEmail(streamId, permissionAssignDto, permissionId)
+                await this.repository.sendAssignPermissionEmail(streamId, permissionAssignDto, permissionIds)
             );
             permissionModel.commit();
         } catch (error) {

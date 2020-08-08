@@ -3,7 +3,7 @@ import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from '../utils/constant'
 import { apiUrl } from './api-url'
 
 export default class PermissionService {
-  static sendAssignPermissionEmail = ({ assigneeUsername, projectId, permissions, assignerId }) => {
+  static sendAssignPermissionEmail = ({ assigneeUsernames, projectId, expiresIn, assignerId }) => {
     const api = `${apiUrl}/permissions/assign-permission`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
@@ -12,9 +12,9 @@ export default class PermissionService {
     return fetch(api, {
       method: 'POST',
       body: JSON.stringify({
-        assigneeUsername,
+        assigneeUsernames,
         projectId,
-        permissions,
+        expiresIn,
         assignerId,
       }),
       headers: {
