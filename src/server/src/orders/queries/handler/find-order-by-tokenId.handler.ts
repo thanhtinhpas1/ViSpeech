@@ -22,13 +22,13 @@ export class FindOrderByTokenIdHandler implements IQueryHandler<FindOrderByToken
         let project = null;
 
         try {
-            const order = await this.repository.findOne({ where: { 'token._id': tokenId } });
-            if (order) {
-                project = await this.projectDtoRepository.findOne({ _id: order.token.projectId });
+            const order = await this.repository.find({ where: { 'token._id': tokenId }, order: { createdDate: 'DESC' } });
+            if (order.length > 0) {
+                project = await this.projectDtoRepository.findOne({ _id: order[0].token.projectId });
                 // TODO: verify why we need create new field here
-                order.token['projectName'] = project.name;
+                order[0].token['projectName'] = project.name;
             }
-            return order;
+            return order[0];
         } catch (error) {
             Logger.error(error.message, '', 'FindOrderByTokenIdQuery');
         }

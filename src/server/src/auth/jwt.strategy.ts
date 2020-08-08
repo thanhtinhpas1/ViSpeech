@@ -15,7 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: any) {
-        const user = await this.authService.validateUserId(payload.id);
+        const user = await this.authService.validateUserId(payload.id || payload.assigneeId);
         if (!user) {
             Logger.warn('Authorize by JWT failed', 'JwtBearer');
             return null;

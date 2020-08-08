@@ -17,8 +17,6 @@ export class CallAsrSagas {
     ) {
     }
 
-    streamId: string = null;
-
     @Saga()
     asrCalledRequest = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
@@ -26,18 +24,14 @@ export class CallAsrSagas {
             map((event: AsrCalledRequestEvent) => {
                 Logger.log('Inside [RequestSagas] asrCalledRequest Saga', 'RequestSagas');
                 const { streamId, requestDto, tokenDto } = event;
-                // prevent from duplicated events
-                if (!this.streamId || this.streamId !== streamId) {
-                    if (CONSTANTS.STATUS.SUCCESS === requestDto.status) {
-                        this.streamId = streamId;
-                        // generate report
-                        const date = new Date();
-                        this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
-                        // update token usedMinutes
-                        const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
-                        updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
-                        this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
-                    }
+                if (CONSTANTS.STATUS.SUCCESS === requestDto.status) {
+                    // generate report
+                    const date = new Date();
+                    this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
+                    // update token usedMinutes
+                    const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
+                    updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
+                    this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
                 }
                 // else do nothing
             })
@@ -51,17 +45,13 @@ export class CallAsrSagas {
             map((event: RequestTranscriptFileUrlUpdatedSuccessEvent) => {
                 Logger.log('Inside [RequestSagas] requestTranscriptFileUrlUpdatedSuccess Saga', 'RequestSagas');
                 const { streamId, tokenDto } = event;
-                // prevent from duplicated events
-                if (!this.streamId || this.streamId !== streamId) {
-                    this.streamId = streamId;
-                    // generate report
-                    const date = new Date();
-                    this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
-                    // update token usedMinutes
-                    const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
-                    updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
-                    this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
-                }
+                // generate report
+                const date = new Date();
+                this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
+                // update token usedMinutes
+                const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
+                updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
+                this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };

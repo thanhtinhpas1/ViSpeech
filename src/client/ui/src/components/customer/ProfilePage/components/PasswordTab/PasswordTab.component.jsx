@@ -88,7 +88,7 @@ const PasswordTab = ({
 
   return (
     <div className="tab-pane fade" id="change-password">
-      <Form form={form} onFinish={onSubmit} id="change-password-form">
+      <Form form={form} onFinish={onSubmit} id="change-password-form" size="large">
         <div className="row">
           <div className="col-md-12">
             {!changePasswordObj.isLoading && changePasswordObj.isSuccess === false && (
@@ -191,7 +191,6 @@ const PasswordTab = ({
                 loading={changePasswordObj.isLoading}
                 disabled={Utils.isSocialAccount(currentUser.userType)}
                 type="primary"
-                size="large"
               >
                 Cập nhật
               </Button>

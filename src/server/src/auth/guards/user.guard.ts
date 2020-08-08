@@ -51,7 +51,7 @@ export class VerifyEmailGuard implements CanActivate {
         if (!decodedEmailToken || !userId) {
             throw new BadRequestException('Token is invalid.');
         }
-        if (Number(`${exp}000`) < Date.now()) {
+        if (Utils.tokenExpired(`${exp}000`)) {
             throw new BadRequestException('Token is expired.');
         }
         const user = await getMongoRepository(UserDto).findOne({ _id: userId });

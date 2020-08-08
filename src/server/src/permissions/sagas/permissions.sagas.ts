@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { map } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PermissionAssignEmailSentSuccessEvent } from 'permissions/events/impl/permission-assign-email-sent.event';
 import { CreatePermissionCommand } from 'permissions/commands/impl/create-permission.command';
@@ -12,13 +12,21 @@ export class PermissionsSagas {
     permissionAssignEmailSentSuccess = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(PermissionAssignEmailSentSuccessEvent),
-            map(event => {
+            flatMap(event => {
                 Logger.log('Inside [PermissionsSagas] permissionAssignEmailSentSuccess Saga', 'PermissionsSagas');
-                const { streamId, permissionAssignDto, permissionId } = event;
-                const { permissions, assignerId, projectId, assigneeId } = permissionAssignDto;
-                const permissionDto = new PermissionDto(permissions, assigneeId, assignerId, projectId);
-                permissionDto._id = permissionId;
-                return new CreatePermissionCommand(streamId, permissionDto);
+                const { streamId, permissionAssignDto, permissionIds } = event;
+                const { assigneeUsernames, assignerId, projectId, permissions, assigneeIds, expiresIn } = permissionAssignDto;
+
+                // create permissions for many assignees
+                const createPermissionCommands = [];
+                for (const assigneeId of assigneeIds) {
+                    const assigneePermissions = permissions.filter(p => p.assigneeId === assigneeId);
+                    const permissionDto = new PermissionDto(assigneePermissions, assigneeId, assignerId, projectId, expiresIn);
+                    permissionDto._id = permissionIds.find(id => id.assigneeId === assigneeId)?.id;
+                    createPermissionCommands.push(new CreatePermissionCommand(streamId, permissionDto))
+                }
+
+                return createPermissionCommands;
             })
         );
     };

@@ -12,6 +12,7 @@ import { UserDto } from 'users/dtos/users.dto';
 import { AuthService } from 'auth/auth.service';
 
 import Stripe from 'stripe';
+import { Utils } from 'utils';
 
 const stripe = new Stripe(config.STRIPE_SECRET_KEY, { apiVersion: '2020-03-02' });
 
@@ -68,6 +69,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                 const { userId, tokenType, _id, token } = orderDto;
                 const tokenValue = this.authService.generateTokenWithUserId(userId);
                 const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
+                tokenDto._id = Utils.getUuid();
 
                 // use mergeObjectContext for dto dispatch events
                 const order = this.publisher.mergeObjectContext(

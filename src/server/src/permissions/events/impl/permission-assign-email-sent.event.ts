@@ -1,11 +1,11 @@
 import { IEvent } from '@nestjs/cqrs';
-import { PermissionAssignDto } from 'permissions/dtos/permissions.dto';
+import { PermissionAssignDto, PermissionId } from 'permissions/dtos/permissions.dto';
 
 export class PermissionAssignEmailSentEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly permissionAssignDto: PermissionAssignDto,
-        public readonly permissionId: string,
+        public readonly permissionIds: PermissionId[],
     ) {
     }
 }
@@ -14,7 +14,7 @@ export class PermissionAssignEmailSentSuccessEvent implements IEvent {
     constructor(
         public readonly streamId: string,
         public readonly permissionAssignDto: PermissionAssignDto,
-        public readonly permissionId: string,
+        public readonly permissionIds: PermissionId[],
     ) {
     }
 }

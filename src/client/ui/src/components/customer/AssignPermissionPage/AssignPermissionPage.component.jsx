@@ -6,8 +6,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Form, Select, Button } from 'antd'
-import { PERMISSIONS, DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../utils/constant'
+import { Form, Select, Button, DatePicker } from 'antd'
+import * as moment from 'moment'
+import { DEFAULT_PAGINATION, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../utils/constant'
 import Utils from '../../../utils'
 import SocketService from '../../../services/socket.service'
 import PermissionService from '../../../services/permission.service'
@@ -37,18 +38,6 @@ const AssignPermissionPage = ({
   const [infoModal, setInfoModal] = useState({})
   const loadingRef = useRef(assignPermissionObj.isLoading)
   loadingRef.current = assignPermissionObj.isLoading
-
-  const formItemLayout = {
-    labelCol: {
-      span: 6,
-    },
-    wrapperCol: {
-      span: 18,
-    },
-  }
-  const tailLayout = {
-    wrapperCol: { offset: 6, span: 18 },
-  }
 
   useEffect(() => {
     return () => clearAssignPermissionState()
@@ -122,12 +111,12 @@ const AssignPermissionPage = ({
     if (!currentUser._id) return
 
     const userId = currentUser._id
-    const { username, projectId } = values
+    const { usernames, projectId, expiresIn } = values
 
     const permission = {
-      assigneeUsername: username.trim(),
+      assigneeUsernames: usernames,
       projectId,
-      permissions: [PERMISSIONS.CSR_USER],
+      expiresIn: expiresIn.valueOf(),
       assignerId: userId,
     }
 
@@ -159,6 +148,11 @@ const AssignPermissionPage = ({
     }
   }
 
+  const disabledDate = current => {
+    const now = new Date()
+    return current && current <= moment(now)
+  }
+
   return (
     <div className="page-content">
       <div className="container">
@@ -181,66 +175,86 @@ const AssignPermissionPage = ({
               initialValues={{
                 projectId: query.get('projectId'),
               }}
+              size="large"
             >
-              <Form.Item
-                {...formItemLayout}
-                name="username"
-                label="Tên tài khoản"
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: 'Vui lòng chọn một tài khoản.',
-                  },
-                ]}
-              >
-                <Select
-                  style={{ width: '100%' }}
-                  placeholder={
-                    (getUsernameListObj.usernameList.data || []).length > 0
-                      ? 'Chọn một tài khoản'
-                      : 'Không tìm thấy tài khoản'
-                  }
-                >
-                  {(getUsernameListObj.usernameList.data || [])
-                    .filter(user => user.username !== currentUser.username)
-                    .map(user => {
-                      return (
-                        <Option key={user._id} value={user.username}>
-                          {user.username}
-                        </Option>
-                      )
-                    })}
-                </Select>
-              </Form.Item>
-              <Form.Item
-                {...formItemLayout}
-                name="projectId"
-                label="Dự án"
-                rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}
-              >
-                <Select
-                  style={{ width: '100%' }}
-                  placeholder={
-                    (getMyProjectListObj.myProjectList.data || []).length > 0
-                      ? 'Chọn một dự án'
-                      : 'Không tìm thấy dự án'
-                  }
-                >
-                  {(getMyProjectListObj.myProjectList.data || []).map(item => {
-                    return (
-                      <Option key={item._id} value={item._id}>
-                        {item.name}
-                      </Option>
-                    )
-                  })}
-                </Select>
-              </Form.Item>
-              <Form.Item {...tailLayout}>
-                <Button htmlType="submit" loading={assignPermissionObj.isLoading} type="primary" size="middle">
-                  Mời
-                </Button>
-              </Form.Item>
+              <div className="row justify-content-center">
+                <div className="col-md-6">
+                  <Form.Item
+                    name="usernames"
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng chọn ít nhất một tài khoản.',
+                      },
+                    ]}
+                  >
+                    <Select
+                      mode="multiple"
+                      style={{ width: '100%' }}
+                      placeholder={
+                        (getUsernameListObj.usernameList.data || []).length > 0
+                          ? 'Chọn ít nhất một tài khoản'
+                          : 'Không tìm thấy tài khoản'
+                      }
+                    >
+                      {(getUsernameListObj.usernameList.data || [])
+                        .filter(user => user.username !== currentUser.username)
+                        .map(user => {
+                          return (
+                            <Option key={user._id} value={user.username}>
+                              {user.username}
+                            </Option>
+                          )
+                        })}
+                    </Select>
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="col-md-6">
+                  <Form.Item name="projectId" rules={[{ required: true, message: 'Vui lòng chọn một dự án.' }]}>
+                    <Select
+                      style={{ width: '100%' }}
+                      placeholder={
+                        (getMyProjectListObj.myProjectList.data || []).length > 0
+                          ? 'Chọn một dự án'
+                          : 'Không tìm thấy dự án'
+                      }
+                    >
+                      {(getMyProjectListObj.myProjectList.data || []).map(item => {
+                        return (
+                          <Option key={item._id} value={item._id}>
+                            {item.name}
+                          </Option>
+                        )
+                      })}
+                    </Select>
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="col-md-6">
+                  <Form.Item name="expiresIn" rules={[{ required: true, message: 'Vui lòng chọn thời gian.' }]}>
+                    <DatePicker
+                      style={{ width: '100%' }}
+                      placeholder="Cho phép tham gia đến ngày"
+                      picker="date"
+                      format="DD/MM/YYYY"
+                      disabledDate={disabledDate}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="row justify-content-center">
+                <div className="col-md-6">
+                  <Form.Item>
+                    <Button htmlType="submit" loading={assignPermissionObj.isLoading} type="primary">
+                      Mời tham gia
+                    </Button>
+                  </Form.Item>
+                </div>
+              </div>
             </Form>
           </div>
         </div>

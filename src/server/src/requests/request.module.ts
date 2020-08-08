@@ -42,6 +42,7 @@ import { CallAsrSagas } from './sagas/call-asr.sagas';
 import { RequestService } from './services/request.service';
 import { CONSTANTS } from 'common/constant';
 import { UserDto } from 'users/dtos/users.dto';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Module({
     imports: [
@@ -58,7 +59,8 @@ import { UserDto } from 'users/dtos/users.dto';
             OrderDto,
             ProjectDto,
             UserDto,
-            ProjectionDto
+            ProjectionDto,
+            PermissionDto,
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({

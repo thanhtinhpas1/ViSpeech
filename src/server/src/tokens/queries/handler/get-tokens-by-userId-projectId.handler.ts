@@ -6,6 +6,8 @@ import { getMongoRepository, Repository } from 'typeorm';
 import { GetTokensByUserIdAndProjectIdQuery } from '../impl/get-tokens-by-userId-projectId';
 import { Utils } from 'utils';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { CONSTANTS } from 'common/constant';
 
 @QueryHandler(GetTokensByUserIdAndProjectIdQuery)
 export class GetTokensByUserIdAndProjectIdHandler
@@ -14,13 +16,15 @@ export class GetTokensByUserIdAndProjectIdHandler
         @InjectRepository(TokenDto)
         private readonly repository: Repository<TokenDto>,
         @InjectRepository(TokenTypeDto)
-        private readonly tokenTypeDtoRepository: Repository<TokenTypeDto>
+        private readonly tokenTypeDtoRepository: Repository<TokenTypeDto>,
+        @InjectRepository(PermissionDto)
+        private readonly permissionDtoRepository: Repository<PermissionDto>
     ) {
     }
 
     async execute(query: GetTokensByUserIdAndProjectIdQuery): Promise<any> {
         Logger.log('Async GetTokensByUserIdAndProjectIdQuery...', 'GetTokensByUserIdAndProjectIdQuery');
-        const { userId, projectId, offset, limit, filters, sort } = query;
+        const { userId, projectId, assigneeId, offset, limit, filters, sort } = query;
         let tokens = [];
         try {
             const findOptions = {
@@ -43,6 +47,16 @@ export class GetTokensByUserIdAndProjectIdHandler
             }
 
             tokens = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
+
+            if (assigneeId) {
+                const permission = await this.permissionDtoRepository.findOne({ projectId, assignerId: userId, assigneeId,
+                    status: CONSTANTS.STATUS.ACCEPTED });
+                for (const token of tokens) {
+                    token.value = permission.permissions.find(p => p.tokenId === token._id)?.assigneeToken;
+                    token['status'] = Utils.tokenExpired(permission.expiresIn) ? CONSTANTS.STATUS.EXPIRED : CONSTANTS.STATUS.UNEXPIRED;
+                }
+            }
+
             const count = await getMongoRepository(TokenDto).count(findOptions.where);
             return { data: tokens, count };
         } catch (error) {

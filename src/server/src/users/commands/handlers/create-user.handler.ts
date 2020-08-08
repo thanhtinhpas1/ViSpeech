@@ -5,6 +5,7 @@ import { CreateUserCommand } from '../impl/create-user.command';
 import { AuthService } from 'auth/auth.service';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { CONSTANTS } from 'common/constant';
+import { Utils } from 'utils';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
@@ -24,6 +25,7 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
         const userId = userDto._id;
         const tokenValue = this.authService.generateTokenWithUserId(userId);
         const freeToken = new TokenDto(tokenValue, userId, '', CONSTANTS.TOKEN_TYPE.FREE);
+        freeToken._id = Utils.getUuid();
 
         // use mergeObjectContext for dto dispatch events
         const user = this.publisher.mergeObjectContext(

@@ -5,7 +5,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { useParams, useLocation, Link } from 'react-router-dom'
 import * as moment from 'moment'
-import AntdTable from '../../../components/common/AntdTable/AntdTable.component'
+import AntdTable from '../../common/AntdTable/AntdTable.component'
 import { CUSTOMER_PATH, TOKEN_TYPE, STATUS, DEFAULT_PAGINATION } from '../../../utils/constant'
 
 const ProjectDetailsPage = ({
@@ -27,7 +27,7 @@ const ProjectDetailsPage = ({
     getProjectInfo(id)
   }, [id, getProjectInfo])
 
-  const columns = [
+  let columns = [
     {
       title: 'Tên API key',
       dataIndex: 'name',
@@ -98,6 +98,26 @@ const ProjectDetailsPage = ({
       width: 180,
     },
     {
+      title: 'Thời hạn sử dụng',
+      dataIndex: 'status',
+      headerClassName: 'dt-token',
+      className: 'dt-amount',
+      filters: [
+        { text: STATUS.UNEXPIRED.viText, value: STATUS.UNEXPIRED.name },
+        { text: STATUS.EXPIRED.viText, value: STATUS.EXPIRED.name },
+      ],
+      filterMultiple: false,
+      render: status => (
+        <div className="d-flex align-items-center">
+          <div className={`data-state ${status.cssClass}`} />
+          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
+            {status.viText}
+          </span>
+        </div>
+      ),
+      width: 180,
+    },
+    {
       title: 'Thời gian còn lại',
       dataIndex: 'minutesLeft',
       headerClassName: 'dt-amount',
@@ -111,20 +131,35 @@ const ProjectDetailsPage = ({
     {
       title: '',
       dataIndex: '_id',
-      render: _id => (
-        <Link to={`${CUSTOMER_PATH}/transaction-details?tokenId=${_id}`} className="btn btn-light-alt btn-xs btn-icon">
-          <em className="ti ti-eye" />
-        </Link>
-      ),
+      render: _id => {
+        const acceptedProject = pathname.includes('accepted-project')
+        return (
+          <Link
+            to={`${CUSTOMER_PATH}/transaction-details?tokenId=${_id}`}
+            className={`btn btn-light-alt btn-xs btn-icon ${acceptedProject ? 'disabled' : ''}`}
+          >
+            <em className="ti ti-eye" />
+          </Link>
+        )
+      },
       width: 60,
       align: 'right',
     },
   ]
 
+  if (pathname.includes('my-project')) {
+    columns = columns.filter(col => col.dataIndex !== 'status')
+  }
+
   useEffect(() => {
     const projectOwnerId = getProjectInfoObj.project.userId
     if (pathname.includes('accepted-project') && projectOwnerId) {
-      getProjectTokens({ userId: projectOwnerId, projectId: id, pagination: DEFAULT_PAGINATION.SIZE_5 })
+      getProjectTokens({
+        userId: projectOwnerId,
+        projectId: id,
+        assigneeId: currentUser._id,
+        pagination: DEFAULT_PAGINATION.SIZE_5,
+      })
     }
     if (pathname.includes('my-project')) {
       getProjectTokens({ userId: currentUser._id, projectId: id, pagination: DEFAULT_PAGINATION.SIZE_5 })
@@ -135,7 +170,15 @@ const ProjectDetailsPage = ({
     ({ pagination, sortField, sortOrder, filters }) => {
       const projectOwnerId = getProjectInfoObj.project.userId
       if (pathname.includes('accepted-project') && projectOwnerId) {
-        getProjectTokens({ userId: projectOwnerId, projectId: id, pagination, sortField, sortOrder, filters })
+        getProjectTokens({
+          userId: projectOwnerId,
+          projectId: id,
+          assigneeId: currentUser._id,
+          pagination,
+          sortField,
+          sortOrder,
+          filters,
+        })
       }
       if (pathname.includes('my-project')) {
         getProjectTokens({ userId: currentUser._id, projectId: id, pagination, sortField, sortOrder, filters })

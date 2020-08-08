@@ -87,5 +87,12 @@ export const Utils = {
             return 'updatedDate';
         }
         return sortField;
+    },
+    validDate: (time: number) => {
+        const date = new Date(time);
+        return date instanceof Date && !isNaN(date.valueOf());
+    },
+    tokenExpired: (expiresIn: number | string) => {
+        return Number(expiresIn) < Date.now()
     }
 };

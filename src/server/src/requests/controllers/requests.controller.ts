@@ -26,14 +26,17 @@ import { config } from '../../../config';
 import { TokenDto } from '../../tokens/dtos/tokens.dto';
 import { ApiFile } from '../decorators/asr.decorator';
 import { AsrServiceGuard } from 'auth/guards/asr.service.guard';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Controller('speech')
 @ApiTags('speech')
-@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), AsrServiceGuard)
+@UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
 export class AsrController {
     constructor(
         @InjectRepository(TokenDto)
         private readonly tokenRepository: Repository<TokenDto>,
+        @InjectRepository(PermissionDto)
+        private readonly permissionRepository: Repository<PermissionDto>,
         private readonly jwtService: JwtService,
         private readonly requestService: RequestService,
     ) {
@@ -56,7 +59,23 @@ export class AsrController {
 
         const token = Utils.extractToken(req);
         const payload = this.jwtService.decode(token);
-        const tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
+        let tokenDto = null;
+        if (payload['assignerId'] && payload['projectId'] && payload['assigneeId'] && payload['tokenId']) {
+            // this is assigneeToken
+            const permission = await this.permissionRepository.findOne({ assignerId: payload['assignerId'], projectId: payload['projectId'],
+                assigneeId: payload['assigneeId'], status: CONSTANTS.STATUS.ACCEPTED });
+            if (!permission) {
+                return res.status(HttpStatus.FORBIDDEN).json({message: 'Permission not existed.'});
+            }
+            if (Utils.tokenExpired(permission.expiresIn)) {
+                return res.status(HttpStatus.FORBIDDEN).json({message: 'Permission is expired.'});
+            }
+            const tokenId = permission.permissions.find(p => p.assigneeToken === token)?.tokenId
+            tokenDto = await this.tokenRepository.findOne({ _id: tokenId });
+        } else if (payload['id']) {
+            // this is normal token
+            tokenDto = await this.tokenRepository.findOne({ where: { userId: payload['id'], value: token } });
+        }
 
         // invalid token
         if (!tokenDto || !tokenDto.isValid || tokenDto.usedMinutes >= tokenDto.minutes)
@@ -91,7 +110,7 @@ export class AsrController {
             result.data.tokenId = requestDto.tokenId;
             return res.status(HttpStatus.OK).json(result.data);
         }).catch(err => {
-            Logger.error(err.message, 'RequestCall');
+            Logger.error(err.message, '', 'RequestCall');
             requestStatus = CONSTANTS.STATUS.FAILURE;
             return res.status(HttpStatus.BAD_REQUEST).send();
         }).finally(async () => {
