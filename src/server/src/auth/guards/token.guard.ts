@@ -5,6 +5,7 @@ import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { getMongoRepository } from 'typeorm';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { UserUtils } from '../../utils/user.util';
+import { ProjectDto } from 'projects/dtos/projects.dto';
 
 @Injectable()
 export class TokenGuard implements CanActivate {
@@ -58,23 +59,25 @@ export class TokenQueryGuard implements CanActivate {
             }
             const permission = await getMongoRepository(PermissionDto)
                 .findOne({
+                    assignerId: token.userId,
                     assigneeId: payload['id'],
                     projectId: token.projectId,
                     status: CONSTANTS.STATUS.ACCEPTED
                 });
-            if (permission) {
-                return true;
-            }
+            if (permission) return true;
         }
         if (request.params['userId'] && request.params['userId'] === payload['id']) {
             return true;
         }
         const { userId, projectId } = request.query;
-        if (userId && userId === payload['id']) {
-            return true;
-        }
+        if (userId && userId === payload['id']) return true;
+
         // verify assignee
         if (userId && projectId) {
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: projectId });
+            if (!project) {
+                throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
+            }
             const permission = await getMongoRepository(PermissionDto)
                 .findOne({
                     assigneeId: payload['id'],
@@ -82,9 +85,7 @@ export class TokenQueryGuard implements CanActivate {
                     projectId,
                     status: CONSTANTS.STATUS.ACCEPTED
                 });
-            if (permission) {
-                return true;
-            }
+            if (permission && project.isValid) return true;
         }
         Logger.warn('User does not have permission to query tokens.', 'TokenQueryGuard');
         return false;

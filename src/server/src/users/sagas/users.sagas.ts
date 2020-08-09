@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 import { EventStore } from '../../core/event-store/lib';
 import { UserCreatedSuccessEvent } from '../events/impl/user-created.event';
 import { UserDeletedSuccessEvent } from '../events/impl/user-deleted.event';
@@ -35,7 +35,7 @@ export class UsersSagas {
     userDeletedSuccess = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(UserDeletedSuccessEvent),
-            map((event: UserDeletedSuccessEvent) => {
+            flatMap((event: UserDeletedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] userDeletedSuccess Saga', 'UsersSagas');
                 const { streamId, userId } = event;
                 // remove token

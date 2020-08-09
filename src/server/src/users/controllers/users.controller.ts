@@ -84,11 +84,16 @@ export class UsersController {
     @ApiResponse({ status: 200, description: 'Reset Password.' })
     @Put('reset-password')
     async resetPassword(@Body() body: ResetPasswordBody) {
-        const streamId = Utils.getUuid();
         const decodedEmailToken = this.jwtService.decode(body.emailToken);
-        if (!decodedEmailToken['id']) {
-            throw new NotAcceptableException();
+        const exp = decodedEmailToken['exp'];
+        if (!decodedEmailToken || !decodedEmailToken['id']) {
+            throw new BadRequestException('Token is invalid.');
         }
+        if (Utils.tokenExpired(`${exp}000`)) {
+            throw new BadRequestException('Token is expired.');
+        }
+
+        const streamId = Utils.getUuid();
         body.userId = decodedEmailToken['id']
         return this.usersService.resetPassword(streamId, body);
     }

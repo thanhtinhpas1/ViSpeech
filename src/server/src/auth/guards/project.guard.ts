@@ -58,7 +58,7 @@ export class ProjectQueryGuard implements CanActivate {
             }
             // verify assignee
             const permission = await getMongoRepository(PermissionDto)
-                .findOne({ assigneeId: payload['id'], projectId: id, status: CONSTANTS.STATUS.ACCEPTED });
+                .findOne({ assignerId: project.userId, assigneeId: payload['id'], projectId: id, status: CONSTANTS.STATUS.ACCEPTED });
             if (permission && project.isValid) {
                 return true;
             }
