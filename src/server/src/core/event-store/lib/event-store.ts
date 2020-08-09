@@ -216,8 +216,8 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 (sub, reason, error) =>
                     this.onDropped(sub as ExtendedCatchUpSubscription, reason, error),
                 {
-                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
-                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+                    username: 'admin',
+                    password: 'changeit',
                 } as UserCredentials,
                 10,
             ) as ExtendedCatchUpSubscription;
