@@ -65,12 +65,12 @@ import { CONSTANTS } from 'common/constant';
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: CONSTANTS.STREAM_NAME.PROJECT,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.PROJECT + '-' + config.HOST,
-                    resolveLinkTos: true,  // Default is true (Optional)
-                },
+                // {
+                //     type: EventStoreSubscriptionType.Persistent,
+                //     stream: CONSTANTS.STREAM_NAME.PROJECT,
+                //     persistentSubscriptionName: CONSTANTS.STREAM_NAME.PROJECT + '-' + config.HOST,
+                //     resolveLinkTos: true,  // Default is true (Optional)
+                // },
             ],
             eventHandlers: {
                 ...ProjectsModule.eventHandlers,

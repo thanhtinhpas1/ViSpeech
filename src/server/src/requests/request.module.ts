@@ -72,12 +72,12 @@ import { PermissionDto } from 'permissions/dtos/permissions.dto';
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: CONSTANTS.STREAM_NAME.REQUEST,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.REQUEST + '-' + config.HOST,
-                    resolveLinkTos: true,  // Default is true (Optional)
-                },
+                // {
+                //     type: EventStoreSubscriptionType.Persistent,
+                //     stream: CONSTANTS.STREAM_NAME.REQUEST,
+                //     persistentSubscriptionName: CONSTANTS.STREAM_NAME.REQUEST + '-' + config.HOST,
+                //     resolveLinkTos: true,  // Default is true (Optional)
+                // },
             ],
             eventHandlers: {
                 ...RequestModule.eventHandlers

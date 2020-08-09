@@ -67,12 +67,12 @@ import { TokensModule } from '../tokens/tokens.module';
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream:  CONSTANTS.STREAM_NAME.ORDER,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.ORDER + '-' + config.HOST,
-                    resolveLinkTos: true,  // Default is true (Optional)
-                },
+                // {
+                //     type: EventStoreSubscriptionType.Persistent,
+                //     stream:  CONSTANTS.STREAM_NAME.ORDER,
+                //     persistentSubscriptionName: CONSTANTS.STREAM_NAME.ORDER + '-' + config.HOST,
+                //     resolveLinkTos: true,  // Default is true (Optional)
+                // },
             ],
             eventHandlers: {
                 ...OrdersModule.eventHandlers,
