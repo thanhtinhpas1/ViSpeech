@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getStatisticsById: (id, statisticsType, timeType, queryParams) =>
     dispatch(getStatisticsById(id, statisticsType, timeType, queryParams)),
-  getMyProjects: ({ userId }) => dispatch(getMyProjectList({ userId })),
+  getMyProjects: ({ userId, pagination, filters }) => dispatch(getMyProjectList({ userId, pagination, filters })),
 })
 
 const StatisticsProjectContainer = connect(mapStateToProps, mapDispatchToProps)(StatisticsProject)

@@ -4,7 +4,7 @@ import React, { useEffect, useCallback, useState } from 'react'
 import { Form, Select } from 'antd'
 import { DEFAULT_PAGINATION, TOKEN_TYPE } from '../../../../../../../utils/constant'
 import Utils from '../../../../../../../utils'
-import LoadingIcon from '../../../../../../../components/common/LoadingIcon/LoadingIcon.component'
+import LoadingIcon from '../../../../../../common/LoadingIcon/LoadingIcon.component'
 import './SelectTokenForm.style.scss'
 
 const { Option } = Select
@@ -57,6 +57,8 @@ const SelectTokenForm = ({
       if (getMyProjectListObj.myProjectList.data.length > 0) {
         onProjectIdChange(getMyProjectListObj.myProjectList.data[0]._id)
         form.setFields([{ name: 'projectId', value: getMyProjectListObj.myProjectList.data[0]._id }])
+      } else {
+        form.setFields([{ name: 'projectId', value: null }])
       }
     }
   }, [form, getMyProjectListObj, onProjectIdChange])
@@ -67,6 +69,8 @@ const SelectTokenForm = ({
       // form.resetFields(['tokenId'])
       if (getProjectTokenListObj.projectTokenList.data.length > 0) {
         form.setFields([{ name: 'tokenId', value: getProjectTokenListObj.projectTokenList.data[0]._id }])
+      } else {
+        form.setFields([{ name: 'tokenId', value: null }])
       }
     }
   }, [getProjectTokenListObj, form])
@@ -164,7 +168,6 @@ const SelectTokenForm = ({
             name="tokenId"
             dependencies={['projectId']}
             rules={[
-              { required: true, message: 'Vui lòng chọn một API key.' },
               ({ getFieldValue }) => ({
                 async validator() {
                   const projectId = getFieldValue('projectId')

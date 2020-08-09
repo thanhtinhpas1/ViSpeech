@@ -7,7 +7,7 @@ import { HorizontalBar } from 'react-chartjs-2'
 import { Row, Select, DatePicker, Button, Empty } from 'antd'
 import STORAGE from '../../../../../utils/storage'
 import ReportUtils from '../../../../../utils/report.util'
-import LoadingIcon from '../../../../../components/common/LoadingIcon/LoadingIcon.component'
+import LoadingIcon from '../../../../common/LoadingIcon/LoadingIcon.component'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -69,50 +69,14 @@ const TotalStatisticsTemplate = ({
     }
   }, [getTotalStatisticsObj])
 
-  const getStatistics = (timeType, queryParams) => {
-    STORAGE.setPreferences(`'vispeech-user-total-statistics-${statisticsType}'`, JSON.stringify(queryParams))
-    getTotalStatistics(userId, statisticsType, timeType, queryParams)
-  }
-
-  const resetData = () => {
-    setValueRangePicker([])
-    setQuarterData({})
+  useEffect(() => {
     setChartData([])
     setIsButtonDisabled(true)
-  }
 
-  const onChangePickerType = value => {
-    setPickerType(value)
-    resetData()
-
-    let format = ''
-    let placeHolder = []
-
-    if (value === TIME_TYPE.DATE) {
-      format = 'DD/MM/YYYY'
-      placeHolder = ['Ngày bắt đầu', 'Ngày kết thúc']
-    } else if (value === TIME_TYPE.WEEK) {
-      format = 'Tuần ww / YYYY'
-      placeHolder = ['Tuần bắt đầu', 'Tuần kết thúc']
-    } else if (value === TIME_TYPE.MONTH) {
-      format = 'MM/YYYY'
-      placeHolder = ['Tháng bắt đầu', 'Tháng kết thúc']
-    } else if (value === TIME_TYPE.YEAR) {
-      format = 'YYYY'
-      placeHolder = ['Năm bắt đầu', 'Năm kết thúc']
-    }
-
-    setFormatRangePicker(format)
-    setPlaceHolderRangePicker(placeHolder)
-  }
-
-  const checkDisabledBtn = (value, isStart) => {
-    setIsButtonDisabled(true)
-
-    const from = value ? value[0] : valueRangePicker[0]
-    const to = value ? value[1] : valueRangePicker[1]
-    const fromYear = from && parseInt(from.format('YYYY'))
-    const toYear = to && parseInt(to.format('YYYY'))
+    const from = valueRangePicker && valueRangePicker[0]
+    const to = valueRangePicker && valueRangePicker[1]
+    let fromYear = from && parseInt(from.format('YYYY'))
+    let toYear = to && parseInt(to.format('YYYY'))
 
     if (pickerType !== TIME_TYPE.QUARTER && (!from || !to)) {
       return
@@ -159,39 +123,18 @@ const TotalStatisticsTemplate = ({
         }
       }
     } else if (pickerType === TIME_TYPE.QUARTER) {
-      if (isStart == null) {
-        if (quarterData.to && quarterData.from) {
-          setIsButtonDisabled(false)
-        }
-        return
-      }
-
-      if (isStart && !quarterData.to) return
-      if (!isStart && !quarterData.from) return
-
-      const { quarter, year } = isStart ? quarterData.to : quarterData.from
-      const selectedQuarter = value && parseInt(value.format('Q'))
-      const selectedYear = value && parseInt(value.format('YYYY'))
-
-      if (quarter != null && year && selectedQuarter != null && selectedYear != null) {
-        if (isStart) {
-          let totalQuarters = quarter - selectedQuarter + 1
-          if (selectedYear === year && selectedQuarter < quarter && totalQuarters <= RANGE_PICKER_LIMIT) {
+      if (quarterData.from && quarterData.to) {
+        const fromQuarter = quarterData.from.quarter
+        fromYear = quarterData.from.year
+        const toQuarter = quarterData.to.quarter
+        toYear = quarterData.to.year
+        if (fromQuarter && fromYear && toQuarter && toYear) {
+          let totalQuarters = toQuarter - fromQuarter + 1
+          if (fromYear === toYear && fromQuarter < toQuarter && totalQuarters <= RANGE_PICKER_LIMIT) {
             setIsButtonDisabled(false)
           }
-          if (selectedYear !== year) {
-            totalQuarters = getTotalQuarters(selectedQuarter, selectedYear, quarter, year)
-            if (totalQuarters <= RANGE_PICKER_LIMIT) {
-              setIsButtonDisabled(false)
-            }
-          }
-        } else {
-          let totalQuarters = selectedQuarter - quarter + 1
-          if (selectedYear === year && quarter < selectedQuarter && totalQuarters <= RANGE_PICKER_LIMIT) {
-            setIsButtonDisabled(false)
-          }
-          if (selectedYear !== year) {
-            totalQuarters = getTotalQuarters(quarter, year, selectedQuarter, selectedYear)
+          if (fromYear !== toYear) {
+            totalQuarters = getTotalQuarters(fromQuarter, fromYear, toQuarter, toYear)
             if (totalQuarters <= RANGE_PICKER_LIMIT) {
               setIsButtonDisabled(false)
             }
@@ -204,34 +147,65 @@ const TotalStatisticsTemplate = ({
         setIsButtonDisabled(false)
       }
     }
+  }, [valueRangePicker, pickerType, quarterData])
+
+  const getStatistics = (timeType, queryParams) => {
+    STORAGE.setPreferences(`'vispeech-admin-total-statistics-${statisticsType}'`, JSON.stringify(queryParams))
+    getTotalStatistics(userId, statisticsType, timeType, queryParams)
+  }
+
+  const resetData = () => {
+    setValueRangePicker([])
+    setQuarterData({})
+    setChartData([])
+    setIsButtonDisabled(true)
+  }
+
+  const onChangePickerType = value => {
+    setPickerType(value)
+    resetData()
+
+    let format = ''
+    let placeHolder = []
+
+    if (value === TIME_TYPE.DATE) {
+      format = 'DD/MM/YYYY'
+      placeHolder = ['Ngày bắt đầu', 'Ngày kết thúc']
+    } else if (value === TIME_TYPE.WEEK) {
+      format = 'Tuần ww / YYYY'
+      placeHolder = ['Tuần bắt đầu', 'Tuần kết thúc']
+    } else if (value === TIME_TYPE.MONTH) {
+      format = 'MM/YYYY'
+      placeHolder = ['Tháng bắt đầu', 'Tháng kết thúc']
+    } else if (value === TIME_TYPE.YEAR) {
+      format = 'YYYY'
+      placeHolder = ['Năm bắt đầu', 'Năm kết thúc']
+    }
+
+    setFormatRangePicker(format)
+    setPlaceHolderRangePicker(placeHolder)
   }
 
   const onChangeFromQuarter = value => {
-    console.log('onChangeFromQuarter = ', value.format('Q/YYYY'))
+    console.debug('onChangeFromQuarter = ', value && value.format('Q/YYYY'))
     const quarterObj = {
       ...quarterData,
-      from: { quarter: parseInt(value.format('Q')), year: parseInt(value.format('YYYY')) },
+      from: { quarter: value && parseInt(value.format('Q')), year: value && parseInt(value.format('YYYY')) },
     }
     setQuarterData(quarterObj)
-    setChartData([])
-    checkDisabledBtn(value, true)
   }
 
   const onChangeToQuarter = value => {
-    console.log('onChangeToQuarter = ', value.format('Q/YYYY'))
+    console.debug('onChangeToQuarter = ', value && value.format('Q/YYYY'))
     const quarterObj = {
       ...quarterData,
-      to: { quarter: parseInt(value.format('Q')), year: parseInt(value.format('YYYY')) },
+      to: { quarter: value && parseInt(value.format('Q')), year: value && parseInt(value.format('YYYY')) },
     }
     setQuarterData(quarterObj)
-    setChartData([])
-    checkDisabledBtn(value, false)
   }
 
   const onChangeRangePicker = value => {
     setValueRangePicker(value)
-    setChartData([])
-    checkDisabledBtn(value)
   }
 
   const onClickGetStatistics = () => {
@@ -245,15 +219,15 @@ const TotalStatisticsTemplate = ({
     const toYear = to && parseInt(to.format('YYYY'))
 
     if (pickerType === TIME_TYPE.DATE) {
-      console.log('get total statistics from date ', from.format('DD/MM/YYYY'))
-      console.log('get total statistics to date ', to.format('DD/MM/YYYY'))
+      console.debug('get total statistics from date ', from.format('DD/MM/YYYY'))
+      console.debug('get total statistics to date ', to.format('DD/MM/YYYY'))
       queryParams.fromDate = from.valueOf()
       queryParams.toDate = to.valueOf()
     } else if (pickerType === TIME_TYPE.WEEK) {
       const fromWeek = parseInt(from.format('w'))
       const toWeek = parseInt(to.format('w'))
-      console.log('get total statistics from week ', fromWeek, ', from year', fromYear)
-      console.log('get total statistics to week ', toWeek, ', to year', toYear)
+      console.debug('get total statistics from week ', fromWeek, ', from year', fromYear)
+      console.debug('get total statistics to week ', toWeek, ', to year', toYear)
       queryParams.weekObj = {
         from: {
           data: fromWeek,
@@ -267,8 +241,8 @@ const TotalStatisticsTemplate = ({
     } else if (pickerType === TIME_TYPE.MONTH) {
       const fromMonth = parseInt(from.format('M')) - 1
       const toMonth = parseInt(to.format('M')) - 1
-      console.log('get total statistics from month ', fromMonth, ', from year', fromYear)
-      console.log('get total statistics to month ', toMonth, ', to year', toYear)
+      console.debug('get total statistics from month ', fromMonth, ', from year', fromYear)
+      console.debug('get total statistics to month ', toMonth, ', to year', toYear)
       queryParams.monthObj = {
         from: {
           data: fromMonth,
@@ -284,8 +258,8 @@ const TotalStatisticsTemplate = ({
       const quarterFromYear = quarterData.from.year
       const toQuarter = quarterData.to.quarter
       const quarterToYear = quarterData.to.year
-      console.log('get total statistics from quarter ', fromQuarter, ', from year', quarterFromYear)
-      console.log('get total statistics to quarter ', toQuarter, ', to year', quarterToYear)
+      console.debug('get total statistics from quarter ', fromQuarter, ', from year', quarterFromYear)
+      console.debug('get total statistics to quarter ', toQuarter, ', to year', quarterToYear)
       queryParams.quarterObj = {
         from: {
           data: fromQuarter,
@@ -297,8 +271,8 @@ const TotalStatisticsTemplate = ({
         },
       }
     } else if (pickerType === TIME_TYPE.YEAR) {
-      console.log('get total statistics from year ', fromYear)
-      console.log('get total statistics to year ', toYear)
+      console.debug('get total statistics from year ', fromYear)
+      console.debug('get total statistics to year ', toYear)
       queryParams.fromYear = fromYear
       queryParams.toYear = toYear
     }
@@ -346,7 +320,7 @@ const TotalStatisticsTemplate = ({
         </div>
       )}
 
-      <div className="admin-statistics-page__select-type">
+      <div className="admin-statistics-page__total-select-type">
         <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4 mt-2">
           <Select defaultValue={pickerType} style={{ width: '100%' }} onChange={onChangePickerType}>
             <Option value={TIME_TYPE.DATE}>Theo ngày</Option>
@@ -358,15 +332,17 @@ const TotalStatisticsTemplate = ({
         </div>
         <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 mt-2">
           {pickerType === TIME_TYPE.QUARTER ? (
-            <div style={{ width: '100%' }}>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <DatePicker
+                style={{ width: '45%' }}
                 picker="quarter"
                 onChange={onChangeFromQuarter}
                 format="quý 0Q/YYYY"
                 placeholder="Quý bắt đầu"
               />
-              <div style={{ margin: '0px 5px' }}>đến</div>
+              <div style={{ margin: '0px 5px', width: '10%' }}>đến</div>
               <DatePicker
+                style={{ width: '45%' }}
                 picker="quarter"
                 onChange={onChangeToQuarter}
                 format="quý 0Q/YYYY"
@@ -393,9 +369,7 @@ const TotalStatisticsTemplate = ({
       <Row justify="center">
         <div className="admin-statistics-page__total-chart">
           {(chartData.length === 0 || getTotalStatisticsObj.isLoading) && <Empty />}
-          {getTotalStatisticsObj.isLoading === false &&
-            getTotalStatisticsObj.isSuccess === true &&
-            chartData.length > 0 && <HorizontalBar data={dataChart} options={chartOptions} />}
+          {chartData.length > 0 && <HorizontalBar data={dataChart} options={chartOptions} />}
         </div>
       </Row>
     </div>

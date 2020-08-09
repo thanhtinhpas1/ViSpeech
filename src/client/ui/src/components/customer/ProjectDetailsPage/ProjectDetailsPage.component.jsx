@@ -33,7 +33,7 @@ const ProjectDetailsPage = ({
       dataIndex: 'name',
       style: { paddingRight: '30px' },
       render: name => <span className="lead tnx-id">{name}</span>,
-      width: 250,
+      width: 150,
     },
     {
       title: 'API key',
