@@ -1,11 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ofType, Saga } from '@nestjs/cqrs';
+import { ICommand, ofType, Saga } from '@nestjs/cqrs';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectDeletedSuccessEvent } from 'projects/events/impl/project-deleted.event';
-import { TokenDeletedByProjectIdEvent } from '../../tokens/events/impl/token-deleted-by-projectId.event';
 import { EventStore } from '../../core/event-store/lib';
-import { CONSTANTS } from 'common/constant';
+import { DeleteTokenByProjectIdCommand } from '../../tokens/commands/impl/delete-token-by-projectId.command';
 
 @Injectable()
 export class ProjectsSagas {
@@ -15,15 +14,15 @@ export class ProjectsSagas {
     }
 
     @Saga()
-    projectDeletedSuccess = (events$: Observable<any>): Observable<void> => {
+    projectDeletedSuccess = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(ProjectDeletedSuccessEvent),
             map(event => {
                 Logger.log('Inside [ProjectsSagas] ProjectDeletedSuccessEvent Saga', 'ProjectsSagas');
                 const { streamId, projectId } = event;
-                const deleteTokenEvent = new TokenDeletedByProjectIdEvent(streamId, projectId);
-                deleteTokenEvent['eventType'] = 'TokenDeletedByProjectIdEvent';
-                this.eventStore.publish(deleteTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
+                return new DeleteTokenByProjectIdCommand(streamId, projectId);
+                // deleteTokenEvent['eventType'] = 'TokenDeletedByProjectIdEvent';
+                // this.eventStore.publish(deleteTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };

@@ -36,12 +36,12 @@ import { CONSTANTS } from 'common/constant';
                     stream: '$stats-0.0.0.0:2113',
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
-                {
-                    type: EventStoreSubscriptionType.Persistent,
-                    stream: CONSTANTS.STREAM_NAME.MONITOR,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.MONITOR + '-' + config.HOST,
-                    resolveLinkTos: true,  // Default is true (Optional)
-                },
+                // {
+                //     type: EventStoreSubscriptionType.Persistent,
+                //     stream: CONSTANTS.STREAM_NAME.MONITOR,
+                //     persistentSubscriptionName: CONSTANTS.STREAM_NAME.MONITOR + '-' + config.HOST,
+                //     resolveLinkTos: true,  // Default is true (Optional)
+                // },
             ],
             eventHandlers: {
                 ...MonitorsModule.eventHandlers,

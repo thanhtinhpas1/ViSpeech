@@ -325,11 +325,11 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 (sub, reason, error) =>
                     this.onDropped(sub as ExtendedPersistentSubscription, reason, error),
                 {
-                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
-                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
-                } as UserCredentials,
-                102400,
-                true,
+                    username: 'admin',
+                    password: 'changeit'
+                },
+                10240,
+                true
             ) as ExtendedPersistentSubscription;
 
             resolved.isLive = true;
