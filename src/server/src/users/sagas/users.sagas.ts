@@ -1,15 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ICommand, ofType, Saga } from '@nestjs/cqrs';
-import { CONSTANTS } from 'common/constant';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FreeTokenCreatedEvent } from 'tokens/events/impl/free-token-created.event';
 import { EventStore } from '../../core/event-store/lib';
-import { PermissionDeletedByUserIdEvent } from '../../permissions/events/impl/permission-deleted-by-userId.event';
-import { ProjectDeletedByUserIdEvent } from '../../projects/events/impl/project-deleted-by-userId.event';
-import { TokenDeletedByUserIdEvent } from '../../tokens/events/impl/token-deleted-by-userId.event';
 import { UserCreatedSuccessEvent } from '../events/impl/user-created.event';
 import { UserDeletedSuccessEvent } from '../events/impl/user-deleted.event';
+import { CreateFreeTokenCommand } from '../../tokens/commands/impl/create-token.command';
+import { DeleteTokenByUserIdCommand } from '../../tokens/commands/impl/delete-token-by-userId.command';
+import { DeleteProjectByUserIdCommand } from '../../projects/commands/impl/delete-project-by-userId.command';
+import { DeletePermissionByUserIdCommand } from '../../permissions/commands/impl/delete-permission-by-userId.command';
 
 @Injectable()
 export class UsersSagas {
@@ -19,15 +18,15 @@ export class UsersSagas {
     }
 
     @Saga()
-    userCreatedSuccess = (events$: Observable<any>): Observable<void> => {
+    userCreatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
         return events$.pipe(
             ofType(UserCreatedSuccessEvent),
             map((event: UserCreatedSuccessEvent) => {
                 Logger.log('Inside [UsersSagas] userCreatedSuccess Saga', 'UsersSagas');
                 const { streamId, freeToken } = event;
-                const freeTokenCreatedEvent = new FreeTokenCreatedEvent(streamId, freeToken);
-                freeTokenCreatedEvent['eventType'] = 'FreeTokenCreatedEvent';
-                this.eventStore.publish(freeTokenCreatedEvent, CONSTANTS.STREAM_NAME.TOKEN);
+                return new CreateFreeTokenCommand(streamId, freeToken);
+                // freeTokenCreatedEvent['eventType'] = 'FreeTokenCreatedEvent';
+                // this.eventStore.publish(freeTokenCreatedEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };
@@ -40,18 +39,18 @@ export class UsersSagas {
                 Logger.log('Inside [UsersSagas] userDeletedSuccess Saga', 'UsersSagas');
                 const { streamId, userId } = event;
                 // remove token
-                const tokenDeletedEvent = new TokenDeletedByUserIdEvent(streamId, userId);
-                tokenDeletedEvent['eventType'] = 'TokenDeletedByUserIdEvent';
-                this.eventStore.publish(tokenDeletedEvent, CONSTANTS.STREAM_NAME.TOKEN);
+                const tokenDeletedCommand = new DeleteTokenByUserIdCommand(streamId, userId);
+                // tokenDeletedEvent['eventType'] = 'TokenDeletedByUserIdEvent';
+                // this.eventStore.publish(tokenDeletedEvent, CONSTANTS.STREAM_NAME.TOKEN);
                 // remove project
-                const projectDeletedEvent = new ProjectDeletedByUserIdEvent(streamId, userId);
-                projectDeletedEvent['eventType'] = 'ProjectDeletedByUserIdEvent';
-                this.eventStore.publish(projectDeletedEvent, CONSTANTS.STREAM_NAME.PROJECT);
+                const projectDeletedCommand = new DeleteProjectByUserIdCommand(streamId, userId);
+                // projectDeletedEvent['eventType'] = 'ProjectDeletedByUserIdEvent';
+                // this.eventStore.publish(projectDeletedEvent, CONSTANTS.STREAM_NAME.PROJECT);
                 // remove permission
-                const permissionDeletedEvent = new PermissionDeletedByUserIdEvent(streamId, userId);
-                permissionDeletedEvent['eventType'] = 'PermissionDeletedByUserIdEvent';
-                this.eventStore.publish(permissionDeletedEvent, CONSTANTS.STREAM_NAME.PERMISSION);
-                return null;
+                const permissionDeletedCommand = new DeletePermissionByUserIdCommand(streamId, userId);
+                // permissionDeletedEvent['eventType'] = 'PermissionDeletedByUserIdEvent';
+                // this.eventStore.publish(permissionDeletedEvent, CONSTANTS.STREAM_NAME.PERMISSION);
+                return [tokenDeletedCommand, projectDeletedCommand, permissionDeletedCommand];
             })
         );
     };
