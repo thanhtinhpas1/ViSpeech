@@ -14,6 +14,8 @@ import { GetStatisticsByTokenTypeIdAndUserIdQuery } from 'reports/queries/impl/g
 import { GetUserTotalStatisticsQuery } from 'reports/queries/impl/get-user-total-statistics.query';
 import { GetAdminTotalStatisticsQuery } from 'reports/queries/impl/get-admin-total-statistics.query';
 import { GetTotalStatisticsQuery } from 'reports/queries/impl/get-total-statistics.query';
+import { GetStatisticsForAssignersQuery } from 'reports/queries/impl/get-statistics-for-assigners.query';
+import { GetTotalStatisticsForAssignersQuery } from 'reports/queries/impl/get-total-statistics-for-assigners.query';
 
 @Controller('reports')
 @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT))
@@ -107,6 +109,24 @@ export class ReportsController {
         return this.reportsService.getStatisticsByTokenTypeIdAndUserId(query);
     }
 
+    /* Get Statistics For Assigners */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Get Statistics For Assigners'] })
+    @ApiResponse({ status: 200, description: 'Get Statistics For Assigners.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
+    @Get('statistics-for-assigners/:id/:assignerId/:assigneeId/:statisticsType/:timeType')
+    async getStatisticsForAssigners(@Query() query: GetStatisticsForAssignersQuery,
+                                    @Param() param: GetStatisticsParam) {
+        const { id, assignerId, assigneeId, statisticsType, timeType } = param;
+        query.id = id;
+        query.assignerId = assignerId;
+        query.assigneeId = assigneeId;
+        query.statisticsType = statisticsType;
+        query.timeType = timeType;
+        return this.reportsService.getStatisticsForAssigners(query);
+    }
+
     /* Get Admin Total Statistics */
 
     /*--------------------------------------------*/
@@ -136,6 +156,23 @@ export class ReportsController {
         query.statisticsType = statisticsType;
         query.timeType = timeType;
         return this.reportsService.getUserTotalStatistics(query);
+    }
+
+    /* Get Total Statistics For Assigners */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Get Total Statistics For Assigners'] })
+    @ApiResponse({ status: 200, description: 'Get Total Statistics For Assigners.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ReportQueryGuard)
+    @Get('total-statistics-for-assigners/:assignerId/:projectId/:statisticsType/:timeType')
+    async getTotalStatisticsForAssigners(@Query() query: GetTotalStatisticsForAssignersQuery,
+                                         @Param() param: GetStatisticsParam) {
+        const { assignerId, projectId, statisticsType, timeType } = param;
+        query.assignerId = assignerId;
+        query.projectId = projectId;
+        query.statisticsType = statisticsType;
+        query.timeType = timeType;
+        return this.reportsService.getTotalStatisticsForAssigners(query);
     }
 
     /* Get Total Statistics */

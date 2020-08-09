@@ -241,3 +241,17 @@ export const deleteUserFailure = message => ({
   type: UserTypes.DELETE_USER_FAILURE,
   payload: message,
 })
+
+// get project assignee list
+export const getProjectAssigneeList = projectId => ({
+  type: UserTypes.GET_PROJECT_ASSIGNEES,
+  payload: projectId,
+})
+export const getProjectAssigneeListSuccess = data => ({
+  type: UserTypes.GET_PROJECT_ASSIGNEES_SUCCESS,
+  payload: data,
+})
+export const getProjectAssigneeListFailure = message => ({
+  type: UserTypes.GET_PROJECT_ASSIGNEES_FAILURE,
+  payload: message,
+})

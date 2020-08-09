@@ -25,7 +25,7 @@ export class GetProjectAssigneesHandler implements IQueryHandler<GetProjectAssig
             const assignees = [];
             for (const permission of permissions) {
                 const user = await this.userRepo.findOne({ _id: permission.assigneeId });
-                assignees.push(user);
+                assignees.push({ _id: user._id, username: user.username });
             }
             return assignees;
         } catch (error) {

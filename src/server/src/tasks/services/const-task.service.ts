@@ -279,6 +279,12 @@ export class ConstTaskService {
         // report for userId, tokenTypeId
         await this.createReports(CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, fromDate, toDate, timeType, taskType);
 
+        // report for assignerId, projectId, assigneeId
+        await this.createReportsForAssigners(CONSTANTS.STATISTICS_TYPE.SHARED_PROJECT, fromDate, toDate, timeType, taskType);
+
+        // report for assignerId, projectId, assigneeId, tokenId
+        await this.createReportsForAssigners(CONSTANTS.STATISTICS_TYPE.SHARED_TOKEN, fromDate, toDate, timeType, taskType);
+
         // report for userId
         await this.createReportsForAdmin(CONSTANTS.STATISTICS_TYPE.USER, fromDate, toDate, timeType, taskType);
 
@@ -373,6 +379,56 @@ export class ConstTaskService {
             reportDto[`${reportType}Id`] = id;
             this.reportRepository.save(reportDto);
             this.logger.log(`Report generated for userId=${userId}, ${reportType}Id=${id}`, `${taskType} ReportType=${reportType}`);
+        }
+    }
+
+    async createReportsForAssigners(reportType: string, fromDate: Date, toDate: Date, timeType: string, taskType: string) {
+        const aggregateMatchDates = CronUtils.aggregateMatchDates(fromDate, toDate);
+
+        if (![CONSTANTS.STATISTICS_TYPE.SHARED_PROJECT, CONSTANTS.STATISTICS_TYPE.SHARED_TOKEN].includes(reportType)) {
+            return;
+        }
+
+        await this.deleteRelatedReports(aggregateMatchDates, timeType, reportType);
+
+        // create reports
+        const aggregateGroup = CronUtils.aggregateGroup();
+        aggregateGroup.$group._id = {
+            userId: '$userId',
+            projectId: '$projectId',
+            assigneeId: '$assigneeId'
+        }
+        if (reportType === CONSTANTS.STATISTICS_TYPE.SHARED_TOKEN) {
+            aggregateGroup.$group._id[`tokenId`] = `$tokenId`;
+        }
+
+        // only create report for successful requests
+        aggregateMatchDates.$match['status'] = CONSTANTS.STATUS.SUCCESS;
+        // only create report for request that has assigneeId
+        aggregateMatchDates.$match['assigneeId'] = { $exists: true, $ne: null };
+
+        const groupedRequests = await getMongoRepository(RequestDto).aggregate([
+            aggregateMatchDates,
+            aggregateGroup
+        ]).toArray();
+
+        for (const request of groupedRequests) {
+            const { projectId, assigneeId, tokenId } = request._id;
+            const assignerId = request._id[`userId`];
+            const reportDto = new ReportDto(request.duration, new Date(), request.totalRequests, reportType, timeType);
+            reportDto.totalRequests = Number(reportDto.totalRequests);
+            reportDto.assignerId = assignerId;
+            reportDto.projectId = projectId;
+            reportDto.assigneeId = assigneeId;
+            if (reportType === CONSTANTS.STATISTICS_TYPE.SHARED_TOKEN) {
+                reportDto.tokenId = tokenId;
+            }
+            this.reportRepository.save(reportDto);
+            let loggedMessage = `Report generated for assignerId=${assignerId}, projectId=${projectId}, assigneeId=${assigneeId}`;
+            if (reportType === CONSTANTS.STATISTICS_TYPE.SHARED_TOKEN) {
+                loggedMessage = loggedMessage.concat(`, tokenId=${tokenId}`)
+            }
+            this.logger.log(loggedMessage, `${taskType} ReportType=${reportType}`);
         }
     }
 }

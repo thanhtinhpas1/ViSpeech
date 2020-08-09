@@ -80,6 +80,52 @@ export default class ReportService {
       })
   }
 
+  static getStatisticsForAssigners = (
+    { projectId, assignerId, assigneeId, tokenId },
+    statisticsType,
+    timeType,
+    queryParams
+  ) => {
+    const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = queryParams
+    let query = ''
+    if (tokenId) {
+      query += `${Utils.parameterizeObject({ tokenId })}&`
+    }
+    query += `${Utils.parameterizeObject({ fromDate, toDate })}&${Utils.parameterizeObject({
+      weekObj,
+    })}&${Utils.parameterizeObject({ monthObj })}&${Utils.parameterizeObject({
+      quarterObj,
+    })}&${Utils.parameterizeObject({ fromYear, toYear })}`
+    query = Utils.trimByChar(query, '&')
+
+    const api = `${apiUrl}/reports/statistics-for-assigners/${projectId}/${assignerId}/${assigneeId}/${statisticsType}/${timeType}?${query}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    // eslint-disable-next-line no-undef
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(DEFAULT_ERR_MESSAGE)
+        }
+        return result
+      })
+      .catch(err => {
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
+
   static getUserTotalStatistics = (userId, statisticsType, timeType, queryParams) => {
     const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = queryParams
     let query = `${Utils.parameterizeObject({ fromDate, toDate })}&${Utils.parameterizeObject({
@@ -129,6 +175,43 @@ export default class ReportService {
     query = Utils.trimByChar(query, '&')
 
     const api = `${apiUrl}/reports/admin-total-statistics/${statisticsType}/${timeType}?${query}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    // eslint-disable-next-line no-undef
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(DEFAULT_ERR_MESSAGE)
+        }
+        return result
+      })
+      .catch(err => {
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
+
+  static getTotalStatisticsForAssigners = (assignerId, projectId, statisticsType, timeType, queryParams) => {
+    const { fromDate, toDate, weekObj, monthObj, quarterObj, fromYear, toYear } = queryParams
+    let query = `${Utils.parameterizeObject({ fromDate, toDate })}&${Utils.parameterizeObject({
+      weekObj,
+    })}&${Utils.parameterizeObject({ monthObj })}&${Utils.parameterizeObject({
+      quarterObj,
+    })}&${Utils.parameterizeObject({ fromYear, toYear })}`
+    query = Utils.trimByChar(query, '&')
+
+    const api = `${apiUrl}/reports/total-statistics-for-assigners/${assignerId}/${projectId}/${statisticsType}/${timeType}?${query}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400

@@ -35,6 +35,8 @@ export const CONSTANTS = {
         TOKEN: 'token',
         USER: 'user',
         PROJECT: 'project',
+        SHARED_PROJECT: 'sharedProject',
+        SHARED_TOKEN: 'sharedToken',
         TOKEN_TYPE: 'tokenType',
         USER_TOKEN_TYPE: 'userTokenType'
     },

@@ -36,6 +36,22 @@ export const getUserTokenTypeStatisticsFailure = message => ({
   payload: message,
 })
 
+// get statistics for assigners
+export const getStatisticsForAssigners = (ids, statisticsType, timeType, queryParams) => ({
+  type: ReportTypes.GET_STATISTICS_FOR_ASSIGNERS,
+  payload: { ids, statisticsType, timeType, queryParams },
+})
+
+export const getStatisticsForAssignersSuccess = (data, statisticsType) => ({
+  type: ReportTypes.GET_STATISTICS_FOR_ASSIGNERS_SUCCESS,
+  payload: { data },
+})
+
+export const getStatisticsForAssignersFailure = (message, statisticsType) => ({
+  type: ReportTypes.GET_STATISTICS_FOR_ASSIGNERS_FAILURE,
+  payload: message,
+})
+
 // get user total statistics
 export const getUserTotalStatistics = (userId, statisticsType, timeType, queryParams) => ({
   type: ReportTypes.GET_USER_TOTAL_STATISTICS,
@@ -66,6 +82,22 @@ export const getAdminTotalStatisticsSuccess = (data, statisticsType) => ({
 export const getAdminTotalStatisticsFailure = (message, statisticsType) => ({
   type: ReportTypes.GET_ADMIN_TOTAL_STATISTICS_FAILURE,
   payload: { message, statisticsType },
+})
+
+// get total statistics for assigners
+export const getTotalStatisticsForAssigners = (assignerId, projectId, statisticsType, timeType, queryParams) => ({
+  type: ReportTypes.GET_TOTAL_STATISTICS_FOR_ASSIGNERS,
+  payload: { assignerId, projectId, statisticsType, timeType, queryParams },
+})
+
+export const getTotalStatisticsForAssignersSuccess = (data, statisticsType) => ({
+  type: ReportTypes.GET_TOTAL_STATISTICS_FOR_ASSIGNERS_SUCCESS,
+  payload: { data },
+})
+
+export const getTotalStatisticsForAssignersFailure = (message, statisticsType) => ({
+  type: ReportTypes.GET_TOTAL_STATISTICS_FOR_ASSIGNERS_FAILURE,
+  payload: message,
 })
 
 // get total statistics

@@ -17,13 +17,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'auth/auth.service';
-import { UserGuard, VerifyEmailGuard } from 'auth/guards/user.guard';
+import { UserGuard, VerifyEmailGuard, GetProjectAssigneesGuard } from 'auth/guards/user.guard';
 import { Roles } from 'auth/roles.decorator';
 import { CONSTANTS } from 'common/constant';
 import { FindUserQuery } from 'users/queries/impl/find-user.query';
 import { GetUsersQuery } from 'users/queries/impl/get-users.query';
 import { Utils } from 'utils';
-import { ProjectGuard } from '../../auth/guards/project.guard';
 import { ChangePasswordBody, UserDto, UserIdRequestParamsDto, ResetPasswordBody } from '../dtos/users.dto';
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { UsersService } from '../services/users.service';
@@ -201,11 +200,11 @@ export class UsersController {
         return this.usersService.getUsernames(getUsernamesQuery);
     }
 
-    /* Get Users assignee by project id */
+    /* List Users In Project */
 
-    @ApiOperation({ tags: ['List Users in project'] })
-    @ApiResponse({ status: 200, description: 'List Users in project' })
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
+    @ApiOperation({ tags: ['List Users In Project'] })
+    @ApiResponse({ status: 200, description: 'List Users In Project' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), GetProjectAssigneesGuard)
     @Get('assignees/:projectId')
     async getProjectAssignees(@Param() query: GetProjectAssigneesQuery) {
         return await this.usersService.getProjectAssignees(query);

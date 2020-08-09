@@ -1,19 +1,15 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
 import { STATUS } from '../../utils/constant'
-import ProjectService from './../../services/project.service'
+import ProjectService from '../../services/project.service'
 import ProjectTypes from './project.types'
 import {
   getMyProjectListSuccess,
   getMyProjectListFailure,
   getAcceptedProjectListSuccess,
   getAcceptedProjectListFailure,
-  // createProjectSuccess,
-  // createProjectFailure,
   getProjectInfoSuccess,
   getProjectInfoFailure,
-  // updateProjectInfoSuccess,
-  // updateProjectInfoFailure,
   getProjectListSuccess,
   getProjectListFailure,
   getProjectNameListSuccess,
@@ -101,19 +97,6 @@ export function* getProjectNameListSaga() {
   yield takeLatest(ProjectTypes.GET_PROJECT_NAME_LIST, getProjectNameList)
 }
 
-// create new project
-// function* createProject({ payload: project }) {
-//   try {
-//     yield ProjectService.createProject(project)
-//     yield put(createProjectSuccess(project))
-//   } catch (err) {
-//     yield put(createProjectFailure(err.message))
-//   }
-// }
-// export function* createProjectSaga() {
-//   yield takeLatest(ProjectTypes.CREATE_PROJECT, createProject)
-// }
-
 // ==== get project info
 export function* getProjectInfo({ payload: id }) {
   try {
@@ -128,19 +111,6 @@ export function* getProjectInfoSaga() {
   yield takeLatest(ProjectTypes.GET_PROJECT_INFO, getProjectInfo)
 }
 
-// ==== update project info
-// function* updateProjectInfo({ payload: { id, data } }) {
-//   try {
-//     yield ProjectService.updateProjectInfo(id, data)
-//     yield put(updateProjectInfoSuccess({ ...data, _id: id }))
-//   } catch (err) {
-//     yield put(updateProjectInfoFailure(err.message))
-//   }
-// }
-// function* updateProjectInfoSaga() {
-//   yield takeLatest(ProjectTypes.UPDATE_PROJECT_INFO, updateProjectInfo)
-// }
-
 // =================================
 
 export function* projectSaga() {
@@ -149,8 +119,6 @@ export function* projectSaga() {
     call(getMyProjectListSaga),
     call(getAcceptedProjectListSaga),
     call(getProjectNameListSaga),
-    // call(createProjectSaga),
     call(getProjectInfoSaga),
-    // call(updateProjectInfoSaga),
   ])
 }

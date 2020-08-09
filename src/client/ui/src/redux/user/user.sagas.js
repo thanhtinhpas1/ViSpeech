@@ -17,6 +17,8 @@ import {
   loginFailure,
   loginSuccess,
   onClearUserState,
+  getProjectAssigneeListFailure,
+  getProjectAssigneeListSuccess,
 } from './user.actions'
 
 // ==== login
@@ -110,12 +112,27 @@ export function* getUserInfoSaga() {
   yield takeLatest(UserTypes.GET_USER_INFO, getUserInfo)
 }
 
+// ==== get project assignee list
+export function* getProjectAssigneeList({ payload: projectId }) {
+  try {
+    const assignees = yield UserService.getProjectAssignees(projectId)
+    yield put(getProjectAssigneeListSuccess(assignees))
+  } catch (err) {
+    yield put(getProjectAssigneeListFailure(err.message))
+  }
+}
+
+export function* getProjectAssigneeListSaga() {
+  yield takeLatest(UserTypes.GET_PROJECT_ASSIGNEES, getProjectAssigneeList)
+}
+
 export function* userSaga() {
   yield all([
     call(loginStartSaga),
     call(getUserListSaga),
     call(getUsernameListSaga),
     call(getUserInfoSaga),
+    call(getProjectAssigneeListSaga),
     call(logoutSaga),
     call(authenticateSaga),
   ])
