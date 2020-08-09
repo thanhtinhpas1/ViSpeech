@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ICommand, ofType, Saga } from '@nestjs/cqrs';
+import { ofType, Saga } from '@nestjs/cqrs';
 import { Observable } from 'rxjs';
 import { AsrCalledRequestEvent } from 'requests/events/impl/asr-called-request.event';
 import { map } from 'rxjs/operators';
 import { CONSTANTS } from 'common/constant';
 import { EventStore } from '../../core/event-store/lib';
+import { TokenUpdatedEvent } from '../../tokens/events/impl/token-updated.event';
 import { RequestTranscriptFileUrlUpdatedSuccessEvent } from 'requests/events/impl/request-transcript-file-url-updated.event';
 import { ConstTaskService } from 'tasks/services/const-task.service';
-import { UpdateTokenCommand } from '../../tokens/commands/impl/update-token.command';
 
 @Injectable()
 export class CallAsrSagas {
@@ -18,7 +18,7 @@ export class CallAsrSagas {
     }
 
     @Saga()
-    asrCalledRequest = (events$: Observable<any>): Observable<ICommand> => {
+    asrCalledRequest = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
             ofType(AsrCalledRequestEvent),
             map((event: AsrCalledRequestEvent) => {
@@ -29,9 +29,9 @@ export class CallAsrSagas {
                     const date = new Date();
                     this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
                     // update token usedMinutes
-                    return new UpdateTokenCommand(streamId, tokenDto);
-                    // updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
-                    // this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
+                    const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
+                    updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
+                    this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
                 }
                 // else do nothing
             })
@@ -39,7 +39,7 @@ export class CallAsrSagas {
     };
 
     @Saga()
-    requestTranscriptFileUrlUpdatedSuccess = (events$: Observable<any>): Observable<ICommand> => {
+    requestTranscriptFileUrlUpdatedSuccess = (events$: Observable<any>): Observable<void> => {
         return events$.pipe(
             ofType(RequestTranscriptFileUrlUpdatedSuccessEvent),
             map((event: RequestTranscriptFileUrlUpdatedSuccessEvent) => {
@@ -49,9 +49,9 @@ export class CallAsrSagas {
                 const date = new Date();
                 this.cronTaskService.generateReportsImmediately(date.getDate(), date.getMonth(), date.getFullYear());
                 // update token usedMinutes
-                return new UpdateTokenCommand(streamId, tokenDto);
-                // updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
-                // this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
+                const updateTokenEvent = new TokenUpdatedEvent(streamId, tokenDto);
+                updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
+                this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })
         );
     };

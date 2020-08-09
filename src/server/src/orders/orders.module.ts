@@ -45,7 +45,6 @@ import { OrderRepository } from './repository/order.repository';
 import { OrdersSagas } from './sagas/orders.sagas';
 import { OrdersService } from './services/orders.service';
 import { CONSTANTS } from 'common/constant';
-import { TokensModule } from '../tokens/tokens.module';
 
 @Module({
     imports: [
@@ -79,7 +78,6 @@ import { TokensModule } from '../tokens/tokens.module';
             },
         }),
         forwardRef(() => AuthModule),
-        forwardRef(() => TokensModule),
     ],
     controllers: [OrdersController],
     providers: [
