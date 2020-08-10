@@ -1,12 +1,14 @@
-import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'auth/auth.module';
+import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
+
 import { config } from '../../config';
 import { EventStore, EventStoreModule, EventStoreSubscriptionType } from '../core/event-store/lib';
 import { MongoStore } from '../core/event-store/lib/adapter/mongo-store';
@@ -18,29 +20,28 @@ import { EventHandlers } from './events/handlers';
 import {
     ProjectCreatedEvent,
     ProjectCreatedFailedEvent,
-    ProjectCreatedSuccessEvent
+    ProjectCreatedSuccessEvent,
 } from './events/impl/project-created.event';
 import {
     ProjectDeletedByUserIdEvent,
     ProjectDeletedByUserIdFailedEvent,
-    ProjectDeletedByUserIdSuccessEvent
+    ProjectDeletedByUserIdSuccessEvent,
 } from './events/impl/project-deleted-by-userId.event';
 import {
     ProjectDeletedEvent,
     ProjectDeletedFailedEvent,
-    ProjectDeletedSuccessEvent
+    ProjectDeletedSuccessEvent,
 } from './events/impl/project-deleted.event';
 import {
     ProjectUpdatedEvent,
     ProjectUpdatedFailedEvent,
-    ProjectUpdatedSuccessEvent
+    ProjectUpdatedSuccessEvent,
 } from './events/impl/project-updated.event';
 import { ProjectWelcomedEvent } from './events/impl/project-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { ProjectRepository } from './repository/project.repository';
 import { ProjectsSagas } from './sagas/projects.sagas';
 import { ProjectsService } from './services/projects.service';
-import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -91,17 +92,13 @@ import { CONSTANTS } from 'common/constant';
     ],
     exports: [ProjectsService],
 })
-export class ProjectsModule implements OnModuleInit, OnModuleDestroy {
+export class ProjectsModule implements OnModuleInit {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
     ) {
-    }
-
-    onModuleDestroy() {
-        this.eventStore.close();
     }
 
     async onModuleInit() {

@@ -1,13 +1,16 @@
-import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
 import { TokenTypeDto } from 'tokens/dtos/token-types.dto';
 import { TokenDto } from 'tokens/dtos/tokens.dto';
 import { getMongoRepository } from 'typeorm';
 import { UserDto } from 'users/dtos/users.dto';
+
 import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
 import { EventStore, EventStoreModule } from '../core/event-store/lib';
@@ -18,28 +21,14 @@ import { CommandHandlers } from './commands/handlers';
 import { ReportsController } from './controllers/reports.controller';
 import { ReportDto } from './dtos/reports.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    ReportCreatedEvent,
-    ReportCreatedFailedEvent,
-    ReportCreatedSuccessEvent
-} from './events/impl/report-created.event';
-import {
-    ReportDeletedEvent,
-    ReportDeletedFailedEvent,
-    ReportDeletedSuccessEvent
-} from './events/impl/report-deleted.event';
-import {
-    ReportUpdatedEvent,
-    ReportUpdatedFailedEvent,
-    ReportUpdatedSuccessEvent
-} from './events/impl/report-updated.event';
+import { ReportCreatedEvent, ReportCreatedFailedEvent, ReportCreatedSuccessEvent } from './events/impl/report-created.event';
+import { ReportDeletedEvent, ReportDeletedFailedEvent, ReportDeletedSuccessEvent } from './events/impl/report-deleted.event';
+import { ReportUpdatedEvent, ReportUpdatedFailedEvent, ReportUpdatedSuccessEvent } from './events/impl/report-updated.event';
 import { ReportWelcomedEvent } from './events/impl/report-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { ReportRepository } from './repository/report.repository';
 import { ReportsSagas } from './sagas/reports.sagas';
 import { ReportsService } from './services/reports.service';
-import { CONSTANTS } from 'common/constant';
-import { PermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Module({
     imports: [
@@ -93,17 +82,13 @@ import { PermissionDto } from 'permissions/dtos/permissions.dto';
     ],
     exports: [ReportsService]
 })
-export class ReportsModule implements OnModuleInit, OnModuleDestroy {
+export class ReportsModule implements OnModuleInit {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
     ) {
-    }
-
-    onModuleDestroy() {
-        this.eventStore.close();
     }
 
     async onModuleInit() {

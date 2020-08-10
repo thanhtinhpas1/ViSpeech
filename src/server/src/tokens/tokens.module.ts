@@ -1,10 +1,11 @@
-import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { getMongoRepository } from 'typeorm';
+
 import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
 import { EventStore, EventStoreModule } from '../core/event-store/lib';
@@ -23,43 +24,27 @@ import { EventHandlers } from './events/handlers';
 import {
     FreeTokenCreatedEvent,
     FreeTokenCreatedFailedEvent,
-    FreeTokenCreatedSuccessEvent
+    FreeTokenCreatedSuccessEvent,
 } from './events/impl/free-token-created.event';
 import {
     OrderedTokenCreatedEvent,
     OrderedTokenCreatedFailedEvent,
-    OrderedTokenCreatedSuccessEvent
+    OrderedTokenCreatedSuccessEvent,
 } from './events/impl/ordered-token-created.event';
-import {
-    TokenCreatedEvent,
-    TokenCreatedFailedEvent,
-    TokenCreatedSuccessEvent
-} from './events/impl/token-created.event';
+import { TokenCreatedEvent, TokenCreatedFailedEvent, TokenCreatedSuccessEvent } from './events/impl/token-created.event';
 import {
     TokenDeletedByProjectIdEvent,
     TokenDeletedByProjectIdFailedEvent,
-    TokenDeletedByProjectIdSuccessEvent
+    TokenDeletedByProjectIdSuccessEvent,
 } from './events/impl/token-deleted-by-projectId.event';
 import {
     TokenDeletedByUserIdEvent,
     TokenDeletedByUserIdFailedEvent,
-    TokenDeletedByUserIdSuccessEvent
+    TokenDeletedByUserIdSuccessEvent,
 } from './events/impl/token-deleted-by-userId.event';
-import {
-    TokenDeletedEvent,
-    TokenDeletedFailedEvent,
-    TokenDeletedSuccessEvent
-} from './events/impl/token-deleted.event';
-import {
-    TokenUpdatedEvent,
-    TokenUpdatedFailedEvent,
-    TokenUpdatedSuccessEvent
-} from './events/impl/token-updated.event';
-import {
-    TokenUpgradedEvent,
-    TokenUpgradedFailedEvent,
-    TokenUpgradedSuccessEvent
-} from './events/impl/token-upgraded.event';
+import { TokenDeletedEvent, TokenDeletedFailedEvent, TokenDeletedSuccessEvent } from './events/impl/token-deleted.event';
+import { TokenUpdatedEvent, TokenUpdatedFailedEvent, TokenUpdatedSuccessEvent } from './events/impl/token-updated.event';
+import { TokenUpgradedEvent, TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from './events/impl/token-upgraded.event';
 import { TokenWelcomedEvent } from './events/impl/token-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { TokenRepository } from './repository/token.repository';
@@ -119,17 +104,13 @@ import { TokensService } from './services/tokens.service';
     ],
     exports: [TokensService, CqrsModule, ...CommandHandlers, ...EventHandlers],
 })
-export class TokensModule implements OnModuleInit, OnModuleDestroy {
+export class TokensModule implements OnModuleInit {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
     ) {
-    }
-
-    onModuleDestroy() {
-        this.eventStore.close();
     }
 
     async onModuleInit() {

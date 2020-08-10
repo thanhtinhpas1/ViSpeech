@@ -1,8 +1,9 @@
-import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'auth/auth.module';
+import { CONSTANTS } from 'common/constant';
 import { kafkaClientOptions } from 'common/kafka-client.options';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
 import { ProjectDto } from 'projects/dtos/projects.dto';
@@ -19,32 +20,20 @@ import { CommandHandlers } from './commands/handlers';
 import { OrdersController } from './controllers/orders.controller';
 import { OrderDto } from './dtos/orders.dto';
 import { EventHandlers } from './events/handlers';
-import {
-    OrderCreatedEvent,
-    OrderCreatedFailedEvent,
-    OrderCreatedSuccessEvent
-} from './events/impl/order-created.event';
-import {
-    OrderDeletedEvent,
-    OrderDeletedFailedEvent,
-    OrderDeletedSuccessEvent
-} from './events/impl/order-deleted.event';
+import { OrderCreatedEvent, OrderCreatedFailedEvent, OrderCreatedSuccessEvent } from './events/impl/order-created.event';
+import { OrderDeletedEvent, OrderDeletedFailedEvent, OrderDeletedSuccessEvent } from './events/impl/order-deleted.event';
 import {
     OrderToUpgradeCreatedEvent,
     OrderToUpgradeCreatedFailedEvent,
     OrderToUpgradeCreatedSuccessEvent
 } from './events/impl/order-to-upgrade-created.event';
-import {
-    OrderUpdatedEvent,
-    OrderUpdatedFailedEvent,
-    OrderUpdatedSuccessEvent
-} from './events/impl/order-updated.event';
+import { OrderUpdatedEvent, OrderUpdatedFailedEvent, OrderUpdatedSuccessEvent } from './events/impl/order-updated.event';
 import { OrderWelcomedEvent } from './events/impl/order-welcomed.event';
 import { QueryHandlers } from './queries/handler';
 import { OrderRepository } from './repository/order.repository';
 import { OrdersSagas } from './sagas/orders.sagas';
 import { OrdersService } from './services/orders.service';
-import { CONSTANTS } from 'common/constant';
+
 
 @Module({
     imports: [
@@ -93,7 +82,7 @@ import { CONSTANTS } from 'common/constant';
     ],
     exports: [OrdersService]
 })
-export class OrdersModule implements OnModuleInit, OnModuleDestroy {
+export class OrdersModule implements OnModuleInit {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
@@ -101,10 +90,6 @@ export class OrdersModule implements OnModuleInit, OnModuleDestroy {
         private readonly ordersSagas: OrdersSagas,
         private readonly eventStore: EventStore,
     ) {
-    }
-
-    onModuleDestroy() {
-        this.eventStore.close();
     }
 
     async onModuleInit() {

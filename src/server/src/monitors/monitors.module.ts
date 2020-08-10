@@ -1,8 +1,10 @@
-import { forwardRef, Logger, Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus, EventPublisher, QueryBus } from '@nestjs/cqrs';
 import { ClientsModule } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CONSTANTS } from 'common/constant';
 import { getMongoRepository } from 'typeorm';
+
 import { config } from '../../config';
 import { AuthModule } from '../auth/auth.module';
 import { kafkaClientOptions } from '../common/kafka-client.options';
@@ -15,7 +17,6 @@ import { EventHandlers } from './events/handlers';
 import { $statsCollected, MonitorBeatFailedEvent, MonitorBeatSuccessEvent } from './events/impl/monitor-beat.event';
 import { QueryHandlers } from './queries/handlers';
 import { MonitorsService } from './services/monitors.service';
-import { CONSTANTS } from 'common/constant';
 
 @Module({
     imports: [
@@ -63,17 +64,13 @@ import { CONSTANTS } from 'common/constant';
         ...QueryHandlers,
     ]
 })
-export class MonitorsModule implements OnModuleInit, OnModuleDestroy {
+export class MonitorsModule implements OnModuleInit {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
     ) {
-    }
-
-    onModuleDestroy() {
-        this.eventStore.close();
     }
 
     async onModuleInit() {

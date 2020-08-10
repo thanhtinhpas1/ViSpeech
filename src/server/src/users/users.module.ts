@@ -104,17 +104,13 @@ import { UsersService } from './services/users.service';
     ],
     exports: [UsersService],
 })
-export class UsersModule implements OnModuleInit, OnModuleDestroy {
+export class UsersModule implements OnModuleInit {
     constructor(
         private readonly command$: CommandBus,
         private readonly query$: QueryBus,
         private readonly event$: EventBus,
         private readonly eventStore: EventStore,
     ) {
-    }
-
-    onModuleDestroy() {
-        this.eventStore.close();
     }
 
     async onModuleInit() {
