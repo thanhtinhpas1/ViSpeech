@@ -137,22 +137,12 @@ const Utils = {
     }
     return ''
   },
-  sortAndFilterTokenTypeList: (
-    list,
-    excludedNames,
-    sortBy,
-    getUpgradeTokenType = false,
-    curTokenTypeMinutes = 0,
-    sortType = SORT_ORDER.ASC
-  ) => {
+  sortAndFilterTokenTypeList: (list, excludedNames, sortBy, sortType = SORT_ORDER.ASC) => {
     const result = [...(list || [])]
     const sortFunc = (a, b) => {
       return sortType === SORT_ORDER.ASC ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]
     }
     result.sort(sortFunc)
-    if (getUpgradeTokenType) {
-      return result.filter(item => !excludedNames.includes(item.name) && item.minutes > curTokenTypeMinutes)
-    }
     return result.filter(item => !excludedNames.includes(item.name))
   },
   decodeJwtToken: token => {
