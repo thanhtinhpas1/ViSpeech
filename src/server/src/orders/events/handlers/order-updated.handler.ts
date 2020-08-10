@@ -37,8 +37,7 @@ export class OrderUpdatedHandler implements IEventHandler<OrderUpdatedEvent> {
 }
 
 @EventsHandler(OrderUpdatedSuccessEvent)
-export class OrderUpdatedSuccessHandler
-    implements IEventHandler<OrderUpdatedSuccessEvent> {
+export class OrderUpdatedSuccessHandler implements IEventHandler<OrderUpdatedSuccessEvent> {
     constructor(
         @Inject(config.KAFKA.NAME)
         private readonly clientKafka: ClientKafka,

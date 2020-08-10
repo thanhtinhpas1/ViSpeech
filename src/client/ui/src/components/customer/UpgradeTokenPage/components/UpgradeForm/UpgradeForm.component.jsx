@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd'
 import Utils from '../../../../../utils'
-import { TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../../../utils/constant'
+import { TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE, DEFAULT_PAGINATION } from '../../../../../utils/constant'
 import TokenType from '../../../HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
 import SocketService from '../../../../../services/socket.service'
 import OrderService from '../../../../../services/order.service'
@@ -23,6 +23,8 @@ const UpgradeForm = ({
   createOrderToUpgradeSuccess,
   createOrderToUpgradeFailure,
   clearCreateOrderToUpgradeState,
+  getProjectTokenListObj,
+  getProjectTokenList,
 }) => {
   const stripe = useStripe()
   const elements = useElements()
@@ -67,7 +69,11 @@ const UpgradeForm = ({
 
   useEffect(() => {
     getTokenTypes()
-  }, [getTokenTypes])
+    const filters = {
+      isValid: ['true'],
+    }
+    getProjectTokenList({ _id: selectedTokenId, userId: currentUser._id, projectId: selectedProjectId, pagination: 1, filters })
+  }, [getTokenTypes, getProjectTokenList])
 
   useEffect(() => {
     window.$(`.token-currency-choose .pay-option label.pay-option-check-select`).removeClass('pay-option-check-select')
@@ -85,13 +91,8 @@ const UpgradeForm = ({
       getTokenTypeListObj.isSuccess === true &&
       getTokenTypeListObj.tokenTypeList.length > 0
     ) {
-      const tokenTypeIds = Utils.sortAndFilterTokenTypeList(
-        getTokenTypeListObj.tokenTypeList,
-        [TOKEN_TYPE.FREE.name],
-        'price',
-        true,
-        currentTokenTypeMinutes
-      )
+      const tokenTypeIds =  getTokenTypeListObj.tokenTypeList.filter(type => type.name !== TOKEN_TYPE.FREE.name)
+      // const tokenTypeIds = getTokenTypeListObj.tokenTypeList;
       setTokenTypeToUpgradeList(tokenTypeIds)
       if (tokenTypeIds.length > 0) {
         const id = tokenTypeIds[0]._id
@@ -145,6 +146,7 @@ const UpgradeForm = ({
         const paymentIntent = {
           id: confirmedCardPayment.paymentIntent.id,
         }
+        const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === tokenId)
         const order = {
           userId: currentUser._id,
           tokenType: Utils.removePropertyFromObject(tokenTypeToUpgrade, 'saleOffPrice'),
@@ -152,6 +154,7 @@ const UpgradeForm = ({
             _id: tokenId,
             userId: currentUser._id,
             projectId,
+            minutes: Number(token.minutes) + Number(tokenTypeToUpgrade.minutes)
           },
         }
         createOrderToUpgrade(order)
@@ -236,7 +239,7 @@ const UpgradeForm = ({
       />
       <Row gutter={24} style={{ marginBottom: 20 }}>
         <Col span={24}>
-          <h5 className="font-mid">Nâng cấp lên gói</h5>
+          <h5 className="font-mid">Mua thêm phút từ gói</h5>
           <div className="token-balance token-balance-s2">
             <div className="token-currency-choose" style={{ color: '#495463' }}>
               {tokenTypeToUpgradeList.length === 0 && <p>API key đã được nâng cấp lên gói cao nhất</p>}

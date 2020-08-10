@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { getTokenTypes } from '../../../../../redux/token/token.actions'
+import { getTokenTypes, getProjectTokenList } from '../../../../../redux/token/token.actions'
 import {
   onClearCreateOrderToUpgradeState,
   createOrderToUpgrade,
@@ -12,6 +12,7 @@ const mapStateToProps = state => ({
   currentUser: state.user.currentUser,
   getTokenTypeListObj: state.token.getTokenTypeList,
   createOrderToUpgradeObj: state.order.createOrderToUpgrade,
+  getProjectTokenListObj: state.token.getProjectTokenList,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -20,6 +21,8 @@ const mapDispatchToProps = dispatch => ({
   createOrderToUpgrade: order => dispatch(createOrderToUpgrade(order)),
   createOrderToUpgradeSuccess: order => dispatch(createOrderToUpgradeSuccess({ order })),
   createOrderToUpgradeFailure: message => dispatch(createOrderToUpgradeFailure(message)),
+  getProjectTokenList: ({ userId, projectId, pagination, filters }) =>
+  dispatch(getProjectTokenList({ userId, projectId, pagination, filters })),
 })
 
 const UpgradeFormContainer = connect(mapStateToProps, mapDispatchToProps)(UpgradeForm)
