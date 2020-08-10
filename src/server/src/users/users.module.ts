@@ -73,12 +73,12 @@ import { UsersService } from './services/users.service';
                     resolveLinkTos: true, // Default is true (Optional)
                     lastCheckpoint: 0, // Default is 0 (Optional)
                 },
-                // {
-                //     type: EventStoreSubscriptionType.Persistent,
-                //     stream: CONSTANTS.STREAM_NAME.USER,
-                //     persistentSubscriptionName: CONSTANTS.STREAM_NAME.USER + '-' + config.HOST,
-                //     resolveLinkTos: true,  // Default is true (Optional)
-                // },
+                {
+                    type: EventStoreSubscriptionType.Persistent,
+                    stream: CONSTANTS.STREAM_NAME.USER,
+                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.USER + '-' + config.HOST,
+                    resolveLinkTos: true,  // Default is true (Optional)
+                },
             ],
             eventHandlers: {
                 // Warning: add event handles of token or another module can make duplicate write event
