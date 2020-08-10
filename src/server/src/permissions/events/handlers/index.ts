@@ -34,6 +34,11 @@ import {
     PermissionDeletedByProjectIdHandler,
     PermissionDeletedByProjectIdSuccessHandler
 } from './permission-deleted-by-projectId.handler';
+import { 
+    PermissionAssigneeTokensUpdatedHandler,
+    PermissionAssigneeTokensUpdatedSuccessHandler,
+    PermissionAssigneeTokensUpdatedFailedHandler
+} from './permission-assignee-tokens-updated.handler';
 
 export const EventHandlers = [
     // create
@@ -72,4 +77,9 @@ export const EventHandlers = [
     PermissionAssignRepliedHandler,
     PermissionAssignRepliedSuccessHandler,
     PermissionAssignRepliedFailedHandler,
+
+    // update assignee tokens in permission
+    PermissionAssigneeTokensUpdatedHandler,
+    PermissionAssigneeTokensUpdatedSuccessHandler,
+    PermissionAssigneeTokensUpdatedFailedHandler
 ];

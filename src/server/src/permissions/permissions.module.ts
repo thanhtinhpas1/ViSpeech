@@ -22,6 +22,11 @@ import {
     PermissionAssignEmailSentSuccessEvent
 } from './events/impl/permission-assign-email-sent.event';
 import {
+    PermissionAssigneeTokensUpdatedEvent,
+    PermissionAssigneeTokensUpdatedSuccessEvent,
+    PermissionAssigneeTokensUpdatedFailedEvent
+} from './events/impl/permission-assignee-tokens-updated.event';
+import {
     PermissionAssignRepliedEvent,
     PermissionAssignRepliedFailedEvent,
     PermissionAssignRepliedSuccessEvent
@@ -174,5 +179,9 @@ export class PermissionsModule implements OnModuleInit {
         PermissionAssignRepliedEvent: (streamId, data) => new PermissionAssignRepliedEvent(streamId, data),
         PermissionAssignRepliedSuccessEvent: (streamId, data) => new PermissionAssignRepliedSuccessEvent(streamId, data),
         PermissionAssignRepliedFailedEvent: (streamId, data, error) => new PermissionAssignRepliedFailedEvent(streamId, data, error),
+        // update assignee tokens in permission
+        PermissionAssigneeTokensUpdatedEvent: (streamId, data) => new PermissionAssigneeTokensUpdatedEvent(streamId, data),
+        PermissionAssigneeTokensUpdatedSuccessEvent: (streamId, data) => new PermissionAssigneeTokensUpdatedSuccessEvent(streamId, data),
+        PermissionAssigneeTokensUpdatedFailedEvent: (streamId, data, error) => new PermissionAssigneeTokensUpdatedFailedEvent(streamId, data, error),
     };
 }

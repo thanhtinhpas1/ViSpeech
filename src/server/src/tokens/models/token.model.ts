@@ -30,7 +30,7 @@ export class Token extends AggregateRoot {
     }
 
     createOrderedToken(streamId: string) {
-        this.apply(new OrderedTokenCreatedEvent(streamId, this.data));
+        this.apply(new OrderedTokenCreatedEvent(streamId, this.data, null));
     }
 
     updateToken(streamId: string) {

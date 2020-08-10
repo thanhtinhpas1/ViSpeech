@@ -23,14 +23,14 @@ export class OrderCreatedHandler implements IEventHandler<OrderCreatedEvent> {
 
     async handle(event: OrderCreatedEvent) {
         Logger.log(event.orderDto._id, 'OrderCreatedEvent');
-        const { streamId, orderDto, tokenDto } = event;
+        const { streamId, orderDto, tokenDto, assigneeTokens } = event;
         const order = JSON.parse(JSON.stringify(orderDto));
 
         try {
             order.tokenType = await this.tokenTypeRepository.findOne({ _id: order.tokenType._id });
             order.upgradeToken = false;
             await this.repository.save(order);
-            this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, orderDto, tokenDto));
+            this.eventBus.publish(new OrderCreatedSuccessEvent(streamId, orderDto, tokenDto, assigneeTokens));
         } catch (error) {
             this.eventBus.publish(new OrderCreatedFailedEvent(streamId, orderDto, error));
         }

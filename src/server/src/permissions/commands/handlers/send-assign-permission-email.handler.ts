@@ -57,7 +57,7 @@ export class SendAssignPermissionEmailHandler implements ICommandHandler<SendAss
                     assignerId,
                     assigneeId: { $in: [...assigneeIds] },
                     projectId,
-                    status: { $in: [CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED, CONSTANTS.STATUS.INVALID] }
+                    status: CONSTANTS.STATUS.ACCEPTED
                 }
             });
             if (permissions.length > 0) {

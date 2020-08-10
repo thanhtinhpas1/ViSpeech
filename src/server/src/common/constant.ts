@@ -113,6 +113,8 @@ export const CONSTANTS = {
         PERMISSION_DELETED_BY_PROJECTID_FAILED_EVENT: 'PermissionDeletedByProjectIdFailedEvent',
         PERMISSION_UPDATED_SUCCESS_EVENT: 'PermissionUpdatedSuccessEvent',
         PERMISSION_UPDATED_FAILED_EVENT: 'PermissionUpdatedFailedEvent',
+        PERMISSION_ASSIGNEE_TOKENS_UPDATED_SUCCESS_EVENT: 'PermissionAssigneeTokensUpdatedSuccessEvent',
+        PERMISSION_ASSIGNEE_TOKENS_UPDATED_FAILED_EVENT: 'PermissionAssigneeTokensUpdatedFailedEvent',
         // ORDER
         ORDER_CREATED_SUCCESS_EVENT: 'OrderCreatedSuccessEvent',
         ORDER_CREATED_FAILED_EVENT: 'OrderCreatedFailedEvent',

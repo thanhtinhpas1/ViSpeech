@@ -35,6 +35,7 @@ export class EmailVerifiedHandler implements IEventHandler<EmailVerifiedEvent> {
             const updatedRoles = [...userRoles, new RoleDto(CONSTANTS.ROLE.MANAGER_USER)];
             await this.repository.update({ _id: userId }, { roles: updatedRoles, updatedDate: new Date() });
 
+            // generate jwt token with new roles for client user
             const newToken = this.authService.generateToken(userId, user.username, updatedRoles);
             this.eventBus.publish(new EmailVerifiedSuccessEvent(streamId, emailToken, newToken));
         } catch (error) {
