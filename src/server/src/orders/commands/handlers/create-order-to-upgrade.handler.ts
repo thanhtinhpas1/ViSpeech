@@ -58,6 +58,10 @@ export class CreateOrderToUpgradeHandler implements ICommandHandler<CreateOrderT
                     throw new BadRequestException(`Cannot upgrade free token. Token id: ${orderDto.token._id}.`);
                 }
 
+                // set minutes to update token's minutes
+                const tokenMinutes = Number(validToken.minutes) + Number(tokenTypeDto.minutes);
+                orderDto.token.minutes = tokenMinutes;
+
                 // use mergeObjectContext for dto dispatch events
                 const order = this.publisher.mergeObjectContext(
                     await this.repository.createOrderToUpgrade(streamId, orderDto)

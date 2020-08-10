@@ -399,8 +399,18 @@ export default class UserService {
       })
   }
 
-  static getProjectAssignees = projectId => {
-    const api = `${apiUrl}/users/assignees/${projectId}`
+  static getProjectAssignees = filterConditions => {
+    const { projectId, pagination, sortField, sortOrder, filters } = filterConditions
+    const { current, pageSize } = pagination || DEFAULT_PAGINATION.SIZE_100
+    const offset = (current - 1) * pageSize || 0
+    const limit = pageSize || 0
+
+    let query = `${Utils.parameterizeObject({ offset, limit })}`
+    query += Utils.buildSortQuery(sortField, sortOrder)
+    query += Utils.buildFiltersQuery(filters)
+    query = Utils.trimByChar(query, '&')
+
+    const api = `${apiUrl}/users/assignees/${projectId}?${query}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400

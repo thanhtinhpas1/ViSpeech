@@ -3,7 +3,6 @@ import { DEFAULT_ERR_MESSAGE, JWT_TOKEN, DEFAULT_PAGINATION } from '../utils/con
 import STORAGE from '../utils/storage'
 import Utils from '../utils'
 import { apiUrl } from './api-url'
-import UserService from './user.service'
 
 export default class ProjectService {
   static createProject = ({ name, description, userId }) => {
@@ -194,7 +193,6 @@ export default class ProjectService {
   static getProjectInfo = async id => {
     const api = `${apiUrl}/projects/${id}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
-    const assignees = await UserService.getProjectAssignees(id)
 
     let status = 400
     return fetch(api, {
@@ -212,8 +210,6 @@ export default class ProjectService {
         if (status !== 200) {
           throw new Error(DEFAULT_ERR_MESSAGE)
         }
-        // eslint-disable-next-line no-param-reassign
-        result.assignees = assignees || []
         return result
       })
       .catch(err => {

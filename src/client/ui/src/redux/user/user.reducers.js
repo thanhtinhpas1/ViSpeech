@@ -39,7 +39,7 @@ const INITIAL_STATE = {
     message: null,
   },
   getProjectAssigneeList: {
-    assigneeList: [],
+    assigneeList: { data: [], count: 0 },
     isLoading: false,
     isSuccess: null,
     message: null,
@@ -295,7 +295,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getProjectAssigneeList: {
           ...INITIAL_STATE.getProjectAssigneeList,
-          assigneeList: action.payload,
+          assigneeList: action.payload.data,
           isLoading: false,
           isSuccess: true,
         },

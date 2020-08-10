@@ -72,7 +72,8 @@ export class UsersService {
     }
 
     async getProjectAssignees(getProjectAssigneesQuery: GetProjectAssigneesQuery) {
-        const query = new GetProjectAssigneesQuery(getProjectAssigneesQuery.projectId);
+        const query = new GetProjectAssigneesQuery();
+        Object.assign(query, getProjectAssigneesQuery);
         return await this.queryBus.execute(query);
     }
 }

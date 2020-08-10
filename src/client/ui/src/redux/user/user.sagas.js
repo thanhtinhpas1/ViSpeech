@@ -113,9 +113,10 @@ export function* getUserInfoSaga() {
 }
 
 // ==== get project assignee list
-export function* getProjectAssigneeList({ payload: projectId }) {
+export function* getProjectAssigneeList({ payload: filterConditions }) {
   try {
-    const assignees = yield UserService.getProjectAssignees(projectId)
+    const assignees = yield UserService.getProjectAssignees(filterConditions)
+    assignees.data = formatUserList(assignees.data)
     yield put(getProjectAssigneeListSuccess(assignees))
   } catch (err) {
     yield put(getProjectAssigneeListFailure(err.message))

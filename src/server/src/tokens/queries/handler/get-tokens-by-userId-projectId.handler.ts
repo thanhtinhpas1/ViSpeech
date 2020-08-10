@@ -26,12 +26,27 @@ export class GetTokensByUserIdAndProjectIdHandler
         Logger.log('Async GetTokensByUserIdAndProjectIdQuery...', 'GetTokensByUserIdAndProjectIdQuery');
         const { userId, projectId, assigneeId, offset, limit, filters, sort } = query;
         let tokens = [];
+        let permission = null;
+
         try {
             const findOptions = {
                 where: { userId, projectId },
                 order: {}
             };
+
+            if (assigneeId) {
+                permission = await this.permissionDtoRepository.findOne({ projectId, assignerId: userId, assigneeId,
+                    status: CONSTANTS.STATUS.ACCEPTED });
+                if (permission) {
+                    const tokenIds = permission.permissions.map(p => p.tokenId);
+                    findOptions.where['_id'] = { $in: [...tokenIds] };
+                }
+            }
+
             if (filters) {
+                if (filters['name']) {
+                    findOptions.where['name'] = new RegExp(filters['name'], 'i');
+                }
                 if (filters['tokenType']) {
                     const tokenTypes = await this.tokenTypeDtoRepository.find({ name: filters['tokenType'] });
                     const tokenTypeIds = tokenTypes.map(tokenType => tokenType._id);
@@ -39,6 +54,17 @@ export class GetTokensByUserIdAndProjectIdHandler
                 }
                 if (filters['isValid']) {
                     findOptions.where['isValid'] = Utils.convertToBoolean(filters['isValid']);
+                }
+                if (assigneeId && filters['status'] && [CONSTANTS.STATUS.EXPIRED, CONSTANTS.STATUS.UNEXPIRED].includes(filters['status'])) {
+                    // status of token: expired or not
+                    findOptions.where['_id'] = { $in: [] };
+                    const expiresIn = filters['status'] === CONSTANTS.STATUS.EXPIRED ? { $lt: Date.now() } : { $gt: Date.now() };
+                    const permission = await this.permissionDtoRepository.findOne({ where: { projectId, assignerId: userId, assigneeId,
+                        status: CONSTANTS.STATUS.ACCEPTED, expiresIn }});
+                    if (permission) {
+                        const tokenIds = permission.permissions.map(p => p.tokenId);
+                        findOptions.where['_id'] = { $in: [...tokenIds] };
+                    }
                 }
             }
             if (sort) {
@@ -49,8 +75,6 @@ export class GetTokensByUserIdAndProjectIdHandler
             tokens = await this.repository.find({ skip: offset || 0, take: limit || 0, ...findOptions });
 
             if (assigneeId) {
-                const permission = await this.permissionDtoRepository.findOne({ projectId, assignerId: userId, assigneeId,
-                    status: CONSTANTS.STATUS.ACCEPTED });
                 for (const token of tokens) {
                     token.value = permission.permissions.find(p => p.tokenId === token._id)?.assigneeToken;
                     token['status'] = Utils.tokenExpired(permission.expiresIn) ? CONSTANTS.STATUS.EXPIRED : CONSTANTS.STATUS.UNEXPIRED;

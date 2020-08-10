@@ -23,7 +23,7 @@ import { CONSTANTS } from 'common/constant';
 import { FindUserQuery } from 'users/queries/impl/find-user.query';
 import { GetUsersQuery } from 'users/queries/impl/get-users.query';
 import { Utils } from 'utils';
-import { ChangePasswordBody, UserDto, UserIdRequestParamsDto, ResetPasswordBody } from '../dtos/users.dto';
+import { ChangePasswordBody, UserDto, UserIdRequestParamsDto, ResetPasswordBody, GetProjectAssigneesParamsDto } from '../dtos/users.dto';
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { UsersService } from '../services/users.service';
 import { UserUtils } from 'utils/user.util';
@@ -211,7 +211,8 @@ export class UsersController {
     @ApiResponse({ status: 200, description: 'List Users In Project' })
     @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), GetProjectAssigneesGuard)
     @Get('assignees/:projectId')
-    async getProjectAssignees(@Param() query: GetProjectAssigneesQuery) {
+    async getProjectAssignees(@Param() param: GetProjectAssigneesParamsDto, @Query() query: GetProjectAssigneesQuery) {
+        query.projectId = param.projectId;
         return await this.usersService.getProjectAssignees(query);
     }
 

@@ -243,13 +243,13 @@ export const deleteUserFailure = message => ({
 })
 
 // get project assignee list
-export const getProjectAssigneeList = projectId => ({
+export const getProjectAssigneeList = filterConditions => ({
   type: UserTypes.GET_PROJECT_ASSIGNEES,
-  payload: projectId,
+  payload: filterConditions,
 })
 export const getProjectAssigneeListSuccess = data => ({
   type: UserTypes.GET_PROJECT_ASSIGNEES_SUCCESS,
-  payload: data,
+  payload: { data },
 })
 export const getProjectAssigneeListFailure = message => ({
   type: UserTypes.GET_PROJECT_ASSIGNEES_FAILURE,

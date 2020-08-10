@@ -174,11 +174,14 @@ const StatisticsForAssigners = ({
     value => {
       setSelectedProjectId(value)
 
-      getProjectAssignees(value)
+      let filters = {
+        isActive: ['true'],
+      }
+      getProjectAssignees({ projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
       if (sharedTokenReportType) {
         const userId = currentUser && currentUser._id
         if (userId) {
-          const filters = {
+          filters = {
             isValid: ['true'],
           }
           getProjectTokens({ userId, projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
@@ -215,8 +218,8 @@ const StatisticsForAssigners = ({
       projectIdSelected
     ) {
       let assigneeId = null
-      if (getProjectAssigneeListObj.assigneeList.length > 0) {
-        assigneeId = getProjectAssigneeListObj.assigneeList[0]._id
+      if (getProjectAssigneeListObj.assigneeList.data.length > 0) {
+        assigneeId = getProjectAssigneeListObj.assigneeList.data[0]._id
       }
       onAssigneeIdChange(assigneeId)
       form.setFields([{ name: 'assigneeId', value: assigneeId }])
@@ -528,13 +531,13 @@ const StatisticsForAssigners = ({
               <Select
                 style={{ width: '100%' }}
                 placeholder={
-                  (getProjectAssigneeListObj.assigneeList || []).length > 0
+                  (getProjectAssigneeListObj.assigneeList.data || []).length > 0
                     ? 'Chọn một thành viên'
                     : 'Không tìm thấy thành viên'
                 }
                 onChange={onAssigneeIdChange}
               >
-                {(getProjectAssigneeListObj.assigneeList || []).map(assignee => {
+                {(getProjectAssigneeListObj.assigneeList.data || []).map(assignee => {
                   return (
                     <Option value={assignee._id} key={assignee._id}>
                       {assignee.username}

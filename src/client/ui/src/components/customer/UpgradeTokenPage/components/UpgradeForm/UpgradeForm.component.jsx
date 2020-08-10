@@ -1,16 +1,15 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
-import OrderService from '../../../../../services/order.service';
-import SocketService from '../../../../../services/socket.service';
-import Utils from '../../../../../utils';
-import { DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS, TOKEN_TYPE } from '../../../../../utils/constant';
-import SocketUtils from '../../../../../utils/socket.util';
-import TokenType from '../../../HomePage/components/TokenStatistics/components/TokenType/TokenType.component';
-import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container';
-
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd'
+import React, { useEffect, useRef, useState } from 'react'
+import OrderService from '../../../../../services/order.service'
+import SocketService from '../../../../../services/socket.service'
+import Utils from '../../../../../utils'
+import { DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS, TOKEN_TYPE } from '../../../../../utils/constant'
+import SocketUtils from '../../../../../utils/socket.util'
+import TokenType from '../../../HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
+import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { TOKEN_UPGRADED_SUCCESS_EVENT, TOKEN_UPGRADED_FAILED_EVENT, ORDER_TO_UPGRADE_CREATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -24,15 +23,12 @@ const UpgradeForm = ({
   createOrderToUpgradeSuccess,
   createOrderToUpgradeFailure,
   clearCreateOrderToUpgradeState,
-  getProjectTokenListObj,
-  getProjectTokenList,
 }) => {
   const stripe = useStripe()
   const elements = useElements()
   const [form] = Form.useForm()
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [currentTokenTypeMinutes, setCurrentTokenTypeMinutes] = useState(0)
   const [tokenTypeToUpgradeList, setTokenTypeToUpgradeList] = useState([])
   const [selectedProjectId, setSelectedProjectId] = useState(null)
   const [selectedTokenId, setSelectedTokenId] = useState(null)
@@ -70,11 +66,7 @@ const UpgradeForm = ({
 
   useEffect(() => {
     getTokenTypes()
-    const filters = {
-      isValid: ['true'],
-    }
-    getProjectTokenList({ _id: selectedTokenId, userId: currentUser._id, projectId: selectedProjectId, pagination: 1, filters })
-  }, [getTokenTypes, getProjectTokenList, currentUser, selectedProjectId, selectedTokenId])
+  }, [getTokenTypes])
 
   useEffect(() => {
     window.$(`.token-currency-choose .pay-option label.pay-option-check-select`).removeClass('pay-option-check-select')
@@ -92,8 +84,11 @@ const UpgradeForm = ({
       getTokenTypeListObj.isSuccess === true &&
       getTokenTypeListObj.tokenTypeList.length > 0
     ) {
-      const tokenTypeIds =  getTokenTypeListObj.tokenTypeList.filter(type => type.name !== TOKEN_TYPE.FREE.name)
-      // const tokenTypeIds = getTokenTypeListObj.tokenTypeList;
+      const tokenTypeIds = Utils.sortAndFilterTokenTypeList(
+        getTokenTypeListObj.tokenTypeList,
+        [TOKEN_TYPE.FREE.name],
+        'price'
+      )
       setTokenTypeToUpgradeList(tokenTypeIds)
       if (tokenTypeIds.length > 0) {
         const id = tokenTypeIds[0]._id
@@ -102,7 +97,7 @@ const UpgradeForm = ({
         setSelectedTokenTypeId(null)
       }
     }
-  }, [getTokenTypeListObj, currentTokenTypeMinutes])
+  }, [getTokenTypeListObj])
 
   const onSubmit = () => {
     if (!stripe || !elements) {
@@ -147,7 +142,6 @@ const UpgradeForm = ({
         const paymentIntent = {
           id: confirmedCardPayment.paymentIntent.id,
         }
-        const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === tokenId)
         const order = {
           userId: currentUser._id,
           tokenType: Utils.removePropertyFromObject(tokenTypeToUpgrade, 'saleOffPrice'),
@@ -155,7 +149,6 @@ const UpgradeForm = ({
             _id: tokenId,
             userId: currentUser._id,
             projectId,
-            minutes: Number(token.minutes) + Number(tokenTypeToUpgrade.minutes)
           },
         }
         createOrderToUpgrade(order)
@@ -234,10 +227,7 @@ const UpgradeForm = ({
 
   return (
     <>
-      <SelectTokenForm
-        onSelectTokenFormValuesChange={onSelectTokenFormValuesChange}
-        setCurrentTokenTypeMinutes={setCurrentTokenTypeMinutes}
-      />
+      <SelectTokenForm onSelectTokenFormValuesChange={onSelectTokenFormValuesChange} />
       <Row gutter={24} style={{ marginBottom: 20 }}>
         <Col span={24}>
           <h5 className="font-mid">Mua thêm phút từ gói</h5>

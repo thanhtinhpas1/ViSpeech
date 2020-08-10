@@ -17,7 +17,6 @@ const SelectTokenForm = ({
   getMyProjects,
   getProjectTokenList,
   onSelectTokenFormValuesChange,
-  setCurrentTokenTypeMinutes,
   clearGetProjectTokenState,
 }) => {
   const EMPTY = 'Trống'
@@ -46,10 +45,9 @@ const SelectTokenForm = ({
         }
         getProjectTokenList({ userId, projectId: value, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
         setCurrentTokenType(EMPTY)
-        setCurrentTokenTypeMinutes(0)
       }
     },
-    [currentUser, getProjectTokenList, setCurrentTokenTypeMinutes]
+    [currentUser, getProjectTokenList]
   )
 
   useEffect(() => {
@@ -102,10 +100,9 @@ const SelectTokenForm = ({
     const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === tokenId)
     if (!token) return
 
-    const { viText, minutes } = TOKEN_TYPE[token.tokenType?.name]
+    const { viText } = TOKEN_TYPE[token.tokenType?.name]
     setCurrentTokenType(viText)
-    setCurrentTokenTypeMinutes(minutes)
-  }, [form, getProjectTokenListObj.projectTokenList.data, onSelectTokenFormValuesChange, setCurrentTokenTypeMinutes])
+  }, [form, getProjectTokenListObj.projectTokenList.data, onSelectTokenFormValuesChange])
 
   const onFormValuesChange = (changedValue, allValues) => {
     const { projectId, tokenId } = allValues
@@ -115,9 +112,8 @@ const SelectTokenForm = ({
     const token = getProjectTokenListObj.projectTokenList.data.find(item => item._id === tokenId)
     if (!token) return
 
-    const { viText, minutes } = TOKEN_TYPE[token.tokenType?.name]
+    const { viText } = TOKEN_TYPE[token.tokenType?.name]
     setCurrentTokenType(viText)
-    setCurrentTokenTypeMinutes(minutes)
   }
 
   return (
