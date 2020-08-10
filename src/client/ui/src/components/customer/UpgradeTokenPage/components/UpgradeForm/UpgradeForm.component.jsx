@@ -1,15 +1,16 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-underscore-dangle */
-import React, { useEffect, useState, useRef } from 'react'
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd'
-import Utils from '../../../../../utils'
-import { TOKEN_TYPE, TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE, DEFAULT_PAGINATION } from '../../../../../utils/constant'
-import TokenType from '../../../HomePage/components/TokenStatistics/components/TokenType/TokenType.component'
-import SocketService from '../../../../../services/socket.service'
-import OrderService from '../../../../../services/order.service'
-import SocketUtils from '../../../../../utils/socket.util'
-import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container'
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { Alert, Button, Checkbox, Col, Form, Radio, Row } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import OrderService from '../../../../../services/order.service';
+import SocketService from '../../../../../services/socket.service';
+import Utils from '../../../../../utils';
+import { DEFAULT_ERR_MESSAGE, TIMEOUT_MILLISECONDS, TOKEN_TYPE } from '../../../../../utils/constant';
+import SocketUtils from '../../../../../utils/socket.util';
+import TokenType from '../../../HomePage/components/TokenStatistics/components/TokenType/TokenType.component';
+import SelectTokenForm from './components/SelectTokenForm/SelectTokenForm.container';
+
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { TOKEN_UPGRADED_SUCCESS_EVENT, TOKEN_UPGRADED_FAILED_EVENT, ORDER_TO_UPGRADE_CREATED_FAILED_EVENT } = KAFKA_TOPIC
@@ -73,7 +74,7 @@ const UpgradeForm = ({
       isValid: ['true'],
     }
     getProjectTokenList({ _id: selectedTokenId, userId: currentUser._id, projectId: selectedProjectId, pagination: 1, filters })
-  }, [getTokenTypes, getProjectTokenList])
+  }, [getTokenTypes, getProjectTokenList, currentUser, selectedProjectId, selectedTokenId])
 
   useEffect(() => {
     window.$(`.token-currency-choose .pay-option label.pay-option-check-select`).removeClass('pay-option-check-select')
