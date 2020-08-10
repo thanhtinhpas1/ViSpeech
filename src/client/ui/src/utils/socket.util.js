@@ -82,8 +82,12 @@ const SocketUtils = {
     PERMISSION_DELETED_BY_USERID_FAILED_EVENT: 'PermissionDeletedByUserIdFailedEvent',
     PERMISSION_DELETED_BY_PROJECTID_SUCCESS_EVENT: 'PermissionDeletedByProjectIdSuccessEvent',
     PERMISSION_DELETED_BY_PROJECTID_FAILED_EVENT: 'PermissionDeletedByProjectIdFailedEvent',
+    PERMISSION_FOR_ASSIGNEE_DELETED_SUCCESS_EVENT: 'PermissionForAssigneeDeletedSuccessEvent',
+    PERMISSION_FOR_ASSIGNEE_DELETED_FAILED_EVENT: 'PermissionForAssigneeDeletedFailedEvent',
     PERMISSION_UPDATED_SUCCESS_EVENT: 'PermissionUpdatedSuccessEvent',
     PERMISSION_UPDATED_FAILED_EVENT: 'PermissionUpdatedFailedEvent',
+    PERMISSION_EXPIRATION_DATE_UPDATED_SUCCESS_EVENT: 'PermissionExpirationDateUpdatedSuccessEvent',
+    PERMISSION_EXPIRATION_DATE_UPDATED_FAILED_EVENT: 'PermissionExpirationDateUpdatedFailedEvent',
     PERMISSION_ASSIGNEE_TOKENS_UPDATED_SUCCESS_EVENT: 'PermissionAssigneeTokensUpdatedSuccessEvent',
     PERMISSION_ASSIGNEE_TOKENS_UPDATED_FAILED_EVENT: 'PermissionAssigneeTokensUpdatedFailedEvent',
     // ORDER

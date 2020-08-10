@@ -96,4 +96,75 @@ export default class PermissionService {
         throw new Error(DEFAULT_ERR_MESSAGE)
       })
   }
+
+  static updatePermissionExpirationDate = (projectId, assignerId, assigneeId, expiresIn) => {
+    const api = `${apiUrl}/permissions/update-expiration-date`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'PUT',
+      body: JSON.stringify({
+        expiresIn,
+        assigneePermission: {
+          projectId,
+          assignerId,
+          assigneeId,
+        },
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.text()
+      })
+      .then(result => {
+        const resultObj = result ? JSON.parse(result) : {}
+        if (status !== 200) {
+          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+        }
+        return resultObj
+      })
+      .catch(err => {
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
+
+  static deletePermissionForAssignee = (projectId, assignerId, assigneeId) => {
+    const api = `${apiUrl}/permissions/delete-permission-for-assignee`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'DELETE',
+      body: JSON.stringify({
+        projectId,
+        assignerId,
+        assigneeId,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.text()
+      })
+      .then(result => {
+        const resultObj = result ? JSON.parse(result) : {}
+        if (status !== 200) {
+          throw new Error(resultObj.message || DEFAULT_ERR_MESSAGE)
+        }
+        return resultObj
+      })
+      .catch(err => {
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
 }

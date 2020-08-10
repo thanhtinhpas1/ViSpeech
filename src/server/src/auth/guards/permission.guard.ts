@@ -42,6 +42,49 @@ export class PermissionGuard implements CanActivate {
 }
 
 @Injectable()
+export class UpdatePermissionExpirationDateGuard implements CanActivate {
+    constructor(
+        private readonly authService: AuthService,
+    ) {
+    }
+
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
+        const request = context.switchToHttp().getRequest();
+        const payload = this.authService.decode(request);
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new UnauthorizedException();
+        }
+
+        const { assigneePermission, expiresIn } = request.body;
+        const isAdmin = UserUtils.isAdmin(payload['roles']);
+        const isManagerUser = UserUtils.isManagerUser(payload['roles']);
+        const isValidExpirationDate = Utils.validDate(expiresIn) && expiresIn > Date.now();
+        return isValidExpirationDate && (isAdmin || (isManagerUser && assigneePermission.assignerId === payload['id']));
+    }
+}
+
+@Injectable()
+export class DeletePermissionForAssigneeGuard implements CanActivate {
+    constructor(
+        private readonly authService: AuthService,
+    ) {
+    }
+
+    async canActivate(context: import ('@nestjs/common').ExecutionContext) {
+        const request = context.switchToHttp().getRequest();
+        const payload = this.authService.decode(request);
+        if (!payload || !payload['id'] || !payload['roles']) {
+            throw new UnauthorizedException();
+        }
+
+        const { assignerId } = request.body.assigneePermission;
+        const isAdmin = UserUtils.isAdmin(payload['roles']);
+        const isManagerUser = UserUtils.isManagerUser(payload['roles']);
+        return isAdmin || (isManagerUser && assignerId === payload['id']);
+    }
+}
+
+@Injectable()
 export class AssignPermissionGuard implements CanActivate {
     constructor(
         private readonly authService: AuthService,

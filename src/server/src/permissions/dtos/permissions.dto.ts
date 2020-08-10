@@ -139,6 +139,29 @@ export class UpdatePermissionAssigneeTokensDto {
     assigneeTokens: Permission[];
 }
 
+export class AssigneePermissionDto {
+    constructor(projectId: string, assignerId: string, assigneeId: string) {
+        this.projectId = projectId;
+        this.assignerId = assignerId;
+        this.assigneeId = assigneeId;
+    }
+
+    @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('projectId', ERR.IsUUID))
+    projectId: ObjectID;
+
+    @IsNotEmpty(ErrorUtils.getMessage('assignerId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('assignerId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('assignerId', ERR.IsUUID))
+    assignerId: ObjectID;
+
+    @IsNotEmpty(ErrorUtils.getMessage('assigneeId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
+    assigneeId: ObjectID;
+}
+
 @Entity('permissions')
 export class PermissionDto extends BaseEntityDto {
     constructor(permissions: Permission[], assigneeId, assignerId, projectId, expiresIn: number, status: string = CONSTANTS.STATUS.PENDING) {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Permission } from '../models/permission.model';
-import { PermissionAssignDto, PermissionDto, PermissionResponseDto, PermissionId } from 'permissions/dtos/permissions.dto';
+import { PermissionAssignDto, PermissionDto, PermissionResponseDto, PermissionId, AssigneePermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Injectable()
 export class PermissionRepository {
@@ -15,6 +15,13 @@ export class PermissionRepository {
         const permission = new Permission(streamId);
         permission.setData(permissionDto);
         permission.updatePermission(streamId);
+        return permission;
+    }
+
+    async updatePermissionExpirationDate(streamId: string, assigneePermissionDto: AssigneePermissionDto, expiresIn: number) {
+        const permission = new Permission(streamId);
+        permission.setData(assigneePermissionDto);
+        permission.updatePermissionExpirationDate(streamId, expiresIn);
         return permission;
     }
 
@@ -33,6 +40,13 @@ export class PermissionRepository {
     async deletePermissionByProjectId(streamId: string, projectId: string) {
         const permission = new Permission(streamId);
         permission.deletePermissionByProjectId(streamId, projectId);
+        return permission;
+    }
+
+    async deletePermissionForAssignee(streamId: string, assigneePermissionDto: AssigneePermissionDto) {
+        const permission = new Permission(streamId);
+        permission.setData(assigneePermissionDto);
+        permission.deletePermissionForAssignee(streamId);
         return permission;
     }
 

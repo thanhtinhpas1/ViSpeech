@@ -19,6 +19,16 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  updatePermissionExpirationDate: {
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
+  deletePermissionForAssignee: {
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const permissionReducer = (state = INITIAL_STATE, action) => {
@@ -123,6 +133,76 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
         ...state,
         findPermissionByEmailToken: {
           ...INITIAL_STATE.findPermissionByEmailToken,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // UPDATE PERMISSION EXPIRATION DATE
+    case PermissionTypes.CLEAR_UPDATE_PERMISSION_EXPIRATION_DATE_STATE:
+      return {
+        ...state,
+        updatePermissionExpirationDate: {
+          ...INITIAL_STATE.updatePermissionExpirationDate,
+        },
+      }
+    case PermissionTypes.UPDATE_PERMISSION_EXPIRATION_DATE:
+      return {
+        ...state,
+        updatePermissionExpirationDate: {
+          ...INITIAL_STATE.updatePermissionExpirationDate,
+          isLoading: true,
+        },
+      }
+    case PermissionTypes.UPDATE_PERMISSION_EXPIRATION_DATE_SUCCESS:
+      return {
+        ...state,
+        updatePermissionExpirationDate: {
+          ...INITIAL_STATE.updatePermissionExpirationDate,
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case PermissionTypes.UPDATE_PERMISSION_EXPIRATION_DATE_FAILURE:
+      return {
+        ...state,
+        updatePermissionExpirationDate: {
+          ...INITIAL_STATE.updatePermissionExpirationDate,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // DELETE PERMISSION FOR ASSIGNEE
+    case PermissionTypes.CLEAR_DELETE_PERMISSION_FOR_ASSIGNEE_STATE:
+      return {
+        ...state,
+        deletePermissionForAssignee: {
+          ...INITIAL_STATE.deletePermissionForAssignee,
+        },
+      }
+    case PermissionTypes.DELETE_PERMISSION_FOR_ASSIGNEE:
+      return {
+        ...state,
+        deletePermissionForAssignee: {
+          ...INITIAL_STATE.deletePermissionForAssignee,
+          isLoading: true,
+        },
+      }
+    case PermissionTypes.DELETE_PERMISSION_FOR_ASSIGNEE_SUCCESS:
+      return {
+        ...state,
+        deletePermissionForAssignee: {
+          ...INITIAL_STATE.deletePermissionForAssignee,
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case PermissionTypes.DELETE_PERMISSION_FOR_ASSIGNEE_FAILURE:
+      return {
+        ...state,
+        deletePermissionForAssignee: {
+          ...INITIAL_STATE.deletePermissionForAssignee,
           isLoading: false,
           isSuccess: false,
           message: action.payload,
