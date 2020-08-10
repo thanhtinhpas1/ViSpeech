@@ -19,7 +19,8 @@ const mapDispatchToProps = dispatch => ({
       getStatisticsForAssigners({ projectId, assignerId, assigneeId, tokenId }, statisticsType, timeType, queryParams)
     ),
   getMyProjects: ({ userId, pagination, filters }) => dispatch(getMyProjectList({ userId, pagination, filters })),
-  getProjectAssignees: projectId => dispatch(getProjectAssigneeList(projectId)),
+  getProjectAssignees: ({ projectId, pagination, filters }) =>
+    dispatch(getProjectAssigneeList({ projectId, pagination, filters })),
   getProjectTokens: ({ userId, projectId, assigneeId, pagination, filters }) =>
     dispatch(getProjectTokenList({ userId, projectId, assigneeId, pagination, filters })),
 })

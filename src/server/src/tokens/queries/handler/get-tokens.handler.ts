@@ -37,6 +37,9 @@ export class GetTokensHandler implements IQueryHandler<GetTokensQuery> {
                 if (filters['_id']) {
                     findOptions.where['_id'] = new RegExp(filters['_id'], 'i');
                 }
+                if (filters['name']) {
+                    findOptions.where['name'] = new RegExp(filters['name'], 'i');
+                }
                 if (filters['tokenType']) {
                     const tokenTypes = await this.tokenTypeDtoRepository.find({ name: filters['tokenType'] });
                     const tokenTypeIds = tokenTypes.map(tokenType => tokenType._id);

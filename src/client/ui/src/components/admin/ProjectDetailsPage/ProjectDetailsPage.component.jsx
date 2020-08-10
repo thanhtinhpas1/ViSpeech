@@ -5,33 +5,24 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import * as moment from 'moment'
-import AntdTable from '../../common/AntdTable/AntdTable.component'
-import {
-  ADMIN_PATH,
-  STATUS,
-  TOKEN_TYPE,
-  DEFAULT_PAGINATION,
-  TIMEOUT_MILLISECONDS,
-  DEFAULT_ERR_MESSAGE,
-} from '../../../utils/constant'
+import { TIMEOUT_MILLISECONDS, DEFAULT_ERR_MESSAGE } from '../../../utils/constant'
 import InfoModal from '../../common/InfoModal/InfoModal.component'
 import ConfirmModal from '../../common/ConfirmModal/ConfirmModal.component'
 import ProjectService from '../../../services/project.service'
 import SocketUtils from '../../../utils/socket.util'
 import SocketService from '../../../services/socket.service'
 import Utils from '../../../utils'
+import TokensTable from './components/TokensTable/TokensTable.container'
+import AssigneesTable from './components/AssigneesTable/AssigneesTable.container'
 
 const { KAFKA_TOPIC, invokeCheckSubject } = SocketUtils
 const { PROJECT_UPDATED_SUCCESS_EVENT, PROJECT_UPDATED_FAILED_EVENT } = KAFKA_TOPIC
 
 const ProjectDetailsPage = ({
   getProjectInfoObj,
-  getProjectTokenListObj,
   updateInfoObj,
   clearUpdateProjectInfoState,
-  clearGetProjectTokenState,
   getProjectInfo,
-  getProjectTokens,
   updateProjectInfo,
   updateProjectInfoSuccess,
   updateProjectInfoFailure,
@@ -46,9 +37,8 @@ const ProjectDetailsPage = ({
   useEffect(() => {
     return () => {
       clearUpdateProjectInfoState()
-      clearGetProjectTokenState()
     }
-  }, [clearUpdateProjectInfoState, clearGetProjectTokenState])
+  }, [clearUpdateProjectInfoState])
 
   useEffect(() => {
     SocketService.socketOnListeningEvent(PROJECT_UPDATED_SUCCESS_EVENT)
@@ -121,121 +111,6 @@ const ProjectDetailsPage = ({
     }
     return () => clearTimeout(timer)
   }, [id, updateInfoObj, getProjectInfo, closeInfoModal, updateProjectInfoFailure])
-
-  const columns = [
-    {
-      title: 'API key',
-      dataIndex: 'value',
-      headerClassName: 'dt-type',
-      className: 'dt-type',
-      style: { paddingRight: '30px' },
-      render: value => (
-        <span className="lead tnx-id">
-          <div className="copy-wrap w-100">
-            <span className="copy-feedback" />
-            <em className="fas fa-key" />
-            <input type="text" className="copy-address" defaultValue={value} disabled />
-            <button type="button" className="copy-trigger copy-clipboard" data-clipboard-text={value}>
-              <em className="ti ti-files" />
-            </button>
-          </div>
-        </span>
-      ),
-      width: 250,
-    },
-    {
-      title: 'Loại API key',
-      dataIndex: 'tokenType',
-      headerClassName: 'dt-type',
-      className: 'dt-type',
-      style: { paddingRight: '30px' },
-      filters: [
-        { text: TOKEN_TYPE.FREE.viText, value: TOKEN_TYPE.FREE.name },
-        { text: TOKEN_TYPE['50-MINUTES'].viText, value: TOKEN_TYPE['50-MINUTES'].name },
-        { text: TOKEN_TYPE['200-MINUTES'].viText, value: TOKEN_TYPE['200-MINUTES'].name },
-        { text: TOKEN_TYPE['500-MINUTES'].viText, value: TOKEN_TYPE['500-MINUTES'].name },
-      ],
-      filterMultiple: false,
-      render: tokenType => (
-        <>
-          <span className={`dt-type-md badge badge-outline ${tokenType.cssClass} badge-md`}>{tokenType.viText}</span>
-          <span className={`dt-type-sm badge badge-sq badge-outline ${tokenType.cssClass} badge-md`}>
-            {tokenType.viText}
-          </span>
-        </>
-      ),
-      width: 150,
-      align: 'center',
-    },
-    {
-      title: 'Trạng thái',
-      dataIndex: 'isValid',
-      headerClassName: 'dt-token',
-      className: 'dt-amount',
-      filters: [
-        { text: STATUS.VALID.viText, value: STATUS.VALID.name },
-        { text: STATUS.INVALID.viText, value: STATUS.INVALID.name },
-      ],
-      filterMultiple: false,
-      render: isValid => (
-        <div className="d-flex align-items-center">
-          <div className={`data-state ${isValid.cssClass}`} />
-          <span className="sub sub-s2" style={{ paddingTop: '0' }}>
-            {isValid.viText}
-          </span>
-        </div>
-      ),
-      width: 180,
-    },
-    {
-      title: 'Thời gian còn lại',
-      dataIndex: 'minutesLeft',
-      headerClassName: 'dt-amount',
-      headerStyle: { textAlign: 'center' },
-      className: 'dt-amount',
-      render: minutesLeft => <span className="lead">{minutesLeft} phút</span>,
-      width: 200,
-      align: 'center',
-    },
-    {
-      title: '',
-      dataIndex: '_id',
-      render: _id => (
-        <a
-          href={`${ADMIN_PATH}/transaction-details?tokenId=${_id}`}
-          className="btn btn-just-icon btn-secondary btn-simple"
-        >
-          <i className="far fa-eye" />
-        </a>
-      ),
-      width: 60,
-      align: 'right',
-    },
-  ]
-
-  useEffect(() => {
-    const projectOwnerId = getProjectInfoObj.project.userId
-    if (projectOwnerId) {
-      getProjectTokens({ userId: projectOwnerId, projectId: id, pagination: DEFAULT_PAGINATION.SIZE_5 })
-    }
-  }, [getProjectInfoObj.project.userId, id, getProjectTokens])
-
-  const getProjectTokensList = useCallback(
-    ({ pagination, sortField, sortOrder, filters }) => {
-      const projectOwnerId = getProjectInfoObj.project.userId
-      if (projectOwnerId) {
-        getProjectTokens({
-          userId: projectOwnerId,
-          projectId: id,
-          pagination,
-          sortField,
-          sortOrder,
-          filters,
-        })
-      }
-    },
-    [getProjectInfoObj.project.userId, id, getProjectTokens]
-  )
 
   const onSubmit = event => {
     event.preventDefault()
@@ -356,15 +231,14 @@ const ProjectDetailsPage = ({
               </div>
             </form>
             <div className="gaps-5x" />
+            <div style={{ fontSize: '18px', marginBottom: '22px' }}>Danh sách API key</div>
             <div className="material-datatables">
-              <AntdTable
-                dataObj={getProjectTokenListObj.projectTokenList}
-                columns={columns}
-                fetchData={getProjectTokensList}
-                isLoading={getProjectTokenListObj.isLoading}
-                pageSize={DEFAULT_PAGINATION.SIZE_5.pageSize}
-                scrollY={500}
-              />
+              <TokensTable projectId={id} projectOwnerId={getProjectInfoObj.project?.userId} />
+            </div>
+            <div className="gaps-5x" />
+            <div style={{ fontSize: '18px', marginBottom: '22px' }}>Danh sách thành viên</div>
+            <div className="material-datatables">
+              <AssigneesTable projectId={id} />
             </div>
           </div>
         </div>

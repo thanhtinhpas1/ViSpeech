@@ -15,6 +15,12 @@ export class UserIdRequestParamsDto {
     _id: string;
 }
 
+export class GetProjectAssigneesParamsDto {
+    @IsNotEmpty(ErrorUtils.getMessage('projectId', ERR.IsNotEmpty))
+    @IsString(ErrorUtils.getMessage('projectId', ERR.IsString))
+    projectId: string;
+}
+
 export class ChangePasswordBody {
     @IsNotEmpty(ErrorUtils.getMessage('userId', ERR.IsNotEmpty))
     @IsString(ErrorUtils.getMessage('userId', ERR.IsString))

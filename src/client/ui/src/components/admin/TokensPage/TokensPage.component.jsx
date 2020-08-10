@@ -148,11 +148,20 @@ const TokensPage = ({
 
   const columns = [
     {
-      title: 'Mã API key',
-      dataIndex: '_id',
+      title: 'Tên API key',
+      dataIndex: 'name',
       canSearch: true,
-      render: _id => <span>{_id}</span>,
-      width: 150,
+      render: name => <span className="lead tnx-id">{name}</span>,
+      width: 180,
+    },
+    {
+      title: 'Thuộc dự án',
+      dataIndex: 'projectName',
+      headerClassName: 'dt-amount',
+      className: 'dt-amount',
+      canSearch: true,
+      render: projectName => <span className="lead tnx-id">{projectName}</span>,
+      width: 180,
     },
     {
       title: 'API key',
@@ -225,16 +234,7 @@ const TokensPage = ({
       className: 'dt-amount',
       canSearch: true,
       render: ownerName => <span className="lead tnx-id">{ownerName}</span>,
-      width: 180,
-    },
-    {
-      title: 'Dự án',
-      dataIndex: 'projectName',
-      headerClassName: 'dt-amount',
-      className: 'dt-amount',
-      canSearch: true,
-      render: projectName => <span className="lead tnx-id">{projectName}</span>,
-      width: 180,
+      width: 150,
     },
     {
       title: 'Thời gian còn lại',
@@ -243,7 +243,7 @@ const TokensPage = ({
       headerStyle: { textAlign: 'center' },
       className: 'dt-amount',
       render: minutesLeft => <span className="lead">{minutesLeft} phút</span>,
-      width: 200,
+      width: 180,
       align: 'center',
     },
     {
