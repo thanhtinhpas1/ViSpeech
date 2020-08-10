@@ -8,9 +8,11 @@ import './StatisticsPage.style.scss'
 import StatisticsProject from './components/StatisticsProject/StatisticsProject.container'
 import StatisticsToken from './components/StatisticsToken/StatisticsToken.container'
 import StatisticsTokenType from './components/StatisticsTokenType/StatisticsTokenType.container'
+import StatisticsForAssigners from './components/StatisticsForAssigners/StatisticsForAssigners.container'
 import TotalStatisticsProject from './components/TotalStatisticsProject/TotalStatisticsProject.container'
 import TotalStatisticsToken from './components/TotalStatisticsToken/TotalStatisticsToken.container'
 import TotalStatisticsTokenType from './components/TotalStatisticsTokenType/TotalStatisticsTokenType.container'
+import ReportUtils from '../../../utils/report.util'
 
 const StatisticsPage = () => {
   const twoYAxisOptions = {
@@ -137,6 +139,11 @@ const StatisticsPage = () => {
                   Thống kê tổng
                 </a>
               </li>
+              <li className="nav-item">
+                <a className="nav-link" data-toggle="tab" href="#statistics-project-management">
+                  Thống kê quản lý dự án
+                </a>
+              </li>
             </ul>
             <div className="tab-content">
               <div className="tab-pane fade active show" id="statistics-by-id-list">
@@ -178,6 +185,26 @@ const StatisticsPage = () => {
                 </div>
                 <div className="gaps-1x" />
                 <TotalStatisticsTokenType chartOptions={twoXAxisOptions} />
+              </div>
+              <div className="tab-pane fade" id="statistics-project-management">
+                <div className="gaps-1x" />
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê lịch sử sử dụng của thành viên</h4>
+                </div>
+                <div className="gaps-1x" />
+                <StatisticsForAssigners
+                  chartOptions={twoYAxisOptions}
+                  statisticsType={ReportUtils.STATISTICS_TYPE.SHARED_PROJECT}
+                />
+                <Divider />
+                <div className="card-head">
+                  <h4 className="card-title">Thống kê lịch sử sử dụng theo API key</h4>
+                </div>
+                <div className="gaps-1x" />
+                <StatisticsForAssigners
+                  chartOptions={twoYAxisOptions}
+                  statisticsType={ReportUtils.STATISTICS_TYPE.SHARED_TOKEN}
+                />
               </div>
             </div>
           </div>

@@ -11,6 +11,8 @@ import { GetStatisticsByTokenTypeIdAndUserIdQuery } from 'reports/queries/impl/g
 import { GetAdminTotalStatisticsQuery } from 'reports/queries/impl/get-admin-total-statistics.query';
 import { GetUserTotalStatisticsQuery } from 'reports/queries/impl/get-user-total-statistics.query';
 import { GetTotalStatisticsQuery } from 'reports/queries/impl/get-total-statistics.query';
+import { GetStatisticsForAssignersQuery } from 'reports/queries/impl/get-statistics-for-assigners.query';
+import { GetTotalStatisticsForAssignersQuery } from 'reports/queries/impl/get-total-statistics-for-assigners.query';
 
 @Injectable()
 export class ReportsService {
@@ -57,6 +59,13 @@ export class ReportsService {
         return await this.queryBus.execute(query);
     }
 
+    async getStatisticsForAssigners(getStatisticsForAssignersQuery: GetStatisticsForAssignersQuery) {
+        const { id, assignerId, assigneeId, tokenId, statisticsType, timeType } = getStatisticsForAssignersQuery;
+        const query = new GetStatisticsForAssignersQuery(id, assignerId, assigneeId, tokenId, statisticsType, timeType);
+        Object.assign(query, getStatisticsForAssignersQuery);
+        return await this.queryBus.execute(query);
+    }
+
     async getAdminTotalStatistics(getAdminTotalStatisticsQuery: GetAdminTotalStatisticsQuery) {
         const { statisticsType, timeType } = getAdminTotalStatisticsQuery;
         const query = new GetAdminTotalStatisticsQuery(statisticsType, timeType);
@@ -68,6 +77,13 @@ export class ReportsService {
         const { userId, statisticsType, timeType } = getUserTotalStatisticsQuery;
         const query = new GetUserTotalStatisticsQuery(userId, statisticsType, timeType);
         Object.assign(query, getUserTotalStatisticsQuery);
+        return await this.queryBus.execute(query);
+    }
+
+    async getTotalStatisticsForAssigners(getTotalStatisticsForAssignersQuery: GetTotalStatisticsForAssignersQuery) {
+        const { assignerId, projectId, statisticsType, timeType } = getTotalStatisticsForAssignersQuery;
+        const query = new GetTotalStatisticsForAssignersQuery(assignerId, projectId, statisticsType, timeType);
+        Object.assign(query, getTotalStatisticsForAssignersQuery);
         return await this.queryBus.execute(query);
     }
 

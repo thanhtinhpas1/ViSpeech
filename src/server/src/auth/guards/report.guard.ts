@@ -24,11 +24,11 @@ export class ReportQueryGuard implements CanActivate {
         }
         if (UserUtils.isAdmin(payload['roles'])) return true;
 
-        const { id, userId, statisticsType, timeType } = request.params;
+        const { id, userId, assignerId, assigneeId, projectId, statisticsType, timeType } = request.params;
         if (userId) {
             const user = await getMongoRepository(UserDto).findOne({ _id: userId });
             if (!user) {
-                throw new NotFoundException(`User with _id ${id} does not exist.`);
+                throw new NotFoundException(`User with _id ${userId} does not exist.`);
             }
             if (userId === payload['id']) {
                 return true;
@@ -72,6 +72,20 @@ export class ReportQueryGuard implements CanActivate {
             if (!tokenType) {
                 throw new NotFoundException(`Token type with _id ${id} does not exist.`);
             }
+        }
+        if (id && assignerId && assigneeId && statisticsType && timeType) { // get statistics for assigners
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: id });
+            if (!project) {
+                throw new NotFoundException(`Project with _id ${id} does not exist.`);
+            }
+            if (assignerId === payload['id'] && assignerId === project.userId) return true
+        }
+        if (assignerId && projectId && statisticsType && timeType) { // get total statistics for assigners
+            const project = await getMongoRepository(ProjectDto).findOne({ _id: projectId });
+            if (!project) {
+                throw new NotFoundException(`Project with _id ${projectId} does not exist.`);
+            }
+            if (assignerId === payload['id'] && assignerId === project.userId) return true
         }
         Logger.warn('User does not have permission to query reports.', 'ReportGuard');
         return false;

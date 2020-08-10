@@ -20,6 +20,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
         private readonly eventBus: EventBus,
     ) {
     }
+    private readonly logger = new Logger(this.constructor.name)
 
     async handle(event: TokenCreatedEvent) {
         Logger.log(event.tokenDto._id, 'TokenCreatedEvent');
@@ -42,6 +43,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
             await this.repository.save(token);
             this.eventBus.publish(new TokenCreatedSuccessEvent(streamId, tokenDto));
         } catch (error) {
+            this.logger.error(error)
             this.eventBus.publish(new TokenCreatedFailedEvent(streamId, tokenDto, error));
         }
     }

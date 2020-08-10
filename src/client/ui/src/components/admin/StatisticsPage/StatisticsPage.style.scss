@@ -8,7 +8,7 @@
       text-align: center;
     }
   }
-  &__select-type {
+  &__select-type, &__total-select-type {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -60,6 +60,9 @@
 @media (min-width: 1200px) {
   .admin-statistics-page {
     &__select-type {
+      padding: 0;
+    }
+    &__total-select-type {
       padding: 0 5%;
     }
   }
@@ -67,7 +70,7 @@
 
 @media (max-width: 1199px) {
   .admin-statistics-page {
-    &__select-type {
+    &__select-type, &__total-select-type {
       padding: 0;
     }
   }

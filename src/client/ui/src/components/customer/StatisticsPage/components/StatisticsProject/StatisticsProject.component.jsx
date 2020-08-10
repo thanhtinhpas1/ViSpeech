@@ -5,6 +5,7 @@
 import React, { useEffect, useState } from 'react'
 import ReportUtils from '../../../../../utils/report.util'
 import StatisticsTemplate from '../StatisticsTemplate/StatisticsTemplate.component'
+import { DEFAULT_PAGINATION } from '../../../../../utils/constant'
 
 const StatisticsProject = ({
   currentUser,
@@ -22,7 +23,10 @@ const StatisticsProject = ({
 
   useEffect(() => {
     if (currentUser._id) {
-      getMyProjects({ userId: currentUser._id })
+      const filters = {
+        isValid: ['true'],
+      }
+      getMyProjects({ userId: currentUser._id, pagination: DEFAULT_PAGINATION.SIZE_100, filters })
     }
   }, [currentUser._id, getMyProjects])
 

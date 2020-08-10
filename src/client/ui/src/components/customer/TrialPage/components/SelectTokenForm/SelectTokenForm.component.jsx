@@ -101,6 +101,8 @@ const SelectTokenForm = ({
     if (getFreeTokenObj.isLoading === false && getFreeTokenObj.isSuccess === true) {
       if (getFreeTokenObj.freeToken.value) {
         form.setFields([{ name: 'tokenValue', value: getFreeTokenObj.freeToken.value }])
+      } else {
+        form.setFields([{ name: 'tokenValue', value: null }])
       }
     }
   }, [getFreeTokenObj, form])
@@ -111,6 +113,8 @@ const SelectTokenForm = ({
       // form.resetFields(['tokenValue'])
       if (getProjectTokenListObj.projectTokenList.data.length > 0) {
         form.setFields([{ name: 'tokenValue', value: getProjectTokenListObj.projectTokenList.data[0].value }])
+      } else {
+        form.setFields([{ name: 'tokenValue', value: null }])
       }
     }
   }, [getProjectTokenListObj, form])
@@ -234,7 +238,6 @@ const SelectTokenForm = ({
               label="API key"
               dependencies={['projectId']}
               rules={[
-                { required: true, message: 'Vui lòng chọn một API key.' },
                 ({ getFieldValue }) => ({
                   async validator() {
                     const projectId = getFieldValue('projectId')

@@ -38,6 +38,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  getProjectAssigneeList: {
+    assigneeList: [],
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   updateInfo: {
     isLoading: false,
     isSuccess: null,
@@ -270,6 +276,35 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getInfo: {
           ...INITIAL_STATE.getInfo,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET PROJECT ASSIGNEE LIST
+    case UserTypes.GET_PROJECT_ASSIGNEES:
+      return {
+        ...state,
+        getProjectAssigneeList: {
+          ...INITIAL_STATE.getProjectAssigneeList,
+          isLoading: true,
+        },
+      }
+    case UserTypes.GET_PROJECT_ASSIGNEES_SUCCESS:
+      return {
+        ...state,
+        getProjectAssigneeList: {
+          ...INITIAL_STATE.getProjectAssigneeList,
+          assigneeList: action.payload,
+          isLoading: false,
+          isSuccess: true,
+        },
+      }
+    case UserTypes.GET_PROJECT_ASSIGNEES_FAILURE:
+      return {
+        ...state,
+        getProjectAssigneeList: {
+          ...INITIAL_STATE.getProjectAssigneeList,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

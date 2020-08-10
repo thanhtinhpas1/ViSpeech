@@ -67,6 +67,18 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  getStatisticsForAssigners: {
+    data: [],
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
+  getTotalStatisticsForAssigners: {
+    data: [],
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
 }
 
 const reportReducer = (state = INITIAL_STATE, action) => {
@@ -214,6 +226,64 @@ const reportReducer = (state = INITIAL_STATE, action) => {
         ...state,
         getTotalStatistics: {
           ...INITIAL_STATE.getTotalStatistics,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET STATISTICS FOR ASSIGNERS
+    case ReportTypes.GET_STATISTICS_FOR_ASSIGNERS:
+      return {
+        ...state,
+        getStatisticsForAssigners: {
+          ...INITIAL_STATE.getStatisticsForAssigners,
+          isLoading: true,
+        },
+      }
+    case ReportTypes.GET_STATISTICS_FOR_ASSIGNERS_SUCCESS:
+      return {
+        ...state,
+        getStatisticsForAssigners: {
+          ...INITIAL_STATE.getStatisticsForAssigners,
+          isLoading: false,
+          isSuccess: true,
+          data: action.payload.data,
+        },
+      }
+    case ReportTypes.GET_STATISTICS_FOR_ASSIGNERS_FAILURE:
+      return {
+        ...state,
+        getStatisticsForAssigners: {
+          ...INITIAL_STATE.getStatisticsForAssigners,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // GET TOTAL STATISTICS FOR ASSIGNERS
+    case ReportTypes.GET_TOTAL_STATISTICS_FOR_ASSIGNERS:
+      return {
+        ...state,
+        getTotalStatisticsForAssigners: {
+          ...INITIAL_STATE.getTotalStatisticsForAssigners,
+          isLoading: true,
+        },
+      }
+    case ReportTypes.GET_TOTAL_STATISTICS_FOR_ASSIGNERS_SUCCESS:
+      return {
+        ...state,
+        getTotalStatisticsForAssigners: {
+          ...INITIAL_STATE.getTotalStatisticsForAssigners,
+          isLoading: false,
+          isSuccess: true,
+          data: action.payload.data,
+        },
+      }
+    case ReportTypes.GET_TOTAL_STATISTICS_FOR_ASSIGNERS_FAILURE:
+      return {
+        ...state,
+        getTotalStatisticsForAssigners: {
+          ...INITIAL_STATE.getTotalStatisticsForAssigners,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

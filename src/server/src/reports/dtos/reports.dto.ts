@@ -87,6 +87,24 @@ export class ReportDto extends BaseEntityDto {
     })
     tokenTypeId: ObjectID;
 
+    @IsOptional()
+    @IsString(ErrorUtils.getMessage('assignerId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('assignerId', ERR.IsUUID))
+    @Column({
+        nullable: false,
+        type: 'uuid'
+    })
+    assignerId: ObjectID;
+
+    @IsOptional()
+    @IsString(ErrorUtils.getMessage('assigneeId', ERR.IsString))
+    @IsUUID('all', ErrorUtils.getMessage('assigneeId', ERR.IsUUID))
+    @Column({
+        nullable: false,
+        type: 'uuid'
+    })
+    assigneeId: ObjectID;
+
     @IsNotEmpty(ErrorUtils.getMessage('reportType', ERR.IsNotEmpty))
     @IsString(ErrorUtils.getMessage('reportType', ERR.IsString))
     @IsIn([CONSTANTS.STATISTICS_TYPE.PROJECT, CONSTANTS.STATISTICS_TYPE.TOKEN, CONSTANTS.STATISTICS_TYPE.TOKEN_TYPE, CONSTANTS.STATISTICS_TYPE.USER, 

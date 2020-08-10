@@ -17,13 +17,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'auth/auth.service';
-import { UserGuard, VerifyEmailGuard } from 'auth/guards/user.guard';
+import { UserGuard, VerifyEmailGuard, GetProjectAssigneesGuard } from 'auth/guards/user.guard';
 import { Roles } from 'auth/roles.decorator';
 import { CONSTANTS } from 'common/constant';
 import { FindUserQuery } from 'users/queries/impl/find-user.query';
 import { GetUsersQuery } from 'users/queries/impl/get-users.query';
 import { Utils } from 'utils';
-import { ProjectGuard } from '../../auth/guards/project.guard';
 import { ChangePasswordBody, UserDto, UserIdRequestParamsDto, ResetPasswordBody } from '../dtos/users.dto';
 import { GetProjectAssigneesQuery } from 'users/queries/impl/get-project-assignees.query';
 import { UsersService } from '../services/users.service';
@@ -85,11 +84,16 @@ export class UsersController {
     @ApiResponse({ status: 200, description: 'Reset Password.' })
     @Put('reset-password')
     async resetPassword(@Body() body: ResetPasswordBody) {
-        const streamId = Utils.getUuid();
         const decodedEmailToken = this.jwtService.decode(body.emailToken);
-        if (!decodedEmailToken['id']) {
-            throw new NotAcceptableException();
+        const exp = decodedEmailToken['exp'];
+        if (!decodedEmailToken || !decodedEmailToken['id']) {
+            throw new BadRequestException('Token is invalid.');
         }
+        if (Utils.tokenExpired(`${exp}000`)) {
+            throw new BadRequestException('Token is expired.');
+        }
+
+        const streamId = Utils.getUuid();
         body.userId = decodedEmailToken['id']
         return this.usersService.resetPassword(streamId, body);
     }
@@ -201,11 +205,11 @@ export class UsersController {
         return this.usersService.getUsernames(getUsernamesQuery);
     }
 
-    /* Get Users assignee by project id */
+    /* List Users In Project */
 
-    @ApiOperation({ tags: ['List Users in project'] })
-    @ApiResponse({ status: 200, description: 'List Users in project' })
-    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), ProjectGuard)
+    @ApiOperation({ tags: ['List Users In Project'] })
+    @ApiResponse({ status: 200, description: 'List Users In Project' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), GetProjectAssigneesGuard)
     @Get('assignees/:projectId')
     async getProjectAssignees(@Param() query: GetProjectAssigneesQuery) {
         return await this.usersService.getProjectAssignees(query);

@@ -16,6 +16,7 @@ export class CallAsrSagas {
         private readonly eventStore: EventStore,
     ) {
     }
+    private readonly logger = new Logger(this.constructor.name);
 
     @Saga()
     asrCalledRequest = (events$: Observable<any>): Observable<void> => {
@@ -33,7 +34,7 @@ export class CallAsrSagas {
                     updateTokenEvent['eventType'] = 'TokenUpdatedEvent';
                     this.eventStore.publish(updateTokenEvent, CONSTANTS.STREAM_NAME.TOKEN);
                 }
-                // else do nothing
+                this.logger.warn('Order with status not success forbidden to request asr')
             })
         );
     };

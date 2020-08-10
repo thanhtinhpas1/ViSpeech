@@ -39,6 +39,7 @@ import { ReportRepository } from './repository/report.repository';
 import { ReportsSagas } from './sagas/reports.sagas';
 import { ReportsService } from './services/reports.service';
 import { CONSTANTS } from 'common/constant';
+import { PermissionDto } from 'permissions/dtos/permissions.dto';
 
 @Module({
     imports: [
@@ -52,7 +53,8 @@ import { CONSTANTS } from 'common/constant';
             TokenTypeDto,
             UserDto,
             ProjectDto,
-            ProjectionDto
+            ProjectionDto,
+            PermissionDto
         ]),
         CqrsModule,
         EventStoreModule.registerFeature({
