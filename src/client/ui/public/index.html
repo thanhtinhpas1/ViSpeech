@@ -77,11 +77,14 @@
     <!-- Load Facebook SDK for JavaScript -->
     <div id="fb-root"></div>
     <script>
+      console.log(window.location.pathname)
       window.fbAsyncInit = function() {
-        FB.init({
-          xfbml            : true,
-          version          : 'v8.0'
-        });
+        if (window.location.pathname !== '/login') {
+          FB.init({
+            xfbml            : true,
+            version          : 'v8.0'
+          });
+        }
       };
 
       (function(d, s, id) {
