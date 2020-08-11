@@ -53,7 +53,7 @@ const formatTokenList = tokenList => {
       },
       isValid: token.isValid ? STATUS.VALID : STATUS.INVALID,
       status: STATUS[token.status], // status of expiration showed for assignees
-      minutesLeft: Number(token.minutes) - Number(token.usedMinutes || 0),
+      minutesLeft: Number(token.minutes || 0) - Number(token.usedMinutes || 0),
     }
   }
   return tokenList.map(mapFunc)

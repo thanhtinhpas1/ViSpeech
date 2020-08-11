@@ -61,6 +61,14 @@ export class CreateOrderToUpgradeHandler implements ICommandHandler<CreateOrderT
                 // set minutes to update token's minutes
                 const tokenMinutes = Number(validToken.minutes) + Number(tokenTypeDto.minutes);
                 orderDto.token.minutes = tokenMinutes;
+                // keep the highest level of token type
+                const currentTokenType = await getMongoRepository(TokenTypeDto).findOne({ name: validToken.tokenType });
+                orderDto.token.tokenTypeId = currentTokenType._id;
+                orderDto.token.tokenType = currentTokenType.name;
+                if (Number(tokenTypeDto.minutes) > Number(currentTokenType.minutes)) {
+                    orderDto.token.tokenTypeId = tokenTypeDto._id;
+                    orderDto.token.tokenType = tokenTypeDto.name;
+                }
 
                 // use mergeObjectContext for dto dispatch events
                 const order = this.publisher.mergeObjectContext(
