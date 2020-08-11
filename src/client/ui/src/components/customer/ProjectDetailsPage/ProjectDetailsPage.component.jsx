@@ -73,13 +73,13 @@ const ProjectDetailsPage = ({ currentUser, getProjectInfoObj, getProjectInfo }) 
               <div className="fake-class">
                 <span className="data-details-title">Thời gian tạo</span>
                 <span className="data-details-info">
-                  {moment(getProjectInfoObj.project?.createdDate).format('DD/MM/YYYY hh:mm:ss')}
+                  {moment(getProjectInfoObj.project?.createdDate).format('DD/MM/YYYY HH:mm:ss')}
                 </span>
               </div>
               <div className="fake-class">
                 <span className="data-details-title">Thời gian cập nhật</span>
                 <span className="data-details-info">
-                  {moment(getProjectInfoObj.project?.updatedDate).format('DD/MM/YYYY hh:mm:ss')}
+                  {moment(getProjectInfoObj.project?.updatedDate).format('DD/MM/YYYY HH:mm:ss')}
                 </span>
               </div>
             </div>
@@ -90,7 +90,9 @@ const ProjectDetailsPage = ({ currentUser, getProjectInfoObj, getProjectInfo }) 
               <>
                 <div className="gaps-4x" />
                 <div style={{ fontSize: '20px', marginBottom: '20px' }}>Danh sách thành viên</div>
-                <AssigneesTable projectId={id} />
+                {getProjectInfoObj.project?.name && (
+                  <AssigneesTable projectId={id} projectName={getProjectInfoObj.project?.name} />
+                )}
               </>
             )}
           </div>

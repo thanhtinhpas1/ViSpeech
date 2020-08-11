@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { PermissionAssignEmailSentSuccessEvent } from 'permissions/events/impl/permission-assign-email-sent.event';
 import { CreatePermissionCommand } from 'permissions/commands/impl/create-permission.command';
 import { PermissionDto } from 'permissions/dtos/permissions.dto';
+import { Utils } from 'utils';
 
 @Injectable()
 export class PermissionsSagas {
@@ -21,7 +22,7 @@ export class PermissionsSagas {
                 const createPermissionCommands = [];
                 for (const assigneeId of assigneeIds) {
                     const assigneePermissions = permissions.filter(p => p.assigneeId === assigneeId);
-                    const permissionDto = new PermissionDto(assigneePermissions, assigneeId, assignerId, projectId, expiresIn);
+                    const permissionDto = new PermissionDto(assigneePermissions, assigneeId, assignerId, projectId, Utils.getOnlyDate(expiresIn));
                     permissionDto._id = permissionIds.find(id => id.assigneeId === assigneeId)?.id;
                     createPermissionCommands.push(new CreatePermissionCommand(streamId, permissionDto))
                 }

@@ -1,8 +1,13 @@
 /* eslint-disable no-restricted-globals */
 import { call, all, takeLatest, put } from 'redux-saga/effects'
-import PermissionService from './../../services/permission.service'
+import PermissionService from '../../services/permission.service'
 import PermissionTypes from './permission.types'
-import { findPermissionByEmailTokenSuccess, findPermissionByEmailTokenFailure } from './permission.actions'
+import {
+  findPermissionByEmailTokenSuccess,
+  findPermissionByEmailTokenFailure,
+  findPermissionForAssigneeSuccess,
+  findPermissionForAssigneeFailure,
+} from './permission.actions'
 
 // find permission by email token
 function* findPermissionByEmailToken({ payload: token }) {
@@ -17,39 +22,21 @@ export function* findPermissionByEmailTokenSaga() {
   yield takeLatest(PermissionTypes.FIND_PERMISSION_BY_EMAIL_TOKEN, findPermissionByEmailToken)
 }
 
-// assign permission
-// function* assignPermission({ payload: { assigneeUsername, projectId, permissions, assignerId } }) {
-//   try {
-//     yield PermissionService.sendAssignPermissionEmail({
-//       assigneeUsername,
-//       projectId,
-//       permissions,
-//       assignerId,
-//     })
-//     yield put(assignPermissionSuccess({ assigneeUsername, projectId, permissions, assignerId }))
-//   } catch (err) {
-//     yield put(assignPermissionFailure(err.message))
-//   }
-// }
-// export function* assignPermissionSaga() {
-//   yield takeLatest(PermissionTypes.ASSIGN_PERMISSION, assignPermission)
-// }
-
-// reply permission assign
-// function* replyPermissionAssign({ payload: { emailToken, status } }) {
-//   try {
-//     yield PermissionService.replyPermissionAssign({ emailToken, status })
-//     yield put(replyPermissionAssignSuccess({ emailToken, status }))
-//   } catch (err) {
-//     yield put(replyPermissionAssignFailure(err.message))
-//   }
-// }
-// export function* replyPermissionAssignSaga() {
-//   yield takeLatest(PermissionTypes.REPLY_PERMISSION_ASSIGN, replyPermissionAssign)
-// }
+// find permission for assignee
+function* findPermissionForAssignee({ payload: { projectId, assignerId, assigneeId, status } }) {
+  try {
+    const data = yield PermissionService.findPermissionForAssignee(projectId, assignerId, assigneeId, status)
+    yield put(findPermissionForAssigneeSuccess(data.length > 0 ? data[0] : null))
+  } catch (err) {
+    yield put(findPermissionForAssigneeFailure(err.message))
+  }
+}
+export function* findPermissionForAssigneeSaga() {
+  yield takeLatest(PermissionTypes.FIND_PERMISSION_FOR_ASSIGNEE, findPermissionForAssignee)
+}
 
 // =================================
 
 export function* permissionSaga() {
-  yield all([call(findPermissionByEmailTokenSaga)])
+  yield all([call(findPermissionByEmailTokenSaga), call(findPermissionForAssigneeSaga)])
 }

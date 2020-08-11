@@ -4,8 +4,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import Utils from '../../../utils'
 import * as moment from 'moment'
+import Utils from '../../../utils'
 import { MONETARY_UNIT } from '../../../utils/constant'
 
 const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
@@ -51,7 +51,7 @@ const TransactionDetailsPage = ({ getInfoObj, getOrderInfo }) => {
               <div className="fake-class">
                 <span className="data-details-title">Thời gian giao dịch</span>
                 <span className="data-details-info">
-                  {moment(getInfoObj.order.createdDate).format('DD/MM/YYYY hh:mm:ss')}
+                  {moment(getInfoObj.order.createdDate).format('DD/MM/YYYY HH:mm:ss')}
                 </span>
               </div>
               <div className="fake-class">

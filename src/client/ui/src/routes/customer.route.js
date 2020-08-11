@@ -23,6 +23,7 @@ import TrialDetailsPage from '../components/customer/TrialDetailsPage/TrialDetai
 import UpgradeTokenPage from '../components/customer/UpgradeTokenPage/UpgradeTokenPage.container'
 import RequestsPage from '../components/customer/RequestsPage/RequestsPage.container'
 import DocumentsPage from '../components/customer/DocumentsPage/DocumentsPage.component'
+import UpdatePermissionPage from '../components/customer/UpdatePermissionPage/UpdatePermissionPage.container'
 
 const RouteCustomer = ({ currentUser }) => {
   return (
@@ -57,6 +58,9 @@ const RouteCustomer = ({ currentUser }) => {
             </Route>
             <Route path={`${CUSTOMER_PATH}/assign-permission`}>
               <AssignPermissionPage />
+            </Route>
+            <Route path={`${CUSTOMER_PATH}/update-permission`}>
+              <UpdatePermissionPage />
             </Route>
             <Route path={`${CUSTOMER_PATH}/reply-permission-assign/:emailToken`}>
               <ReplyPermissionAssignPage />

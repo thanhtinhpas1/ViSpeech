@@ -19,6 +19,12 @@ const INITIAL_STATE = {
     isSuccess: null,
     message: null,
   },
+  findPermissionForAssignee: {
+    data: null,
+    isLoading: false,
+    isSuccess: null,
+    message: null,
+  },
   updatePermissionExpirationDate: {
     isLoading: false,
     isSuccess: null,
@@ -133,6 +139,35 @@ const permissionReducer = (state = INITIAL_STATE, action) => {
         ...state,
         findPermissionByEmailToken: {
           ...INITIAL_STATE.findPermissionByEmailToken,
+          isLoading: false,
+          isSuccess: false,
+          message: action.payload,
+        },
+      }
+    // FIND PERMISSION FOR ASSIGNEE
+    case PermissionTypes.FIND_PERMISSION_FOR_ASSIGNEE:
+      return {
+        ...state,
+        findPermissionForAssignee: {
+          ...INITIAL_STATE.findPermissionForAssignee,
+          isLoading: true,
+        },
+      }
+    case PermissionTypes.FIND_PERMISSION_FOR_ASSIGNEE_SUCCESS:
+      return {
+        ...state,
+        findPermissionForAssignee: {
+          ...INITIAL_STATE.findPermissionForAssignee,
+          isLoading: false,
+          isSuccess: true,
+          data: action.payload,
+        },
+      }
+    case PermissionTypes.FIND_PERMISSION_FOR_ASSIGNEE_FAILURE:
+      return {
+        ...state,
+        findPermissionForAssignee: {
+          ...INITIAL_STATE.findPermissionForAssignee,
           isLoading: false,
           isSuccess: false,
           message: action.payload,

@@ -171,7 +171,7 @@ const TrialDetailsPage = ({ getRequestInfoObj, getRequestInfo, clearRequestInfo 
                 <div className="fake-class">
                   <span className="data-details-title">Thời gian tạo</span>
                   <span className="data-details-info">
-                    {moment(getRequestInfoObj.request.updatedDate).format('DD/MM/YYYY hh:mm:ss')}
+                    {moment(getRequestInfoObj.request.updatedDate).format('DD/MM/YYYY HH:mm:ss')}
                   </span>
                 </div>
               </div>

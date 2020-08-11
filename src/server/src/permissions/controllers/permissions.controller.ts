@@ -159,6 +159,18 @@ export class PermissionsController {
         return this.permissionsService.findPermissionsByIds(query);
     }
 
+    /* Find Permission For Assignee */
+
+    /*--------------------------------------------*/
+
+    @ApiOperation({ tags: ['Find Permission For Assignee'] })
+    @ApiResponse({ status: 200, description: 'Find Permission For Assignee.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), PermissionQueryGuard)
+    @Get('permission-for-assignee')
+    async findPermissionForAssignee(@Query() query: FindPermissionsByIdsQuery) {
+        return this.permissionsService.findPermissionsByIds(query);
+    }
+
     /* Find Permission */
 
     /*--------------------------------------------*/

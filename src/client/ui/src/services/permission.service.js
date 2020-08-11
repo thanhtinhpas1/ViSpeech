@@ -1,6 +1,7 @@
 import STORAGE from '../utils/storage'
 import { JWT_TOKEN, DEFAULT_ERR_MESSAGE } from '../utils/constant'
 import { apiUrl } from './api-url'
+import Utils from '../utils'
 
 export default class PermissionService {
   static sendAssignPermissionEmail = ({ assigneeUsernames, projectId, expiresIn, assignerId }) => {
@@ -71,6 +72,36 @@ export default class PermissionService {
 
   static findPermissionByEmailToken = token => {
     const api = `${apiUrl}/permissions/email-token/${token}`
+    const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
+
+    let status = 400
+    return fetch(api, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then(response => {
+        status = response.status
+        return response.json()
+      })
+      .then(result => {
+        if (status !== 200) {
+          throw new Error(DEFAULT_ERR_MESSAGE)
+        }
+        return result
+      })
+      .catch(err => {
+        console.log(err.message)
+        throw new Error(DEFAULT_ERR_MESSAGE)
+      })
+  }
+
+  static findPermissionForAssignee = (projectId, assignerId, assigneeId, permissionStatus) => {
+    let query = `${Utils.parameterizeObject({ projectId, assignerId, assigneeId, status: permissionStatus })}`
+    query = Utils.trimByChar(query, '&')
+    const api = `${apiUrl}/permissions/permission-for-assignee?${query}`
     const jwtToken = STORAGE.getPreferences(JWT_TOKEN)
 
     let status = 400

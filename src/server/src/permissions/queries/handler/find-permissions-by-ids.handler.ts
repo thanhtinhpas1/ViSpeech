@@ -15,16 +15,19 @@ export class FindPermissionsByIdsHandler implements IQueryHandler<FindPermission
 
     async execute(query: FindPermissionsByIdsQuery): Promise<any> {
         Logger.log('Async FindPermissionsByIdsQuery...', 'FindPermissionsByIdsQuery');
-        const { assigneeId, assignerId, projectId } = query;
+        const { assigneeId, assignerId, projectId, status } = query;
         try {
             if (!assigneeId && !assignerId && !projectId) return [];
 
-            const findOptions = {};
-            if (assigneeId) findOptions['assigneeId'] = assigneeId;
-            if (assignerId) findOptions['assignerId'] = assignerId;
-            if (projectId) findOptions['projectId'] = projectId;
+            const findOptions = {
+                where: {},
+            };
+            if (assigneeId) findOptions.where['assigneeId'] = assigneeId;
+            if (assignerId) findOptions.where['assignerId'] = assignerId;
+            if (projectId) findOptions.where['projectId'] = projectId;
+            if (status) findOptions.where['status'] = status;
 
-            return await this.repository.find(findOptions);
+            return await this.repository.find({ ...findOptions, order: { updatedDate: 'DESC' } });
         } catch (error) {
             Logger.error(error.message, '', 'FindPermissionsByIdsQuery');
         }

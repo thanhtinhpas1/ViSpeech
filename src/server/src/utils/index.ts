@@ -92,6 +92,18 @@ export const Utils = {
         const date = new Date(time);
         return date instanceof Date && !isNaN(date.valueOf());
     },
+    getOnlyDate: (time: number) => {
+        const date = new Date(time);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date.getTime();
+    },
+    validExpirationDate: (time: number) => {
+        const now = new Date();
+        return Utils.validDate(time) && Utils.getOnlyDate(time) > Utils.getOnlyDate(now.getTime());
+    },
     tokenExpired: (expiresIn: number | string) => {
         return Number(expiresIn) < Date.now()
     }

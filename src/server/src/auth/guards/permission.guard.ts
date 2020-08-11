@@ -58,7 +58,7 @@ export class UpdatePermissionExpirationDateGuard implements CanActivate {
         const { assigneePermission, expiresIn } = request.body;
         const isAdmin = UserUtils.isAdmin(payload['roles']);
         const isManagerUser = UserUtils.isManagerUser(payload['roles']);
-        const isValidExpirationDate = Utils.validDate(expiresIn) && expiresIn > Date.now();
+        const isValidExpirationDate = Utils.validExpirationDate(expiresIn);
         return isValidExpirationDate && (isAdmin || (isManagerUser && assigneePermission.assignerId === payload['id']));
     }
 }
@@ -101,7 +101,7 @@ export class AssignPermissionGuard implements CanActivate {
         const { assignerId, expiresIn } = request.body;
         const isAdmin = UserUtils.isAdmin(payload['roles']);
         const isManagerUser = UserUtils.isManagerUser(payload['roles']);
-        const isValidExpirationDate = Utils.validDate(expiresIn) && expiresIn > Date.now();
+        const isValidExpirationDate = Utils.validExpirationDate(expiresIn);
         return isValidExpirationDate && (isAdmin || (isManagerUser && assignerId === payload['id']));
     }
 }
@@ -179,12 +179,17 @@ export class PermissionQueryGuard implements CanActivate {
             if (assigneeId && assignerId && projectId) {
                 const permissions = await getMongoRepository(PermissionDto).find({ assigneeId, assignerId, projectId });
                 if (permissions.length === 0) {
-                    throw new NotFoundException(`Permissions with assigneeId does not exist.`);
+                    throw new NotFoundException(`Permissions with projectId: ${projectId}, assignerId: ${assignerId}, assigneeId: ${assigneeId} does not exist.`);
                 }
                 if (assigneeId === payload['id'] || assignerId === payload['id']) {
                     return true;
                 }
             }
+        }
+
+        const { assigneeId, assignerId } = request.query;
+        if (assigneeId === payload['id'] || assignerId === payload['id']) {
+            return true;
         }
 
         Logger.warn('User does not have permission to query permissions.', 'PermissionQueryGuard');
