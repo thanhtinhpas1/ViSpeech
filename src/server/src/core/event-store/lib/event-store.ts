@@ -290,9 +290,9 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 stream,
                 subscriptionName,
                 {
-                    readBatchSize: 10024,
-                    historyBufferSize: 100024,
-                    liveBufferSize: 100024,
+                    readBatchSize: 20,
+                    historyBufferSize: 20,
+                    liveBufferSize: 20,
                     maxRetryCount: 10,
                     checkPointAfter: 0,
                     startFrom: 0,
@@ -324,6 +324,12 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
                 (sub, payload) => this.onEvent(sub, payload),
                 (sub, reason, error) =>
                     this.onDropped(sub as ExtendedPersistentSubscription, reason, error),
+                {
+                    username: process.env.EVENT_STORE_CREDENTIALS_USERNAME || 'admin',
+                    password: process.env.EVENT_STORE_CREDENTIALS_PASSWORD || 'changeit',
+                },
+                20,
+                true
             ) as ExtendedPersistentSubscription;
 
             resolved.isLive = true;
