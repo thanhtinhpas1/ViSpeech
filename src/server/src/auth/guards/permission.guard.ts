@@ -77,7 +77,7 @@ export class DeletePermissionForAssigneeGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const { assignerId } = request.body.assigneePermission;
+        const { assignerId } = request.body;
         const isAdmin = UserUtils.isAdmin(payload['roles']);
         const isManagerUser = UserUtils.isManagerUser(payload['roles']);
         return isAdmin || (isManagerUser && assignerId === payload['id']);
