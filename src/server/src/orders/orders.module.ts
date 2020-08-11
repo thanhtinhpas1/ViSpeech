@@ -121,8 +121,8 @@ export class OrdersModule implements OnModuleInit {
 
     public static eventHandlers = {
         // create
-        OrderCreatedEvent: (streamId, data, token) => new OrderCreatedEvent(streamId, data, token),
-        OrderCreatedSuccessEvent: (streamId, data, token) => new OrderCreatedSuccessEvent(streamId, data, token),
+        OrderCreatedEvent: (streamId, data, token, assigneeTokens) => new OrderCreatedEvent(streamId, data, token, assigneeTokens),
+        OrderCreatedSuccessEvent: (streamId, data, token, assigneeTokens) => new OrderCreatedSuccessEvent(streamId, data, token, assigneeTokens),
         OrderCreatedFailedEvent: (streamId, data, error) => new OrderCreatedFailedEvent(streamId, data, error),
         // create order to upgrade token
         OrderToUpgradeCreatedEvent: (streamId, data) => new OrderToUpgradeCreatedEvent(streamId, data),

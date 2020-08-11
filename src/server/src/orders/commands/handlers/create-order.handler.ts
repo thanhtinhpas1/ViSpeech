@@ -13,6 +13,8 @@ import { AuthService } from 'auth/auth.service';
 
 import Stripe from 'stripe';
 import { Utils } from 'utils';
+import { PermissionDto, Permission } from 'permissions/dtos/permissions.dto';
+import { CONSTANTS } from 'common/constant';
 
 const stripe = new Stripe(config.STRIPE_SECRET_KEY, { apiVersion: '2020-03-02' });
 
@@ -71,9 +73,19 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
                 const tokenDto = new TokenDto(tokenValue, userId, token.projectId, tokenType.name, tokenType._id, _id, token.name);
                 tokenDto._id = Utils.getUuid();
 
+                // generate assigneeTokens to update permissions
+                const assigneeTokens = [];
+                const permissions = await getMongoRepository(PermissionDto).find({ projectId: validProject._id, assignerId: user._id,
+                    status: CONSTANTS.STATUS.ACCEPTED });
+                const assigneeIds = permissions.map(p => p.assigneeId);
+                for (const assigneeId of assigneeIds) {
+                    const assigneeToken = this.authService.generateAssigneeToken(user._id, validProject._id, assigneeId, tokenDto._id)
+                    assigneeTokens.push(new Permission(assigneeId, tokenDto._id, assigneeToken));
+                }
+
                 // use mergeObjectContext for dto dispatch events
                 const order = this.publisher.mergeObjectContext(
-                    await this.repository.createOrder(streamId, orderDto, tokenDto)
+                    await this.repository.createOrder(streamId, orderDto, tokenDto, assigneeTokens)
                 );
                 order.commit();
                 return;

@@ -27,7 +27,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
 
     async handle(event: OrderedTokenCreatedEvent) {
         Logger.log(event.tokenDto._id, 'OrderedTokenCreatedEvent');
-        const { streamId, tokenDto } = event;
+        const { streamId, tokenDto, assigneeTokens } = event;
         let token = JSON.parse(JSON.stringify(tokenDto));
         let tokenTypeDto = null;
 
@@ -44,7 +44,7 @@ export class OrderedTokenCreatedHandler implements IEventHandler<OrderedTokenCre
             token.isValid = Utils.convertToBoolean(token.isValid);
             token = Utils.removePropertiesFromObject(token, ['orderId']);
             await this.repository.save(token);
-            this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, token));
+            this.eventBus.publish(new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, token, assigneeTokens));
         } catch (error) {
             Logger.error('Create ordered token failed', error.message);
             this.eventBus.publish(new OrderedTokenCreatedFailedEvent(streamId, tokenDto, error));

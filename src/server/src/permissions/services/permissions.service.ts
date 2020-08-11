@@ -4,7 +4,8 @@ import {
     PermissionAssignDto,
     PermissionDto,
     PermissionIdRequestParamsDto,
-    PermissionResponseDto
+    PermissionResponseDto,
+    AssigneePermissionDto
 } from '../dtos/permissions.dto';
 import { CreatePermissionCommand } from '../commands/impl/create-permission.command';
 import { UpdatePermissionCommand } from '../commands/impl/update-permission.command';
@@ -14,6 +15,8 @@ import { FindPermissionQuery } from 'permissions/queries/impl/find-permission.qu
 import { SendAssignPermissionEmailCommand } from 'permissions/commands/impl/send-assign-permission-email.command';
 import { ReplyPermissionAssignCommand } from 'permissions/commands/impl/reply-permission-assign.command';
 import { FindPermissionsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
+import { UpdatePermissionExpirationDateCommand } from 'permissions/commands/impl/update-permission-expiration-date.command';
+import { DeletePermissionForAssigneeCommand } from 'permissions/commands/impl/delete-permission-for-assignee.command';
 
 @Injectable()
 export class PermissionsService {
@@ -31,8 +34,16 @@ export class PermissionsService {
         return await this.commandBus.execute(new UpdatePermissionCommand(streamId, permissionDto));
     }
 
+    async updatePermissionExpirationDate(streamId: string, assigneePermissionDto: AssigneePermissionDto, expiresIn: number) {
+        return await this.commandBus.execute(new UpdatePermissionExpirationDateCommand(streamId, assigneePermissionDto, expiresIn));
+    }
+
     async deletePermission(streamId: string, permissionIdDto: PermissionIdRequestParamsDto) {
         return await this.commandBus.execute(new DeletePermissionCommand(streamId, permissionIdDto));
+    }
+
+    async deletePermissionForAssignee(streamId: string, assigneePermissionDto: AssigneePermissionDto) {
+        return await this.commandBus.execute(new DeletePermissionForAssigneeCommand(streamId, assigneePermissionDto));
     }
 
     async sendAssignPermissionEmail(streamId: string, permissionAssignDto: PermissionAssignDto) {

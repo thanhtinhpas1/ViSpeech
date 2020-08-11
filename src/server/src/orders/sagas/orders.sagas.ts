@@ -23,8 +23,8 @@ export class OrdersSagas {
             ofType(OrderCreatedSuccessEvent),
             map((event: OrderCreatedSuccessEvent) => {
                 Logger.log('Inside [OrdersSagas] orderCreatedSuccess Saga', 'OrdersSagas');
-                const { streamId, tokenDto } = event;
-                const tokenCreatedEvent = new OrderedTokenCreatedEvent(streamId, tokenDto);
+                const { streamId, tokenDto, assigneeTokens } = event;
+                const tokenCreatedEvent = new OrderedTokenCreatedEvent(streamId, tokenDto, assigneeTokens);
                 tokenCreatedEvent['eventType'] = 'OrderedTokenCreatedEvent';
                 this.eventStore.publish(tokenCreatedEvent, CONSTANTS.STREAM_NAME.TOKEN);
             })

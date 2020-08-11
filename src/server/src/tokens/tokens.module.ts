@@ -167,9 +167,9 @@ export class TokensModule implements OnModuleInit {
         FreeTokenCreatedSuccessEvent: (streamId, data) => new FreeTokenCreatedSuccessEvent(streamId, data),
         FreeTokenCreatedFailedEvent: (streamId, data, error) => new FreeTokenCreatedFailedEvent(streamId, data, error),
         // ordered token
-        OrderedTokenCreatedEvent: (streamId, data) => new OrderedTokenCreatedEvent(streamId, data),
-        OrderedTokenCreatedSuccessEvent: (streamId, tokenDto, updatedToken) =>
-            new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, updatedToken),
+        OrderedTokenCreatedEvent: (streamId, data, assigneeTokens) => new OrderedTokenCreatedEvent(streamId, data, assigneeTokens),
+        OrderedTokenCreatedSuccessEvent: (streamId, tokenDto, updatedToken, assigneeTokens) =>
+            new OrderedTokenCreatedSuccessEvent(streamId, tokenDto, updatedToken, assigneeTokens),
         OrderedTokenCreatedFailedEvent: (streamId, data, error) => new OrderedTokenCreatedFailedEvent(streamId, data, error),
         // upgrade token
         TokenUpgradedEvent: (streamId, token, tokenType) => new TokenUpgradedEvent(streamId, token, tokenType),

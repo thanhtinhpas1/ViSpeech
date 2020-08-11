@@ -22,6 +22,11 @@ import {
     PermissionAssignEmailSentSuccessEvent
 } from './events/impl/permission-assign-email-sent.event';
 import {
+    PermissionAssigneeTokensUpdatedEvent,
+    PermissionAssigneeTokensUpdatedSuccessEvent,
+    PermissionAssigneeTokensUpdatedFailedEvent
+} from './events/impl/permission-assignee-tokens-updated.event';
+import {
     PermissionAssignRepliedEvent,
     PermissionAssignRepliedFailedEvent,
     PermissionAssignRepliedSuccessEvent
@@ -46,6 +51,16 @@ import {
     PermissionDeletedFailedEvent,
     PermissionDeletedSuccessEvent
 } from './events/impl/permission-deleted.event';
+import {
+    PermissionExpirationDateUpdatedEvent,
+    PermissionExpirationDateUpdatedSuccessEvent,
+    PermissionExpirationDateUpdatedFailedEvent
+} from './events/impl/permission-expiration-date-updated.event';
+import {
+    PermissionForAssigneeDeletedEvent,
+    PermissionForAssigneeDeletedSuccessEvent,
+    PermissionForAssigneeDeletedFailedEvent
+} from './events/impl/permission-for-assignee-deleted.event';
 import {
     PermissionUpdatedEvent,
     PermissionUpdatedFailedEvent,
@@ -160,11 +175,20 @@ export class PermissionsModule implements OnModuleInit {
         PermissionDeletedByProjectIdEvent: (streamId, data) => new PermissionDeletedByProjectIdEvent(streamId, data),
         PermissionDeletedByProjectIdSuccessEvent: (streamId, data) => new PermissionDeletedByProjectIdSuccessEvent(streamId, data),
         PermissionDeletedByProjectIdFailedEvent: (streamId, data, error) => new PermissionDeletedByProjectIdFailedEvent(streamId, data, error),
+        // delete permission for assignee
+        PermissionForAssigneeDeletedEvent: (streamId, data) => new PermissionForAssigneeDeletedEvent(streamId, data),
+        PermissionForAssigneeDeletedSuccessEvent: (streamId, data) => new PermissionForAssigneeDeletedSuccessEvent(streamId, data),
+        PermissionForAssigneeDeletedFailedEvent: (streamId, data, error) => new PermissionForAssigneeDeletedFailedEvent(streamId, data, error),
         // update
         PermissionUpdatedEvent: (streamId, data) => new PermissionUpdatedEvent(streamId, data),
         PermissionUpdatedSuccessEvent: (streamId, data) => new PermissionUpdatedSuccessEvent(streamId, data),
         PermissionUpdatedFailedEvent: (streamId, data, error) => new PermissionUpdatedFailedEvent(streamId, data, error),
-        PermissionWelcomedEvent: (streamId, data) => new PermissionWelcomedEvent(streamId, data),
+        // update permission expiration date
+        PermissionExpirationDateUpdatedEvent: (streamId, data, expiresIn) => new PermissionExpirationDateUpdatedEvent(streamId, expiresIn, data),
+        PermissionExpirationDateUpdatedSuccessEvent: (streamId, data, expiresIn) =>
+            new PermissionExpirationDateUpdatedSuccessEvent(streamId, expiresIn, data),
+        PermissionExpirationDateUpdatedFailedEvent: (streamId, data, expiresIn, error) =>
+            new PermissionExpirationDateUpdatedFailedEvent(streamId, data, expiresIn, error),
         // send email assign permission
         PermissionAssignEmailSentEvent: (streamId, data, permissionIds) => new PermissionAssignEmailSentEvent(streamId, data, permissionIds),
         PermissionAssignEmailSentSuccessEvent: (streamId, data, permissionIds) =>
@@ -174,5 +198,11 @@ export class PermissionsModule implements OnModuleInit {
         PermissionAssignRepliedEvent: (streamId, data) => new PermissionAssignRepliedEvent(streamId, data),
         PermissionAssignRepliedSuccessEvent: (streamId, data) => new PermissionAssignRepliedSuccessEvent(streamId, data),
         PermissionAssignRepliedFailedEvent: (streamId, data, error) => new PermissionAssignRepliedFailedEvent(streamId, data, error),
+        // update assignee tokens in permission
+        PermissionAssigneeTokensUpdatedEvent: (streamId, data) => new PermissionAssigneeTokensUpdatedEvent(streamId, data),
+        PermissionAssigneeTokensUpdatedSuccessEvent: (streamId, data) => new PermissionAssigneeTokensUpdatedSuccessEvent(streamId, data),
+        PermissionAssigneeTokensUpdatedFailedEvent: (streamId, data, error) => new PermissionAssigneeTokensUpdatedFailedEvent(streamId, data, error),
+        // welcome
+        PermissionWelcomedEvent: (streamId, data) => new PermissionWelcomedEvent(streamId, data),
     };
 }

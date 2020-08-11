@@ -110,7 +110,7 @@ export class EventStore implements IEventPublisher, IMessageSource, OnModuleDest
             event['eventType'] || stream,
         );
         // it's hack for find out streamId by include stream
-        const streams = ['Token', 'Order', 'Permission', 'Report', 'Project', 'User', 'Request', 'Role', 'Task', 'Monitor'];
+        const streams = ['Permission', 'Token', 'Order', 'Report', 'Project', 'User', 'Request', 'Role', 'Task', 'Monitor'];
         const streamName = streams.map(stream => eventPayload.type.includes(stream) ? stream : null)
             .filter(event => event != null)[0];
         const streamId = stream ? stream : `$ce-${streamName?.toLowerCase() ?? 'user'}`;

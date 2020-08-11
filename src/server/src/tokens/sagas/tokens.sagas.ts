@@ -12,6 +12,8 @@ import {
     OrderedTokenCreatedSuccessEvent
 } from '../events/impl/ordered-token-created.event';
 import { TokenUpgradedFailedEvent, TokenUpgradedSuccessEvent } from '../events/impl/token-upgraded.event';
+import { PermissionAssigneeTokensUpdatedEvent } from 'permissions/events/impl/permission-assignee-tokens-updated.event';
+import { UpdatePermissionAssigneeTokensDto } from 'permissions/dtos/permissions.dto';
 
 @Injectable()
 export class TokensSagas {
@@ -26,12 +28,18 @@ export class TokensSagas {
             ofType(OrderedTokenCreatedSuccessEvent),
             map((event: OrderedTokenCreatedSuccessEvent) => {
                 Logger.log('Inside [TokensSagas] orderedTokenCreatedSuccess Saga', 'TokensSagas');
-                const { streamId, updatedToken, tokenDto } = event;
-                const { userId, orderId } = tokenDto;
+                const { streamId, updatedToken, tokenDto, assigneeTokens } = event;
+                // update order status
+                const { userId, orderId, projectId } = tokenDto;
                 const tempTokenTypeDto = TokenTypeDto.createTempInstance();
                 const orderDto = new OrderDto(userId, tempTokenTypeDto, updatedToken, CONSTANTS.STATUS.SUCCESS);
                 orderDto._id = orderId;
                 this.publishOrderUpdatedEvent(streamId, orderDto);
+                // update permissions
+                const updatePermissionAssigneeTokensDto = new UpdatePermissionAssigneeTokensDto(projectId, userId, assigneeTokens);
+                const permissionAssigneeTokensUpdatedEvent = new PermissionAssigneeTokensUpdatedEvent(streamId, updatePermissionAssigneeTokensDto);
+                permissionAssigneeTokensUpdatedEvent['eventType'] = 'PermissionAssigneeTokensUpdatedEvent';
+                this.eventStore.publish(permissionAssigneeTokensUpdatedEvent, CONSTANTS.STREAM_NAME.PERMISSION);
             })
         );
     };

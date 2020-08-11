@@ -9,7 +9,8 @@ import {
     PermissionAssignDto,
     PermissionDto,
     PermissionIdRequestParamsDto,
-    PermissionResponseDto
+    PermissionResponseDto,
+    AssigneePermissionDto
 } from '../dtos/permissions.dto';
 import { PermissionsService } from '../services/permissions.service';
 import { Roles } from 'auth/roles.decorator';
@@ -17,7 +18,9 @@ import {
     AssignPermissionGuard,
     PermissionGuard,
     PermissionQueryGuard,
-    ReplyPermissionAssignGuard
+    ReplyPermissionAssignGuard,
+    UpdatePermissionExpirationDateGuard,
+    DeletePermissionForAssigneeGuard
 } from 'auth/guards/permission.guard';
 import { Utils } from 'utils';
 import { FindPermissionsByIdsQuery } from 'permissions/queries/impl/find-permissions-by-ids.query';
@@ -42,6 +45,22 @@ export class PermissionsController {
         return this.permissionsService.createPermission(streamId, permissionDto);
     }
 
+    /* Update Permission Expiration Date */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Update Permission Expiration Date'] })
+    @ApiResponse({ status: 200, description: 'Update Permission Expiration Date.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), UpdatePermissionExpirationDateGuard)
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Put('/update-expiration-date')
+    async updatePermissionExpirationDate(
+        @Body('assigneePermission') assigneePermissionDto: AssigneePermissionDto,
+        @Body('expiresIn') expiresIn: number,
+    ) {
+        const streamId = assigneePermissionDto.assigneeId;
+        return this.permissionsService.updatePermissionExpirationDate(streamId, assigneePermissionDto, expiresIn);
+    }
+
     /* Update Permission */
 
     /*--------------------------------------------*/
@@ -59,6 +78,19 @@ export class PermissionsController {
             ...permissionDto,
             _id: permissionIdDto._id,
         });
+    }
+
+    /* Delete Permission For Assignee */
+
+    /*--------------------------------------------*/
+    @ApiOperation({ tags: ['Delete Permission For Assignee'] })
+    @ApiResponse({ status: 200, description: 'Delete Permission For Assignee.' })
+    @UseGuards(AuthGuard(CONSTANTS.AUTH_JWT), DeletePermissionForAssigneeGuard)
+    @Roles([CONSTANTS.ROLE.ADMIN, CONSTANTS.ROLE.MANAGER_USER])
+    @Delete('/delete-permission-for-assignee')
+    async deletePermissionForAssignee(@Body() assigneePermissionDto: AssigneePermissionDto) {
+        const streamId = assigneePermissionDto.assigneeId;
+        return this.permissionsService.deletePermissionForAssignee(streamId, assigneePermissionDto);
     }
 
     /* Delete Permission */
