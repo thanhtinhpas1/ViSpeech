@@ -2,6 +2,7 @@
 import React from 'react'
 
 const Footer = () => {
+
   return (
     <footer className="footer">
       <div className="container">
@@ -14,23 +15,8 @@ const Footer = () => {
             </p>
             <ul className="social-icons">
               <li>
-                <a className="facebook" href="#">
+                <a className="facebook" href="https://www.facebook.com/ASR-VietSpeech-577800236200579/">
                   <i className="fab fa-facebook-f" />
-                </a>
-              </li>
-              <li>
-                <a className="twitter" href="#">
-                  <i className="fab fa-twitter" />
-                </a>
-              </li>
-              <li>
-                <a className="google" href="#">
-                  <i className="fab fa-google-plus-g" />
-                </a>
-              </li>
-              <li>
-                <a className="linkedin" href="#">
-                  <i className="fab fa-linkedin-in" />
                 </a>
               </li>
             </ul>
@@ -40,42 +26,36 @@ const Footer = () => {
             <div className="d-flex justify-content-around">
               <ul className="list-style">
                 <li>
-                  <a href="/customer/login">Đăng nhập</a>
+                  <a href="/login">Đăng nhập</a>
                 </li>
                 <li>
                   <a href="/register">Đăng ký</a>
                 </li>
                 <li>
-                  <a href="/customer/documents">Tài liệu</a>
-                </li>
-                <li>
-                  <a href="/customer/projects">Dự án</a>
+                  <a href="https://www.facebook.com/ASR-VietSpeech-577800236200579/">Liên hệ</a>
                 </li>
               </ul>
               <ul className="list-style">
                 <li>
-                  <a href="#">Microservices</a>
+                  <a href="https://microservices.io/patterns/microservices.html">Microservices</a>
                 </li>
                 <li>
-                  <a href="#">Domain Driven Design</a>
+                  <a href="https://martinfowler.com/tags/domain%20driven%20design.html">Domain Driven Design</a>
                 </li>
                 <li>
-                  <a href="#">Command Query Responsibility Separate</a>
+                  <a href="https://martinfowler.com/bliki/CQRS.html">Command Query Responsibility Separate</a>
                 </li>
                 <li>
-                  <a href="#">Event Sourcing</a>
+                  <a href="https://martinfowler.com/eaaDev/EventSourcing.html">Event Sourcing</a>
                 </li>
               </ul>
             </div>
           </div>
           <div className="col-md-3 col-lg-3 sm-m-15px-tb">
             <h4 className="font-18 font-alt color-white font-w-600 m-0px m-15px-b">Địa chỉ liên hệ</h4>
-            <p>227 Nguyễn Văn Cừ</p>
+            <p><span>Facebook:</span> <a href="https://www.facebook.com/ASR-VietSpeech-577800236200579">Fanpage ASR</a></p>
             <p>
-              <span>E-Mail:</span> 1612704@student.hcmus.edu.vn
-            </p>
-            <p>
-              1612339@student.hcmus.edu.vn
+              <span>E-Mail:</span> vispeech2020@gmail.com
             </p>
             <p>
               <span>Phone:</span> +083 0962804643

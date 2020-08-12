@@ -27,6 +27,7 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
         private readonly eventBus: EventBus,
     ) {
     }
+    private readonly logger = new Logger(this.constructor.name);
 
     async handle(event: PermissionAssignEmailSentEvent) {
         Logger.log(event.streamId, 'PermissionAssignEmailSentEvent');
@@ -45,6 +46,7 @@ export class PermissionAssignEmailSentHandler implements IEventHandler<Permissio
 
             this.eventBus.publish(new PermissionAssignEmailSentSuccessEvent(streamId, permissionAssignDto, permissionIds));
         } catch (error) {
+            this.logger.error(error.message)
             this.eventBus.publish(new PermissionAssignEmailSentFailedEvent(streamId, permissionAssignDto, error));
         }
     }

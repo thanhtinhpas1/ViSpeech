@@ -18,6 +18,7 @@ export class PermissionAssigneeTokensUpdatedHandler implements IEventHandler<Per
         private readonly eventBus: EventBus,
     ) {
     }
+    private readonly logger = new Logger(this.constructor.name);
 
     async handle(event: PermissionAssigneeTokensUpdatedEvent) {
         Logger.log(event.updatePermissionAssigneeTokensDto.projectId, 'PermissionAssigneeTokensUpdatedEvent'); // write here
@@ -31,6 +32,7 @@ export class PermissionAssigneeTokensUpdatedHandler implements IEventHandler<Per
             }
             this.eventBus.publish(new PermissionAssigneeTokensUpdatedSuccessEvent(streamId, updatePermissionAssigneeTokensDto));
         } catch (error) {
+            this.logger.error(error.message)
             this.eventBus.publish(new PermissionAssigneeTokensUpdatedFailedEvent(streamId, updatePermissionAssigneeTokensDto, error));
         }
     }

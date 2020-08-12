@@ -38,10 +38,9 @@ import { MonitorsService } from './services/monitors.service';
                     resolveLinkTos: true,  // Default is true (Optional)
                 },
                 {
-                    type: EventStoreSubscriptionType.Persistent,
+                    type: EventStoreSubscriptionType.CatchUp,
                     stream: CONSTANTS.STREAM_NAME.MONITOR,
-                    persistentSubscriptionName: CONSTANTS.STREAM_NAME.MONITOR + '-' + config.HOST,
-                    resolveLinkTos: true,  // Default is true (Optional)
+                    resolveLinkTos: true, // Default is true (Optional)
                 },
             ],
             eventHandlers: {
