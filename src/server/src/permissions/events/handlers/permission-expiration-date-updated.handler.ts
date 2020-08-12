@@ -29,7 +29,7 @@ export class PermissionExpirationDateUpdatedHandler implements IEventHandler<Per
 
         try {
             await this.repository.update({ projectId, assignerId, assigneeId, status: CONSTANTS.STATUS.ACCEPTED },
-                { expiresIn, updatedDate: new Date() });
+                { expiresIn: Utils.getOnlyDate(expiresIn), updatedDate: new Date() });
             this.eventBus.publish(new PermissionExpirationDateUpdatedSuccessEvent(streamId, assigneePermissionDto, expiresIn));
         } catch (error) {
             this.eventBus.publish(new PermissionExpirationDateUpdatedFailedEvent(streamId, assigneePermissionDto, expiresIn, error));

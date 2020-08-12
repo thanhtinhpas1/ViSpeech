@@ -25,6 +25,7 @@ const { PERMISSION_FOR_ASSIGNEE_DELETED_SUCCESS_EVENT, PERMISSION_FOR_ASSIGNEE_D
 const AssigneesTable = ({
   currentUser,
   projectId,
+  projectName,
   getProjectAssigneeListObj,
   deletePermissionForAssigneeObj,
   getProjectAssignees,
@@ -204,10 +205,13 @@ const AssigneesTable = ({
     {
       title: '',
       dataIndex: '_id',
-      render: _id => {
+      render: (_id, record) => {
         return (
           <>
-            <Link to={`${CUSTOMER_PATH}`} className="btn btn-light-alt btn-xs btn-icon mr-2">
+            <Link
+              to={`${CUSTOMER_PATH}/update-permission?projectId=${projectId}&assignerId=${currentUser?._id}&assigneeId=${_id}&username=${record.username}&projectName=${projectName}`}
+              className="btn btn-light-alt btn-xs btn-icon mr-2"
+            >
               <em className="ti ti-eye" />
             </Link>
             <button className="btn btn-danger-alt btn-xs btn-icon" onClick={() => onDeletePermissionForAssignee(_id)}>

@@ -23,16 +23,13 @@ export class TokenUpgradedHandler implements IEventHandler<TokenUpgradedEvent> {
         const { streamId, tokenDto, tokenTypeDto } = event;
 
         try {
-            const upgradedToken = JSON.parse(JSON.stringify(tokenDto))
-            upgradedToken.tokenTypeId = tokenTypeDto._id;
-            upgradedToken.tokenType = tokenTypeDto.name;
-            await this.repository.update({ _id: upgradedToken._id }, {
-                minutes: upgradedToken.minutes,
-                tokenTypeId: upgradedToken.tokenTypeId,
-                tokenType: upgradedToken.tokenType,
+            await this.repository.update({ _id: tokenDto._id }, {
+                minutes: Number(tokenDto.minutes || 0),
+                tokenTypeId: tokenDto.tokenTypeId,
+                tokenType: tokenDto.tokenType,
                 updatedDate: new Date()
             });
-            this.eventBus.publish(new TokenUpgradedSuccessEvent(streamId, upgradedToken, tokenTypeDto));
+            this.eventBus.publish(new TokenUpgradedSuccessEvent(streamId, tokenDto, tokenTypeDto));
         } catch (error) {
             Logger.error(error.message)
             this.eventBus.publish(new TokenUpgradedFailedEvent(streamId, tokenDto, tokenTypeDto, error));

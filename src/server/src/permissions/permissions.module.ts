@@ -184,9 +184,9 @@ export class PermissionsModule implements OnModuleInit {
         PermissionUpdatedSuccessEvent: (streamId, data) => new PermissionUpdatedSuccessEvent(streamId, data),
         PermissionUpdatedFailedEvent: (streamId, data, error) => new PermissionUpdatedFailedEvent(streamId, data, error),
         // update permission expiration date
-        PermissionExpirationDateUpdatedEvent: (streamId, data, expiresIn) => new PermissionExpirationDateUpdatedEvent(streamId, expiresIn, data),
+        PermissionExpirationDateUpdatedEvent: (streamId, data, expiresIn) => new PermissionExpirationDateUpdatedEvent(streamId, data, expiresIn),
         PermissionExpirationDateUpdatedSuccessEvent: (streamId, data, expiresIn) =>
-            new PermissionExpirationDateUpdatedSuccessEvent(streamId, expiresIn, data),
+            new PermissionExpirationDateUpdatedSuccessEvent(streamId, data, expiresIn),
         PermissionExpirationDateUpdatedFailedEvent: (streamId, data, expiresIn, error) =>
             new PermissionExpirationDateUpdatedFailedEvent(streamId, data, expiresIn, error),
         // send email assign permission

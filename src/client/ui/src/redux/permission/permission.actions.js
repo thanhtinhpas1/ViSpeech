@@ -60,6 +60,22 @@ export const findPermissionByEmailTokenFailure = message => ({
   payload: message,
 })
 
+// find permission for assignee
+export const findPermissionForAssignee = (projectId, assignerId, assigneeId, status) => ({
+  type: PermissionTypes.FIND_PERMISSION_FOR_ASSIGNEE,
+  payload: { projectId, assignerId, assigneeId, status },
+})
+
+export const findPermissionForAssigneeSuccess = data => ({
+  type: PermissionTypes.FIND_PERMISSION_FOR_ASSIGNEE_SUCCESS,
+  payload: data,
+})
+
+export const findPermissionForAssigneeFailure = message => ({
+  type: PermissionTypes.FIND_PERMISSION_FOR_ASSIGNEE_FAILURE,
+  payload: message,
+})
+
 // update permission expiration date
 export const onClearUpdatePermissionExpirationDateState = () => ({
   type: PermissionTypes.CLEAR_UPDATE_PERMISSION_EXPIRATION_DATE_STATE,

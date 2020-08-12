@@ -36,7 +36,7 @@ export class TokenCreatedHandler implements IEventHandler<TokenCreatedEvent> {
             }
             token.tokenTypeId = tokenTypeDto?._id;
             token.tokenType = tokenTypeDto?.name;
-            token.minutes = Number(tokenTypeDto?.minutes);
+            token.minutes = Number(tokenTypeDto?.minutes || 0);
             token.usedMinutes = 0;
             token.isValid = Utils.convertToBoolean(token.isValid);
             token = Utils.removePropertiesFromObject(token, ['orderId']);

@@ -78,12 +78,12 @@ export class AsrController {
         }
 
         // invalid token
-        if (!tokenDto || !tokenDto.isValid || tokenDto.usedMinutes >= tokenDto.minutes)
+        if (!tokenDto || !tokenDto.isValid || Number(tokenDto.usedMinutes) >= Number(tokenDto.minutes))
             return res.status(HttpStatus.FORBIDDEN).json({message: 'Invalid API key.'});
 
         // not enough token minutes to request
         const duration = Utils.calculateDuration(file.size);
-        const minutes = Number(tokenDto.minutes);
+        const minutes = Number(tokenDto.minutes || 0);
         const usedMinutes = Number(tokenDto.usedMinutes || 0);
         if (duration > (minutes - usedMinutes)) {
             return res.status(HttpStatus.FORBIDDEN).json({message: 'Not enough API key\'s minutes to request ASR service.'});

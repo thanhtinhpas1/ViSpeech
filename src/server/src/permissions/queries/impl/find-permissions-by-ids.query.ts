@@ -1,4 +1,5 @@
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsUUID, IsIn } from 'class-validator';
+import { CONSTANTS } from 'common/constant';
 
 export class FindPermissionsByIdsQuery {
     constructor() {
@@ -18,4 +19,9 @@ export class FindPermissionsByIdsQuery {
     @IsUUID()
     @IsString()
     projectId: string;
+
+    @IsOptional()
+    @IsString()
+    @IsIn([CONSTANTS.STATUS.ACCEPTED, CONSTANTS.STATUS.REJECTED, CONSTANTS.STATUS.PENDING, CONSTANTS.STATUS.INVALID])
+    status: string;
 }
