@@ -59,7 +59,7 @@ soupsieve==1.9
 sox==1.2.5
 tables==3.5.1
 tensorboard==1.12.2
-tensorflow==1.15.2
+tensorflow==1.15.4
 termcolor==1.1.0
 urllib3==1.24.1
 Werkzeug==0.15.3
