@@ -18,11 +18,11 @@
 
 This is an application boilerplate that demonstrates how to use Nest.js and Event Store to create a RESTful Users API microservice.
 
-Please note that commands have been implemented and they do write into the Event Store, however, queries for denormalized views have some boilerplate but it is up to you to implement them using your favorite database technology of choice. (use MySql in my position, suggest use NoSql as Mongodb, PostgreSql)
+Please note that commands have been implemented and they do write into the Event Store, however, queries for denormalized views have some boilerplate but it is up to you to implement them using your favorite database technology of choice. (use MongoDB in my position, suggest use NoSql or PostgreSql)
 
 In case you don't feel like downloading dependencies locally, I've added support for Docker so follow those instructions in "Running the app" and you'll have everything up and running in less than 2 minutes.
 
-The system has 5 main folder (can run as a stand-alone) as located in `./src` <br />
+The system has 6 main folder (can run as a stand-alone) as located in `./src` <br />
 - `server` - main web api build with NestJS
 - `client` - web proxy for navigate request and security network
 - `client/ui` - web ui for main application
