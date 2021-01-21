@@ -26,7 +26,7 @@
     "ip": "^1.1.5",
     "kafkajs": "^1.12.0",
     "morgan": "~1.9.1",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
