@@ -15,7 +15,7 @@ cycler==0.10.0
 decorator==4.4.0
 deepspeech==0.4.1
 Flask==1.0.2
-Flask-Cors==3.0.7
+Flask-Cors==3.0.9
 gast==0.2.2
 grpcio==1.19.0
 gunicorn==19.9.0
